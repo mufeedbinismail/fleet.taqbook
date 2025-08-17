@@ -254,6 +254,9 @@ function display_credit_items()
 	shippers_list_cells(null, 'ShipperID', $_POST['ShipperID']);
 
 	end_row();
+    start_row();
+    label_cells(_("Tracking No"), $_SESSION['Items']->tracking_no, "class='tableheader2'");
+    end_row();
 	end_table();
 
     echo "</td><td>";// outer table

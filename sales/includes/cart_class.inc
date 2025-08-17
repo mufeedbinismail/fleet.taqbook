@@ -51,6 +51,7 @@ class Cart
 
 	var $cust_ref;
 	var $reference;
+    var $tracking_no;
 	var $Comments;
 	var $Location;
 	var $location_name;

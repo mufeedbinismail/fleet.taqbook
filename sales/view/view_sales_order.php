@@ -93,7 +93,10 @@ end_row();
 
 label_row(_("Delivery Address"), nl2br($_SESSION['View']->delivery_address),
 	"class='tableheader2'", "colspan=3");
-label_row(_("Reference"), $_SESSION['View']->reference, "class='tableheader2'", "colspan=3");
+start_row();
+label_cells(_("Reference"), $_SESSION['View']->reference, "class='tableheader2'");
+label_cells(_("Tracking No"), $_SESSION['View']->tracking_no, "class='tableheader2'");
+end_row();
 label_row(_("Telephone"), $_SESSION['View']->phone, "class='tableheader2'", "colspan=3");
 label_row(_("E-mail"), "<a href='mailto:" . $_SESSION['View']->email . "'>" . $_SESSION['View']->email . "</a>",
 	"class='tableheader2'", "colspan=3");

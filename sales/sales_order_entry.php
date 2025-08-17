@@ -274,6 +274,8 @@ function copy_to_cart()
 	$cart = &$_SESSION['Items'];
 
 	$cart->reference = get_post('ref');
+    
+	$cart->tracking_no = get_post('tracking_no');
 
 	$cart->Comments =  $_POST['Comments'];
 
@@ -327,6 +329,7 @@ function copy_from_cart()
 {
 	$cart = &$_SESSION['Items'];
 	$_POST['ref'] = $cart->reference;
+	$_POST['tracking_no'] = $cart->tracking_no;
 	$_POST['Comments'] = $cart->Comments;
 
 	$_POST['OrderDate'] = $cart->document_date;

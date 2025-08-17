@@ -217,6 +217,7 @@ $cols = array(
 	_("#") => array('fun'=>'trans_view', 'ord'=>'', 'align'=>'right'),
 	_("Order") => array('fun'=>'order_view', 'align'=>'right'), 
 	_("Reference"), 
+	_("Tracking No"), 
 	_("Date") => array('name'=>'tran_date', 'type'=>'date', 'ord'=>'desc'),
 	_("Due Date") => array('type'=>'date', 'fun'=>'due_date'),
 	_("Customer") => array('ord'=>''), 

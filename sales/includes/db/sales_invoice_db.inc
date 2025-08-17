@@ -90,7 +90,8 @@ function write_sales_invoice(&$invoice)
 		$items_added_tax, $invoice->freight_cost, $freight_added_tax,
 		$invoice->sales_type, $sales_order, $invoice->ship_via, 
 		$invoice->due_date, 0, 0, $invoice->dimension_id, 
-		$invoice->dimension2_id, $invoice->payment, $invoice->tax_included, $invoice->prep_amount); 
+		$invoice->dimension2_id, $invoice->payment, $invoice->tax_included,
+        $invoice->prep_amount, $invoice->tracking_no);
 
 	if ($trans_no == 0) {
 		$invoice->trans_no = array($invoice_no=>0);

@@ -53,12 +53,14 @@ class allocation
 	}
 
 	function add_item($type, $type_no, $date_, $due_date, $amount, $amount_allocated, 
-		$current_allocated, $ref)
+		$current_allocated, $ref, $tracking_no=null)
 	{
 		if (floatcmp($amount, 0))
 		{
 			$this->allocs[count($this->allocs)] = new allocation_item($type, $type_no, 
-				$date_, $due_date, $amount, $amount_allocated, $current_allocated, $ref);
+				$date_, $due_date, $amount, $amount_allocated, $current_allocated, $ref,
+                $tracking_no
+            );
 			return true;
 		} 
 		else 
@@ -154,7 +156,9 @@ class allocation
 					$myrow["Total"], // trans total
 					$myrow["alloc"], // trans total allocated
 					0,
-					$myrow["reference"]); // this allocation
+					$myrow["reference"],
+                    $myrow["tracking_no"] ?? null
+                ); // this allocation
 			}
 		}
 		if ($this->trans_no == 0) return; // this is new payment
@@ -273,17 +277,19 @@ class allocation_item
 	var $amount_allocated;
 	var $amount;
 	var $ref;
+    var $tracking_no; // for sales orders, deliveries, invoices
 	
 	var $current_allocated;
 	
 	function __construct($type, $type_no, $date_, $due_date, $amount, 
-		$amount_allocated, $current_allocated, $ref)
+		$amount_allocated, $current_allocated, $ref, $tracking_no = null)
 	{
 
 		$this->type = $type;
 		$this->type_no = $type_no;
 
 		$this->ref = $ref;
+        $this->tracking_no = $tracking_no;
 
 		$this->date_ = $date_;
 		$this->due_date = $due_date;
@@ -309,8 +315,23 @@ function show_allocatable($show_totals) {
 	{
 		display_heading(sprintf(_("Allocated amounts in %s:"), $cart->person_curr));
 		start_table(TABLESTYLE, "width='60%'");
-   		$th = array(_("Transaction Type"), _("#"), $supp_ref ? _("Supplier Ref"): _("Ref"), _("Date"), _("Due Date"), _("Amount"),
-   			_("Other Allocations"), _("Left to Allocate"), _("This Allocation"),'','');
+   		$th = array(
+            _("Transaction Type"),
+            _("#"),
+            $supp_ref ? _("Supplier Ref"): _("Ref"),
+            _("Date"),
+            _("Due Date"),
+            _("Amount"),
+   			_("Other Allocations"),
+            _("Left to Allocate"),
+            _("This Allocation"),
+            '',
+            ''
+        );
+
+        if (!$supp_ref) {
+            array_splice($th, 3, 0, [_("Tracking No")]);
+        }
 
 	   	table_header($th);
 
@@ -322,6 +343,9 @@ function show_allocatable($show_totals) {
     			label_cell($systypes_array[$alloc_item->type]);
 	   			label_cell(get_trans_view_str($alloc_item->type, $alloc_item->type_no), "nowrap align='right'");
 		   		label_cell($alloc_item->ref);
+                if (!$supp_ref) {
+                    label_cell($alloc_item->tracking_no, "align=right");
+                }
     			label_cell($alloc_item->date_, "align=right");
     			label_cell($alloc_item->due_date, "align=right");
 	    		amount_cell(abs($alloc_item->amount));

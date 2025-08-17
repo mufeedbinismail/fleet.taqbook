@@ -246,6 +246,7 @@ function read_sales_trans($doc_type, $trans_no, &$cart)
 			$myrow["tax_group_name"]);
 
 		$cart->reference = $myrow["reference"];
+		$cart->tracking_no = $myrow["tracking_no"];
 		$cart->prepaid = $myrow["prepaid"];
 		$cart->order_no = $myrow["order_"];
 		$cart->due_date = sql2date($myrow["due_date"]);

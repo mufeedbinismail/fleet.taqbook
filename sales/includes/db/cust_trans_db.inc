@@ -56,7 +56,8 @@ function get_customer_trans_version($type, $trans_no) {
 function write_customer_trans($trans_type, $trans_no, $debtor_no, $BranchNo,
 	$date_, $reference, $Total, $discount=0, $Tax=0, $Freight=0, $FreightTax=0,
 	$sales_type=0, $order_no=0, $ship_via=0, $due_date="",
-	$AllocAmt=0, $rate=0, $dimension_id=0, $dimension2_id=0, $payment_terms=null, $tax_included=0, $prep_amount=0)
+	$AllocAmt=0, $rate=0, $dimension_id=0, $dimension2_id=0, $payment_terms=null,
+    $tax_included=0, $prep_amount=0, $tracking_no=null)
 {
 	$new = $trans_no==0;
 	$curr = get_customer_currency($debtor_no);
@@ -81,14 +82,14 @@ function write_customer_trans($trans_type, $trans_no, $debtor_no, $BranchNo,
 		trans_no, type,
 		debtor_no, branch_code,
 		tran_date, due_date,
-		reference, tpe,
+		reference, tracking_no, tpe,
 		order_, ov_amount, ov_discount,
 		ov_gst, ov_freight, ov_freight_tax,
 		rate, ship_via, alloc,
 		dimension_id, dimension2_id, payment_terms, tax_included, prep_amount
 		) VALUES (".db_escape($trans_no).", ".db_escape($trans_type).",
 		".db_escape($debtor_no).", ".db_escape($BranchNo).",
-		'$SQLDate', '$SQLDueDate', ".db_escape($reference).",
+		'$SQLDate', '$SQLDueDate', ".db_escape($reference).", ".db_escape($tracking_no, true).",
 		".db_escape($sales_type).", ".db_escape($order_no).", $Total, ".db_escape($discount).", $Tax,
 		".db_escape($Freight).",
 		$FreightTax, $rate, ".db_escape($ship_via).", $AllocAmt,
@@ -106,7 +107,8 @@ function write_customer_trans($trans_type, $trans_no, $debtor_no, $BranchNo,
 		dimension_id=".db_escape($dimension_id).", dimension2_id=".db_escape($dimension2_id).",
 		payment_terms=".db_escape($payment_terms, true).",
 		tax_included=".db_escape($tax_included).",
-		prep_amount =".db_escape($prep_amount)."
+		prep_amount =".db_escape($prep_amount).",
+		tracking_no=".db_escape($tracking_no, true)."
 		WHERE trans_no=".db_escape($trans_no)." AND type=".db_escape($trans_type);
 	}
 	db_query($sql, "The debtor transaction record could not be inserted");
@@ -309,6 +311,7 @@ function get_sql_for_customer_inquiry($from, $to, $cust_id = ALL_TEXT, $filter =
 		trans.trans_no, 
 		trans.order_, 
 		trans.reference,
+		trans.tracking_no,
 		trans.tran_date, 
 		trans.due_date, 
 		debtor.name, 

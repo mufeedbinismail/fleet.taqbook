@@ -102,6 +102,9 @@ if ($myrow['prep_amount']==0)
 		get_sales_parent_numbers(ST_SALESINVOICE, $trans_id)), "class='tableheader2'");
 label_cells(_("Invoice Date"), sql2date($myrow["tran_date"]), "class='tableheader2'", "nowrap");
 end_row();
+start_row();
+label_cells(_("Tracking No"), $myrow["tracking_no"], "class='tableheader2'");
+end_row();
 comments_display_row(ST_SALESINVOICE, $trans_id);
 end_table();
 

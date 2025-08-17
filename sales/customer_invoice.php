@@ -499,6 +499,9 @@ if ($dim > 1) {
 else
 	hidden('dimension2_id', 0);
 end_row();
+start_row();
+label_cells(_("Tracking No"), $_SESSION['Items']->tracking_no, "class='tableheader2'");
+end_row();
 end_table();
 
 $row = get_customer_to_order($_SESSION['Items']->customer_id);

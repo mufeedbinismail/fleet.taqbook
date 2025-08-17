@@ -281,6 +281,7 @@ if ($trans_type == ST_SALESORDER)
 	$cols = array(
 		_("Order #") => array('fun'=>'view_link', 'align'=>'right', 'ord' =>''),
 		_("Ref") => array('type' => 'sorder.reference', 'ord' => '') ,
+        _("Tracking No") => array('type' => 'sorder.tracking_no', 'ord' => '') ,
 		_("Customer") => array('type' => 'debtor.name' , 'ord' => '') ,
 		_("Branch"), 
 		_("Cust Order Ref"),
@@ -295,6 +296,7 @@ else
 	$cols = array(
 		_("Quote #") => array('fun'=>'view_link', 'align'=>'right', 'ord' => ''),
 		_("Ref"),
+        _("Tracking No"),
 		_("Customer"),
 		_("Branch"), 
 		_("Cust Order Ref"),
@@ -312,11 +314,11 @@ if ($_POST['order_view_mode'] == 'OutstandingOnly') {
 		array('insert'=>true, 'fun'=>'prt_link')));
 
 } elseif ($_POST['order_view_mode'] == 'InvoiceTemplates') {
-	array_substitute($cols, 4, 1, _("Description"));
+	array_substitute($cols, 5, 1, _("Description"));
 	array_append($cols, array( array('insert'=>true, 'fun'=>'invoice_link')));
 
 } else if ($_POST['order_view_mode'] == 'DeliveryTemplates') {
-	array_substitute($cols, 4, 1, _("Description"));
+	array_substitute($cols, 5, 1, _("Description"));
 	array_append($cols, array(
 			array('insert'=>true, 'fun'=>'delivery_link'))
 	);

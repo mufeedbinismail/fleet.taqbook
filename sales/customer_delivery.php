@@ -368,6 +368,10 @@ if (!isset($_POST['DispatchDate']) || !is_date($_POST['DispatchDate'])) {
 date_cells(_("Date"), 'DispatchDate', '', $_SESSION['Items']->trans_no==0, 0, 0, 0, "class='tableheader2'");
 end_row();
 
+start_row();
+label_cells(_("Tracking No"), $_SESSION['Items']->tracking_no, "class='tableheader2'");
+end_row();
+
 end_table();
 
 echo "</td><td>";// outer table

@@ -20,13 +20,14 @@ function add_sales_order(&$order)
 	$del_date = date2sql($order->due_date);
 	$order_type = 0; // this is default on new order
 	$total = $order->get_trans_total();
-	$sql = "INSERT INTO ".TB_PREF."sales_orders (order_no, type, debtor_no, trans_type, branch_code, customer_ref, reference, comments, ord_date,
-		order_type, ship_via, deliver_to, delivery_address, contact_phone,
+	$sql = "INSERT INTO ".TB_PREF."sales_orders (order_no, type, debtor_no, trans_type, branch_code, customer_ref,
+        reference, tracking_no, comments, ord_date, order_type, ship_via, deliver_to, delivery_address, contact_phone,
 		freight_cost, from_stk_loc, delivery_date, payment_terms, total, prep_amount)
 		VALUES (" .db_escape($order_no) . "," .db_escape($order_type) . "," . db_escape($order->customer_id) .
 		 ", " .db_escape($order->trans_type) . "," .db_escape($order->Branch) . ", ".
 			db_escape($order->cust_ref) .",". 
 			db_escape($order->reference) .",". 
+			db_escape($order->tracking_no, true) .",". 
 			db_escape($order->Comments) .",'" . 
 			date2sql($order->document_date) . "', " .
 			db_escape($order->sales_type) . ", " .
@@ -139,6 +140,7 @@ function update_sales_order($order)
 		branch_code = " . db_escape($order->Branch) . ",
 		customer_ref = ". db_escape($order->cust_ref) .",
 		reference = ". db_escape($order->reference) .",
+		tracking_no = ". db_escape($order->tracking_no, true) .",
 		comments = ". db_escape($order->Comments) .",
 		ord_date = " . db_escape($ord_date) . ",
 		order_type = " .db_escape($order->sales_type) . ",
@@ -325,6 +327,7 @@ function read_sales_order($order_no, &$order, $trans_type)
 	$order->cust_ref = $myrow["customer_ref"];
 	$order->sales_type =$myrow["order_type"];
 	$order->reference = $myrow["reference"];
+	$order->tracking_no = $myrow["tracking_no"];
 	$order->Comments = $myrow["comments"];
 	$order->due_date = sql2date($myrow["delivery_date"]);
 	$order->document_date = sql2date($myrow["ord_date"]);
@@ -475,6 +478,7 @@ function get_sql_for_sales_orders_view($trans_type, $trans_no, $filter,
 	$sql = "SELECT 
 			sorder.order_no,
 			sorder.reference,
+			sorder.tracking_no,
 			debtor.name,
 			branch.br_name,"
 			.($filter=='InvoiceTemplates' 
