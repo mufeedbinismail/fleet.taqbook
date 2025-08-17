@@ -3,12 +3,15 @@
 /company/*/backup/*.sql.gz
 /company/*/pdf_files/*.pdf
 /company/*/js_cache/*.js
+/company/*/js_cache/**/*.js
 /company/*/reporting
 /company/*/images
 /tmp
 /lang
 /modules
 /themes
+/.history
+/.vscode
 !/themes/default
 !/themes/aqua
 !/themes/cool
