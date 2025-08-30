@@ -15,10 +15,12 @@
 !/themes/default
 !/themes/aqua
 !/themes/cool
+!/themes/cume
 !/lang/en_US
 !/lang/new_language_template
 installed_languages.inc
 installed_extensions.php
 config.php
 config_db.php
+.DS_Store
 !index.php
