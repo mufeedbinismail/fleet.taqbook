@@ -1,19 +1,11 @@
-# prevent eol hell
-* text=auto !eol
-*.php	text
-*.inc	text
-*.sql	text
-*.js	text
-*.css	text
-*.po	text
-*.png	binary
-*.gif	binary
-*.jpg	binary
-*.ico	binary
-*.mo	binary
+* text=auto eol=lf
 
-# improve diff chunks headers
-*.php	diff=php
-*.inc	diff=php
-.gitattributes export-ignore  
-.gitignore export-ignore
+*.blade.php diff=html
+*.css diff=css
+*.html diff=html
+*.md diff=markdown
+*.php diff=php
+
+/.github export-ignore
+CHANGELOG.md export-ignore
+.styleci.yml export-ignore

@@ -1,62 +1,66 @@
-![FrontAccounting ERP](./themes/default/images/logo_frontaccounting.jpg  "FrontAccounting ERP")
-===================
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-FrontAccounting ERP is open source, web-based accounting software for small and medium enterprises.
-It supports double entry accounting providing both low level journal entry and user friendly, document based 
-interface for everyday business activity with automatic GL postings generation. This is multicurrency,
-multilanguage system with active worldwide users community:
+<p align="center">
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-* [Project web site](http://frontaccounting.com)
-* [SourceForge project page](http://sourceforge.net/projects/frontaccounting/)
-* [Central users forum](http://frontaccounting.com/punbb/index.php)
-* [Main code repository](https://sourceforge.net/p/frontaccounting/git/ci/master/tree/)
-* [GitHub mirror](http://github.com/FrontAccountingERP/FA)
-* [Mantis bugtracker](http://mantis.frontaccounting.com)
-* [FrontAccounting Wiki](http://frontaccounting.com/fawiki/)
+## About Laravel
 
-This project is developed as cooperative effort by FrontAccounting team and available under [GPL v.3 license](./doc/license.txt) 
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-## Requirements
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-To use FrontAccounting application you should have already installed: 
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-*   Any HTTP web server supporting php eg. _**Apache with mod_php**_ or _**IIS**_.
-*   **_PHP_** >=5.0 (version 5.6 or 7.x is recommended)
-*   **_MySQL_** >=4.1 server with **_Innodb_** tables enabled, or any version on **MariaDB** server
-*   **_Adobe Acrobat Reader_** (or any another PDF reader like _**evince**_) is handy for viewing reports before printing them out.
+## Learning Laravel
 
-## Installation
-### 1. PHP configuration checks
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-*   One critical aspect of the PHP installation is the setting of **_session.auto_start_** in the php.ini file. Some rpm distributions of PHP have the default setting of **_session.auto_start = 1_**. This starts a new session at the beginning of each script. However, this makes it impossible to instantiate any class objects that the system relies on. Classes are used extensively by this system. When sessions are required they are started by the system and this setting of **_session.auto_start_** can and should be set to 0.
-*   For security reasons both Register Globals and Magic Quotes php settings should be set to Off. When FrontAccounting is used with www server running php as Apache module, respective flags are set in .htaccess file. When your server uses CGI interface to PHP you should set  **_magic_quotes_gpc = 0_** and **_register_globals = 0_** in php.ini file.
-*   **_Innodb_** tables must be enabled in the MySQL server. These tables allow database transactions which are a critical component of the software. This is enabled by default in the newer versions of MySQL. If you need to enable it yourself, consult the MySQL manual.
+You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-### 2. Download application files
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-* Download and unpack latest FrontAccounting tarball from SourceForge into folder created under web server document root, e.g. **/var/www/html/frontaccounting**
+## Laravel Sponsors
 
-* If you prefer easy upgrades when new minor versions are released, you can clone sources from SourceForge project page or Github mirror e.g.:
->	# cd  /var/www/html
->	# git clone `https://git.code.sf.net/p/frontaccounting/git` frontaccounting
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-Master branch contains all the latest bugfixes made atop the last stable release.
-	
-### 3. Installation
+### Premium Partners
 
-FrontAccounting should NOT be used via unsecure http protocol. If you really need this - change SECURE_ONLY constant in /includes/session.inc to false (comment in the file added). Unfortunately this option cannot be added in sysprefs/config.php because the settings are not available before session is started.
+- **[Vehikl](https://vehikl.com/)**
+- **[Tighten Co.](https://tighten.co)**
+- **[WebReinvent](https://webreinvent.com/)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
+- **[Cyber-Duck](https://cyber-duck.co.uk)**
+- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
+- **[Jump24](https://jump24.co.uk)**
+- **[Redberry](https://redberry.international/laravel/)**
+- **[Active Logic](https://activelogic.com)**
+- **[byte5](https://byte5.de)**
+- **[OP.GG](https://op.gg)**
 
-Use your browser to open page at URL related to chosen installation folder. As an example, if you plan to use application locally and in previous step you have put files on your Linux box in /var/www/html/frontaccounting subfolder, just select `http://localhost/frontaccounting` url in your browser, and you will see start page of installation wizard. Follow instructions displayed during the process.
+## Contributing
 
-During installation you will need to provide data server credentials with permissions to create new database, or you will have to provide existing database name and credentials for user with valid usage permissions to access it. You will have to chose also a couple of other options including installation language, optimal encoding for database data etc. Keep in mind that some options (like additional translations and charts of accounts) presented during installation process could be installed also later, when FrontAccounting is already in use.
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-After successful installation please remove or rename your install directory for safety reasons. You won't need it any more.
+## Code of Conduct
 
-### 4. Logging In For the First Time
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-Open a browser and enter the URL for the web server directory where FrontAccounting is installed. Enter the user name  **admin** and use password declared during install process to login as company administrator. Now you can proceed with configuration process setting up additional user accounts, creating fiscal years, defining additional currencies, GL accounts etc. All configuration options available in application are described in [FrontAccounting Wiki](http://frontaccounting.com/fawiki/) available directly from Help links on every application page under ![Help](./themes/default/images/help.gif  "Help") icon.
- 
+## Security Vulnerabilities
 
-## Troubleshooting
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-If you encountered any problems with FrontAccounting configuration or usage, please consult your case with other users on [Frontaccounting forum](http://frontaccounting.com/punbb/index.php). If you think you have encountered a bug in application and after consulting other community members you still are sure this is really a bug, please fill in a report in project [Mantis bugtracker](http://mantis.frontaccounting.com) with all details which allow development team reproduce the problem, and hopefully fix it. Keep in mind, that  [GitHub](http://github.com/FrontAccountingERP/FA) page is mainly passive mirror for project based on SorceForge, so posting bug reports here is at least suboptimal.
+## License
+
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
