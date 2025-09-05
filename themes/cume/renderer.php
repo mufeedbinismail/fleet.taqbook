@@ -98,8 +98,9 @@ class renderer
                 if ($appfunction->label == "") {
                     echo "<div class='col-span-1'>&nbsp;<br></div>";
                 } elseif ($user->can_access_page($appfunction->access)) {
+                    $access = access_string($appfunction->label);
                     echo "<div class='col-span-1 flex items-center'>";
-                    echo $img . "<a href='" . $appfunction->link . "' class='text-primary-txt hover:underline ml-2'>" . $appfunction->label . "</a>";
+                    echo $img . "<a href='" . $this->url($appfunction->link) . "' class='text-primary-txt hover:underline ml-2' {$access[1]}>{$access[0]}</a>";
                     echo "</div>";
                 } elseif (!$user->hide_inaccessible_menu_items()) {
                     echo "<div class='col-span-1 flex items-center'>";
@@ -118,8 +119,9 @@ class renderer
                     if ($appfunction->label == "") {
                         echo "<div class='col-span-1'>&nbsp;<br></div>";
                     } elseif ($user->can_access_page($appfunction->access)) {
+                        $access = access_string($appfunction->label);
                         echo "<div class='col-span-1 flex items-center'>";
-                        echo $img . "<a href='" . $appfunction->link . "' class='text-primary-txt hover:underline ml-2'>" . $appfunction->label . "</a>";
+                        echo $img . "<a href='" . $this->url($appfunction->link) . "' class='text-primary-txt hover:underline ml-2' {$access[1]}>{$access[0]}</a>";
                         echo "</div>";
                     } elseif (!$user->hide_inaccessible_menu_items()) {
                         echo "<div class='col-span-1 flex items-center'>";
@@ -135,6 +137,14 @@ class renderer
             echo "</div>";
         }
         echo "</div>";
+    }
+
+    protected function url($link) {
+        global $path_to_root;
+
+        if ($link[0] !=  '/') $link = '/' . $link;
+        
+        return $path_to_root . $link;
     }
 
     protected function shouldShowFooter($no_menu, $is_index) {
