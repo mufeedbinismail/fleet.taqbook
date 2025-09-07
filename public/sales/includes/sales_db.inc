@@ -26,6 +26,7 @@ include_once($path_to_root . "/sales/includes/db/cust_trans_details_db.inc");
 include_once($path_to_root . "/sales/includes/db/payment_db.inc");
 include_once($path_to_root . "/sales/includes/db/branches_db.inc");
 include_once($path_to_root . "/sales/includes/db/customers_db.inc");
+include_once($path_to_root . "/sales/includes/db/marketplaces_db.inc");
 
 //----------------------------------------------------------------------------------------
 // add a debtor-related gl transaction

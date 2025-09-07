@@ -337,6 +337,10 @@ $opts = array(		// default options
 	        			$link = $path_to_root . "/sales/inquiry/customers_list.php?popup=1&client_id=" . $id;
 	        			$img_title = _("Search customers");
 	        			break;
+	      			case "marketplace":
+	        			$link = $path_to_root . "/sales/inquiry/marketplaces_list.php?popup=1&client_id=" . $id;
+	        			$img_title = _("Search marketplaces");
+	        			break;
 	      			case "branch":
 	        			$link = $path_to_root . "/sales/inquiry/customer_branches_list.php?popup=1&client_id=" . $id . "#customer_id";
 	        			$img_title = _("Search branches");
@@ -623,6 +627,68 @@ function customer_list_row($label, $name, $selected_id=null, $all_option = false
 
 	echo "<tr><td class='label'>$label</td><td nowrap>";
 	echo customer_list($name, $selected_id, $all_option, $submit_on_change,
+		$show_inactive, $editkey);
+	echo "</td>\n</tr>\n";
+}
+
+//----------------------------------------------------------------------------------------------
+
+function marketplace_list($name, $selected_id=null, $spec_option=false, $submit_on_change=false, 
+	$show_inactive=false, $editkey = false)
+{
+	global $SysPrefs;
+	
+    $sql = "SELECT id, code, `name`, payable_account, inactive FROM ".TB_PREF."marketplaces ";
+
+	if ($editkey)
+		set_editor('marketplace', $name, $editkey);
+
+	return combo_input(
+        $name,
+        $selected_id,
+        $sql,
+        'id',
+        'name',
+        array(
+            'format' => fn ($row) => (
+                empty($SysPrefs->prefs['shortname_name_in_list'])
+                    ? $row['name']
+                    : $row['code'] . ' - ' . $row['name']
+            ),
+            'order' => array('name'),
+            'search_box' => false,
+            'type' => 1,
+            'size' => 20,
+            'search' => array("code","name","payable_account"),        
+            'spec_option' => $spec_option === true ? _("All Marketplaces") : $spec_option,
+            'spec_id' => ALL_TEXT,
+            'select_submit'=> $submit_on_change,
+            'async' => false,
+            'sel_hint' => _('Select marketplace'),
+            'show_inactive' => $show_inactive,
+            'editlink' => $editkey ? add_edit_combo('marketplace') : false
+        ),
+        "marketplace"
+    );
+}
+
+function marketplace_list_cells($label, $name, $selected_id=null, $all_option=false, 
+	$submit_on_change=false, $show_inactive=false, $editkey = false)
+{
+	if ($label != null)
+		echo "<td>$label</td>\n";
+	echo "<td nowrap>";
+	echo marketplace_list($name, $selected_id, $all_option, $submit_on_change,
+		$show_inactive, $editkey);
+	echo "</td>\n";
+}
+
+function marketplace_list_row($label, $name, $selected_id=null, $all_option = false, 
+	$submit_on_change=false, $show_inactive=false, $editkey = false)
+{
+
+	echo "<tr><td class='label'>$label</td><td nowrap>";
+	echo marketplace_list($name, $selected_id, $all_option, $submit_on_change,
 		$show_inactive, $editkey);
 	echo "</td>\n</tr>\n";
 }

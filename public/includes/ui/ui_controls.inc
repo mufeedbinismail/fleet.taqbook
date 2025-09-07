@@ -511,7 +511,9 @@ $popup_editors = array(
 	'item' => array('/inventory/manage/items.php?stock_id=', 
 		115, _("Items"), 1000, 500),
 	'fa_item' => array('/inventory/manage/items.php?FixedAsset=1&stock_id=', 
-		115, _("Items"), 1000, 500)
+		115, _("Items"), 1000, 500),
+    'marketplace' => array('/sales/manage/marketplaces.php?debtor_no=', 
+		116, _("Marketplace"), 900, 550),
 );
 /*
 	Bind editors for various selectors.

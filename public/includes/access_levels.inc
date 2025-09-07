@@ -168,8 +168,7 @@ $security_areas =array(
 //
 // Market Place Sales related functionality
 //
-
-
+    'SA_MARKETPLACE' => array(SS_MP_SALES_C|1, _("Market Places configuration")),
 
 //
 // Purchase related functions

@@ -13,7 +13,7 @@ class marketplaces_app extends application
 
 
 		$this->add_module(_("Maintenance"));
-
-
+		$this->add_lapp_function(2, _("Add and Manage &Marketplaces"),
+			"sales/manage/marketplaces.php", 'SA_MARKETPLACE', MENU_ENTRY);
 	}
 }
