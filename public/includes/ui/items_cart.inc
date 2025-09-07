@@ -147,7 +147,7 @@ class items_cart
         $gl_type = is_subledger_account($code_id);
         if ($person_id != null && $gl_type)
 		{
-			$this->gl_items[$index]->person_type_id = $gl_type > 0 ? PT_CUSTOMER : PT_SUPPLIER;
+			$this->gl_items[$index]->person_type_id = get_subaccount_person_type($gl_type);
 			$data = get_subaccount_data($code_id, $person_id);
 			$this->gl_items[$index]->person_name = $data['name'];
 			$this->gl_items[$index]->branch_id = $data['id'];
@@ -220,11 +220,11 @@ class items_cart
 	//
 	//	Check if cart contains virtual subaccount (AP/AR) postings
 	//
-	function has_sub_accounts()
+	function has_sub_accounts($taxable_only=false)
 	{
 		foreach ($this->gl_items as $gl_item)
 		{
-			if (is_subledger_account($gl_item->code_id))
+			if (is_subledger_account($gl_item->code_id, $taxable_only))
 				return true;
 		}
 		return false;
@@ -263,9 +263,9 @@ class items_cart
 
 		foreach($this->gl_items as $gl)
 		{
-            if ($person_type = is_subledger_account($gl->code_id))
+            if ($person_type = is_subledger_account($gl->code_id, true))
 			{
-				$tax_info['person_type'] = $person_type < 0 ? PT_SUPPLIER : PT_CUSTOMER;
+				$tax_info['person_type'] = get_subaccount_person_type($person_type);
 				$tax_info['person_id'] = $gl->person_id;
 
 				if ($tax_info['person_type'] == PT_CUSTOMER)
@@ -522,9 +522,9 @@ class gl_item
 		$this->code_id = $code_id;
 		$this->person_id = $person_id;
         $gl_type = is_subledger_account($code_id);
-        if ($person_id != null  && $gl_type)
+        if ($person_id != null && $gl_type)
 		{
-			$this->person_type_id = $gl_type > 0 ? PT_CUSTOMER : PT_SUPPLIER;
+			$this->person_type_id = get_subaccount_person_type($gl_type);
 			$data = get_subaccount_data($code_id, $person_id);
 			$this->person_name = $data['name'];
 			$this->branch_id = $data['id'];

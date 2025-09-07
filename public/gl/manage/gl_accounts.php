@@ -172,6 +172,12 @@ function can_delete($selected_account)
 		return false;
 	}
 
+    if (gl_account_in_marketplaces($selected_account))
+    {
+        display_error(_("Cannot delete this account because it is used by one or more Marketplaces."));
+        return false;
+    }
+
 	return true;
 }
 

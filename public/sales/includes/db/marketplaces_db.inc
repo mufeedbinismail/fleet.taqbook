@@ -74,6 +74,12 @@ function get_marketplace_by_name($name)
     return db_fetch($result);
 }
 
+function get_marketplace_name($id)
+{
+    $data = get_marketplace($id);
+    return $data ? $data['name'] : '';
+}
+
 function db_has_marketplaces()
 {
     return check_empty_result("SELECT COUNT(*) FROM ".TB_PREF."marketplaces");

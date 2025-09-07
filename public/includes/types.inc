@@ -57,6 +57,11 @@ define('ST_BANKACCOUNT', 45);
 define ('ST_STATEMENT', 91);
 define ('ST_CHEQUE', 92);
 
+// Subledger types
+define('SLT_MARKETPLACE', -2);
+define('SLT_AP', -1);
+define('SLT_AR', 1);
+
 // document inheritance
 $document_child_types = array(
 		ST_SALESQUOTE => ST_SALESORDER,
@@ -103,6 +108,7 @@ define('PT_CUSTOMER', 2);
 define('PT_SUPPLIER', 3);
 define('PT_QUICKENTRY', 4);
 define('PT_DIMESION', 5);
+define('PT_MARKETPLACE', 6);
 
 function payment_person_currency($type, $person_id)  {
 	switch ($type)
@@ -110,6 +116,7 @@ function payment_person_currency($type, $person_id)  {
 		case PT_MISC :
 		case PT_QUICKENTRY :
 		case PT_WORKORDER :
+		case PT_MARKETPLACE :
 			return get_company_currency();
 
 		case PT_CUSTOMER :
@@ -140,6 +147,8 @@ function payment_person_name($type, $person_id, $full=true) {
 			return ($full ?$payment_person_types[$type] . " ":"") . sprintf("[%05s] %s", $person_id, get_customer_name($person_id));
 		case PT_SUPPLIER :
 			return ($full ? $payment_person_types[$type] . " ":"") . sprintf("[%05s] %s", $person_id, get_supplier_name($person_id));
+		case PT_MARKETPLACE :
+			return ($full ? $payment_person_types[$type] . " ":"") . sprintf("[%05s] %s", $person_id, get_marketplace_name($person_id));
 		default :
 			return '';
 	}
@@ -158,6 +167,8 @@ function payment_person_has_items($type) {
 			return db_has_customers();
 		case PT_SUPPLIER :
 			return db_has_suppliers();
+		case PT_MARKETPLACE :
+			return db_has_marketplaces();
 		default :
 			display_db_error("Invalid type sent to has_items", "");
 			return false;

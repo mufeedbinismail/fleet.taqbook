@@ -209,36 +209,96 @@ function gl_account_in_quick_entry_lines($acc)
 	$myrow = db_fetch_row($result);
 	return ($myrow[0] > 0); 
 }
+
+function gl_account_in_marketplaces($acc)
+{
+	$acc = db_escape($acc);
+
+	$sql= "SELECT COUNT(*)
+		FROM ".TB_PREF."marketplaces
+		WHERE payable_account=$acc";
+	$result = db_query($sql,"Couldn't test for existing marketplaces GL codes");
+
+	$myrow = db_fetch_row($result);
+	return ($myrow[0] > 0); 
+}
+
 //
 //	Returns n>0 when account is AR, n<0 when account is AP
 //  (priority for AR accounts)
 //
-function is_subledger_account($account)
+function is_subledger_account($account, $taxable_only=false)
 {
-	$sql = "SELECT 1 
-		FROM ".TB_PREF."cust_branch
-		WHERE receivables_account=".db_escape($account)
-	." UNION
-		SELECT -1 
-		FROM ".TB_PREF."suppliers 
-		WHERE payable_account=".db_escape($account);
+    $account = db_escape($account);
+    
+    $sql = "SELECT 
+        CASE 
+            WHEN EXISTS (SELECT 1 FROM ".TB_PREF."cust_branch WHERE receivables_account={$account} LIMIT 1) THEN ".SLT_AR."
+            WHEN EXISTS (SELECT 1 FROM ".TB_PREF."suppliers WHERE payable_account={$account} LIMIT 1) THEN ".SLT_AP."
+            WHEN EXISTS (SELECT 1 FROM ".TB_PREF."marketplaces WHERE payable_account={$account} LIMIT 1) THEN ".SLT_MARKETPLACE."
+            ELSE NULL
+        END as sl_type";
 
-	$result = db_query($sql,"Couldn't test AR/AP account");
-	$myrow = db_fetch_row($result);
-	return $myrow == false ? 0 : $myrow[0];
+	$result = db_query($sql, "Couldn't test AR/AP account");
+	$myrow = db_fetch_assoc($result);
+
+    if ($myrow == false)
+        return null;
+
+    if (
+        !$taxable_only ||
+        ($taxable_only && in_array($myrow['sl_type'], array(SLT_AP, SLT_AR)))
+    ) {
+        return $myrow['sl_type'];
+    }
+
+	return null;
 }
 
-function get_subaccount_data($code_id, $person_id)
+function get_subaccount_person_type($gl_type)
 {
-	$sql = "SELECT debtor_ref as name, branch_code as id 
-		FROM ".TB_PREF."cust_branch branch 
-			LEFT JOIN ".TB_PREF."debtors_master d ON branch.debtor_no = d.debtor_no
-		WHERE branch.receivables_account=".db_escape($code_id)
-			." AND d.debtor_no=".db_escape($person_id)
-		." UNION SELECT supp_ref as name, '' as id 
-			FROM ".TB_PREF."suppliers supp
-			WHERE supplier_id=".db_escape($person_id)." 
-				AND payable_account=".db_escape($code_id);
+    switch ($gl_type) {
+        case SLT_AR:
+            return PT_CUSTOMER;
+        case SLT_AP:
+            return PT_SUPPLIER;
+        case SLT_MARKETPLACE:
+            return PT_MARKETPLACE;
+        default:
+            return null;
+    }
+}
+
+function get_subaccount_data($code_id, $person_id, $sl_type=null)
+{
+    if ($sl_type === null) {
+        $sl_type = is_subledger_account($code_id);
+    }
+
+    switch ($sl_type) {
+        case SLT_AR:
+            $sql = "SELECT debtor_ref as name, branch_code as id 
+                FROM ".TB_PREF."cust_branch branch 
+                    LEFT JOIN ".TB_PREF."debtors_master d ON branch.debtor_no = d.debtor_no
+                WHERE branch.receivables_account=".db_escape($code_id)
+                    ." AND d.debtor_no=".db_escape($person_id);
+            break;
+        case SLT_AP:
+            $sql = "SELECT supp_ref as name, '' as id 
+                FROM ".TB_PREF."suppliers supp
+                WHERE payable_account=".db_escape($code_id)." 
+                    AND supplier_id=".db_escape($person_id);
+            break;
+        case SLT_MARKETPLACE:
+            $sql = "SELECT name, '' as id
+                FROM ".TB_PREF."marketplaces
+                WHERE payable_account=".db_escape($code_id)." 
+                    AND id=".db_escape($person_id);
+            break;
+        default:
+            return null;
+    }
+
 	$result = db_query($sql, 'cannot retrieve counterparty name');
 
 	return  db_fetch($result);
@@ -246,19 +306,9 @@ function get_subaccount_data($code_id, $person_id)
 
 function get_subaccount_name($code_id, $person_id)
 {
-	$sql = "SELECT debtor_ref as ref
-		FROM ".TB_PREF."cust_branch branch
-			LEFT JOIN ".TB_PREF."debtors_master d ON branch.debtor_no = d.debtor_no
-		WHERE branch.receivables_account=".db_escape($code_id)
-			." AND d.debtor_no=".db_escape($person_id)
-		." UNION SELECT supp_ref as ref
-			FROM ".TB_PREF."suppliers supp
-			WHERE payable_account=".db_escape($code_id)." 
-				AND supplier_id=".db_escape($person_id);
-	$result = db_query($sql, 'cannot retrieve counterparty name');
-	$row = db_fetch($result);
-
-	return  $row ? $row['ref'] : '';
+    $data = get_subaccount_data($code_id, $person_id);
+    
+    return $data ? $data['name'] : '';
 }
 
 function gl_account_in_bank_accounts($acc)

@@ -2704,31 +2704,54 @@ function refline_list_row($label, $name, $type, $selected_id=null, $spec_option=
 
 function subledger_list($name, $account, $selected_id=null)
 {
-
 	$type = is_subledger_account($account);
-	if (!$type)
-		return '';
 
-	if($type > 0)
-		$sql = "SELECT DISTINCT d.debtor_no as id, debtor_ref as name 
-		FROM "
-		.TB_PREF."debtors_master d,"
-		.TB_PREF."cust_branch c
-		WHERE d.debtor_no=c.debtor_no AND NOT d.inactive AND c.receivables_account=".db_escape($account);
-	else
-		$sql = "SELECT supplier_id as id, supp_ref as name 
-		FROM "
-		.TB_PREF."suppliers s
-		WHERE NOT s.inactive AND s.payable_account=".db_escape($account);
+    $account = db_escape($account);
+    switch ($type) {
+        case SLT_AP:
+            $sql = "SELECT supplier_id as id, concat_ws(' - ', supp_ref, supp_name) as name 
+                FROM "
+                .TB_PREF."suppliers s
+                WHERE
+                    NOT s.inactive
+                    AND s.payable_account={$account}";
+            break;
+        case SLT_AR:
+            $sql = "SELECT DISTINCT d.debtor_no as id, concat_ws(' - ', d.debtor_ref, c.br_name) as name
+                FROM "
+                .TB_PREF."debtors_master d,"
+                .TB_PREF."cust_branch c
+                WHERE
+                    d.debtor_no=c.debtor_no
+                    AND NOT d.inactive
+                    AND c.receivables_account={$account}";
+            break;
+        case SLT_MARKETPLACE:
+            $sql = "SELECT id, concat_ws(' - ', code, name) as name
+                FROM "
+                .TB_PREF."marketplaces
+                WHERE
+                    NOT inactive
+                    AND payable_account={$account}";
+            break;
+        default:
+            return '';
+    }
 
-	$mode = get_company_pref('no_customer_list');
-
-	return combo_input($name, $selected_id, $sql, 'id', 'name',
-	array(
-		'type' => 1,
-		'size' => 20,
-		'async' => false,
-	) );
+	return combo_input(
+        $name,
+        $selected_id,
+        $sql,
+        'id',
+        'name',
+        array(
+            'type' => 1,
+            'size' => 20,
+            'async' => false,
+            'spec_option' => _("-- select --"),
+            'spec_id' => '',
+        )
+    );
 }
 
 function subledger_list_cells($label, $name, $account, $selected_id=null)
@@ -2740,8 +2763,7 @@ function subledger_list_cells($label, $name, $account, $selected_id=null)
 	echo "</td>\n";
 }
 
-function subledger_list_row($label, $name, $selected_id=null, $all_option = false, 
-	$submit_on_change=false, $show_inactive=false, $editkey = false)
+function subledger_list_row($label, $name, $account, $selected_id=null)
 {
 	echo "<tr><td class='label'>$label</td><td nowrap>";
 	echo subledger_list($name, $account, $selected_id);

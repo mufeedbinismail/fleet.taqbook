@@ -147,7 +147,7 @@ function create_cart($type=0, $trans_no=0)
 		{
 			$net_sum = 0;
 			foreach($cart->gl_items as $gl)
-                if (!is_tax_account($gl->code_id) && !is_subledger_account($gl->code_id))
+                if (!is_tax_account($gl->code_id) && !is_subledger_account($gl->code_id, true))
 					$net_sum += $gl->amount;
 
 			$ex_net = abs($net_sum) - array_sum($tax_info['net_amount']);
@@ -281,7 +281,7 @@ if (isset($_POST['Process']))
 				$net_amount += input_num('net_amount_'.$tax_id);
 			}
 			// in case no tax account used we have to guss tax register on customer/supplier used.
-			if ($net_amount && !$_SESSION['journal_items']->has_taxes() && !$_SESSION['journal_items']->has_sub_accounts())
+			if ($net_amount && !$_SESSION['journal_items']->has_taxes() && !$_SESSION['journal_items']->has_sub_accounts(true))
 			{
 				display_error(_("Cannot determine tax register to be used. You have to make at least one posting either to tax or customer/supplier account to use tax register."));
 				$_POST['tabs_gl'] = true; // force gl tab select
