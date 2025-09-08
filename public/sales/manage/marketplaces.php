@@ -122,6 +122,14 @@ function handle_delete()
 {
     global $Ajax, $selected_id;
 	
+	if (key_in_foreign_table($selected_id, 'debtor_trans', 'marketplace_id')) {
+        display_error(_("This marketplace cannot be deleted because there are transactions that refer to it."));
+        return;
+	} else if (key_in_foreign_table($selected_id, 'sales_orders', 'marketplace_id')) {
+        display_error(_("Cannot delete the marketplace record because orders have been created against it."));
+        return;
+    }
+	
     delete_marketplace($selected_id);
 
     display_notification(_("Selected marketplace has been deleted."));

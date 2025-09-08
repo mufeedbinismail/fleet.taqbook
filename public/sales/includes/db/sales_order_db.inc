@@ -22,7 +22,7 @@ function add_sales_order(&$order)
 	$total = $order->get_trans_total();
 	$sql = "INSERT INTO ".TB_PREF."sales_orders (order_no, type, debtor_no, trans_type, branch_code, customer_ref,
         reference, tracking_no, comments, ord_date, order_type, ship_via, deliver_to, delivery_address, contact_phone,
-		freight_cost, from_stk_loc, delivery_date, payment_terms, total, prep_amount)
+		freight_cost, from_stk_loc, delivery_date, payment_terms, total, prep_amount, marketplace_id)
 		VALUES (" .db_escape($order_no) . "," .db_escape($order_type) . "," . db_escape($order->customer_id) .
 		 ", " .db_escape($order->trans_type) . "," .db_escape($order->Branch) . ", ".
 			db_escape($order->cust_ref) .",". 
@@ -40,7 +40,8 @@ function add_sales_order(&$order)
 			db_escape($del_date) . "," .
 			db_escape($order->payment) . "," .
 			db_escape($total) . "," .
-			db_escape($order->prep_amount).")";
+			db_escape($order->prep_amount) . "," .
+			db_escape($order->marketplace_id, true) . ")";
 
 	db_query($sql, "order Cannot be Added");
 
@@ -137,6 +138,7 @@ function update_sales_order($order)
 
 	$sql = "UPDATE ".TB_PREF."sales_orders SET type =".db_escape($order->so_type)." ,
 		debtor_no = " . db_escape($order->customer_id) . ",
+		marketplace_id = " . db_escape($order->marketplace_id, true) . ",
 		branch_code = " . db_escape($order->Branch) . ",
 		customer_ref = ". db_escape($order->cust_ref) .",
 		reference = ". db_escape($order->reference) .",
@@ -309,6 +311,7 @@ function read_sales_order($order_no, &$order, $trans_type)
 	$order->trans_type = $myrow['trans_type'];
 	$order->so_type =  $myrow["type"];
 	$order->trans_no = array($order_no=> $myrow["version"]);
+    $order->marketplace_id = $myrow["marketplace_id"];
 
 	$order->set_customer($myrow["debtor_no"], $myrow["name"],
 	  $myrow["curr_code"], $myrow["discount"], $myrow["payment_terms"]);

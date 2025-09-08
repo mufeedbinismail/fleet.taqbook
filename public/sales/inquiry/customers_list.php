@@ -20,6 +20,9 @@ include_once($path_to_root . "/includes/session.inc");
 include_once($path_to_root . "/includes/ui.inc");
 include_once($path_to_root . "/sales/includes/db/customers_db.inc");
 
+if (!user_check_access($page_security) && user_check_access('SA_MP_SALESORDER'))
+    $page_security = 'SA_MP_SALESORDER';
+
 $mode = get_company_pref('no_customer_list');
 if ($mode != 0)
 	$js = get_js_set_combo_item();

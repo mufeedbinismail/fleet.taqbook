@@ -20,6 +20,9 @@ include_once($path_to_root . "/includes/session.inc");
 include_once($path_to_root . "/includes/ui.inc");
 include_once($path_to_root . "/sales/includes/db/branches_db.inc");
 
+if (!user_check_access($page_security) && user_check_access('SA_MP_SALESORDER'))
+    $page_security = 'SA_MP_SALESORDER';
+    
 $js = get_js_select_combo_item();
 
 page(_($help_context = "Customer Branches"), true, false, "", $js);

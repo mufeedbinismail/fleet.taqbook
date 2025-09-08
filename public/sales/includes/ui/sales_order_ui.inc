@@ -363,6 +363,15 @@ function display_order_header(&$order, $editable, $date_text)
 
 	table_section(2);
 
+    if ($order->is_marketplace_trans) {
+        if (!$editable) {
+            label_row(_("Marketplace:"), get_marketplace_name($order->marketplace_id));
+            hidden('marketplace_id', $order->marketplace_id);
+        } else {
+            marketplace_list_row(_("Marketplace:"), 'marketplace_id', null, '-- select --', false, false, true);
+        }
+    }
+
 	if (!is_company_currency($order->customer_currency) && in_array($order->trans_type, array(ST_SALESINVOICE, ST_CUSTDELIVERY)))
 	{
 		label_row(_("Customer Currency:"), $order->customer_currency);

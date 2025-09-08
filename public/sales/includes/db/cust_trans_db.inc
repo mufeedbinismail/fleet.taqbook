@@ -57,7 +57,7 @@ function write_customer_trans($trans_type, $trans_no, $debtor_no, $BranchNo,
 	$date_, $reference, $Total, $discount=0, $Tax=0, $Freight=0, $FreightTax=0,
 	$sales_type=0, $order_no=0, $ship_via=0, $due_date="",
 	$AllocAmt=0, $rate=0, $dimension_id=0, $dimension2_id=0, $payment_terms=null,
-    $tax_included=0, $prep_amount=0, $tracking_no=null)
+    $tax_included=0, $prep_amount=0, $tracking_no=null, $marketplace_id=null)
 {
 	$new = $trans_no==0;
 	$curr = get_customer_currency($debtor_no);
@@ -80,7 +80,7 @@ function write_customer_trans($trans_type, $trans_no, $debtor_no, $BranchNo,
 
 	$sql = "INSERT INTO ".TB_PREF."debtor_trans (
 		trans_no, type,
-		debtor_no, branch_code,
+		debtor_no, branch_code, marketplace_id,
 		tran_date, due_date,
 		reference, tracking_no, tpe,
 		order_, ov_amount, ov_discount,
@@ -88,7 +88,7 @@ function write_customer_trans($trans_type, $trans_no, $debtor_no, $BranchNo,
 		rate, ship_via, alloc,
 		dimension_id, dimension2_id, payment_terms, tax_included, prep_amount
 		) VALUES (".db_escape($trans_no).", ".db_escape($trans_type).",
-		".db_escape($debtor_no).", ".db_escape($BranchNo).",
+		".db_escape($debtor_no).", ".db_escape($BranchNo).", ".db_escape($marketplace_id, true).",
 		'$SQLDate', '$SQLDueDate', ".db_escape($reference).", ".db_escape($tracking_no, true).",
 		".db_escape($sales_type).", ".db_escape($order_no).", $Total, ".db_escape($discount).", $Tax,
 		".db_escape($Freight).",
@@ -99,6 +99,7 @@ function write_customer_trans($trans_type, $trans_no, $debtor_no, $BranchNo,
 	} else {	// may be optional argument should stay unchanged ?
 	$sql = "UPDATE ".TB_PREF."debtor_trans SET
 		debtor_no=".db_escape($debtor_no)." , branch_code=".db_escape($BranchNo).",
+		marketplace_id=".db_escape($marketplace_id, true).",
 		tran_date='$SQLDate', due_date='$SQLDueDate',
 		reference=".db_escape($reference).", tpe=".db_escape($sales_type).", order_=".db_escape($order_no).",
 		ov_amount=$Total, ov_discount=".db_escape($discount).", ov_gst=$Tax,

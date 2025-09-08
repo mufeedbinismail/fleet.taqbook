@@ -23,6 +23,8 @@ include_once($path_to_root . "/taxes/tax_calc.inc");
 
 class Cart 
 {
+    var $is_marketplace_trans = false; // true if this transaction is created from marketplace order
+    var $marketplace_id;
 	var $trans_type; // invoice, order, quotation, delivery note ...
 	var $trans_no = array();// array (num1=>ver1,..) or 0 for new
 	var $so_type = 0;		// for sales order: simple=0 template=1
@@ -92,8 +94,9 @@ class Cart
 	//  $trans_no!=0 && $prepare_child==true => prepare for child doc entry
 	//	$prepare_child is set to ST_SALESINVOICE for prepayment invoices
 	//
-	function __construct($type, $trans_no=0, $prepare_child=false) {
-		/*Constructor function initialises a new shopping cart */
+	function __construct($type, $trans_no=0, $prepare_child=false, $is_marketplace_trans = false) {
+        /*Constructor function initialises a new shopping cart */
+        $this->is_marketplace_trans = $is_marketplace_trans;
 		$this->line_items = array();
 		$this->sales_type = "";
 		if ($type == ST_SALESQUOTE)
@@ -105,6 +108,11 @@ class Cart
 		$this->pos = get_sales_point(user_pos());
 		$this->read($type, $trans_no, $prepare_child);
 		$this->cart_id = uniqid('');
+
+        // After reading the document, set the flag is marketplace_id is set
+        if ($this->marketplace_id) {
+            $this->is_marketplace_trans = true;
+        }
 	}
 
 	/*

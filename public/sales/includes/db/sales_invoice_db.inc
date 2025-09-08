@@ -91,7 +91,7 @@ function write_sales_invoice(&$invoice)
 		$invoice->sales_type, $sales_order, $invoice->ship_via, 
 		$invoice->due_date, 0, 0, $invoice->dimension_id, 
 		$invoice->dimension2_id, $invoice->payment, $invoice->tax_included,
-        $invoice->prep_amount, $invoice->tracking_no);
+        $invoice->prep_amount, $invoice->tracking_no, $invoice->marketplace_id);
 
 	if ($trans_no == 0) {
 		$invoice->trans_no = array($invoice_no=>0);

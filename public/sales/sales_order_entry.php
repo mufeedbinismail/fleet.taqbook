@@ -28,25 +28,50 @@ include_once($path_to_root . "/sales/includes/sales_db.inc");
 include_once($path_to_root . "/sales/includes/db/sales_types_db.inc");
 include_once($path_to_root . "/reporting/includes/reporting.inc");
 
-set_page_security( @$_SESSION['Items']->trans_type,
-	array(	ST_SALESORDER=>'SA_SALESORDER',
-			ST_SALESQUOTE => 'SA_SALESQUOTE',
-			ST_CUSTDELIVERY => 'SA_SALESDELIVERY',
-			ST_SALESINVOICE => 'SA_SALESINVOICE'),
-	array(	'NewOrder' => 'SA_SALESORDER',
-			'ModifyOrderNumber' => 'SA_SALESORDER',
-			'AddedID' => 'SA_SALESORDER',
-			'UpdatedID' => 'SA_SALESORDER',
-			'NewQuotation' => 'SA_SALESQUOTE',
-			'ModifyQuotationNumber' => 'SA_SALESQUOTE',
-			'NewQuoteToSalesOrder' => 'SA_SALESQUOTE',
-			'AddedQU' => 'SA_SALESQUOTE',
-			'UpdatedQU' => 'SA_SALESQUOTE',
-			'NewDelivery' => 'SA_SALESDELIVERY',
-			'AddedDN' => 'SA_SALESDELIVERY', 
-			'NewInvoice' => 'SA_SALESINVOICE',
-			'AddedDI' => 'SA_SALESINVOICE'
-			)
+if (isset($_GET['ModifyOrderNumber']) && !isset($_GET['Marketplace'])) {
+    $_GET['Marketplace'] = get_sales_order_header($_GET['ModifyOrderNumber'], ST_SALESORDER)['marketplace_id'] ? 'Yes' : '';
+}
+
+set_page_security(
+    @$_SESSION['Items']->trans_type,
+    @$_SESSION['Items']->is_marketplace_trans
+        ? [
+            ST_SALESORDER =>'SA_MP_SALESORDER',
+            ST_CUSTDELIVERY => 'SA_MP_SALESDELIVERY',
+            ST_SALESINVOICE => 'SA_MP_SALESINVOICE'
+        ]
+        : [
+            ST_SALESORDER =>'SA_SALESORDER',
+            ST_SALESQUOTE => 'SA_SALESQUOTE',
+            ST_CUSTDELIVERY => 'SA_SALESDELIVERY',
+            ST_SALESINVOICE => 'SA_SALESINVOICE'
+        ],
+	isset($_GET['Marketplace']) 
+        ? [	
+            'NewOrder' => 'SA_MP_SALESORDER',
+            'AddedID' => 'SA_MP_SALESORDER',
+            'ModifyOrderNumber' => 'SA_MP_SALESORDER',
+            'UpdatedID' => 'SA_MP_SALESORDER',
+            'NewDelivery' => 'SA_MP_SALESDELIVERY',
+            'AddedDN' => 'SA_MP_SALESDELIVERY',
+            'NewInvoice' => 'SA_MP_SALESINVOICE',
+            'AddedDI' => 'SA_MP_SALESINVOICE',
+        ]
+        : [	
+            'NewOrder' => 'SA_SALESORDER',
+            'ModifyOrderNumber' => 'SA_SALESORDER',
+            'AddedID' => 'SA_SALESORDER',
+            'UpdatedID' => 'SA_SALESORDER',
+            'NewQuotation' => 'SA_SALESQUOTE',
+            'ModifyQuotationNumber' => 'SA_SALESQUOTE',
+            'NewQuoteToSalesOrder' => 'SA_SALESQUOTE',
+            'AddedQU' => 'SA_SALESQUOTE',
+            'UpdatedQU' => 'SA_SALESQUOTE',
+            'NewDelivery' => 'SA_SALESDELIVERY',
+            'AddedDN' => 'SA_SALESDELIVERY',
+            'NewInvoice' => 'SA_SALESINVOICE',
+            'AddedDI' => 'SA_SALESINVOICE',
+        ]
 );
 
 $js = '';
@@ -120,6 +145,7 @@ if (list_updated('branch_id')) {
 	$Ajax->activate('customer_id');
 }
 
+$marketplace_flg = isset($_GET['Marketplace']) ? 'Marketplace=Yes&' : '';
 if (isset($_GET['AddedID'])) {
 	$order_no = $_GET['AddedID'];
 
@@ -136,7 +162,7 @@ if (isset($_GET['AddedID'])) {
 
 	submenu_option(_("Work &Order Entry"),	"/manufacturing/work_order_entry.php?");
 
-	submenu_option(_("Enter a &New Order"),	"/sales/sales_order_entry.php?NewOrder=0");
+	submenu_option(_("Enter a &New Order"),	"/sales/sales_order_entry.php?{$marketplace_flg}NewOrder=0");
 
 	$order = get_sales_order_header($order_no, ST_SALESORDER);
 	$customer_id = $order['debtor_no'];	
@@ -224,12 +250,12 @@ if (isset($_GET['AddedID'])) {
 	submenu_option(_("Make &Invoice Against This Delivery"),
 		"/sales/customer_invoice.php?DeliveryNumber=$delivery");
 
-	if ((isset($_GET['Type']) && $_GET['Type'] == 1))
+	if ((isset($_GET['Type']) && $_GET['Type'] == 1) && $marketplace_flg == '')
 		submenu_option(_("Enter a New Template &Delivery"),
 			"/sales/inquiry/sales_orders_view.php?DeliveryTemplates=Yes");
 	else
 		submenu_option(_("Enter a &New Delivery"), 
-			"/sales/sales_order_entry.php?NewDelivery=0");
+			"/sales/sales_order_entry.php?{$marketplace_flg}NewDelivery=0");
 
 	submenu_option(_("Add an Attachment"), "/admin/attachments.php?filterType=".ST_CUSTDELIVERY."&trans_no=$delivery");
 
@@ -252,12 +278,12 @@ if (isset($_GET['AddedID'])) {
 
 	display_note(get_gl_view_str(ST_SALESINVOICE, $invoice, _("View the GL &Journal Entries for this Invoice")),0, 1);
 
-	if ((isset($_GET['Type']) && $_GET['Type'] == 1))
+	if ((isset($_GET['Type']) && $_GET['Type'] == 1) && $marketplace_flg == '')
 		submenu_option(_("Enter a &New Template Invoice"), 
 			"/sales/inquiry/sales_orders_view.php?InvoiceTemplates=Yes");
 	else
 		submenu_option(_("Enter a &New Direct Invoice"),
-			"/sales/sales_order_entry.php?NewInvoice=0");
+			"/sales/sales_order_entry.php?{$marketplace_flg}NewInvoice=0");
 
 	if ($row === false)
 		submenu_option(_("Entry &customer payment for this invoice"), "/sales/customer_payments.php?SInvoice=".$invoice);
@@ -315,6 +341,7 @@ function copy_to_cart()
 	$cart->customer_id	= $_POST['customer_id'];
 	$cart->Branch = $_POST['branch_id'];
 	$cart->sales_type = $_POST['sales_type'];
+    $cart->marketplace_id = $_POST['marketplace_id'];
 
 	if ($cart->trans_type!=ST_SALESORDER && $cart->trans_type!=ST_SALESQUOTE) { // 2008-11-12 Joe Hunt
 		$cart->dimension_id = $_POST['dimension_id'];
@@ -344,6 +371,7 @@ function copy_from_cart()
 	$_POST['ship_via'] = $cart->ship_via;
 
 	$_POST['customer_id'] = $cart->customer_id;
+    $_POST['marketplace_id'] = $cart->marketplace_id;
 
 	$_POST['branch_id'] = $cart->Branch;
 	$_POST['sales_type'] = $cart->sales_type;
@@ -378,7 +406,14 @@ function can_process() {
 		display_error(_("There is no customer selected."));
 		set_focus('customer_id');
 		return false;
-	} 
+	}
+
+    if (!get_post('marketplace_id') && $_SESSION['Items']->is_marketplace_trans) 
+    {
+        display_error(_("There is no marketplace selected."));
+        set_focus('marketplace_id');
+        return false;
+    }
 	
 	if (!get_post('branch_id')) 
 	{
@@ -511,20 +546,21 @@ if (isset($_POST['ProcessOrder']) && can_process()) {
 		$trans_no = key($_SESSION['Items']->trans_no);
 		$trans_type = $_SESSION['Items']->trans_type;
 		new_doc_date($_SESSION['Items']->document_date);
+        $marketplace_flag= $_SESSION['Items']->is_marketplace_trans ? "Marketplace=Yes&" : "";
 		processing_end();
 		if ($modified) {
 			if ($trans_type == ST_SALESQUOTE)
 				meta_forward($_SERVER['PHP_SELF'], "UpdatedQU=$trans_no");
 			else	
-				meta_forward($_SERVER['PHP_SELF'], "UpdatedID=$trans_no");
+				meta_forward($_SERVER['PHP_SELF'], "{$marketplace_flag}UpdatedID=$trans_no");
 		} elseif ($trans_type == ST_SALESORDER) {
-			meta_forward($_SERVER['PHP_SELF'], "AddedID=$trans_no");
+			meta_forward($_SERVER['PHP_SELF'], "{$marketplace_flag}AddedID=$trans_no");
 		} elseif ($trans_type == ST_SALESQUOTE) {
 			meta_forward($_SERVER['PHP_SELF'], "AddedQU=$trans_no");
 		} elseif ($trans_type == ST_SALESINVOICE) {
-			meta_forward($_SERVER['PHP_SELF'], "AddedDI=$trans_no&Type=$so_type");
+			meta_forward($_SERVER['PHP_SELF'], "{$marketplace_flag}AddedDI=$trans_no&Type=$so_type");
 		} else {
-			meta_forward($_SERVER['PHP_SELF'], "AddedDN=$trans_no&Type=$so_type");
+			meta_forward($_SERVER['PHP_SELF'], "{$marketplace_flag}AddedDN=$trans_no&Type=$so_type");
 		}
 	}	
 }
@@ -670,6 +706,7 @@ function create_cart($type, $trans_no)
 
 	processing_start();
 
+    $is_marketplace_trans = isset($_GET['Marketplace']);
 	if (isset($_GET['NewQuoteToSalesOrder']))
 	{
 		$trans_no = $_GET['NewQuoteToSalesOrder'];
@@ -679,7 +716,7 @@ function create_cart($type, $trans_no)
 	}	
 	elseif($type != ST_SALESORDER && $type != ST_SALESQUOTE && $trans_no != 0) { // this is template
 
-		$doc = new Cart(ST_SALESORDER, array($trans_no));
+		$doc = new Cart(ST_SALESORDER, array($trans_no), false, $is_marketplace_trans);
 		$doc->trans_type = $type;
 		$doc->trans_no = 0;
 		$doc->document_date = new_doc_date();
@@ -695,7 +732,7 @@ function create_cart($type, $trans_no)
 		}
 		$_SESSION['Items'] = $doc;
 	} else
-		$_SESSION['Items'] = new Cart($type, array($trans_no));
+		$_SESSION['Items'] = new Cart($type, array($trans_no), false, $is_marketplace_trans);
 	copy_from_cart();
 }
 
