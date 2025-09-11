@@ -25,6 +25,20 @@ include_once($path_to_root . "/reporting/includes/reporting.inc");
 include_once($path_to_root . "/taxes/tax_calc.inc");
 include_once($path_to_root . "/admin/db/shipping_db.inc");
 
+if (isset($_GET['ModifyInvoice']) && !isset($_GET['Marketplace'])) {
+    if (get_customer_trans($_GET['ModifyInvoice'], ST_SALESINVOICE)['marketplace_id']) {
+        $_GET['Marketplace'] = 'Yes';
+    }
+}
+
+if (isset($_GET['Marketplace']) || ($_SESSION['Items']->is_marketplace_trans ?? 0)) {
+    $_POST['is_marketplace_trans'] = 1;
+}
+
+if (check_value('is_marketplace_trans')) {
+    $page_security = 'SA_MP_SALESINVOICE';
+}
+
 $js = "";
 if ($SysPrefs->use_popup_windows) {
 	$js .= get_js_open_window(900, 500);
@@ -49,6 +63,7 @@ page($_SESSION['page_title'], false, false, "", $js);
 
 check_edit_conflicts(get_post('cart_id'));
 
+$marketplace_flg = check_value('is_marketplace_trans') ? 'Marketplace=Yes&' : '';
 if (isset($_GET['AddedID'])) {
 
 	$invoice_no = $_GET['AddedID'];
@@ -63,7 +78,7 @@ if (isset($_GET['AddedID'])) {
 
 	display_note(get_gl_view_str($trans_type, $invoice_no, _("View the GL &Journal Entries for this Invoice")),1);
 
-	hyperlink_params("$path_to_root/sales/inquiry/sales_deliveries_view.php", _("Select Another &Delivery For Invoicing"), "OutstandingOnly=1");
+	hyperlink_params("$path_to_root/sales/inquiry/sales_deliveries_view.php", _("Select Another &Delivery For Invoicing"), "{$marketplace_flg}OutstandingOnly=1");
 
 	if (!db_num_rows(get_allocatable_from_cust_transactions(null, $invoice_no, $trans_type)))
 		hyperlink_params("$path_to_root/sales/customer_payments.php", _("Entry &customer payment for this invoice"),
@@ -85,7 +100,7 @@ if (isset($_GET['AddedID'])) {
 	display_note(print_document_link($invoice_no."-".$trans_type, _("&Print This Invoice"), true, ST_SALESINVOICE));
 	display_note(print_document_link($invoice_no."-".$trans_type, _("&Email This Invoice"), true, ST_SALESINVOICE, false, "printlink", "", 1),1);
 
-	hyperlink_no_params($path_to_root . "/sales/inquiry/customer_inquiry.php", _("Select Another &Invoice to Modify"));
+	hyperlink_no_params($path_to_root . "/sales/inquiry/customer_inquiry.php", _("Select Another &Invoice to Modify"), "{$marketplace_flg}");
 
 	display_footer_exit();
 
@@ -124,7 +139,7 @@ if ( (isset($_GET['DeliveryNumber']) && ($_GET['DeliveryNumber'] > 0) )
 
 	if ($dn->count_items() == 0) {
 		hyperlink_params($path_to_root . "/sales/inquiry/sales_deliveries_view.php",
-			_("Select a different delivery to invoice"), "OutstandingOnly=1");
+			_("Select a different delivery to invoice"), "{$marketplace_flg}OutstandingOnly=1");
 		die ("<br><b>" . _("There are no delivered items with a quantity left to invoice. There is nothing left to invoice.") . "</b>");
 	}
 
@@ -177,7 +192,7 @@ elseif (!processing_active()) {
 	/* This page can only be called with a delivery for invoicing or invoice no for edit */
 	display_error(_("This page can only be opened after delivery selection. Please select delivery to invoicing first."));
 
-	hyperlink_no_params("$path_to_root/sales/inquiry/sales_deliveries_view.php", _("Select Delivery to Invoice"));
+	hyperlink_no_params("$path_to_root/sales/inquiry/sales_deliveries_view.php", _("Select Delivery to Invoice"), "{$marketplace_flg}");
 
 	end_page();
 	exit;
@@ -369,10 +384,11 @@ if (isset($_POST['process_invoice']) && check_data()) {
 	{
 		processing_end();
 
+        $marketplace_flg = check_value('is_marketplace_trans') ? '&Marketplace=Yes' : '';
 		if ($newinvoice) {
-			meta_forward($_SERVER['PHP_SELF'], "AddedID=$invoice_no");
+			meta_forward($_SERVER['PHP_SELF'], "AddedID=$invoice_no{$marketplace_flg}");
 		} else {
-			meta_forward($_SERVER['PHP_SELF'], "UpdatedID=$invoice_no");
+			meta_forward($_SERVER['PHP_SELF'], "UpdatedID=$invoice_no{$marketplace_flg}");
 		}
 	}	
 }
@@ -421,6 +437,7 @@ $prepaid = $_SESSION['Items']->is_prepaid();
 $is_edition = $_SESSION['Items']->trans_type == ST_SALESINVOICE && $_SESSION['Items']->trans_no != 0;
 start_form();
 hidden('cart_id');
+hidden('is_marketplace_trans', check_value('is_marketplace_trans'));
 
 start_table(TABLESTYLE2, "width='80%'", 5);
 
@@ -501,6 +518,9 @@ else
 end_row();
 start_row();
 label_cells(_("Tracking No"), $_SESSION['Items']->tracking_no, "class='tableheader2'");
+if ($_SESSION['Items']->is_marketplace_trans) {
+    label_cells(_("Marketplace"), get_marketplace_name($_SESSION['Items']->marketplace_id), "class='tableheader2'");
+}
 end_row();
 end_table();
 

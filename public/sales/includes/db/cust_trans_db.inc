@@ -426,7 +426,17 @@ function get_sql_for_customer_inquiry(
    	return $sql;
 }
 
-function get_sql_for_sales_deliveries_view($from, $to, $customer_id, $stock_item, $location, $delivery, $outstanding=false)
+function get_sql_for_sales_deliveries_view(
+    $from,
+    $to,
+    $customer_id,
+    $stock_item,
+    $location,
+    $delivery,
+    $outstanding=false,
+    $is_marketplace_trans=0,
+    $marketplace_id=''
+)
 {
 	$sql = "SELECT trans.trans_no,
 			debtor.name,
@@ -459,6 +469,16 @@ function get_sql_for_sales_deliveries_view($from, $to, $customer_id, $stock_item
 	if ($outstanding == true) {
 		 $sql .= " AND line.qty_done < line.quantity ";
 	}
+
+    if ($is_marketplace_trans) {
+        $sql .= " AND trans.marketplace_id IS NOT NULL";
+    } else {
+        $sql .= " AND trans.marketplace_id IS NULL";
+    }
+
+    if ($marketplace_id != '') {
+        $sql .= " AND trans.marketplace_id = ".db_escape($marketplace_id);
+    }
 
 	//figure out the sql required from the inputs available
 	if ($delivery)

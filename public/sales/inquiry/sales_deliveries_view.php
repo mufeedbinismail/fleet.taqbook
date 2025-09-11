@@ -17,6 +17,14 @@ include($path_to_root . "/includes/session.inc");
 include($path_to_root . "/sales/includes/sales_ui.inc");
 include_once($path_to_root . "/reporting/includes/reporting.inc");
 
+if (isset($_GET['Marketplace'])) {
+    $_POST['is_marketplace_trans'] = 1;
+}
+
+if (check_value('is_marketplace_trans')) {
+    $page_security = 'SA_MP_SALESINVOICE';
+}
+
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 600);
@@ -117,8 +125,12 @@ customer_list_cells(_("Select a customer: "), 'customer_id', null, true, true);
 submit_cells('SearchOrders', _("Search"),'',_('Select documents'), 'default');
 
 hidden('OutstandingOnly', $_POST['OutstandingOnly']);
+hidden('is_marketplace_trans', check_value('is_marketplace_trans'));
 
 end_row();
+if (check_value('is_marketplace_trans')) {
+    marketplace_list_row("Marketplace:", 'marketplace_id', null, true);
+}
 
 end_table(1);
 //---------------------------------------------------------------------------------------------
@@ -151,9 +163,10 @@ function prt_link($row)
 
 function invoice_link($row)
 {
+    $marketplace_flg = check_value('is_marketplace_trans') ? '&Marketplace=Yes' : '';
 	return $row["Outstanding"]==0 ? '' :
 		pager_link(_('Invoice'), "/sales/customer_invoice.php?DeliveryNumber=" 
-			.$row['trans_no'], ICON_DOC);
+			.$row['trans_no'].$marketplace_flg, ICON_DOC);
 }
 
 function check_overdue($row)
@@ -162,8 +175,17 @@ function check_overdue($row)
 			$row["Outstanding"]!=0;
 }
 //------------------------------------------------------------------------------------------------
-$sql = get_sql_for_sales_deliveries_view(get_post('DeliveryAfterDate'), get_post('DeliveryToDate'), get_post('customer_id'),	
-	get_post('SelectStockFromList'), get_post('StockLocation'), get_post('DeliveryNumber'), get_post('OutstandingOnly'));
+$sql = get_sql_for_sales_deliveries_view(
+    get_post('DeliveryAfterDate'),
+    get_post('DeliveryToDate'),
+    get_post('customer_id'),	
+	get_post('SelectStockFromList'),
+    get_post('StockLocation'),
+    get_post('DeliveryNumber'),
+    get_post('OutstandingOnly'),
+    check_value('is_marketplace_trans'),
+    get_post('marketplace_id')
+);
 
 $cols = array(
 		_("Delivery #") => array('fun'=>'trans_view', 'align'=>'right'), 

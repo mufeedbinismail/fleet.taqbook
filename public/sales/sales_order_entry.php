@@ -248,7 +248,7 @@ if (isset($_GET['AddedID'])) {
 	display_note(get_gl_view_str(ST_CUSTDELIVERY, $delivery, _("View the GL Journal Entries for this Dispatch")),0, 1);
 
 	submenu_option(_("Make &Invoice Against This Delivery"),
-		"/sales/customer_invoice.php?DeliveryNumber=$delivery");
+		"/sales/customer_invoice.php?{$marketplace_flg}DeliveryNumber=$delivery");
 
 	if ((isset($_GET['Type']) && $_GET['Type'] == 1) && $marketplace_flg == '')
 		submenu_option(_("Enter a New Template &Delivery"),
