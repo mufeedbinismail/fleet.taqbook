@@ -133,7 +133,13 @@ function get_allocatable_from_cust_sql($customer_id, $settled)
 	return $sql;
 }
 
-function get_allocatable_sales_orders($customer_id = null, $trans_no=null, $type=null)
+function get_allocatable_sales_orders(
+    $customer_id = null,
+    $trans_no=null,
+    $type=null,
+    $is_marketplace_trans=0,
+    $marketplace_id=''
+)
 {
 	$sql = "SELECT
 		sorder.trans_type as type,
@@ -170,6 +176,15 @@ function get_allocatable_sales_orders($customer_id = null, $trans_no=null, $type
 	}
 	if ($customer_id)
 		$sql .= " AND sorder.debtor_no=".db_escape($customer_id);
+    
+    if ($marketplace_id != '') {
+        $sql .= " AND sorder.marketplace_id=".db_escape($marketplace_id);
+    } elseif ($is_marketplace_trans) {
+        // $sql .= " AND sorder.marketplace_id IS NOT NULL"; // all marketplace transactions
+        $sql .= " AND FALSE"; // don't show anything
+    } elseif (!$is_marketplace_trans) {
+        $sql .= " AND sorder.marketplace_id IS NULL";
+    }
 
 	$sql .= " GROUP BY sorder.order_no";
 
@@ -177,7 +192,13 @@ function get_allocatable_sales_orders($customer_id = null, $trans_no=null, $type
 }
 //-------------------------------------------------------------------------------------------------------------
 
-function get_allocatable_to_cust_transactions($customer_id = null, $trans_no=null, $type=null)
+function get_allocatable_to_cust_transactions(
+    $customer_id = null,
+    $trans_no=null,
+    $type=null,
+    $is_marketplace_trans=0,
+    $marketplace_id=''
+)
 {
 	$sql = "SELECT
 		trans.type,
@@ -204,6 +225,15 @@ function get_allocatable_to_cust_transactions($customer_id = null, $trans_no=nul
 	if ($customer_id)
 		$sql .= " AND trans.debtor_no=".db_escape($customer_id);
 
+    if ($marketplace_id != '') {
+        $sql .= " AND trans.marketplace_id=".db_escape($marketplace_id);
+    } elseif ($is_marketplace_trans) {
+        // $sql .= " AND trans.marketplace_id IS NOT NULL"; // all marketplace transactions
+        $sql .= " AND FALSE"; // don't show anything
+    } elseif (!$is_marketplace_trans) {
+        $sql .= " AND trans.marketplace_id IS NULL";
+    }
+
 	if ($trans_no != null and $type != null)
 	{
 		$sql .= " AND alloc.trans_no_from=".db_escape($trans_no)."
@@ -228,7 +258,13 @@ function get_allocatable_to_cust_transactions($customer_id = null, $trans_no=nul
 		$sql .= " GROUP BY type, trans_no";
 	}
 
-	$orders = get_allocatable_sales_orders($customer_id, $trans_no, $type);
+	$orders = get_allocatable_sales_orders(
+        $customer_id,
+        $trans_no,
+        $type,
+        $is_marketplace_trans,
+        $marketplace_id
+    );
 	$sql = "($sql ORDER BY trans_no) \nUNION \n($orders)";
 
 	return db_query($sql, "Cannot retreive alloc to transactions");

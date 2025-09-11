@@ -20,15 +20,46 @@
 	$bank_amount - in bank currency (before charge)
 	$charge - in bank currency
 */
-function write_customer_payment($trans_no, $customer_id, $branch_id, $bank_account,
-	$date_, $ref, $amount, $discount, $memo_, $rate=0, $charge=0, $bank_amount=0, $dim1=0, $dim2=0)
+function write_customer_payment(
+    $trans_no,
+    $customer_id,
+    $branch_id,
+    $bank_account,
+	$date_,
+    $ref,
+    $amount,
+    $discount,
+    $memo_,
+    $rate=0,
+    $charge=0,
+    $bank_amount=0,
+    $dim1=0,
+    $dim2=0,
+    $marketplace_id=null
+)
 {
 	global $Refs;
 
 	begin_transaction();
-	$args = func_get_args(); while (count($args) < 14) $args[] = 0;
-	$args = (object)array_combine(array('trans_no', 'customer_id', 'branch_id', 'bank_account', 
-		'date_', 'ref', 'amount', 'discount', 'memo_','rate','charge', 'bank_amount', 'dim1', 'dim2'), $args);
+	$args = func_get_args(); while (count($args) < 15) $args[] = 0;
+	$args = (object)array_combine(
+        array(
+            'trans_no',
+            'customer_id',
+            'branch_id',
+            'bank_account',
+            'date_',
+            'ref',
+            'amount',
+            'discount',
+            'memo_','rate','charge',
+            'bank_amount',
+            'dim1',
+            'dim2',
+            'marketplace_id'
+        ),
+        $args
+    );
 	hook_db_prewrite($args, ST_CUSTPAYMENT);
 
 	$company_record = get_company_prefs();
@@ -52,8 +83,32 @@ function write_customer_payment($trans_no, $customer_id, $branch_id, $bank_accou
 	}
 
 	// do not use $rate here: global rate stored in exrate table is always used
-	$payment_no = write_customer_trans(ST_CUSTPAYMENT, $trans_no, $customer_id, $branch_id, 
-		$date_, $ref, $amount, $discount);
+	$payment_no = write_customer_trans(
+        ST_CUSTPAYMENT,
+        $trans_no,
+        $customer_id,
+        $branch_id,
+		$date_,
+        $ref,
+        $amount,
+        $discount,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        "",
+        0,
+        0,
+        0,
+        0,
+        null,
+        0,
+        0,
+        null,
+        $marketplace_id
+    );
 
 	$bank_gl_account = get_bank_gl_account($bank_account);
 

@@ -17,6 +17,8 @@
 
 class allocation
 {
+    var $is_marketplace_trans;
+    var $marketplace_id;
 
 	var $trans_no; 
 	var $type;
@@ -31,12 +33,21 @@ class allocation
 
 	var $allocs; /*array of transactions allocated to */
 
-	function __construct($type, $trans_no, $person_id = null, $person_type_id=null)
+	function __construct(
+        $type,
+        $trans_no,
+        $person_id = null,
+        $person_type_id=null,
+        $is_marketplace_trans=0,
+        $marketplace_id=null
+    )
 	{
 		$this->allocs = array();
 		
 		$this->trans_no = $trans_no;
 		$this->type = $type;
+        $this->is_marketplace_trans = $is_marketplace_trans;
+        $this->marketplace_id = $marketplace_id;
 		if ($person_id)
 			$this->set_person($person_id, $person_type_id);
 
@@ -135,6 +146,8 @@ class allocation
 				$this->currency = isset($trans['bank_curr_code']) ? $trans['bank_curr_code'] : $trans['curr_code'];
 				$this->bank_amount = isset($trans["bank_amount"]) ? $trans["bank_amount"] : $trans["Total"]; // not set for journal entry
 				$this->amount = $trans["Total"];
+                $this->is_marketplace_trans = $trans["is_marketplace_trans"] ?? 0;
+                $this->marketplace_id = $trans["marketplace_id"] ?? null;
 			}
 		}
 		/* Now populate the array of possible (and previous actual) allocations 
@@ -147,7 +160,13 @@ class allocation
 			if ($this->person_type==PT_SUPPLIER)
 				$trans_items = get_allocatable_to_supp_transactions($this->person_id);
 			else
-		 		$trans_items = get_allocatable_to_cust_transactions($this->person_id);
+		 		$trans_items = get_allocatable_to_cust_transactions(
+                    $this->person_id,
+                    null,
+                    null,
+                    $this->is_marketplace_trans,
+                    $this->marketplace_id
+                );
 			while ($myrow = db_fetch($trans_items))
 			{
 				$this->add_item($myrow["type"], $myrow["trans_no"],
@@ -171,8 +190,13 @@ class allocation
 			$trans_items = get_allocatable_to_supp_transactions($this->person_id, 
 				$this->trans_no, $this->type);
 		else
-		 	$trans_items = get_allocatable_to_cust_transactions($this->person_id, 
-				$this->trans_no, $this->type);
+		 	$trans_items = get_allocatable_to_cust_transactions(
+                $this->person_id, 
+				$this->trans_no,
+                $this->type,
+                $this->is_marketplace_trans,
+                $this->marketplace_id
+            );
 
 		$amount = $this->amount;
 		while ($myrow = db_fetch($trans_items))

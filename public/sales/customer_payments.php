@@ -20,6 +20,32 @@ include_once($path_to_root . "/includes/data_checks.inc");
 include_once($path_to_root . "/sales/includes/sales_db.inc");
 include_once($path_to_root . "/reporting/includes/reporting.inc");
 
+if (($_GET['trans_no'] ?? 0) > 0) {
+    $_POST['trans_no'] = $_GET['trans_no'];
+    $myrow = get_customer_trans($_POST['trans_no'], ST_CUSTPAYMENT);
+}
+
+if (!isset($_POST['bank_account']) && isset($_GET['SInvoice'])) {
+    $type = !isset($_GET['Type']) ? ST_SALESINVOICE : $_GET['Type'];
+    $cust = !isset($_GET['customer_id']) ? null : $_GET['customer_id'];
+    $inv = get_customer_trans($_GET['SInvoice'], $type,  $cust);
+}
+
+if (
+    (isset($myrow) && !isset($_GET['Marketplace']) && $myrow['marketplace_id'])
+    || (isset($inv) && !isset($_GET['Marketplace']) && $inv['marketplace_id'])
+) {
+    $_GET['Marketplace'] = 'Yes';
+}
+
+if (isset($_GET['Marketplace']) || ($_SESSION['alloc']->is_marketplace_trans ?? 0)) {
+    $_POST['is_marketplace_trans'] = '1';
+}
+
+if (check_value('is_marketplace_trans')) {
+    $page_security = 'SA_MP_SALESPAYMNT';
+}
+
 $js = "";
 if ($SysPrefs->use_popup_windows) {
 	$js .= get_js_open_window(900, 500);
@@ -44,16 +70,22 @@ if (isset($_GET['customer_id']))
 }
 
 if (!isset($_POST['bank_account'])) { // first page call
-	$_SESSION['alloc'] = new allocation(ST_CUSTPAYMENT, 0, get_post('customer_id'));
+	$_SESSION['alloc'] = new allocation(
+        ST_CUSTPAYMENT,
+        0,
+        get_post('customer_id'),
+        null,
+        check_value('is_marketplace_trans')
+    );
 
 	if (isset($_GET['SInvoice'])) {
 		//  get date and supplier
-		$type = !isset($_GET['Type']) ? ST_SALESINVOICE : $_GET['Type'];
-		$cust = !isset($_GET['customer_id']) ? null : $_GET['customer_id'];
-		$inv = get_customer_trans($_GET['SInvoice'], $type,  $cust);
 		$dflt_act = get_default_bank_account($inv['curr_code']);
 		$_POST['bank_account'] = $dflt_act['id'];
 		if ($inv) {
+            $_SESSION['alloc']->marketplace_id = $_POST['marketplace_id'] = $inv['marketplace_id'];
+            $_SESSION['alloc']->is_marketplace_trans = $_POST['marketplace_id'] ? 1 : 0;
+            $_POST['is_marketplace_trans'] = $_SESSION['alloc']->is_marketplace_trans;
 			$_POST['customer_id'] = $inv['debtor_no'];
 			$_SESSION['alloc']->set_person($inv['debtor_no'], PT_CUSTOMER);
 			$_SESSION['alloc']->read();
@@ -147,7 +179,13 @@ function can_process()
 		display_error(_("There is no customer selected."));
 		set_focus('customer_id');
 		return false;
-	} 
+	}
+
+    if (check_value('is_marketplace_trans') && !get_post('marketplace_id')) {
+        display_error(_("There is no marketplace selected."));
+        set_focus('marketplace_id');
+        return false;
+    }
 	
 	if (!get_post('BranchID'))
 	{
@@ -241,16 +279,32 @@ if (get_post('AddPaymentItem') && can_process()) {
 
 	$new_pmt = !$_SESSION['alloc']->trans_no;
 	//Chaitanya : 13-OCT-2011 - To support Edit feature
-	$payment_no = write_customer_payment($_SESSION['alloc']->trans_no, $_POST['customer_id'], $_POST['BranchID'],
-		$_POST['bank_account'], $_POST['DateBanked'], $_POST['ref'],
-                input_num('amount'), input_num('discount'), $_POST['memo_'], 0, input_num('charge'), input_num('bank_amount', input_num('amount')), $_POST['dimension_id'], $_POST['dimension2_id']);
+	$payment_no = write_customer_payment(
+        $_SESSION['alloc']->trans_no,
+        $_POST['customer_id'],
+        $_POST['BranchID'],
+		$_POST['bank_account'],
+        $_POST['DateBanked'],
+        $_POST['ref'],
+        input_num('amount'),
+        input_num('discount'),
+        $_POST['memo_'],
+        0,
+        input_num('charge'),
+        input_num('bank_amount',
+        input_num('amount')),
+        $_POST['dimension_id'],
+        $_POST['dimension2_id'],
+        get_post('marketplace_id')
+    );
 
 	$_SESSION['alloc']->trans_no = $payment_no;
 	$_SESSION['alloc']->date_ = $_POST['DateBanked'];
 	$_SESSION['alloc']->write();
 
 	unset($_SESSION['alloc']);
-	meta_forward($_SERVER['PHP_SELF'], $new_pmt ? "AddedID=$payment_no" : "UpdatedID=$payment_no");
+    $marketplace_flg = check_value('is_marketplace_trans') ? 'Marketplace=Yes&' : '';
+	meta_forward($_SERVER['PHP_SELF'], $marketplace_flg . ($new_pmt ? "AddedID=$payment_no" : "UpdatedID=$payment_no"));
 }
 
 //----------------------------------------------------------------------------------------------
@@ -276,10 +330,8 @@ $new = 1;
 // To support Edit feature
 if (isset($_GET['trans_no']) && $_GET['trans_no'] > 0 )
 {
-	$_POST['trans_no'] = $_GET['trans_no'];
-
 	$new = 0;
-	$myrow = get_customer_trans($_POST['trans_no'], ST_CUSTPAYMENT);
+    $_POST['marketplace_id'] = $myrow['marketplace_id'];
 	$_POST['customer_id'] = $myrow["debtor_no"];
 	$_POST['customer_name'] = $myrow["DebtorName"];
 	$_POST['BranchID'] = $myrow["branch_code"];
@@ -320,13 +372,27 @@ else {
 	hidden('customer_id', $_POST['customer_id']);
 }
 
+if (check_value('is_marketplace_trans')) {
+    if ($new) {
+        marketplace_list_row(_("Marketplace:"), 'marketplace_id', null, '-- select --', true);
+    } else {
+        label_cells(_("Marketplace:"), get_marketplace_name($_POST['marketplace_id']), "class='label'");
+        hidden('marketplace_id', $_POST['marketplace_id']);
+    }
+}
+
 if (db_customer_has_branches($_POST['customer_id'])) {
 	customer_branches_list_row(_("Branch:"), $_POST['customer_id'], 'BranchID', null, false, true, true);
 } else {
 	hidden('BranchID', ANY_NUMERIC);
 }
 
-if (list_updated('customer_id') || ($new && list_updated('bank_account'))) {
+if (
+    list_updated('customer_id')
+    || ($new && list_updated('bank_account'))
+    || list_updated('marketplace_id')
+) {
+    $_SESSION['alloc']->marketplace_id = get_post('marketplace_id');
 	$_SESSION['alloc']->set_person($_POST['customer_id'], PT_CUSTOMER);
 	$_SESSION['alloc']->read();
 	$_POST['memo_'] = $_POST['amount'] = $_POST['discount'] = '';

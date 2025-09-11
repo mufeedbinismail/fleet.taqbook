@@ -170,7 +170,7 @@ if (isset($_GET['AddedID'])) {
 	{
 		$row = db_fetch(db_query(get_allocatable_sales_orders($customer_id, $order_no, ST_SALESORDER)));
 		if ($row === false)
-			submenu_option(_("Receive Customer Payment"), "/sales/customer_payments.php?customer_id=$customer_id");
+			submenu_option(_("Receive Customer Payment"), "/sales/customer_payments.php?{$marketplace_flg}customer_id=$customer_id");
 	}
 	submenu_option(_("Add an Attachment"), "/admin/attachments.php?filterType=".ST_SALESORDER."&trans_no=$order_no");
 
@@ -286,7 +286,7 @@ if (isset($_GET['AddedID'])) {
 			"/sales/sales_order_entry.php?{$marketplace_flg}NewInvoice=0");
 
 	if ($row === false)
-		submenu_option(_("Entry &customer payment for this invoice"), "/sales/customer_payments.php?SInvoice=".$invoice);
+		submenu_option(_("Entry &customer payment for this invoice"), "/sales/customer_payments.php?{$marketplace_flg}SInvoice=".$invoice);
 
 	submenu_option(_("Add an Attachment"), "/admin/attachments.php?filterType=".ST_SALESINVOICE."&trans_no=$invoice");
 
