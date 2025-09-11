@@ -32,6 +32,10 @@ define('SS_SALES_C',11<<8); // configuration
 define('SS_SALES',	12<<8);	// transactions
 define('SS_SALES_A',13<<8); // analytic functions/reports/inquires
 
+define('SS_MP_SALES_C',16<<8); // configuration
+define('SS_MP_SALES',  17<<8); // transactions
+define('SS_MP_SALES_A',18<<8); // analytic functions/reports/inquires
+
 define('SS_PURCH_C',21<<8);
 define('SS_PURCH',	22<<8);
 define('SS_PURCH_A',23<<8);
@@ -63,6 +67,9 @@ $security_sections = array(
  	SS_SALES_C => _("Sales configuration"),
  	SS_SALES => _("Sales transactions"),
  	SS_SALES_A => _("Sales related reports"),
+ 	SS_MP_SALES_C => _("Market Place Sales configuration"),
+ 	SS_MP_SALES => _("Market Place Sales transactions"),
+ 	SS_MP_SALES_A => _("Market Place Sales related reports"),
  	SS_PURCH_C => _("Purchase configuration"),
  	SS_PURCH => _("Purchase transactions"),
  	SS_PURCH_A => _("Purchase analytics"),
@@ -157,6 +164,12 @@ $security_areas =array(
 	'SA_CUSTBULKREP' => array(SS_SALES_A|5, _("Customer bulk listing")),
 	'SA_CUSTSTATREP' => array(SS_SALES_A|6, _("Customer status report")),
 	'SA_CUSTPAYMREP' => array(SS_SALES_A|7, _("Customer payments report")),
+
+//
+// Market Place Sales related functionality
+//
+
+
 
 //
 // Purchase related functions

@@ -184,6 +184,7 @@ class renderer
 
         $appIcons = [
             "orders" => "icon-storefront",
+            "mp_orders" => "icon-storefront",
             "AP" => "icon-procurement",
             "GL" => "icon-accountant",
             "stock" => "icon-inventory",

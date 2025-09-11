@@ -13,6 +13,7 @@ if (!isset($path_to_root) || isset($_GET['path_to_root']) || isset($_POST['path_
 	die("Restricted access");
 	include_once($path_to_root . '/applications/application.php');
 	include_once($path_to_root . '/applications/customers.php');
+	include_once($path_to_root . '/applications/marketplaces.php');
 	include_once($path_to_root . '/applications/suppliers.php');
 	include_once($path_to_root . '/applications/inventory.php');
 	include_once($path_to_root . '/applications/fixed_assets.php');
@@ -75,6 +76,7 @@ if (!isset($path_to_root) || isset($_GET['path_to_root']) || isset($_POST['path_
 			$this->menu->add_item(_("Logout"), "/account/access/logout.php");
 			$this->applications = array();
 			$this->add_application(new customers_app());
+			$this->add_application(new marketplaces_app());
 			$this->add_application(new suppliers_app());
 			$this->add_application(new inventory_app());
 			if (get_company_pref('use_manufacturing'))
