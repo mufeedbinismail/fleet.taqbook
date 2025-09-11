@@ -269,9 +269,9 @@ if($show_dates) {
 }
 stock_items_list_cells(_("Item:"), 'SelectStockFromList', null, true, true);
 
-if (!$page_nested)
+if (!$page_nested || check_value('is_marketplace_trans'))
 	customer_list_cells(_("Select a customer: "), 'customer_id', null, true, true);
-if (check_value('is_marketplace_trans'))
+if (check_value('is_marketplace_trans') && !$page_nested)
     marketplace_list_cells(_("Marketplace:"), 'marketplace_id', null, true);
 if ($trans_type == ST_SALESQUOTE)
 	check_cells(_("Show All:"), 'show_all');

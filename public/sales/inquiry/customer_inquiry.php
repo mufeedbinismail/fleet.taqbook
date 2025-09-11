@@ -180,10 +180,10 @@ start_row();
 
 ref_cells(_("Reference:"), 'Ref', '', NULL, _('Enter reference fragment or leave empty'));
 
-if (!$page_nested)
+if (!$page_nested || check_value('is_marketplace_trans'))
 	customer_list_cells(_("Select a customer: "), 'customer_id', null, true, true, false, true);
 
-if (check_value('is_marketplace_trans'))
+if (check_value('is_marketplace_trans') && !$page_nested)
     marketplace_list_cells(_("Marketplace:"), 'marketplace_id', null, true);
 
 cust_allocations_list_cells(null, 'filterType', null, true, true);

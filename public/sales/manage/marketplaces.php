@@ -231,12 +231,24 @@ if (!$selected_id)
 
 tabbed_content_start('tabs', array(
     'settings' => array(_('&General settings'), $selected_id),
+    'transactions' => array(_('&Transactions'), (user_check_access('SA_MP_SALESTRANSVIEW') ? $selected_id : null)),
+    'orders' => array(_('Sales &Orders'), (user_check_access('SA_MP_SALESTRANSVIEW') ? $selected_id : null)),
 ));
 	
 	switch (get_post('_tabs_sel')) {
 		default:
 		case 'settings':
 			marketplace_settings($selected_id); 
+			break;
+		case 'transactions':
+			$_GET['marketplace_id'] = $selected_id;
+            $_GET['Marketplace'] = 'Yes';
+			include_once($path_to_root."/sales/inquiry/customer_inquiry.php");
+			break;
+		case 'orders':
+			$_GET['marketplace_id'] = $selected_id;
+            $_GET['Marketplace'] = 'Yes';
+			include_once($path_to_root."/sales/inquiry/sales_orders_view.php");
 			break;
 	};
 br();
