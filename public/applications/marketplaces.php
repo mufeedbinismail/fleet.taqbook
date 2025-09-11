@@ -13,6 +13,9 @@ class marketplaces_app extends application
 			"sales/sales_order_entry.php?Marketplace=Yes&NewDelivery=0", 'SA_MP_SALESDELIVERY', MENU_TRANSACTION);
 		$this->add_lapp_function(0, _("Direct &Invoice"),
 			"sales/sales_order_entry.php?Marketplace=Yes&NewInvoice=0", 'SA_MP_SALESINVOICE', MENU_TRANSACTION);
+		$this->add_lapp_function(0, "","");
+		$this->add_lapp_function(0, _("&Delivery Against Sales Orders"),
+			"sales/inquiry/sales_orders_view.php?Marketplace=Yes&OutstandingOnly=1", 'SA_MP_SALESDELIVERY', MENU_TRANSACTION);
 
 		$this->add_module(_("Inquiries and Reports"));
 		$this->add_lapp_function(1, _("Sales Order &Inquiry"),

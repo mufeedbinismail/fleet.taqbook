@@ -24,15 +24,24 @@ $page_security = get_post('is_marketplace_trans')
     ? 'SA_MP_SALESTRANSVIEW'
     : 'SA_SALESTRANSVIEW';
 
-set_page_security( @$_POST['order_view_mode'],
-	array(	'OutstandingOnly' => 'SA_SALESDELIVERY',
-			'InvoiceTemplates' => 'SA_SALESINVOICE',
-			'DeliveryTemplates' => 'SA_SALESDELIVERY',
-			'PrepaidOrders' => 'SA_SALESINVOICE'),
-	array(	'OutstandingOnly' => 'SA_SALESDELIVERY',
-			'InvoiceTemplates' => 'SA_SALESINVOICE',
-			'DeliveryTemplates' => 'SA_SALESDELIVERY',
-			'PrepaidOrders' => 'SA_SALESINVOICE')
+set_page_security(
+    @$_POST['order_view_mode'],
+	[
+        'OutstandingOnly' => get_post('is_marketplace_trans')
+            ? 'SA_MP_SALESDELIVERY'
+            : 'SA_SALESDELIVERY',
+        'InvoiceTemplates' => 'SA_SALESINVOICE',
+        'DeliveryTemplates' => 'SA_SALESDELIVERY',
+        'PrepaidOrders' => 'SA_SALESINVOICE'
+    ],
+	[
+        'OutstandingOnly' => get_post('is_marketplace_trans')
+            ? 'SA_MP_SALESDELIVERY'
+            : 'SA_SALESDELIVERY',
+        'InvoiceTemplates' => 'SA_SALESINVOICE',
+        'DeliveryTemplates' => 'SA_SALESDELIVERY',
+        'PrepaidOrders' => 'SA_SALESINVOICE'
+    ]
 );
 
 if (get_post('type'))

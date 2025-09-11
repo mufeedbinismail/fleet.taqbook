@@ -24,6 +24,16 @@ include_once($path_to_root . "/sales/includes/sales_ui.inc");
 include_once($path_to_root . "/reporting/includes/reporting.inc");
 include_once($path_to_root . "/taxes/tax_calc.inc");
 
+if (isset($_GET['ModifyDelivery']) && !isset($_GET['Marketplace'])) {
+    if (get_customer_trans($_GET['ModifyDelivery'], ST_CUSTDELIVERY)['marketplace_id']) {
+        $_GET['Marketplace'] = 'Yes';
+    }
+}
+
+if (isset($_GET['Marketplace']) || @$_SESSION['Items']->is_marketplace_trans) {
+    $page_security = 'SA_MP_SALESDELIVERY';
+}
+
 $js = "";
 if ($SysPrefs->use_popup_windows) {
 	$js .= get_js_open_window(900, 500);
@@ -43,6 +53,7 @@ if (isset($_GET['ModifyDelivery'])) {
 
 page($_SESSION['page_title'], false, false, "", $js);
 
+$marketplace_flg = isset($_GET['Marketplace']) ? '&Marketplace=Yes' : '';
 if (isset($_GET['AddedID'])) {
 	$dispatch_no = $_GET['AddedID'];
 
@@ -60,7 +71,7 @@ if (isset($_GET['AddedID'])) {
 	if (!isset($_GET['prepaid']))
 		hyperlink_params("$path_to_root/sales/customer_invoice.php", _("Invoice This Delivery"), "DeliveryNumber=$dispatch_no");
 
-	hyperlink_params("$path_to_root/sales/inquiry/sales_orders_view.php", _("Select Another Order For Dispatch"), "OutstandingOnly=1");
+	hyperlink_params("$path_to_root/sales/inquiry/sales_orders_view.php", _("Select Another Order For Dispatch"), "OutstandingOnly=1{$marketplace_flg}");
 
 	hyperlink_params("$path_to_root/admin/attachments.php", _("Add an Attachment"), "filterType=".ST_CUSTDELIVERY."&trans_no=$dispatch_no");
 
@@ -96,13 +107,13 @@ if (isset($_GET['OrderNumber']) && $_GET['OrderNumber'] > 0) {
 
 	if ($ord->count_items() == 0) {
 		hyperlink_params($path_to_root . "/sales/inquiry/sales_orders_view.php",
-			_("Select a different sales order to delivery"), "OutstandingOnly=1");
+			_("Select a different sales order to delivery"), "OutstandingOnly=1{$marketplace_flg}");
 		echo "<br><center><b>" . _("This order has no items. There is nothing to delivery.") .
 			"</center></b>";
 		display_footer_exit();
 	} else if (!$ord->is_released()) {
 		hyperlink_params($path_to_root . "/sales/inquiry/sales_orders_view.php",_("Select a different sales order to delivery"),
-			"OutstandingOnly=1");
+			"OutstandingOnly=1{$marketplace_flg}");
 		echo "<br><center><b>"._("This prepayment order is not yet ready for delivery due to insufficient amount received.")
 			."</center></b>";
 		display_footer_exit();
@@ -120,7 +131,7 @@ if (isset($_GET['OrderNumber']) && $_GET['OrderNumber'] > 0) {
 
 	if (!$_SESSION['Items']->prepaid && $_SESSION['Items']->count_items() == 0) {
 		hyperlink_params($path_to_root . "/sales/inquiry/sales_orders_view.php",
-			_("Select a different delivery"), "OutstandingOnly=1");
+			_("Select a different delivery"), "OutstandingOnly=1{$marketplace_flg}");
 		echo "<br><center><b>" . _("This delivery has all items invoiced. There is nothing to modify.") .
 			"</center></b>";
 		display_footer_exit();
@@ -133,7 +144,7 @@ if (isset($_GET['OrderNumber']) && $_GET['OrderNumber'] > 0) {
 
 	display_error(_("This page can only be opened if an order or delivery note has been selected. Please select it first."));
 
-	hyperlink_params("$path_to_root/sales/inquiry/sales_orders_view.php", _("Select a Sales Order to Delivery"), "OutstandingOnly=1");
+	hyperlink_params("$path_to_root/sales/inquiry/sales_orders_view.php", _("Select a Sales Order to Delivery"), "OutstandingOnly=1{$marketplace_flg}");
 
 	end_page();
 	exit;
@@ -303,12 +314,12 @@ if (isset($_POST['process_delivery']) && check_data()) {
 	else
 	{
 		$is_prepaid = $dn->is_prepaid() ? "&prepaid=Yes" : '';
-
+        $marketplace = $dn->is_marketplace_trans ? "&Marketplace=Yes" : '';
 		processing_end();
 		if ($newdelivery) {
-			meta_forward($_SERVER['PHP_SELF'], "AddedID=$delivery_no$is_prepaid");
+			meta_forward($_SERVER['PHP_SELF'], "AddedID={$delivery_no}{$is_prepaid}{$marketplace}");
 		} else {
-			meta_forward($_SERVER['PHP_SELF'], "UpdatedID=$delivery_no$is_prepaid");
+			meta_forward($_SERVER['PHP_SELF'], "UpdatedID={$delivery_no}{$is_prepaid}{$marketplace}");
 		}
 	}
 }
@@ -370,6 +381,9 @@ end_row();
 
 start_row();
 label_cells(_("Tracking No"), $_SESSION['Items']->tracking_no, "class='tableheader2'");
+if ($_SESSION['Items']->is_marketplace_trans) {
+    label_cells(_("Marketplace"), get_marketplace_name($_SESSION['Items']->marketplace_id), "class='tableheader2'");
+}
 end_row();
 
 end_table();

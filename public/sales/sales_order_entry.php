@@ -158,7 +158,7 @@ if (isset($_GET['AddedID'])) {
 	set_focus('prtopt');
 	
 	submenu_option(_("Make &Delivery Against This Order"),
-		"/sales/customer_delivery.php?OrderNumber=$order_no");
+		"/sales/customer_delivery.php?{$marketplace_flg}OrderNumber=$order_no");
 
 	submenu_option(_("Work &Order Entry"),	"/manufacturing/work_order_entry.php?");
 
@@ -188,10 +188,10 @@ if (isset($_GET['AddedID'])) {
 	set_focus('prtopt');
 
 	submenu_option(_("Confirm Order Quantities and Make &Delivery"),
-		"/sales/customer_delivery.php?OrderNumber=$order_no");
+		"/sales/customer_delivery.php?{$marketplace_flg}OrderNumber=$order_no");
 
 	submenu_option(_("Select A Different &Order"),
-		"/sales/inquiry/sales_orders_view.php?OutstandingOnly=1");
+		"/sales/inquiry/sales_orders_view.php?{$marketplace_flg}OutstandingOnly=1");
 
 	display_footer_exit();
 
