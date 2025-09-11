@@ -16,7 +16,13 @@ include_once($path_to_root . "/includes/session.inc");
 include_once($path_to_root . "/sales/includes/sales_ui.inc");
 include_once($path_to_root . "/reporting/includes/reporting.inc");
 
-$page_security = 'SA_SALESTRANSVIEW';
+if (isset($_GET['Marketplace'])) {
+    $_POST['is_marketplace_trans'] = 1;
+}
+
+$page_security = get_post('is_marketplace_trans')
+    ? 'SA_MP_SALESTRANSVIEW'
+    : 'SA_SALESTRANSVIEW';
 
 set_page_security( @$_POST['order_view_mode'],
 	array(	'OutstandingOnly' => 'SA_SALESDELIVERY',
@@ -256,6 +262,8 @@ stock_items_list_cells(_("Item:"), 'SelectStockFromList', null, true, true);
 
 if (!$page_nested)
 	customer_list_cells(_("Select a customer: "), 'customer_id', null, true, true);
+if (check_value('is_marketplace_trans'))
+    marketplace_list_cells(_("Marketplace:"), 'marketplace_id', null, true);
 if ($trans_type == ST_SALESQUOTE)
 	check_cells(_("Show All:"), 'show_all');
 if ($trans_type == ST_SALESORDER)
@@ -265,6 +273,7 @@ if ($show_dates && $trans_type == ST_SALESORDER)
 
 submit_cells('SearchOrders', _("Search"),'',_('Select documents'), 'default');
 hidden('order_view_mode', $_POST['order_view_mode']);
+hidden('is_marketplace_trans', check_value('is_marketplace_trans'));
 hidden('type', $trans_type);
 
 end_row();
@@ -273,9 +282,22 @@ end_table(1);
 //---------------------------------------------------------------------------------------------
 //	Orders inquiry table
 //
-$sql = get_sql_for_sales_orders_view($trans_type, get_post('OrderNumber'), get_post('order_view_mode'),
-	get_post('SelectStockFromList'), get_post('OrdersAfterDate'), get_post('OrdersToDate'), get_post('OrderReference'), get_post('StockLocation'), get_post('customer_id'), check_value('show_voided'),
-	get_post('by_delivery'), get_post('no_auto'));
+$sql = get_sql_for_sales_orders_view(
+    $trans_type,
+    get_post('OrderNumber'),
+    get_post('order_view_mode'),
+	get_post('SelectStockFromList'),
+    get_post('OrdersAfterDate'),
+    get_post('OrdersToDate'),
+    get_post('OrderReference'),
+    get_post('StockLocation'),
+    get_post('customer_id'),
+    check_value('show_voided'),
+	get_post('by_delivery'),
+	get_post('no_auto'),
+    check_value('is_marketplace_trans'),
+    get_post('marketplace_id')
+);
 
 if ($trans_type == ST_SALESORDER)
 	$cols = array(

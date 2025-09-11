@@ -302,7 +302,16 @@ function post_void_customer_trans($type, $type_no)
 }
 
 //----------------------------------------------------------------------------------------
-function get_sql_for_customer_inquiry($from, $to, $cust_id = ALL_TEXT, $filter = ALL_TEXT, $show_voided = 0, $ref='')
+function get_sql_for_customer_inquiry(
+    $from,
+    $to,
+    $cust_id = ALL_TEXT,
+    $filter = ALL_TEXT,
+    $show_voided = 0,
+    $ref='',
+    $is_marketplace_trans=0,
+    $marketplace_id=''
+)
 {
     $date_after = date2sql($from);
     $date_to = date2sql($to);
@@ -401,6 +410,16 @@ function get_sql_for_customer_inquiry($from, $to, $cust_id = ALL_TEXT, $filter =
 				trans.ov_freight + trans.ov_discount - trans.alloc > 0) ";
     	}
    	}
+
+    if ($is_marketplace_trans) {
+        $sql .= ' AND trans.marketplace_id IS NOT NULL';
+    } else {
+        $sql .= ' AND trans.marketplace_id IS NULL';
+    }
+
+    if ($marketplace_id != '') {
+        $sql .= " AND trans.marketplace_id = ".db_escape($marketplace_id);
+    }
 
 	$sql .= " GROUP BY trans.trans_no, trans.type, trans.debtor_no";
 

@@ -18,6 +18,14 @@ include_once($path_to_root . "/sales/includes/sales_ui.inc");
 include_once($path_to_root . "/sales/includes/sales_db.inc");
 include_once($path_to_root . "/reporting/includes/reporting.inc");
 
+if (isset($_GET['Marketplace'])) {
+    $_POST['is_marketplace_trans'] = 1;
+}
+
+if (check_value('is_marketplace_trans')) {
+    $page_security = 'SA_MP_SALESTRANSVIEW';
+}
+
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
@@ -175,14 +183,19 @@ ref_cells(_("Reference:"), 'Ref', '', NULL, _('Enter reference fragment or leave
 if (!$page_nested)
 	customer_list_cells(_("Select a customer: "), 'customer_id', null, true, true, false, true);
 
-cust_allocations_list_cells(null, 'filterType', null, true, true);
+if (check_value('is_marketplace_trans'))
+    marketplace_list_cells(_("Marketplace:"), 'marketplace_id', null, true);
 
+cust_allocations_list_cells(null, 'filterType', null, true, true);
+end_row();
+start_row();
 if ($_POST['filterType'] != '2')
 {
 	date_cells(_("From:"), 'TransAfterDate', '', null, -user_transaction_days());
 	date_cells(_("To:"), 'TransToDate', '', null);
 }
 check_cells(_("Zero values"), 'show_voided');
+hidden('is_marketplace_trans', check_value('is_marketplace_trans'));
 
 submit_cells('RefreshInquiry', _("Search"),'',_('Refresh Inquiry'), 'default');
 end_row();
@@ -193,9 +206,15 @@ set_global_customer($_POST['customer_id']);
 //------------------------------------------------------------------------------------------------
 
 div_start('totals_tbl');
-if ($_POST['customer_id'] != "" && $_POST['customer_id'] != ALL_TEXT)
+if (get_post('customer_id') != '' || get_post('marketplace_id') != '')
 {
-	$customer_record = get_customer_details(get_post('customer_id'), get_post('TransToDate'), false);
+	$customer_record = get_customer_details(
+        get_post('customer_id'),
+        get_post('TransToDate'),
+        false,
+        check_value('is_marketplace_trans'),
+        get_post('marketplace_id')
+    );
     display_customer_summary($customer_record);
     echo "<br>";
 }
@@ -206,8 +225,16 @@ if (get_post('RefreshInquiry') || list_updated('filterType'))
 	$Ajax->activate('_page_body');
 }
 //------------------------------------------------------------------------------------------------
-$sql = get_sql_for_customer_inquiry(get_post('TransAfterDate'), get_post('TransToDate'),
-	get_post('customer_id'), get_post('filterType'), check_value('show_voided'), get_post('Ref'));
+$sql = get_sql_for_customer_inquiry(
+    get_post('TransAfterDate'),
+    get_post('TransToDate'),
+	get_post('customer_id'),
+    get_post('filterType'),
+    check_value('show_voided'),
+    get_post('Ref'),
+    check_value('is_marketplace_trans'),
+    get_post('marketplace_id')
+);
 
 //------------------------------------------------------------------------------------------------
 //db_query("set @bal:=0");

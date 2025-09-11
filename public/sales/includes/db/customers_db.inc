@@ -63,7 +63,13 @@ function delete_customer($customer_id)
 /*
 	This function probably should be renamed to get_customer_summary
 */
-function get_customer_details($customer_id, $to=null, $all=true)
+function get_customer_details(
+    $customer_id,
+    $to=null,
+    $all=true,
+    $is_marketplace_trans=0,
+    $marketplace_id=''
+)
 {
 
 	if ($to == null)
@@ -100,6 +106,16 @@ function get_customer_details($customer_id, $to=null, $all=true)
 
 	if (!$all)
 		$sql .= " AND ABS(IF(trans.prep_amount, trans.prep_amount, ABS(trans.ov_amount) + trans.ov_gst + trans.ov_freight + trans.ov_freight_tax + trans.ov_discount) - trans.alloc) > ".FLOAT_COMP_DELTA;
+
+    if ($is_marketplace_trans) {
+        $sql .= ' AND trans.marketplace_id IS NOT NULL';
+    } else {
+        $sql .= ' AND trans.marketplace_id IS NULL';
+    }
+
+    if ($marketplace_id != '') {
+        $sql .= " AND trans.marketplace_id = ".db_escape($marketplace_id);
+    }
 
 	$sql .= " GROUP BY
 				debtor.name,

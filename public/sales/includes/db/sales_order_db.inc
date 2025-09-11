@@ -470,8 +470,22 @@ function get_branch_to_order($customer_id, $branch_id) {
 	OutstandingOnly
 	PrepaidOrders
 */
-function get_sql_for_sales_orders_view($trans_type, $trans_no, $filter, 
-	$stock_item='', $from='', $to='', $ref='', $location=ALL_TEXT, $customer_id=ALL_TEXT, $show_voided = 0, $by_delivery=0, $no_auto=0)
+function get_sql_for_sales_orders_view(
+    $trans_type,
+    $trans_no,
+    $filter,
+	$stock_item='',
+    $from='',
+    $to='',
+    $ref='',
+    $location=ALL_TEXT,
+    $customer_id=ALL_TEXT,
+    $show_voided = 0,
+    $by_delivery=0,
+    $no_auto=0,
+    $is_marketplace_trans=0,
+    $marketplace_id=''
+)
 {
     if ($filter=='OutstandingOnly')
         $order_value = 'Sum(line.unit_price*(line.quantity-line.qty_sent)*(1-line.discount_percent))+freight_cost';
@@ -567,7 +581,15 @@ function get_sql_for_sales_orders_view($trans_type, $trans_no, $filter,
 
 		//Chaiatanya : New Filter
 		if ($customer_id != ALL_TEXT)
-			$sql .= " AND sorder.debtor_no = ".db_escape($customer_id);		
+			$sql .= " AND sorder.debtor_no = ".db_escape($customer_id);
+
+        if ($is_marketplace_trans)
+            $sql .= " AND sorder.marketplace_id IS NOT NULL";
+        else
+            $sql .= " AND sorder.marketplace_id IS NULL";
+
+        if ($marketplace_id != '')
+            $sql .= " AND sorder.marketplace_id = ".db_escape($marketplace_id);
 
 		$sql .= " GROUP BY sorder.order_no,
 					sorder.debtor_no,
