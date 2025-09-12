@@ -16,6 +16,15 @@ include_once($path_to_root . "/includes/session.inc");
 
 include_once($path_to_root . "/sales/includes/sales_ui.inc");
 include_once($path_to_root . "/sales/includes/sales_db.inc");
+
+if (isset($_GET['Marketplace'])) {
+    $_POST['is_marketplace_trans'] = 1;
+}
+
+if (check_value('is_marketplace_trans')) {
+    $page_security = 'SA_MP_SALESALLOC';
+}
+
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
@@ -30,9 +39,15 @@ if (!isset($_POST['customer_id']))
 	$_POST['customer_id'] = get_global_customer();
 
 echo "<center>" . _("Select a customer: ") . "&nbsp;&nbsp;";
-echo customer_list('customer_id', $_POST['customer_id'], true, true);
+echo customer_list('customer_id', null, true);
+if (check_value('is_marketplace_trans')) {
+    echo "&nbsp;&nbsp;" . _("Marketplace:") . "&nbsp;&nbsp;";
+    echo marketplace_list('marketplace_id', null, true);
+}
+hidden('is_marketplace_trans', check_value('is_marketplace_trans'));
 echo "<br>";
 check(_("Show Settled Items:"), 'ShowSettled', null, true);
+submit('Search', _("Search"), true, '', 'default');
 echo "</center><br><br>";
 
 set_global_customer($_POST['customer_id']);
@@ -65,9 +80,10 @@ function trans_view($trans)
 
 function alloc_link($row)
 {
+    $marketplace_flg = check_value('is_marketplace_trans') ? "&Marketplace=Yes" : "";
 	return pager_link(_("Allocate"),
 		"/sales/allocations/customer_allocate.php?trans_no="
-			.$row["trans_no"] . "&trans_type=" . $row["type"]. "&debtor_no=" . $row["debtor_no"], ICON_ALLOC);
+			.$row["trans_no"] . "&trans_type=" . $row["type"]. "&debtor_no=" . $row["debtor_no"] . $marketplace_flg, ICON_ALLOC);
 }
 
 function amount_total($row)
@@ -86,7 +102,7 @@ function check_settled($row)
 }
 
 
-$sql = get_allocatable_from_cust_sql($customer_id, $settled);
+$sql = get_allocatable_from_cust_sql($customer_id, $settled, check_value('is_marketplace_trans'), get_post('marketplace_id'));
 
 $cols = array(
 	_("Transaction Type") => array('fun'=>'systype_name'),

@@ -19,6 +19,20 @@ include_once($path_to_root . "/sales/includes/sales_ui.inc");
 include_once($path_to_root . "/sales/includes/sales_db.inc");
 //include_once($path_to_root . "/sales/includes/ui/cust_alloc_ui.inc");
 
+if (isset($_GET['trans_no']) && isset($_GET['trans_type']) && !isset($_GET['Marketplace'])) {
+    if (get_customer_trans($_GET['trans_no'], $_GET['trans_type'])['marketplace_id'] ?? null) {
+        $_GET['Marketplace'] = 'Yes';
+    }
+}
+
+if (isset($_GET['Marketplace'])) {
+    $_POST['is_marketplace_trans'] = 1;
+}
+
+if (check_value('is_marketplace_trans') || ($_SESSION['alloc']->is_marketplace_trans ?? 0)) {
+    $page_security = 'SA_MP_SALESALLOC';
+}
+
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
@@ -71,6 +85,7 @@ function edit_allocations_for_transaction($type, $trans_no)
 
 	start_form();
 	div_start('alloc_tbl');
+    hidden('is_marketplace_trans', check_value('is_marketplace_trans'));
     if (count($cart->allocs) > 0)
     {
 		show_allocatable(true);
@@ -105,7 +120,8 @@ if (isset($_POST['Process']))
 if (isset($_POST['Cancel']))
 {
 	clear_allocations();
-	meta_forward($path_to_root . "/sales/allocations/customer_allocation_main.php");
+    $marketplace_flg = check_value('is_marketplace_trans') ? "Marketplace=Yes&" : "";
+	meta_forward($path_to_root . "/sales/allocations/customer_allocation_main.php", $marketplace_flg);
 }
 
 //--------------------------------------------------------------------------------

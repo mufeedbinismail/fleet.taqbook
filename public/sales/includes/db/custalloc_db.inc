@@ -99,7 +99,12 @@ function clear_cust_alloctions($type, $type_no, $person_id=null, $date="")
 }
 //-------------------------------------------------------------------------------------------------------------
 
-function get_allocatable_from_cust_sql($customer_id, $settled)
+function get_allocatable_from_cust_sql(
+    $customer_id,
+    $settled,
+    $is_marketplace_trans=0,
+    $marketplace_id=''
+)
 {
 	$sql = "SELECT
 		trans.type,
@@ -129,6 +134,16 @@ function get_allocatable_from_cust_sql($customer_id, $settled)
 
 	if ($customer_id != null)
 		$sql .= " AND trans.debtor_no = ".db_escape($customer_id);
+
+    if ($is_marketplace_trans) {
+        $sql .= " AND trans.marketplace_id IS NOT NULL";
+    } else {
+        $sql .= " AND trans.marketplace_id IS NULL";
+    }
+
+    if ($marketplace_id != '') {
+        $sql .= " AND trans.marketplace_id=".db_escape($marketplace_id);
+    }
 
 	return $sql;
 }
@@ -315,7 +330,15 @@ function get_allocatable_from_cust_transactions($customer_id, $trans_no=null, $t
 	return db_query($sql." ORDER BY trans_no", "Cannot retreive alloc to transactions");
 }
 
-function get_sql_for_customer_allocation_inquiry($from, $to, $customer, $filterType, $settled)
+function get_sql_for_customer_allocation_inquiry(
+    $from,
+    $to,
+    $customer,
+    $filterType,
+    $settled,
+    $is_marketplace_trans=0,
+    $marketplace_id=''
+)
 {
   	$data_after = date2sql($from);
   	$date_to = date2sql($to);
@@ -381,6 +404,15 @@ function get_sql_for_customer_allocation_inquiry($from, $to, $customer, $filterT
 	    $sql .= " AND trans.type <> ".ST_CUSTDELIVERY." ";
    	}
 
+    if ($is_marketplace_trans) {
+        $sql .= " AND trans.marketplace_id IS NOT NULL";
+    } else {
+        $sql .= " AND trans.marketplace_id IS NULL";
+    }
+
+    if ($marketplace_id != '') {
+        $sql .= " AND trans.marketplace_id = ".db_escape($marketplace_id);
+    }
 
    	if (!$settled)
    	{

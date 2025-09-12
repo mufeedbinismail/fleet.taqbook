@@ -174,6 +174,7 @@ $security_areas =array(
 	'SA_MP_SALESDELIVERY' => array(SS_MP_SALES|2, _("Market Place Sales deliveries edition")),
 	'SA_MP_SALESINVOICE' => array(SS_MP_SALES|3, _("Market Place Sales invoices edition")),
 	'SA_MP_SALESPAYMNT' => array(SS_MP_SALES|4, _("Market Place Customer payments entry")),
+	'SA_MP_SALESALLOC' => array(SS_MP_SALES|5, _("Market Place Customer payments allocation")),
 
     'SA_MP_SALESTRANSVIEW' => array(SS_MP_SALES_A|1,  _("Market Place Sales transactions view")),
 

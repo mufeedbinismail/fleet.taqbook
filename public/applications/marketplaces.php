@@ -21,12 +21,16 @@ class marketplaces_app extends application
 
 		$this->add_rapp_function(0, _("Customer &Payments"),
 			"sales/customer_payments.php?Marketplace=Yes", 'SA_MP_SALESPAYMNT', MENU_TRANSACTION);
+		$this->add_rapp_function(0, _("&Allocate Customer Payments or Credit Notes"),
+			"sales/allocations/customer_allocation_main.php?Marketplace=Yes", 'SA_MP_SALESALLOC', MENU_TRANSACTION);
 
 		$this->add_module(_("Inquiries and Reports"));
 		$this->add_lapp_function(1, _("Sales Order &Inquiry"),
 			"sales/inquiry/sales_orders_view.php?type=30&Marketplace=Yes", 'SA_MP_SALESTRANSVIEW', MENU_INQUIRY);
 		$this->add_lapp_function(1, _("Customer Transaction &Inquiry"),
 			"sales/inquiry/customer_inquiry.php?Marketplace=Yes", 'SA_MP_SALESTRANSVIEW', MENU_INQUIRY);
+		$this->add_lapp_function(1, _("Customer Allocation &Inquiry"),
+			"sales/inquiry/customer_allocation_inquiry.php?Marketplace=Yes", 'SA_MP_SALESALLOC', MENU_INQUIRY);
 
 		$this->add_module(_("Maintenance"));
 		$this->add_lapp_function(2, _("Add and Manage &Marketplaces"),
