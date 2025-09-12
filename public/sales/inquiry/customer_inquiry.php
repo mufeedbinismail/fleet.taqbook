@@ -79,12 +79,13 @@ function credit_link($row)
 		return '';
 	if ($row["Outstanding"] > 0)
 	{
+        $marketplace_flg = check_value('is_marketplace_trans') ? "&Marketplace=Yes" : "";
 		if ($row['type'] == ST_CUSTDELIVERY)
 			return pager_link(_('Invoice'), "/sales/customer_invoice.php?DeliveryNumber=" 
-				.$row['trans_no'], ICON_DOC);
+				.$row['trans_no'].$marketplace_flg, ICON_DOC);
 		else if ($row['type'] == ST_SALESINVOICE)
 			return pager_link(_("Credit This") ,
-			"/sales/customer_credit_invoice.php?InvoiceNumber=". $row['trans_no'], ICON_CREDIT);
+			"/sales/customer_credit_invoice.php?InvoiceNumber=". $row['trans_no'].$marketplace_flg, ICON_CREDIT);
 	}	
 }
 

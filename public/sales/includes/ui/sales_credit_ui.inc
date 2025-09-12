@@ -86,10 +86,10 @@ function display_credit_header(&$order)
 	if (!is_company_currency($order->customer_currency))
 	{
 		table_section(2);
-		
-		label_row(_("Customer Currency:"), $order->customer_currency);
-		exchange_rate_display(get_company_currency(), $order->customer_currency,
-			$_POST['OrderDate']);
+
+        label_row(_("Customer Currency:"), $order->customer_currency);
+        exchange_rate_display(get_company_currency(), $order->customer_currency,
+            $_POST['OrderDate']);
 	}
 	table_section(3);
 
@@ -122,6 +122,16 @@ function display_credit_header(&$order)
 		}
 		$Ajax->activate('_ex_rate');
 	}
+
+    if ($order->is_marketplace_trans) {
+        if ($order->trans_no==0) {
+            marketplace_list_row(_("Marketplace"), 'marketplace_id', null, '-- select --', false, false, true);
+        }
+        else {
+            hidden('marketplace_id', $order->marketplace_id);
+            label_row(_("Marketplace"), get_marketplace_name($order->marketplace_id));
+        }
+    }
 	// added dimensions
 	$dim = get_company_pref('use_dimension');
 	if ($dim > 0)

@@ -37,9 +37,19 @@ if(isset($_GET['NewCredit'])) {
 	$_SESSION['page_title'] = _($help_context = "Customer Credit Note");
 	handle_new_credit(0);
 } elseif (isset($_GET['ModifyCredit'])) {
+    if (!isset($_GET['Marketplace'])) {
+        if (get_customer_trans($_GET['ModifyCredit'], ST_CUSTCREDIT, true)['marketplace_id'] ?? null) {
+            $_GET['Marketplace'] = 'Yes';
+        }
+    }
+
 	$_SESSION['page_title'] = sprintf(_("Modifying Customer Credit Note #%d"), $_GET['ModifyCredit']);
 	handle_new_credit($_GET['ModifyCredit']);
 	$help_context = "Modifying Customer Credit Note";
+}
+
+if (isset($_GET['Marketplace']) || ($_SESSION['Items']->is_marketplace_trans ?? 0) != 0) {
+    $page_security = 'SA_MP_SALESCREDIT';
 }
 
 page($_SESSION['page_title'],false, false, "", $js);
@@ -60,8 +70,9 @@ if (list_updated('branch_id')) {
 }
 
 if (isset($_GET['AddedID'])) {
-	$credit_no = $_GET['AddedID'];
+    $credit_no = $_GET['AddedID'];
 	$trans_type = ST_CUSTCREDIT;
+    $marketplace_flg = isset($_GET['Marketplace']) ? "&Marketplace=Yes" : "";
 
 	display_notification_centered(sprintf(_("Credit Note # %d has been processed"),$credit_no));
 
@@ -72,7 +83,7 @@ if (isset($_GET['AddedID'])) {
 
 	display_note(get_gl_view_str($trans_type, $credit_no, _("View the GL &Journal Entries for this Credit Note")));
 
-	hyperlink_params($_SERVER['PHP_SELF'], _("Enter Another &Credit Note"), "NewCredit=yes");
+	hyperlink_params($_SERVER['PHP_SELF'], _("Enter Another &Credit Note"), "NewCredit=yes{$marketplace_flg}");
 
 	hyperlink_params("$path_to_root/admin/attachments.php", _("Add an Attachment"), "filterType=$trans_type&trans_no=$credit_no");
 
@@ -103,6 +114,7 @@ function copy_to_cn()
 	$cart->ship_via = $_POST['ShipperID'];
 	$cart->dimension_id = $_POST['dimension_id'];
 	$cart->dimension2_id = $_POST['dimension2_id'];
+    $cart->marketplace_id = get_post('marketplace_id');
 }
 
 //-----------------------------------------------------------------------------
@@ -121,6 +133,7 @@ function copy_from_cn()
 	$_POST['dimension_id'] = $cart->dimension_id;
 	$_POST['dimension2_id'] = $cart->dimension2_id;
 	$_POST['cart_id'] = $cart->cart_id;
+    $_POST['marketplace_id'] = $cart->marketplace_id;
 }
 
 //-----------------------------------------------------------------------------
@@ -128,7 +141,7 @@ function copy_from_cn()
 function handle_new_credit($trans_no)
 {
 	processing_start();
-	$_SESSION['Items'] = new Cart(ST_CUSTCREDIT,$trans_no);
+	$_SESSION['Items'] = new Cart(ST_CUSTCREDIT, $trans_no, false, isset($_GET['Marketplace']));
 	copy_from_cn();
 }
 
@@ -144,6 +157,13 @@ function can_process()
 	{
 		display_error(_("There is no customer selected."));
 		set_focus('customer_id');
+		return false;
+	} 
+	
+    if (!get_post('marketplace_id') && $_SESSION['Items']->is_marketplace_trans)
+	{
+		display_error(_("There is no marketplace selected."));
+		set_focus('marketplace_id');
 		return false;
 	} 
 	
@@ -201,9 +221,10 @@ if (isset($_POST['ProcessCredit']) && can_process()) {
 	}
 	else
 	{
+        $marketplace_flg = $_SESSION['Items']->is_marketplace_trans ? "&Marketplace=Yes" : "";
 		new_doc_date($_SESSION['Items']->document_date);
 		processing_end();
-		meta_forward($_SERVER['PHP_SELF'], "AddedID=$credit_no");
+		meta_forward($_SERVER['PHP_SELF'], "AddedID=$credit_no{$marketplace_flg}");
 	}
 } /*end of process credit note */
 

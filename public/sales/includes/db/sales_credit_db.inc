@@ -80,7 +80,7 @@ function write_credit_note(&$credit_note, $write_off_acc)
 		$credit_note->sales_type, $credit_note->order_no, $credit_note->ship_via,
 		null, $alloc, 0, $credit_note->dimension_id, $credit_note->dimension2_id,
 		$credit_note->payment, $credit_note->tax_included,
-        0, $credit_note->tracking_no
+        0, $credit_note->tracking_no, $credit_note->marketplace_id
     ); 
 
 	if ($trans_no==0) {

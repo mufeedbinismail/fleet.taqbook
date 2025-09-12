@@ -38,9 +38,19 @@ if (isset($_GET['ModifyCredit'])) {
 	$help_context = "Modifying Credit Invoice";
 	processing_start();
 } elseif (isset($_GET['InvoiceNumber'])) {
+    if (!isset($_GET['MarketPlace'])) {
+        if (get_customer_trans($_GET['InvoiceNumber'], ST_SALESINVOICE, true)['marketplace_id'] ?? null) {
+            $_GET['Marketplace'] = 'Yes';
+        }
+    }
 	$_SESSION['page_title'] = _($help_context = "Credit all or part of an Invoice");
 	processing_start();
 }
+
+if (isset($_GET['Marketplace']) || ($_SESSION['Items']->is_marketplace_trans ?? 0) != 0) {
+    $page_security = 'SA_MP_SALESCREDITINV';
+}
+
 page($_SESSION['page_title'], false, false, "", $js);
 
 //-----------------------------------------------------------------------------
@@ -205,10 +215,11 @@ if (isset($_POST['ProcessCredit']) && can_process()) {
 		set_focus('ref');
 	} elseif($credit_no) {
 		processing_end();
+        $marketplace_flg = $_SESSION['Items']->is_marketplace_trans ? "&Marketplace=Yes" : "";
 		if ($new_credit) {
-			meta_forward($_SERVER['PHP_SELF'], "AddedID=$credit_no");
+			meta_forward($_SERVER['PHP_SELF'], "AddedID=$credit_no{$marketplace_flg}");
 		} else {
-			meta_forward($_SERVER['PHP_SELF'], "UpdatedID=$credit_no");
+			meta_forward($_SERVER['PHP_SELF'], "UpdatedID=$credit_no{$marketplace_flg}");
 		}
 	}
 }
@@ -256,6 +267,9 @@ function display_credit_items()
 	end_row();
     start_row();
     label_cells(_("Tracking No"), $_SESSION['Items']->tracking_no, "class='tableheader2'");
+    if ($_SESSION['Items']->is_marketplace_trans) {
+        label_cells(_("Marketplace"), get_marketplace_name($_SESSION['Items']->marketplace_id), "class='tableheader2'");
+    }
     end_row();
 	end_table();
 

@@ -21,6 +21,8 @@ class marketplaces_app extends application
 
 		$this->add_rapp_function(0, _("Customer &Payments"),
 			"sales/customer_payments.php?Marketplace=Yes", 'SA_MP_SALESPAYMNT', MENU_TRANSACTION);
+		$this->add_rapp_function(0, _("Customer &Credit Notes"),
+			"sales/credit_note_entry.php?NewCredit=Yes&Marketplace=Yes", 'SA_MP_SALESCREDIT', MENU_TRANSACTION);
 		$this->add_rapp_function(0, _("&Allocate Customer Payments or Credit Notes"),
 			"sales/allocations/customer_allocation_main.php?Marketplace=Yes", 'SA_MP_SALESALLOC', MENU_TRANSACTION);
 
