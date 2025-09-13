@@ -87,8 +87,6 @@ function can_process()
 
 	$grn_act = get_company_pref('grn_clearing_act');
 	$post_grn_act = get_post('grn_clearing_act');
-	if ($post_grn_act == null)
-		$post_grn_act = 0;
 	if (($post_grn_act != $grn_act) && db_num_rows(get_grn_items(0, '', true)))
 	{
 		display_error(_("Before GRN Clearing Account can be changed all GRNs have to be invoiced"));
