@@ -33,15 +33,38 @@ include_once($path_to_root . "/sales/includes/db/marketplaces_db.inc");
 // $date_ is display date (non-sql)
 // $amount is in CUSTOMER'S currency
 
-function add_gl_trans_customer($type, $type_no, $date_, $account, $dimension, $dimension2,
-	$amount, $customer_id, $err_msg="", $rate=0)
+function add_gl_trans_customer(
+    $type,
+    $type_no,
+    $date_,
+    $account,
+    $dimension,
+    $dimension2,
+	$amount,
+    $customer_id,
+    $err_msg="",
+    $rate=0,
+    $memo=""
+)
 {
 	if ($err_msg == "")
 		$err_msg = "The customer GL transaction could not be inserted";
 
-	return add_gl_trans($type, $type_no, $date_, $account, $dimension, $dimension2, "", $amount,
+	return add_gl_trans(
+        $type,
+        $type_no,
+        $date_,
+        $account,
+        $dimension,
+        $dimension2,
+        $memo,
+        $amount,
 		get_customer_currency($customer_id),
-		PT_CUSTOMER, $customer_id, $err_msg, $rate);
+		PT_CUSTOMER,
+        $customer_id,
+        $err_msg,
+        $rate
+    );
 }
 
 //----------------------------------------------------------------------------------------
