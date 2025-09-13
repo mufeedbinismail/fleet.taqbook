@@ -39,7 +39,9 @@ function write_credit_note(&$credit_note, $write_off_acc)
 	hook_db_prewrite($credit_note, ST_CUSTCREDIT);
 
 	$company_data = get_company_prefs();
+    $customer_data = get_customer($credit_note->customer_id);
 	$branch_data = get_branch_accounts($credit_note->Branch);
+    $marketplace_data = $credit_note->marketplace_id ? get_marketplace($credit_note->marketplace_id) : null;
 
 	add_new_exchange_rate(get_customer_currency($credit_note->customer_id), $credit_date, $credit_note->ex_rate);
 
@@ -118,17 +120,28 @@ function write_credit_note(&$credit_note, $write_off_acc)
 
 		$credit_line->standard_cost = get_unit_cost($credit_line->stock_id); 
 		
-		write_customer_trans_detail_item(ST_CUSTCREDIT, $credit_no, $credit_line->stock_id,
-			$credit_line->item_description, $credit_line->qty_dispatched,
-			$credit_line->line_price(), $line_tax, $credit_line->discount_percent,
-			$credit_line->standard_cost, $credit_line->src_id, $trans_no==0 ? 0:  $credit_line->id);
+		write_customer_trans_detail_item(
+            ST_CUSTCREDIT,
+            $credit_no,
+            $credit_line->stock_id,
+			$credit_line->item_description,
+            $credit_line->qty_dispatched,
+			$credit_line->line_price(),
+            $line_tax,
+            $credit_line->discount_percent,
+			$credit_line->standard_cost,
+            $credit_line->src_id,
+            $trans_no==0 ? 0:  $credit_line->id,
+            $credit_line->marketplace_commission,
+            $credit_line->marketplace_shipping
+        );
 
 		if ($credit_type == 'Return')
 			add_credit_movements_item($credit_note, $credit_line,
 				$credit_type, ($line_taxfree_price+$line_tax)*(1-$credit_line->discount_percent), $credit_invoice);
 
 		$total += add_gl_trans_credit_costs($credit_note, $credit_line, $credit_no,
-		    $credit_date, $credit_type, $write_off_acc, $branch_data);
+		    $credit_date, $credit_type, $write_off_acc, $branch_data, $customer_data, $marketplace_data);
 	} /*end of credit_line loop */
 
 	/*Post credit note transaction to GL credit debtors,
@@ -200,10 +213,10 @@ function add_credit_movements_item(&$credit_note, &$credit_line,
 //----------------------------------------------------------------------------------------
 
 function add_gl_trans_credit_costs($order, $order_line, $credit_no, $date_,
-	$credit_type, $write_off_gl_code, &$branch_data)
+	$credit_type, $write_off_gl_code, &$branch_data, $customer, $marketplace)
 {
 	$stock_gl_codes = get_stock_gl_code($order_line->stock_id);
-	$customer = get_customer($order->customer_id);
+
 	// If there is a Customer Dimension, then override with this,
 	// else take the Item Dimension (if any)
 	$dim = ($order->dimension_id != $customer['dimension_id'] ? $order->dimension_id : 
@@ -268,6 +281,66 @@ function add_gl_trans_credit_costs($order, $order_line, $credit_no, $date_,
 				"The credit note discount GL posting could not be inserted");
 
 		} /*end of if discount !=0 */
+
+        if (
+            $order->is_marketplace_trans
+            && ($order_line->marketplace_commission != 0 || $order_line->marketplace_shipping != 0)
+        ) {
+            $marketplace_payable = 0;
+            if (($comm = $order_line->marketplace_commission * $order_line->qty_dispatched) != 0) {
+                $marketplace_payable += $comm;
+
+                add_gl_trans_customer(
+                    ST_CUSTCREDIT,
+                    $credit_no,
+                    $date_,
+                    get_company_pref('marketplace_commission_act'),
+                    $dim,
+                    $dim2,
+                    -$comm,
+                    $order->customer_id,
+                    "The sales price GL posting could not be inserted",
+                    0,
+                    "Marketplace Commission"
+                );
+            }
+
+            if (($ship = $order_line->marketplace_shipping * $order_line->qty_dispatched) != 0) {
+                $marketplace_payable += $ship;
+
+                add_gl_trans_customer(
+                    ST_CUSTCREDIT,
+                    $credit_no,
+                    $date_,
+                    get_company_pref('marketplace_shipping_act'),
+                    $dim,
+                    $dim2,
+                    -$ship,
+                    $order->customer_id,
+                    "The sales price GL posting could not be inserted",
+                    0,
+                    "Marketplace Shipping Charge"
+                );
+            }
+
+            if ($marketplace_payable != 0) {
+                add_gl_trans(
+                    ST_CUSTCREDIT,
+                    $credit_no,
+                    $date_,
+                    $marketplace["payable_account"],
+                    $dim,
+                    $dim2,
+                    "Marketplace Payable",
+                    $marketplace_payable,
+                    get_customer_currency($order->customer_id),
+                    PT_MARKETPLACE,
+                    $order->marketplace_id,
+                    "The sales price GL posting could not be inserted",
+                    0,
+                );
+            }
+        }
 	} /*if line_price!=0 */
 	return $total;
 }

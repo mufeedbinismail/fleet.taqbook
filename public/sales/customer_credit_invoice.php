@@ -130,6 +130,15 @@ function can_process()
 if (isset($_GET['InvoiceNumber']) && $_GET['InvoiceNumber'] > 0) {
 
     $_SESSION['Items'] = new Cart(ST_SALESINVOICE, $_GET['InvoiceNumber'], true);
+
+    foreach ($_SESSION['Items']->line_items as $line_no => $itm) {
+        $itm->bk_marketplace_commission = $itm->marketplace_commission;
+        $itm->bk_marketplace_shipping = $itm->marketplace_shipping;
+
+        $itm->marketplace_commission = 0;
+        $itm->marketplace_shipping = 0;
+    }
+
 	copy_from_cart();
 
 } elseif ( isset($_GET['ModifyCredit']) && $_GET['ModifyCredit']>0) {
@@ -142,12 +151,27 @@ if (isset($_GET['InvoiceNumber']) && $_GET['InvoiceNumber'] > 0) {
 	die (_("This page can only be opened if an invoice has been selected for crediting."));
 } else check_item_data();
 
+$options = [
+    'show_marketplace_cols' => $_SESSION['Items']->is_marketplace_trans
+];
+
 function check_item_data()
 {
     if (!check_quantities()) {
         display_error(_("Selected quantity cannot be less than zero nor more than quantity not credited yet."));
         return false;
     }
+
+    // copy to cart
+    foreach ($_SESSION['Items']->line_items as $line_no => $itm) {
+		if (isset($_POST['Line'.$line_no.'MktShipping'])) {
+			$itm->marketplace_shipping = input_num('Line'.$line_no.'MktShipping');
+	  	}
+		
+        if (isset($_POST['Line'.$line_no.'MktCommission'])) {
+			$itm->marketplace_commission = input_num('Line'.$line_no.'MktCommission');
+	  	}
+	}
 
     return true;
 }
@@ -241,6 +265,7 @@ if (isset($_POST['Location'])) {
 
 function display_credit_items()
 {
+    global $options;
     start_form();
 	hidden('cart_id');
 
@@ -296,8 +321,19 @@ function display_credit_items()
 
 	div_start('credit_items');
     start_table(TABLESTYLE, "width='80%'");
-    $th = array(_("Item Code"), _("Item Description"), _("Invoiced Quantity"), _("Units"),
-    	_("Credit Quantity"), _("Price"), _("Discount %"), _("Total"));
+    $th = [];
+    $th[] = _("Item Code");
+    $th[] = _("Item Description");
+    $th[] = _("Invoiced Quantity");
+    $th[] = _("Units");
+    $th[] = _("Credit Quantity");
+    $th[] = _("Price");
+    $th[] = _("Discount %");
+    if ($options['show_marketplace_cols']) {
+        $th[] = _("Marketplace Commission");
+        $th[] = _("Marketplace Shipping");
+    }
+    $th[] = _("Total");
     table_header($th);
 
     $k = 0; //row colour counter
@@ -322,6 +358,23 @@ function display_credit_items()
 
     	amount_cell($ln_itm->price);
     	percent_cell($ln_itm->discount_percent*100);
+        if ($options['show_marketplace_cols']) {
+            amount_cells(
+                null,
+                'Line'.$line_no.'MktCommission',
+                price_format($ln_itm->marketplace_commission),
+                null,
+                "<br><small>("._("Original:")." ".price_format($ln_itm->bk_marketplace_commission ?? 0).")</small>",
+                $dec
+            );
+            amount_cells(null,
+                'Line'.$line_no.'MktShipping',
+                price_format($ln_itm->marketplace_shipping),
+                null,
+                "<br><small>("._("Original:")." ".price_format($ln_itm->bk_marketplace_shipping ?? 0).")</small>",
+                $dec
+            );
+        }
     	amount_cell($line_total);
     	end_row();
     }
@@ -329,7 +382,7 @@ function display_credit_items()
     if (!check_num('ChargeFreightCost')) {
     	$_POST['ChargeFreightCost'] = price_format($_SESSION['Items']->freight_cost);
     }
-	$colspan = 7;
+	$colspan = 7 + ($options['show_marketplace_cols'] ? 2 : 0);
 	start_row();
 	label_cell(_("Credit Shipping Cost"), "colspan=$colspan align=right");
 	small_amount_cells(null, "ChargeFreightCost", price_format(get_post('ChargeFreightCost',0)));
@@ -344,9 +397,25 @@ function display_credit_items()
 
     $tax_total = display_edit_tax_items($taxes, $colspan, $_SESSION['Items']->tax_included);
 
-    $display_total = price_format(($inv_items_total + input_num('ChargeFreightCost') + $tax_total));
+    $credit_total = ($inv_items_total + input_num('ChargeFreightCost') + $tax_total);
 
-    label_row(_("Credit Note Total"), $display_total, "colspan=$colspan align=right", "align=right");
+    label_row(_("Credit Note Total"), price_format($credit_total), "colspan=$colspan align=right", "align=right");
+
+    if ($options['show_marketplace_cols']) {
+        $market_cost = $_SESSION['Items']->get_total_marketplace_cost();
+        label_row(
+            _("Total Marketplace Cost"),
+            price_format($market_cost),
+            "colspan=$colspan align=right",
+            "align=right"
+        );
+        label_row(
+            _("Net Refundable to Marketplace"),
+            price_format($credit_total - $market_cost),
+            "colspan=$colspan align=right",
+            "align=right"
+        );
+    }
 
     end_table();
 	div_end();
