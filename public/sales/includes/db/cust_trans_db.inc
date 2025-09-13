@@ -487,7 +487,8 @@ function get_sql_for_sales_deliveries_view(
     $marketplace_id=''
 )
 {
-	$sql = "SELECT trans.trans_no,
+	$sql = "SELECT
+            trans.trans_no,
 			debtor.name,
 			branch.branch_code,
 			branch.br_name,
@@ -499,7 +500,8 @@ function get_sql_for_sales_deliveries_view(
 			(ov_amount+ov_gst+ov_freight+ov_freight_tax) AS DeliveryValue,
 			debtor.curr_code,
 			Sum(line.quantity-line.qty_done) AND sorder.prep_amount=0 AS Outstanding,
-			Sum(line.qty_done) AS Done
+			Sum(line.qty_done) AS Done,
+            trans.marketplace_id
 		FROM "
 		 .TB_PREF."sales_orders as sorder, "
 		 .TB_PREF."debtor_trans as trans, "

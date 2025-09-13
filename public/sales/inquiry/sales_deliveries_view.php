@@ -56,14 +56,15 @@ if (isset($_POST['BatchInvoice']))
 	// checking batch integrity
     $del_count = 0;
     if (isset($_POST['Sel_'])) {
-		foreach($_POST['Sel_'] as $delivery => $branch) {
+		foreach($_POST['Sel_'] as $delivery => $data) {
+            [$branch, $marketplace] = explode(',', $data);
 			$checkbox = 'Sel_'.$delivery;
 			if (check_value($checkbox))	{
 				if (!$del_count) {
-					$del_branch = $branch;
+					[$del_branch, $del_marketplace] = [$branch, $marketplace];
 				}
 				else {
-					if ($del_branch != $branch)	{
+					if ($del_branch != $branch || $del_marketplace != $marketplace) {
 						$del_count=0;
 						break;
 					}
@@ -74,12 +75,14 @@ if (isset($_POST['BatchInvoice']))
 		}
 	}
     if (!$del_count) {
-		display_error(_('For batch invoicing you should
-		    select at least one delivery. All items must be dispatched to
-		    the same customer branch.'));
+		display_error(_('For batch invoicing you should select at least one delivery.
+            All items must be dispatched to the same customer branch'
+            . (check_value('is_marketplace_trans') ? ' and marketplace' : '') . '.'
+        ));
     } else {
 		$_SESSION['DeliveryBatch'] = $selected;
-		meta_forward($path_to_root . '/sales/customer_invoice.php','BatchInvoice=Yes');
+        $marketplace_flg = check_value('is_marketplace_trans') ? '&Marketplace=Yes' : '';
+		meta_forward($path_to_root . '/sales/customer_invoice.php','BatchInvoice=Yes' . $marketplace_flg);
     }
 }
 
@@ -146,8 +149,7 @@ function batch_checkbox($row)
 	return $row['Done'] ? '' :
 		"<input type='checkbox' name='$name' value='1' >"
 // add also trans_no => branch code for checking after 'Batch' submit
-	 ."<input name='Sel_[".$row['trans_no']."]' type='hidden' value='"
-	 .$row['branch_code']."'>\n";
+	 ."<input name='Sel_[".$row['trans_no']."]' type='hidden' value='{$row['branch_code']},{$row['marketplace_id']}'>\n";
 }
 
 function edit_link($row)

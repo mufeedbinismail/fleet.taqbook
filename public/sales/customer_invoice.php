@@ -238,6 +238,14 @@ function check_quantities()
 				$_SESSION['Items']->line_items[$line_no]->item_description = $line_desc;
 			}
 		}
+
+        if (isset($_POST['Line'.$line_no.'MktShipping'])) {
+			$itm->marketplace_shipping = input_num('Line'.$line_no.'MktShipping');
+	  	}
+		
+        if (isset($_POST['Line'.$line_no.'MktCommission'])) {
+			$itm->marketplace_commission = input_num('Line'.$line_no.'MktCommission');
+	  	}
 	}
  return $ok;
 }
@@ -433,7 +441,9 @@ $dspans[] = $spanlen;
 
 $is_batch_invoice = count($_SESSION['Items']->src_docs) > 1;
 $prepaid = $_SESSION['Items']->is_prepaid();
-
+$options = [
+    "show_marketplace_cols" => $_SESSION['Items']->is_marketplace_trans
+];
 $is_edition = $_SESSION['Items']->trans_type == ST_SALESINVOICE && $_SESSION['Items']->trans_no != 0;
 start_form();
 hidden('cart_id');
@@ -538,12 +548,30 @@ display_heading($prepaid ? _("Sales Order Items") : _("Invoice Items"));
 div_start('Items');
 
 start_table(TABLESTYLE, "width='80%'");
-if ($prepaid)
-	$th = array(_("Item Code"), _("Item Description"), _("Units"), _("Quantity"),
-		_("Price"), _("Tax Type"), _("Discount"), _("Total"));
-else
-	$th = array(_("Item Code"), _("Item Description"), _("Delivered"), _("Units"), _("Invoiced"),
-		_("This Invoice"), _("Price"), _("Tax Type"), _("Discount"), _("Total"));
+$th = [];
+$th[] = _("Item Code");
+$th[] = _("Item Description");
+
+if ($prepaid) {
+    $th[] = _("Units");
+    $th[] = _("Quantity");
+} else {
+    $th[] = _("Delivered");
+    $th[] = _("Units");
+    $th[] = _("Invoiced");
+    $th[] = _("This Invoice");
+}
+
+$th[] = _("Price");
+$th[] = _("Tax Type");
+$th[] = _("Discount");
+
+if ($options['show_marketplace_cols']) {
+    $th[] = _("Mkt Commission");
+    $th[] = _("Mkt Shipping Chg");
+}
+
+$th[] = _("Total");
 
 if ($is_batch_invoice) {
     $th[] = _("DN");
@@ -594,6 +622,23 @@ foreach ($_SESSION['Items']->line_items as $line=>$ln_itm) {
 	amount_cell($ln_itm->price);
 	label_cell($ln_itm->tax_type_name);
 	label_cell($display_discount_percent, "nowrap align=right");
+    if ($options['show_marketplace_cols']) {
+        amount_cells(
+            null,
+            'Line'.$line.'MktCommission',
+            price_format($ln_itm->marketplace_commission),
+            null,
+            "",
+            $dec
+        );
+        amount_cells(null,
+            'Line'.$line.'MktShipping',
+            price_format($ln_itm->marketplace_shipping),
+            null,
+            "",
+            $dec
+        );
+    }
 	amount_cell($line_total);
 
 	if ($is_batch_invoice) {
@@ -630,7 +675,7 @@ $accumulate_shipping = get_company_pref('accumulate_shipping');
 if ($is_batch_invoice && $accumulate_shipping)
 	set_delivery_shipping_sum(array_keys($_SESSION['Items']->src_docs));
 
-$colspan = $prepaid ? 7:9;
+$colspan = ($prepaid ? 7 : 9) + ($options['show_marketplace_cols'] ? 2 : 0);
 start_row();
 label_cell(_("Shipping Cost"), "colspan=$colspan align=right");
 if ($prepaid)
@@ -651,9 +696,25 @@ label_row(_("Sub-total"), $display_sub_total, "colspan=$colspan align=right","al
 $taxes = $_SESSION['Items']->get_taxes(input_num('ChargeFreightCost'));
 $tax_total = display_edit_tax_items($taxes, $colspan, $_SESSION['Items']->tax_included, $is_batch_invoice ? 2 : 0);
 
-$display_total = price_format(($inv_items_total + input_num('ChargeFreightCost') + $tax_total));
+$inv_total = $inv_items_total + input_num('ChargeFreightCost') + $tax_total;
 
-label_row(_("Invoice Total"), $display_total, "colspan=$colspan align=right","align=right", $is_batch_invoice ? 2 : 0);
+label_row(_("Invoice Total"), price_format($inv_total), "colspan=$colspan align=right","align=right", $is_batch_invoice ? 2 : 0);
+
+if ($options['show_marketplace_cols']) {
+    $market_cost = $_SESSION['Items']->get_total_marketplace_cost();
+    label_row(
+        _("Total Marketplace Cost"),
+        price_format($market_cost),
+        "colspan=$colspan align=right",
+        "align=right"
+    );
+    label_row(
+        _("Net Receivable From Marketplace"),
+        price_format($inv_total - $market_cost),
+        "colspan=$colspan align=right",
+        "align=right"
+    );
+}
 
 end_table(1);
 div_end();
