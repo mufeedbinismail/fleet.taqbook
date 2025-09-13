@@ -1879,20 +1879,41 @@ function gl_account_types_list_row($label, $name, $selected_id=null, $all_option
 
 //-----------------------------------------------------------------------------------------------
 function gl_all_accounts_list($name, $selected_id=null, $skip_bank_accounts=false,
-	$cells=false, $all_option=false, $submit_on_change=false, $all=false, $type_id=false)
+	$cells=false, $all_option=false, $submit_on_change=false, $all=false, $type_id=false,
+    $class=null)
 {
 	if ($skip_bank_accounts)
-		$sql = "SELECT chart.account_code, chart.account_name, type.name, chart.inactive, type.id
-			FROM (".TB_PREF."chart_master chart,".TB_PREF."chart_types type) "
-			."LEFT JOIN ".TB_PREF."bank_accounts acc "
-			."ON chart.account_code=acc.account_code
-				WHERE acc.account_code  IS NULL
-			AND chart.account_type=type.id";
+		$sql = "SELECT
+            chart.account_code,
+            chart.account_name,
+            type.name,
+            chart.inactive,
+            type.id
+        FROM ".TB_PREF."chart_master chart
+        INNER JOIN ".TB_PREF."chart_types type ON chart.account_type=type.id
+        INNER JOIN ".TB_PREF."chart_class as class ON type.class_id=class.cid
+        LEFT JOIN ".TB_PREF."bank_accounts acc ON chart.account_code=acc.account_code
+        WHERE acc.account_code  IS NULL";
 	else
-		$sql = "SELECT chart.account_code, chart.account_name, type.name, chart.inactive, type.id
-			FROM ".TB_PREF."chart_master chart,".TB_PREF."chart_types type
-			WHERE chart.account_type=type.id";
+		$sql = "SELECT
+            chart.account_code,
+            chart.account_name,
+            type.name,
+            chart.inactive,
+            type.id
+		FROM ".TB_PREF."chart_master chart
+        INNER JOIN ".TB_PREF."chart_types type ON chart.account_type=type.id
+        INNER JOIN ".TB_PREF."chart_class as class ON type.class_id=class.cid";
+
 	if ($type_id ) $sql .= " AND chart.account_type=".db_escape($type_id);
+
+    if ($class) {
+        if (!is_array($class))
+            $class = explode(',', $class);
+
+        $sql .= " AND class.ctype IN (".implode(',', array_map('db_escape', $class)).")";
+    }
+
 	$account = ($skip_bank_accounts ? "account2" : "account");
 	return combo_input($name, $selected_id, $sql, 'chart.account_code', 'chart.account_name',
 		array(
@@ -1920,22 +1941,25 @@ function _format_account($row)
 
 function gl_all_accounts_list_cells($label, $name, $selected_id=null, 
 	$skip_bank_accounts=false, $cells=false, $all_option=false, 
-	$submit_on_change=false, $all=false, $type_id=false)
+	$submit_on_change=false, $all=false, $type_id=false, $class=null)
 {
 	if ($label != null)
 		echo "<td>$label</td>\n";
 	echo "<td>";
 	echo gl_all_accounts_list($name, $selected_id, 
-		$skip_bank_accounts, $cells, $all_option, $submit_on_change, $all, $type_id);
+		$skip_bank_accounts, $cells, $all_option, $submit_on_change,
+        $all, $type_id, $class);
 	echo "</td>\n";
 }
 
 function gl_all_accounts_list_row($label, $name, $selected_id=null, 
-	$skip_bank_accounts=false, $cells=false, $all_option=false, $submit_on_change=false, $all=false, $type_id=false)
+	$skip_bank_accounts=false, $cells=false, $all_option=false,
+    $submit_on_change=false, $all=false, $type_id=false, $class=null)
 {
 	echo "<tr><td class='label'>$label</td>";
 	gl_all_accounts_list_cells(null, $name, $selected_id, 
-		$skip_bank_accounts, $cells, $all_option, $submit_on_change, $all, $type_id);
+		$skip_bank_accounts, $cells, $all_option, $submit_on_change,
+        $all, $type_id, $class);
 	echo "</tr>\n";
 }
 
