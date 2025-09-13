@@ -298,43 +298,73 @@ class Cart
 		
 		global $SysPrefs, $Refs;
 		
-		begin_transaction(); // prevents partial database changes in case of direct delivery/invoice
-		if ($this->reference != 'auto' && $this->trans_no == 0 && !is_new_reference($this->reference, $this->trans_type))
-		{
+        // prevents partial database changes in case of direct delivery/invoice
+		begin_transaction();
+
+        // Ensure reference is set and is unique
+        // If not, and auto-increment is enabled, get next and set it.
+		if (
+            $this->trans_no == 0
+            && !is_new_reference($this->reference, $this->trans_type)
+        ) {
 			if (!empty($SysPrefs->prefs['ref_no_auto_increase']))
 				$this->reference = $Refs->get_next($this->trans_type, null, array('date' => Today()));
-			else	
-			{
+			else {
 				commit_transaction();
 				return -1;
 			}
 		}
-		if (count($this->src_docs) == 0 && ($this->trans_type == ST_SALESINVOICE || $this->trans_type == ST_CUSTDELIVERY) && !$this->is_prepaid()) {
-			// this is direct document - first add parent
-			$ref = $this->reference;
-			$date = $this->document_date;
-			$due_date = $this->due_date;
-			$dimension_id = $this->dimension_id;
-			$dimension2_id = $this->dimension2_id;
-			$this->trans_type = get_parent_type($this->trans_type);
 
-			$this->reference = 'auto'; 
-			$trans_no = $this->write(1); 
+        // These are not common for all documents
+        // so we need to restore them, after creating,
+        // possibly multiple, parent documents
+        $orig_type = $this->trans_type;
+        $ref = $this->reference;
+        $date = $this->document_date;
+        $due_date = $this->due_date;
+        $dimension_id = $this->dimension_id;
+        $dimension2_id = $this->dimension2_id;
 
-			// re-read parent document converting it to child
-			$this->read($this->trans_type, $trans_no, true); 
-			$this->document_date = $date;
-			$this->reference = $ref;
-			$this->due_date = $due_date;
-			$this->dimension_id = $dimension_id;
-			$this->dimension2_id = $dimension2_id;
+        // For direct documents (no src_docs and not prepaid),
+        // create missing parent documents iteratively
+		if (
+            in_array($orig_type, [ST_CUSTDELIVERY, ST_SALESINVOICE])
+            && count($this->src_docs) == 0
+            && !$this->is_prepaid()
+        ) {
+            // In case of direct delivery, only sales order is required
+            // In case of direct invoice, both sales order and delivery are required
+            foreach ([ST_SALESORDER, ST_CUSTDELIVERY] as $parent_type) {
+                $this->trans_type = $parent_type;
+                $this->reference = 'auto'; 
+
+                $trans_no = $parent_type == ST_SALESORDER
+                    ? add_sales_order($this)
+                    : write_sales_delivery($this, 1);
+
+                // read the parent and prepare the child
+                // sales order -> delivery, or delivery -> invoice
+                $this->read($this->trans_type, $trans_no, true);
+
+                // After reading from DB, it may be encoded, so decode it.
+                $this->Comments = @html_entity_decode($this->Comments, ENT_QUOTES);
+                foreach($this->line_items as $lineno => $line) {
+                    $this->line_items[$lineno]->stock_id = @html_entity_decode($line->stock_id, ENT_QUOTES);
+                    $this->line_items[$lineno]->item_description = @html_entity_decode($line->item_description, ENT_QUOTES);
+                }
+
+                // These are not common for all documents
+                // so we need to restore them, after every iteration
+                $this->document_date = $date;
+                $this->reference = $ref;
+                $this->due_date = $due_date;
+                $this->dimension_id = $dimension_id;
+                $this->dimension2_id = $dimension2_id;
+
+                if ($this->trans_type == $orig_type) break;
+            }
 		}
-		$this->reference = @html_entity_decode($this->reference, ENT_QUOTES);
-		$this->Comments = @html_entity_decode($this->Comments, ENT_QUOTES);
-		foreach($this->line_items as $lineno => $line) {
-			$this->line_items[$lineno]->stock_id = @html_entity_decode($line->stock_id, ENT_QUOTES);
-			$this->line_items[$lineno]->item_description = @html_entity_decode($line->item_description, ENT_QUOTES);
-		}
+
 		switch($this->trans_type) {
 			case ST_SALESINVOICE:
 				$ret = write_sales_invoice($this); break;
