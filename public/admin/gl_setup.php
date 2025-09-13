@@ -22,13 +22,16 @@ page(_($help_context = "System and General GL Setup"), false, false, "", $js);
 include_once($path_to_root . "/includes/date_functions.inc");
 include_once($path_to_root . "/includes/ui.inc");
 include_once($path_to_root . "/includes/data_checks.inc");
-
 include_once($path_to_root . "/admin/db/company_db.inc");
+
+$user = $_SESSION['wa_current_user'];
 
 //-------------------------------------------------------------------------------------------------
 
 function can_process()
 {
+    global $user;
+
     if (!check_num('past_due_days', 0, 100))
     {
         display_error(_("The past due days interval allowance must be between 0 and 100."));
@@ -99,6 +102,20 @@ function can_process()
 		display_error(_("The Retained Earnings Account should be a Balance Account or the Profit and Loss Year Account should be an Expense Account (preferred the last one in the Expense Class)"));
 		return false;
 	}
+
+    if ($user->check_module_access('mp_orders')) {
+        if (!get_post('marketplace_commission_act')) {
+            display_error(_("Please select the marketplace commission account."));
+            set_focus('marketplace_commission_act');
+            return false;
+        }
+
+        if (!get_post('marketplace_shipping_act')) {
+            display_error(_("Please select the marketplace shipping account."));
+            set_focus('marketplace_shipping_act');
+            return false;
+        }
+    }
 	return true;
 }
 
@@ -106,18 +123,50 @@ function can_process()
 
 if (isset($_POST['submit']) && can_process())
 {
-	update_company_prefs( get_post( array( 'retained_earnings_act', 'profit_loss_year_act',
-		'debtors_act', 'pyt_discount_act', 'creditors_act', 'freight_act', 'deferred_income_act',
-		'exchange_diff_act', 'bank_charge_act', 'default_sales_act', 'default_sales_discount_act',
-		'default_prompt_payment_act', 'default_inventory_act', 'default_cogs_act', 'depreciation_period',
-		'default_loss_on_asset_disposal_act', 'default_adj_act', 'default_inv_sales_act', 'default_wip_act', 'legal_text',
-		'past_due_days', 'default_workorder_required', 'default_dim_required', 'default_receival_required',
-		'default_delivery_required', 'default_quote_valid_days', 'grn_clearing_act', 'tax_algorithm',
-		'no_zero_lines_amount', 'show_po_item_codes', 'accounts_alpha', 'loc_notification', 'print_invoice_no',
-		'allow_negative_prices', 'print_item_images_on_quote', 
-		'allow_negative_stock'=> 0, 'accumulate_shipping'=> 0,
-		'po_over_receive' => 0.0, 'po_over_charge' => 0.0, 'default_credit_limit'=>0.0
-)));
+	update_company_prefs( get_post( array(
+        'retained_earnings_act',
+        'profit_loss_year_act',
+		'debtors_act',
+        'pyt_discount_act',
+        'creditors_act',
+        'freight_act',
+        'deferred_income_act',
+		'exchange_diff_act',
+        'bank_charge_act',
+        'default_sales_act',
+        'default_sales_discount_act',
+		'default_prompt_payment_act',
+        'default_inventory_act',
+        'default_cogs_act',
+        'depreciation_period',
+		'default_loss_on_asset_disposal_act',
+        'default_adj_act',
+        'default_inv_sales_act',
+        'default_wip_act',
+        'legal_text',
+		'past_due_days',
+        'default_workorder_required',
+        'default_dim_required',
+        'default_receival_required',
+		'default_delivery_required',
+        'default_quote_valid_days',
+        'grn_clearing_act',
+        'tax_algorithm',
+		'no_zero_lines_amount',
+        'show_po_item_codes',
+        'accounts_alpha',
+        'loc_notification',
+        'print_invoice_no',
+		'allow_negative_prices',
+        'print_item_images_on_quote',
+		'allow_negative_stock'=> 0,
+        'accumulate_shipping'=> 0,
+		'po_over_receive' => 0.0,
+        'po_over_charge' => 0.0,
+        'default_credit_limit'=>0.0,
+        'marketplace_commission_act',
+        'marketplace_shipping_act',
+    )));
 
 	display_notification(_("The general GL setup has been updated."));
 
@@ -180,6 +229,9 @@ $_POST['allow_negative_prices'] = $myrow['allow_negative_prices'];
 $_POST['print_item_images_on_quote'] = $myrow['print_item_images_on_quote'];
 $_POST['default_loss_on_asset_disposal_act'] = $myrow['default_loss_on_asset_disposal_act'];
 $_POST['depreciation_period'] = $myrow['depreciation_period'];
+
+$_POST['marketplace_commission_act'] = $myrow['marketplace_commission_act'];
+$_POST['marketplace_shipping_act'] = $myrow['marketplace_shipping_act'];
 
 //---------------
 
@@ -245,6 +297,36 @@ text_row(_("Delivery Required By:"), 'default_delivery_required', $_POST['defaul
 //---------------
 
 table_section(2);
+
+if ($user->check_module_access('mp_orders')) {
+    table_section_title(_("Marketplace Sales Defaults"));
+
+    gl_all_accounts_list_row(
+        _("Commission Account:"),
+        'marketplace_commission_act',
+        null,
+        true,
+        false,
+        '-- select --',
+        false,
+        false,
+        false,
+        [CL_COGS, CL_EXPENSE]
+    );
+
+    gl_all_accounts_list_row(
+        _("Shipping Chrg Account:"),
+        'marketplace_shipping_act',
+        null,
+        true,
+        false,
+        '-- select --',
+        false,
+        false,
+        false,
+        [CL_COGS, CL_EXPENSE]
+    );
+}
 
 table_section_title(_("Suppliers and Purchasing"));
 

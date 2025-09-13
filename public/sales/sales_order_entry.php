@@ -617,9 +617,15 @@ function check_item_data()
 function handle_update_item()
 {
 	if ($_POST['UpdateItem'] != '' && check_item_data()) {
-		$_SESSION['Items']->update_cart_item($_POST['LineNo'],
-		 input_num('qty'), input_num('price'),
-		 input_num('Disc') / 100, $_POST['item_description'] );
+		$_SESSION['Items']->update_cart_item(
+            $_POST['LineNo'],
+			input_num('qty'),
+			input_num('price'),
+			input_num('Disc') / 100,
+			$_POST['item_description'],
+			input_num('marketplace_commission'),
+			input_num('marketplace_shipping')
+		);
 	}
 	page_modified();
   line_start_focus();
@@ -645,8 +651,16 @@ function handle_new_item()
 	if (!check_item_data()) {
 			return;
 	}
-	add_to_order($_SESSION['Items'], get_post('stock_id'), input_num('qty'),
-		input_num('price'), input_num('Disc') / 100, get_post('stock_id_text'));
+	add_to_order(
+        $_SESSION['Items'],
+        get_post('stock_id'),
+        input_num('qty'),
+		input_num('price'),
+        input_num('Disc') / 100,
+        get_post('stock_id_text'),
+		input_num('marketplace_commission'),
+		input_num('marketplace_shipping')
+	);
 
 	unset($_POST['_stock_id_edit'], $_POST['stock_id']);
 	page_modified();

@@ -299,11 +299,19 @@ function read_sales_trans($doc_type, $trans_no, &$cart)
 		if (db_num_rows($result) > 0) {
 			for($line_no=0; $myrow = db_fetch($result); $line_no++)	{
 				$cart->line_items[$line_no] = new line_details(
-					$myrow["stock_id"],$myrow["quantity"],
-					$myrow["unit_price"], $myrow["discount_percent"],
-					$myrow["qty_done"], $myrow["standard_cost"],
-					$myrow["StockDescription"],$myrow["id"], $myrow["debtor_trans_no"],
-					@$myrow["src_id"]);
+					$myrow["stock_id"],
+                    $myrow["quantity"],
+					$myrow["unit_price"],
+                    $myrow["discount_percent"],
+					$myrow["qty_done"],
+                    $myrow["standard_cost"],
+					$myrow["StockDescription"],
+                    $myrow["id"],
+                    $myrow["debtor_trans_no"],
+					@$myrow["src_id"],
+                    $myrow["marketplace_commission"],
+                    $myrow["marketplace_shipping"]
+                );
 			}
 		}
         $cart->prepayments = get_payments_for($trans_no[0], $doc_type, $debtor_no);
