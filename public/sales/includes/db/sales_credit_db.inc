@@ -82,8 +82,9 @@ function write_credit_note(&$credit_note, $write_off_acc)
 		$credit_note->sales_type, $credit_note->order_no, $credit_note->ship_via,
 		null, $alloc, 0, $credit_note->dimension_id, $credit_note->dimension2_id,
 		$credit_note->payment, $credit_note->tax_included,
-        0, $credit_note->tracking_no, $credit_note->marketplace_id
-    ); 
+        0, $credit_note->tracking_no, $credit_note->marketplace_id,
+        $credit_note->get_total_marketplace_cost()
+    );
 
 	if ($trans_no==0) {
 		$credit_note->trans_no = array($credit_no=>0);
