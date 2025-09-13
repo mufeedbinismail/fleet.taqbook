@@ -119,8 +119,7 @@ function can_process()
 		set_focus('ChargeFreightCost');
 		return false;
 	}
-	if (!check_quantities()) {
-		display_error(_("Selected quantity cannot be less than zero nor more than quantity not credited yet."));
+	if (!check_item_data()) {
 		return false;
 	}
 	return true;
@@ -141,8 +140,16 @@ if (isset($_GET['InvoiceNumber']) && $_GET['InvoiceNumber'] > 0) {
 } elseif (!processing_active()) {
 	/* This page can only be called with an invoice number for crediting*/
 	die (_("This page can only be opened if an invoice has been selected for crediting."));
-} elseif (!check_quantities()) {
-	display_error(_("Selected quantity cannot be less than zero nor more than quantity not credited yet."));
+} else check_item_data();
+
+function check_item_data()
+{
+    if (!check_quantities()) {
+        display_error(_("Selected quantity cannot be less than zero nor more than quantity not credited yet."));
+        return false;
+    }
+
+    return true;
 }
 
 function check_quantities()
