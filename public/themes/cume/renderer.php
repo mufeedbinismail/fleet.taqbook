@@ -159,6 +159,7 @@ class renderer
         $sel_app = $_SESSION['sel_app'];
         $user = $_SESSION["wa_current_user"];
         $shouldShowFooter = $this->shouldShowFooter($no_menu, $is_index);
+        $sidebarCollapsed = ($_COOKIE['sidebar_collapsed'] ?? '0') === '1';
         $toolbox = [
             'dashboard' => [
                 'link' => "$path_to_root/admin/dashboard.php?sel_app=$sel_app",
@@ -206,34 +207,41 @@ class renderer
             'main-container',
             'has-header' => true,
             'has-sidebar' => !$no_menu,
-            'has-footer' => $shouldShowFooter
+            'has-footer' => $shouldShowFooter,
+            'sidebar-collapsed' => !$no_menu && $sidebarCollapsed
         ]) ?>">
             <?php if (!$no_menu) : ?>
             <!-- Sidebar -->
             <aside class="main-sidebar">
-                <h2 class="app-name">
-                    <img src="<?= "$path_to_root/themes/cume/images/logo.svg" ?>" alt="Logo">
-                    taqbook <small><sub>ERP</sub></small>
-                </h2>
-                <nav>
-                    <ul>
-                        <?php foreach($applications as $app):
-                            if ($user->check_application_access($app)):
-                                $acc = access_string($app->name); ?>
-                                <li class="main-nav-item <?= $sel_app == $app->id ? 'selected' : '' ?>">
-                                    <span class="cu-icon pe-2 <?= $appIcons[$app->id] ?? 'icon-spacer' ?>"></span>
-                                    <?= "<a href='{$local_path_to_root}/index.php?application={$app->id}' {$acc[1]}>{$acc[0]}</a>" ?>
-                                </li>
-                            <?php endif;
-                        endforeach; ?>
-                    </ul>
-                </nav>
+                <div class="sidebar-inner">
+                    <h2 class="app-name">
+                        <img src="<?= "$path_to_root/themes/cume/images/logo.svg" ?>" alt="Logo">
+                        taqbook <small><sub>ERP</sub></small>
+                    </h2>
+                    <nav>
+                        <ul>
+                            <?php foreach($applications as $app):
+                                if ($user->check_application_access($app)):
+                                    $acc = access_string($app->name); ?>
+                                    <li class="main-nav-item <?= $sel_app == $app->id ? 'selected' : '' ?>">
+                                        <span class="cu-icon pe-2 <?= $appIcons[$app->id] ?? 'icon-spacer' ?>"></span>
+                                        <?= "<a href='{$local_path_to_root}/index.php?application={$app->id}' {$acc[1]}>{$acc[0]}</a>" ?>
+                                    </li>
+                                <?php endif;
+                            endforeach; ?>
+                        </ul>
+                    </nav>
+                </div>
             </aside>
             <?php endif; ?>
 
             <section class="main-section">
                 <?php if(!$no_menu): ?>
                 <header class="main-header">
+                    <!-- Sidebar Minimize Button -->
+                    <button id="sidebar-toggle" class="sidebar-toggle-btn me-2 bg-transparent w-[25px] h-[25px] border-0 text-lg pb-0" aria-label="Toggle sidebar" type="button">
+                        <span class="cu-icon icon-bars"></span>
+                    </button>
                     <?php if ($title && !$is_index) : ?>
                     <h1 class="title"><?= $title ?></h1>
                     <?php endif; ?>

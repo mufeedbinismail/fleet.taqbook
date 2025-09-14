@@ -195,10 +195,28 @@ function initUI() {
       }
     };
   }
+  function handleMinimizeSidebarButton() {
+    const btn = document.getElementById("sidebar-toggle");
+    if (!btn) {
+      return;
+    }
+    const container = document.querySelector(".main-container");
+    if (!container) {
+      return;
+    }
+    btn.addEventListener("click", function() {
+      const collapsed = container.classList.toggle("sidebar-collapsed");
+      document.cookie = "sidebar_collapsed=" + (collapsed ? "1" : "0") + "; path=/; SameSite=Lax";
+    });
+    if (document.cookie.match(/sidebar_collapsed=1/)) {
+      container.classList.add("sidebar-collapsed");
+    }
+  }
   document.addEventListener("DOMContentLoaded", function() {
     refreshUI();
     monkeyPatchFADatePicker();
     monkeyPatchFASetMark();
+    handleMinimizeSidebarButton();
   });
 }
 initUI();
