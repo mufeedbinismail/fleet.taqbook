@@ -35,13 +35,14 @@ function write_customer_payment(
     $bank_amount=0,
     $dim1=0,
     $dim2=0,
-    $marketplace_id=null
+    $marketplace_id=null,
+    $marketplace_cost=0
 )
 {
 	global $Refs;
 
 	begin_transaction();
-	$args = func_get_args(); while (count($args) < 15) $args[] = 0;
+	$args = func_get_args(); while (count($args) < 16) $args[] = 0;
 	$args = (object)array_combine(
         array(
             'trans_no',
@@ -56,7 +57,8 @@ function write_customer_payment(
             'bank_amount',
             'dim1',
             'dim2',
-            'marketplace_id'
+            'marketplace_id',
+            'marketplace_cost'
         ),
         $args
     );
@@ -107,16 +109,47 @@ function write_customer_payment(
         0,
         0,
         null,
-        $marketplace_id
+        $marketplace_id,
+        $marketplace_cost
     );
 
 	$bank_gl_account = get_bank_gl_account($bank_account);
 
 	$total = 0;
+    $bank_amount -= $marketplace_cost;
 
 	/* Bank account entry first */
-	$total += add_gl_trans(ST_CUSTPAYMENT, $payment_no, $date_,
-		$bank_gl_account, $dim1, $dim2, '', ($bank_amount - $charge),  $bank['bank_curr_code'], PT_CUSTOMER, $customer_id);
+	$total += add_gl_trans(
+        ST_CUSTPAYMENT,
+        $payment_no,
+        $date_,
+		$bank_gl_account,
+        $dim1,
+        $dim2,
+        '',
+        ($bank_amount - $charge),
+         $bank['bank_curr_code'],
+        PT_CUSTOMER,
+        $customer_id
+    );
+
+    if ($marketplace_cost != 0)
+    {
+        $marketplace_act = get_marketplace($marketplace_id)['payable_account'];
+        $total += add_gl_trans(
+            ST_CUSTPAYMENT,
+            $payment_no,
+            $date_,
+            $marketplace_act,
+            $dim1,
+            $dim2,
+            '',
+            $marketplace_cost,
+            get_customer_currency($customer_id),
+            PT_MARKETPLACE,
+            $marketplace_id
+        );
+    }
 
 	if ($branch_id != ANY_NUMERIC) {
 
@@ -131,23 +164,50 @@ function write_customer_payment(
 	}
 
 	if (($discount + $amount) != 0)	{
-	/* Now Credit Debtors account with receipts + discounts */
-	$total += add_gl_trans_customer(ST_CUSTPAYMENT, $payment_no, $date_,
-		$debtors_account, $dim1, $dim2, -($discount + $amount), $customer_id,
-		"Cannot insert a GL transaction for the debtors account credit");
+	    /* Now Credit Debtors account with receipts + discounts */
+        $total += add_gl_trans_customer(
+            ST_CUSTPAYMENT,
+            $payment_no,
+            $date_,
+            $debtors_account,
+            $dim1,
+            $dim2,
+            -($discount + $amount),
+            $customer_id,
+            "Cannot insert a GL transaction for the debtors account credit"
+        );
 	}
 	if ($discount != 0)	{
 		/* Now Debit discount account with discounts allowed*/
-		$total += add_gl_trans_customer(ST_CUSTPAYMENT, $payment_no, $date_,
-			$discount_account, $dim1, $dim2, $discount, $customer_id,
-			"Cannot insert a GL transaction for the payment discount debit");
+		$total += add_gl_trans_customer(
+            ST_CUSTPAYMENT,
+            $payment_no,
+            $date_,
+			$discount_account,
+            $dim1,
+            $dim2,
+            $discount,
+            $customer_id,
+			"Cannot insert a GL transaction for the payment discount debit"
+        );
 	}
 
 	if ($charge != 0)	{
 		/* Now Debit bank charge account with charges */
 		$charge_act = get_bank_charge_account($bank_account);
-		$total += add_gl_trans(ST_CUSTPAYMENT, $payment_no, $date_,	$charge_act, $dim1, $dim2, '', 
-			$charge, $bank['bank_curr_code'], PT_CUSTOMER,  $customer_id);
+		$total += add_gl_trans(
+            ST_CUSTPAYMENT,
+            $payment_no,
+            $date_,
+            $charge_act,
+            $dim1,
+            $dim2,
+            '',
+			$charge,
+            $bank['bank_curr_code'],
+            PT_CUSTOMER,
+            $customer_id
+        );
 	}
 
 
@@ -155,13 +215,32 @@ function write_customer_payment(
 	if ($total != 0)
 	{
 		$variance_act = get_company_pref('exchange_diff_act');
-		add_gl_trans(ST_CUSTPAYMENT, $payment_no, $date_,	$variance_act, $dim1, $dim2, '',
-			-$total, null, PT_CUSTOMER,  $customer_id);
+		add_gl_trans(
+            ST_CUSTPAYMENT,
+            $payment_no,
+            $date_,
+            $variance_act,
+            $dim1,
+            $dim2,
+            '',
+			-$total,
+            null,
+            PT_CUSTOMER,
+            $customer_id
+        );
 	}
 
 	/*now enter the bank_trans entry */
-	add_bank_trans(ST_CUSTPAYMENT, $payment_no, $bank_account, $ref,
-		$date_, $bank_amount - $charge, PT_CUSTOMER, $customer_id);
+	add_bank_trans(
+        ST_CUSTPAYMENT,
+        $payment_no,
+        $bank_account,
+        $ref,
+		$date_,
+        $bank_amount - $charge,
+        PT_CUSTOMER,
+        $customer_id
+    );
 
 	add_comments(ST_CUSTPAYMENT, $payment_no, $date_, $memo_);
 

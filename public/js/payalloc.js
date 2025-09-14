@@ -14,20 +14,25 @@ function focus_alloc(i) {
 }
 
 function blur_alloc(i) {
-		var change = get_amount(i.name);
-		
-		if (i.name != 'amount' && i.name != 'charge' && i.name != 'discount')
-			change = Math.min(change, get_amount('maxval'+i.name.substr(6), 1))
+    if (i.name == 'marketplace_cost') {
+        return;
+    }
+    
+    var change = get_amount(i.name);
+    
+    if (i.name != 'amount' && i.name != 'charge' && i.name != 'discount')
+        change = Math.min(change, get_amount('maxval'+i.name.substr(6), 1))
 
-		price_format(i.name, change, user.pdec);
-		if (i.name != 'amount' && i.name != 'charge') {
-			if (change<0) change = 0;
-			change = change-i.getAttribute('_last');
-			if (i.name == 'discount') change = -change;
+    price_format(i.name, change, user.pdec);
+    if (i.name != 'amount' && i.name != 'charge') {
+        if (change<0) change = 0;
+        change = change-i.getAttribute('_last');
+        if (i.name == 'discount') change = -change;
 
-			var total = get_amount('amount')+change;
-			price_format('amount', total, user.pdec, 0);
-		}
+        var total = get_amount('amount')+change;
+        price_format('amount', total, user.pdec, 0);
+    }
+    handleTotalsReceivable();
 }
 
 function allocate_all(doc) {
@@ -45,6 +50,13 @@ function allocate_all(doc) {
 	}
 	price_format('amount'+doc, amount, user.pdec);
 	price_format('amount', total, user.pdec);
+
+    if (document.querySelector('[name="marketplace_cost"]')) {
+        var marketplace_cost = get_amount('marketplace_cost'+doc);
+        var total_mkt_cost = get_amount('marketplace_cost');
+        price_format('marketplace_cost', total_mkt_cost+marketplace_cost, user.pdec);
+        handleTotalsReceivable()
+    }
 }
 
 function allocate_none(doc) {
@@ -52,6 +64,35 @@ function allocate_none(doc) {
 	total = get_amount('amount');
 	price_format('amount'+doc, 0, user.pdec);
 	price_format('amount', total-amount, user.pdec);
+
+    if (document.querySelector('[name="marketplace_cost"]')) {
+        var marketplace_cost = get_amount('marketplace_cost'+doc);
+        var total_mkt_cost = get_amount('marketplace_cost');
+        price_format('marketplace_cost', total_mkt_cost-marketplace_cost, user.pdec);
+        handleTotalsReceivable()
+    }
+}
+
+function handleTotalsReceivable() {
+    setTimeout(() => {
+        if (document.getElementById('TotalToBank')) {
+            price_format(
+                "TotalToBank",
+                get_amount('amount') - get_amount('marketplace_cost') - get_amount('charge'),
+                user.pdec,
+                true
+            );
+        }
+        
+        if (document.getElementById('TotalAR')) {
+            price_format(
+                "TotalAR",
+                get_amount('amount') + get_amount('discount'),
+                user.pdec,
+                true
+            );
+        }
+    });
 }
 
 var allocations = {
@@ -70,7 +111,10 @@ var allocations = {
 				focus_alloc(this);
 			};
 		}
-	}
+	},
+    '[name="discount"],[name="amount"],[name="charge"],[name="marketplace_cost"]': function(e) {
+        e.addEventListener('blur', handleTotalsReceivable);
+    },
 }
 
 Behaviour.register(allocations);

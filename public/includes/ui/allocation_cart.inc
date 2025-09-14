@@ -64,13 +64,13 @@ class allocation
 	}
 
 	function add_item($type, $type_no, $date_, $due_date, $amount, $amount_allocated, 
-		$current_allocated, $ref, $tracking_no=null)
+		$current_allocated, $ref, $tracking_no=null, $marketplace_cost=0)
 	{
 		if (floatcmp($amount, 0))
 		{
 			$this->allocs[count($this->allocs)] = new allocation_item($type, $type_no, 
 				$date_, $due_date, $amount, $amount_allocated, $current_allocated, $ref,
-                $tracking_no
+                $tracking_no, $marketplace_cost
             );
 			return true;
 		} 
@@ -146,7 +146,7 @@ class allocation
 				$this->currency = isset($trans['bank_curr_code']) ? $trans['bank_curr_code'] : $trans['curr_code'];
 				$this->bank_amount = isset($trans["bank_amount"]) ? $trans["bank_amount"] : $trans["Total"]; // not set for journal entry
 				$this->amount = $trans["Total"];
-                $this->is_marketplace_trans = $trans["is_marketplace_trans"] ?? 0;
+                $this->is_marketplace_trans = ($trans["marketplace_id"] ?? 0) ? 1 : 0;
                 $this->marketplace_id = $trans["marketplace_id"] ?? null;
 			}
 		}
@@ -176,7 +176,8 @@ class allocation
 					$myrow["alloc"], // trans total allocated
 					0,
 					$myrow["reference"],
-                    $myrow["tracking_no"] ?? null
+                    $myrow["tracking_no"] ?? null,
+                    $myrow["marketplace_cost"] ?? 0
                 ); // this allocation
 			}
 		}
@@ -300,13 +301,16 @@ class allocation_item
 	
 	var $amount_allocated;
 	var $amount;
+    var $marketplace_cost=0;
 	var $ref;
     var $tracking_no; // for sales orders, deliveries, invoices
 	
 	var $current_allocated;
 	
 	function __construct($type, $type_no, $date_, $due_date, $amount, 
-		$amount_allocated, $current_allocated, $ref, $tracking_no = null)
+		$amount_allocated, $current_allocated, $ref, $tracking_no = null,
+        $marketplace_cost=0
+    )
 	{
 
 		$this->type = $type;
@@ -321,6 +325,7 @@ class allocation_item
 		$this->amount = $amount;
 		$this->amount_allocated = $amount_allocated;
 		$this->current_allocated = $current_allocated;
+        $this->marketplace_cost = $marketplace_cost;
 	}
 }
 
@@ -356,6 +361,9 @@ function show_allocatable($show_totals) {
         if (!$supp_ref) {
             array_splice($th, 3, 0, [_("Tracking No")]);
         }
+        if ($cart->is_marketplace_trans) {
+            array_splice($th, 7, 0, [_("Mkt Payable")]);
+        }
 
 	   	table_header($th);
 
@@ -373,26 +381,44 @@ function show_allocatable($show_totals) {
     			label_cell($alloc_item->date_, "align=right");
     			label_cell($alloc_item->due_date, "align=right");
 	    		amount_cell(abs($alloc_item->amount));
+                if ($cart->is_marketplace_trans) {
+                    amount_cell($alloc_item->marketplace_cost);
+                }
 				amount_cell($alloc_item->amount_allocated);
 
 		    	$_POST['amount' . $id] = price_format($alloc_item->current_allocated);
 
 	    		$un_allocated = round((abs($alloc_item->amount) - $alloc_item->amount_allocated), 6);
+                $marketplace_cost = round($alloc_item->marketplace_cost, 6);
 	    		amount_cell($un_allocated, false,'', 'maxval'.$id);
-    			amount_cells(null, "amount" . $id);//, input_num('amount' . $id));
-				label_cell("<a href='javascript:void(0)' name=Alloc$id onclick='allocate_all(this.name.substr(5));return true;'>"
-					 . _("All") . "</a>");
-				label_cell("<a href='javascript:void(0)' name=DeAll$id onclick='allocate_none(this.name.substr(5));return true;'>"
-					 . _("None") . "</a>".hidden("un_allocated" . $id, 
-					 price_format($un_allocated), false));
+    			amount_cells(null, "amount" . $id, null, '', null, null, $cart->is_marketplace_trans);//, input_num('amount' . $id));
+				label_cell(
+                    "<a "
+                        . 'href="javascript:void(0)" '
+                        . "name=Alloc$id "
+                        . 'onclick="allocate_all(this.name.substr(5));return true;">'
+					    . _("All")
+                    . "</a>"
+                );
+				label_cell(
+                    "<a "
+                        . 'href="javascript:void(0)" '
+                        . "name=DeAll$id "
+                        . 'onclick="allocate_none(this.name.substr(5)); return true;">'
+					    . _("None")
+                    . "</a>"
+                    . hidden("un_allocated" . $id, price_format($un_allocated), false)
+                    . hidden("marketplace_cost" . $id, price_format($marketplace_cost), false)
+                );
 				end_row();
 
    	    		$total_allocated += input_num('amount' . $id);
 		   	}
 		}
 		if ($show_totals) {
+            $colspan = 8 + ($supp_ref ? 0 : 1) + $cart->is_marketplace_trans;
     	   	label_row(_("Total Allocated"), price_format($total_allocated),
-	    		"colspan=8 align=right", "align=right id='total_allocated'", 3);
+	    		"colspan=$colspan align=right", "align=right id='total_allocated'", 3);
 
 			$amount = abs($cart->amount);
 
@@ -405,7 +431,7 @@ function show_allocatable($show_totals) {
         		$font1 = $font2 = "";
 			$left_to_allocate = price_format($amount - $total_allocated);
 	        label_row(_("Left to Allocate"), $font1 . $left_to_allocate . $font2, 
-				"colspan=8 align=right", "nowrap align=right id='left_to_allocate'",
+				"colspan=$colspan align=right", "nowrap align=right id='left_to_allocate'",
 				 3);
 		}
 		end_table(1);
@@ -452,6 +478,22 @@ function check_allocations()
 				set_focus('amount'.$counter);
 				return false;
 			}
+
+            // If marketplace transaction, ensure there are no partial
+            // allocations & the marketplace is the same for all allocations
+            if ($_SESSION['alloc']->is_marketplace_trans) {
+                if ($trans['marketplace_id'] != $_SESSION['alloc']->marketplace_id) {
+                    display_error(_("All allocated transactions must be from the same marketplace as the payment."));
+                    set_focus('amount'.$counter);
+                    return false;
+                }
+
+                if ($allocated > 0 && floatcmp($allocated, abs($_SESSION['alloc']->allocs[$counter]->amount)) != 0) {
+                    display_error(_("Marketplace transactions must be allocated in full."));
+                    set_focus('amount'.$counter);
+                    return false;
+                }
+            }
 		} elseif ($_SESSION['alloc']->person_type == PT_SUPPLIER) {
 			if ($_SESSION['alloc']->allocs[$counter]->type == ST_PURCHORDER)
                 $trans = get_po($_SESSION['alloc']->allocs[$counter]->type_no);

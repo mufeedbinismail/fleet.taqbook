@@ -97,6 +97,7 @@ if (!isset($_POST['bank_account'])) { // first page call
 					if ($un_allocated){
 						$_SESSION['alloc']->allocs[$line]->current_allocated = $un_allocated;
 						$_POST['amount'] = $_POST['amount'.$line] = price_format($un_allocated);
+                        $_POST['marketplace_cost'] = price_format($inv['ov_mkt_cost']);
 					}
 					break;
 				}
@@ -291,11 +292,11 @@ if (get_post('AddPaymentItem') && can_process()) {
         $_POST['memo_'],
         0,
         input_num('charge'),
-        input_num('bank_amount',
-        input_num('amount')),
+        input_num('bank_amount', input_num('amount')),
         $_POST['dimension_id'],
         $_POST['dimension2_id'],
-        get_post('marketplace_id')
+        get_post('marketplace_id'),
+        input_num('marketplace_cost')
     );
 
 	$_SESSION['alloc']->trans_no = $payment_no;
@@ -336,6 +337,7 @@ if (isset($_GET['trans_no']) && $_GET['trans_no'] > 0 )
 	$_POST['customer_name'] = $myrow["DebtorName"];
 	$_POST['BranchID'] = $myrow["branch_code"];
 	$_POST['bank_account'] = $myrow["bank_act"];
+    $_POST['marketplace_cost'] = price_format($myrow['ov_mkt_cost']);
 	$_POST['ref'] =  $myrow["reference"];
 	$charge = get_cust_bank_charge(ST_CUSTPAYMENT, $_POST['trans_no']);
 	$_POST['charge'] =  price_format($charge);
@@ -460,7 +462,26 @@ label_row(_("Customer prompt payment discount :"), $display_discount_percent);
 
 amount_row(_("Amount of Discount:"), 'discount', null, '', $cust_currency);
 
-amount_row(_("Amount:"), 'amount', null, '', $cust_currency);
+amount_row(_("Payment Amount:"), 'amount', null, '', $cust_currency);
+label_row(
+    _("Amount Receivable:"), 
+    price_format(input_num('amount') + input_num('discount')),
+    "",
+    "",
+    0,
+    "TotalAR"
+);
+if (check_value('is_marketplace_trans')) {
+    amount_row(_("Marketplace Cost:"), 'marketplace_cost', null, '', $cust_currency);
+}
+label_row(
+    _("Total Received to Bank Account:"),
+    price_format(input_num('amount') - input_num('marketplace_cost') - input_num('charge')),
+    "",
+    "nowrap",
+    0,
+    "TotalToBank"
+);
 
 textarea_row(_("Memo:"), 'memo_', null, 22, 4);
 end_table(1);
