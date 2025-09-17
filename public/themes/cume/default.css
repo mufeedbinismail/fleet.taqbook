@@ -828,6 +828,9 @@ video {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
 }
+.pb-0 {
+  padding-bottom: 0px;
+}
 .pb-2 {
   padding-bottom: 0.5rem;
 }
@@ -839,9 +842,6 @@ video {
 }
 .pe-5 {
   padding-inline-end: 1.25rem;
-}
-.pb-0 {
-  padding-bottom: 0px;
 }
 .text-center {
   text-align: center;
@@ -935,13 +935,10 @@ video {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 .backdrop-filter {
-  -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
   backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
 }
 .transition {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
@@ -1065,7 +1062,8 @@ input[type=file]:not(:disabled):not([readonly])::file-selector-button {
   font-style: normal;
   font-display: block;
 }
-.cu-icon:before {
+.icon-style:before,
+.icon:before {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'icomoon' !important;
   speak: never;
@@ -1492,10 +1490,10 @@ ul.ajaxtabs li.has-current {
 /* Search button next to select box  */
 input[name$="_update"]  + img,
     input[name$="_update"] + svg,
-    input[name$="_update"] + span.cu-icon,
+    input[name$="_update"] + span.icon,
     span.has-select  + img,
     span.has-select + svg,
-    span.has-select + span.cu-icon {
+    span.has-select + span.icon {
   display: inline-block;
   cursor: pointer;
         padding: 0 !important;
@@ -1504,30 +1502,17 @@ input[name$="_update"]  + img,
 span.has-updatable-sibling > select span.has-img-sibling > select {
   max-width: calc(100% - 1.75rem);
 }
-/* Calendar icon after the input box */
-input + a[href^="javascript:date_picker"] {
-  display: inline-block;
-  cursor: pointer;
-  vertical-align: text-bottom;
-}
-input + a[href^="javascript:date_picker"] > img,
-  input + a[href^="javascript:date_picker"] > svg,
-  input + a[href^="javascript:date_picker"] > span.cu-icon {
-    padding: 0 !important;
-    height: 1.3rem !important;
-    width: 1.3rem !important;
-  }
 /* Icons inside button */
 button > img,
 button > svg,
-button > span.cu-icon {
+button > span.icon {
   display: inline-block;
   vertical-align: text-bottom;
   height: 1rem !important;
 }
 button:not(.is-icon) > img,
   button:not(.is-icon) > svg,
-  button:not(.is-icon) > span.cu-icon {
+  button:not(.is-icon) > span.icon {
   margin-inline-end: 0.5rem;
   margin-bottom: 0.125rem;
 }
@@ -1537,7 +1522,7 @@ button.navibutton {
   background-color: transparent;
   color: #364a59;
 }
-button.navibutton :not(img, svg, span.cu-icon) {
+button.navibutton :not(img, svg, span.icon) {
   cursor: pointer;
   border-bottom-width: 1px;
   border-style: solid;
@@ -1564,14 +1549,13 @@ button.is-icon {
   --tw-bg-opacity: 0.5;
   pointer-events: none;
 }
-#ajaxmark[style*="visibility: visible"] + [data-loader-container], #ajaxmark[style*="visibility:visible"] + [data-loader-container] {
+#ajaxmark[style*="visible"] + [data-loader-container] {
   display: flex;
   align-items: center;
   justify-content: center;
-        -webkit-backdrop-filter: blur(5px);
-                backdrop-filter: blur(5px);
+        backdrop-filter: blur(5px);
 }
-#ajaxmark[style*="visibility: visible"][src$="progressbar.gif"] + [data-loader-container] [data-loader], #ajaxmark[style*="visibility:visible"][src$="progressbar.gif"] + [data-loader-container] [data-loader] {
+#ajaxmark[style*="visible"][src$="progressbar.gif"] + [data-loader-container] [data-loader] {
         height: 60px;
         aspect-ratio: 2;
         border-bottom: 3px solid #0000;
@@ -1581,7 +1565,7 @@ button.is-icon {
         position: relative;
         animation: bouncing-ball-0 .75s linear infinite;
     }
-#ajaxmark[style*="visibility: visible"][src$="progressbar.gif"] + [data-loader-container] [data-loader]:before, #ajaxmark[style*="visibility:visible"][src$="progressbar.gif"] + [data-loader-container] [data-loader]:before {
+#ajaxmark[style*="visible"][src$="progressbar.gif"] + [data-loader-container] [data-loader]:before {
             content: "";
             position: absolute;
             inset: auto 42.5% 0;
@@ -1590,7 +1574,7 @@ button.is-icon {
             background: #ff7066;
             animation: bouncing-ball-1 .75s cubic-bezier(0,900,1,900) infinite;
         }
-#ajaxmark[style*="visibility: visible"][src$="ajax-loader.gif"] + [data-loader-container] [data-loader], #ajaxmark[style*="visibility:visible"][src$="ajax-loader.gif"] + [data-loader-container] [data-loader] {
+#ajaxmark[style*="visible"][src$="ajax-loader.gif"] + [data-loader-container] [data-loader] {
         --s: 64px;
         width: var(--s);
         aspect-ratio: 2;
@@ -1604,7 +1588,7 @@ button.is-icon {
         background-repeat: no-repeat;
         animation: dot-through-dots 1s infinite;
     }
-#ajaxmark[style*="visibility: visible"][src$="warning.png"] + [data-loader-container] [data-loader]:before, #ajaxmark[style*="visibility:visible"][src$="warning.png"] + [data-loader-container] [data-loader]:before {
+#ajaxmark[style*="visible"][src$="warning.png"] + [data-loader-container] [data-loader]:before {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'icomoon';
   speak: never;
@@ -1619,43 +1603,7 @@ button.is-icon {
   -moz-osx-font-smoothing: grayscale;
   content: "\e92c";
 }
-
-    input[name$="_update"] + span#ajaxmark[style*="visibility: visible"][src$="warning.png"] + [data-loader-container] [data-loader],
-    span.has-select + span#ajaxmark[style*="visibility: visible"][src$="warning.png"] + [data-loader-container] [data-loader],
-    input[name$="_update"] + span #ajaxmark[style*="visibility:visible"][src$="warning.png"] + [data-loader-container] [data-loader],
-    span.has-select + span #ajaxmark[style*="visibility:visible"][src$="warning.png"] + [data-loader-container] [data-loader] {
-  display: inline-block;
-  cursor: pointer;
-        padding: 0;
-        vertical-align: text-bottom;
-}
-
-  input + a[href^="javascript:date_picker"] > span#ajaxmark[style*="visibility: visible"][src$="warning.png"] + [data-loader-container] [data-loader],
-  input + a[href^="javascript:date_picker"] > span #ajaxmark[style*="visibility:visible"][src$="warning.png"] + [data-loader-container] [data-loader] {
-    padding: 0;
-    height: 1.3rem;
-    width: 1.3rem;
-  }
-
-button > span#ajaxmark[style*="visibility: visible"][src$="warning.png"] + [data-loader-container] [data-loader],
-button > span #ajaxmark[style*="visibility:visible"][src$="warning.png"] + [data-loader-container] [data-loader] {
-  display: inline-block;
-  vertical-align: text-bottom;
-  height: 1rem;
-}
-
-  button:not(.is-icon) > span#ajaxmark[style*="visibility: visible"][src$="warning.png"] + [data-loader-container] [data-loader],
-  button:not(.is-icon) > span #ajaxmark[style*="visibility:visible"][src$="warning.png"] + [data-loader-container] [data-loader] {
-  margin-inline-end: 0.5rem;
-  margin-bottom: 0.125rem;
-}
-button.navibutton :not(img, svg, span#ajaxmark[style*="visibility: visible"][src$="warning.png"] + [data-loader-container] [data-loader]),button.navibutton :not(img, svg, span #ajaxmark[style*="visibility:visible"][src$="warning.png"] + [data-loader-container] [data-loader]) {
-  cursor: pointer;
-  border-bottom-width: 1px;
-  border-style: solid;
-    border-color: #364a59;
-}
-#ajaxmark[style*="visibility: visible"][src$="warning.png"] + [data-loader-container] [data-loader], #ajaxmark[style*="visibility:visible"][src$="warning.png"] + [data-loader-container] [data-loader] {
+#ajaxmark[style*="visible"][src$="warning.png"] + [data-loader-container] [data-loader] {
         font-size: 5rem;
         color: #e94f64;
     }
@@ -1814,7 +1762,6 @@ select {
   --tw-text-opacity: 1;
   color: rgb(233 79 100 / var(--tw-text-opacity, 1));
 }
-@source './renderer.php';
 .hover\:bg-gray-200:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1));

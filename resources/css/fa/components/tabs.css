@@ -1,0 +1,11 @@
+ul.ajaxtabs {
+    @apply font-medium w-full overflow-x-scroll gap-0;
+
+    li {
+        @apply inline-block border border-solid border-gray-400 rounded-t-sm py-1 px-2 hover:bg-gray-200 whitespace-nowrap;
+
+        &.has-current {
+            @apply border-b-0;
+        }
+    }
+}

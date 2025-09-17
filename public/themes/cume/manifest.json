@@ -1,0 +1,13 @@
+{
+  "resources/css/fa.css": {
+    "file": "assets/fa-ZQgG8LVl.css",
+    "src": "resources/css/fa.css",
+    "isEntry": true
+  },
+  "resources/js/fa.js": {
+    "file": "assets/fa-CwS0N6O6.js",
+    "name": "fa",
+    "src": "resources/js/fa.js",
+    "isEntry": true
+  }
+}

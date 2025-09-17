@@ -13,7 +13,22 @@ require_once $GLOBALS['path_to_root'] . "/includes/date_functions.inc";
 
 class renderer
 {
+    /** 
+     * @var array<string, array
+     *   file: string,
+     *   src: string,
+     *   name: string,
+     *   isEntry: bool
+     * }> */
+    public array $manifest;
+
     public function __construct() {
+        $manifestPath = $GLOBALS['path_to_root'] . "/themes/cume/manifest.json";
+        if (!file_exists($manifestPath)) {
+            throw new Exception("Manifest file not found at $manifestPath. Please ensure the theme assets are built and the manifest file is present.");
+        }
+        $this->manifest = json_decode(file_get_contents($manifestPath), true);
+
         $footerScripts = $this->footer_scripts();
         if (array_search($footerScripts, $GLOBALS['js_lib']) === false) {
             $GLOBALS['js_lib'][] = $footerScripts;
@@ -41,7 +56,7 @@ class renderer
         ];
 
         $icon = $menuIconsMap[$category] ?? 'icon-feature';
-        return "<span class='cu-icon $icon'></span>&nbsp;&nbsp;";
+        return "<span class='icon $icon'></span>&nbsp;&nbsp;";
     }
 
     function wa_header()
@@ -224,7 +239,7 @@ class renderer
                                 if ($user->check_application_access($app)):
                                     $acc = access_string($app->name); ?>
                                     <li class="main-nav-item <?= $sel_app == $app->id ? 'selected' : '' ?>">
-                                        <span class="cu-icon pe-2 <?= $appIcons[$app->id] ?? 'icon-spacer' ?>"></span>
+                                        <span class="icon pe-2 <?= $appIcons[$app->id] ?? 'icon-spacer' ?>"></span>
                                         <?= "<a href='{$local_path_to_root}/index.php?application={$app->id}' {$acc[1]}>{$acc[0]}</a>" ?>
                                     </li>
                                 <?php endif;
@@ -240,7 +255,7 @@ class renderer
                 <header class="main-header">
                     <!-- Sidebar Minimize Button -->
                     <button id="sidebar-toggle" class="sidebar-toggle-btn me-2 bg-transparent w-[25px] h-[25px] border-0 text-lg pb-0" aria-label="Toggle sidebar" type="button">
-                        <span class="cu-icon icon-bars"></span>
+                        <span class="icon icon-bars"></span>
                     </button>
                     <?php if ($title && !$is_index) : ?>
                     <h1 class="title"><?= $title ?></h1>
@@ -249,7 +264,7 @@ class renderer
                     <?php foreach($toolbox as $key => $item) : ?>
                         <li class="toolbar-item">
                             <a href="<?= $item['link'] ?>">
-                                <span class="cu-icon <?= $item['icon'] ?>"></span>
+                                <span class="icon <?= $item['icon'] ?>"></span>
                                 <span><?= $item['label'] ?></span>
                             </a>
                         </li>
@@ -281,8 +296,9 @@ class renderer
     protected function footer_scripts() {
         global $path_to_root;
         
+        $sourceJs = $this->manifest['resources/js/fa.js']['file'];
         $ret = "\n--></script>"
-             . "\n<script type='module' src='{$path_to_root}/themes/cume/build/cume.js'></script>"
+             . "\n<script type='module' src='{$path_to_root}/build/{$sourceJs}'></script>"
              . "\n<script type='text/javascript'><!--\n";
         
         return $ret;

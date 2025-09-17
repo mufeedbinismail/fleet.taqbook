@@ -1,0 +1,17 @@
+@import './tables.css';
+@import './tabs.css';
+@import './icons.css';
+@import './loader.css';
+@import './calendar.css';
+@import './messages.css';
+@import './buttons.css';
+@import './forms.css';
+
+/* Reporting Page */
+.repclass_link {
+    @apply leading-[2] p-0.5;
+}
+
+.redfg {
+    @apply text-error-accent;
+}

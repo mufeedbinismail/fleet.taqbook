@@ -1,0 +1,46 @@
+/* Search button next to select box  */
+input[name$="_update"],
+span.has-select {
+    &  + img,
+    & + svg,
+    & + span.icon {
+        @apply inline-block cursor-pointer;
+        padding: 0 !important;
+        vertical-align: text-bottom !important;
+    }
+}
+
+span.has-updatable-sibling > select span.has-img-sibling > select {
+  max-width: calc(100% - 1.75rem);
+}
+
+/* Icons inside button */
+button > img,
+button > svg,
+button > span.icon {
+  @apply inline-block align-text-bottom;
+  height: 1rem !important;
+}
+
+button:not(.is-icon) {
+  & > img,
+  & > svg,
+  & > span.icon {
+    @apply me-2 mb-[0.125rem];
+  }
+}
+
+/* sort button inside headers */
+button.navibutton {
+  @apply border-0 bg-transparent;
+  color: theme("colors.table-header-txt");
+
+  :not(img, svg, span.icon) {
+    @apply cursor-pointer border-b border-solid;
+    border-color: theme("colors.table-header-txt");
+  }
+}
+
+button.is-icon {
+   @apply p-0 cursor-pointer border-0
+}

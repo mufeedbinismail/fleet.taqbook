@@ -1,0 +1,32 @@
+table {
+    &.tablestyle, &.tablestyle2, &.tablestyle_inner {
+        @apply w-full;
+    }
+
+    &.tablestyle, &.tablestyle2 {
+        & > tbody > tr,
+        & > thead > tr,
+        & > tfoot > tr,
+        & > tr {
+            & > td,
+            & > th {
+                @apply border border-solid;
+                border-color: theme('colors.soft-border');
+            }
+        }
+    }
+}
+
+.tableheader, .tableheader2 {
+    @apply font-bold;
+    background-color: theme('colors.table-header-bg');
+    color: theme('colors.table-header-txt');
+}
+
+.tableheader {
+    @apply text-center;
+}
+
+.tableheader2 {
+    @apply text-start;
+}

@@ -1,0 +1,84 @@
+#CCIframe {
+    @apply hidden absolute m-0 p-0 z-10 top-0 left-0 h-[250px] w-[270px];
+}
+
+#CC { 
+    @apply hidden absolute bg-white m-0 p-0 z-10;
+
+    table {
+        @apply border-separate border-spacing-0 text-sm shadow-lg border border-solid;
+        border-color: theme('colors.soft-border');
+    }
+
+    * {
+        @apply rounded-sm cursor-default;
+    }
+
+    .header {
+        td, th {
+            @apply py-2;
+        }
+
+        a {
+            @apply cursor-pointer inline-block;
+        }
+    }
+
+    table, tbody, tr, td, th {
+        @apply rounded-lg;
+    }
+
+    th, td {
+        @apply text-center font-normal;
+    }
+
+    .weekday, .weekend, .current, .weekno, .empty {
+        @apply px-2 py-1.5;
+    }
+
+    .weekday, .weekend, .current {
+        @apply -m-1 block cursor-pointer;
+
+        &:hover {
+            background-color: theme('colors.header-bg');
+            color: theme('colors.header-txt');
+        }
+    }
+
+    .current {
+        background-color: theme('colors.sidebar-selected-bg');
+        color: theme('colors.sidebar-selected-txt');
+    }
+
+    .weekno {
+        @apply text-gray-400;
+    }
+
+    .weekend {
+        @apply text-amber-500;
+    }
+
+    .previous {
+        @apply text-left;
+    }
+
+    .next {
+        @apply text-right;
+    }
+
+    .previous, .next, .title, th {
+        &, a {
+            @apply font-bold;
+        }
+    }
+
+    .previous, .next {
+        & a {
+            @apply px-2
+        }
+    }
+
+    a[href$="hideCC();"] {
+        @apply pb-2
+    }
+}

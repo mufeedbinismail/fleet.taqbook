@@ -1,0 +1,27 @@
+.main-sidebar {
+    @apply border-e border-solid;
+    background-color: theme('colors.sidebar-bg');
+    color: theme('colors.primary-txt');
+    border-color: theme('colors.soft-border');
+
+    .app-name, .main-nav-item {
+        @apply mb-3 p-4;
+    }
+
+    .app-name {
+        @apply text-2xl font-bold text-center;
+
+        img {
+            @apply inline-block w-[2rem] align-text-bottom
+        }
+    }
+
+    .main-nav-item {
+        @apply font-semibold transition-colors;
+    }
+
+    .main-nav-item.selected {
+        background-color: theme('colors.sidebar-selected-bg');
+        color: theme('colors.sidebar-selected-txt');
+    }
+}

@@ -1,0 +1,21 @@
+.main-header {
+    @apply p-4 drop-shadow flex;
+    background-color: theme('colors.header-bg');
+    color: theme('colors.primary-txt');
+
+    .title {
+        @apply inline-block text-xl font-semibold whitespace-nowrap;
+    }
+
+    .toolbar {
+        @apply flex-1 flex justify-end items-center overflow-x-auto w-[60%];
+
+        .toolbar-item {
+            @apply me-4;
+
+            img {
+                @apply h-[1.2rem] w-[1.2rem] inline-block align-text-bottom;
+            }
+        }
+    }
+}

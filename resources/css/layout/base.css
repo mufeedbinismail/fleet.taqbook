@@ -1,0 +1,99 @@
+.main-container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    margin: 0 auto;
+    min-width: var(--breakpoint-md);
+    max-width: var(--breakpoint-3xl);
+    width: 100vw;
+    height: 100vh;
+
+    &.has-sidebar.sidebar-collapsed {
+        .main-sidebar {
+            flex: 0 0 0px;
+
+            .sidebar-inner {
+                transform: translateX(-100%);
+            }
+        }
+    }
+
+    .main-section {
+        position: relative;
+        overflow: hidden;
+        flex: 1;
+        max-width: 100%;
+        height: 100vh;
+        transition: flex 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    &.has-footer.has-header .main-content-area {
+        height: calc(100vh - theme('height.header') - theme('height.footer'));
+    }
+
+    &.has-footer .main-content-area {
+        height: calc(100vh - theme('height.footer'));
+    }
+}
+
+.main-content-area {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+}
+
+.has-header .main-content-area {
+    height: calc(100vh - theme('height.header'));
+}
+
+.main-footer {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: theme('height.footer');
+}
+
+.main-header {
+    position: relative;
+    overflow: hidden;
+    z-index: 110;
+    height: theme('height.header');
+    width: 100%;
+}
+
+.main-sidebar {
+    position: relative;
+    z-index: 100;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 0 0 theme('width.sidebar');
+    height: 100vh;
+    background: inherit;
+    transition: flex 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    .sidebar-inner {
+        width: theme('width.sidebar');
+        transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .main-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        z-index: 1000;
+        flex: 0 0 250px;
+    }
+    
+    .main-sidebar.sidebar-collapsed {
+        flex: 0 0 0px;
+    }
+    
+    .main-section {
+        margin-left: 0;
+    }
+}

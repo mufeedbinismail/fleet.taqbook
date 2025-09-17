@@ -1,0 +1,10 @@
+/* print and go back buttons */
+a[href*="javascript:window.print"],
+a[href*="javascript:goBack"] {
+    color: theme('colors.secondary-accent')
+}
+
+/* select button in search popup */
+a[onclick*="selectComboItem"] {
+    @apply text-primary-accent;
+}
