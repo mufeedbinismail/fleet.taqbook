@@ -63,6 +63,12 @@ export default function initUI() {
                 parent.classList.add("is-icon");
             }
         });
+
+        for (const select of document.getElementsByTagName('select')) {
+            if (select.options.length > 10 && !select.classList.contains('select2-hidden-accessible')) {
+                $(select).select2()
+            }
+        };
     }
 
     /**

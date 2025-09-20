@@ -23,15 +23,31 @@ class renderer
     public array $manifest;
 
     public function __construct() {
-        $manifestPath = $GLOBALS['path_to_root'] . "/themes/cume/manifest.json";
+        global $path_to_root, $css_files, $js_lib;
+
+        $manifestPath = $path_to_root . "/themes/cume/manifest.json";
         if (!file_exists($manifestPath)) {
             throw new Exception("Manifest file not found at $manifestPath. Please ensure the theme assets are built and the manifest file is present.");
         }
         $this->manifest = json_decode(file_get_contents($manifestPath), true);
 
+        if (!isset($css_files) || !is_array($css_files)) {
+            $css_files = [];
+        }
+
+        $pluginsCss = $path_to_root .'/build/'. $this->manifest['resources/css/plugins.css']['file'] ?? null;
+        foreach ([
+            $pluginsCss,
+            $path_to_root . "/themes/cume/default.css"
+        ] as $css_file) {
+            if (array_search($css_file, $css_files) === false) {
+                $css_files[] = $css_file;
+            }
+        }
+
         $footerScripts = $this->footer_scripts();
-        if (array_search($footerScripts, $GLOBALS['js_lib']) === false) {
-            $GLOBALS['js_lib'][] = $footerScripts;
+        if (array_search($footerScripts, $js_lib) === false) {
+            $js_lib[] = $footerScripts;
         }
     }
 
@@ -297,7 +313,9 @@ class renderer
         global $path_to_root;
         
         $sourceJs = $this->manifest['resources/js/fa.js']['file'];
+        $pluginJs = $this->manifest['resources/js/plugins.js']['file'] ?? null;
         $ret = "\n--></script>"
+             . "\n<script type='module' src='{$path_to_root}/build/{$pluginJs}'></script>"
              . "\n<script type='module' src='{$path_to_root}/build/{$sourceJs}'></script>"
              . "\n<script type='text/javascript'><!--\n";
         

@@ -144,8 +144,10 @@ function page_header($title, $no_menu=false, $is_index=false, $onload="", $js=""
 	echo "<meta http-equiv='Content-type' content='text/html; charset=$encoding'>";
 	echo "<link href='$path_to_root/themes/default/images/favicon.ico' rel='icon' type='image/x-icon'> \n";
 
-	send_css($css);
+    include_once($path_to_root . "/themes/$theme/renderer.php");
+    $rend = new renderer();
 
+	send_css($css);
 	send_scripts();
 
 	echo "</head> \n";
@@ -154,8 +156,6 @@ function page_header($title, $no_menu=false, $is_index=false, $onload="", $js=""
 	else
 		echo "<body onload=\"$onload\">";
 
-	include_once($path_to_root . "/themes/$theme/renderer.php");
-	$rend = new renderer();
 	$rend->menu_header($title, $no_menu, $is_index);
 	error_box();
 }

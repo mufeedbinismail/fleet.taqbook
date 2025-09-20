@@ -1,13 +1,24 @@
 {
   "resources/css/fa.css": {
-    "file": "assets/fa-ZQgG8LVl.css",
+    "file": "assets/fa-kgoxmDYo.css",
     "src": "resources/css/fa.css",
     "isEntry": true
   },
+  "resources/css/plugins.css": {
+    "file": "assets/plugins-Bz6_h5FT.css",
+    "src": "resources/css/plugins.css",
+    "isEntry": true
+  },
   "resources/js/fa.js": {
-    "file": "assets/fa-CwS0N6O6.js",
+    "file": "assets/fa-D-gmzOFd.js",
     "name": "fa",
     "src": "resources/js/fa.js",
+    "isEntry": true
+  },
+  "resources/js/plugins.js": {
+    "file": "assets/plugins-C8xtial0.js",
+    "name": "plugins",
+    "src": "resources/js/plugins.js",
     "isEntry": true
   }
 }
