@@ -104,15 +104,15 @@ function can_process()
 	}
 
     if ($user->check_module_access('mp_orders')) {
-        if (!get_post('marketplace_commission_act')) {
+        if (!get_post('marketplace_commission_item')) {
             display_error(_("Please select the marketplace commission account."));
-            set_focus('marketplace_commission_act');
+            set_focus('marketplace_commission_item');
             return false;
         }
 
-        if (!get_post('marketplace_shipping_act')) {
+        if (!get_post('marketplace_shipping_item')) {
             display_error(_("Please select the marketplace shipping account."));
-            set_focus('marketplace_shipping_act');
+            set_focus('marketplace_shipping_item');
             return false;
         }
     }
@@ -164,8 +164,8 @@ if (isset($_POST['submit']) && can_process())
 		'po_over_receive' => 0.0,
         'po_over_charge' => 0.0,
         'default_credit_limit'=>0.0,
-        'marketplace_commission_act',
-        'marketplace_shipping_act',
+        'marketplace_commission_item',
+        'marketplace_shipping_item',
     )));
 
 	display_notification(_("The general GL setup has been updated."));
@@ -230,8 +230,8 @@ $_POST['print_item_images_on_quote'] = $myrow['print_item_images_on_quote'];
 $_POST['default_loss_on_asset_disposal_act'] = $myrow['default_loss_on_asset_disposal_act'];
 $_POST['depreciation_period'] = $myrow['depreciation_period'];
 
-$_POST['marketplace_commission_act'] = $myrow['marketplace_commission_act'];
-$_POST['marketplace_shipping_act'] = $myrow['marketplace_shipping_act'];
+$_POST['marketplace_commission_item'] = $myrow['marketplace_commission_item'];
+$_POST['marketplace_shipping_item'] = $myrow['marketplace_shipping_item'];
 
 //---------------
 
@@ -301,31 +301,34 @@ table_section(2);
 if ($user->check_module_access('mp_orders')) {
     table_section_title(_("Marketplace Sales Defaults"));
 
-    gl_all_accounts_list_row(
-        _("Commission Account:"),
-        'marketplace_commission_act',
+    start_row();
+    label_cells(_("Commission Item:"), stock_items_list(
+        'marketplace_commission_item',
         null,
-        true,
-        false,
         '-- select --',
         false,
-        false,
-        false,
-        [CL_COGS, CL_EXPENSE]
-    );
+        [
+            'search_box' => false,
+            'where' => ["mb_flag = 'D'"]
+        ]
+    ));
+    end_row();
 
-    gl_all_accounts_list_row(
-        _("Shipping Chrg Account:"),
-        'marketplace_shipping_act',
-        null,
-        true,
-        false,
-        '-- select --',
-        false,
-        false,
-        false,
-        [CL_COGS, CL_EXPENSE]
+    start_row();
+    label_cells(
+        _("Shipping Chrg Item:"),
+        stock_items_list(
+            'marketplace_shipping_item',
+            null,
+            '-- select --',
+            false,
+            [
+                'search_box' => false,
+                'where' => ["mb_flag = 'D'"]
+            ]
+        )
     );
+    end_row();
 }
 
 table_section_title(_("Suppliers and Purchasing"));
