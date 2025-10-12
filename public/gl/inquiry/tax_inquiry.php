@@ -11,14 +11,14 @@
 ***********************************************************************/
 $page_security = 'SA_TAXREP';
 $path_to_root="../..";
-include_once($path_to_root . "/includes/session.inc");
+require_once __DIR__ . "/../../includes/session.inc";
 
 
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/includes/ui.inc");
-include_once($path_to_root . "/includes/data_checks.inc");
+require_once __DIR__ . "/../../includes/date_functions.inc";
+require_once __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../includes/data_checks.inc";
 
-include_once($path_to_root . "/gl/includes/gl_db.inc");
+require_once __DIR__ . "/../../gl/includes/gl_db.inc";
 
 $js = '';
 set_focus('account');

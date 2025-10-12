@@ -11,12 +11,12 @@
 ***********************************************************************/
 $page_security = 'SA_WORKORDERANALYTIC';
 $path_to_root = "../..";
-include($path_to_root . "/includes/db_pager.inc");
-include($path_to_root . "/includes/session.inc");
+require __DIR__ . "/../../includes/db_pager.inc";
+require __DIR__ . "/../../includes/session.inc";
 
 page(_($help_context = "Inventory Item Where Used Inquiry"));
 
-include($path_to_root . "/includes/ui.inc");
+require __DIR__ . "/../../includes/ui.inc";
 
 check_db_has_stock_items(_("There are no items defined in the system."));
 

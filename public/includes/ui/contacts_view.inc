@@ -9,8 +9,8 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-include_once($path_to_root. '/includes/ui/simple_crud_class.inc');
-include_once($path_to_root . "/includes/db/crm_contacts_db.inc");
+require_once __DIR__ . '/../../includes/ui/simple_crud_class.inc';
+require_once __DIR__ . "/../../includes/db/crm_contacts_db.inc";
 
 /*
 	View/Edit class for contacts

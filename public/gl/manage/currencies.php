@@ -11,12 +11,12 @@
 ***********************************************************************/
 $page_security = 'SA_CURRENCY';
 $path_to_root = "../..";
-include_once($path_to_root . "/includes/session.inc");
+require_once __DIR__ . "/../../includes/session.inc";
 
 page(_($help_context = "Currencies"));
 
-include_once($path_to_root . "/includes/ui.inc");
-include_once($path_to_root . "/includes/banking.inc");
+require_once __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../includes/banking.inc";
 
 simple_page_mode(false);
 

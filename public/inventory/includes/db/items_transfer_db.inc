@@ -26,7 +26,7 @@ function add_stock_transfer($Items, $location_from, $location_to, $date_, $refer
 
 	if ($SysPrefs->loc_notification() == 1)
 	{
-		include_once($path_to_root . "/inventory/includes/inventory_db.inc");
+		require_once __DIR__ . "/../../../inventory/includes/inventory_db.inc";
 		$st_ids = array();
 		$st_names = array();
 		$st_num = array();

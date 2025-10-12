@@ -295,28 +295,28 @@ if (!isset($path_to_root))
 if (isset($_GET['path_to_root']) || isset($_POST['path_to_root']))
 	die("Restricted access");
 
-include_once($path_to_root . "/includes/errors.inc");
+require_once __DIR__ . "/../includes/errors.inc";
 // colect all error msgs
 set_error_handler('error_handler' /*, errtypes */);
 set_exception_handler('exception_handler');
 
-include_once($path_to_root . "/includes/current_user.inc");
-include_once($path_to_root . "/frontaccounting.php");
-include_once($path_to_root . "/admin/db/security_db.inc");
-include_once($path_to_root . "/includes/lang/language.inc");
-include_once($path_to_root . "/config_db.php");
-include_once($path_to_root . "/includes/ajax.inc");
-include_once($path_to_root . "/includes/ui/ui_msgs.inc");
-include_once($path_to_root . "/includes/prefs/sysprefs.inc");
+require_once __DIR__ . "/../includes/current_user.inc";
+require_once __DIR__ . "/../frontaccounting.php";
+require_once __DIR__ . "/../admin/db/security_db.inc";
+require_once __DIR__ . "/../includes/lang/language.inc";
+require_once __DIR__ . "/../config_db.php";
+require_once __DIR__ . "/../includes/ajax.inc";
+require_once __DIR__ . "/../includes/ui/ui_msgs.inc";
+require_once __DIR__ . "/../includes/prefs/sysprefs.inc";
 
-include_once($path_to_root . "/includes/hooks.inc");
+require_once __DIR__ . "/../includes/hooks.inc";
 //
 // include all extensions hook files.
 //
 foreach ($installed_extensions as $ext)
 {
-	if (file_exists($path_to_root.'/'.$ext['path'].'/hooks.php'))
-		include_once($path_to_root.'/'.$ext['path'].'/hooks.php');
+	if (file_exists(__DIR__ . '/../'.$ext['path'].'/hooks.php'))
+		require_once __DIR__ . '/../'.$ext['path'].'/hooks.php';
 }
 
 ini_set('session.gc_maxlifetime', 36000); // moved from below.
@@ -384,10 +384,10 @@ if (isset($dflt_lang) && isset($installed_languages))
 	$_SESSION['language']->set_language($_SESSION['language']->code);
 }
 
-include_once($path_to_root . "/includes/access_levels.inc");
-include_once($path_to_root . "/version.php");
-include_once($path_to_root . "/includes/main.inc");
-include_once($path_to_root . "/includes/app_entries.inc");
+require_once __DIR__ . "/../includes/access_levels.inc";
+require_once __DIR__ . "/../version.php";
+require_once __DIR__ . "/../includes/main.inc";
+require_once __DIR__ . "/../includes/app_entries.inc";
 
 // Ajax communication object
 $Ajax = new Ajax();
@@ -419,8 +419,8 @@ if (!defined('FA_LOGOUT_PHP_FILE')){
 
 	login_timeout();
 
-	if (!$_SESSION["wa_current_user"]->old_db && file_exists($path_to_root . '/company/'.user_company().'/installed_extensions.php'))
-		include($path_to_root . '/company/'.user_company().'/installed_extensions.php');
+	if (!$_SESSION["wa_current_user"]->old_db && file_exists(__DIR__ . '/../company/'.user_company().'/installed_extensions.php'))
+		require __DIR__ . '/../company/'.user_company().'/installed_extensions.php';
 
 	install_hooks();
 
@@ -429,7 +429,7 @@ if (!defined('FA_LOGOUT_PHP_FILE')){
       if (@$SysPrefs->allow_password_reset && !$SysPrefs->allow_demo_mode
         && (isset($_GET['reset']) || isset($_POST['email_entry_field']))) {
 		  if (!isset($_POST["email_entry_field"])) {
-        include($path_to_root . "/access/password_reset.php");
+        require __DIR__ . "/../access/password_reset.php";
         exit();
       }
       else {
@@ -463,7 +463,7 @@ if (!defined('FA_LOGOUT_PHP_FILE')){
 		if (in_ajax())
 			$Ajax->popup($path_to_root ."/access/timeout.php");
 		else
-			include($path_to_root . "/access/login.php");
+			require __DIR__ . "/../access/login.php";
 			exit;
 		} else {
 			if (isset($_POST["company_login_nickname"]) && !isset($_POST["company_login_name"])) {
@@ -484,7 +484,7 @@ if (!defined('FA_LOGOUT_PHP_FILE')){
 			{
 			// Incorrect password
 				if (isset($_SESSION['timeout'])) {
-					include($path_to_root . "/access/login.php");
+					require __DIR__ . "/../access/login.php";
 					exit;
 				} else
 					login_fail();

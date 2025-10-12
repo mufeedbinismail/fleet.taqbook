@@ -11,10 +11,10 @@
 ***********************************************************************/
 $page_security = 'SA_SHIPPING';
 $path_to_root="..";
-include($path_to_root . "/includes/session.inc");
+require __DIR__ . "/../includes/session.inc";
 page(_($help_context = "Shipping Company"));
-include($path_to_root . "/includes/ui.inc");
-include($path_to_root . "/admin/db/shipping_db.inc");
+require __DIR__ . "/../includes/ui.inc";
+require __DIR__ . "/../admin/db/shipping_db.inc";
 
 simple_page_mode(true);
 //----------------------------------------------------------------------------------------------

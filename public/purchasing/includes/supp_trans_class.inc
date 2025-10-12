@@ -12,7 +12,7 @@
 /* Definition of the Supplier Transactions class to hold all the information for an accounts payable invoice or credit note
 */
 
-include_once($path_to_root . "/taxes/tax_calc.inc");
+require_once __DIR__ . "/../../taxes/tax_calc.inc";
 
 class supp_trans 
 {

@@ -9,7 +9,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-include_once($path_to_root."/includes/packages.inc");
+require_once __DIR__ . "/../../includes/packages.inc";
 //
 //	Utility class contains basic database upgrade routines.
 //
@@ -31,7 +31,7 @@ class fa_patch {
 	{
 		global $path_to_root;
 
-		include $path_to_root."/config_db.php";
+		require __DIR__ . "/../../config_db.php";
 
 		$this->companies = $db_connections;
 

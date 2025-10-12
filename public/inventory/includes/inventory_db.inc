@@ -9,20 +9,20 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/includes/banking.inc");
-include_once($path_to_root . "/includes/inventory.inc");
+require_once __DIR__ . "/../../includes/date_functions.inc";
+require_once __DIR__ . "/../../includes/banking.inc";
+require_once __DIR__ . "/../../includes/inventory.inc";
 
-include_once($path_to_root . "/inventory/includes/db/items_category_db.inc");
-include_once($path_to_root . "/inventory/includes/db/items_trans_db.inc");
-include_once($path_to_root . "/inventory/includes/db/items_prices_db.inc");
-include_once($path_to_root . "/inventory/includes/db/items_purchases_db.inc");
-include_once($path_to_root . "/inventory/includes/db/items_codes_db.inc");
-include_once($path_to_root . "/inventory/includes/db/items_db.inc");
-include_once($path_to_root . "/inventory/includes/db/items_locations_db.inc");
-include_once($path_to_root . "/inventory/includes/db/items_adjust_db.inc");
-include_once($path_to_root . "/inventory/includes/db/items_transfer_db.inc");
-include_once($path_to_root . "/inventory/includes/db/items_units_db.inc");
+require_once __DIR__ . "/../../inventory/includes/db/items_category_db.inc";
+require_once __DIR__ . "/../../inventory/includes/db/items_trans_db.inc";
+require_once __DIR__ . "/../../inventory/includes/db/items_prices_db.inc";
+require_once __DIR__ . "/../../inventory/includes/db/items_purchases_db.inc";
+require_once __DIR__ . "/../../inventory/includes/db/items_codes_db.inc";
+require_once __DIR__ . "/../../inventory/includes/db/items_db.inc";
+require_once __DIR__ . "/../../inventory/includes/db/items_locations_db.inc";
+require_once __DIR__ . "/../../inventory/includes/db/items_adjust_db.inc";
+require_once __DIR__ . "/../../inventory/includes/db/items_transfer_db.inc";
+require_once __DIR__ . "/../../inventory/includes/db/items_units_db.inc";
 
 function item_img_name($stock_id)
 {
@@ -91,7 +91,7 @@ function send_reorder_email($loc, $st_ids, $st_names, $st_num, $st_reorder)
 {
 	global $path_to_root;
 
-	require_once($path_to_root . "/reporting/includes/class.mail.inc");
+	require_once __DIR__ . "/../../reporting/includes/class.mail.inc";
 	$company = get_company_prefs();
 	$mail = new email($company['coy_name'], $company['email']);
 	$subject = _("Stocks below Re-Order Level at ") . $loc['location_name'];

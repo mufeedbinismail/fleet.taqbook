@@ -101,7 +101,7 @@ function page_header($title, $no_menu=false, $is_index=false, $onload="", $js=""
 	{
 		if (!function_exists('get_js_open_window'))
 		{
-			include_once($path_to_root.'/includes/ui/ui_view.inc');
+			require_once __DIR__ . '/../../includes/ui/ui_view.inc';
 		}
 		add_js_source(get_js_open_window(900, 500));
 	}
@@ -144,7 +144,7 @@ function page_header($title, $no_menu=false, $is_index=false, $onload="", $js=""
 	echo "<meta http-equiv='Content-type' content='text/html; charset=$encoding'>";
 	echo "<link href='$path_to_root/themes/default/images/favicon.ico' rel='icon' type='image/x-icon'> \n";
 
-    include_once($path_to_root . "/themes/$theme/renderer.php");
+    require_once __DIR__ . "/../../themes/$theme/renderer.php";
     $rend = new renderer();
 
 	send_css($css);

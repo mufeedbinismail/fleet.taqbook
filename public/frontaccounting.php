@@ -11,17 +11,17 @@
 ***********************************************************************/
 if (!isset($path_to_root) || isset($_GET['path_to_root']) || isset($_POST['path_to_root']))
 	die("Restricted access");
-	include_once($path_to_root . '/applications/application.php');
-	include_once($path_to_root . '/applications/customers.php');
-	include_once($path_to_root . '/applications/marketplaces.php');
-	include_once($path_to_root . '/applications/suppliers.php');
-	include_once($path_to_root . '/applications/inventory.php');
-	include_once($path_to_root . '/applications/fixed_assets.php');
-	include_once($path_to_root . '/applications/manufacturing.php');
-	include_once($path_to_root . '/applications/dimensions.php');
-	include_once($path_to_root . '/applications/generalledger.php');
-	include_once($path_to_root . '/applications/setup.php');
-	include_once($path_to_root . '/installed_extensions.php');
+	require_once __DIR__ . '/applications/application.php';
+	require_once __DIR__ . '/applications/customers.php';
+	require_once __DIR__ . '/applications/marketplaces.php';
+	require_once __DIR__ . '/applications/suppliers.php';
+	require_once __DIR__ . '/applications/inventory.php';
+	require_once __DIR__ . '/applications/fixed_assets.php';
+	require_once __DIR__ . '/applications/manufacturing.php';
+	require_once __DIR__ . '/applications/dimensions.php';
+	require_once __DIR__ . '/applications/generalledger.php';
+	require_once __DIR__ . '/applications/setup.php';
+	require_once __DIR__ . '/installed_extensions.php';
 
 	class front_accounting
 	{
@@ -56,7 +56,7 @@ if (!isset($path_to_root) || isset($_GET['path_to_root']) || isset($_POST['path_
 		{
 			global $path_to_root;
 			
-			include_once($path_to_root . "/themes/".user_theme()."/renderer.php");
+			require_once __DIR__ . "/themes/".user_theme()."/renderer.php";
 
 			$this->init();
 			$rend = new renderer();

@@ -9,8 +9,8 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-include_once($path_to_root . "/includes/prefs/sysprefs.inc");
-include_once($path_to_root . "/inventory/includes/inventory_db.inc");
+require_once __DIR__ . "/../../includes/prefs/sysprefs.inc";
+require_once __DIR__ . "/../../inventory/includes/inventory_db.inc";
 
 class items_cart
 {

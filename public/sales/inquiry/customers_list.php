@@ -16,9 +16,9 @@
 ***********************************************************************/
 $page_security = "SA_SALESORDER";
 $path_to_root = "../..";
-include_once($path_to_root . "/includes/session.inc");
-include_once($path_to_root . "/includes/ui.inc");
-include_once($path_to_root . "/sales/includes/db/customers_db.inc");
+require_once __DIR__ . "/../../includes/session.inc";
+require_once __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../sales/includes/db/customers_db.inc";
 
 if (!user_check_access($page_security) && user_check_access('SA_MP_SALESORDER'))
     $page_security = 'SA_MP_SALESORDER';

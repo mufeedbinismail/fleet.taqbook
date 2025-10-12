@@ -9,9 +9,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-include_once($path_to_root . "/includes/banking.inc");
-include_once($path_to_root . "/includes/types.inc");
-include_once($path_to_root . "/includes/current_user.inc");
+require_once __DIR__ . "/../../includes/banking.inc";
+require_once __DIR__ . "/../../includes/types.inc";
+require_once __DIR__ . "/../../includes/current_user.inc";
 
 define('SEARCH_BUTTON', "<input %s type='submit' class='combo_submit' style='border:0;background:url($path_to_root/themes/"
 	."%s/images/locate.png) no-repeat;%s' aspect='fallback' name='%s' value=' ' title='"._("Set filter")."'> ");
@@ -2517,7 +2517,7 @@ function tag_list($name, $height, $type, $multi=false, $all=false, $spec_opt = f
 {
 	// Get tags
 	global $path_to_root;
-	include_once($path_to_root . "/admin/db/tags_db.inc");
+	require_once __DIR__ . "/../../admin/db/tags_db.inc";
 	$results = get_tags($type, $all);
 
 	while ($tag = db_fetch($results))

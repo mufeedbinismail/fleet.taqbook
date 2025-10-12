@@ -20,13 +20,13 @@
 $path_to_root = "..";
 $page_security = 'SA_SALESORDER';
 
-include_once($path_to_root . "/sales/includes/cart_class.inc");
-include_once($path_to_root . "/includes/session.inc");
-include_once($path_to_root . "/sales/includes/sales_ui.inc");
-include_once($path_to_root . "/sales/includes/ui/sales_order_ui.inc");
-include_once($path_to_root . "/sales/includes/sales_db.inc");
-include_once($path_to_root . "/sales/includes/db/sales_types_db.inc");
-include_once($path_to_root . "/reporting/includes/reporting.inc");
+require_once __DIR__ . "/../sales/includes/cart_class.inc";
+require_once __DIR__ . "/../includes/session.inc";
+require_once __DIR__ . "/../sales/includes/sales_ui.inc";
+require_once __DIR__ . "/../sales/includes/ui/sales_order_ui.inc";
+require_once __DIR__ . "/../sales/includes/sales_db.inc";
+require_once __DIR__ . "/../sales/includes/db/sales_types_db.inc";
+require_once __DIR__ . "/../reporting/includes/reporting.inc";
 
 if (isset($_GET['ModifyOrderNumber']) && !isset($_GET['Marketplace'])) {
     $_GET['Marketplace'] = get_sales_order_header($_GET['ModifyOrderNumber'], ST_SALESORDER)['marketplace_id'] ? 'Yes' : '';

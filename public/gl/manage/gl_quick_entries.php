@@ -11,13 +11,13 @@
 ***********************************************************************/
 $page_security = 'SA_QUICKENTRY';
 $path_to_root = "../..";
-include($path_to_root . "/includes/session.inc");
+require __DIR__ . "/../../includes/session.inc";
 
 page(_($help_context = "Quick Entries"));
 
-include($path_to_root . "/gl/includes/gl_db.inc");
+require __DIR__ . "/../../gl/includes/gl_db.inc";
 
-include($path_to_root . "/includes/ui.inc");
+require __DIR__ . "/../../includes/ui.inc";
 
 simple_page_mode(true);
 simple_page_mode2(true);

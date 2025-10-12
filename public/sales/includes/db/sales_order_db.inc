@@ -49,7 +49,7 @@ function add_sales_order(&$order)
 
 	if ($SysPrefs->loc_notification() == 1)
 	{
-		include_once($path_to_root . "/inventory/includes/inventory_db.inc");
+		require_once __DIR__ . "/../../../inventory/includes/inventory_db.inc";
 		$st_ids = array();
 		$st_names = array();
 		$st_num = array();
@@ -174,7 +174,7 @@ function update_sales_order($order)
 
 	if ($SysPrefs->loc_notification() == 1)
 	{
-		include_once($path_to_root . "/inventory/includes/inventory_db.inc");
+		require_once __DIR__ . "/../../../inventory/includes/inventory_db.inc";
 		$st_ids = array();
 		$st_names = array();
 		$st_num = array();

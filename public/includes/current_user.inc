@@ -10,7 +10,7 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
-include_once($path_to_root . "/includes/prefs/userprefs.inc");
+require_once __DIR__ . "/../includes/prefs/userprefs.inc";
 if (!defined('TB_PREF')) {
 	define('TB_PREF', '&TB_PREF&');
 }
@@ -377,7 +377,7 @@ function qty_format($number, $stock_id, &$dec) {
 function get_qty_dec($stock_id=null)
 {
 	global $path_to_root;
-	include_once($path_to_root."/inventory/includes/db/items_units_db.inc");
+	require_once __DIR__ . "/../inventory/includes/db/items_units_db.inc";
 	if ($stock_id != null)
 		$dec = get_unit_dec($stock_id);
 	if ($stock_id == null || $dec == -1 || $dec == null)

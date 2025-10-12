@@ -11,16 +11,16 @@
 ***********************************************************************/
 $page_security = 'SA_ACCRUALS';
 $path_to_root = "../..";
-include_once($path_to_root . "/includes/session.inc");
+require_once __DIR__ . "/../../includes/session.inc";
 
 $_SESSION['page_title'] = _($help_context = _("Search General Ledger Transactions for account: ").$_GET['act']);
 
 page($_SESSION['page_title'], true);
 
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/includes/ui.inc");
+require_once __DIR__ . "/../../includes/date_functions.inc";
+require_once __DIR__ . "/../../includes/ui.inc";
 
-include_once($path_to_root . "/gl/includes/gl_db.inc");
+require_once __DIR__ . "/../../gl/includes/gl_db.inc";
 
 $js ="\n<script type='text/javascript'>\n"
 		. "<!--\n"

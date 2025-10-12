@@ -11,8 +11,8 @@
 ***********************************************************************/
 $page_security = 'SA_BANKACCOUNT';
 $path_to_root = "../..";
-include($path_to_root . "/includes/db_pager.inc");
-include($path_to_root . "/includes/session.inc");
+require __DIR__ . "/../../includes/db_pager.inc";
+require __DIR__ . "/../../includes/session.inc";
 
 $js = "";
 if (user_use_date_picker())
@@ -20,8 +20,8 @@ if (user_use_date_picker())
 
 page(_($help_context = "Bank Accounts"), isset($_GET['bank_id']), false, "", $js);
 
-include($path_to_root . "/includes/ui.inc");
-include_once($path_to_root . "/includes/ui/attachment.inc");
+require __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../includes/ui/attachment.inc";
 
 simple_page_mode();
 
@@ -254,7 +254,7 @@ tabbed_content_start('tabs', array(
 			break;
 		case 'transactions':
 			$_GET['bank_account'] = $bank_id;
-			include_once($path_to_root."/gl/inquiry/bank_inquiry.php");
+			require_once __DIR__ . "/../../gl/inquiry/bank_inquiry.php";
 			break;
 		case 'attachments':
 			$_GET['trans_no'] = $bank_id;

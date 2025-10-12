@@ -11,14 +11,14 @@
 ***********************************************************************/
 $page_security = 'SA_CHGPASSWD';
 $path_to_root="..";
-include_once($path_to_root . "/includes/session.inc");
+require_once __DIR__ . "/../includes/session.inc";
 
 page(_($help_context = "Change password"));
 
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/includes/ui.inc");
+require_once __DIR__ . "/../includes/date_functions.inc";
+require_once __DIR__ . "/../includes/ui.inc";
 
-include_once($path_to_root . "/admin/db/users_db.inc");
+require_once __DIR__ . "/../admin/db/users_db.inc";
 
 function can_process()
 {

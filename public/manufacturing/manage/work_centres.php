@@ -11,13 +11,13 @@
 ***********************************************************************/
 $page_security = 'SA_WORKCENTRES';
 $path_to_root = "../..";
-include($path_to_root . "/includes/session.inc");
+require __DIR__ . "/../../includes/session.inc";
 
 page(_($help_context = "Work Centres"));
 
-include($path_to_root . "/manufacturing/includes/manufacturing_db.inc");
+require __DIR__ . "/../../manufacturing/includes/manufacturing_db.inc";
 
-include($path_to_root . "/includes/ui.inc");
+require __DIR__ . "/../../includes/ui.inc";
 
 simple_page_mode(true);
 //-----------------------------------------------------------------------------------

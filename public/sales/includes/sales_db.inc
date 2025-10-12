@@ -9,24 +9,24 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-include_once($path_to_root . "/includes/banking.inc");
-include_once($path_to_root . "/includes/inventory.inc");
-include_once($path_to_root . "/includes/db/allocations_db.inc");
-include_once($path_to_root . "/sales/includes/db/sales_order_db.inc");
-include_once($path_to_root . "/sales/includes/db/sales_credit_db.inc");
-include_once($path_to_root . "/sales/includes/db/sales_invoice_db.inc");
-include_once($path_to_root . "/sales/includes/db/sales_delivery_db.inc");
-include_once($path_to_root . "/sales/includes/db/sales_types_db.inc");
-include_once($path_to_root . "/sales/includes/db/sales_points_db.inc");
-include_once($path_to_root . "/sales/includes/db/sales_groups_db.inc");
-include_once($path_to_root . "/sales/includes/db/recurrent_invoices_db.inc");
-include_once($path_to_root . "/sales/includes/db/custalloc_db.inc");
-include_once($path_to_root . "/sales/includes/db/cust_trans_db.inc");
-include_once($path_to_root . "/sales/includes/db/cust_trans_details_db.inc");
-include_once($path_to_root . "/sales/includes/db/payment_db.inc");
-include_once($path_to_root . "/sales/includes/db/branches_db.inc");
-include_once($path_to_root . "/sales/includes/db/customers_db.inc");
-include_once($path_to_root . "/sales/includes/db/marketplaces_db.inc");
+require_once __DIR__ . "/../../includes/banking.inc";
+require_once __DIR__ . "/../../includes/inventory.inc";
+require_once __DIR__ . "/../../includes/db/allocations_db.inc";
+require_once __DIR__ . "/../../sales/includes/db/sales_order_db.inc";
+require_once __DIR__ . "/../../sales/includes/db/sales_credit_db.inc";
+require_once __DIR__ . "/../../sales/includes/db/sales_invoice_db.inc";
+require_once __DIR__ . "/../../sales/includes/db/sales_delivery_db.inc";
+require_once __DIR__ . "/../../sales/includes/db/sales_types_db.inc";
+require_once __DIR__ . "/../../sales/includes/db/sales_points_db.inc";
+require_once __DIR__ . "/../../sales/includes/db/sales_groups_db.inc";
+require_once __DIR__ . "/../../sales/includes/db/recurrent_invoices_db.inc";
+require_once __DIR__ . "/../../sales/includes/db/custalloc_db.inc";
+require_once __DIR__ . "/../../sales/includes/db/cust_trans_db.inc";
+require_once __DIR__ . "/../../sales/includes/db/cust_trans_details_db.inc";
+require_once __DIR__ . "/../../sales/includes/db/payment_db.inc";
+require_once __DIR__ . "/../../sales/includes/db/branches_db.inc";
+require_once __DIR__ . "/../../sales/includes/db/customers_db.inc";
+require_once __DIR__ . "/../../sales/includes/db/marketplaces_db.inc";
 
 //----------------------------------------------------------------------------------------
 // add a debtor-related gl transaction

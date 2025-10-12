@@ -16,7 +16,7 @@
 $path_to_root = "..";
 global $page_security;
 $page_security = 'SA_OPEN';	// this level is later overriden in rep file
-include_once($path_to_root . "/includes/session.inc");
+require_once __DIR__ . "/../includes/session.inc";
 
 if (user_save_report_selections() > 0 && isset($_POST['REP_ID'])) {	// save parameters from Report Center
 	for($i=0; $i<12; $i++) { // 2013-01-16 Joe Hunt

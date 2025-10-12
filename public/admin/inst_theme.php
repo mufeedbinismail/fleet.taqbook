@@ -11,11 +11,11 @@
 ***********************************************************************/
 $page_security = 'SA_CREATEMODULES';
 $path_to_root="..";
-include_once($path_to_root . "/includes/session.inc");
+require_once __DIR__ . "/../includes/session.inc";
 
-include_once($path_to_root."/includes/packages.inc");
-include_once($path_to_root . "/admin/db/maintenance_db.inc");
-include_once($path_to_root . "/includes/ui.inc");
+require_once __DIR__ . "/../includes/packages.inc";
+require_once __DIR__ . "/../admin/db/maintenance_db.inc";
+require_once __DIR__ . "/../includes/ui.inc";
 
 if ($SysPrefs->use_popup_windows) {
 	$js = get_js_open_window(900, 500);

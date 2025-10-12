@@ -11,12 +11,12 @@
 ***********************************************************************/
 $page_security = 'SA_SOFTWAREUPGRADE';
 $path_to_root = "../..";
-include_once($path_to_root . "/includes/session.inc");
-include_once($path_to_root . "/includes/packages.inc");
+require_once __DIR__ . "/../../includes/session.inc";
+require_once __DIR__ . "/../../includes/packages.inc";
 
 page(_($help_context = "Log View"), true);
 
-include_once($path_to_root . "/includes/ui.inc");
+require_once __DIR__ . "/../../includes/ui.inc";
 
 if (!isset($_GET['id'])) 
 {

@@ -16,7 +16,7 @@ function set_global_connection($company=-1)
 {
 	global $db, $path_to_root, $db_connections, $SysPrefs;
 
-	include ($path_to_root . "/config_db.php");
+	require __DIR__ . "/../../config_db.php";
 	if ($company == -1) 
 		$company = user_company();
 

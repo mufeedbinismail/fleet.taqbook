@@ -11,16 +11,16 @@
 ***********************************************************************/
 $page_security = 'SA_INVENTORYADJUSTMENT';
 $path_to_root = "..";
-include_once($path_to_root . "/includes/ui/items_cart.inc");
+require_once __DIR__ . "/../includes/ui/items_cart.inc";
 
-include_once($path_to_root . "/includes/session.inc");
+require_once __DIR__ . "/../includes/session.inc";
 
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/includes/data_checks.inc");
+require_once __DIR__ . "/../includes/date_functions.inc";
+require_once __DIR__ . "/../includes/data_checks.inc";
 
-include_once($path_to_root . "/fixed_assets/includes/fixed_assets_db.inc");
-include_once($path_to_root . "/inventory/includes/item_adjustments_ui.inc");
-include_once($path_to_root . "/inventory/includes/inventory_db.inc");
+require_once __DIR__ . "/../fixed_assets/includes/fixed_assets_db.inc";
+require_once __DIR__ . "/../inventory/includes/item_adjustments_ui.inc";
+require_once __DIR__ . "/../inventory/includes/inventory_db.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(800, 500);

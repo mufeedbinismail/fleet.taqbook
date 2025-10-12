@@ -15,16 +15,16 @@ $path_to_root="..";
 if (file_exists($path_to_root.'/config_db.php'))
 	header("Location: $path_to_root/index.php");
 
-include($path_to_root . "/install/isession.inc");
+require __DIR__ . "/../install/isession.inc";
 
 page(_("FrontAccouting ERP Installation Wizard"), true, false, "", '', false, 'stylesheet.css');
 
-include($path_to_root . "/includes/ui.inc");
-include($path_to_root . "/includes/system_tests.inc");
-include($path_to_root . "/admin/db/maintenance_db.inc");
-include($path_to_root . "/includes/packages.inc");
-if (file_exists($path_to_root . "/installed_extensions.php"))
-	include($path_to_root . "/installed_extensions.php");
+require __DIR__ . "/../includes/ui.inc";
+require __DIR__ . "/../includes/system_tests.inc";
+require __DIR__ . "/../admin/db/maintenance_db.inc";
+require __DIR__ . "/../includes/packages.inc";
+if (file_exists(__DIR__ . "/../installed_extensions.php"))
+	require __DIR__ . "/../installed_extensions.php";
 //-------------------------------------------------------------------------------------------------
 
 function subpage_title($txt) 
@@ -179,8 +179,8 @@ function do_install() {
 			return false;
 		}
 		// update default language
-		if (file_exists($path_to_root . "/lang/installed_languages.inc"))
-			include_once($path_to_root . "/lang/installed_languages.inc");
+		if (file_exists(__DIR__ . "/../lang/installed_languages.inc"))
+			require_once __DIR__ . "/../lang/installed_languages.inc";
 		$dflt_lang = $_POST['lang'];
 		write_lang();
 		return true;
@@ -275,8 +275,8 @@ elseif(get_post('install_coas'))
 			$ret &= install_extension($package);
 		}
 	if ($ret) {
-		if (file_exists($path_to_root . '/installed_extensions.php'))
-			include($path_to_root.'/installed_extensions.php');
+		if (file_exists(__DIR__ . '/../installed_extensions.php'))
+			require __DIR__ . '/../installed_extensions.php';
 		$_POST['Page'] = 5;
 	}
 } elseif (isset($_POST['set_admin'])) {

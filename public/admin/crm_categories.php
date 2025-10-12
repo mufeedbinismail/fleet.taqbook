@@ -11,12 +11,12 @@
 ***********************************************************************/
 $page_security = 'SA_CRMCATEGORY';
 $path_to_root = '..';
-include($path_to_root . "/includes/session.inc");
-include_once($path_to_root . "/includes/db/crm_contacts_db.inc");
+require __DIR__ . "/../includes/session.inc";
+require_once __DIR__ . "/../includes/db/crm_contacts_db.inc";
 
 page(_($help_context = "Contact Categories"));
 
-include($path_to_root . "/includes/ui.inc");
+require __DIR__ . "/../includes/ui.inc";
 
 simple_page_mode(true);
 

@@ -20,9 +20,9 @@ $page_security = $_POST['PARAM_0'] == $_POST['PARAM_1'] ?
 // ----------------------------------------------------------------
 $path_to_root="..";
 
-include_once($path_to_root . "/includes/session.inc");
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/includes/data_checks.inc");
+require_once __DIR__ . "/../includes/session.inc";
+require_once __DIR__ . "/../includes/date_functions.inc";
+require_once __DIR__ . "/../includes/data_checks.inc";
 
 //----------------------------------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ function print_receipts()
 {
 	global $path_to_root, $systypes_array;
 
-	include_once($path_to_root . "/reporting/includes/pdf_report.inc");
+	require_once __DIR__ . "/../reporting/includes/pdf_report.inc";
 
 	$from = $_POST['PARAM_0'];
 	$to = $_POST['PARAM_1'];

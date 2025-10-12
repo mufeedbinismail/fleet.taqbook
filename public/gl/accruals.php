@@ -17,15 +17,15 @@ Free software under GNU GPL
 $page_security = 'SA_ACCRUALS';
 $path_to_root="..";
 
-include_once($path_to_root . "/includes/session.inc");
-include_once($path_to_root . "/includes/ui/items_cart.inc");
+require_once __DIR__ . "/../includes/session.inc";
+require_once __DIR__ . "/../includes/ui/items_cart.inc";
 
 $js = get_js_open_window(800, 500);
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
 // Begin the UI
-include_once($path_to_root . "/includes/ui.inc");
+require_once __DIR__ . "/../includes/ui.inc";
 
 $_SESSION['page_title'] = _($help_context = "Revenue / Cost Accruals");
 page($_SESSION['page_title'], false, false,'', $js);

@@ -9,8 +9,8 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-include_once($path_to_root . "/admin/db/voiding_db.inc");
-include_once($path_to_root . "/includes/types.inc");
+require_once __DIR__ . "/../../admin/db/voiding_db.inc";
+require_once __DIR__ . "/../../includes/types.inc";
 
 //--------------------------------------------------------------------------------------
 

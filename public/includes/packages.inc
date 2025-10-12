@@ -9,9 +9,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-include_once($path_to_root. "/includes/archive.inc");
-include_once($path_to_root. "/includes/remote_url.inc");
-include_once($path_to_root. "/includes/hooks.inc");
+require_once __DIR__ . "/../includes/archive.inc";
+require_once __DIR__ . "/../includes/remote_url.inc";
+require_once __DIR__ . "/../includes/hooks.inc";
 
 define('PKG_CACHE_PATH', $path_to_root.'/modules/_cache');
 define('PUBKEY_PATH', $path_to_root);
@@ -682,10 +682,10 @@ function install_extension($pkg_name)
 			$local_exts[$ext_id] = $ext;
 			$ret = update_extensions($local_exts);
 
-			if (($ext['active'] == true) && file_exists($path_to_root.'/'.$ext['path'].'/hooks.php'))
+			if (($ext['active'] == true) && file_exists(__DIR__ . '/../'.$ext['path'].'/hooks.php'))
 			{
 				// we need to include the new hooks file to activate extension
-				include_once($path_to_root.'/'.$ext['path'].'/hooks.php');
+				require_once __DIR__ . '/../'.$ext['path'].'/hooks.php';
 				foreach($db_connections as $comp => $db)
 					activate_hooks($ext['package'], $comp);
 			}

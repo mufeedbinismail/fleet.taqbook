@@ -11,12 +11,12 @@
 ***********************************************************************/
 $path_to_root="..";
 $page_security = 'SA_OPEN';
-include_once($path_to_root . "/includes/session.inc");
+require_once __DIR__ . "/../includes/session.inc";
 
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/includes/data_checks.inc");
-include_once($path_to_root . "/includes/ui.inc");
-include_once($path_to_root . "/reporting/includes/reports_classes.inc");
+require_once __DIR__ . "/../includes/date_functions.inc";
+require_once __DIR__ . "/../includes/data_checks.inc";
+require_once __DIR__ . "/../includes/ui.inc";
+require_once __DIR__ . "/../reporting/includes/reports_classes.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 	$js .= get_js_open_window(900, 500);

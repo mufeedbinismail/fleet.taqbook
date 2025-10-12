@@ -11,14 +11,14 @@
 ***********************************************************************/
 	$path_to_root = "..";
 
-	include_once($path_to_root . "/includes/session.inc");
-	include_once($path_to_root . "/includes/ui.inc");
-	include_once($path_to_root . "/includes/data_checks.inc");
-	include_once($path_to_root . "/reporting/includes/class.graphic.inc");
-	if (file_exists("$path_to_root/themes/".user_theme()."/dashboard.inc"))
-		include_once("$path_to_root/themes/".user_theme()."/dashboard.inc"); // yse theme dashboard.inc
+	require_once __DIR__ . "/../includes/session.inc";
+	require_once __DIR__ . "/../includes/ui.inc";
+	require_once __DIR__ . "/../includes/data_checks.inc";
+	require_once __DIR__ . "/../reporting/includes/class.graphic.inc";
+	if (file_exists(__DIR__ . "/../themes/".user_theme()."/dashboard.inc"))
+		require_once __DIR__ . "/../themes/".user_theme()."/dashboard.inc"; // yse theme dashboard.inc
 	else
-		include_once("$path_to_root/includes/dashboard.inc"); // here are all the dashboard routines.
+		require_once __DIR__ . "/../includes/dashboard.inc"; // here are all the dashboard routines.
 	$page_security = 'SA_SETUPDISPLAY'; // A very low access level. The real access level is inside the routines.
 	$app = isset($_GET['sel_app']) ? $_GET['sel_app'] : (isset($_POST['sel_app']) ? $_POST['sel_app'] : "orders");
 	if (get_post('id'))

@@ -11,12 +11,12 @@
 ***********************************************************************/
 $page_security = 'SA_OPEN';
 $path_to_root = "../..";
-include_once($path_to_root . "/includes/session.inc");
-include_once($path_to_root . "/includes/packages.inc");
+require_once __DIR__ . "/../../includes/session.inc";
+require_once __DIR__ . "/../../includes/packages.inc";
 
 page(_($help_context = "Package Details"), true);
 
-include_once($path_to_root . "/includes/ui.inc");
+require_once __DIR__ . "/../../includes/ui.inc";
 
 if (!isset($_GET['id'])) 
 {

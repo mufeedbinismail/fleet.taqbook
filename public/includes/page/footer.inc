@@ -16,7 +16,7 @@ function page_footer($no_menu=false, $is_index=false)
 	$page_header_args = func_get_args();
 	hook_invoke_all('pre_footer', $page_header_args);
 
-	include_once($path_to_root."/themes/".user_theme()."/renderer.php");
+	require_once __DIR__ . "/../../themes/".user_theme()."/renderer.php";
 	$rend = new renderer();
 	$rend->menu_footer($no_menu, $is_index);
 

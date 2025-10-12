@@ -192,7 +192,7 @@ function new_doc_date($date=null)
 function is_date_in_fiscalyear($date, $convert=false)
 {
 	global $path_to_root;
-	include_once($path_to_root . "/admin/db/fiscalyears_db.inc");
+	require_once __DIR__ . "/../admin/db/fiscalyears_db.inc";
 
 	if ($convert)
 		$date2 = sql2date($date);
@@ -223,7 +223,7 @@ function is_date_closed($date)
 function begin_fiscalyear()
 {
 	global $path_to_root;
-	include_once($path_to_root . "/admin/db/fiscalyears_db.inc");
+	require_once __DIR__ . "/../admin/db/fiscalyears_db.inc";
 
 	$myrow = get_current_fiscalyear();
 	return sql2date($myrow['begin']);
@@ -232,7 +232,7 @@ function begin_fiscalyear()
 function end_fiscalyear()
 {
 	global $path_to_root;
-	include_once($path_to_root . "/admin/db/fiscalyears_db.inc");
+	require_once __DIR__ . "/../admin/db/fiscalyears_db.inc";
 
 	$myrow = get_current_fiscalyear();
 	return sql2date($myrow['end']);

@@ -12,12 +12,12 @@
 
 $page_security = 'SA_GLCLOSE';
 $path_to_root = "../..";
-include_once($path_to_root . "/includes/session.inc");
+require_once __DIR__ . "/../../includes/session.inc";
 
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/includes/ui.inc");
-include_once($path_to_root . "/includes/banking.inc");
-include_once($path_to_root . "/admin/db/fiscalyears_db.inc");
+require_once __DIR__ . "/../../includes/date_functions.inc";
+require_once __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../includes/banking.inc";
+require_once __DIR__ . "/../../admin/db/fiscalyears_db.inc";
 
 $js = "";
 if (user_use_date_picker())

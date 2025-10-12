@@ -14,10 +14,10 @@ define("FA_LOGOUT_PHP_FILE","");
 
 $page_security = 'SA_OPEN';
 $path_to_root="..";
-include($path_to_root . "/includes/session.inc");
+require __DIR__ . "/../includes/session.inc";
 add_js_file('login.js');
 
-include($path_to_root . "/includes/page/header.inc");
+require __DIR__ . "/../includes/page/header.inc";
 page_header(_("Logout"), true, false, '');
 
 echo "<table width='100%' border='0'>

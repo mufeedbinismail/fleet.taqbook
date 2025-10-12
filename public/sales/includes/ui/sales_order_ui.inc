@@ -9,7 +9,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-include_once($path_to_root . "/sales/includes/cart_class.inc");
+require_once __DIR__ . "/../../../sales/includes/cart_class.inc";
 
 //--------------------------------------------------------------------------------
 function add_to_order(

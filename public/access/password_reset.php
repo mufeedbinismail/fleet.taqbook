@@ -11,8 +11,8 @@
 ***********************************************************************/
 	if (!isset($path_to_root) || isset($_GET['path_to_root']) || isset($_POST['path_to_root']))
 		die(_("Restricted access"));
-	include_once($path_to_root . "/includes/ui.inc");
-	include_once($path_to_root . "/includes/page/header.inc");
+	require_once __DIR__ . "/../includes/ui.inc";
+	require_once __DIR__ . "/../includes/page/header.inc";
 
 	$js = "<script language='JavaScript' type='text/javascript'>
 function defaultCompany()

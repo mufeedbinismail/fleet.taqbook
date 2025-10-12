@@ -9,7 +9,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-include_once($path_to_root . "/admin/db/company_db.inc");
+require_once __DIR__ . "/../../admin/db/company_db.inc";
 
 /*
 	System and per company prefferences.
@@ -26,9 +26,9 @@ class sys_prefs extends stdClass
 		global $path_to_root;
 
 		// retrieve set system wide preferences
-		include $path_to_root.'/config.default.php';
-		if (file_exists($path_to_root.'/config.php'))
-			include $path_to_root.'/config.php';
+		require __DIR__ . '/../../config.default.php';
+		if (file_exists(__DIR__ . '/../../config.php'))
+			require __DIR__ . '/../../config.php';
 
 		foreach(get_defined_vars() as $name => $value)
 			$this->$name = $value;

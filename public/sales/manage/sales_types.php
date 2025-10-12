@@ -11,12 +11,12 @@
 ***********************************************************************/
 $page_security = 'SA_SALESTYPES';
 $path_to_root = "../..";
-include_once($path_to_root . "/includes/session.inc");
+require_once __DIR__ . "/../../includes/session.inc";
 
 page(_($help_context = "Sales Types"));
 
-include_once($path_to_root . "/includes/ui.inc");
-include_once($path_to_root . "/sales/includes/db/sales_types_db.inc");
+require_once __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../sales/includes/db/sales_types_db.inc";
 
 simple_page_mode(true);
 //----------------------------------------------------------------------------------------------------

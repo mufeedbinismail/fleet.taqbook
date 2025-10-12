@@ -11,11 +11,11 @@
 ***********************************************************************/
 $page_security = 'SA_SALESTRANSVIEW';
 $path_to_root = "../..";
-include_once($path_to_root . "/includes/session.inc");
+require_once __DIR__ . "/../../includes/session.inc";
 
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/includes/ui.inc");
-include_once($path_to_root . "/sales/includes/sales_db.inc");
+require_once __DIR__ . "/../../includes/date_functions.inc";
+require_once __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../sales/includes/sales_db.inc";
 
 $js = "";
 if ($SysPrefs->use_popup_windows)

@@ -11,7 +11,7 @@
 ***********************************************************************/
 $page_security = 'SA_GLSETUP';
 $path_to_root="..";
-include($path_to_root . "/includes/session.inc");
+require __DIR__ . "/../includes/session.inc";
 
 $js = "";
 if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
@@ -19,10 +19,10 @@ if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 
 page(_($help_context = "System and General GL Setup"), false, false, "", $js);
 
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/includes/ui.inc");
-include_once($path_to_root . "/includes/data_checks.inc");
-include_once($path_to_root . "/admin/db/company_db.inc");
+require_once __DIR__ . "/../includes/date_functions.inc";
+require_once __DIR__ . "/../includes/ui.inc";
+require_once __DIR__ . "/../includes/data_checks.inc";
+require_once __DIR__ . "/../admin/db/company_db.inc";
 
 $user = $_SESSION['wa_current_user'];
 

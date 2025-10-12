@@ -11,7 +11,7 @@
 ***********************************************************************/
 $page_security = 'SA_FORITEMCODE';
 $path_to_root = "../..";
-include_once($path_to_root . "/includes/session.inc");
+require_once __DIR__ . "/../../includes/session.inc";
 
 $js = "";
 if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
@@ -19,9 +19,9 @@ if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 
 page(_($help_context = "Foreign Item Codes"), false, false, "", $js);
 
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/includes/ui.inc");
-include_once($path_to_root . "/includes/data_checks.inc");
+require_once __DIR__ . "/../../includes/date_functions.inc";
+require_once __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../includes/data_checks.inc";
 
 check_db_has_purchasable_items(_("There are no inventory items defined in the system."));
 

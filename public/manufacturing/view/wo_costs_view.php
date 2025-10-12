@@ -12,18 +12,18 @@
 $page_security = 'SA_MANUFTRANSVIEW';
 $path_to_root = "../..";
 
-include_once($path_to_root . "/includes/session.inc");
+require_once __DIR__ . "/../../includes/session.inc";
 
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
 page(_($help_context = "View Work Order Costs"), true, false, "", $js);
 
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/includes/data_checks.inc");
+require_once __DIR__ . "/../../includes/date_functions.inc";
+require_once __DIR__ . "/../../includes/data_checks.inc";
 
-include_once($path_to_root . "/manufacturing/includes/manufacturing_db.inc");
-include_once($path_to_root . "/manufacturing/includes/manufacturing_ui.inc");
+require_once __DIR__ . "/../../manufacturing/includes/manufacturing_db.inc";
+require_once __DIR__ . "/../../manufacturing/includes/manufacturing_ui.inc";
 
 //-------------------------------------------------------------------------------------------------
 

@@ -18,11 +18,11 @@ $page_security = 'SA_ITEMSVALREP';
 // ----------------------------------------------------------------
 $path_to_root="..";
 
-include_once($path_to_root . "/includes/session.inc");
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/includes/data_checks.inc");
-include_once($path_to_root . "/gl/includes/gl_db.inc");
-include_once($path_to_root . "/inventory/includes/db/items_category_db.inc");
+require_once __DIR__ . "/../includes/session.inc";
+require_once __DIR__ . "/../includes/date_functions.inc";
+require_once __DIR__ . "/../includes/data_checks.inc";
+require_once __DIR__ . "/../gl/includes/gl_db.inc";
+require_once __DIR__ . "/../inventory/includes/db/items_category_db.inc";
 
 //----------------------------------------------------------------------------------------------------
 
@@ -143,9 +143,9 @@ function print_inventory_valuation_report()
 	$orientation = $_POST['PARAM_5'];
 	$destination = $_POST['PARAM_6'];
 	if ($destination)
-		include_once($path_to_root . "/reporting/includes/excel_report.inc");
+		require_once __DIR__ . "/../reporting/includes/excel_report.inc";
 	else
-		include_once($path_to_root . "/reporting/includes/pdf_report.inc");
+		require_once __DIR__ . "/../reporting/includes/pdf_report.inc";
 	$detail = !$detail;
     $dec = user_price_dec();
 

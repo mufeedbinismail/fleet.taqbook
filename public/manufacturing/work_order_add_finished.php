@@ -11,14 +11,14 @@
 ***********************************************************************/
 $page_security = 'SA_MANUFRECEIVE';
 $path_to_root = "..";
-include_once($path_to_root . "/includes/session.inc");
-include_once($path_to_root . "/includes/inventory.inc");
+require_once __DIR__ . "/../includes/session.inc";
+require_once __DIR__ . "/../includes/inventory.inc";
 
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/gl/includes/db/gl_db_bank_trans.inc");
+require_once __DIR__ . "/../includes/date_functions.inc";
+require_once __DIR__ . "/../gl/includes/db/gl_db_bank_trans.inc";
 
-include_once($path_to_root . "/manufacturing/includes/manufacturing_db.inc");
-include_once($path_to_root . "/manufacturing/includes/manufacturing_ui.inc");
+require_once __DIR__ . "/../manufacturing/includes/manufacturing_db.inc";
+require_once __DIR__ . "/../manufacturing/includes/manufacturing_ui.inc";
 
 $js = "";
 if ($SysPrefs->use_popup_windows)
@@ -36,7 +36,7 @@ if (isset($_GET['trans_no']) && $_GET['trans_no'] != "")
 
 if (isset($_GET['AddedID']))
 {
-	include_once($path_to_root . "/reporting/includes/reporting.inc");
+	require_once __DIR__ . "/../reporting/includes/reporting.inc";
 	$id = $_GET['AddedID'];
 	$stype = ST_WORKORDER;
 

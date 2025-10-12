@@ -47,7 +47,7 @@ if (!isset($path_to_root) || isset($_GET['path_to_root']) || isset($_POST['path_
 	$app_title = "FrontAccounting";
 
 	// Build for development purposes
-	$build_version 	= date("d.m.Y", filemtime("$path_to_root/CHANGELOG.txt"));
+	$build_version 	= date("d.m.Y", filemtime(__DIR__."/CHANGELOG.txt"));
 
 	// Powered by
 	$power_by 		= "FrontAccounting";
@@ -81,14 +81,14 @@ if (!isset($path_to_root) || isset($_GET['path_to_root']) || isset($_POST['path_
  	// $old_style_help = 1; // this setting is depreciated and subject to removal in next FA versions
 	$old_style_help = 0;
 	// 	locally installed wiki module
-	// $help_base_url = $path_to_root.'/modules/wiki/index.php?n='._('Help').'.';
+	// $help_base_url =  __DIR__.'/modules/wiki/index.php?n='._('Help').'.';
 	// 	context help feed from frontaccounting.com
 	$help_base_url = 'http://frontaccounting.com/fawiki/index.php?n=Help.';
 	// 	set to null if not used:
 	//	$help_base_url = null;
 
 	/* per user data/cache directory */
-	$comp_path = $path_to_root.'/company';
+	$comp_path = __DIR__.'/company';
 
 	/* Date systems. 0 = traditional, 1 = Jalali used by Iran, Afghanistan and some other Central Asian nations,
 	2 = Islamic used by other arabic nations. 3 = traditional, but where non-workday is Friday and start of week is Saturday */

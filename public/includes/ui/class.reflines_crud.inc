@@ -9,8 +9,8 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-include_once $path_to_root.'/includes/db/class.reflines_db.inc';
-include_once $path_to_root.'/includes/ui/class.crud_view.inc';
+require_once __DIR__ . '/../../includes/db/class.reflines_db.inc';
+require_once __DIR__ . '/../../includes/ui/class.crud_view.inc';
 
 class fa_reflines extends simple_crud_view {
 

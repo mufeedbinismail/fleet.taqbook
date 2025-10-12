@@ -200,7 +200,7 @@ function hyperlink_back($center=true, $no_menu=true, $type_no=0, $trans_no=0, $f
 	$id = 0;	
 	if ($no_menu && $trans_no != 0)
 	{
-		include_once($path_to_root."/admin/db/attachments_db.inc");
+		require_once __DIR__ . "/../../admin/db/attachments_db.inc";
 		$id = has_attachment($type_no, $trans_no);
 		$attach = get_attachment_string($type_no, $trans_no);
     	echo $attach;

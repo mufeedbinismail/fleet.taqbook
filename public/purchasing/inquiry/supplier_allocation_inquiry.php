@@ -11,10 +11,10 @@
 ***********************************************************************/
 $page_security = 'SA_SUPPLIERALLOC';
 $path_to_root = "../..";
-include($path_to_root . "/includes/db_pager.inc");
-include($path_to_root . "/includes/session.inc");
+require __DIR__ . "/../../includes/db_pager.inc";
+require __DIR__ . "/../../includes/session.inc";
 
-include($path_to_root . "/purchasing/includes/purchasing_ui.inc");
+require __DIR__ . "/../../purchasing/includes/purchasing_ui.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);

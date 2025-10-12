@@ -11,12 +11,12 @@
 ***********************************************************************/
 $page_security = 'SA_INVENTORYLOCATION';
 $path_to_root = "../..";
-include($path_to_root . "/includes/session.inc");
+require __DIR__ . "/../../includes/session.inc";
 
 
-include_once($path_to_root . "/includes/ui.inc");
+require_once __DIR__ . "/../../includes/ui.inc";
 
-include_once($path_to_root . "/inventory/includes/inventory_db.inc");
+require_once __DIR__ . "/../../inventory/includes/inventory_db.inc";
 
 if (isset($_GET['FixedAsset'])) {
 	$help_context = _("Fixed Assets Locations");

@@ -109,7 +109,7 @@
 		{
 			global $version, $path_to_root, $Pagehelp, $Ajax, $SysPrefs;
 
-			include_once($path_to_root . "/includes/date_functions.inc");
+			require_once __DIR__ . "/../../includes/date_functions.inc";
 
 			echo "</td></tr></table>\n"; // 'main_page'
 			if ($no_menu == false) // bottom status line

@@ -9,22 +9,22 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-include_once($path_to_root . "/purchasing/includes/supp_trans_class.inc");
+require_once __DIR__ . "/../../purchasing/includes/supp_trans_class.inc";
 
-include_once($path_to_root . "/includes/banking.inc");
-include_once($path_to_root . "/includes/inventory.inc");
+require_once __DIR__ . "/../../includes/banking.inc";
+require_once __DIR__ . "/../../includes/inventory.inc";
 
-include_once($path_to_root . "/includes/date_functions.inc");
+require_once __DIR__ . "/../../includes/date_functions.inc";
 
-include_once($path_to_root . "/includes/db/allocations_db.inc");
+require_once __DIR__ . "/../../includes/db/allocations_db.inc";
 
-include_once($path_to_root . "/purchasing/includes/db/supp_trans_db.inc");
-include_once($path_to_root . "/purchasing/includes/db/po_db.inc");
-include_once($path_to_root . "/purchasing/includes/db/grn_db.inc");
-include_once($path_to_root . "/purchasing/includes/db/invoice_db.inc");
-include_once($path_to_root . "/purchasing/includes/db/suppalloc_db.inc");
-include_once($path_to_root . "/purchasing/includes/db/supp_payment_db.inc");
-include_once($path_to_root . "/purchasing/includes/db/suppliers_db.inc");
+require_once __DIR__ . "/../../purchasing/includes/db/supp_trans_db.inc";
+require_once __DIR__ . "/../../purchasing/includes/db/po_db.inc";
+require_once __DIR__ . "/../../purchasing/includes/db/grn_db.inc";
+require_once __DIR__ . "/../../purchasing/includes/db/invoice_db.inc";
+require_once __DIR__ . "/../../purchasing/includes/db/suppalloc_db.inc";
+require_once __DIR__ . "/../../purchasing/includes/db/supp_payment_db.inc";
+require_once __DIR__ . "/../../purchasing/includes/db/suppliers_db.inc";
 
 //-------------------------------------------------------------------------------------------------------------
 

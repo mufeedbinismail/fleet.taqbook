@@ -12,13 +12,13 @@
 $page_security = 'SA_ITEMSTRANSVIEW';
 $path_to_root = "../..";
 
-include($path_to_root . "/includes/session.inc");
+require __DIR__ . "/../../includes/session.inc";
 
 page(_($help_context = "View Inventory Transfer"), true);
 
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/includes/ui.inc");
-include_once($path_to_root . "/gl/includes/gl_db.inc");
+require_once __DIR__ . "/../../includes/date_functions.inc";
+require_once __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../gl/includes/gl_db.inc";
 
 if (isset($_GET["trans_no"]))
 {

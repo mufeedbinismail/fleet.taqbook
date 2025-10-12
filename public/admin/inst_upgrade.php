@@ -11,18 +11,18 @@
 ***********************************************************************/
 $page_security = 'SA_SOFTWAREUPGRADE';
 $path_to_root="..";
-include_once($path_to_root . "/includes/session.inc");
+require_once __DIR__ . "/../includes/session.inc";
 
 if ($SysPrefs->use_popup_windows) {
 	$js = get_js_open_window(900, 500);
 }
 page(_($help_context = "Software Upgrade"), false, false, "", $js);
 
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/admin/db/company_db.inc");
-include_once($path_to_root . "/admin/db/maintenance_db.inc");
-include_once($path_to_root . "/includes/ui.inc");
-include_once($path_to_root . "/admin/includes/fa_patch.class.inc");
+require_once __DIR__ . "/../includes/date_functions.inc";
+require_once __DIR__ . "/../admin/db/company_db.inc";
+require_once __DIR__ . "/../admin/db/maintenance_db.inc";
+require_once __DIR__ . "/../includes/ui.inc";
+require_once __DIR__ . "/../admin/includes/fa_patch.class.inc";
 
 $site_status = get_site_status($db_connections);
 $installers = get_installers();

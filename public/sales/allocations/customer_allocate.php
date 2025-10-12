@@ -12,12 +12,12 @@
 $page_security = 'SA_SALESALLOC';
 $path_to_root = "../..";
 
-include($path_to_root . "/includes/ui/allocation_cart.inc");
-include_once($path_to_root . "/includes/session.inc");
-include_once($path_to_root . "/includes/data_checks.inc");
-include_once($path_to_root . "/sales/includes/sales_ui.inc");
-include_once($path_to_root . "/sales/includes/sales_db.inc");
-//include_once($path_to_root . "/sales/includes/ui/cust_alloc_ui.inc");
+require __DIR__ . "/../../includes/ui/allocation_cart.inc";
+require_once __DIR__ . "/../../includes/session.inc";
+require_once __DIR__ . "/../../includes/data_checks.inc";
+require_once __DIR__ . "/../../sales/includes/sales_ui.inc";
+require_once __DIR__ . "/../../sales/includes/sales_db.inc";
+//require_once __DIR__ . "/../../sales/includes/ui/cust_alloc_ui.inc";
 
 if (isset($_GET['trans_no']) && isset($_GET['trans_type']) && !isset($_GET['Marketplace'])) {
     if (get_customer_trans($_GET['trans_no'], $_GET['trans_type'])['marketplace_id'] ?? null) {

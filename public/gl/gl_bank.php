@@ -10,19 +10,19 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $path_to_root = "..";
-include_once($path_to_root . "/includes/ui/items_cart.inc");
-include_once($path_to_root . "/includes/session.inc");
+require_once __DIR__ . "/../includes/ui/items_cart.inc";
+require_once __DIR__ . "/../includes/session.inc";
 $page_security = isset($_GET['NewPayment']) || 
 	@($_SESSION['pay_items']->trans_type==ST_BANKPAYMENT)
  ? 'SA_PAYMENT' : 'SA_DEPOSIT';
 
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/includes/data_checks.inc");
+require_once __DIR__ . "/../includes/date_functions.inc";
+require_once __DIR__ . "/../includes/data_checks.inc";
 
-include_once($path_to_root . "/gl/includes/ui/gl_bank_ui.inc");
-include_once($path_to_root . "/gl/includes/gl_db.inc");
-include_once($path_to_root . "/gl/includes/gl_ui.inc");
-include_once($path_to_root . "/admin/db/attachments_db.inc");
+require_once __DIR__ . "/../gl/includes/ui/gl_bank_ui.inc";
+require_once __DIR__ . "/../gl/includes/gl_db.inc";
+require_once __DIR__ . "/../gl/includes/gl_ui.inc";
+require_once __DIR__ . "/../admin/db/attachments_db.inc";
 
 $js = '';
 if ($SysPrefs->use_popup_windows)

@@ -11,11 +11,11 @@
 ***********************************************************************/
 $page_security = 'SA_SALESALLOC';
 $path_to_root = "../..";
-include($path_to_root . "/includes/db_pager.inc");
-include_once($path_to_root . "/includes/session.inc");
+require __DIR__ . "/../../includes/db_pager.inc";
+require_once __DIR__ . "/../../includes/session.inc";
 
-include_once($path_to_root . "/sales/includes/sales_ui.inc");
-include_once($path_to_root . "/sales/includes/sales_db.inc");
+require_once __DIR__ . "/../../sales/includes/sales_ui.inc";
+require_once __DIR__ . "/../../sales/includes/sales_db.inc";
 
 if (isset($_GET['Marketplace'])) {
     $_POST['is_marketplace_trans'] = 1;

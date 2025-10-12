@@ -16,9 +16,9 @@
 ***********************************************************************/
 $page_security = "SA_PURCHASEORDER";
 $path_to_root = "../..";
-include_once($path_to_root . "/includes/session.inc");
-include_once($path_to_root . "/includes/ui.inc");
-include_once($path_to_root . "/purchasing/includes/db/suppliers_db.inc");
+require_once __DIR__ . "/../../includes/session.inc";
+require_once __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../purchasing/includes/db/suppliers_db.inc";
 
 $mode = get_company_pref('no_supplier_list');
 if ($mode != 0)

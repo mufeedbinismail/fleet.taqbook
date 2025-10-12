@@ -9,10 +9,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-include_once($path_to_root . "/reporting/includes/Workbook.php");
-include_once($path_to_root . "/admin/db/company_db.inc");
-include_once($path_to_root . "/admin/db/fiscalyears_db.inc");
-include_once($path_to_root . "/config.php");
+require_once __DIR__ . "/../../reporting/includes/Workbook.php";
+require_once __DIR__ . "/../../admin/db/company_db.inc";
+require_once __DIR__ . "/../../admin/db/fiscalyears_db.inc";
+require_once __DIR__ . "/../../config.php";
 define('MAX_ROW_SHEET', 65530);
 // xls version
 class FrontReport extends Spreadsheet_Excel_Writer_Workbook

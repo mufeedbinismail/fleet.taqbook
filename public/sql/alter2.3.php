@@ -119,8 +119,8 @@ class fa2_3 extends fa_patch {
 	{
 		global $path_to_root;
 
-		include_once("$path_to_root/sales/includes/cart_class.inc");
-		include_once("$path_to_root/purchasing/includes/po_class.inc");
+		require_once __DIR__ . "/../sales/includes/cart_class.inc";
+		require_once __DIR__ . "/../purchasing/includes/po_class.inc";
 		$cart = new cart(ST_SALESORDER);
 		$sql = "SELECT order_no, trans_type FROM ".TB_PREF."sales_orders";
 		$orders = db_query($sql);
@@ -188,7 +188,7 @@ class fa2_3 extends fa_patch {
 	{
 		global $path_to_root, $systypes_array;
 
-		require_once("$path_to_root/includes/sysnames.inc");
+		require_once __DIR__ . "/../includes/sysnames.inc";
 		
 		$sql =	"SELECT d.type, trans_no, order_ FROM ".TB_PREF."debtor_trans d
 			LEFT JOIN ".TB_PREF."voided v ON d.type=v.type AND d.trans_no=v.id

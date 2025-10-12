@@ -2,9 +2,9 @@
 
 $page_security = "SA_MP_SALESORDER";
 $path_to_root = "../..";
-include_once($path_to_root . "/includes/session.inc");
-include_once($path_to_root . "/includes/ui.inc");
-include_once($path_to_root . "/sales/includes/db/marketplaces_db.inc");
+require_once __DIR__ . "/../../includes/session.inc";
+require_once __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../sales/includes/db/marketplaces_db.inc";
 
 $js = get_js_select_combo_item();
 

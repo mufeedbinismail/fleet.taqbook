@@ -228,9 +228,9 @@ function install_hooks($lang_code=null)
 		$lang_code = $_SESSION['language']->code;
 	$lang_code  = clean_file_name($lang_code);
 
-	if (file_exists($path_to_root . "/lang/" . $lang_code . "/locale.inc"))
+	if (file_exists(__DIR__ . "/../lang/" . $lang_code . "/locale.inc"))
 	{
-		include_once($path_to_root . "/lang/" . $lang_code . "/locale.inc");
+		require_once __DIR__ . "/../lang/" . $lang_code . "/locale.inc";
 		$code = $lang_code;
 		$hook_class = 'hooks_'.$code;
 		$Hooks[$code] = new $hook_class;

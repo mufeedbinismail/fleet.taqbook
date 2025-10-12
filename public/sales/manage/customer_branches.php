@@ -12,8 +12,8 @@
 $page_security = 'SA_CUSTOMER';
 $path_to_root="../..";
 
-include($path_to_root . "/includes/db_pager.inc");
-include($path_to_root . "/includes/session.inc");
+require __DIR__ . "/../../includes/db_pager.inc";
+require __DIR__ . "/../../includes/session.inc";
 
 $js = "";
 if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
@@ -21,8 +21,8 @@ if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 
 page(_($help_context = "Customer Branches"), @$_REQUEST['popup'], false, "", $js);
 
-include($path_to_root . "/includes/ui.inc");
-include($path_to_root . "/includes/ui/contacts_view.inc");
+require __DIR__ . "/../../includes/ui.inc";
+require __DIR__ . "/../../includes/ui/contacts_view.inc";
 
 //-----------------------------------------------------------------------------------------------
 

@@ -16,9 +16,9 @@
 ***********************************************************************/
 $page_security = "SA_GLACCOUNT";
 $path_to_root = "../..";
-include_once($path_to_root . "/includes/session.inc");
-include_once($path_to_root . "/includes/ui.inc");
-include_once($path_to_root . "/gl/includes/db/gl_db_accounts.inc");
+require_once __DIR__ . "/../../includes/session.inc";
+require_once __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../gl/includes/db/gl_db_accounts.inc";
 
 $js = get_js_select_combo_item();
 

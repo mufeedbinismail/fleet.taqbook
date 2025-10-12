@@ -12,13 +12,13 @@
 $page_security = 'SA_SUPPLIERALLOC';
 $path_to_root = "../..";
 
-include($path_to_root . "/includes/ui/allocation_cart.inc");
-include_once($path_to_root . "/includes/session.inc");
-include_once($path_to_root . "/includes/date_functions.inc");
-include_once($path_to_root . "/includes/ui.inc");
-include_once($path_to_root . "/includes/banking.inc");
-include_once($path_to_root . "/sales/includes/sales_db.inc");
-//include_once($path_to_root . "/purchasing/includes/ui/supp_alloc_ui.inc");
+require __DIR__ . "/../../includes/ui/allocation_cart.inc";
+require_once __DIR__ . "/../../includes/session.inc";
+require_once __DIR__ . "/../../includes/date_functions.inc";
+require_once __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../includes/banking.inc";
+require_once __DIR__ . "/../../sales/includes/sales_db.inc";
+//require_once __DIR__ . "/../../purchasing/includes/ui/supp_alloc_ui.inc";
 
 $js = "";
 if ($SysPrefs->use_popup_windows)
