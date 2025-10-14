@@ -6,7 +6,7 @@
 </FilesMatch>
 
 # Set the default index.
-DirectoryIndex index.php
+DirectoryIndex entry.php
 
 <IfModule mod_negotiation.c>
     Options -MultiViews -Indexes
@@ -24,10 +24,23 @@ DirectoryIndex index.php
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
+    # Redirect Request to PHP files
+    # or directory that contain index.php
+    # to Front Controller...
+
+    # Only redirect directory requests (no file extension in the request)
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ entry.php [L,QSA,E=IS_LEGACY_ROUTE:true]
+
+    # Redirect PHP files to front controller
+    RewriteCond %{REQUEST_FILENAME} \.php$
+    RewriteRule ^ entry.php [L,QSA,E=IS_LEGACY_ROUTE:true]
+
     # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ index.php [L]
+    RewriteRule ^ entry.php [L]
 </IfModule>
 
 # These settings are recommended

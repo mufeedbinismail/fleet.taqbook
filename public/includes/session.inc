@@ -298,7 +298,6 @@ if (isset($_GET['path_to_root']) || isset($_POST['path_to_root']))
 require_once __DIR__ . "/../includes/errors.inc";
 // colect all error msgs
 set_error_handler('error_handler' /*, errtypes */);
-set_exception_handler('exception_handler');
 
 require_once __DIR__ . "/../includes/current_user.inc";
 require_once __DIR__ . "/../frontaccounting.php";
@@ -401,8 +400,6 @@ $Pagehelp = array();
 
 $Refs = new references();
 
-// intercept all output to destroy it in case of ajax call
-register_shutdown_function('end_flush');
 ob_start('output_html',0);
 
 if (!isset($_SESSION["wa_current_user"]))

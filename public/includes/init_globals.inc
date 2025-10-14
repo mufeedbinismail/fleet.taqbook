@@ -1,0 +1,31 @@
+<?php
+
+$GLOBALS['page_nested']          = -1;
+$GLOBALS['js_path']              = dirname(__DIR__).'/js/';
+$GLOBALS['js_static']            = [];
+$GLOBALS['js_userlib']           = [];
+$GLOBALS['js_lib']               = [];
+$GLOBALS['messages']             = [];
+$GLOBALS['before_box']           = '';
+$GLOBALS['installed_languages']  = [['code' => 'C', 'name' => 'English', 'encoding' => 'iso-8859-1']];
+$GLOBALS['dflt_lang']            = 'C';
+$GLOBALS['installed_extensions'] = [];
+$GLOBALS['next_extension_id']    = 1;
+$GLOBALS['def_coy']              = 0;
+$GLOBALS['tb_pref_counter']      = 0;
+$GLOBALS['db_connections']       = [];
+$GLOBALS['security_groups']      = [];
+$GLOBALS['security_headings']    = [];
+$GLOBALS['form_nested']          = -1;
+$GLOBALS['ajax_divs']            = [];
+$GLOBALS['popup_editors']        = [];
+$GLOBALS['hidden_fields']        = [];
+$GLOBALS['Editors']              = [];
+$GLOBALS['Pagehelp']             = [];
+$GLOBALS['Validate']             = [];
+$GLOBALS['sql_queries']          = '';
+$GLOBALS['login_faillog']        = [];
+$GLOBALS['db_last_inserted_id']  = 0;
+$GLOBALS['bom_list']             = array(); 
+$GLOBALS['qoh_stock']            = NULL;
+$GLOBALS['transaction_level']    = 0;

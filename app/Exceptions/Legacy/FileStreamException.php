@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Exceptions\Legacy;
+
+use App\Exceptions\Legacy\FlowControlException as Exception;
+
+class FileStreamException extends Exception
+{
+    protected $filePath;
+    protected $fileName;
+
+    public function __construct(string $filePath, string $fileName = null, int $code = 0, \Throwable $previous = null)
+    {
+        // Guess a default filename if one isn't provided
+        $this->filePath = $filePath;
+        $this->fileName = $fileName ?? basename($filePath);
+        
+        // Use a generic message for the exception
+        parent::__construct("Initiating file streaming for: " . $this->fileName, $code, $previous);
+    }
+
+    public function getFilePath(): string
+    {
+        return $this->filePath;
+    }
+
+    public function getFileName(): string
+    {
+        return $this->fileName;
+    }
+}
