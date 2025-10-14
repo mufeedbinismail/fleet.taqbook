@@ -18,9 +18,6 @@
 	Debugging info level also determined by settings in PHP.ini
 	if $debug=1 show debugging info, dont show if $debug=0 */
 
-if (!isset($path_to_root) || isset($_GET['path_to_root']) || isset($_POST['path_to_root']))
-	die("Restricted access");
-
 	// Server time zone. Since php 5.3.0 time zone have to be set either here or in server php ini file
 	if (!ini_get('date.timezone'))
 		ini_set('date.timezone', 'Europe/Berlin');

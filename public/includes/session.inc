@@ -61,16 +61,15 @@ function kill_login()
 
 function login_fail()
 {
-	global $path_to_root;
-
-	header("HTTP/1.1 401 Authorization Required");
+    global $path_to_root;
+    
 	echo "<center><br><br><font size='5' color='red'><b>" . _("Incorrect Password") . "<b></font><br><br>";
 	echo "<b>" . _("The user and password combination is not valid for the system.") . "<b><br><br>";
 	echo _("If you are not an authorized user, please contact your system administrator to obtain an account to enable you to use the system.");
 	echo "<br><a href='$path_to_root/index.php'>" . _("Try again") . "</a>";
 	echo "</center>";
 	kill_login();
-	die();
+	throw new \Illuminate\Validation\UnauthorizedException;
 }
 
 function password_reset_fail()
@@ -85,7 +84,7 @@ function password_reset_fail()
   	echo "</center>";
 
 	kill_login();
-	die();
+	throw new \App\Exceptions\Legacy\FlowTerminatedException;
 }
 
 function password_reset_success()
@@ -99,7 +98,7 @@ function password_reset_success()
   	echo "</center>";
 	
 	kill_login();
-	die();
+	throw new \App\Exceptions\Legacy\FlowCompletedException;
 }
 
 function check_faillog()
@@ -190,7 +189,7 @@ function check_page_security($page_security)
 		display_error($msg);
 		end_page(@$_REQUEST['popup']);
 		kill_login();
-		exit;
+		throw new \App\Exceptions\Legacy\FlowTerminatedException;
 	}
 
 	if (!$_SESSION["wa_current_user"]->can_access_page($page_security))
@@ -201,14 +200,14 @@ function check_page_security($page_security)
 		echo "</b>";
 		echo "<br><br><br><br></center>";
 		end_page(@$_REQUEST['popup']);
-		exit;
+		throw new \App\Exceptions\Legacy\FlowTerminatedException;
 	}
 	if (!$SysPrefs->db_ok 
 		&& !in_array($page_security, array('SA_SOFTWAREUPGRADE', 'SA_OPEN', 'SA_BACKUP')))
 	{
 		display_error(_('System is blocked after source upgrade until database is updated on System/Software Upgrade page'));
 		end_page();
-		exit;
+		throw new \App\Exceptions\Legacy\FlowTerminatedException;
 	}
 
 }
@@ -294,10 +293,6 @@ if (!isset($path_to_root))
 {
 	$path_to_root = ".";
 }
-
-// Prevent register_globals vulnerability
-if (isset($_GET['path_to_root']) || isset($_POST['path_to_root']))
-	die("Restricted access");
 
 require_once __DIR__ . "/../includes/errors.inc";
 // colect all error msgs
@@ -431,7 +426,7 @@ if (!defined('FA_LOGOUT_PHP_FILE')){
         && (isset($_GET['reset']) || isset($_POST['email_entry_field']))) {
 		  if (!isset($_POST["email_entry_field"])) {
         require __DIR__ . "/../access/password_reset.php";
-        exit();
+        throw new \App\Exceptions\Legacy\FlowCompletedException;
       }
       else {
         if (isset($_POST["company_login_nickname"]) && !isset($_POST["company_login_name"])) {
@@ -465,7 +460,7 @@ if (!defined('FA_LOGOUT_PHP_FILE')){
 			$Ajax->popup($path_to_root ."/access/timeout.php");
 		else
 			require __DIR__ . "/../access/login.php";
-			exit;
+			throw new \App\Exceptions\Legacy\FlowTerminatedException;
 		} else {
 			if (isset($_POST["company_login_nickname"]) && !isset($_POST["company_login_name"])) {
 				for ($i = 0; $i < count($db_connections); $i++) {
@@ -486,17 +481,13 @@ if (!defined('FA_LOGOUT_PHP_FILE')){
 			// Incorrect password
 				if (isset($_SESSION['timeout'])) {
 					require __DIR__ . "/../access/login.php";
-					exit;
+					throw new \App\Exceptions\Legacy\FlowTerminatedException;
 				} else
 					login_fail();
 			}
 			elseif(isset($_SESSION['timeout']) && !$_SESSION['timeout']['post'])
 			{
-				// in case of GET request redirect to avoid confirmation dialog 
-				// after return from menu option
-				header("HTTP/1.1 307 Temporary Redirect");
-				header("Location: ".$_SESSION['timeout']['uri']);
-				exit();
+                throw new \App\Exceptions\Legacy\FlowRedirectionException($_SESSION['timeout']['uri'], 307);
 			}
 			$lang = &$_SESSION['language'];
 			$lang->set_language($_SESSION['language']->code);

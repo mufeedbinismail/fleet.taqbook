@@ -129,7 +129,7 @@ page($_SESSION['page_title'], false, false, "", $js);
 if (isset($_GET['ModifyOrderNumber']) && is_prepaid_order_open($_GET['ModifyOrderNumber']))
 {
 	display_error(_("This order cannot be edited because there are invoices or payments related to it, and prepayment terms were used."));
-	end_page(); exit;
+	end_page(); throw new \App\Exceptions\Legacy\FlowTerminatedException;
 }
 if (isset($_GET['ModifyOrderNumber']))
 	check_is_editable(ST_SALESORDER, $_GET['ModifyOrderNumber']);

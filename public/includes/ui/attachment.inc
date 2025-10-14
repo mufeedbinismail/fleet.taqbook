@@ -41,12 +41,11 @@ class attachments extends simple_crud {
 			if ($row['unique_name'] != ""){
 				if(in_ajax()) {
 					$Ajax->redirect($path_to_root.'/admin/attachments.php?dl='.$keys[0]);
-				} else {					
-		    		Header("Content-type: 'application/octet-stream' ");
-			    	//header('Content-Length: '.$row['filesize']);
-		    		header('Content-Disposition: attachment; filename="'.$row['filename'].'"');
-		    		echo file_get_contents(company_path()."/attachments/".$row['unique_name']);
-			    	exit();
+				} else {
+                    throw new \App\Exceptions\Legacy\FileDownloadException(
+                        company_path()."/attachments/".$row['unique_name'],
+                        $row['filename']
+                    );
 				}
 			}
 		}
@@ -56,17 +55,7 @@ class attachments extends simple_crud {
 			$row = db_fetch(db_query($sql), "Cannot retrieve attachment $keys[0]");
 			
 			if ($row['unique_name'] != ""){
-
-				$Ajax->redirect($path_to_root.'/admin/attachments.php?vw='.$keys[0]);	
-				/*if(in_ajax()) {
-					
-				} else {					
-		    		$type_no = ($row['filetype']) ? $row['filetype'] : 'application/octet-stream';	
-		    		header("Content-type: ".$type_no);
-		 			header("Content-Disposition: inline");
-			    	echo file_get_contents(company_path(). "/attachments/".$row['unique_name']);
-		    		exit();
-				}*/
+				$Ajax->redirect($path_to_root.'/admin/attachments.php?vw='.$keys[0]);
 			}
 		}
 		$filters = array('trans_no' => $this->entity, 'type_no' => (isset($_GET['type_no']) ? $_GET['type_no'] : ST_CUSTOMER)); // default ST_CUSTOMER

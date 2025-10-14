@@ -9,8 +9,6 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-	if (!isset($path_to_root) || isset($_GET['path_to_root']) || isset($_POST['path_to_root']))
-		die(_("Restricted access"));
 	require_once __DIR__ . "/../includes/ui.inc";
 	require_once __DIR__ . "/../includes/page/header.inc";
 

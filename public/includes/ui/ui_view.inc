@@ -544,7 +544,7 @@ function display_footer_exit($space=2)
 	if ($space)
 		br($space);
 	end_page(false, false, true);
-	exit;
+	throw new \App\Exceptions\Legacy\FlowTerminatedException;
 }
 
 //--------------------------------------------------------------------------------------
@@ -1510,7 +1510,7 @@ if (!function_exists('_vd'))
     	$str .= "</pre>\n";
 		display_notification('<table><tr><td>'.$str.'</td></tr></table>');
     	if ($exit)
-    		exit;
+    		throw new \App\Exceptions\Legacy\FlowTerminatedException;
   	}
 }
 
@@ -1518,7 +1518,7 @@ function _vl($mixed, $title = '', $exit = false)
 {
 	error_log((!empty($title) ? ($title .':') : '') . print_r($mixed, true));
 	if ($exit)
-		exit;
+		throw new \App\Exceptions\Legacy\FlowTerminatedException;
 }
 
 function display_backtrace($cond=true, $msg='') {

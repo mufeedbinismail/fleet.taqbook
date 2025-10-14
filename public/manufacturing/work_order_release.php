@@ -36,7 +36,7 @@ elseif (isset($_POST["selected_id"]))
 else
 {
 	display_note("This page must be called with a work order reference");
-	exit;
+	throw new \App\Exceptions\Legacy\FlowTerminatedException;
 }
 
 //------------------------------------------------------------------------------------
@@ -78,7 +78,7 @@ if (isset($_POST['release']))
 
 	$Ajax->activate('_page_body');
 	end_page();
-	exit;
+    throw new \App\Exceptions\Legacy\FlowCompletedException;
 }
 
 //------------------------------------------------------------------------------------

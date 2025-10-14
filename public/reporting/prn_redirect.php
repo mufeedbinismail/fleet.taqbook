@@ -31,14 +31,10 @@ if (isset($_GET['xls']) || isset($_GET['xml']))
 {
 	$filename = $_GET['filename'];
 	$unique_name = preg_replace('/[^0-9_a-z.\-]/i', '', $_GET['unique']);
-	$path =  company_path(). '/pdf_files/';
-	header("Content-type: ". (isset($_GET['xls']) ? "application/vnd.ms-excel" : "text/xml"));
-	header("Content-Disposition: attachment; filename=$filename" );
-	header("Expires: 0");
-	header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
-	header("Pragma: public");
-	echo file_get_contents($path.$unique_name);
-	exit();
+    throw new \App\Exceptions\Legacy\FileDownloadException(
+        company_path().'/pdf_files/'.$unique_name,
+        $filename
+    );
 }
 
 if (!isset($_POST['REP_ID'])) {	// print link clicked
@@ -56,7 +52,8 @@ $rep_file = find_custom_file("/reporting/rep$rep.php");
 
 if ($rep_file) {
 	require($rep_file);
-} else
+} else {
 	display_error("Cannot find report file '$rep'");
-exit();
+}
 
+throw new \App\Exceptions\Legacy\FlowTerminatedException;

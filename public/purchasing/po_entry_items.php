@@ -220,7 +220,7 @@ function handle_cancel_po()
 	echo "<br>";
 
 	end_page();
-	exit;
+	throw new \App\Exceptions\Legacy\FlowCompletedException;
 }
 
 //---------------------------------------------------------------------------------------------------

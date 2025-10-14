@@ -53,7 +53,8 @@ if (isset($_GET['AddedID']))
 
 if ((!isset($_GET['PONumber']) || $_GET['PONumber'] == 0) && !isset($_SESSION['PO']))
 {
-	die (_("This page can only be opened if a purchase order has been selected. Please select a purchase order first."));
+	display_error(_("This page can only be opened if a purchase order has been selected. Please select a purchase order first."));
+    throw new \App\Exceptions\Legacy\FlowTerminatedException;
 }
 
 //--------------------------------------------------------------------------------------------------

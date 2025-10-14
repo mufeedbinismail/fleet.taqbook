@@ -29,8 +29,11 @@ if (!isset($_POST['type'])) {
 		$_POST['type'] = TAG_ACCOUNT;
 	elseif ($_GET['type'] == "dimension")
 		$_POST['type'] = TAG_DIMENSION;
-	else
-		die(_("Unspecified tag type"));
+	else {
+		display_error(_("Unspecified tag type"));
+        throw new \App\Exceptions\Legacy\FlowTerminatedException;
+    }
+
 }
 
 // Set up page based on what type of tags we're working with

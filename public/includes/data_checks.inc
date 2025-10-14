@@ -21,7 +21,7 @@ function check_db_has_customers($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -37,7 +37,7 @@ function check_db_has_currencies($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }
 }
 
@@ -66,7 +66,7 @@ function check_db_has_sales_types($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -82,7 +82,7 @@ function check_db_has_item_tax_types($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -98,7 +98,7 @@ function check_db_has_tax_types($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -114,7 +114,7 @@ function check_db_has_tax_groups($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -137,7 +137,7 @@ function check_db_has_customer_branches($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -153,7 +153,7 @@ function check_db_has_sales_people($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }
 }
 
@@ -169,7 +169,7 @@ function check_db_has_sales_areas($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -185,7 +185,7 @@ function check_db_has_shippers($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -206,7 +206,7 @@ function check_db_has_workorders($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -227,7 +227,7 @@ function check_db_has_dimensions($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -244,7 +244,7 @@ function check_db_has_suppliers($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -261,7 +261,7 @@ function check_db_has_stock_items($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -277,7 +277,7 @@ function check_db_has_bom_stock_items($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -293,7 +293,7 @@ function check_db_has_manufacturable_items($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -309,7 +309,7 @@ function check_db_has_purchasable_items($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -325,7 +325,7 @@ function check_db_has_costable_items($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -336,7 +336,7 @@ function check_db_has_fixed_asset_classes($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }
 }
 
@@ -368,7 +368,7 @@ function check_db_has_depreciable_fixed_assets($msg)
 	{
 		display_error($msg, true);
 		end_page();
-	exit;
+	throw new \App\Exceptions\Legacy\FlowTerminatedException;
 	}
 }
 
@@ -385,7 +385,7 @@ function check_db_has_fixed_assets($msg)
 	{
 		display_error($msg, true);
 		end_page();
-		exit;
+		throw new \App\Exceptions\Legacy\FlowTerminatedException;
 	}
 }
 
@@ -406,7 +406,7 @@ function check_db_has_purchasable_fixed_assets($msg)
 	{
 		display_error($msg, true);
 		end_page();
-	 	exit;
+	 	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }
 }
 
@@ -429,7 +429,7 @@ function check_db_has_disposable_fixed_assets($msg)
 	{
 		display_error($msg, true);
 		end_page();
-		exit;
+		throw new \App\Exceptions\Legacy\FlowTerminatedException;
 	}
 }
 
@@ -445,7 +445,7 @@ function check_db_has_fixed_asset_categories($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }
 }
 
@@ -461,7 +461,7 @@ function check_db_has_stock_categories($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }
 }
 
@@ -477,7 +477,7 @@ function check_db_has_workcentres($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -493,7 +493,7 @@ function check_db_has_locations($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -510,7 +510,7 @@ function check_db_has_bank_accounts($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -537,7 +537,7 @@ function check_db_has_gl_account_groups($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -558,7 +558,7 @@ function check_db_has_tags($type, $msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;	
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }	
 }
 
@@ -628,7 +628,7 @@ function check_db_has_template_orders($msg)
     {
     	display_error($msg, true);
     	end_page();
-    	exit;
+    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }
 }
 

@@ -34,12 +34,7 @@ if ($view_id != -1)
 		if(in_ajax()) {
 			$Ajax->popup($_SERVER['PHP_SELF'].'?vw='.$view_id);
 		} else {
-			$type = ($row['filetype']) ? $row['filetype'] : 'application/octet-stream';	
-    		header("Content-type: ".$type);
-    		header('Content-Length: '.$row['filesize']);
- 			header("Content-Disposition: inline");
-	    	echo file_get_contents(company_path(). "/attachments/".$row['unique_name']);
-    		exit();
+            throw new \App\Exceptions\Legacy\FileStreamException(company_path(). "/attachments/".$row['unique_name']);
 		}
 	}	
 }
@@ -56,12 +51,10 @@ if ($download_id != -1)
 		if(in_ajax()) {
 			$Ajax->redirect($_SERVER['PHP_SELF'].'?dl='.$download_id);
 		} else {
-			$type = ($row['filetype']) ? $row['filetype'] : 'application/octet-stream';	
-    		header("Content-type: ".$type);
-	    	header('Content-Length: '.$row['filesize']);
-    		header('Content-Disposition: attachment; filename="'.$row['filename'].'"');
-    		echo file_get_contents(company_path()."/attachments/".$row['unique_name']);
-	    	exit();
+            throw new \App\Exceptions\Legacy\FileDownloadException(
+                company_path(). "/attachments/".$row['unique_name'],
+                $row['filename']
+            );
 		}
 	}	
 }
@@ -106,10 +99,6 @@ if ($Mode == 'ADD_ITEM' || $Mode == 'UPDATE_ITEM')
 		if (!file_exists($dir))
 		{
 			mkdir ($dir,0777);
-			$index_file = "<?php\nheader(\"Location: ../index.php\");\n";
-			$fp = fopen($dir."/index.php", "w");
-			fwrite($fp, $index_file);
-			fclose($fp);
 		}
 
 		$filesize = $_FILES['filename']['size'];
@@ -120,8 +109,10 @@ if ($Mode == 'ADD_ITEM' || $Mode == 'UPDATE_ITEM')
 		if ($Mode == 'UPDATE_ITEM')
 		{
 		    $row = get_attachment($selected_id);
-		    if ($row['filename'] == "")
-        		exit();
+		    if ($row['filename'] == "") {
+        		display_error(_("Attachment file not found."));
+                throw new \App\Exceptions\Legacy\FlowTerminatedException;
+            }
 			$unique_name = $row['unique_name'];
 			if ($filename && file_exists($dir."/".$unique_name))
 				unlink($dir."/".$unique_name);

@@ -47,7 +47,7 @@ $myrow = get_dimension($id, true);
 if ($myrow == false)
 {
 	echo _("The dimension number sent is not valid.");
-    exit;
+    throw new \App\Exceptions\Legacy\FlowTerminatedException;
 }
 
 start_table(TABLESTYLE);

@@ -10,8 +10,9 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 	$path_to_root=".";
-	if (!file_exists($path_to_root.'/config_db.php'))
-		header("Location: ".$path_to_root."/install/index.php");
+	if (!file_exists($path_to_root.'/config_db.php')) {
+        throw new \App\Exceptions\Legacy\FlowRedirectionException("/install/index.php");
+    }
 
 	$page_security = 'SA_OPEN';
 	ini_set('xdebug.auto_trace',1);

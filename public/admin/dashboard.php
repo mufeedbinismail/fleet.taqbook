@@ -24,7 +24,7 @@
 	if (get_post('id'))
 	{
 		dashboard($app);
-		exit;
+		throw new \App\Exceptions\Legacy\FlowCompletedException;
 	}
 	
 	$js = "";
@@ -34,5 +34,5 @@
 	page(_($help_context = "Dashboard"), false, false, "", $js);
 	dashboard($app);
 	end_page();
-	exit;
+	throw new \App\Exceptions\Legacy\FlowCompletedException;
 

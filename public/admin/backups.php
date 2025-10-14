@@ -24,17 +24,7 @@ if (get_post('view')) {
 		if (in_ajax()) 
 			$Ajax->popup( $filename );
 		else {
-			header('Content-type: text/plain');
-			header('Content-Length: '.filesize($filename));
-			header("Content-Disposition: inline; filename=".basename($filename));
-			if (substr($filename, -3, 3) == '.gz')
-				header("Content-Encoding: gzip");
-
-			if (substr($filename, -4, 4) == '.zip')
-				echo db_unzip('', $filename);
-			else
-				readfile($filename);
-			exit();
+            throw new \App\Exceptions\Legacy\FileStreamException($filename);
 		}
 	}
 };
@@ -42,7 +32,6 @@ if (get_post('view')) {
 if (get_post('download')) {
 	if (get_post('backups')) {
 		download_file($SysPrefs->backup_dir().clean_file_name(get_post('backups')));
-		exit;
 	} else
 		display_error(_("Select backup file first."));
 }
@@ -60,7 +49,7 @@ function check_paths()
 			._("Please contact System Administrator.")."<br>" 
 			. _("cannot find backup directory") . " - " . $SysPrefs->backup_dir() . "<br>");
 		end_page();
-		exit;
+		throw new \App\Exceptions\Legacy\FlowTerminatedException;
 	}
 }
 
@@ -123,15 +112,14 @@ function download_file($filename)
     if (empty($filename) || !file_exists($filename))
     {
 		display_error(_('Select backup file first.'));
-        return false;
+        throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }
+    
     $saveasname = basename($filename);
-    header('Content-type: application/octet-stream');
-   	header('Content-Length: '.filesize($filename));
-   	header('Content-Disposition: attachment; filename="'.$saveasname.'"');
-    readfile($filename);
-
-    return true;
+    throw new \App\Exceptions\Legacy\FileDownloadException(
+        $filename,
+        $saveasname
+    );
 }
 
 $conn = $db_connections[user_company()];

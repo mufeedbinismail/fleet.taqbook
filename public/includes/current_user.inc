@@ -102,7 +102,7 @@ class current_user
 						echo _('Before software upgrade you have to include old $security_groups and $security_headings arrays from old config.php file to the new one.');
 						echo '<br>'."<a href=$path_to_root/index.php>"._("Back")."</a>";
 						echo "</b></font><br><br></center>";
-						exit;
+						throw new \App\Exceptions\Legacy\FlowTerminatedException;
 					}
 	        	    $this->access = $myrow["full_access"];
 	        	    if (in_array(20, $security_groups[$this->access]))
@@ -112,7 +112,7 @@ class current_user
 						echo "<center><br><br><font size='5' color='red'><b>";
 						echo _('System is available for site admin only until full database upgrade');
 						echo "</b></font><br><br></center>";
-						exit;
+						throw new \App\Exceptions\Legacy\FlowTerminatedException;
 					}
 	        	} else {
 					$this->role_set = array();

@@ -10,7 +10,7 @@
  * See http://www.gnu.org/copyleft/lesser.html
  *
  * Do not remove this comment if you want to use the script!
- * Не удаляйте данный комментарий, если вы хотите использовать скрипт!
+ * пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!
  *
  * This backend library also supports POST requests additionally to GET.
  *
@@ -116,7 +116,7 @@ class JsHttpRequest
                     . "this header cannot be set. See header() function documentation for more details",
                     E_USER_ERROR
                 );
-                exit();
+                throw new \App\Exceptions\Legacy\FlowTerminatedException;
             }
         } else {
             $this->ID = 0;

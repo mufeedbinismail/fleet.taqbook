@@ -976,7 +976,7 @@ class Spreadsheet_Excel_Writer_BIFFwriter
             $byte_order = 1;    // Big Endian
         } else {
             // Give up. I'll fix this in a later version.
-            die("Required floating point format ".
+            throw new \Exception("Required floating point format ".
                                      "not supported on this platform.");
         }
         $this->_byte_order = $byte_order;
@@ -2817,7 +2817,7 @@ class Spreadsheet_Excel_Writer_Parser
             return '';
         }
         // TODO: use real error codes
-        die("Unknown token $token");
+        throw new \Exception("Unknown token $token");
     }
 
     /**
@@ -2852,7 +2852,7 @@ class Spreadsheet_Excel_Writer_Parser
         // chop away beggining and ending quotes
         $string = substr($string, 1, strlen($string) - 2);
         if (strlen($string) > 255) {
-            die("String is too long");
+            throw new \Exception("String is too long");
         }
 
         if ($this->_BIFF_version == 0x0500) {
@@ -2905,7 +2905,7 @@ class Spreadsheet_Excel_Writer_Parser
 
         } else {
             // TODO: use real error codes
-            die("Unknown range separator");
+            throw new \Exception("Unknown range separator");
         }
 
         // Convert the cell references
@@ -2923,7 +2923,7 @@ class Spreadsheet_Excel_Writer_Parser
             $ptgArea = pack("C", $this->ptg['ptgAreaA']);
         } else {
             // TODO: use real error codes
-            die("Unknown class $class");
+            throw new \Exception("Unknown class $class");
         }
         return $ptgArea . $row1 . $row2 . $col1. $col2;
     }
@@ -2972,7 +2972,7 @@ class Spreadsheet_Excel_Writer_Parser
         } elseif ($class == 2) {
             $ptgArea = pack("C", $this->ptg['ptgArea3dA']);
         } else {
-            die("Unknown class $class");
+            throw new \Exception("Unknown class $class");
         }
 
         return $ptgArea . $ext_ref . $row1 . $row2 . $col1. $col2;
@@ -3002,7 +3002,7 @@ class Spreadsheet_Excel_Writer_Parser
             $ptgRef = pack("C", $this->ptg['ptgRefA']);
         } else {
             // TODO: use real error codes
-            die("Unknown class $class");
+            throw new \Exception("Unknown class $class");
         }
         return $ptgRef.$row.$col;
     }
@@ -3040,7 +3040,7 @@ class Spreadsheet_Excel_Writer_Parser
         } elseif ($class == 2) {
             $ptgRef = pack("C", $this->ptg['ptgRef3dA']);
         } else {
-            die("Unknown class $class");
+            throw new \Exception("Unknown class $class");
         }
 
         return $ptgRef . $ext_ref. $row . $col;
@@ -3065,11 +3065,11 @@ class Spreadsheet_Excel_Writer_Parser
 
             $sheet1 = $this->_getSheetIndex($sheet_name1);
             if ($sheet1 == -1) {
-                die("Unknown sheet name $sheet_name1 in formula");
+                throw new \Exception("Unknown sheet name $sheet_name1 in formula");
             }
             $sheet2 = $this->_getSheetIndex($sheet_name2);
             if ($sheet2 == -1) {
-                die("Unknown sheet name $sheet_name2 in formula");
+                throw new \Exception("Unknown sheet name $sheet_name2 in formula");
             }
 
             // Reverse max and min sheet numbers if necessary
@@ -3079,7 +3079,7 @@ class Spreadsheet_Excel_Writer_Parser
         } else { // Single sheet name only.
             $sheet1 = $this->_getSheetIndex($ext_ref);
             if ($sheet1 == -1) {
-                die("Unknown sheet name $ext_ref in formula");
+                throw new \Exception("Unknown sheet name $ext_ref in formula");
             }
             $sheet2 = $sheet1;
         }
@@ -3111,11 +3111,11 @@ class Spreadsheet_Excel_Writer_Parser
 
             $sheet1 = $this->_getSheetIndex($sheet_name1);
             if ($sheet1 == -1) {
-                die("Unknown sheet name $sheet_name1 in formula");
+                throw new \Exception("Unknown sheet name $sheet_name1 in formula");
             }
             $sheet2 = $this->_getSheetIndex($sheet_name2);
             if ($sheet2 == -1) {
-                die("Unknown sheet name $sheet_name2 in formula");
+                throw new \Exception("Unknown sheet name $sheet_name2 in formula");
             }
 
             // Reverse max and min sheet numbers if necessary
@@ -3125,7 +3125,7 @@ class Spreadsheet_Excel_Writer_Parser
         } else { // Single sheet name only.
             $sheet1 = $this->_getSheetIndex($ext_ref);
             if ($sheet1 == -1) {
-                die("Unknown sheet name $ext_ref in formula");
+                throw new \Exception("Unknown sheet name $ext_ref in formula");
             }
             $sheet2 = $sheet1;
         }
@@ -3194,11 +3194,11 @@ class Spreadsheet_Excel_Writer_Parser
         $cell = strtoupper($cell);
         list($row, $col, $row_rel, $col_rel) = $this->_cellToRowcol($cell);
         if ($col >= 256) {
-            die("Column in: $cell greater than 255");
+            throw new \Exception("Column in: $cell greater than 255");
         }
         // FIXME: change for BIFF8
         if ($row >= 16384) {
-            die("Row in: $cell greater than 16384 ");
+            throw new \Exception("Row in: $cell greater than 16384 ");
         }
 
         // Set the high bits to indicate if row or col are relative.
@@ -3241,7 +3241,7 @@ class Spreadsheet_Excel_Writer_Parser
 
         // FIXME: this changes for BIFF8
         if (($row1 >= 16384) or ($row2 >= 16384)) {
-            die("Row in: $range greater than 16384 ");
+            throw new \Exception("Row in: $range greater than 16384 ");
         }
 
         // Set the high bits to indicate if rows are relative.
@@ -3341,7 +3341,7 @@ class Spreadsheet_Excel_Writer_Parser
             }
             $i++;
         }
-        //die("Lexical error ".$this->_current_char);
+        //throw new \Exception("Lexical error ".$this->_current_char);
     }
 
     /**
@@ -3623,7 +3623,7 @@ class Spreadsheet_Excel_Writer_Parser
             $this->_advance();         // eat the "("
             $result = $this->_parenthesizedExpression();
             if ($this->_current_token != SPREADSHEET_EXCEL_WRITER_CLOSE) {
-                die("')' token expected.");
+                throw new \Exception("')' token expected.");
             }
             $this->_advance();         // eat the ")"
             return $result;
@@ -3683,7 +3683,7 @@ class Spreadsheet_Excel_Writer_Parser
             $result = $this->_func();
             return $result;
         }
-        die("Syntax error: ".$this->_current_token.
+        throw new \Exception("Syntax error: ".$this->_current_token.
                                  ", lookahead: ".$this->_lookahead.
                                  ", current char: ".$this->_current_char);
     }
@@ -3710,7 +3710,7 @@ class Spreadsheet_Excel_Writer_Parser
                 {
                     $this->_advance();  // eat the "," or ";"
                 } else {
-                    die("Syntax error: comma expected in ".
+                    throw new \Exception("Syntax error: comma expected in ".
                                       "function $function, arg #{$num_args}");
                 }
                 $result2 = $this->_condition();
@@ -3722,12 +3722,12 @@ class Spreadsheet_Excel_Writer_Parser
             $num_args++;
         }
         if (!isset($this->_functions[$function])) {
-            die("Function $function() doesn't exist");
+            throw new \Exception("Function $function() doesn't exist");
         }
         $args = $this->_functions[$function][1];
         // If fixed number of args eg. TIME($i,$j,$k). Check that the number of args is valid.
         if (($args >= 0) and ($args != $num_args)) {
-            die("Incorrect number of arguments in function $function() ");
+            throw new \Exception("Incorrect number of arguments in function $function() ");
         }
 
         $result = $this->_createTree($function, $result, $num_args);
@@ -4993,7 +4993,7 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
                 $col++;
             }
         } else {
-            die('$val needs to be an array');
+            throw new \Exception('$val needs to be an array');
         }
         return($retval);
     }
@@ -5018,7 +5018,7 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
                 $row++;
             }
         } else {
-            die('$val needs to be an array');
+            throw new \Exception('$val needs to be an array');
         }
         return($retval);
     }
@@ -5103,7 +5103,7 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
         }
 
         // TODO use real error codes
-        die("Unknown cell reference $cell");
+        throw new \Exception("Unknown cell reference $cell");
     }
 
     /**
@@ -5317,7 +5317,7 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
     function setInputEncoding($encoding)
     {
          if ($encoding != 'UTF-16LE' && !function_exists('iconv')) {
-             die("Using an input encoding other than UTF-16LE requires PHP support for iconv");
+             throw new \Exception("Using an input encoding other than UTF-16LE requires PHP support for iconv");
          }
          $this->_input_encoding = $encoding;
     }
@@ -7168,7 +7168,7 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
         // Open file.
         $bmp_fd = @fopen($bitmap,"rb");
         if (!$bmp_fd) {
-            die("Couldn't import $bitmap");
+            throw new \Exception("Couldn't import $bitmap");
         }
 
         // Slurp the file into a string.
@@ -7176,13 +7176,13 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
 
         // Check that the file is big enough to be a bitmap.
         if (strlen($data) <= 0x36) {
-            die("$bitmap doesn't contain enough data.\n");
+            throw new \Exception("$bitmap doesn't contain enough data.\n");
         }
 
         // The first 2 bytes are used to identify the bitmap.
         $identity = unpack("A2ident", $data);
         if ($identity['ident'] != "BM") {
-            die("$bitmap doesn't appear to be a valid bitmap image.\n");
+            throw new \Exception("$bitmap doesn't appear to be a valid bitmap image.\n");
         }
 
         // Remove bitmap data: ID.
@@ -7206,20 +7206,20 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
         $height = $width_and_height[2];
         $data   = substr($data, 8);
         if ($width > 0xFFFF) {
-            die("$bitmap: largest image width supported is 65k.\n");
+            throw new \Exception("$bitmap: largest image width supported is 65k.\n");
         }
         if ($height > 0xFFFF) {
-            die("$bitmap: largest image height supported is 65k.\n");
+            throw new \Exception("$bitmap: largest image height supported is 65k.\n");
         }
 
         // Read and remove the bitmap planes and bpp data. Verify them.
         $planes_and_bitcount = unpack("v2", substr($data, 0, 4));
         $data = substr($data, 4);
         if ($planes_and_bitcount[2] != 24) { // Bitcount
-            die("$bitmap isn't a 24bit true color bitmap.\n");
+            throw new \Exception("$bitmap isn't a 24bit true color bitmap.\n");
         }
         if ($planes_and_bitcount[1] != 1) {
-            die("$bitmap: only 1 plane supported in bitmap image.\n");
+            throw new \Exception("$bitmap: only 1 plane supported in bitmap image.\n");
         }
 
         // Read and remove the bitmap compression. Verify compression.
@@ -7228,7 +7228,7 @@ class Spreadsheet_Excel_Writer_Worksheet extends Spreadsheet_Excel_Writer_BIFFwr
 
         //$compression = 0;
         if ($compression['comp'] != 0) {
-            die("$bitmap: compression not supported in bitmap image.\n");
+            throw new \Exception("$bitmap: compression not supported in bitmap image.\n");
         }
 
         // Remove bitmap data: data size, hres, vres, colours, imp. colours.
@@ -7590,7 +7590,7 @@ class Spreadsheet_Excel_Writer_Workbook extends Spreadsheet_Excel_Writer_BIFFwri
         if ($this->_BIFF_version != 0x0600)
         {
             if (strlen($name) > 31) {
-                die("Sheetname $name must be <= 31 chars");
+                throw new \Exception("Sheetname $name must be <= 31 chars");
             }
         }
 
@@ -7598,7 +7598,7 @@ class Spreadsheet_Excel_Writer_Workbook extends Spreadsheet_Excel_Writer_BIFFwri
         $total_worksheets = count($this->_worksheets);
         for ($i = 0; $i < $total_worksheets; $i++) {
             if ($this->_worksheets[$i]->getName() == $name) {
-                die("Worksheet '$name' already exists");
+                throw new \Exception("Worksheet '$name' already exists");
             }
         }
 
@@ -7665,7 +7665,7 @@ class Spreadsheet_Excel_Writer_Workbook extends Spreadsheet_Excel_Writer_BIFFwri
         // Check that the colour index is the right range
         if ($index < 8 or $index > 64) {
             // TODO: assign real error codes
-            die("Color index $index outside range: 8 <= index <= 64");
+            throw new \Exception("Color index $index outside range: 8 <= index <= 64");
         }
 
         // Check that the colour components are in the right range
@@ -7673,7 +7673,7 @@ class Spreadsheet_Excel_Writer_Workbook extends Spreadsheet_Excel_Writer_BIFFwri
             ($green < 0 or $green > 255) ||
             ($blue  < 0 or $blue  > 255))
         {
-            die("Color component outside range: 0 <= color <= 255");
+            throw new \Exception("Color component outside range: 0 <= color <= 255");
         }
 
         $index -= 8; // Adjust colour index (wingless dragonfly)

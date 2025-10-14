@@ -140,7 +140,8 @@ if ( (isset($_GET['DeliveryNumber']) && ($_GET['DeliveryNumber'] > 0) )
 	if ($dn->count_items() == 0) {
 		hyperlink_params($path_to_root . "/sales/inquiry/sales_deliveries_view.php",
 			_("Select a different delivery to invoice"), "{$marketplace_flg}OutstandingOnly=1");
-		die ("<br><b>" . _("There are no delivered items with a quantity left to invoice. There is nothing left to invoice.") . "</b>");
+		display_error("<br><b>" . _("There are no delivered items with a quantity left to invoice. There is nothing left to invoice.") . "</b>");
+        throw new \App\Exceptions\Legacy\FlowTerminatedException;
 	}
 
 	$_SESSION['Items'] = $dn;
@@ -195,7 +196,7 @@ elseif (!processing_active()) {
 	hyperlink_no_params("$path_to_root/sales/inquiry/sales_deliveries_view.php", _("Select Delivery to Invoice"), "{$marketplace_flg}");
 
 	end_page();
-	exit;
+	throw new \App\Exceptions\Legacy\FlowTerminatedException;
 } elseif (!isset($_POST['process_invoice']) && (!$_SESSION['Items']->is_prepaid() && !check_quantities())) {
 	display_error(_("Selected quantity cannot be less than quantity credited nor more than quantity not invoiced yet."));
 }
@@ -540,7 +541,7 @@ if ($row['dissallow_invoices'] == 1)
 	display_error(_("The selected customer account is currently on hold. Please contact the credit control personnel to discuss."));
 	end_form();
 	end_page();
-	exit();
+	throw new \App\Exceptions\Legacy\FlowTerminatedException;
 }	
 
 display_heading($prepaid ? _("Sales Order Items") : _("Invoice Items"));

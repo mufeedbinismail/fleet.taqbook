@@ -535,7 +535,7 @@ function db_unzip($mode, $path)
         $comp = substr($comp, 0, (strlen($comp) - 80 - strlen($filename)-13));
 
         // fix the crc bugfix (see function save_to_file)
-        $comp = "xœ" . $comp . $suffix;
+        $comp = "xï¿½" . $comp . $suffix;
         $file_data = gzuncompress($comp);
     }
 
@@ -948,19 +948,12 @@ function save_to_file($path, $zip, $fileData)
 
 function create_comp_dirs($comp_path, $comp_subdirs)
 {
-		$index = "<?php\nheader(\"Location: ../index.php\");\n";
 	    $cdir = $comp_path;
 	    @mkdir($cdir);
-		$f = @fopen("$cdir/index.php", "wb");
-		@fwrite($f, $index);
-		@fclose($f);
 
 	    foreach($comp_subdirs as $dir)
 	    {
 			@mkdir($cdir.'/'.$dir);
-			$f = @fopen("$cdir/$dir/index.php", "wb");
-			@fwrite($f, $index);
-			@fclose($f);
 	    }
 }
 

@@ -81,7 +81,7 @@ class FrontReport extends Cpdf
 		{
 			display_error(_("The security settings on your account do not permit you to print this report"));
 			end_page();
-			exit;
+			throw new \App\Exceptions\Legacy\FlowTerminatedException;
 		}
 		// Page margins - if user-specified, use those.  Otherwise, use defaults below.
 		if (isset($margins))
