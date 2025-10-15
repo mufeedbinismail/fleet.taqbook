@@ -35,8 +35,8 @@ function defaultCompany()
 	echo "<html dir='$rtl' >\n";
 	echo "<head profile=\"http://www.w3.org/2005/10/profile\"><title>$title</title>\n";
    	echo "<meta http-equiv='Content-type' content='text/html; charset=$encoding' >\n";
-	echo "<link href='$path_to_root/themes/$def_theme/default.css' rel='stylesheet' type='text/css'> \n";
- 	echo "<link href='$path_to_root/themes/default/images/favicon.ico' rel='icon' type='image/x-icon'> \n";
+	echo "<link href='".url("/themes/$def_theme/default.css")."' rel='stylesheet' type='text/css'> \n";
+ 	echo "<link href='".url("/themes/default/images/favicon.ico")."' rel='icon' type='image/x-icon'> \n";
 	send_scripts();
 	echo $js;
 	echo "</head>\n";
@@ -51,7 +51,7 @@ function defaultCompany()
 	start_table(false, "class='login'");
 	start_row();
 	echo "<td align='center' colspan=2>";
-	echo "<a target='_blank' href='".$SysPrefs->power_url."'><img src='$path_to_root/themes/$def_theme/images/logo_frontaccounting.png' alt='FrontAccounting' height='50' onload='fixPNG(this)' border='0' ></a>";
+	echo "<a target='_blank' href='".$SysPrefs->power_url."'><img src='".url("/themes/$def_theme/images/logo_frontaccounting.png")."' alt='FrontAccounting' height='50' onload='fixPNG(this)' border='0' ></a>";
 	echo "</td>\n";
 	end_row();
 

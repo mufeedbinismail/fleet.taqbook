@@ -78,13 +78,13 @@ if (isset($_GET['AddedID'])) {
 
 	display_note(get_gl_view_str($trans_type, $invoice_no, _("View the GL &Journal Entries for this Invoice")),1);
 
-	hyperlink_params("$path_to_root/sales/inquiry/sales_deliveries_view.php", _("Select Another &Delivery For Invoicing"), "{$marketplace_flg}OutstandingOnly=1");
+	hyperlink_params(url("/sales/inquiry/sales_deliveries_view.php"), _("Select Another &Delivery For Invoicing"), "{$marketplace_flg}OutstandingOnly=1");
 
 	if (!db_num_rows(get_allocatable_from_cust_transactions(null, $invoice_no, $trans_type)))
-		hyperlink_params("$path_to_root/sales/customer_payments.php", _("Entry &customer payment for this invoice"),
+		hyperlink_params(url("/sales/customer_payments.php"), _("Entry &customer payment for this invoice"),
 		"{$marketplace_flg}SInvoice=".$invoice_no);
 
-	hyperlink_params("$path_to_root/admin/attachments.php", _("Add an Attachment"), "filterType=$trans_type&trans_no=$invoice_no");
+	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), "filterType=$trans_type&trans_no=$invoice_no");
 
 	display_footer_exit();
 
@@ -100,7 +100,7 @@ if (isset($_GET['AddedID'])) {
 	display_note(print_document_link($invoice_no."-".$trans_type, _("&Print This Invoice"), true, ST_SALESINVOICE));
 	display_note(print_document_link($invoice_no."-".$trans_type, _("&Email This Invoice"), true, ST_SALESINVOICE, false, "printlink", "", 1),1);
 
-	hyperlink_no_params($path_to_root . "/sales/inquiry/customer_inquiry.php", _("Select Another &Invoice to Modify"), "{$marketplace_flg}");
+	hyperlink_no_params(url("/sales/inquiry/customer_inquiry.php"), _("Select Another &Invoice to Modify"), "{$marketplace_flg}");
 
 	display_footer_exit();
 
@@ -138,7 +138,7 @@ if ( (isset($_GET['DeliveryNumber']) && ($_GET['DeliveryNumber'] > 0) )
 	$dn = new Cart(ST_CUSTDELIVERY, $src, true);
 
 	if ($dn->count_items() == 0) {
-		hyperlink_params($path_to_root . "/sales/inquiry/sales_deliveries_view.php",
+		hyperlink_params(url("/sales/inquiry/sales_deliveries_view.php"),
 			_("Select a different delivery to invoice"), "{$marketplace_flg}OutstandingOnly=1");
 		display_error("<br><b>" . _("There are no delivered items with a quantity left to invoice. There is nothing left to invoice.") . "</b>");
         throw new \App\Exceptions\Legacy\FlowTerminatedException;
@@ -193,7 +193,7 @@ elseif (!processing_active()) {
 	/* This page can only be called with a delivery for invoicing or invoice no for edit */
 	display_error(_("This page can only be opened after delivery selection. Please select delivery to invoicing first."));
 
-	hyperlink_no_params("$path_to_root/sales/inquiry/sales_deliveries_view.php", _("Select Delivery to Invoice"), "{$marketplace_flg}");
+	hyperlink_no_params(url("/sales/inquiry/sales_deliveries_view.php"), _("Select Delivery to Invoice"), "{$marketplace_flg}");
 
 	end_page();
 	throw new \App\Exceptions\Legacy\FlowTerminatedException;

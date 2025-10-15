@@ -83,7 +83,7 @@ if (isset($_GET['AddedID']))
 	display_note(get_gl_view_str($trans_type, $invoice_no, _("View the GL Journal Entries for this Credit Note")), 1);
 
     hyperlink_params($_SERVER['PHP_SELF'], _("Enter Another Credit Note"), "New=1");
-	hyperlink_params("$path_to_root/admin/attachments.php", _("Add an Attachment"), "filterType=$trans_type&trans_no=$invoice_no");
+	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), "filterType=$trans_type&trans_no=$invoice_no");
 
 	display_footer_exit();
 }

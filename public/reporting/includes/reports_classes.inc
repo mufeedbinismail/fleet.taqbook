@@ -219,8 +219,11 @@ class BoxReports
 					$st = "<input type='text' name='$name' value='$date'>";
 					if (user_use_date_picker())
 					{
-						$calc_image = (file_exists("$path_to_root/themes/".user_theme()."/images/cal.gif")) ? 
-							"$path_to_root/themes/".user_theme()."/images/cal.gif" : "$path_to_root/themes/default/images/cal.gif";
+						$calc_image = url(
+                            (file_exists("$path_to_root/themes/".user_theme()."/images/cal.gif"))
+                                ? "/themes/".user_theme()."/images/cal.gif"
+                                : "/themes/default/images/cal.gif"
+                        );
 						$st .= "<a href=\"javascript:date_picker(document.forms[0].$name);\">"
 						. "	<img src='$calc_image' style='vertical-align:middle;padding-bottom:4px;width:16px;height:16px;border:0;' alt='"._('Click Here to Pick up the date')."'></a>\n";
 					}	

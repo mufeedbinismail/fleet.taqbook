@@ -173,7 +173,7 @@ function submit($name, $value, $echo=true, $title=false, $atype=false, $icon=fal
 	    ." name=\"$name\"  id=\"$name\" value=\"$value\""
 	    .($title ? " title='$title'" : '')
 	    .">"
-		.($icon ? "<img src='$path_to_root/themes/".user_theme()."/images/$icon' height='12' alt=''>" : '')
+		.($icon ? "<img src='".url("/themes/".user_theme()."/images/$icon")."' height='12' alt=''>" : '')
 		."<span>$value</span>"
 		."</button>\n";
 	if ($echo)
@@ -289,7 +289,7 @@ function set_icon($icon, $title=false)
 {
 	global $path_to_root;
 	if (basename($icon) === $icon) // standard icons does not contain path separator
-		$icon = "$path_to_root/themes/".user_theme()."/images/$icon";
+		$icon = url("/themes/".user_theme()."/images/$icon");
 	return "<img src='$icon' style='vertical-align:middle;width:12px;height:12px;border:0;'".($title ? " title='$title'" : "")." >\n";	
 }
 
@@ -657,8 +657,11 @@ function date_cells($label, $name, $title = null, $check=null, $inc_days=0,
 	}
 	if (user_use_date_picker())
 	{
-		$calc_image = (file_exists("$path_to_root/themes/".user_theme()."/images/cal.gif")) ? 
-			"$path_to_root/themes/".user_theme()."/images/cal.gif" : "$path_to_root/themes/default/images/cal.gif";
+		$calc_image = url(
+            (file_exists("$path_to_root/themes/".user_theme()."/images/cal.gif"))
+                ? "/themes/".user_theme()."/images/cal.gif"
+                : "/themes/default/images/cal.gif"
+        );
 		$post_label = "<a tabindex='-1' href=\"javascript:date_picker(document.getElementsByName('$name')[0]);\">"
 		. "	<img src='$calc_image' style='vertical-align:middle;padding-bottom:4px;width:16px;height:16px;border:0;' alt='"._('Click Here to Pick up the date')."'></a>\n";
 	}	
@@ -1000,7 +1003,7 @@ function customer_credit_row($customer, $credit, $parms='')
 	
 	label_row( _("Current Credit:"),
 		"<a target='_blank' " . ($credit<0 ? 'class="redfg"' : '')
-		."href='$path_to_root/sales/inquiry/customer_inquiry.php?customer_id=".$customer."'"
+		."href='".url('/sales/inquiry/customer_inquiry.php', ['customer_id' => $customer])."'"
 		." onclick=\"javascript:openWindow(this.href,this.target); return false;\" >"
 		. price_format($credit)
 		."</a>", $parms);
@@ -1012,7 +1015,7 @@ function supplier_credit_row($supplier, $credit, $parms='')
 	
 	label_row( _("Current Credit:"),
 		"<a target='_blank' " . ($credit<0 ? 'class="redfg"' : '')
-		."href='$path_to_root/purchasing/inquiry/supplier_inquiry.php?supplier_id=".$supplier."'"
+		."href='".url('/purchasing/inquiry/supplier_inquiry.php', ['supplier_id' => $supplier])."'"
 		." onclick=\"javascript:openWindow(this.href,this.target); return false;\" >"
 		. price_format($credit)
 		."</a>", $parms);
@@ -1026,7 +1029,7 @@ function bank_balance_row($bank_acc, $parms='')
 	$bal = get_balance_before_for_bank_account($bank_acc, $to);
 	label_row( _("Bank Balance:"),
 		"<a target='_blank' " . ($bal<0 ? 'class="redfg"' : '')
-		."href='$path_to_root/gl/inquiry/bank_inquiry.php?bank_account=".$bank_acc."'"
+		."href='".url('/gl/inquiry/bank_inquiry.php', ['bank_account' => $bank_acc])."'"
 		." onclick=\"javascript:openWindow(this.href,this.target); return false;\" >&nbsp;"
 		. price_format($bal)
 		."</a>", $parms);

@@ -66,7 +66,7 @@ function login_fail()
 	echo "<center><br><br><font size='5' color='red'><b>" . _("Incorrect Password") . "<b></font><br><br>";
 	echo "<b>" . _("The user and password combination is not valid for the system.") . "<b><br><br>";
 	echo _("If you are not an authorized user, please contact your system administrator to obtain an account to enable you to use the system.");
-	echo "<br><a href='$path_to_root/index.php'>" . _("Try again") . "</a>";
+	echo "<br><a href='".url("/index.php")."'>" . _("Try again") . "</a>";
 	echo "</center>";
 	kill_login();
 	throw new \Illuminate\Validation\UnauthorizedException;
@@ -80,7 +80,7 @@ function password_reset_fail()
   	echo "<b>" . _("The email address does not exist in the system, or is used by more than one user.") . "<b><br><br>";
 
   	echo _("Plase try again or contact your system administrator to obtain new password.");
-  	echo "<br><a href='$path_to_root/index.php?reset=1'>" . _("Try again") . "</a>";
+  	echo "<br><a href='".url("/index.php", ['reset' => 1])."'>" . _("Try again") . "</a>";
   	echo "</center>";
 
 	kill_login();
@@ -94,7 +94,7 @@ function password_reset_success()
   	echo "<center><br><br><font size='5' color='green'><b>" . _("New password sent") . "<b></font><br><br>";
   	echo "<b>" . _("A new password has been sent to your mailbox.") . "<b><br><br>";
 
-  	echo "<br><a href='$path_to_root/index.php'>" . _("Login here") . "</a>";
+  	echo "<br><a href='".url("/index.php")."'>" . _("Login here") . "</a>";
   	echo "</center>";
 	
 	kill_login();
@@ -453,11 +453,16 @@ if (!defined('FA_LOGOUT_PHP_FILE')){
 		if (!isset($_POST["user_name_entry_field"]) or $_POST["user_name_entry_field"] == "")
 		{
 			// strip ajax marker from uri, to force synchronous page reload
-			$_SESSION['timeout'] = array( 'uri'=>preg_replace('/JsHttpRequest=(?:(\d+)-)?([^&]+)/s',
-					'', html_specials_encode($_SERVER['REQUEST_URI'])),
-				'post' => $_POST);
+			$_SESSION['timeout'] = array(
+                'uri' => preg_replace(
+                    '/JsHttpRequest=(?:(\d+)-)?([^&]+)/s',
+					'',
+                    request()->fullUrl()
+                ),
+				'post' => $_POST
+            );
 		if (in_ajax())
-			$Ajax->popup($path_to_root ."/access/timeout.php");
+			$Ajax->popup(url("/access/timeout.php"));
 		else
 			require __DIR__ . "/../access/login.php";
 			throw new \App\Exceptions\Legacy\FlowTerminatedException;

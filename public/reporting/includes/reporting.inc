@@ -140,7 +140,7 @@ function print_link($link_text, $rep, $pars = array(), $dir = '',
 	$icon=false, $class='printlink', $id='')
 {
 	global $path_to_root, $SysPrefs;
-	$url = $dir == '' ?  $path_to_root.'/reporting/prn_redirect.php?' : $dir;
+	$url = $dir == '' ? url('/reporting/prn_redirect.php').'?' : $dir;
 
 	$id = default_focus($id);
 	$parm = array();

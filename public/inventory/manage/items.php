@@ -81,7 +81,7 @@ function show_image($stock_id)
 			if (file_exists($file)) {
 				// rand() call is necessary here to avoid caching problems.
 				$check_remove_image = true; // fixme
-				$stock_img_link = "<img id='item_img' alt = '[".$stock_id.".$ext"."]' src='".$file."?nocache=".rand()."'"
+				$stock_img_link = "<img id='item_img' alt = '[".$stock_id.".$ext"."]' src='".url_from_path($file)."?nocache=".rand()."'"
 					." height='".$SysPrefs->pic_height."' border='0'>";
 				break;
 			}

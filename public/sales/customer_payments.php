@@ -160,11 +160,11 @@ elseif (isset($_GET['UpdatedID'])) {
 
 	display_note(get_gl_view_str(ST_CUSTPAYMENT, $payment_no, _("&View the GL Journal Entries for this Customer Payment")));
 
-//	hyperlink_params($path_to_root . "/sales/allocations/customer_allocate.php", _("&Allocate this Customer Payment"), "trans_no=$payment_no&trans_type=12");
+//	hyperlink_params(url("/sales/allocations/customer_allocate.php"), _("&Allocate this Customer Payment"), "trans_no=$payment_no&trans_type=12");
 
-	hyperlink_no_params($path_to_root . "/sales/inquiry/customer_inquiry.php?", _("Select Another Customer Payment for &Edition"));
+	hyperlink_no_params(url("/sales/inquiry/customer_inquiry.php"), _("Select Another Customer Payment for &Edition"));
 
-	hyperlink_no_params($path_to_root . "/sales/customer_payments.php", _("Enter Another &Customer Payment"));
+	hyperlink_no_params(url("/sales/customer_payments.php"), _("Enter Another &Customer Payment"));
 
 	display_footer_exit();
 }

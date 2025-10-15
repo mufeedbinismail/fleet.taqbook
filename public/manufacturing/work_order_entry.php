@@ -64,7 +64,7 @@ if (isset($_GET['AddedID']))
     	$ar = array('PARAM_0' => $_GET['date'], 'PARAM_1' => $_GET['date'], 'PARAM_2' => $stype, 'PARAM_3' => '',
     		'PARAM_4' => (user_def_print_orientation() == 1 ? 1 : 0)); 
     	display_note(print_link(_("Print the GL Journal Entries for this Work Order"), 702, $ar), 1);
-		hyperlink_params("$path_to_root/admin/attachments.php", _("Add an Attachment"), "filterType=$stype&trans_no=$id");
+		hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), "filterType=$stype&trans_no=$id");
 	}
 	
 	safe_exit();

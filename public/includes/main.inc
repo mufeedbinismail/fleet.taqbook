@@ -73,7 +73,7 @@ function css_files_ensure_init() {
 	{
 		$theme = user_theme();
 		$css_files = array();
-		$css_files[] = $path_to_root . "/themes/$theme/default.css";
+		$css_files[] = url("/themes/$theme/default.css");
 	}
 }
 

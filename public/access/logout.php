@@ -22,7 +22,7 @@ page_header(_("Logout"), true, false, '');
 
 echo "<table width='100%' border='0'>
   <tr>
-	<td align='center'><img src='$path_to_root/themes/default/images/logo_frontaccounting.png' alt='FrontAccounting' width='250' height='50' onload='fixPNG(this)' ></td>
+	<td align='center'><img src='".url('/themes/default/images/logo_frontaccounting.png')."' alt='FrontAccounting' width='250' height='50' onload='fixPNG(this)' ></td>
   </tr>
   <tr>
     <td>&nbsp;</td>
@@ -40,7 +40,7 @@ echo "</font></div></td>
   </tr>
   <tr>
     <td><div align='center'>";
-echo "<a href='$path_to_root/index.php'><b>" . _("Click here to Login Again.") . "</b></a>";
+echo "<a href='".url('/index.php')."'><b>" . _("Click here to Login Again.") . "</b></a>";
 echo "</div></td>
   </tr>
 </table>

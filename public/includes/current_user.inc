@@ -100,7 +100,7 @@ class current_user
 					if (!isset($security_groups) || !isset($security_headings)) {
 						echo "<center><br><br><font size='5' color='red'><b>";
 						echo _('Before software upgrade you have to include old $security_groups and $security_headings arrays from old config.php file to the new one.');
-						echo '<br>'."<a href=$path_to_root/index.php>"._("Back")."</a>";
+						echo '<br>'."<a href=".url("/index.php").">"._("Back")."</a>";
 						echo "</b></font><br><br></center>";
 						throw new \App\Exceptions\Legacy\FlowTerminatedException;
 					}
@@ -613,7 +613,7 @@ function add_user_js_data() {
 
     $js = "\n"
 	  . "var user = {\n"
-	  . "theme: '". $path_to_root . '/themes/'. user_theme().'/'."',\n"
+	  . "theme: '". url('/themes/'. user_theme()). "/',\n"
 	  . "loadtxt: '"._('Requesting data...')."',\n"
 	  . "date: '".Today()."',\n"	// server date
 	  . "datesys: ".$SysPrefs->date_system.",\n"

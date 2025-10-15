@@ -278,7 +278,7 @@ function viewer_link($label, $url='', $class='', $id='',  $icon=null)
 		$pars = access_string($label);
 		if (user_graphic_links() && $icon)
 			$pars[0] = set_icon($icon, $pars[0]);
-		$preview_str = "<a target='_blank' $class $id href='$path_to_root/$url' onclick=\"javascript:openWindow(this.href,this.target); return false;\"$pars[1]>$pars[0]</a>";
+		$preview_str = "<a target='_blank' $class $id href='".url($url)."' onclick=\"javascript:openWindow(this.href,this.target); return false;\"$pars[1]>$pars[0]</a>";
 	}
 	else
 		$preview_str = $label;
@@ -294,7 +294,7 @@ function menu_link($url, $label, $id=null)
 
 	if ($url[0] != '/')
 		$url = '/'.$url;
-	$url = $path_to_root.$url;
+	$url = url($url);
 
 	return "<a href='$url' class='menu_option' id='$id' $pars[1]>$pars[0]</a>";
 }
@@ -530,7 +530,7 @@ function set_editor($type, $input, $caller=true)
 
 	$key = $caller===true ? $popup_editors[$type][1] : $caller;
 
-	$Editors[$key] = array( $path_to_root . $popup_editors[$type][0], $input, 
+	$Editors[$key] = array( url($popup_editors[$type][0]), $input, 
 		$popup_editors[$type][3], $popup_editors[$type][4]);
 	
 	$help = 'F' . ($key - 111) . ' - ';

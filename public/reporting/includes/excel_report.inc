@@ -730,7 +730,7 @@ class FrontReport extends Spreadsheet_Excel_Writer_Workbook
 			closedir($d);
 		}
 
-		meta_forward($path_to_root.'/reporting/prn_redirect.php', "xls=1&filename=$this->filename&unique=$this->unique_name");
+		meta_forward(url('/reporting/prn_redirect.php'), "xls=1&filename=$this->filename&unique=$this->unique_name");
 		throw new \App\Exceptions\Legacy\FlowCompletedException;
 	}
 }

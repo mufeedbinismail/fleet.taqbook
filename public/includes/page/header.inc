@@ -76,12 +76,12 @@ function send_scripts()
 			cache_js_file($fpath, file_get_contents($js_path.$jsfile));
 
 	  	$js .= '<script language="javascript" type="text/javascript" src="'.
-			$fpath . '"></script>';
+            url_from_path($fpath) . '"></script>';
 	}
 	foreach($js_userlib as $jsfile)
 	{
 	  	$js .= '<script language="javascript" type="text/javascript" src="'.
-	    	$jsfile . '"></script>';
+	    	url_from_path($jsfile) . '"></script>';
 	}
 
     echo $js;
@@ -142,7 +142,7 @@ function page_header($title, $no_menu=false, $is_index=false, $onload="", $js=""
 	if (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0; rv:11.0') != -1) // IE 11 doesn't work with input file type in form.
 		echo "<meta http-equiv='X-UA-Compatible' content='IE=10'>\n";
 	echo "<meta http-equiv='Content-type' content='text/html; charset=$encoding'>";
-	echo "<link href='$path_to_root/themes/default/images/favicon.ico' rel='icon' type='image/x-icon'> \n";
+	echo "<link href='".url("/themes/default/images/favicon.ico")."' rel='icon' type='image/x-icon'> \n";
 
     require_once __DIR__ . "/../../themes/$theme/renderer.php";
     $rend = new renderer();

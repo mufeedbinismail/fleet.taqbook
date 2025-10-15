@@ -69,11 +69,11 @@ if (isset($_GET['AddedID'])) {
 	display_note(get_gl_view_str(13, $dispatch_no, _("View the GL Journal Entries for this Dispatch")),1);
 
 	if (!isset($_GET['prepaid']))
-		hyperlink_params("$path_to_root/sales/customer_invoice.php", _("Invoice This Delivery"), "DeliveryNumber=$dispatch_no{$marketplace_flg}");
+		hyperlink_params(url("/sales/customer_invoice.php"), _("Invoice This Delivery"), "DeliveryNumber=$dispatch_no{$marketplace_flg}");
 
-	hyperlink_params("$path_to_root/sales/inquiry/sales_orders_view.php", _("Select Another Order For Dispatch"), "OutstandingOnly=1{$marketplace_flg}");
+	hyperlink_params(url("/sales/inquiry/sales_orders_view.php"), _("Select Another Order For Dispatch"), "OutstandingOnly=1{$marketplace_flg}");
 
-	hyperlink_params("$path_to_root/admin/attachments.php", _("Add an Attachment"), "filterType=".ST_CUSTDELIVERY."&trans_no=$dispatch_no");
+	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), "filterType=".ST_CUSTDELIVERY."&trans_no=$dispatch_no");
 
 	display_footer_exit();
 
@@ -91,9 +91,9 @@ if (isset($_GET['AddedID'])) {
 	display_note(print_document_link($delivery_no, _("E&mail as Packing Slip"), true, ST_CUSTDELIVERY, false, "printlink", "", 1, 1), 1);
 
 	if (!isset($_GET['prepaid']))
-		hyperlink_params($path_to_root . "/sales/customer_invoice.php", _("Confirm Delivery and Invoice"), "DeliveryNumber=$delivery_no{$marketplace_flg}");
+		hyperlink_params(url("/sales/customer_invoice.php"), _("Confirm Delivery and Invoice"), "DeliveryNumber=$delivery_no{$marketplace_flg}");
 
-	hyperlink_params($path_to_root . "/sales/inquiry/sales_deliveries_view.php", _("Select A Different Delivery"), "OutstandingOnly=1{$marketplace_flg}");
+	hyperlink_params(url("/sales/inquiry/sales_deliveries_view.php"), _("Select A Different Delivery"), "OutstandingOnly=1{$marketplace_flg}");
 
 	display_footer_exit();
 }
@@ -106,13 +106,13 @@ if (isset($_GET['OrderNumber']) && $_GET['OrderNumber'] > 0) {
 		check_deferred_income_act(_("You have to set Deferred Income Account in GL Setup to entry prepayment invoices."));
 
 	if ($ord->count_items() == 0) {
-		hyperlink_params($path_to_root . "/sales/inquiry/sales_orders_view.php",
+		hyperlink_params(url("/sales/inquiry/sales_orders_view.php"),
 			_("Select a different sales order to delivery"), "OutstandingOnly=1{$marketplace_flg}");
 		echo "<br><center><b>" . _("This order has no items. There is nothing to delivery.") .
 			"</center></b>";
 		display_footer_exit();
 	} else if (!$ord->is_released()) {
-		hyperlink_params($path_to_root . "/sales/inquiry/sales_orders_view.php",_("Select a different sales order to delivery"),
+		hyperlink_params(url("/sales/inquiry/sales_orders_view.php"),_("Select a different sales order to delivery"),
 			"OutstandingOnly=1{$marketplace_flg}");
 		echo "<br><center><b>"._("This prepayment order is not yet ready for delivery due to insufficient amount received.")
 			."</center></b>";
@@ -130,7 +130,7 @@ if (isset($_GET['OrderNumber']) && $_GET['OrderNumber'] > 0) {
 	$_SESSION['Items'] = new Cart(ST_CUSTDELIVERY,$_GET['ModifyDelivery']);
 
 	if (!$_SESSION['Items']->prepaid && $_SESSION['Items']->count_items() == 0) {
-		hyperlink_params($path_to_root . "/sales/inquiry/sales_orders_view.php",
+		hyperlink_params(url("/sales/inquiry/sales_orders_view.php"),
 			_("Select a different delivery"), "OutstandingOnly=1{$marketplace_flg}");
 		echo "<br><center><b>" . _("This delivery has all items invoiced. There is nothing to modify.") .
 			"</center></b>";
@@ -144,7 +144,7 @@ if (isset($_GET['OrderNumber']) && $_GET['OrderNumber'] > 0) {
 
 	display_error(_("This page can only be opened if an order or delivery note has been selected. Please select it first."));
 
-	hyperlink_params("$path_to_root/sales/inquiry/sales_orders_view.php", _("Select a Sales Order to Delivery"), "OutstandingOnly=1{$marketplace_flg}");
+	hyperlink_params(url("/sales/inquiry/sales_orders_view.php"), _("Select a Sales Order to Delivery"), "OutstandingOnly=1{$marketplace_flg}");
 
 	end_page();
 	throw new \App\Exceptions\Legacy\FlowTerminatedException;

@@ -61,7 +61,7 @@ if (isset($_GET['AddedID']))
 	reset_focus();
 	hyperlink_params($_SERVER['PHP_SELF'], _("Enter &New Journal Entry"), "NewJournal=Yes");
 
-	hyperlink_params("$path_to_root/admin/attachments.php", _("Add an Attachment"), "filterType=$trans_type&trans_no=$trans_no");
+	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), "filterType=$trans_type&trans_no=$trans_no");
 
 	display_footer_exit();
 } elseif (isset($_GET['UpdatedID'])) 
@@ -73,7 +73,7 @@ if (isset($_GET['AddedID']))
 
     display_note(get_gl_view_str($trans_type, $trans_no, _("&View this Journal Entry")));
 
-   	hyperlink_no_params($path_to_root."/gl/inquiry/journal_inquiry.php", _("Return to Journal &Inquiry"));
+   	hyperlink_no_params(url("/gl/inquiry/journal_inquiry.php"), _("Return to Journal &Inquiry"));
 
 	display_footer_exit();
 }
@@ -89,7 +89,7 @@ elseif (isset($_GET['ModifyGL']))
 
 	if (!isset($_GET['trans_type']) || $_GET['trans_type']!= 0) {
 		display_error(_("You can edit directly only journal entries created via Journal Entry page."));
-		hyperlink_params("$path_to_root/gl/gl_journal.php", _("Entry &New Journal Entry"), "NewJournal=Yes");
+		hyperlink_params(url("/gl/gl_journal.php"), _("Entry &New Journal Entry"), "NewJournal=Yes");
 		display_footer_exit();
 	}
 	create_cart($_GET['trans_type'], $_GET['trans_no']);

@@ -82,10 +82,13 @@ function display_type ($type, $typename, $from, $to, $begin, $end, $compare, $co
 		
 		if ($drilldown && $levelptr == 0)
 		{
-			$url = "<a href='$path_to_root/gl/inquiry/gl_account_inquiry.php?TransFromDate=" 
-				. $from . "&TransToDate=" . $to . "&Dimension=" . $dimension . "&Dimension2=" . $dimension2 
-				. "&account=" . $account['account_code'] . "'>" . $account['account_code'] 
-				." ". $account['account_name'] ."</a>";				
+			$url = "<a href='".url("/gl/inquiry/gl_account_inquiry.php", [
+                "TransFromDate" => $from,
+                "TransToDate" => $to,
+                "Dimension" => $dimension,
+                "Dimension2" => $dimension2,
+                "account" => $account['account_code']
+            ])."'>{$account['account_code']} {$account['account_name']}</a>";
 				
 			start_row("class='stockmankobg'");
 			label_cell($url);
@@ -130,9 +133,14 @@ function display_type ($type, $typename, $from, $to, $begin, $end, $compare, $co
 		//END Patch#2		
 		//elseif ($drilldown && $type != $_POST["AccGrp"])
 		{	
-			$url = "<a href='$path_to_root/gl/inquiry/profit_loss.php?TransFromDate=" 
-				. $from . "&TransToDate=" . $to . "&Compare=" . $compare . "&Dimension=" . $dimension . "&Dimension2=" . $dimension2
-				. "&AccGrp=" . $type ."'>" . $type . " " . $typename ."</a>";
+			$url = "<a href='".url("/gl/inquiry/profit_loss.php", [
+                "TransFromDate" => $from,
+                "TransToDate" => $to,
+                "Compare" => $compare,
+                "Dimension" => $dimension,
+                "Dimension2" => $dimension2,
+                "AccGrp" => $type
+            ])."'>$type $typename</a>";
 				
 			alt_table_row_color($k);
 			label_cell($url);
@@ -268,10 +276,15 @@ function display_profit_and_loss($compare)
 
 				if ($TypeTotal[0] != 0 || $TypeTotal[1] != 0 )
 				{
-					$url = "<a href='$path_to_root/gl/inquiry/profit_loss.php?TransFromDate=" 
-						. $from . "&TransToDate=" . $to . "&Compare=" . $compare . "&Dimension=" . $dimension . "&Dimension2=" . $dimension2
-						. "&AccGrp=" . $accounttype['id'] ."'>" . $accounttype['id'] . " " . $accounttype['name'] ."</a>";
-						
+					$url = "<a href='".url("/gl/inquiry/profit_loss.php", [
+						"TransFromDate" => $from,
+						"TransToDate" => $to,
+						"Compare" => $compare,
+						"Dimension" => $dimension,
+						"Dimension2" => $dimension2,
+						"AccGrp" => $accounttype['id']
+					])."'>{$accounttype['id']} {$accounttype['name']}</a>";
+
 					alt_table_row_color($k);
 					label_cell($url);
 					amount_cell($TypeTotal[0] * $convert);

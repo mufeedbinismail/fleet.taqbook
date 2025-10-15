@@ -35,13 +35,13 @@ class renderer
             $css_files = [];
         }
 
-        $pluginsCss = $path_to_root .'/build/'. $this->manifest['resources/css/plugins.css']['file'] ?? null;
+        $pluginsCss = '/build/'. $this->manifest['resources/css/plugins.css']['file'] ?? null;
         foreach ([
             $pluginsCss,
-            $path_to_root . "/themes/cume/default.css"
+            "/themes/cume/default.css"
         ] as $css_file) {
             if (array_search($css_file, $css_files) === false) {
-                $css_files[] = $css_file;
+                $css_files[] = url($css_file);
             }
         }
 
@@ -131,7 +131,7 @@ class renderer
                 } elseif ($user->can_access_page($appfunction->access)) {
                     $access = access_string($appfunction->label);
                     echo "<div class='col-span-1 flex items-center'>";
-                    echo $img . "<a href='" . $this->url($appfunction->link) . "' class='text-primary-txt hover:underline ml-2' {$access[1]}>{$access[0]}</a>";
+                    echo $img . "<a href='" . url($appfunction->link) . "' class='text-primary-txt hover:underline ml-2' {$access[1]}>{$access[0]}</a>";
                     echo "</div>";
                 } elseif (!$user->hide_inaccessible_menu_items()) {
                     echo "<div class='col-span-1 flex items-center'>";
@@ -152,7 +152,7 @@ class renderer
                     } elseif ($user->can_access_page($appfunction->access)) {
                         $access = access_string($appfunction->label);
                         echo "<div class='col-span-1 flex items-center'>";
-                        echo $img . "<a href='" . $this->url($appfunction->link) . "' class='text-primary-txt hover:underline ml-2' {$access[1]}>{$access[0]}</a>";
+                        echo $img . "<a href='" . url($appfunction->link) . "' class='text-primary-txt hover:underline ml-2' {$access[1]}>{$access[0]}</a>";
                         echo "</div>";
                     } elseif (!$user->hide_inaccessible_menu_items()) {
                         echo "<div class='col-span-1 flex items-center'>";
@@ -170,14 +170,6 @@ class renderer
         echo "</div>";
     }
 
-    protected function url($link) {
-        global $path_to_root;
-
-        if ($link[0] !=  '/') $link = '/' . $link;
-        
-        return $path_to_root . $link;
-    }
-
     protected function shouldShowFooter($no_menu, $is_index) {
         return !$no_menu && !$is_index && isset($_SESSION['wa_current_user']);
     }
@@ -193,22 +185,22 @@ class renderer
         $sidebarCollapsed = ($_COOKIE['sidebar_collapsed'] ?? '0') === '1';
         $toolbox = [
             'dashboard' => [
-                'link' => "$path_to_root/admin/dashboard.php?sel_app=$sel_app",
+                'link' => url("/admin/dashboard.php", ['sel_app' => $sel_app]),
                 'icon' => 'icon-statistics',
                 'label' => _('Dashboard')
             ],
             'preferences' => [
-                'link' => "$path_to_root/admin/display_prefs.php?",
+                'link' => url("/admin/display_prefs.php"),
                 'icon' => 'icon-prefs',
                 'label' => _('Preferences')
             ],
             'change_password' => [
-                'link' => "$path_to_root/admin/change_current_user_password.php?selected_id=" . $user->username,
+                'link' => url("/admin/change_current_user_password.php", ['selected_id' => $user->username]),
                 'icon' => 'icon-security',
                 'label' => _('Change password')
             ],
             'logout' => [
-                'link' => "$local_path_to_root/access/logout.php?",
+                'link' => url("/access/logout.php"),
                 'icon' => 'icon-logout',
                 'label' => _('Logout')
             ]
@@ -231,7 +223,7 @@ class renderer
             $Ajax->addUpdate(true, 'hotkeyshelp', $help);
         }
 
-        $indicator = "$path_to_root/themes/".user_theme(). "/images/ajax-loader.gif";
+        $indicator = url("themes/".user_theme()."/images/ajax-loader.gif");
 
         if ($is_opening): ?>
         <section class="<?= $this->class_names([
@@ -246,7 +238,7 @@ class renderer
             <aside class="main-sidebar">
                 <div class="sidebar-inner">
                     <h2 class="app-name">
-                        <img src="<?= "$path_to_root/themes/cume/images/logo.svg" ?>" alt="Logo">
+                        <img src="<?= url("/themes/cume/images/logo.svg") ?>" alt="Logo">
                         taqbook <small><sub>ERP</sub></small>
                     </h2>
                     <nav>
@@ -256,7 +248,7 @@ class renderer
                                     $acc = access_string($app->name); ?>
                                     <li class="main-nav-item <?= $sel_app == $app->id ? 'selected' : '' ?>">
                                         <span class="icon pe-2 <?= $appIcons[$app->id] ?? 'icon-spacer' ?>"></span>
-                                        <?= "<a href='{$local_path_to_root}/index.php?application={$app->id}' {$acc[1]}>{$acc[0]}</a>" ?>
+                                        <?= "<a href='" . url("/index.php", ['application' => $app->id]) . "' {$acc[1]}>{$acc[0]}</a>" ?>
                                     </li>
                                 <?php endif;
                             endforeach; ?>
@@ -315,8 +307,8 @@ class renderer
         $sourceJs = $this->manifest['resources/js/fa.js']['file'];
         $pluginJs = $this->manifest['resources/js/plugins.js']['file'] ?? null;
         $ret = "\n--></script>"
-             . "\n<script type='module' src='{$path_to_root}/build/{$pluginJs}'></script>"
-             . "\n<script type='module' src='{$path_to_root}/build/{$sourceJs}'></script>"
+             . "\n<script type='module' src='" . url("/build/{$pluginJs}") . "'></script>"
+             . "\n<script type='module' src='" . url("/build/{$sourceJs}") . "'></script>"
              . "\n<script type='text/javascript'><!--\n";
         
         return $ret;

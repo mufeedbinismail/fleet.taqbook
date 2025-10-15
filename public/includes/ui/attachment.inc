@@ -40,7 +40,7 @@ class attachments extends simple_crud {
 			
 			if ($row['unique_name'] != ""){
 				if(in_ajax()) {
-					$Ajax->redirect($path_to_root.'/admin/attachments.php?dl='.$keys[0]);
+					$Ajax->redirect(url('/admin/attachments.php', ['dl' => $keys[0]]));
 				} else {
                     throw new \App\Exceptions\Legacy\FileDownloadException(
                         company_path()."/attachments/".$row['unique_name'],
@@ -55,7 +55,7 @@ class attachments extends simple_crud {
 			$row = db_fetch(db_query($sql), "Cannot retrieve attachment $keys[0]");
 			
 			if ($row['unique_name'] != ""){
-				$Ajax->redirect($path_to_root.'/admin/attachments.php?vw='.$keys[0]);
+				$Ajax->redirect(url('/admin/attachments.php', ['vw' => $keys[0]]));
 			}
 		}
 		$filters = array('trans_no' => $this->entity, 'type_no' => (isset($_GET['type_no']) ? $_GET['type_no'] : ST_CUSTOMER)); // default ST_CUSTOMER
@@ -81,7 +81,7 @@ class attachments extends simple_crud {
 				label_cell($de['filetype']);
 				label_cell(sql2date($de['tran_date']));
 				edit_button_cell("{$this->name}Edit[{$de['id']}]", _("Edit"));
-				label_cell('<a target="_blank" class="viewlink" href="'.$path_to_root.'/admin/attachments.php?vw='.$de['id'].'" onclick="javascript:openWindow(this.href,this.target); return false;" accesskey="V"><img src="'.$path_to_root.'/themes/default/images/view.gif" style="vertical-align:middle;width:12px;height:12px;border:0;"></a>', 'style="text-align: center;" ');
+				label_cell('<a target="_blank" class="viewlink" href="'.url('/admin/attachments.php', ['vw' => $de['id']]).'" onclick="javascript:openWindow(this.href,this.target); return false;" accesskey="V"><img src="'.url('/themes/default/images/view.gif').'" style="vertical-align:middle;width:12px;height:12px;border:0;"></a>', 'style="text-align: center;" ');
 				button_cell("{$this->name}Download[{$de['id']}]", _("Download"), false, ICON_DOWN);
 				
 				delete_button_cell("{$this->name}Delete[{$de['id']}]", _("Delete"));

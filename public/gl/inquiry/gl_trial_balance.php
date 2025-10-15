@@ -128,7 +128,13 @@ function display_trial_balance($type, $typename)
 		{
 			alt_table_row_color($k);
 
-			$url = "<a href='$path_to_root/gl/inquiry/gl_account_inquiry.php?TransFromDate=" . $_POST["TransFromDate"] . "&TransToDate=" . $_POST["TransToDate"] . "&account=" . $account["account_code"] . "&Dimension=" . $_POST["Dimension"] . "&Dimension2=" . $_POST["Dimension2"] . "'>" . $account["account_code"] . "</a>";
+			$url = "<a href='".url("/gl/inquiry/gl_account_inquiry.php", [
+                "TransFromDate" => $_POST["TransFromDate"],
+                "TransToDate" => $_POST["TransToDate"],
+                "account" => $account["account_code"],
+                "Dimension" => $_POST["Dimension"],
+                "Dimension2" => $_POST["Dimension2"]
+            ])."'>" . $account["account_code"] . "</a>";
 
 			label_cell($url);
 			label_cell($account["account_name"]);

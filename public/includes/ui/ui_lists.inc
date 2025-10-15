@@ -13,11 +13,11 @@ require_once __DIR__ . "/../../includes/banking.inc";
 require_once __DIR__ . "/../../includes/types.inc";
 require_once __DIR__ . "/../../includes/current_user.inc";
 
-define('SEARCH_BUTTON', "<input %s type='submit' class='combo_submit' style='border:0;background:url($path_to_root/themes/"
-	."%s/images/locate.png) no-repeat;%s' aspect='fallback' name='%s' value=' ' title='"._("Set filter")."'> ");
+define('SEARCH_BUTTON', "<input %s type='submit' class='combo_submit' style='border:0;background:url(".url("/themes/"
+	."%s/images/locate.png").") no-repeat;%s' aspect='fallback' name='%s' value=' ' title='"._("Set filter")."'> ");
 
-define('SELECT_BUTTON', "<input %s type='submit' class='combo_select' style='border:0;background:url($path_to_root/themes/"
-	."%s/images/button_ok.png) no-repeat;%s' aspect='fallback' name='%s' value=' ' title='"._("Select")."'> ");
+define('SELECT_BUTTON', "<input %s type='submit' class='combo_select' style='border:0;background:url(".url("/themes/"
+	."%s/images/button_ok.png").") no-repeat;%s' aspect='fallback' name='%s' value=' ' title='"._("Select")."'> ");
 
 //----------------------------------------------------------------------------
 //	Universal sql combo generator
@@ -305,54 +305,54 @@ $opts = array(		// default options
   			if ($type != NULL) {
 	    		switch (strtolower($type)) {
 	      			case "stock":
-	        			$link = $path_to_root . "/inventory/inquiry/stock_list.php?popup=1&type=all&client_id=" . $id;
+	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'all', 'client_id' => $id]);
 	        			$img_title = _("Search items");
 	        			break;
 	      			case "stock_manufactured":
-	        			$link = $path_to_root . "/inventory/inquiry/stock_list.php?popup=1&type=manufactured&client_id=" . $id;
+	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'manufactured', 'client_id' => $id]);
 	        			$img_title = _("Search items");
 	        			break;
 	      			case "stock_purchased":
-	        			$link = $path_to_root . "/inventory/inquiry/stock_list.php?popup=1&type=purchasable&client_id=" . $id;
+	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'purchasable', 'client_id' => $id]);
 	        			$img_title = _("Search items");
 	        			break;
 	      			case "stock_sales":
-	        			$link = $path_to_root . "/inventory/inquiry/stock_list.php?popup=1&type=sales&client_id=" . $id;
+	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'sales', 'client_id' => $id]);
 	        			$img_title = _("Search items");
 	        			break;
 	      			case "stock_costable":
-	        			$link = $path_to_root . "/inventory/inquiry/stock_list.php?popup=1&type=costable&client_id=" . $id;
+	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'costable', 'client_id' => $id]);
 	        			$img_title = _("Search items");
 	        			break;
 	      			case "component":
 	      				$parent = $opts['parent'];
-	        			$link = $path_to_root . "/inventory/inquiry/stock_list.php?popup=1&type=component&parent=".$parent."&client_id=" . $id;
+	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'component', 'parent' => $parent, 'client_id' => $id]);
 	        			$img_title = _("Search items");
 	        			break;
 	      			case "kits":
-	        			$link = $path_to_root . "/inventory/inquiry/stock_list.php?popup=1&type=kits&client_id=" . $id;
+	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'kits', 'client_id' => $id]);
 	        			$img_title = _("Search items");
 	        			break;
 	      			case "customer":
-	        			$link = $path_to_root . "/sales/inquiry/customers_list.php?popup=1&client_id=" . $id;
+	        			$link = url("/sales/inquiry/customers_list.php", ['popup' => 1, 'client_id' => $id]);
 	        			$img_title = _("Search customers");
 	        			break;
 	      			case "marketplace":
-	        			$link = $path_to_root . "/sales/inquiry/marketplaces_list.php?popup=1&client_id=" . $id;
+	        			$link = url("/sales/inquiry/marketplaces_list.php", ['popup' => 1, 'client_id' => $id]);
 	        			$img_title = _("Search marketplaces");
 	        			break;
 	      			case "branch":
-	        			$link = $path_to_root . "/sales/inquiry/customer_branches_list.php?popup=1&client_id=" . $id . "#customer_id";
+	        			$link = url("/sales/inquiry/customer_branches_list.php", ['popup' => 1, 'client_id' => "{$id}#customer_id"]);
 	        			$img_title = _("Search branches");
 	        			break;
 	      			case "supplier":
-	        			$link = $path_to_root . "/purchasing/inquiry/suppliers_list.php?popup=1&client_id=" . $id;
+	        			$link = url("/purchasing/inquiry/suppliers_list.php", ['popup' => 1, 'client_id' => $id]);
 	        			$img_title = _("Search suppliers");
 	        			break;
 	      			case "account":
 	      			case "account2":
 	      				$skip = strtolower($type) == "account" ? false : true;
-	        			$link = $path_to_root . "/gl/inquiry/accounts_list.php?popup=1&skip=".$skip."&client_id=" . $id;
+	        			$link = url("/gl/inquiry/accounts_list.php", ['popup' => 1, 'skip' => $skip, 'client_id' => $id]);
 	        			$img_title = _("Search GL accounts");
 	        			break;
 	    		}
@@ -361,7 +361,7 @@ $opts = array(		// default options
 
   		if ($link !=="") {
     		$theme = user_theme();
-    		$img = '<img src="'.$path_to_root.'/themes/'.$theme.'/images/'.ICON_VIEW.
+    		$img = '<img src="'.url('/themes/'.$theme.'/images/'.ICON_VIEW).
     			'" style="vertical-align:middle;width:12px;height:12px;border:0;" onclick="javascript:lookupWindow(&quot;'.
     			$link.'&quot;, &quot;&quot;);" title="' . $img_title . '" style="cursor:pointer;" />';
   		}
@@ -513,12 +513,10 @@ function add_edit_combo($type)
 
 	if (!isset($SysPrefs->use_icon_for_editkey) || $SysPrefs->use_icon_for_editkey==0)
 		return "";
-	// Derive theme path
-	$theme_path = $path_to_root . '/themes/' . user_theme();
 
 	$key = $popup_editors[$type][1];
 	$onclick = "onclick=\"javascript:callEditor($key); return false;\"";
-	$img = "<img width='12' height='12' border='0' alt='Add/Edit' title='Add/Edit' src='$theme_path/images/".ICON_EDIT."'>";
+	$img = "<img width='12' height='12' border='0' alt='Add/Edit' title='Add/Edit' src='".url('/themes/'.user_theme()."/images/".ICON_EDIT)."'>";
 	return "<a target = '_blank' href='#' $onclick tabindex='-1'>$img</a>"; 
 }
 

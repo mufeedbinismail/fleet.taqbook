@@ -121,7 +121,7 @@ if (isset($_POST['Cancel']))
 {
 	clear_allocations();
     $marketplace_flg = check_value('is_marketplace_trans') ? "Marketplace=Yes&" : "";
-	meta_forward($path_to_root . "/sales/allocations/customer_allocation_main.php", $marketplace_flg);
+	meta_forward(url("/sales/allocations/customer_allocation_main.php"), $marketplace_flg);
 }
 
 //--------------------------------------------------------------------------------

@@ -31,8 +31,8 @@ if (file_exists(__DIR__ . "/../installed_extensions.php"))
 function subpage_title($txt) 
 {
 	global $path_to_root;
-	
-	echo '<center><img src="'.$path_to_root.'/themes/default/images/logo_frontaccounting.png" width="250" height="50" alt="Logo" >
+
+	echo '<center><img src="' . url("/themes/default/images/logo_frontaccounting.png") . '" width="250" height="50" alt="Logo" >
 		</center>';
 
 	$page = @$_POST['Page'] ? $_POST['Page'] : 1;
@@ -411,7 +411,7 @@ start_form();
 			display_note(_('Please do not forget to remove install wizard folder.'));
 			session_unset();
 			session_destroy();
-			hyperlink_no_params($path_to_root.'/index.php', _('Click here to start.'));
+			hyperlink_no_params(url('/index.php'), _('Click here to start.'));
 			break;
 
 	}

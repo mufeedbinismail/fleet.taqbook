@@ -89,14 +89,14 @@ if (isset($_GET['AddedID']))
 
 	display_note(print_document_link($order_no, _("&Email This Order"), true, $trans_type, false, "printlink", "", 1));
 
-	hyperlink_params($path_to_root . "/purchasing/po_receive_items.php", _("&Receive Items on this Purchase Order"), "PONumber=$order_no");
+	hyperlink_params(url("/purchasing/po_receive_items.php"), _("&Receive Items on this Purchase Order"), "PONumber=$order_no");
 
   // TODO, for fixed asset
 	hyperlink_params($_SERVER['PHP_SELF'], _("Enter &Another Purchase Order"), "NewOrder=yes");
 	
-	hyperlink_no_params($path_to_root."/purchasing/inquiry/po_search.php", _("Select An &Outstanding Purchase Order"));
+	hyperlink_no_params(url("/purchasing/inquiry/po_search.php"), _("Select An &Outstanding Purchase Order"));
 	
-	hyperlink_params("$path_to_root/admin/attachments.php", _("Add an Attachment"), 
+	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), 
 		"filterType=$trans_type&trans_no=$order_no");
 
 	display_footer_exit();	
@@ -114,12 +114,12 @@ if (isset($_GET['AddedID']))
 	if ($clearing_act)	
 		display_note(get_gl_view_str($trans_type, $trans_no, _("View the GL Journal Entries for this Delivery")), 1);
 
-	hyperlink_params("$path_to_root/purchasing/supplier_invoice.php",
+	hyperlink_params(url("/purchasing/supplier_invoice.php"),
 		_("Entry purchase &invoice for this receival"), "New=1");
 
 	hyperlink_params($_SERVER['PHP_SELF'], _("Enter &Another GRN"), "NewGRN=Yes");
 	
-	hyperlink_params("$path_to_root/admin/attachments.php", _("Add an Attachment"), 
+	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), 
 		"filterType=$trans_type&trans_no=$trans_no");
 
 	display_footer_exit();	
@@ -135,12 +135,12 @@ if (isset($_GET['AddedID']))
 
 	display_note(get_gl_view_str($trans_type, $trans_no, _("View the GL Journal Entries for this Invoice")), 1);
 
-	hyperlink_params("$path_to_root/purchasing/supplier_payment.php", _("Entry supplier &payment for this invoice"),
+	hyperlink_params(url("/purchasing/supplier_payment.php"), _("Entry supplier &payment for this invoice"),
 		"trans_type=$trans_type&PInvoice=".$trans_no);
 
 	hyperlink_params($_SERVER['PHP_SELF'], _("Enter &Another Direct Invoice"), "NewInvoice=Yes");
-	
-	hyperlink_params("$path_to_root/admin/attachments.php", _("Add an Attachment"), 
+
+	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"),
 		"filterType=$trans_type&trans_no=$trans_no");
 
 	display_footer_exit();	
@@ -206,9 +206,9 @@ function handle_cancel_po()
 		unset($_SESSION['PO']);
 
     	if ($fixed_asset)
-			meta_forward($path_to_root.'/index.php','application=assets');
+			meta_forward(url('/index.php'),'application=assets');
 		else
-			meta_forward($path_to_root.'/index.php','application=AP');
+			meta_forward(url('/index.php'),'application=AP');
 	}
 
 	$_SESSION['PO']->clear_items();
@@ -216,7 +216,7 @@ function handle_cancel_po()
 
 	display_notification(_("This purchase order has been cancelled."));
 
-	hyperlink_params($path_to_root . "/purchasing/po_entry_items.php", _("Enter a new purchase order"), "NewOrder=Yes");
+	hyperlink_params(url("/purchasing/po_entry_items.php"), _("Enter a new purchase order"), "NewOrder=Yes");
 	echo "<br>";
 
 	end_page();

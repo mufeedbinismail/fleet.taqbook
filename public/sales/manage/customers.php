@@ -284,7 +284,7 @@ function customer_settings($selected_id)
 	if ($selected_id)  {
 		start_row();
 		echo '<td class="label">'._('Customer branches').':</td>';
-	  	hyperlink_params_td($path_to_root . "/sales/manage/customer_branches.php",
+	  	hyperlink_params_td(url("/sales/manage/customer_branches.php"),
 			'<b>'. ($page_nested ?  _("Select or &Add") : _("&Add or Edit ")).'</b>', 
 			"debtor_no=".$selected_id.($page_nested ? '&popup=1':''));
 		end_row();
