@@ -13,7 +13,7 @@
 	{
 		function get_icon($category)
 		{
-			global  $path_to_root, $SysPrefs;
+			global $SysPrefs;
 
 			if ($SysPrefs->show_menu_category_icons)
 				$img = $category == '' ? 'right.gif' : $category.'.png';
@@ -34,7 +34,7 @@
 
 		function menu_header($title, $no_menu, $is_index)
 		{
-			global $path_to_root, $SysPrefs, $db_connections;
+			global $SysPrefs, $db_connections;
 			echo "<table class='callout_main' border='0' cellpadding='0' cellspacing='0'>\n";
 			echo "<tr>\n";
 			echo "<td colspan='2' rowspan='2'>\n";
@@ -105,7 +105,7 @@
 
 		function menu_footer($no_menu, $is_index)
 		{
-			global $version, $path_to_root, $Pagehelp, $Ajax, $SysPrefs;
+			global $version, $Pagehelp, $Ajax, $SysPrefs;
 
 			require_once __DIR__ . "/../../includes/date_functions.inc";
 
@@ -149,7 +149,6 @@
 
 		function display_applications(&$waapp)
 		{
-			global $path_to_root;
 
 			$selected_app = $waapp->get_selected_application();
 			if (!$_SESSION["wa_current_user"]->check_application_access($selected_app))

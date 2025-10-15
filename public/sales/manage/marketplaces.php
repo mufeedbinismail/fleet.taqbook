@@ -1,7 +1,6 @@
 <?php
 
 $page_security = 'SA_MARKETPLACE';
-$path_to_root = "../..";
 
 require_once __DIR__ . "/../../includes/db_pager.inc";
 require_once __DIR__ . "/../../includes/session.inc";

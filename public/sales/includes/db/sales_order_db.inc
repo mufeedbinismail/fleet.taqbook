@@ -12,7 +12,7 @@
 //----------------------------------------------------------------------------------------
 function add_sales_order(&$order)
 {
-	global $SysPrefs, $path_to_root, $Refs;
+	global $SysPrefs, $Refs;
 
 	begin_transaction();
 	hook_db_prewrite($order, $order->trans_type);
@@ -122,7 +122,7 @@ function update_sales_order_version($order)
 
 function update_sales_order($order)
 {
-	global $SysPrefs, $path_to_root, $Refs;
+	global $SysPrefs, $Refs;
 
 	$del_date = date2sql($order->due_date);
 	$ord_date = date2sql($order->document_date);

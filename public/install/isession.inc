@@ -71,11 +71,6 @@ function cache_invalidate($filename)
         opcache_invalidate($filename);
 }
 //============================================================================
-if (!isset($path_to_root))
-{
-	$path_to_root = ".";
-}
-
 
 require_once __DIR__ . "/../includes/errors.inc";
 // collect all error msgs

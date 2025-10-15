@@ -531,7 +531,7 @@ class gettext_php_support_compiler
 	Set current gettext domain path
 */
 function set_ext_domain($path='') {
-	global $path_to_root, $GetText;
+	global $GetText;
 	static $domain_stack = array('');
 
 	if ($path)	// save path on domain stack

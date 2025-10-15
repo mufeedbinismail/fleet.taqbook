@@ -128,7 +128,6 @@ function retrieve_exrate($curr_b, $date)
 
 function get_extern_rate($curr_b, $provider, $date) 
 {
-	global	$path_to_root;
 
 	if ($date != Today())	// no historical rates available
 		return 0;

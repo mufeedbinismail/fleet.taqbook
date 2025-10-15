@@ -30,7 +30,7 @@ class attachments extends simple_crud {
 	}
 
 	function list_view() {
-		global $Ajax, $path_to_root, $session_debtor_no, $session_supplier_id;
+		global $Ajax, $session_debtor_no, $session_supplier_id;
 		br();
 		if(isset($_POST['attachmentDownload'])){
 			$keys =  array_keys($_POST['attachmentDownload']);

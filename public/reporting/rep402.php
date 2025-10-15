@@ -16,7 +16,6 @@ $page_security = 'SA_BOMREP';
 // date_:	2005-05-19
 // Title:	Work Order Listing
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -99,7 +98,7 @@ function print_gl_rows(&$rep, $result, $title)
 
 function print_work_order_listing()
 {
-    global $path_to_root, $wo_types_array;
+    global $wo_types_array;
 
     $item = $_POST['PARAM_0'];
     $location = $_POST['PARAM_1'];

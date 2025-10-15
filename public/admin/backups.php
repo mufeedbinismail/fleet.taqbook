@@ -11,7 +11,6 @@
 ***********************************************************************/
 $page_security = 'SA_BACKUP';
 
-$path_to_root="..";
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/ui.inc";
 require_once __DIR__ . "/../admin/db/maintenance_db.inc";
@@ -70,7 +69,7 @@ function generate_backup($conn, $ext='no', $comm='')
 
 function get_backup_file_combo()
 {
-	global $path_to_root, $Ajax, $SysPrefs;
+	global $Ajax, $SysPrefs;
 	
 	$ar_files = array();
     default_focus('backups');

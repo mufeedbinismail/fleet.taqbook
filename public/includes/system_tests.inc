@@ -77,7 +77,6 @@ function tst_sessionpath()
 
 function tst_install() 
 {
-	global $path_to_root;
 
 	$test['descr'] = _('Removed install wizard folder');
 	$test['type'] = 2;
@@ -220,8 +219,6 @@ function tst_subdirs($install=false)
 
 function tst_tmpdir()
 {
-	global $path_to_root;
-	
 	$test['descr'] = _('Temporary directory');
 	$test['type'] = 3;
 	$test['test'] = VARLIB_PATH;
@@ -232,7 +229,7 @@ function tst_tmpdir()
 
 function tst_langs($install)
 {
-	global $installed_languages, $path_to_root, $GetText;
+	global $installed_languages, $GetText;
 
 	$test['descr'] = _('Language configuration consistency');
 	$test['type'] = 3;
@@ -287,7 +284,6 @@ function tst_langs($install)
 
 function tst_config($install)
 {
-	global $path_to_root;
 
 	$test['descr'] = _('Main config file');
 	$test['test'] = PATH_TO_ROOT.'/config.php';
@@ -308,7 +304,6 @@ function tst_config($install)
 
 function tst_dbconfig($install)
 {
-	global $path_to_root;
 
 	$test['descr'] = _('Database auth file');
 	$test['test'] = PATH_TO_ROOT.'/config_db.php';
@@ -330,7 +325,7 @@ function tst_dbconfig($install)
 
 function tst_extconfig($install)
 {
-	global $path_to_root, $db_connections;
+	global $db_connections;
 
 	$comps = $install ? array('0') : array_keys($db_connections);
 	

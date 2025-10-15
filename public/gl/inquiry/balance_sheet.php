@@ -10,7 +10,6 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $page_security = 'SA_GLANALYTIC';
-$path_to_root="../..";
 
 require_once __DIR__ . "/../../includes/session.inc";
 
@@ -49,7 +48,7 @@ if (isset($_GET["AccGrp"]))
 
 function display_type ($type, $typename, $from, $to, $convert, $dimension, $dimension2, $drilldown)
 {
-	global $path_to_root, $levelptr, $k;
+	global $levelptr, $k;
 	
 	$acctstotal = 0;
 	$typestotal = 0;
@@ -144,8 +143,6 @@ function inquiry_controls()
 
 function display_balance_sheet()
 {
-	global $path_to_root;
-	
 	$to = $_POST['TransToDate'];
 	$from = get_fiscalyear_begin_for_date($to);
 

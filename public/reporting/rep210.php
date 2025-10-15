@@ -18,7 +18,6 @@ $page_security = $_POST['PARAM_0'] == $_POST['PARAM_1'] ?
 // date_:	2005-05-19
 // Title:	Purchase Remittance
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -52,7 +51,7 @@ function get_remittance($type, $trans_no)
 
 function print_remittances()
 {
-	global $path_to_root, $systypes_array;
+	global $systypes_array;
 
 	require_once __DIR__ . "/../reporting/includes/pdf_report.inc";
 

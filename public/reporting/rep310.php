@@ -16,7 +16,6 @@ $page_security = 'SA_SUPPLIERANALYTIC';
 // date_:	01-12-2017
 // Title:	Inventory Purchasing - Transaction Based
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -93,7 +92,6 @@ function get_supp_inv_reference($supplier_id, $stock_id, $date)
 
 function print_inventory_purchase()
 {
-    global $path_to_root;
 
 	$from = $_POST['PARAM_0'];
 	$to = $_POST['PARAM_1'];

@@ -31,7 +31,7 @@ $GLOBALS['js_userlib']  = array();
 function page($title, $no_menu=false, $is_index=false, $onload="", $js="", $script_only=false, $css='')
 {
 
-   	global $path_to_root, $page_security, $page_nested;
+   	global $page_security, $page_nested;
 
 	if (++$page_nested) return;
 
@@ -54,7 +54,7 @@ function page($title, $no_menu=false, $is_index=false, $onload="", $js="", $scri
 
 function end_page($no_menu=false, $is_index=false, $final_screen=false, $type_no=0, $trans_no=0)
 {
-	global $path_to_root, $page_nested;
+	global $page_nested;
 
 	if ($page_nested-- > 0) return;
 
@@ -67,7 +67,7 @@ function end_page($no_menu=false, $is_index=false, $final_screen=false, $type_no
 }
 
 function css_files_ensure_init() {
-	global $css_files, $path_to_root;
+	global $css_files;
 
 	if (!isset($css_files))
 	{
@@ -359,7 +359,7 @@ function copy_file($file, $from, $to)
 */
 function find_custom_file($rep)
 {
-	global $installed_extensions, $path_to_root, $local_path_to_root;
+	global $installed_extensions, $local_path_to_root;
 
 	// customized per company version
 	$path = company_path();

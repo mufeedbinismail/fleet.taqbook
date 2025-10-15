@@ -112,7 +112,7 @@ function exception_handler($exception)
 //	Formats system messages before insert them into message <div>
 // FIX center is unused now
 function fmt_errors($center=false) {
-    global $messages, $path_to_root, $SysPrefs;
+    global $messages, $SysPrefs;
 
   	$msg_class = array(
   		E_USER_ERROR => 'err_msg',
@@ -150,8 +150,8 @@ function fmt_errors($center=false) {
 		}
 		$class = $msg_class[$type];
     	$content = "<div class='$class'>$content</div>";
-  	} elseif ($path_to_root=='.')
-		return '';
+  	}
+    
   	return $content;
 }
 //-----------------------------------------------------------------------------

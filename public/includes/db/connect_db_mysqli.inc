@@ -16,7 +16,7 @@ $GLOBALS['db_last_inserted_id'] = 0;
 
 function set_global_connection($company=-1)
 {
-	global $db, $path_to_root, $db_connections, $SysPrefs;
+	global $db, $db_connections, $SysPrefs;
 
 	require __DIR__ . "/../../config_db.php";
 

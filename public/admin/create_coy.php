@@ -10,7 +10,6 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $page_security = 'SA_CREATECOMPANY';
-$path_to_root="..";
 require_once __DIR__ . "/../includes/session.inc";
 
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -87,7 +86,7 @@ function remove_connection($id) {
 function handle_submit($selected_id)
 {
 	global $db_connections, $def_coy, $tb_pref_counter, $db,
-	    $comp_subdirs, $path_to_root, $Mode;
+	    $comp_subdirs, $Mode;
 
 	$error = false;
 
@@ -172,7 +171,7 @@ function handle_submit($selected_id)
 
 function handle_delete($id)
 {
-	global $Ajax, $def_coy, $db_connections, $comp_subdirs, $path_to_root, $Mode;
+	global $Ajax, $def_coy, $db_connections, $comp_subdirs, $Mode;
 
 	// First make sure all company directories from the one under removal are writable. 
 	// Without this after operation we end up with changed per-company owners!

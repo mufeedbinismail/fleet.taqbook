@@ -10,7 +10,6 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $page_security = 'SA_DIMENSION';
-$path_to_root = "..";
 require_once __DIR__ . "/../includes/session.inc";
 
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -92,7 +91,7 @@ if (isset($_GET['ReopenedID']))
 
 function safe_exit()
 {
-	global $path_to_root, $id;
+	global $id;
 
 	hyperlink_no_params("", _("Enter a &new dimension"));
 	hyperlink_no_params(url("/dimensions/inquiry/search_dimensions.php"), _("&Select an existing dimension"));

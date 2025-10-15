@@ -60,7 +60,7 @@ class current_user
 
 	function login($company, $loginname, $password)
 	{
-		global $security_areas, $security_groups, $security_headings, $path_to_root, $dflt_lang, $SysPrefs;
+		global $security_areas, $security_groups, $security_headings, $dflt_lang, $SysPrefs;
 
 		$this->set_company($company);
 	    $this->logged = false;
@@ -376,7 +376,6 @@ function qty_format($number, $stock_id, &$dec) {
 // and get_qty_dec
 function get_qty_dec($stock_id=null)
 {
-	global $path_to_root;
 	require_once __DIR__ . "/../inventory/includes/db/items_units_db.inc";
 	if ($stock_id != null)
 		$dec = get_unit_dec($stock_id);
@@ -606,7 +605,7 @@ function set_user_prefs($prefs)
 }
 
 function add_user_js_data() {
-	global $path_to_root, $SysPrefs;
+	global $SysPrefs;
 
 	$ts = $SysPrefs->thoseps[user_tho_sep()];
 	$ds = $SysPrefs->decseps[user_dec_sep()];
@@ -628,7 +627,6 @@ function add_user_js_data() {
 
 function user_js_cache($id=null)
 {
-	global $path_to_root;
 
 	if (!$id)
 		$id = @$_SESSION['wa_current_user']->user;
@@ -752,7 +750,7 @@ function flush_dir($path, $wipe = false)
 */
 function company_path($comp=null)
 {
-	global $path_to_root, $SysPrefs;
+	global $SysPrefs;
 
 	$comp_path = $SysPrefs->comp_path;
 

@@ -230,7 +230,7 @@ function display_gl_controls(&$supp_trans, $k)
 
 function display_gl_items(&$supp_trans, $mode=0)
 {
-	global $path_to_root, $Ajax;
+	global $Ajax;
 
     // if displaying in form, and no items, exit
     if (($mode == 2 || $mode == 3) && count($supp_trans->gl_codes) == 0)
@@ -441,8 +441,6 @@ function display_grn_items_for_selection(&$supp_trans, $k)
 
 function display_grn_items(&$supp_trans, $mode=0)
 {
-	global $path_to_root;
-
     $ret = true;
     // if displaying in form, and no items, exit
     if (($mode == 2  || $mode == 3) && count($supp_trans->grn_items) == 0)

@@ -16,7 +16,6 @@ $page_security = 'SA_ITEMSVALREP';
 // date_:	2005-05-19
 // Title:	Stock Check Sheet
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -172,7 +171,7 @@ function getTransactions($category, $location, $item_like)
 
 function print_stock_check()
 {
-    global $path_to_root, $SysPrefs;
+    global $SysPrefs;
 
    	$category = $_POST['PARAM_0'];
    	$location = $_POST['PARAM_1'];

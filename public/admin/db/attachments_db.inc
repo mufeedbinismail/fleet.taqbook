@@ -56,7 +56,6 @@ function delete_attachment($id)
 
 function get_attachment_string($type, $id)
 {
-	global $path_to_root;
     $str_return = "";    
     $sql = "SELECT * FROM ".TB_PREF."attachments WHERE type_no=".db_escape($type)." AND trans_no=".db_escape($id)." ORDER BY trans_no";
     $return = db_query($sql, "Could not retrieve attachments");

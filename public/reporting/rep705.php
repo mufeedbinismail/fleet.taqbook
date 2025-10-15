@@ -16,7 +16,6 @@ $page_security = 'SA_GLANALYTIC';
 // date_:	2005-05-19
 // Title:	Annual expense breakdown
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -166,7 +165,7 @@ function display_type ($type, $typename, $yr, $mo, $convert, &$dec, &$rep, $dime
 
 function print_annual_expense_breakdown()
 {
-	global $path_to_root, $SysPrefs, $tmonths;
+	global $SysPrefs, $tmonths;
 
 	$dim = get_company_pref('use_dimension');
 	$dimension = $dimension2 = 0;

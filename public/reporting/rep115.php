@@ -17,7 +17,6 @@ $page_security = 'SA_CUSTPAYMREP';
 // date_:    2018-12-20
 // Title:    Customer Trial Balances
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -109,7 +108,7 @@ function get_customer_reference ($order_number)
 
 function print_customer_balances()
 {
-    global $path_to_root, $systypes_array;
+    global $systypes_array;
 
     $from = $_POST['PARAM_0'];
     $to = $_POST['PARAM_1'];

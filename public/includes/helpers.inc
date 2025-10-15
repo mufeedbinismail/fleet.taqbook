@@ -1,7 +1,5 @@
 <?php
 
-define('PATH_TO_ROOT', dirname(__DIR__));
-
 /**
  * Generate a url for the application.
  * 
@@ -31,7 +29,6 @@ function url($path = null, $parameters = [], $secure = null)
 
 function url_from_path($path)
 {
-    global $path_to_root;
     if (($resolved_path = realpath($path)) !== false) {
         $root_path = realpath(PATH_TO_ROOT);
         if (strpos($resolved_path, $root_path) === 0) {

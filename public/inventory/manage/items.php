@@ -10,7 +10,6 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $page_security = 'SA_ITEM';
-$path_to_root = "../..";
 require __DIR__ . "/../../includes/session.inc";
 require __DIR__ . "/../../reporting/includes/tcpdf.php";
 
@@ -348,7 +347,7 @@ if (isset($_POST['delete']) && strlen($_POST['delete']) > 1)
 
 function item_settings(&$stock_id, $new_item) 
 {
-	global $SysPrefs, $path_to_root, $page_nested, $depreciation_methods;
+	global $SysPrefs, $page_nested, $depreciation_methods;
 
 	start_outer_table(TABLESTYLE2);
 

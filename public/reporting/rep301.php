@@ -16,7 +16,6 @@ $page_security = 'SA_ITEMSVALREP';
 // date_:		2014-05-13
 // Title:		Inventory Valuation
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -133,7 +132,7 @@ function getTransactions($category, $location, $date)
 
 function print_inventory_valuation_report()
 {
-    global $path_to_root, $SysPrefs;
+    global $SysPrefs;
 
 	$date = $_POST['PARAM_0'];
     $category = $_POST['PARAM_1'];

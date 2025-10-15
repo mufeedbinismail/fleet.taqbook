@@ -23,7 +23,6 @@ class sys_prefs extends stdClass
 
 	function __construct()
 	{
-		global $path_to_root;
 
 		// retrieve set system wide preferences
 		require __DIR__ . '/../../config.default.php';

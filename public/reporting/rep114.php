@@ -16,7 +16,6 @@ $page_security = 'SA_TAXREP';
 // date_:	2005-05-19
 // Title:	Sales Summary Report
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -62,7 +61,6 @@ function getTaxes($type, $trans_no)
 
 function print_sales_summary_report()
 {
-	global $path_to_root;
 	
 	$from = $_POST['PARAM_0'];
 	$to = $_POST['PARAM_1'];

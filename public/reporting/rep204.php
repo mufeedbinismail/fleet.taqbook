@@ -16,7 +16,6 @@ $page_security = 'SA_SUPPLIERANALYTIC';
 // date_:	2005-05-19
 // Title:	Outstanding GRNs Report
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -61,7 +60,6 @@ function getTransactions($fromsupp)
 
 function print_outstanding_GRN()
 {
-    global $path_to_root;
 
     $fromsupp = $_POST['PARAM_0'];
     $comments = $_POST['PARAM_1'];

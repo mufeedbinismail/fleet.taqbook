@@ -16,7 +16,6 @@ $page_security = 'SA_SALESANALYTIC';
 // date_:	2005-05-19
 // Title:	Inventory Sales Report
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -84,7 +83,6 @@ function getTransactions($category, $location, $fromcust, $from, $to, $show_serv
 
 function print_inventory_sales()
 {
-    global $path_to_root;
 
 	$from = $_POST['PARAM_0'];
 	$to = $_POST['PARAM_1'];

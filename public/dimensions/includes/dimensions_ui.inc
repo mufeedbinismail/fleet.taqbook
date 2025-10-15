@@ -15,7 +15,6 @@ require_once __DIR__ . "/../../includes/ui.inc";
 
 function display_dimension_balance($id, $from, $to)
 {
-	global $path_to_root;
 
 	$result = get_dimension_balance_all($id, $from, $to);
 

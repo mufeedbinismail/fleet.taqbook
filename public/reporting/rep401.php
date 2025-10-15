@@ -16,7 +16,6 @@ $page_security = 'SA_BOMREP';
 // date_:	2005-05-19
 // Title:	Bill Of Material
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -53,7 +52,6 @@ function getTransactions($from, $to)
 
 function print_bill_of_material()
 {
-    global $path_to_root;
 
     $frompart = $_POST['PARAM_0'];
     $topart = $_POST['PARAM_1'];

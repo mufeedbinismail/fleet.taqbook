@@ -16,7 +16,6 @@ $page_security = 'SA_DIMENSIONREP';
 // date_:	2005-05-19
 // Title:	Dimension Summary
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -68,7 +67,6 @@ function getYTD($dim)
 
 function print_dimension_summary()
 {
-    global $path_to_root;
 
     $fromdim = $_POST['PARAM_0'];
     $todim = $_POST['PARAM_1'];

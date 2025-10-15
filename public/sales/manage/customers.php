@@ -10,7 +10,6 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $page_security = 'SA_CUSTOMER';
-$path_to_root = "../..";
 
 require_once __DIR__ . "/../../includes/db_pager.inc";
 require_once __DIR__ . "/../../includes/session.inc";
@@ -80,7 +79,7 @@ function can_process()
 
 function handle_submit(&$selected_id)
 {
-	global $path_to_root, $Ajax, $SysPrefs;
+	global $Ajax, $SysPrefs;
 
 	if (!can_process())
 		return;
@@ -188,7 +187,7 @@ if (isset($_POST['delete']))
 
 function customer_settings($selected_id) 
 {
-	global $SysPrefs, $path_to_root, $page_nested;
+	global $SysPrefs, $page_nested;
 	
 	if (!$selected_id) 
 	{

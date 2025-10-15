@@ -25,8 +25,6 @@ function add_to_issue(&$order, $new_item, $new_item_qty, $standard_cost)
 
 function display_issue_items($title, &$order)
 {
-	global $path_to_root;
-
 	display_heading($title);
     div_start('items_table');
 	start_table(TABLESTYLE, "width='80%'");

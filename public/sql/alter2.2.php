@@ -121,7 +121,7 @@ class fa2_2 extends fa_patch  {
 */
 function convert_roles($pref) 
 {
-		global $security_groups, $security_headings, $security_areas, $path_to_root;
+		global $security_groups, $security_headings, $security_areas;
 		require_once __DIR__ . "/../includes/access_levels.inc";
 
 	$trans_sec = array(
@@ -212,7 +212,7 @@ function import_security_role($name, $sections, $areas)
 	This function is executed once on first Upgrade System display.
 */
 function fix_extensions() {
-	global $path_to_root, $db_connections;
+	global $db_connections;
 
 	if (!file_exists(PATH_TO_ROOT.'/modules/installed_modules.php'))
 		return true; // already converted

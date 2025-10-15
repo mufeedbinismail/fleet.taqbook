@@ -16,7 +16,6 @@ $page_security = 'SA_CUSTPAYMREP';
 // date_:	2005-05-19
 // Title:	Aged Customer Balances
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -62,7 +61,7 @@ function get_invoices($customer_id, $to, $all=true)
 
 function print_aged_customer_analysis()
 {
-    global $path_to_root, $systypes_array, $SysPrefs;
+    global $systypes_array, $SysPrefs;
 
     $to = $_POST['PARAM_0'];
     $fromcust = $_POST['PARAM_1'];

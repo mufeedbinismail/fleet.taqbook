@@ -117,7 +117,6 @@ class fa2_3 extends fa_patch {
 	*/
 	function update_totals()
 	{
-		global $path_to_root;
 
 		require_once __DIR__ . "/../sales/includes/cart_class.inc";
 		require_once __DIR__ . "/../purchasing/includes/po_class.inc";
@@ -186,7 +185,7 @@ class fa2_3 extends fa_patch {
 	*/
 	function update_line_relations()
 	{
-		global $path_to_root, $systypes_array;
+		global $systypes_array;
 
 		require_once __DIR__ . "/../includes/sysnames.inc";
 		
@@ -251,7 +250,7 @@ class fa2_3 extends fa_patch {
 
 	function fix_extensions()
 	{
-		global $path_to_root, $next_extension_id, $installed_languages;
+		global $next_extension_id, $installed_languages;
 
 		$lang_chd = false;
 		foreach($installed_languages as $i => $lang) {

@@ -10,7 +10,6 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $page_security = 'SA_WORKORDERENTRY';
-$path_to_root = "..";
 
 require_once __DIR__ . "/../includes/session.inc";
 
@@ -104,8 +103,6 @@ if (isset($_GET['ClosedID']))
 
 function safe_exit()
 {
-	global $path_to_root;
-
 	hyperlink_no_params("", _("Enter a new work order"));
 	hyperlink_no_params("search_work_orders.php", _("Select an existing work order"));
 	

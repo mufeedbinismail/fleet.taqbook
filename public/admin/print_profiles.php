@@ -10,7 +10,6 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $page_security = 'SA_PRINTPROFILE';
-$path_to_root = "..";
 require __DIR__ . "/../includes/session.inc";
 require __DIR__ . "/../admin/db/printers_db.inc";
 require __DIR__ . "/../includes/ui.inc";
@@ -23,7 +22,7 @@ $selected_id = get_post('profile_id','');
 // Returns array of defined reports
 //
 function get_reports() {
-	global $path_to_root, $SysPrefs;
+	global $SysPrefs;
 
 	if ($SysPrefs->go_debug || !isset($_SESSION['reports'])) {	
 	// to save time, store in session.

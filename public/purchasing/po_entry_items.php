@@ -9,7 +9,6 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$path_to_root = "..";
 $page_security = 'SA_PURCHASEORDER';
 require_once __DIR__ . "/../purchasing/includes/po_class.inc";
 require_once __DIR__ . "/../includes/session.inc";
@@ -187,8 +186,6 @@ function handle_delete_item($line_no)
 
 function handle_cancel_po()
 {
-	global $path_to_root;
-	
 	//need to check that not already dispatched or invoiced by the supplier
 	if(($_SESSION['PO']->order_no != 0) && 
 		$_SESSION['PO']->any_already_received() == 1)

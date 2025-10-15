@@ -10,7 +10,6 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $page_security = 'SA_GRN';
-$path_to_root = "..";
 require_once __DIR__ . "/../purchasing/includes/po_class.inc";
 
 require_once __DIR__ . "/../includes/session.inc";
@@ -233,7 +232,7 @@ function can_process()
 
 function process_receive_po()
 {
-	global $path_to_root, $Ajax;
+	global $Ajax;
 
 	if (!can_process())
 		return;

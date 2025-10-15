@@ -16,7 +16,6 @@ $page_security = 'SA_BANKREP';
 // date_:	2005-05-19
 // Title:	Bank Accounts Transactions
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -54,7 +53,7 @@ function get_bank_transactions($from, $to, $account)
 
 function print_bank_transactions()
 {
-	global $path_to_root, $systypes_array;
+	global $systypes_array;
 
 	$acc = $_POST['PARAM_0'];
 	$from = $_POST['PARAM_1'];

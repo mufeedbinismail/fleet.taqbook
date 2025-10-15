@@ -11,7 +11,7 @@
 ***********************************************************************/
 function page_footer($no_menu=false, $is_index=false)
 {
-	global $path_to_root, $js_lib, $Validate, $Editors, $Ajax, $sql_queries;
+	global $js_lib, $Validate, $Editors, $Ajax, $sql_queries;
 
 	$page_header_args = func_get_args();
 	hook_invoke_all('pre_footer', $page_header_args);

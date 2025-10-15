@@ -16,7 +16,6 @@ $page_security = 'SA_ITEMSVALREP';
 // date_:	2011-05-24
 // Title:	Stock Movements
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -82,7 +81,6 @@ function trans_qty($stock_id, $location, $from_date, $to_date, $inward = true)
 
 function inventory_movements()
 {
-    global $path_to_root;
 
     $from_date = $_POST['PARAM_0'];
     $to_date = $_POST['PARAM_1'];

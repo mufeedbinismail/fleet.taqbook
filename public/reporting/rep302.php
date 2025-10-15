@@ -16,7 +16,6 @@ $page_security = 'SA_ITEMSANALYTIC';
 // date_:	2005-05-19
 // Title:	Inventory Planning
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -84,7 +83,7 @@ function getPeriods($stockid, $location)
 
 function print_inventory_planning()
 {
-    global $path_to_root, $tmonths;
+    global $tmonths;
 
     $category = $_POST['PARAM_0'];
     $location = $_POST['PARAM_1'];

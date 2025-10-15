@@ -16,7 +16,6 @@ $page_security = 'SA_GLANALYTIC';
 // date_:	2005-05-19
 // Title:	Audit Trail
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -55,7 +54,7 @@ function getTransactions($from, $to, $type, $user)
 
 function print_audit_trail()
 {
-    global $path_to_root, $systypes_array;
+    global $systypes_array;
 
     $from = $_POST['PARAM_0'];
     $to = $_POST['PARAM_1'];

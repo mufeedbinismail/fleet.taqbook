@@ -9,7 +9,6 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-	$path_to_root=".";
 	if (!file_exists(PATH_TO_ROOT.'/config_db.php')) {
         throw new \App\Exceptions\Legacy\FlowRedirectionException("/install/index.php");
     }

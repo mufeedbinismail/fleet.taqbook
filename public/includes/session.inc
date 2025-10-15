@@ -61,7 +61,6 @@ function kill_login()
 
 function login_fail()
 {
-    global $path_to_root;
     
 	echo "<center><br><br><font size='5' color='red'><b>" . _("Incorrect Password") . "<b></font><br><br>";
 	echo "<b>" . _("The user and password combination is not valid for the system.") . "<b><br><br>";
@@ -74,8 +73,6 @@ function login_fail()
 
 function password_reset_fail()
 {
-	global $path_to_root;
-	
   	echo "<center><br><br><font size='5' color='red'><b>" . _("Incorrect Email") . "<b></font><br><br>";
   	echo "<b>" . _("The email address does not exist in the system, or is used by more than one user.") . "<b><br><br>";
 
@@ -89,8 +86,6 @@ function password_reset_fail()
 
 function password_reset_success()
 {
-	global $path_to_root;
-
   	echo "<center><br><br><font size='5' color='green'><b>" . _("New password sent") . "<b></font><br><br>";
   	echo "<b>" . _("A new password has been sent to your mailbox.") . "<b><br><br>";
 
@@ -129,7 +124,7 @@ function cache_invalidate($filename)
 */
 function write_login_filelog($login, $result)
 {
-	global $login_faillog, $SysPrefs, $path_to_root;
+	global $login_faillog, $SysPrefs;
 
 	$user = $_SESSION["wa_current_user"]->user;
 
@@ -289,10 +284,6 @@ function login_timeout()
 	}
 }
 //============================================================================
-if (!isset($path_to_root))
-{
-	$path_to_root = ".";
-}
 
 require_once __DIR__ . "/../includes/errors.inc";
 // colect all error msgs

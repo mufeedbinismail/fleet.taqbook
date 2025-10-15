@@ -11,7 +11,6 @@
 ***********************************************************************/
 
 $page_security = 'SA_GLCLOSE';
-$path_to_root = "../..";
 require_once __DIR__ . "/../../includes/session.inc";
 
 require_once __DIR__ . "/../../includes/date_functions.inc";

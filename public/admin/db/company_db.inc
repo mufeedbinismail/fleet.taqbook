@@ -66,7 +66,6 @@ function get_base_sales_type()
 }
 
 function get_company_extensions($id = -1) {
-	global $path_to_root;
 
 	$file = PATH_TO_ROOT.($id == -1 ? '' : '/company/'.(int)$id).'/installed_extensions.php';
 	$installed_extensions = array();

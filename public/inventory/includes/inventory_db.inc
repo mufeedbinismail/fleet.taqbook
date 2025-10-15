@@ -89,7 +89,6 @@ function calculate_reorder_level($location, $line, &$st_ids, &$st_names, &$st_nu
 
 function send_reorder_email($loc, $st_ids, $st_names, $st_num, $st_reorder)
 {
-	global $path_to_root;
 
 	require_once __DIR__ . "/../../reporting/includes/class.mail.inc";
 	$company = get_company_prefs();

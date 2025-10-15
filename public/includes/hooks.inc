@@ -30,7 +30,7 @@ class hooks {
 	//
 	function update_databases($comp, $updates, $check_only=false)
 	{
-		global $db_connections, $path_to_root;
+		global $db_connections;
 	
 		if ($comp == -1) 
 			$conn = $db_connections;
@@ -75,7 +75,6 @@ class hooks {
 	//
 	function install_options($app)
 	{
-//		global $path_to_root;
 //
 //		switch($app->id) {
 //			case 'orders':
@@ -220,7 +219,7 @@ class hooks {
 */
 function install_hooks($lang_code=null)
 {
-	global $path_to_root, $Hooks, $installed_extensions;
+	global $Hooks, $installed_extensions;
 
 	$Hooks = array();
 	// include current language related $Hooks object if locale file exists

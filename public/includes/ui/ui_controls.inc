@@ -216,7 +216,6 @@ function access_string($label, $clean=false)
 
 function hyperlink_back($center=true, $no_menu=true, $type_no=0, $trans_no=0, $final=false)
 {
-	global $path_to_root;
 
 	if ($center)
 		echo "<center>";
@@ -265,8 +264,6 @@ function hyperlink_no_params_td($target, $label)
 
 function viewer_link($label, $url='', $class='', $id='',  $icon=null)
 {
-	global $path_to_root;
-	
 	if ($class != '')
 		$class = " class='$class'";
 
@@ -287,8 +284,6 @@ function viewer_link($label, $url='', $class='', $id='',  $icon=null)
 
 function menu_link($url, $label, $id=null)
 {
-	global $path_to_root;
-
 	$id = default_focus($id);
 	$pars = access_string($label);
 
@@ -526,7 +521,7 @@ function tab_visible($name, $tab)
 */
 function set_editor($type, $input, $caller=true)
 {
-	global $path_to_root, $Editors, $popup_editors, $Pagehelp;
+	global $Editors, $popup_editors, $Pagehelp;
 
 	$key = $caller===true ? $popup_editors[$type][1] : $caller;
 

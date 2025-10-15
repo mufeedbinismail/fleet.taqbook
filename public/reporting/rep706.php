@@ -16,7 +16,6 @@ $page_security = 'SA_GLANALYTIC';
 // date_:	2005-05-19
 // Title:	Balance Sheet
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -127,7 +126,7 @@ print_balance_sheet();
 
 function print_balance_sheet()
 {
-	global $path_to_root, $SysPrefs;
+	global $SysPrefs;
 
 	$dim = get_company_pref('use_dimension');
 	$dimension = $dimension2 = 0;

@@ -16,7 +16,6 @@ $page_security = 'SA_SALESBULKREP';
 // date_:	2005-05-19
 // Title:	Order Status List
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -72,7 +71,6 @@ function GetSalesOrders($from, $to, $category=0, $location=null, $backorder=0)
 
 function print_order_status_list()
 {
-	global $path_to_root;
 
 	$from = $_POST['PARAM_0'];
 	$to = $_POST['PARAM_1'];

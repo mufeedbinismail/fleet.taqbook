@@ -10,7 +10,6 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $page_security = 'SA_SUPPLIERALLOC';
-$path_to_root = "../..";
 
 require __DIR__ . "/../../includes/ui/allocation_cart.inc";
 require_once __DIR__ . "/../../includes/session.inc";

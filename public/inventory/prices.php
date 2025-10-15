@@ -12,9 +12,7 @@
 $page_security = 'SA_SALESPRICE';
 
 if (@$_GET['page_level'] == 1)
-	$path_to_root = "../..";
 else	
-	$path_to_root = "..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../sales/includes/sales_db.inc";

@@ -16,7 +16,6 @@ $page_security = 'SA_CUSTSTATREP';
 // date_:	2005-05-19
 // Title:	Print Statements
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -59,7 +58,7 @@ function getTransactions($debtorno, $date, $show_also_allocated)
 
 function print_statements()
 {
-	global $path_to_root, $systypes_array;
+	global $systypes_array;
 
 	require_once __DIR__ . "/../reporting/includes/pdf_report.inc";
 

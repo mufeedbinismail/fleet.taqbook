@@ -22,7 +22,6 @@ class package extends gzip_file {
 
 	function __construct($filename, $basedir=null)
 	{
-		global $path_to_root;
 
 		if (!$basedir) {
 			$basedir = PKG_CACHE_PATH.'/'.substr(basename($filename), 0, -4);
@@ -47,7 +46,6 @@ class package extends gzip_file {
 	//
 	function install()
 	{
-		global $path_to_root;
 		
 		$success = true;
 
@@ -84,7 +82,6 @@ class package extends gzip_file {
 	//
 	function uninstall()
 	{
-		global $path_to_root;
 
 		$success = true;
 
@@ -269,7 +266,7 @@ function pkg_prop($pkg, $property, $lang=false)
 //
 function get_pkg_or_list($type = null, $pkgname = null, $filter=array(), $outkey=null, $download=true) {
 
-	global $path_to_root, $repo_auth;
+	global $repo_auth;
 
 	$repo =  (isset($repo_auth['scheme']) ? $repo_auth['scheme'] : 'http://')
 			.(isset($repo_auth['login'])  ? $repo_auth['login'].':' : '')
@@ -484,7 +481,6 @@ function get_languages_list()
 //
 function get_extensions_list($type = null)
 {
-	global $path_to_root;
 
 	if (isset($type) || !is_array($type)) {
 		$type = array($type);
@@ -608,7 +604,7 @@ function get_charts_list()
 //
 function install_language($pkg_name)
 {
-	global $path_to_root, $installed_languages, $Ajax;
+	global $installed_languages, $Ajax;
 	
 	$pkg = get_pkg_or_list('language', $pkg_name);
 
@@ -653,7 +649,7 @@ function install_language($pkg_name)
 //
 function install_extension($pkg_name)
 {
-	global $path_to_root, $installed_extensions, $next_extension_id, $Ajax, $db_connections;
+	global $installed_extensions, $next_extension_id, $Ajax, $db_connections;
 	
 	$pkg = get_pkg_or_list(array('extension', 'theme', 'chart'), $pkg_name);
 	if ($pkg) {

@@ -10,7 +10,6 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $page_security = 'SA_GLANALYTIC';
-$path_to_root="../..";
 
 require_once __DIR__ . "/../../includes/session.inc";
 
@@ -71,7 +70,7 @@ function gl_inquiry_controls()
 
 function display_trial_balance($type, $typename)
 {
-	global $path_to_root, $SysPrefs,
+	global $SysPrefs,
 		 $k, $pdeb, $pcre, $cdeb, $ccre, $tdeb, $tcre, $pbal, $cbal, $tbal;
 
 	$printtitle = 0; //Flag for printing type name

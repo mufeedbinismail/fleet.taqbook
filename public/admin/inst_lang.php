@@ -10,7 +10,6 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $page_security = 'SA_CREATELANGUAGE';
-$path_to_root="..";
 require_once __DIR__ . "/../includes/session.inc";
 
 require_once __DIR__ . "/../includes/packages.inc";
@@ -145,7 +144,7 @@ function check_data()
 
 function handle_submit($id)
 {
-	global $path_to_root, $installed_languages, $dflt_lang, $Mode;
+	global $installed_languages, $dflt_lang, $Mode;
 
 	if ($_POST['dflt']) {
 			$dflt_lang = $_POST['code'];
@@ -235,7 +234,7 @@ function display_language_edit($selected_id)
 
 function handle_delete($id)
 {
-	global  $path_to_root, $installed_languages, $dflt_lang;
+	global $installed_languages, $dflt_lang;
 
 	$lang = $installed_languages[$id]['code'];
 	if ($installed_languages[$id]['package'])

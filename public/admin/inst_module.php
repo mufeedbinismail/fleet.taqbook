@@ -10,7 +10,6 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $page_security = 'SA_CREATEMODULES';
-$path_to_root="..";
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/packages.inc";
 
@@ -29,7 +28,7 @@ simple_page_mode(true);
 //---------------------------------------------------------------------------------------------
 function local_extension($id)
 {
-	global $next_extension_id, $Ajax, $path_to_root;
+	global $next_extension_id, $Ajax;
 
 	$exts = get_company_extensions();
 	$exts[$next_extension_id++] = array(
@@ -68,7 +67,6 @@ function local_extension($id)
 
 function handle_delete($id)
 {
-	global $path_to_root;
 	
 	$extensions = get_company_extensions();
 	$ext = $extensions[$id];

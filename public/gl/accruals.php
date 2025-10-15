@@ -15,7 +15,6 @@ Name: Revenue / Cost Accruals v2.2
 Free software under GNU GPL
 ***********************************************/
 $page_security = 'SA_ACCRUALS';
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/ui/items_cart.inc";

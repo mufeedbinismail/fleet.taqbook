@@ -23,7 +23,7 @@ class renderer
     public array $manifest;
 
     public function __construct() {
-        global $path_to_root, $css_files, $js_lib;
+        global $css_files, $js_lib;
 
         $manifestPath = PATH_TO_ROOT . "/themes/cume/manifest.json";
         if (!file_exists($manifestPath)) {
@@ -53,7 +53,7 @@ class renderer
 
     function get_icon($category)
     {
-        global  $path_to_root, $SysPrefs;
+        global $SysPrefs;
 
         if (!$SysPrefs->show_menu_category_icons) {
             return '';
@@ -97,8 +97,6 @@ class renderer
 
     function display_applications(&$waapp)
     {
-        global $path_to_root;
-
         $selected_app = $waapp->get_selected_application();
         $user = $_SESSION["wa_current_user"];
         if (!$user->check_application_access($selected_app)) {
@@ -175,10 +173,9 @@ class renderer
     }
 
     protected function layout($no_menu, $is_index, $title = null, $is_opening = true) {
-        global $path_to_root, $SysPrefs, $db_connections, $Pagehelp, $Ajax, $version;
+        global $Pagehelp, $Ajax;
 
         $applications = $_SESSION['App']->applications;
-        $local_path_to_root = $path_to_root;
         $sel_app = $_SESSION['sel_app'];
         $user = $_SESSION["wa_current_user"];
         $shouldShowFooter = $this->shouldShowFooter($no_menu, $is_index);
@@ -302,8 +299,6 @@ class renderer
     }
 
     protected function footer_scripts() {
-        global $path_to_root;
-        
         $sourceJs = $this->manifest['resources/js/fa.js']['file'];
         $pluginJs = $this->manifest['resources/js/plugins.js']['file'] ?? null;
         $ret = "\n--></script>"

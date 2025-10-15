@@ -15,7 +15,6 @@
 //	Entry/Modify Batch Sales Invoice against batch of deliveries
 //
 $page_security = 'SA_SALESINVOICE';
-$path_to_root = "..";
 require_once __DIR__ . "/../sales/includes/cart_class.inc";
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/data_checks.inc";

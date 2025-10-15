@@ -16,7 +16,6 @@ $page_security = 'SA_PRICEREP';
 // date_:	2005-05-19
 // Title:	price Listing
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -64,7 +63,7 @@ function get_kits($category=0)
 
 function print_price_listing()
 {
-    global $path_to_root, $SysPrefs;
+    global $SysPrefs;
 
     $currency = $_POST['PARAM_0'];
     $category = $_POST['PARAM_1'];

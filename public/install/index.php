@@ -10,7 +10,6 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $page_security = 'SA_OPEN';
-$path_to_root="..";
 
 if (file_exists(PATH_TO_ROOT.'/config_db.php')) {
     throw new \App\Exceptions\Legacy\FlowRedirectionException("/index.php");
@@ -30,7 +29,6 @@ if (file_exists(__DIR__ . "/../installed_extensions.php"))
 
 function subpage_title($txt) 
 {
-	global $path_to_root;
 
 	echo '<center><img src="' . url("/themes/default/images/logo_frontaccounting.png") . '" width="250" height="50" alt="Logo" >
 		</center>';
@@ -132,7 +130,7 @@ function install_connect_db() {
 
 function do_install() {
 
-	global $path_to_root, $db_connections, $def_coy, $installed_extensions, $tb_pref_counter,
+	global $db_connections, $def_coy, $installed_extensions, $tb_pref_counter,
 		$dflt_lang, $installed_languages;
 
 	$coa = $_SESSION['inst_set']['coa'];

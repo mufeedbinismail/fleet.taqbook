@@ -12,8 +12,6 @@
 //--------------------------------------------------------------------------------------------------
 function pager_link($link_text, $url, $icon=false)
 {
-	global $path_to_root;
-	
 	if (user_graphic_links() && $icon)
 		$link_text = set_icon($icon, $link_text);
 
@@ -22,7 +20,6 @@ function pager_link($link_text, $url, $icon=false)
 }
 
 function navi_button($name, $value, $enabled=true, $icon = false) {
-	global $path_to_root;
   	return "<button ". ($enabled ? '':'disabled')
   		." class=\"navibutton\" type=\"submit\""
 	    ." name=\"$name\"  id=\"$name\" value=\"$value\">"
@@ -40,8 +37,6 @@ function navi_button_cell($name, $value, $enabled=true, $align='left') {
 //    Sql paged table view. Call this function inside form.
 //
 function display_db_pager(&$pager) {
-    global	$path_to_root;
-
 	$pager->select_records();
 
 	div_start("_{$pager->name}_span");

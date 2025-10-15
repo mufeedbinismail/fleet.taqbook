@@ -10,7 +10,6 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $page_security = 'SA_GLANALYTIC';
-$path_to_root="../..";
 
 require_once __DIR__ . "/../../includes/session.inc";
 
@@ -57,7 +56,7 @@ if (isset($_GET["AccGrp"]))
 function display_type ($type, $typename, $from, $to, $begin, $end, $compare, $convert,
 	$dimension, $dimension2, $drilldown)
 {
-	global $path_to_root, $levelptr, $k;
+	global $levelptr, $k;
 		
 	$code_per_balance = 0;
 	$code_acc_balance = 0;
@@ -203,7 +202,7 @@ function inquiry_controls()
 
 function display_profit_and_loss($compare)
 {
-	global $path_to_root, $compare_types;
+	global $compare_types;
 
 	if (!isset($_POST['Dimension']))
 		$_POST['Dimension'] = 0;

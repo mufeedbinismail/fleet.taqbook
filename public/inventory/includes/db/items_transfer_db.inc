@@ -13,7 +13,7 @@
 
 function add_stock_transfer($Items, $location_from, $location_to, $date_, $reference, $memo_)
 {
-	global $SysPrefs, $path_to_root, $Refs;
+	global $SysPrefs, $Refs;
 
 	begin_transaction();
 	$args = func_get_args();

@@ -709,7 +709,6 @@ class FrontReport extends Spreadsheet_Excel_Writer_Workbook
 
 	function End($email=0, $subject='')
 	{
-		global $path_to_root;
 		++$this->y;
 		for ($i = 0; $i < $this->numcols; $i++)
 			$this->sheet->writeBlank($this->y, $i, $this->formatFooter);

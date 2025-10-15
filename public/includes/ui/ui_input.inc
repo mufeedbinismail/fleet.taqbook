@@ -136,8 +136,6 @@ function hidden($name, $value=null, $echo=true)
 */
 function submit($name, $value, $echo=true, $title=false, $atype=false, $icon=false)
 {
-	global $path_to_root;
-
 	$aspect='';
 	if ($atype === null) {
 		$aspect = fallback_mode() ? " aspect='fallback'" : " style='display:none;'";
@@ -287,7 +285,6 @@ function submit_js_confirm($name, $msg, $set = true) {
 
 function set_icon($icon, $title=false)
 {
-	global $path_to_root;
 	if (basename($icon) === $icon) // standard icons does not contain path separator
 		$icon = url("/themes/".user_theme()."/images/$icon");
 	return "<img src='$icon' style='vertical-align:middle;width:12px;height:12px;border:0;'".($title ? " title='$title'" : "")." >\n";	
@@ -637,7 +634,7 @@ function link_row_ex($label, $name, $size, $max=null, $title=null, $value=null, 
 function date_cells($label, $name, $title = null, $check=null, $inc_days=0, 
 	$inc_months=0, $inc_years=0, $params=null, $submit_on_change=false)
 {
-	global $path_to_root, $Ajax;
+	global $Ajax;
 
 	if (!isset($_POST[$name]) || $_POST[$name] == "")
 	{
@@ -999,8 +996,6 @@ function inactive_control_column(&$th) {
 
 function customer_credit_row($customer, $credit, $parms='')
 {
-	global $path_to_root;
-	
 	label_row( _("Current Credit:"),
 		"<a target='_blank' " . ($credit<0 ? 'class="redfg"' : '')
 		."href='".url('/sales/inquiry/customer_inquiry.php', ['customer_id' => $customer])."'"
@@ -1011,8 +1006,6 @@ function customer_credit_row($customer, $credit, $parms='')
 
 function supplier_credit_row($supplier, $credit, $parms='')
 {
-	global $path_to_root;
-	
 	label_row( _("Current Credit:"),
 		"<a target='_blank' " . ($credit<0 ? 'class="redfg"' : '')
 		."href='".url('/purchasing/inquiry/supplier_inquiry.php', ['supplier_id' => $supplier])."'"
@@ -1023,8 +1016,6 @@ function supplier_credit_row($supplier, $credit, $parms='')
 
 function bank_balance_row($bank_acc, $parms='')
 {
-	global $path_to_root;
-
 	$to = add_days(Today(), 1);
 	$bal = get_balance_before_for_bank_account($bank_acc, $to);
 	label_row( _("Bank Balance:"),

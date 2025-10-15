@@ -10,7 +10,6 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $page_security = 'SA_GLTRANSVIEW';
-$path_to_root = "../..";
 require_once __DIR__ . "/../../includes/session.inc";
 
 require __DIR__ . "/../../includes/db_pager.inc";
@@ -96,7 +95,7 @@ function gl_inquiry_controls()
 
 function show_results()
 {
-	global $path_to_root, $systypes_array;
+	global $systypes_array;
 
 	if (!isset($_POST["account"]))
 		$_POST["account"] = null;

@@ -67,7 +67,7 @@ function update_admin_password($conn, $password)
 
 function write_config_db($new = false)
 {
-	global $path_to_root, $def_coy, $db_connections, $tb_pref_counter;
+	global $def_coy, $db_connections, $tb_pref_counter;
 
 	if ($new)
 		$tb_pref_counter++;
@@ -118,7 +118,7 @@ function write_config_db($new = false)
 
 function write_extensions($extensions=null, $company = -1)
 {
-	global $path_to_root, $installed_extensions, $next_extension_id;
+	global $installed_extensions, $next_extension_id;
 
 	if (!isset($extensions)) {
 		$extensions = $installed_extensions;
@@ -207,7 +207,7 @@ function update_extensions($extensions) {
 
 function write_lang()
 {
-	global $path_to_root, $installed_languages, $dflt_lang;
+	global $installed_languages, $dflt_lang;
 
 	$installed_languages = array_natsort($installed_languages, 'code', 'code');
 	$msg = "<?php\n\n";
@@ -416,7 +416,6 @@ function db_import($filename, $connection, $force=true, $init=true, $protect=fal
 	db_set_charset($db, $encoding);
 
 /*/	{ 	// for debugging purposes
-	global $path_to_root;
 	$f = fopen(PATH_TO_ROOT.'/tmp/dbimport.txt', 'w+');
 	fwrite($f, print_r($set_names,true) ."\n");
 	fwrite($f, print_r($drop_queries,true) ."\n");

@@ -79,7 +79,7 @@ class Cpdf extends FPDI {
 	*/
 	function SetLang($code=null) 
 	{
-		global $installed_languages, $dflt_lang, $path_to_root, $local_path_to_root, $GetText;
+		global $installed_languages, $dflt_lang, $local_path_to_root, $GetText;
 
 		if (!$code)
 			$code = $dflt_lang;

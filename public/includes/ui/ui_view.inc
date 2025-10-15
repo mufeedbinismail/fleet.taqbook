@@ -400,7 +400,6 @@ function get_comments_string($type, $type_no)
 
 function view_stock_status($stock_id, $description=null, $echo=true)
 {
-	global $path_to_root;
 	if ($description)
 		$preview_str = "<a target='_blank' href='" . url("/inventory/inquiry/stock_status.php", ['stock_id' => $stock_id, 'popup' => 1]) . "' onclick=\"javascript:openWindow(this.href,this.target); return false;\" >". (user_show_codes()?$stock_id . " - ":"") . $description."</a>";
 	else
@@ -1588,8 +1587,6 @@ function payment_link($name, $options)
 
 function trans_editor_link($type, $trans_no)
 {
-	global $path_to_root;
-
 	$editor_url = array(
 		ST_JOURNAL => "/gl/gl_journal.php?ModifyGL=Yes&trans_no=%d&trans_type=%d",
 		ST_BANKPAYMENT => "/gl/gl_bank.php?ModifyPayment=Yes&trans_no=%d&trans_type=%d",

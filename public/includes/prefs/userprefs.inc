@@ -62,7 +62,6 @@ class user_prefs
 			$this->def_print_orientation = 0;
 
 		} else {
-			global $path_to_root;
 			$this->language = $user["language"];
 			$_SESSION['language']->set_language($this->language);
 

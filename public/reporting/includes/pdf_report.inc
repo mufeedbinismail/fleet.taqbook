@@ -951,7 +951,7 @@ class FrontReport extends Cpdf
 
 	function End($email=0, $subject='')
 	{
-		global $SysPrefs, $path_to_root;
+		global $SysPrefs;
 
 		if (!empty($SysPrefs->prefs['print_dialog_direct']))		
 			$this->includeJS("print();"); // force to open print dialog

@@ -13,7 +13,6 @@
 define("FA_LOGOUT_PHP_FILE","");
 
 $page_security = 'SA_OPEN';
-$path_to_root="..";
 require __DIR__ . "/../includes/session.inc";
 add_js_file('login.js');
 

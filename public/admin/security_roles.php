@@ -10,7 +10,6 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $page_security = 'SA_SECROLES';
-$path_to_root = "..";
 require_once __DIR__ . "/../includes/session.inc";
 
 add_access_extensions();

@@ -17,7 +17,6 @@ $page_security = 'SA_BANKREP';
 // Title:	Bank Statements w/Reconcile
 // Desc:	Bank Statement w/ Reconcile like the normal Bank Statement but with reconcile columns
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -59,7 +58,7 @@ function get_bank_transactions($from, $to, $account)
 
 function print_bank_transactions_reconcile()
 {
-	global $path_to_root, $systypes_array;
+	global $systypes_array;
 
 	$acc = $_POST['PARAM_0'];
 	$from = $_POST['PARAM_1'];

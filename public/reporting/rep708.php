@@ -16,7 +16,6 @@ $page_security = 'SA_GLANALYTIC';
 // date_:	2005-05-19
 // Title:	Trial Balance
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../admin/db/fiscalyears_db.inc";
@@ -141,7 +140,6 @@ print_trial_balance();
 
 function print_trial_balance()
 {
-	global $path_to_root;
 	global $pdeb, $pcre, $cdeb, $ccre, $tdeb, $tcre, $pbal, $cbal, $tbal;
 
 	$dim = get_company_pref('use_dimension');

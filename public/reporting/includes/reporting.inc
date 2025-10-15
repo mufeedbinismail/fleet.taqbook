@@ -17,10 +17,8 @@
 function print_document_link($doc_no, $link_text, $link, $type_no, 
 	$icon=false, $class='printlink', $id='', $email=0, $extra=0)
 {
-	global $path_to_root;
 	require_once __DIR__ . "/../../includes/types.inc";
 
-	$url = $path_to_root.'/reporting/prn_redirect.php?';
 	$def_orientation = (user_def_print_orientation() == 1 ? 1 : 0);
 
 	switch ($type_no)
@@ -139,7 +137,7 @@ function print_document_link($doc_no, $link_text, $link, $type_no,
 function print_link($link_text, $rep, $pars = array(), $dir = '', 
 	$icon=false, $class='printlink', $id='')
 {
-	global $path_to_root, $SysPrefs;
+	global $SysPrefs;
 	$url = $dir == '' ? url('/reporting/prn_redirect.php').'?' : $dir;
 
 	$id = default_focus($id);

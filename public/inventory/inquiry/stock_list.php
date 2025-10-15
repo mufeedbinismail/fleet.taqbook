@@ -15,7 +15,6 @@
   Author: bogeyman2007 from Discussion Forum. Modified by Joe Hunt
 ***********************************************************************/
 $page_security = "SA_ITEM";
-$path_to_root = "../..";
 require_once __DIR__ . "/../../includes/session.inc";
 require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../inventory/includes/db/items_db.inc";

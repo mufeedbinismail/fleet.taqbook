@@ -46,8 +46,6 @@ function display_order_header(&$order)
 
 function display_adjustment_items($title, &$order)
 {
-	global $path_to_root;
-
 	display_heading($title);
     div_start('items_table');
 	start_table(TABLESTYLE, "width='90%'");

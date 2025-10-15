@@ -11,11 +11,6 @@
 ***********************************************************************/
 $page_security = 'SA_PURCHASEPRICING';
 
-if (@$_GET['page_level'] == 1)
-	$path_to_root = "../..";
-else	
-	$path_to_root = "..";
-
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
 require_once __DIR__ . "/../includes/ui.inc";

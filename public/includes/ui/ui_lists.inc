@@ -27,7 +27,7 @@ define('SELECT_BUTTON', "<input %s type='submit' class='combo_select' style='bor
 function combo_input($name, $selected_id, $sql, $valfield, $namefield,
 	$options=null, $type=null)
 {
-global $Ajax, $path_to_root, $SysPrefs ;
+global $Ajax, $SysPrefs ;
 
 $opts = array(		// default options
 	'where'=> array(),		// additional constraints
@@ -509,7 +509,7 @@ function _format_add_curr($row, $pname=false)
 
 function add_edit_combo($type)
 {
-	global $path_to_root, $popup_editors, $SysPrefs;
+	global $popup_editors, $SysPrefs;
 
 	if (!isset($SysPrefs->use_icon_for_editkey) || $SysPrefs->use_icon_for_editkey==0)
 		return "";
@@ -2132,7 +2132,6 @@ function decseps_list_row($label, $name, $value=null)
 
 function themes_list_row($label, $name, $value=null)
 {
-	global $path_to_root;
 
 	$path = PATH_TO_ROOT.'/themes/';
 	$themes = array();
@@ -2514,7 +2513,6 @@ function tab_list_row($label, $name, $selected_id=null)
 function tag_list($name, $height, $type, $multi=false, $all=false, $spec_opt = false)
 {
 	// Get tags
-	global $path_to_root;
 	require_once __DIR__ . "/../../admin/db/tags_db.inc";
 	$results = get_tags($type, $all);
 
@@ -2620,7 +2618,7 @@ function payment_type_list_row($label, $name, $selected_id=null, $submit_on_chan
 
 function coa_list_row($label, $name, $value=null)
 {
-	global $path_to_root, $installed_extensions;
+	global $installed_extensions;
 
 	$path = PATH_TO_ROOT.'/sql/';
 	$coas = array();

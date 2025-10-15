@@ -29,7 +29,6 @@ class fa_patch {
 
 	function __construct()
 	{
-		global $path_to_root;
 
 		require __DIR__ . "/../../config_db.php";
 
@@ -150,7 +149,6 @@ class fa_patch {
 	*/
 	function sql_install($company, $force=false) 
 	{
-		global $path_to_root;
 
 		if ($this->sql != '')	// perform basic upgrade operations defined in sql file
 		{
@@ -292,7 +290,6 @@ function get_site_status($connections)
 */
 function get_installers()
 {
-	global $path_to_root;
 
 	$patchdir = PATH_TO_ROOT."/sql/";
 	$upgrades = array();	

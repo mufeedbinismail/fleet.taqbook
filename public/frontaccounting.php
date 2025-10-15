@@ -52,7 +52,6 @@
 		}
 		function display()
 		{
-			global $path_to_root;
 			
 			require_once __DIR__ . "/themes/".user_theme()."/renderer.php";
 

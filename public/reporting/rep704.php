@@ -16,7 +16,6 @@ $page_security = 'SA_GLREP';
 // date_:	2005-05-19
 // Title:	GL Accounts Transactions
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../admin/db/fiscalyears_db.inc";
@@ -32,7 +31,7 @@ print_GL_transactions();
 
 function print_GL_transactions()
 {
-	global $path_to_root, $systypes_array;
+	global $systypes_array;
 
 	$dim = get_company_pref('use_dimension');
 	$dimension = $dimension2 = 0;

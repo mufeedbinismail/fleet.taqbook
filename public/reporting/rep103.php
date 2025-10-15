@@ -16,7 +16,6 @@ $page_security = 'SA_CUSTBULKREP';
 // date_:	2005-05-19
 // Title:	Customer Details Listing
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -104,7 +103,6 @@ function getTransactions($debtorno, $branchcode, $date)
 
 function print_customer_details_listing()
 {
-    global $path_to_root;
 
     $from = $_POST['PARAM_0'];
     $area = $_POST['PARAM_1'];

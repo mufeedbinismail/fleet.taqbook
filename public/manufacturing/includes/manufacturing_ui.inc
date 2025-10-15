@@ -160,8 +160,6 @@ function display_wo_requirements($woid, $quantity, $show_qoh=false, $date=null)
 
 function display_wo_productions($woid)
 {
-	global $path_to_root;
-
     $result = get_work_order_productions($woid);
 
     if (db_num_rows($result) == 0)
@@ -203,8 +201,6 @@ function display_wo_productions($woid)
 
 function display_wo_issues($woid)
 {
-	global $path_to_root;
-
     $result = get_work_order_issues($woid);
 
     if (db_num_rows($result) == 0)
@@ -239,7 +235,7 @@ function display_wo_issues($woid)
 
 function display_wo_payments($woid)
 {
-	global $path_to_root, $wo_cost_types;
+	global $wo_cost_types;
 
     $result = get_wo_costing($woid);
 

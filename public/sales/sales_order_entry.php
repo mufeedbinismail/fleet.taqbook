@@ -17,7 +17,6 @@
 //	Entry Direct Invoice
 //
 
-$path_to_root = "..";
 $page_security = 'SA_SALESORDER';
 
 require_once __DIR__ . "/../sales/includes/cart_class.inc";
@@ -671,7 +670,7 @@ function handle_new_item()
 
 function  handle_cancel_order()
 {
-	global $path_to_root, $Ajax;
+	global $Ajax;
 
 
 	if ($_SESSION['Items']->trans_type == ST_CUSTDELIVERY) {

@@ -16,7 +16,6 @@ $page_security = 'SA_GLANALYTIC';
 // date_:	2005-05-19
 // Title:	List of Journal Entries
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -32,7 +31,7 @@ print_list_of_journal_entries();
 
 function print_list_of_journal_entries()
 {
-    global $path_to_root, $systypes_array;
+    global $systypes_array;
 
     $from = $_POST['PARAM_0'];
     $to = $_POST['PARAM_1'];

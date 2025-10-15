@@ -64,7 +64,7 @@ function send_css($css = '')
 
 function send_scripts()
 {
-    global $SysPrefs, $path_to_root, $js_static, $js_path, $js_userlib;
+    global $SysPrefs, $js_static, $js_path, $js_userlib;
 
 	$js ='';
 	foreach($js_static as $jsfile)
@@ -90,7 +90,7 @@ function send_scripts()
 function page_header($title, $no_menu=false, $is_index=false, $onload="", $js="", $css='')
 {
 	// titles and screen header
-	global $path_to_root, $SysPrefs, $db_connections;
+	global $SysPrefs, $db_connections;
 
 	if (in_ajax() || isset($_POST['REP_ID']))
 		return; // just for speed up

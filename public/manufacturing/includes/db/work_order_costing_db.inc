@@ -160,7 +160,7 @@ function add_wo_costs_journal($wo_id, $amount, $cost_type, $cr_acc, $date, $dim1
 */
 function work_order_production_gl($woid, $stock_id, $quantity, $date_, $rcv_no)
 {
-	global $SysPrefs, $path_to_root;
+	global $SysPrefs;
 
 	$memo = "";
 	if ($SysPrefs->loc_notification() == 1)

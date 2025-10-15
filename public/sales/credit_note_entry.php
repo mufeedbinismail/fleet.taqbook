@@ -14,7 +14,6 @@
 //	Entry/Modify free hand Credit Note
 //
 $page_security = 'SA_SALESCREDIT';
-$path_to_root = "..";
 require_once __DIR__ . "/../sales/includes/cart_class.inc";
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/data_checks.inc";

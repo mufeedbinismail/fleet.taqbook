@@ -16,7 +16,6 @@ $page_security = 'SA_ASSETSANALYTIC';
 // date_:	2015-12-01
 // Title:	Fixed Assets Valuation
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -44,7 +43,7 @@ print_fixed_assets_valuation_report();
 
 function print_fixed_assets_valuation_report()
 {
-    global $path_to_root, $SysPrefs;
+    global $SysPrefs;
 
 	$date = $_POST['PARAM_0'];
     $class = $_POST['PARAM_1'];

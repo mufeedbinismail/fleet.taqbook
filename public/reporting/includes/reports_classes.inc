@@ -48,7 +48,7 @@ class BoxReports
 
 	function getDisplay($class=null)
 	{
-		global $path_to_root, $SysPrefs, $Ajax;
+		global $SysPrefs, $Ajax;
 
 		if (find_submit('Rep') != -1) {
 			require __DIR__ . '/../../reporting/prn_redirect.php';
@@ -168,7 +168,7 @@ class BoxReports
 	//
 	function get_ctrl($name, $type)
 	{
-		global $path_to_root, $SysPrefs,
+		global $SysPrefs,
 			$type_shortcuts;
 		$day_range = get_company_pref("max_days_in_docs");
 		if (!$day_range)
@@ -526,7 +526,7 @@ function gl_systypes_list($name, $value=null, $spec_opt=false)
 */
 function add_custom_reports(&$reports)
 {
-	global $installed_extensions, $path_to_root;
+	global $installed_extensions;
 	
 	// include reports installed inside extension modules
 	if (count($installed_extensions) > 0)

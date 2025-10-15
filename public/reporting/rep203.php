@@ -16,7 +16,6 @@ $page_security = 'SA_SUPPPAYMREP';
 // date_:	2005-05-19
 // Title:	Payment Report
 // ----------------------------------------------------------------
-$path_to_root="..";
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";
@@ -50,7 +49,7 @@ function getTransactions($supplier, $date)
 
 function print_payment_report()
 {
-	global $path_to_root, $systypes_array;
+	global $systypes_array;
 
 	$to = $_POST['PARAM_0'];
 	$fromsupp = $_POST['PARAM_1'];
