@@ -157,7 +157,7 @@ class fa_patch {
 			$result = true;
 
 			if ($result === true)
-				$result = db_import($path_to_root. '/sql/'.$this->sql, $this->companies[$company],
+				$result = db_import(PATH_TO_ROOT. '/sql/'.$this->sql, $this->companies[$company],
 					$force,	true, false, true);
 
 			if ($result !== true)
@@ -294,7 +294,7 @@ function get_installers()
 {
 	global $path_to_root;
 
-	$patchdir = $path_to_root."/sql/";
+	$patchdir = PATH_TO_ROOT."/sql/";
 	$upgrades = array();	
 	$datadir = @opendir($patchdir);
 

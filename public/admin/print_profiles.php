@@ -28,7 +28,7 @@ function get_reports() {
 	if ($SysPrefs->go_debug || !isset($_SESSION['reports'])) {	
 	// to save time, store in session.
 		$paths = array (
-			$path_to_root.'/reporting/',
+			PATH_TO_ROOT.'/reporting/',
 			company_path(). '/reporting/');
 		$reports = array( '' => _('Default printing destination'));
 

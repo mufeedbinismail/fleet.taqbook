@@ -95,7 +95,7 @@ class Cpdf extends FPDI {
 		if (file_exists($local_path_to_root.'/lang/'.$lang['code'].'/LC_MESSAGES/'.$lang['code'].'.po'))
 			$GetText->add_domain($lang['code'], $local_path_to_root . "/lang");
 		else
-			$GetText->add_domain($lang['code'], $path_to_root . "/lang", @$lang['version']);
+			$GetText->add_domain($lang['code'], PATH_TO_ROOT . "/lang", @$lang['version']);
 		// re-read translated sys names.
 		require __DIR__ . '/../../includes/sysnames.inc';
 

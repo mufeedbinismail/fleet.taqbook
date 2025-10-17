@@ -25,7 +25,7 @@ class renderer
     public function __construct() {
         global $path_to_root, $css_files, $js_lib;
 
-        $manifestPath = __DIR__ . "/manifest.json";
+        $manifestPath = PATH_TO_ROOT . "/themes/cume/manifest.json";
         if (!file_exists($manifestPath)) {
             throw new Exception("Manifest file not found at $manifestPath. Please ensure the theme assets are built and the manifest file is present.");
         }

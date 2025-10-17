@@ -13,8 +13,8 @@ require_once __DIR__ . "/../includes/archive.inc";
 require_once __DIR__ . "/../includes/remote_url.inc";
 require_once __DIR__ . "/../includes/hooks.inc";
 
-define('PKG_CACHE_PATH', $path_to_root.'/modules/_cache');
-define('PUBKEY_PATH', $path_to_root);
+define('PKG_CACHE_PATH', PATH_TO_ROOT.'/modules/_cache');
+define('PUBKEY_PATH', PATH_TO_ROOT);
 //
 // FrontAccounting package class
 //
@@ -56,7 +56,7 @@ class package extends gzip_file {
 		$cachepath = $this->options['basedir'];
 		$ctrl = get_control_file("$cachepath/_init/config");
 
-		$targetdir = $path_to_root.'/'.$ctrl['InstallPath'];
+		$targetdir = PATH_TO_ROOT.'/'.$ctrl['InstallPath'];
 
 		if (!is_dir($targetdir))
 			mkdir($targetdir);
@@ -91,7 +91,7 @@ class package extends gzip_file {
 		$cachepath = $this->options['basedir'];
 		$ctrl = get_control_file("$cachepath/_init/config");
 
-		$targetdir = $path_to_root.'/'.$ctrl['InstallPath'];
+		$targetdir = PATH_TO_ROOT.'/'.$ctrl['InstallPath'];
 
 		$dpackage = new package("$cachepath/_data", $targetdir);
 
@@ -505,7 +505,7 @@ function get_extensions_list($type = null)
 			));
 
 	// lookup for local extensions
-	$path = $path_to_root.'/modules/';
+	$path = PATH_TO_ROOT.'/modules/';
 	$loc = array();
 	$moddir = opendir($path);
 

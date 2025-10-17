@@ -160,7 +160,7 @@ function handle_submit($id)
 	$installed_languages[$id]['version'] = '';
 	if (!write_lang())
 		return false;
-	$directory = $path_to_root . "/lang/" . clean_file_name(get_post('code'));
+	$directory = PATH_TO_ROOT . "/lang/" . clean_file_name(get_post('code'));
 	if (!file_exists($directory))
 	{
 		mkdir($directory);
@@ -253,7 +253,7 @@ function handle_delete($id)
 	if (!write_lang())
 		return;
 
-	$dirname = "$path_to_root/lang/$lang";
+	$dirname = PATH_TO_ROOT."/lang/$lang";
 	if ($lang && is_dir($dirname)) {	// remove nonstadard language dir
 		flush_dir($dirname, true);
 		rmdir($dirname);

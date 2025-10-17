@@ -32,7 +32,7 @@ if (($id = find_submit('Delete', false)) && isset($installed_extensions[$id])
 	$path = $extensions[$id]['path'];
 
 	if (uninstall_package($theme)) {
-		$dirname = $path_to_root.'/'.$path;
+		$dirname = PATH_TO_ROOT.'/'.$path;
 		flush_dir($dirname, true);
 		rmdir($dirname);
 		unset($extensions[$id]);

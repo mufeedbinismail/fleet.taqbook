@@ -635,7 +635,7 @@ function user_js_cache($id=null)
 
 	if (!$id)
 		$id = 0; // before login
-	return $path_to_root.'/company/'.user_company().'/js_cache/'.$id;
+	return PATH_TO_ROOT.'/company/'.user_company().'/js_cache/'.$id;
 }
 
 //--------------------------------------------------------------------------
@@ -761,7 +761,7 @@ function company_path($comp=null)
 		$comp = user_company();
 
 	// if path is relative, set current path_to_root
-	return ($comp_path[0]=='.' ? $path_to_root.'/'.basename($comp_path) : $comp_path)
+	return ($comp_path[0]=='.' ? PATH_TO_ROOT.'/'.basename($comp_path) : $comp_path)
 			. '/'.$comp;
 }
 

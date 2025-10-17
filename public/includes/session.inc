@@ -9,8 +9,8 @@
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 	See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-define('VARLIB_PATH', $path_to_root.'/tmp');
-define('VARLOG_PATH', $path_to_root.'/tmp');
+define('VARLIB_PATH', PATH_TO_ROOT.'/tmp');
+define('VARLOG_PATH', PATH_TO_ROOT.'/tmp');
 define('SECURE_ONLY', true); // if you really need also http (unsecure) access allowed, you can set this to NULL
 
 global $SysPrefs, $Ajax, $db_connections, $installed_extensions,

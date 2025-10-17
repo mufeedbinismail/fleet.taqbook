@@ -100,7 +100,7 @@ class user_prefs
 			$this->def_print_destination = @$user['def_print_destination'];
 			$this->def_print_orientation = @$user['def_print_orientation'];
 
-			if (!file_exists("$path_to_root/themes/$this->theme"))
+			if (!file_exists(PATH_TO_ROOT."/themes/$this->theme"))
 				$this->theme = "default";
 		}
 	}

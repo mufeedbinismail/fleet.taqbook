@@ -214,10 +214,10 @@ function import_security_role($name, $sections, $areas)
 function fix_extensions() {
 	global $path_to_root, $db_connections;
 
-	if (!file_exists($path_to_root.'/modules/installed_modules.php'))
+	if (!file_exists(PATH_TO_ROOT.'/modules/installed_modules.php'))
 		return true; // already converted
 	
-	if (!is_writable($path_to_root.'/modules/installed_modules.php')) {
+	if (!is_writable(PATH_TO_ROOT.'/modules/installed_modules.php')) {
 		display_error(_('Cannot upgrade extensions system: file /modules/installed_modules.php is not writeable'));
 		return false;
 	}
@@ -241,7 +241,7 @@ function fix_extensions() {
 	for ($i = 0; $i < $cnt; $i++)
 		write_extensions($exts, $i);
 
-	unlink($path_to_root.'/modules/installed_modules.php');
+	unlink(PATH_TO_ROOT.'/modules/installed_modules.php');
 	return true;
 }
 

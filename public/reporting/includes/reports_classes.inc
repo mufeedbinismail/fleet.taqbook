@@ -220,7 +220,7 @@ class BoxReports
 					if (user_use_date_picker())
 					{
 						$calc_image = url(
-                            (file_exists("$path_to_root/themes/".user_theme()."/images/cal.gif"))
+                            (file_exists(PATH_TO_ROOT."/themes/".user_theme()."/images/cal.gif"))
                                 ? "/themes/".user_theme()."/images/cal.gif"
                                 : "/themes/default/images/cal.gif"
                         );
@@ -534,7 +534,7 @@ function add_custom_reports(&$reports)
 		$extensions = $installed_extensions;
 		foreach ($extensions as $ext)
 			if (($ext['active'] && $ext['type'] == 'extension')) {
-				$file = $path_to_root.'/'.$ext['path']."/reporting/reports_custom.php";
+				$file = root_path($ext['path']."/reporting/reports_custom.php");
 				if (file_exists($file)) {
 					set_ext_domain($ext['path']);
 					include_once($file);

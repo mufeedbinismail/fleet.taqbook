@@ -126,7 +126,7 @@ function handle_submit($selected_id)
 		} else {
 			if (strncmp(db_get_version(), "5.6", 3) >= 0) 
 				db_query("SET sql_mode = ''");
-			if (!db_import($path_to_root.'/sql/'.get_post('coa'), $conn, $selected_id)) {
+			if (!db_import(PATH_TO_ROOT.'/sql/'.get_post('coa'), $conn, $selected_id)) {
 				display_error(_('Cannot create new company due to bugs in sql file.'));
 				$error = true;
 			} 
@@ -144,12 +144,13 @@ function handle_submit($selected_id)
 	}
 	$error = write_config_db($new);
 
+    $config_db_path = PATH_TO_ROOT . "/config_db.php";
 	if ($error == -1)
-		display_error(_("Cannot open the configuration file - ") . $path_to_root . "/config_db.php");
+		display_error(_("Cannot open the configuration file - ") . $config_db_path);
 	else if ($error == -2)
-		display_error(_("Cannot write to the configuration file - ") . $path_to_root . "/config_db.php");
+		display_error(_("Cannot write to the configuration file - ") . $config_db_path);
 	else if ($error == -3)
-		display_error(_("The configuration file ") . $path_to_root . "/config_db.php" . _(" is not writable. Change its permissions so it is, then re-run the operation."));
+		display_error(_("The configuration file ") . $config_db_path . _(" is not writable. Change its permissions so it is, then re-run the operation."));
 	if ($error != 0)
 	{
 		return false;
@@ -182,10 +183,11 @@ function handle_delete($id)
 			return;
 		}
 	}
+    $config_db_path = PATH_TO_ROOT . "/config_db.php";
 	// make sure config file is writable
-	if (!is_writeable($path_to_root . "/config_db.php"))
+	if (!is_writeable($config_db_path))
 	{
-		display_error(_("The configuration file ") . $path_to_root . "/config_db.php" . _(" is not writable. Change its permissions so it is, then re-run the operation."));
+		display_error(_("The configuration file ") . $config_db_path . _(" is not writable. Change its permissions so it is, then re-run the operation."));
 		return;
 	}
 	// rename directory to temporary name to ensure all
@@ -213,11 +215,11 @@ function handle_delete($id)
 
 	$error = write_config_db();
 	if ($error == -1)
-		display_error(_("Cannot open the configuration file - ") . $path_to_root . "/config_db.php");
+		display_error(_("Cannot open the configuration file - ") . $config_db_path);
 	else if ($error == -2)
-		display_error(_("Cannot write to the configuration file - ") . $path_to_root . "/config_db.php");
+		display_error(_("Cannot write to the configuration file - ") . $config_db_path);
 	else if ($error == -3)
-		display_error(_("The configuration file ") . $path_to_root . "/config_db.php" . _(" is not writable. Change its permissions so it is, then re-run the operation."));
+		display_error(_("The configuration file ") . $config_db_path . _(" is not writable. Change its permissions so it is, then re-run the operation."));
 	if ($error != 0) {
 		@rename($tmpname, $cdir);
 		return;

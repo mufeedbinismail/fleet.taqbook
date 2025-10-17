@@ -57,12 +57,12 @@ class language
 			$this->encoding = $lang['encoding'];
 			$this->version = @$lang['version'];
 			$this->dir = (isset($lang['rtl']) && $lang['rtl'] === true) ? 'rtl' : 'ltr';
-			$locale = $path_to_root . "/lang/" . $this->code . "/locale.inc";
+			$locale = PATH_TO_ROOT . "/lang/" . $this->code . "/locale.inc";
 			$this->is_locale_file = file_exists($locale);
 		}
 
 		$GetText->set_language($this->code, $this->encoding);
-		$GetText->add_domain($this->code, $path_to_root . "/lang", $this->version);
+		$GetText->add_domain($this->code, PATH_TO_ROOT . "/lang", $this->version);
 
 		// Necessary for ajax calls. Due to bug in php 4.3.10 for this 
 		// version set globally in php.ini

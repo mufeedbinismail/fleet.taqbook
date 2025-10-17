@@ -658,7 +658,7 @@ function date_cells($label, $name, $title = null, $check=null, $inc_days=0,
 	if (user_use_date_picker())
 	{
 		$calc_image = url(
-            (file_exists("$path_to_root/themes/".user_theme()."/images/cal.gif"))
+            (file_exists(PATH_TO_ROOT."/themes/".user_theme()."/images/cal.gif"))
                 ? "/themes/".user_theme()."/images/cal.gif"
                 : "/themes/default/images/cal.gif"
         );

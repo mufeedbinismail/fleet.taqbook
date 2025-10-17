@@ -2134,7 +2134,7 @@ function themes_list_row($label, $name, $value=null)
 {
 	global $path_to_root;
 
-	$path = $path_to_root.'/themes/';
+	$path = PATH_TO_ROOT.'/themes/';
 	$themes = array();
 	$themedir = opendir($path);
 	while(false !== ($fname = readdir($themedir)))
@@ -2622,7 +2622,7 @@ function coa_list_row($label, $name, $value=null)
 {
 	global $path_to_root, $installed_extensions;
 
-	$path = $path_to_root.'/sql/';
+	$path = PATH_TO_ROOT.'/sql/';
 	$coas = array();
 	$sqldir = opendir($path);
 	while (false !== ($fname = readdir($sqldir)))

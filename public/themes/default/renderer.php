@@ -19,7 +19,7 @@
 				$img = $category == '' ? 'right.gif' : $category.'.png';
 			else	
 				$img = 'right.gif';
-			return "<img src='$path_to_root/themes/".user_theme()."/images/$img' style='vertical-align:middle;' border='0'>&nbsp;&nbsp;";
+			return "<img src='".url("/themes/".user_theme()."/images/$img")."' style='vertical-align:middle;' border='0'>&nbsp;&nbsp;";
 		}
 
 		function wa_header()
@@ -46,11 +46,10 @@
 			echo "<tr>\n";
 			echo "<td class='quick_menu'>\n"; // tabs
 
-			$indicator = "$path_to_root/themes/".user_theme(). "/images/ajax-loader.gif";
+			$indicator = url("/themes/".user_theme(). "/images/ajax-loader.gif");
 			if (!$no_menu)
 			{
 				$applications = $_SESSION['App']->applications;
-				$local_path_to_root = $path_to_root;
 				$sel_app = $_SESSION['sel_app'];
 				echo "<table cellpadding='0' cellspacing='0' width='100%'><tr><td>";
 				echo "<div class='tabs'>";
@@ -60,31 +59,30 @@
                     {
                         $acc = access_string($app->name);
                         echo "<a class='".($sel_app == $app->id ? 'selected' : 'menu_tab')
-                            ."' href='$local_path_to_root/index.php?application=".$app->id
-                            ."'$acc[1]>" .$acc[0] . "</a>";
+                            ."' href='".url("/index.php", ['application' => $app->id ])."' {$acc[1]}>{$acc[0]}</a>";
                     }
 				}
 				echo "</div>";
 				echo "</td></tr></table>";
 				// top status bar
-				$rimg = "<img src='$path_to_root/themes/".user_theme()."/images/report.png' style='width:14px;height:14px;border:0;vertical-align:middle;' alt='"._('Dashboard')."'>&nbsp;&nbsp;";
-				$pimg = "<img src='$local_path_to_root/themes/".user_theme()."/images/preferences.gif' style='width:14px;height:14px; border:0;vertical-align:middle;' alt='"._('Preferences')."'>&nbsp;&nbsp;";
-				$limg = "<img src='$local_path_to_root/themes/".user_theme()."/images/lock.gif' style='width:14px;height:14px;border:0;vertical-align:middle;' alt='"._('Change Password')."'>&nbsp;&nbsp;";
-				$img = "<img src='$local_path_to_root/themes/".user_theme()."/images/login.gif' style='width:14px;height:14px;border:0;vertical-align:middle;' alt='"._('Logout')."'>&nbsp;&nbsp;";
-				$himg = "<img src='$local_path_to_root/themes/".user_theme()."/images/help.gif' style='width:14px;height:14px;border:0;vertical-align:middle;'' alt='"._('Help')."'>&nbsp;&nbsp;";
+				$rimg = "<img src='".url("/themes/".user_theme()."/images/report.png")."' style='width:14px;height:14px;border:0;vertical-align:middle;' alt='"._('Dashboard')."'>&nbsp;&nbsp;";
+				$pimg = "<img src='".url("/themes/".user_theme()."/images/preferences.gif")."' style='width:14px;height:14px; border:0;vertical-align:middle;' alt='"._('Preferences')."'>&nbsp;&nbsp;";
+				$limg = "<img src='".url("/themes/".user_theme()."/images/lock.gif")."' style='width:14px;height:14px;border:0;vertical-align:middle;' alt='"._('Change Password')."'>&nbsp;&nbsp;";
+				$img = "<img src='".url("/themes/".user_theme()."/images/login.gif")."' style='width:14px;height:14px;border:0;vertical-align:middle;' alt='"._('Logout')."'>&nbsp;&nbsp;";
+				$himg = "<img src='".url("/themes/".user_theme()."/images/help.gif")."' style='width:14px;height:14px;border:0;vertical-align:middle;'' alt='"._('Help')."'>&nbsp;&nbsp;";
 				echo "<table class='logoutBar'>";
 				echo "<tr><td class='headingtext3'>" . $db_connections[user_company()]["name"] . " | " . $_SERVER['SERVER_NAME'] . " | " . $_SESSION["wa_current_user"]->name . "</td>";
 				echo "<td class='logoutBarRight'><img id='ajaxmark' src='$indicator' align='center' style='visibility:hidden;' alt='ajaxmark'></td>";
-				echo "<td class='logoutBarRight'><a href='$path_to_root/admin/dashboard.php?sel_app=$sel_app'>$rimg" . _("Dashboard") . "</a>&nbsp;&nbsp;&nbsp;\n";
+				echo "<td class='logoutBarRight'><a href='".url("/admin/dashboard.php", ['sel_app' => $sel_app])."'>$rimg" . _("Dashboard") . "</a>&nbsp;&nbsp;&nbsp;\n";
 				
-				echo "<a class='shortcut' href='$path_to_root/admin/display_prefs.php?'>$pimg" . _("Preferences") . "</a>&nbsp;&nbsp;&nbsp;\n";
-				echo "  <a class='shortcut' href='$path_to_root/admin/change_current_user_password.php?selected_id=" . $_SESSION["wa_current_user"]->username . "'>$limg" . _("Change password") . "</a>&nbsp;&nbsp;&nbsp;\n";
+				echo "<a class='shortcut' href='".url("/admin/display_prefs.php")."'>$pimg" . _("Preferences") . "</a>&nbsp;&nbsp;&nbsp;\n";
+				echo "  <a class='shortcut' href='".url("/admin/change_current_user_password.php", ['selected_id' => $_SESSION["wa_current_user"]->username])."'>$limg" . _("Change password") . "</a>&nbsp;&nbsp;&nbsp;\n";
 
 				if ($SysPrefs->help_base_url != null)
 				{
 					echo "<a target = '_blank' onclick=" .'"'."javascript:openWindow(this.href,this.target); return false;".'" '. "href='". help_url()."'>$himg" . _("Help") . "</a>&nbsp;&nbsp;&nbsp;";
 				}
-				echo "<a class='shortcut' href='$local_path_to_root/access/logout.php?'>$img" . _("Logout") . "</a>&nbsp;&nbsp;&nbsp;";
+				echo "<a class='shortcut' href='".url("/access/logout.php")."'>$img" . _("Logout") . "</a>&nbsp;&nbsp;&nbsp;";
 				echo "</td></tr><tr><td colspan=3>";
 				echo "</td></tr></table>";
 			}

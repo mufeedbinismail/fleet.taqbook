@@ -89,9 +89,9 @@ function write_config_db($new = false)
 	$msg .= "\$db_connections = " .var_export($db_connections, true);
 	$msg .= ";\n";
 
-	$filename = $path_to_root . "/config_db.php";
+	$filename = PATH_TO_ROOT . "/config_db.php";
 	// Check if the file exists and is writable first.
-	if ((!file_exists($filename) && is_writable($path_to_root)) || is_writable($filename))
+	if ((!file_exists($filename) && is_writable(PATH_TO_ROOT)) || is_writable($filename))
 	{
 		if (!$zp = fopen($filename, 'w'))
 		{
@@ -145,7 +145,7 @@ function write_extensions($extensions=null, $company = -1)
 
 	$msg .= "\$installed_extensions = ". var_export($extensions, true);
 	$msg .= ";\n";
-	$filename = $path_to_root . ($company==-1 ? '' : '/company/'.$company)
+	$filename = PATH_TO_ROOT . ($company==-1 ? '' : '/company/'.$company)
 		.'/installed_extensions.php';
 
 	// Check if the file is writable first.
@@ -225,7 +225,7 @@ function write_lang()
 	$msg .= ";\n";
 	$msg .= "\n\$dflt_lang = '$dflt_lang';\n";
 
-	$path = $path_to_root . "/lang";
+	$path = PATH_TO_ROOT . "/lang";
 	$filename = $path.'/installed_languages.inc';
 	// Check if directory exists and is writable first.
 	if (file_exists($path) && is_writable($path))
@@ -417,7 +417,7 @@ function db_import($filename, $connection, $force=true, $init=true, $protect=fal
 
 /*/	{ 	// for debugging purposes
 	global $path_to_root;
-	$f = fopen($path_to_root.'/tmp/dbimport.txt', 'w+');
+	$f = fopen(PATH_TO_ROOT.'/tmp/dbimport.txt', 'w+');
 	fwrite($f, print_r($set_names,true) ."\n");
 	fwrite($f, print_r($drop_queries,true) ."\n");
 	fwrite($f, print_r($table_queries,true) ."\n");

@@ -48,7 +48,7 @@ class hooks {
 				$ok = check_table($con['tbpref'], $table, $field, $properties) == 0;
 
 				if (!$check_only && !$ok) {
-					$ok = db_import($path_to_root.'/modules/'.$this->module_name.'/sql/'.$file,
+					$ok = db_import(PATH_TO_ROOT.'/modules/'.$this->module_name.'/sql/'.$file,
 						$con);
 				}
 				$result &= $ok;
@@ -80,7 +80,7 @@ class hooks {
 //		switch($app->id) {
 //			case 'orders':
 //				$app->add_rapp_function( 0, _("&Example option"), 
-//					$path_to_root.'/modules/example/example.php?', 'SA_OPEN');
+//					PATH_TO_ROOT.'/modules/example/example.php?', 'SA_OPEN');
 //		}
 	}
 	

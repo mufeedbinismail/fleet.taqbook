@@ -42,7 +42,7 @@ function local_extension($id)
 			'active' => false
 	);
 
-	$local_module_path = $path_to_root.'/modules/'.clean_file_name($id);
+	$local_module_path = PATH_TO_ROOT.'/modules/'.clean_file_name($id);
 	$local_config_file = $local_module_path.'/_init/config';
 	$local_hook_file = $local_module_path.'/hooks.php';
 

@@ -23,7 +23,7 @@ require_once __DIR__ . "/../includes/ui/ui_view.inc";
 require_once __DIR__ . "/../includes/ui/ui_controls.inc";
 
 $GLOBALS['page_nested'] = -1;
-$GLOBALS['js_path']     = $path_to_root.'/js/';
+$GLOBALS['js_path']     = PATH_TO_ROOT.'/js/';
 $GLOBALS['js_static']   = ['JsHttpRequest.js', 'behaviour.js', 'utils.js', 'inserts.js'];
 $GLOBALS['js_lib']      = [];
 $GLOBALS['js_userlib']  = array();
@@ -376,7 +376,7 @@ function find_custom_file($rep)
 		$extensions = $installed_extensions;
 		foreach ($extensions as $ext)
 			if (($ext['active'] && $ext['type'] == 'extension')) {
-				$path = $path_to_root.'/'.$ext['path'];
+				$path = root_path($ext['path']);
 				$file = $path.$rep;
 				if (file_exists($file)) {
 					set_include_path($path.PATH_SEPARATOR.get_include_path());
@@ -386,7 +386,7 @@ function find_custom_file($rep)
 			}
 	}
 	// standard location
-	$file = $path_to_root.$rep;
+	$file = root_path($rep);
 	if (file_exists($file))
 		return $file;
 

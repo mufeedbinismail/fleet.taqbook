@@ -542,7 +542,7 @@ function set_ext_domain($path='') {
 		$path = $domain_stack[0];
 	}
 
-	$lang_path = $path_to_root . ($path ? '/' : '') .$path.'/lang';
+	$lang_path = root_path($path.'/lang');
 	// ignore change when extension does not provide translation structure and test for valid gettext.
 	if (file_exists($lang_path) && isset($GetText))
 		$GetText->add_domain($_SESSION['language']->code,

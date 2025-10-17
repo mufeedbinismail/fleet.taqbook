@@ -9,8 +9,8 @@
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 	See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-define('VARLIB_PATH', $path_to_root.'/tmp');
-define('VARLOG_PATH', $path_to_root.'/tmp');
+define('VARLIB_PATH', PATH_TO_ROOT.'/tmp');
+define('VARLOG_PATH', PATH_TO_ROOT.'/tmp');
 
 function output_html($text)
 {
@@ -150,7 +150,7 @@ if (!isset($installed_languages))
 	$installed_languages = array();
 
 $_SESSION['language']->set_language($_SESSION['language']->code);
-$GetText->add_domain( $_SESSION['language']->code, $path_to_root."/install/lang");
+$GetText->add_domain( $_SESSION['language']->code, PATH_TO_ROOT."/install/lang");
 
 require_once __DIR__ . "/../version.php";
 require_once __DIR__ . "/../includes/main.inc";

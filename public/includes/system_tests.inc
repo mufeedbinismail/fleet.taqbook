@@ -81,7 +81,7 @@ function tst_install()
 
 	$test['descr'] = _('Removed install wizard folder');
 	$test['type'] = 2;
-	$test['result'] = !is_dir($path_to_root.'/install');
+	$test['result'] = !is_dir(PATH_TO_ROOT.'/install');
 	$test['test'] = _('Not removed');
 	$test['comments'] = _('Remove or rename install wizard folder for security reasons.');
 
@@ -239,7 +239,7 @@ function tst_langs($install)
 	$test['result'] = true;
 	$test['comments'] = array();
 
-	$fname =  $path_to_root.'/lang';
+	$fname =  PATH_TO_ROOT.'/lang';
 	$test['test'] = $fname;
 	if (!(is_dir($fname) && is_writable($fname))) {
 		$test['result'] = false;
@@ -248,7 +248,7 @@ function tst_langs($install)
 	}
 	
 	if (!$install) {
-		$fname =  $path_to_root.'/lang/installed_languages.inc';
+		$fname =  PATH_TO_ROOT.'/lang/installed_languages.inc';
 		$test['test'] = $fname;
 		if (!(is_file($fname) && is_writable($fname))) {
 			$test['result'] = false;
@@ -264,7 +264,7 @@ function tst_langs($install)
 		if ($lang['code'] == 'C') continue; // no translation (English)
 		$langs[] = $lang['code'];
 
-		$file = $path_to_root.'/lang/'.$lang['code'].'/LC_MESSAGES/'.$lang['code'];
+		$file = PATH_TO_ROOT.'/lang/'.$lang['code'].'/LC_MESSAGES/'.$lang['code'];
 		if (@$lang['version'])
 			$file .= '-'.$lang['version'];
 		$file .= function_exists('gettext') ? '.mo' : '.po';
@@ -290,7 +290,7 @@ function tst_config($install)
 	global $path_to_root;
 
 	$test['descr'] = _('Main config file');
-	$test['test'] = $path_to_root.'/config.php';
+	$test['test'] = PATH_TO_ROOT.'/config.php';
 	if ($install) {
 		$test['type'] = 3;
 		$writable = check_write($test['test']);
@@ -311,7 +311,7 @@ function tst_dbconfig($install)
 	global $path_to_root;
 
 	$test['descr'] = _('Database auth file');
-	$test['test'] = $path_to_root.'/config_db.php';
+	$test['test'] = PATH_TO_ROOT.'/config_db.php';
 
 	if ($install) {
 		$test['type'] = 3;
@@ -336,7 +336,7 @@ function tst_extconfig($install)
 	
 	$test['descr'] = _('Extensions system');
 	$test['type'] = 3;
-	$fname =  $path_to_root.'/installed_extensions.php';
+	$fname =  PATH_TO_ROOT.'/installed_extensions.php';
 	$test['test'][] = $fname;
 	$test['result'] = ($install || is_file($fname)) && check_write($fname);
 	$test['test'][] = company_path().'/*/installed_extensions.php';
@@ -355,7 +355,7 @@ function tst_extconfig($install)
 		};
 	}
 	foreach(array('modules', 'modules/_cache', 'themes', 'sql') as $dir) {
-		$fname =  $path_to_root.'/'.$dir;
+		$fname =  PATH_TO_ROOT.'/'.$dir;
 		$test['test'][] = $fname;
 		$t = is_dir($fname) && is_writable($fname);
 		if (!$t)
@@ -364,7 +364,7 @@ function tst_extconfig($install)
 	}
 
 	foreach(array('Release', 'Themes', 'Languages', 'Extensions', 'Charts') as $file) {
-		$fname = $path_to_root."/modules/_cache/".$file.".gz";
+		$fname = PATH_TO_ROOT."/modules/_cache/".$file.".gz";
 		$t = !file_exists($fname) || is_writable($fname);
 		if (!$t)
 			$test['comments'][] = sprintf(_("'%s' is not writeable"), $fname);
@@ -374,15 +374,15 @@ function tst_extconfig($install)
 	if(!$test['result'])
 		$test['comments'][] = _("Extensions configuration files and directories should be writeable");
 
-	$fname = $path_to_root."/themes";
+	$fname = PATH_TO_ROOT."/themes";
 	$themedir = opendir($fname);
 	while (false !== ($fname = readdir($themedir)))
 	{
-		if ($fname!='.' && $fname!='..' && is_dir($path_to_root.'/themes/'.$fname)
+		if ($fname!='.' && $fname!='..' && is_dir(PATH_TO_ROOT.'/themes/'.$fname)
 			&& !in_array($fname, array('canvas', 'default', 'dropdown')))
 		{
 			$test['test'][] = $fname;
-			$test['result'] = is_writable($path_to_root.'/themes/'.$fname);
+			$test['result'] = is_writable(PATH_TO_ROOT.'/themes/'.$fname);
 			if (!$test['result']) {
 				$test['comments'][] = 
 					sprintf(_("Non-standard theme directory '%s' is not writable"), $fname);

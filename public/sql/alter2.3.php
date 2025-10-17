@@ -310,7 +310,7 @@ class fa2_3 extends fa_patch {
 		}
 */		
 		// Preserve non-standard themes
-		$path = $path_to_root.'/themes/';
+		$path = PATH_TO_ROOT.'/themes/';
 		$themes = array();
 		$themedir = opendir($path);
 		while (false !== ($fname = readdir($themedir)))

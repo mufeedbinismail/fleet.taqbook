@@ -12,7 +12,7 @@
 $page_security = 'SA_OPEN';
 $path_to_root="..";
 
-if (file_exists($path_to_root.'/config_db.php')) {
+if (file_exists(PATH_TO_ROOT.'/config_db.php')) {
     throw new \App\Exceptions\Legacy\FlowRedirectionException("/index.php");
 }
 
@@ -136,7 +136,7 @@ function do_install() {
 		$dflt_lang, $installed_languages;
 
 	$coa = $_SESSION['inst_set']['coa'];
-	if (install_connect_db() && db_import($path_to_root.'/sql/'.$coa, $_SESSION['inst_set'])) {
+	if (install_connect_db() && db_import(PATH_TO_ROOT.'/sql/'.$coa, $_SESSION['inst_set'])) {
 		$con = $_SESSION['inst_set'];
 		$table_prefix = $con['tbpref'];
 
@@ -162,7 +162,7 @@ function do_install() {
 			'password' => md5($con['pass']),
 			'user_id' => $con['admin']));
 
-		if (!copy($path_to_root. "/config.default.php", $path_to_root. "/config.php")) {
+		if (!copy(PATH_TO_ROOT. "/config.default.php", PATH_TO_ROOT. "/config.php")) {
 			display_error(_("Cannot save system configuration file 'config.php'."));
 			return false;
 		}
@@ -248,7 +248,7 @@ elseif (isset($_POST['db_test'])) {
 				(check_value('sel_coas') ? 4 : 5);
 		}
 	}
-	if (!file_exists($path_to_root . "/lang/installed_languages.inc")) {
+	if (!file_exists(PATH_TO_ROOT . "/lang/installed_languages.inc")) {
 		$installed_languages = array (
 			0 => array ('code' => 'C', 'name' => 'English', 'encoding' => 'iso-8859-1'));
 			$dflt_lang = 'C';
