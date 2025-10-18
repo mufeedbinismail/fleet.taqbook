@@ -22,13 +22,11 @@ require_once __DIR__ . "/../admin/db/users_db.inc";
 require_once __DIR__ . "/../includes/ui/ui_view.inc";
 require_once __DIR__ . "/../includes/ui/ui_controls.inc";
 
-$page_nested = -1;
-// static js files path
-$js_path = $path_to_root.'/js/';
-// standard external js scripts included in all files
-$js_static = array('JsHttpRequest.js', 'behaviour.js', 'utils.js', 'inserts.js');
-// additional js source included in header
-$js_lib = $js_userlib = array();
+$GLOBALS['page_nested'] = -1;
+$GLOBALS['js_path']     = $path_to_root.'/js/';
+$GLOBALS['js_static']   = ['JsHttpRequest.js', 'behaviour.js', 'utils.js', 'inserts.js'];
+$GLOBALS['js_lib']      = [];
+$GLOBALS['js_userlib']  = array();
 
 function page($title, $no_menu=false, $is_index=false, $onload="", $js="", $script_only=false, $css='')
 {

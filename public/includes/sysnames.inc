@@ -16,7 +16,9 @@
 //
 global $systypes_array, $bank_account_types, $bank_transfer_types, 
 	$payment_person_types, $wo_types_array, $wo_cost_types, $class_types,
-	$quick_actions, $quick_entry_types, $stock_types, $tag_types, $bank_owner;
+	$quick_actions, $quick_entry_types, $stock_types, $tag_types,
+    $bank_owner, $type_shortcuts, $tmonths, $pterm_types, $tax_algorithms,
+    $supported_collations, $depreciation_methods, $fa_systypes_array;
 
 $systypes_array = array (
 	ST_JOURNAL => _("Journal Entry"),

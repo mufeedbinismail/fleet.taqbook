@@ -60,7 +60,7 @@ define('SS_GL_C',	61<<8);
 define('SS_GL',		62<<8);
 define('SS_GL_A',	63<<8);
 
-$security_sections = array(
+$GLOBALS['security_sections'] = array(
  	SS_SADMIN => _("System administration"),
  	SS_SETUP => _("Company setup"),
  	SS_SPEC => _("Special maintenance"),
@@ -100,7 +100,7 @@ $security_sections = array(
 
 	Special value 'SA_OPEN' is used for publicly available pages like login/logout.
 */
-$security_areas =array(
+$GLOBALS['security_areas'] =array(
 //
 //	Site administration
 //
@@ -294,7 +294,7 @@ $security_areas =array(
 );
 
 if (!@$SysPrefs->allow_gl_reopen)
-	unset($security_areas['SA_GLREOPEN']);
+	unset($GLOBALS['security_areas']['SA_GLREOPEN']);
 /*
 	This function should be called whenever we want to extend core access level system
 	with new security areas and/or sections i.e.: 

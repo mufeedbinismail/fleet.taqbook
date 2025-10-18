@@ -16,6 +16,30 @@
 	If some field have user formatted numeric value, pass float default value to
 	convert automatically to POSIX.
 */
+
+$GLOBALS['form_nested'] = -1;
+$GLOBALS['ajax_divs'] = array();
+/**
+ * Table editor interfaces. Key is editor type
+ *	0 => url of editor page
+ *	1 => hotkey code
+ *	2 => context help
+ */
+$GLOBALS['popup_editors'] = array(
+	'customer' => array('/sales/manage/customers.php?debtor_no=', 
+		113,	_("Customers"), 900, 550),
+	'branch' => array('/sales/manage/customer_branches.php?SelectedBranch=', 
+		114, _("Branches"), 900, 650),
+	'supplier' => array('/purchasing/manage/suppliers.php?supplier_id=', 
+		113, _("Suppliers"), 1150, 550),
+	'item' => array('/inventory/manage/items.php?stock_id=', 
+		115, _("Items"), 1000, 500),
+	'fa_item' => array('/inventory/manage/items.php?FixedAsset=1&stock_id=', 
+		115, _("Items"), 1000, 500),
+    'marketplace' => array('/sales/manage/marketplaces.php?debtor_no=', 
+		116, _("Marketplace"), 900, 550),
+);
+
 function get_post($name, $dflt='')
 {
 	if (is_array($name)) {
@@ -32,7 +56,6 @@ function get_post($name, $dflt='')
 				((!isset($_POST[$name]) /*|| $_POST[$name] === ''*/) ? $dflt : $_POST[$name]);
 }
 //---------------------------------------------------------------------------------
-$form_nested = -1;
 
 function start_form($multi=false, $dummy=false, $action="", $name="")
 {
@@ -385,8 +408,6 @@ function br($num=1)
 		echo "<br>";
 }
 
-$ajax_divs = array();
-
 function div_start($id='', $trigger=null, $non_ajax=false)
 {
     global $ajax_divs;
@@ -496,25 +517,6 @@ function tab_visible($name, $tab)
 	return (get_post('_'.$name.'_sel') == $tab && !$new) || $new==$tab;
 }
 
-/* Table editor interfaces. Key is editor type
-	0 => url of editor page
-	1 => hotkey code
-	2 => context help
-*/
-$popup_editors = array(
-	'customer' => array('/sales/manage/customers.php?debtor_no=', 
-		113,	_("Customers"), 900, 550),
-	'branch' => array('/sales/manage/customer_branches.php?SelectedBranch=', 
-		114, _("Branches"), 900, 650),
-	'supplier' => array('/purchasing/manage/suppliers.php?supplier_id=', 
-		113, _("Suppliers"), 1150, 550),
-	'item' => array('/inventory/manage/items.php?stock_id=', 
-		115, _("Items"), 1000, 500),
-	'fa_item' => array('/inventory/manage/items.php?FixedAsset=1&stock_id=', 
-		115, _("Items"), 1000, 500),
-    'marketplace' => array('/sales/manage/marketplaces.php?debtor_no=', 
-		116, _("Marketplace"), 900, 550),
-);
 /*
 	Bind editors for various selectors.
 	$type - type of editor

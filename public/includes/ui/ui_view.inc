@@ -12,6 +12,17 @@
 require_once __DIR__ . "/../../admin/db/voiding_db.inc";
 require_once __DIR__ . "/../../includes/types.inc";
 
+//
+// FIXME: $payment_services array will be moved to bank_accounts in 2.4.x
+//
+if (!isset($GLOBALS['payment_services']))
+{
+	$GLOBALS['payment_services'] = array(
+		'PayPal' => "https://www.paypal.com/xclick?business=<company_email>&item_name=<comment>&amount=<amount>&currency_code=<currency>",
+		'XUMM XRP' => "https://xumm.app/detect/request:{{account}}?amount=<amount>"
+	);
+}
+
 //--------------------------------------------------------------------------------------
 
 function get_supplier_trans_view_str($type, $trans_no, $label="", $icon=false, 
@@ -1521,16 +1532,6 @@ function display_backtrace($cond=true, $msg='') {
 	}
 }
 
-//
-// FIXME: $payment_services array will be moved to bank_accounts in 2.4.x
-//
-if (!isset($payment_services))
-{
-	$payment_services = array(
-		'PayPal' => "https://www.paypal.com/xclick?business=<company_email>&item_name=<comment>&amount=<amount>&currency_code=<currency>",
-		'XUMM XRP' => "https://xumm.app/detect/request:{{account}}?amount=<amount>"
-	);
-}
 /*
 *	Payment link generation. Options provided during invoice generation:
 *	company_email, comment, amount, currency

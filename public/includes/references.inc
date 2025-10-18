@@ -24,7 +24,7 @@ require_once __DIR__ . "/../includes/types.inc";
 //		- see fixmes below
 //		- remove refs table and create view instead (need e.g. CREATE VIEW support in db_import/db_export)
 
-$refline_options = array(
+$GLOBALS['refline_options'] = array(
 	ST_JOURNAL => array('date', 'user'),
 	ST_COSTUPDATE => array('date', 'user'),
 
@@ -54,7 +54,7 @@ $refline_options = array(
 	ST_DIMENSION => array('date','user'),
 );
 
-$refline_placeholders = array(
+$GLOBALS['refline_placeholders'] = array(
 	'MM' => 'date',
 	'YY' => 'date',
 	'YYYY' => 'date',

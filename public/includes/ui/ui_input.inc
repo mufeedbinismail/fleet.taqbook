@@ -9,6 +9,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
+
+$GLOBALS['hidden_fields'] = array();
+
 //
 // Sets local POST value and adds Value to ajax posting if needed
 //
@@ -98,7 +101,6 @@ function input_num($postname=null, $dflt=0)
 //  proper html structure is still preserved. Buffered hidden fields are output on the nearest 
 //  table or form closing tag (see output_hidden()).
 //
-$hidden_fields = array();
 
 function hidden($name, $value=null, $echo=true)
 {

@@ -15,7 +15,7 @@
 //-------------------------------------------------------------------
 // Multilevel transaction control.
 //
-$transaction_level = 0;
+$GLOBALS['transaction_level'] = 0;
 
 function begin_transaction()
 {

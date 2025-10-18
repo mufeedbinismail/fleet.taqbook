@@ -13,6 +13,10 @@ define('VARLIB_PATH', $path_to_root.'/tmp');
 define('VARLOG_PATH', $path_to_root.'/tmp');
 define('SECURE_ONLY', true); // if you really need also http (unsecure) access allowed, you can set this to NULL
 
+global $SysPrefs, $Ajax, $db_connections, $installed_extensions,
+    $installed_languages, $Validate, $Editors, $Pagehelp, $Refs,
+    $lang, $db, $version, $cur_error_level;
+
 class SessionManager
 {
    	function sessionStart($name, $limit = 0, $path = '/', $domain = null, $secure = null)
@@ -151,7 +155,7 @@ function write_login_filelog($login, $result)
 	$msg .= "/*\n";
 	$msg .= "Login attempts info.\n";
 	$msg .= "*/\n";
-	$msg .= "\$login_faillog = " .var_export($login_faillog, true). ";\n";
+	$msg .= "\$GLOBALS['login_faillog'] = " .var_export($login_faillog, true). ";\n";
 
 	$filename = VARLIB_PATH."/faillog.php";
 
@@ -323,9 +327,9 @@ ini_set('session.gc_maxlifetime', 36000); // moved from below.
 $Session_manager = new SessionManager();
 $Session_manager->sessionStart('FA'.md5(dirname(__FILE__)), 0, '/', null, SECURE_ONLY);
 
-$_SESSION['SysPrefs'] = new sys_prefs();
+$SysPrefs = new sys_prefs();
 
-$SysPrefs = &$_SESSION['SysPrefs'];
+$_SESSION['SysPrefs'] = &$SysPrefs;
 
 //----------------------------------------------------------------------------------------
 // set to reasonable values if not set in config file (pre-2.3.12 installations)

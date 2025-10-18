@@ -9,8 +9,8 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$messages = array(); // container for system messages
-$before_box = ''; // temporary container for output html data before error box
+$GLOBALS['messages']   = array(); // container for system messages
+$GLOBALS['before_box'] = '';      // temporary container for output html data before error box
 
 #
 #   Wrapper for trigger_error

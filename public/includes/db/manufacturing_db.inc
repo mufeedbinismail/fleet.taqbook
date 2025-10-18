@@ -10,6 +10,10 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 //----------------------------------------------------------------------------------------
+
+$GLOBALS['bom_list'] = array(); 
+$GLOBALS['qoh_stock'] = NULL;
+
 function get_demand_qty($stock_id, $location)
 {
 	$sql = "SELECT SUM(line.quantity - line.qty_sent) AS QtyDemand
@@ -27,9 +31,6 @@ function get_demand_qty($stock_id, $location)
 		return 0;
 	return $row['QtyDemand'];
 }
-
-$bom_list = array(); 
-$qoh_stock = NULL;
 
 function load_stock_levels($location)
 {
