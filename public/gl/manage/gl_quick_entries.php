@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_QUICKENTRY';
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($help_context = "Quick Entries"));
+page(_($GLOBALS['help_context'] = "Quick Entries"));
 
 require __DIR__ . "/../../gl/includes/gl_db.inc";
 

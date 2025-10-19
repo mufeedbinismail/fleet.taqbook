@@ -26,7 +26,7 @@ if ($SysPrefs->use_popup_windows)
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
-page(_($help_context = "Tax Inquiry"), false, false, '', $js);
+page(_($GLOBALS['help_context'] = "Tax Inquiry"), false, false, '', $js);
 
 //----------------------------------------------------------------------------------------------------
 // Ajax updates

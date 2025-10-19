@@ -16,7 +16,7 @@ require_once __DIR__ . "/../../includes/session.inc";
 $js = "";
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($help_context = "View Dimension"), true, false, "", $js);
+page(_($GLOBALS['help_context'] = "View Dimension"), true, false, "", $js);
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/data_checks.inc";

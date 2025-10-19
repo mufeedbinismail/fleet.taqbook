@@ -17,7 +17,7 @@ $js = "";
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
-page(_($help_context = "Bank Accounts"), isset($_GET['bank_id']), false, "", $js);
+page(_($GLOBALS['help_context'] = "Bank Accounts"), isset($_GET['bank_id']), false, "", $js);
 
 require __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../includes/ui/attachment.inc";

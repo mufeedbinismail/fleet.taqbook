@@ -24,12 +24,12 @@ if ($SysPrefs->use_popup_windows)
 
 if ($_GET['trans_type'] == ST_SALESQUOTE)
 {
-	page(_($help_context = "View Sales Quotation"), true, false, "", $js);
+	page(_($GLOBALS['help_context'] = "View Sales Quotation"), true, false, "", $js);
 	display_heading(sprintf(_("Sales Quotation #%d"),$_GET['trans_no']));
 }	
 else
 {
-	page(_($help_context = "View Sales Order"), true, false, "", $js);
+	page(_($GLOBALS['help_context'] = "View Sales Order"), true, false, "", $js);
 	display_heading(sprintf(_("Sales Order #%d"),$_GET['trans_no']));
 }
 

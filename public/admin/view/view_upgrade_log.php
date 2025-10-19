@@ -13,7 +13,7 @@ $GLOBALS['page_security'] = 'SA_SOFTWAREUPGRADE';
 require_once __DIR__ . "/../../includes/session.inc";
 require_once __DIR__ . "/../../includes/packages.inc";
 
-page(_($help_context = "Log View"), true);
+page(_($GLOBALS['help_context'] = "Log View"), true);
 
 require_once __DIR__ . "/../../includes/ui.inc";
 

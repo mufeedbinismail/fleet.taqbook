@@ -25,7 +25,7 @@ if ($mode != 0)
 else
 	$js = get_js_select_combo_item();
 
-page(_($help_context = "Suppliers"), true, false, "", $js);
+page(_($GLOBALS['help_context'] = "Suppliers"), true, false, "", $js);
 
 if(get_post("search")) {
   $Ajax->activate("supplier_tbl");

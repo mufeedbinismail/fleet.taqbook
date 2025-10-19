@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_GLTRANSVIEW';
 require_once __DIR__ . "/../../includes/session.inc";
 
-page(_($help_context = "General Ledger Transaction Details"), true);
+page(_($GLOBALS['help_context'] = "General Ledger Transaction Details"), true);
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/ui.inc";

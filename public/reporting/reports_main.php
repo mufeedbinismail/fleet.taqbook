@@ -24,7 +24,7 @@ if (user_use_date_picker())
 
 add_js_file('reports.js');
 
-page(_($help_context = "Reports and Analysis"), false, false, "", $js);
+page(_($GLOBALS['help_context'] = "Reports and Analysis"), false, false, "", $js);
 
 $reports = new BoxReports;
 

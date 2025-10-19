@@ -21,12 +21,12 @@ if (user_use_date_picker())
 
 if (isset($_GET['FixedAsset'])) {
   $GLOBALS['page_security'] = 'SA_ASSET';
-  $_SESSION['page_title'] = _($help_context = "Fixed Assets");
+  $_SESSION['page_title'] = _($GLOBALS['help_context'] = "Fixed Assets");
   $_POST['mb_flag'] = 'F';
   $_POST['fixed_asset']  = 1;
 }
 else {
-  $_SESSION['page_title'] = _($help_context = "Items");
+  $_SESSION['page_title'] = _($GLOBALS['help_context'] = "Items");
 	if (!get_post('fixed_asset'))
 		$_POST['fixed_asset']  = 0;
 }

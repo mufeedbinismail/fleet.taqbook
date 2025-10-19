@@ -16,7 +16,7 @@ require_once __DIR__ . "/../includes/packages.inc";
 if ($SysPrefs->use_popup_windows) {
 	$js = get_js_open_window(900, 500);
 }
-page(_($help_context = "Install Charts of Accounts"), false, false, '', $js);
+page(_($GLOBALS['help_context'] = "Install Charts of Accounts"), false, false, '', $js);
 
 require_once __DIR__ . "/../includes/date_functions.inc";
 require_once __DIR__ . "/../admin/db/company_db.inc";

@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_UOM';
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($help_context = "Units of Measure"));
+page(_($GLOBALS['help_context'] = "Units of Measure"));
 
 require_once __DIR__ . "/../../includes/ui.inc";
 

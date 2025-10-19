@@ -24,7 +24,7 @@
 
 		function wa_header()
 		{
-			page(_($help_context = "Main Menu"), false, true);
+			page(_($GLOBALS['help_context'] = "Main Menu"), false, true);
 		}
 
 		function wa_footer()

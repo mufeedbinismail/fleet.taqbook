@@ -13,7 +13,7 @@ $GLOBALS['page_security'] = 'SA_SOFTWAREUPGRADE';
 
 require __DIR__ . "/../includes/session.inc";
 
-page(_($help_context = "System Diagnostics"));
+page(_($GLOBALS['help_context'] = "System Diagnostics"));
 
 require __DIR__ . "/../includes/ui.inc";
 require __DIR__ . "/../includes/system_tests.inc";

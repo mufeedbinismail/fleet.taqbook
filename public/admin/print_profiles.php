@@ -14,7 +14,7 @@ require __DIR__ . "/../includes/session.inc";
 require __DIR__ . "/../admin/db/printers_db.inc";
 require __DIR__ . "/../includes/ui.inc";
 
-page(_($help_context = "Printing Profiles"));
+page(_($GLOBALS['help_context'] = "Printing Profiles"));
 
 $selected_id = get_post('profile_id','');
 

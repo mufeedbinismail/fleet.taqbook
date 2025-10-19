@@ -27,7 +27,7 @@ if (check_value('is_marketplace_trans')) {
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
-page(_($help_context = "Customer Allocations"), false, false, "", $js);
+page(_($GLOBALS['help_context'] = "Customer Allocations"), false, false, "", $js);
 
 //--------------------------------------------------------------------------------
 

@@ -13,7 +13,7 @@ $GLOBALS['page_security'] = 'SA_CRMCATEGORY';
 require __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/db/crm_contacts_db.inc";
 
-page(_($help_context = "Contact Categories"));
+page(_($GLOBALS['help_context'] = "Contact Categories"));
 
 require __DIR__ . "/../includes/ui.inc";
 

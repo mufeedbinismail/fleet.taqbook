@@ -13,7 +13,7 @@ $GLOBALS['page_security'] = 'SA_WORKORDERANALYTIC';
 require __DIR__ . "/../../includes/db_pager.inc";
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($help_context = "Inventory Item Where Used Inquiry"));
+page(_($GLOBALS['help_context'] = "Inventory Item Where Used Inquiry"));
 
 require __DIR__ . "/../../includes/ui.inc";
 

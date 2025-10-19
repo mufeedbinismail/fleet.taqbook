@@ -20,7 +20,7 @@ require_once __DIR__ . "/../../sales/includes/sales_db.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
-page(_($help_context = "View Credit Note"), true, false, "", $js);
+page(_($GLOBALS['help_context'] = "View Credit Note"), true, false, "", $js);
 
 if (isset($_GET["trans_no"]))
 {

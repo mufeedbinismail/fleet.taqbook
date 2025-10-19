@@ -34,12 +34,12 @@ if (isset($_GET['New']))
 		unset ($_SESSION['supp_trans']->gl_codes);
 		unset ($_SESSION['supp_trans']);
 	}
-	$help_context = "Enter Supplier Invoice";
+	$GLOBALS['help_context'] = "Enter Supplier Invoice";
 	$_SESSION['page_title'] = _("Enter Supplier Invoice");
 
 	$_SESSION['supp_trans'] = new supp_trans(ST_SUPPINVOICE);
 } else if(isset($_GET['ModifyInvoice'])) {
-	$help_context = 'Modifying Purchase Invoice';
+	$GLOBALS['help_context'] = 'Modifying Purchase Invoice';
 	$_SESSION['page_title'] = sprintf( _("Modifying Purchase Invoice # %d"), $_GET['ModifyInvoice']);
 	$_SESSION['supp_trans'] = new supp_trans(ST_SUPPINVOICE, $_GET['ModifyInvoice']);
 }

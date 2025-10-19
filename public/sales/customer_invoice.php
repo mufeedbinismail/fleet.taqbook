@@ -48,13 +48,13 @@ if (user_use_date_picker()) {
 
 if (isset($_GET['ModifyInvoice'])) {
 	$_SESSION['page_title'] = sprintf(_("Modifying Sales Invoice # %d.") ,$_GET['ModifyInvoice']);
-	$help_context = "Modifying Sales Invoice";
+	$GLOBALS['help_context'] = "Modifying Sales Invoice";
 } elseif (isset($_GET['DeliveryNumber'])) {
-	$_SESSION['page_title'] = _($help_context = "Issue an Invoice for Delivery Note");
+	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Issue an Invoice for Delivery Note");
 } elseif (isset($_GET['BatchInvoice'])) {
-	$_SESSION['page_title'] = _($help_context = "Issue Batch Invoice for Delivery Notes");
+	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Issue Batch Invoice for Delivery Notes");
 } elseif (isset($_GET['AllocationNumber']) || isset($_GET['InvoicePrepayments'])) {
-	$_SESSION['page_title'] = _($help_context = "Prepayment or Final Invoice Entry");
+	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Prepayment or Final Invoice Entry");
 }
 page($_SESSION['page_title'], false, false, "", $js);
 

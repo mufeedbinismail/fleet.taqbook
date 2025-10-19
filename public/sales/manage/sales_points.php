@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_POSSETUP';
 require_once __DIR__ . "/../../includes/session.inc";
 
-page(_($help_context = "POS settings"));
+page(_($GLOBALS['help_context'] = "POS settings"));
 
 require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../sales/includes/db/sales_points_db.inc";

@@ -26,7 +26,7 @@ if (user_use_date_picker())
 // Begin the UI
 require_once __DIR__ . "/../includes/ui.inc";
 
-$_SESSION['page_title'] = _($help_context = "Revenue / Cost Accruals");
+$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Revenue / Cost Accruals");
 page($_SESSION['page_title'], false, false,'', $js);
 
 //--------------------------------------------------------------------------------------------------

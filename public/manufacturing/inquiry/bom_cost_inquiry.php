@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_WORKORDERCOST';
 require_once __DIR__ . "/../../includes/session.inc";
 
-page(_($help_context = "Costed Bill Of Material Inquiry"));
+page(_($GLOBALS['help_context'] = "Costed Bill Of Material Inquiry"));
 
 require_once __DIR__ . "/../../manufacturing/includes/manufacturing_ui.inc";
 require_once __DIR__ . "/../../includes/ui.inc";

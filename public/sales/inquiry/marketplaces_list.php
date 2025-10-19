@@ -7,7 +7,7 @@ require_once __DIR__ . "/../../sales/includes/db/marketplaces_db.inc";
 
 $js = get_js_select_combo_item();
 
-page(_($help_context = "Marketplaces"), true, false, "", $js);
+page(_($GLOBALS['help_context'] = "Marketplaces"), true, false, "", $js);
 
 if(get_post("search")) {
   $Ajax->activate("marketplace_tbl");

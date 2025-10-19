@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_GLACCOUNTCLASS';
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($help_context = "GL Account Classes"));
+page(_($GLOBALS['help_context'] = "GL Account Classes"));
 
 require __DIR__ . "/../../gl/includes/gl_db.inc";
 

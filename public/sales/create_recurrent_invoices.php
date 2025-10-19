@@ -22,7 +22,7 @@ if ($SysPrefs->use_popup_windows)
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
-page(_($help_context = "Create and Print Recurrent Invoices"), false, false, "", $js);
+page(_($GLOBALS['help_context'] = "Create and Print Recurrent Invoices"), false, false, "", $js);
 
 function create_recurrent_invoices($customer_id, $branch_id, $order_no, $tmpl_no, $date, $from, $to, $memo)
 {

@@ -26,9 +26,9 @@ if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
 if (isset($_GET['ModifyTransfer'])) {
-	$_SESSION['page_title'] = _($help_context = "Modify Bank Account Transfer");
+	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Modify Bank Account Transfer");
 } else {
-	$_SESSION['page_title'] = _($help_context = "Bank Account Transfer Entry");
+	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Bank Account Transfer Entry");
 }
 
 page($_SESSION['page_title'], false, false, "", $js);

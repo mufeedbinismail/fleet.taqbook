@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_SALESGROUP';
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($help_context = "Sales Groups"));
+page(_($GLOBALS['help_context'] = "Sales Groups"));
 
 require __DIR__ . "/../../includes/ui.inc";
 

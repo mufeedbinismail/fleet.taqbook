@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_TAXRATES';
 
 require __DIR__ . "/../includes/session.inc";
-page(_($help_context = "Tax Types"));
+page(_($GLOBALS['help_context'] = "Tax Types"));
 
 require_once __DIR__ . "/../includes/ui.inc";
 require_once __DIR__ . "/../taxes/db/tax_types_db.inc";

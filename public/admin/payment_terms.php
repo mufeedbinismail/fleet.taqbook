@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_PAYTERMS';
 require __DIR__ . "/../includes/session.inc";
 
-page(_($help_context = "Payment Terms"));
+page(_($GLOBALS['help_context'] = "Payment Terms"));
 
 require __DIR__ . "/../includes/ui.inc";
 

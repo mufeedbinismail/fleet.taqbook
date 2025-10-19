@@ -16,7 +16,7 @@ require_once __DIR__ . "/../../includes/session.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
-page(_($help_context = "View Work Order Costs"), true, false, "", $js);
+page(_($GLOBALS['help_context'] = "View Work Order Costs"), true, false, "", $js);
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/data_checks.inc";

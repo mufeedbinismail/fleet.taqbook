@@ -19,7 +19,7 @@ require_once __DIR__ . "/../includes/ui.inc";
 if ($SysPrefs->use_popup_windows)
 	$js = get_js_open_window(900, 500);
 
-page(_($help_context = "Install/Update Languages"), false, false, "", $js);
+page(_($GLOBALS['help_context'] = "Install/Update Languages"), false, false, "", $js);
 
 simple_page_mode(true);
 

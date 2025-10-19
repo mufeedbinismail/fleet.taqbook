@@ -14,7 +14,7 @@ require_once __DIR__ . "/../includes/session.inc";
 
 add_js_file('budget.js');
 
-page(_($help_context = "Budget Entry"));
+page(_($GLOBALS['help_context'] = "Budget Entry"));
 
 require_once __DIR__ . "/../includes/ui.inc";
 require_once __DIR__ . "/../gl/includes/gl_db.inc";

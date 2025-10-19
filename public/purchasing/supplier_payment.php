@@ -27,7 +27,7 @@ if (user_use_date_picker())
 
 add_js_file('payalloc.js');
 
-page(_($help_context = "Supplier Payment Entry"), false, false, "", $js);
+page(_($GLOBALS['help_context'] = "Supplier Payment Entry"), false, false, "", $js);
 
 if (isset($_GET['supplier_id']))
 {

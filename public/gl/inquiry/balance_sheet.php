@@ -23,7 +23,7 @@ $js = "";
 if (user_use_date_picker())
 	$js = get_js_date_picker();
 
-page(_($help_context = "Balance Sheet Drilldown"), false, false, "", $js);
+page(_($GLOBALS['help_context'] = "Balance Sheet Drilldown"), false, false, "", $js);
 
 //----------------------------------------------------------------------------------------------------
 // Ajax updates

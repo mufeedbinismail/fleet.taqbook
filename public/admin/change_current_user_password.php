@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_CHGPASSWD';
 require_once __DIR__ . "/../includes/session.inc";
 
-page(_($help_context = "Change password"));
+page(_($GLOBALS['help_context'] = "Change password"));
 
 require_once __DIR__ . "/../includes/date_functions.inc";
 require_once __DIR__ . "/../includes/ui.inc";

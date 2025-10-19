@@ -19,7 +19,7 @@ if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 if (isset($_GET['stock_id']))
 	$_POST['stock_id'] = $_GET['stock_id'];
 
-page(_($help_context = "Inventory Item Status"), isset($_GET['stock_id']), false, "", $js);
+page(_($GLOBALS['help_context'] = "Inventory Item Status"), isset($_GET['stock_id']), false, "", $js);
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/ui.inc";

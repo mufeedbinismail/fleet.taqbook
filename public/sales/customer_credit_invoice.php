@@ -34,7 +34,7 @@ if (user_use_date_picker()) {
 
 if (isset($_GET['ModifyCredit'])) {
 	$_SESSION['page_title'] = sprintf(_("Modifying Credit Invoice # %d."), $_GET['ModifyCredit']);
-	$help_context = "Modifying Credit Invoice";
+	$GLOBALS['help_context'] = "Modifying Credit Invoice";
 	processing_start();
 } elseif (isset($_GET['InvoiceNumber'])) {
     if (!isset($_GET['MarketPlace'])) {
@@ -42,7 +42,7 @@ if (isset($_GET['ModifyCredit'])) {
             $_GET['Marketplace'] = 'Yes';
         }
     }
-	$_SESSION['page_title'] = _($help_context = "Credit all or part of an Invoice");
+	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Credit all or part of an Invoice");
 	processing_start();
 }
 

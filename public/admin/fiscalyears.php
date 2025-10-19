@@ -21,7 +21,7 @@ require_once __DIR__ . "/../admin/db/maintenance_db.inc";
 $js = "";
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($help_context = "Fiscal Years"), false, false, "", $js);
+page(_($GLOBALS['help_context'] = "Fiscal Years"), false, false, "", $js);
 
 simple_page_mode(true);
 //---------------------------------------------------------------------------------------------

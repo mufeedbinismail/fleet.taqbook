@@ -11,7 +11,7 @@
 ***********************************************************************/
 $GLOBALS['page_security'] = 'SA_SHIPPING';
 require __DIR__ . "/../includes/session.inc";
-page(_($help_context = "Shipping Company"));
+page(_($GLOBALS['help_context'] = "Shipping Company"));
 require __DIR__ . "/../includes/ui.inc";
 require __DIR__ . "/../admin/db/shipping_db.inc";
 

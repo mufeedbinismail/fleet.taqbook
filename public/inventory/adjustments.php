@@ -28,9 +28,9 @@ if (user_use_date_picker())
 if (isset($_GET['NewAdjustment'])) {
 	if (isset($_GET['FixedAsset'])) {
 		$GLOBALS['page_security'] = 'SA_ASSETDISPOSAL';
-		$_SESSION['page_title'] = _($help_context = "Fixed Assets Disposal");
+		$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Fixed Assets Disposal");
 	} else {
-		$_SESSION['page_title'] = _($help_context = "Item Adjustments Note");
+		$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Item Adjustments Note");
 	}
 }
 page($_SESSION['page_title'], false, false, "", $js);

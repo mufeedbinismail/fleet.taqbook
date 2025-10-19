@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_USERS';
 require_once __DIR__ . "/../includes/session.inc";
 
-page(_($help_context = "Users"));
+page(_($GLOBALS['help_context'] = "Users"));
 
 require_once __DIR__ . "/../includes/date_functions.inc";
 require_once __DIR__ . "/../includes/ui.inc";

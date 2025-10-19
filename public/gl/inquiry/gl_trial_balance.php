@@ -24,7 +24,7 @@ $js = "";
 if (user_use_date_picker())
 	$js = get_js_date_picker();
 
-page(_($help_context = "Trial Balance"), false, false, "", $js);
+page(_($GLOBALS['help_context'] = "Trial Balance"), false, false, "", $js);
 
 $k = 0;
 $pdeb = $pcre = $cdeb = $ccre = $tdeb = $tcre = $pbal = $cbal = $tbal = 0;

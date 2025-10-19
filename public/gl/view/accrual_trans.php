@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_ACCRUALS';
 require_once __DIR__ . "/../../includes/session.inc";
 
-$_SESSION['page_title'] = _($help_context = _("Search General Ledger Transactions for account: ").$_GET['act']);
+$_SESSION['page_title'] = _($GLOBALS['help_context'] = _("Search General Ledger Transactions for account: ").$_GET['act']);
 
 page($_SESSION['page_title'], true);
 

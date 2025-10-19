@@ -30,16 +30,16 @@ if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
 if (isset($_GET['NewPayment'])) {
-	$_SESSION['page_title'] = _($help_context = "Bank Account Payment Entry");
+	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Bank Account Payment Entry");
 	create_cart(ST_BANKPAYMENT, 0);
 } else if(isset($_GET['NewDeposit'])) {
-	$_SESSION['page_title'] = _($help_context = "Bank Account Deposit Entry");
+	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Bank Account Deposit Entry");
 	create_cart(ST_BANKDEPOSIT, 0);
 } else if(isset($_GET['ModifyPayment'])) {
-	$_SESSION['page_title'] = _($help_context = "Modify Bank Account Entry")." #".$_GET['trans_no'];
+	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Modify Bank Account Entry")." #".$_GET['trans_no'];
 	create_cart(ST_BANKPAYMENT, $_GET['trans_no']);
 } else if(isset($_GET['ModifyDeposit'])) {
-	$_SESSION['page_title'] = _($help_context = "Modify Bank Deposit Entry")." #".$_GET['trans_no'];
+	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Modify Bank Deposit Entry")." #".$_GET['trans_no'];
 	create_cart(ST_BANKDEPOSIT, $_GET['trans_no']);
 }
 page($_SESSION['page_title'], false, false, '', $js);

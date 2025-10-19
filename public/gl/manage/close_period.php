@@ -21,7 +21,7 @@ require_once __DIR__ . "/../../admin/db/fiscalyears_db.inc";
 $js = "";
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($help_context = "Closing GL Transactions"), false, false, "", $js);
+page(_($GLOBALS['help_context'] = "Closing GL Transactions"), false, false, "", $js);
 
 //---------------------------------------------------------------------------------------------
 function check_data()

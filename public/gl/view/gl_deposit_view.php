@@ -13,7 +13,7 @@ $GLOBALS['page_security'] = 'SA_BANKTRANSVIEW';
 
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($help_context = "View Bank Deposit"), true);
+page(_($GLOBALS['help_context'] = "View Bank Deposit"), true);
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/ui.inc";

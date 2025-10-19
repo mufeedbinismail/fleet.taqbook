@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_BOM';
 require_once __DIR__ . "/../../includes/session.inc";
 
-page(_($help_context = "Bill Of Materials"));
+page(_($GLOBALS['help_context'] = "Bill Of Materials"));
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/ui.inc";

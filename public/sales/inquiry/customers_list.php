@@ -28,7 +28,7 @@ if ($mode != 0)
 else
 	$js = get_js_select_combo_item();
 
-page(_($help_context = "Customers"), true, false, "", $js);
+page(_($GLOBALS['help_context'] = "Customers"), true, false, "", $js);
 
 if(get_post("search")) {
   $Ajax->activate("customer_tbl");

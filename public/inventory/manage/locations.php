@@ -18,12 +18,12 @@ require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../inventory/includes/inventory_db.inc";
 
 if (isset($_GET['FixedAsset'])) {
-	$help_context = _("Fixed Assets Locations");
+	$GLOBALS['help_context'] = _("Fixed Assets Locations");
 	$_POST['fixed_asset'] = 1;
 } else
-	$help_context = _("Inventory Locations");
+	$GLOBALS['help_context'] = _("Inventory Locations");
 
-page(_($help_context));
+page(_($GLOBALS['help_context']));
 
 simple_page_mode(true);
 

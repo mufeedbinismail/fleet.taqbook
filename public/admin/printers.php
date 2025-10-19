@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_PRINTERS';
 require __DIR__ . "/../includes/session.inc";
 
-page(_($help_context = "Printer Locations"));
+page(_($GLOBALS['help_context'] = "Printer Locations"));
 
 require __DIR__ . "/../admin/db/printers_db.inc";
 require __DIR__ . "/../includes/ui.inc";

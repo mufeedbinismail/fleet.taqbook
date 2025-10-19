@@ -21,7 +21,7 @@ if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($help_context = "Supplier Inquiry"), isset($_GET['supplier_id']), false, "", $js);
+page(_($GLOBALS['help_context'] = "Supplier Inquiry"), isset($_GET['supplier_id']), false, "", $js);
 
 if (isset($_GET['supplier_id'])){
 	$_POST['supplier_id'] = $_GET['supplier_id'];

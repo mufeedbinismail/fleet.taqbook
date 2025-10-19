@@ -16,7 +16,7 @@ require_once __DIR__ . "/../includes/ui/class.reflines_crud.inc";
 
 require_once __DIR__ . "/../includes/ui.inc";
 
-page(_($help_context = "Transaction References"));
+page(_($GLOBALS['help_context'] = "Transaction References"));
 
 start_form();
 

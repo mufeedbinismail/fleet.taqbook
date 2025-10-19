@@ -19,7 +19,7 @@ require_once __DIR__ . "/../../includes/banking.inc";
 $js = "";
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($help_context = "Revaluation of Currency Accounts"), false, false, "", $js);
+page(_($GLOBALS['help_context'] = "Revaluation of Currency Accounts"), false, false, "", $js);
 
 if (isset($_GET['BA'])) 
 {

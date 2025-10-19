@@ -24,7 +24,7 @@ if (!user_check_access($GLOBALS['page_security']) && user_check_access('SA_MP_SA
     
 $js = get_js_select_combo_item();
 
-page(_($help_context = "Customer Branches"), true, false, "", $js);
+page(_($GLOBALS['help_context'] = "Customer Branches"), true, false, "", $js);
 
 if(get_post("search")) {
   $Ajax->activate("customer_branch_tbl");

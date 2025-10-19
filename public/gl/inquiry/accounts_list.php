@@ -21,7 +21,7 @@ require_once __DIR__ . "/../../gl/includes/db/gl_db_accounts.inc";
 
 $js = get_js_select_combo_item();
 
-page(_($help_context = "GL Accounts"), true, false, "", $js);
+page(_($GLOBALS['help_context'] = "GL Accounts"), true, false, "", $js);
 
 if(get_post("search")) {
   	$Ajax->activate("account_tbl");

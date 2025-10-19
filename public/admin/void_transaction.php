@@ -25,7 +25,7 @@ if (user_use_date_picker())
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(800, 500);
 	
-page(_($help_context = "Void a Transaction"), false, false, "", $js);
+page(_($GLOBALS['help_context'] = "Void a Transaction"), false, false, "", $js);
 
 simple_page_mode(true);
 //----------------------------------------------------------------------------------------

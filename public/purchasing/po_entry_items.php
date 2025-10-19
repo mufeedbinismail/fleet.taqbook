@@ -37,17 +37,17 @@ if (user_use_date_picker())
 
 if (isset($_GET['ModifyOrderNumber']) && is_numeric($_GET['ModifyOrderNumber'])) {
 
-	$_SESSION['page_title'] = _($help_context = "Modify Purchase Order #") . $_GET['ModifyOrderNumber'];
+	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Modify Purchase Order #") . $_GET['ModifyOrderNumber'];
 	create_new_po(ST_PURCHORDER, $_GET['ModifyOrderNumber']);
 	copy_from_cart();
 } elseif (isset($_GET['NewOrder'])) {
 
-	$_SESSION['page_title'] = _($help_context = "Purchase Order Entry");
+	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Purchase Order Entry");
 	create_new_po(ST_PURCHORDER, 0);
 	copy_from_cart();
 } elseif (isset($_GET['NewGRN'])) {
 
-	$_SESSION['page_title'] = _($help_context = "Direct GRN Entry");
+	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Direct GRN Entry");
 	create_new_po(ST_SUPPRECEIVE, 0);
 	copy_from_cart();
 } elseif (isset($_GET['NewInvoice'])) {
@@ -56,10 +56,10 @@ if (isset($_GET['ModifyOrderNumber']) && is_numeric($_GET['ModifyOrderNumber']))
 	copy_from_cart();
 
 	if (isset($_GET['FixedAsset'])) {
-		$_SESSION['page_title'] = _($help_context = "Fixed Asset Purchase Invoice Entry");
+		$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Fixed Asset Purchase Invoice Entry");
 		$_SESSION['PO']->fixed_asset = true;
 	} else
-		$_SESSION['page_title'] = _($help_context = "Direct Purchase Invoice Entry");
+		$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Direct Purchase Invoice Entry");
 }
 
 page($_SESSION['page_title'], false, false, "", $js);

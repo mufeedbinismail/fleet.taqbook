@@ -33,7 +33,7 @@ if (user_use_date_picker()) {
 }
 
 if(isset($_GET['NewCredit'])) {
-	$_SESSION['page_title'] = _($help_context = "Customer Credit Note");
+	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Customer Credit Note");
 	handle_new_credit(0);
 } elseif (isset($_GET['ModifyCredit'])) {
     if (!isset($_GET['Marketplace'])) {
@@ -44,7 +44,7 @@ if(isset($_GET['NewCredit'])) {
 
 	$_SESSION['page_title'] = sprintf(_("Modifying Customer Credit Note #%d"), $_GET['ModifyCredit']);
 	handle_new_credit($_GET['ModifyCredit']);
-	$help_context = "Modifying Customer Credit Note";
+	$GLOBALS['help_context'] = "Modifying Customer Credit Note";
 }
 
 if (isset($_GET['Marketplace']) || ($_SESSION['Items']->is_marketplace_trans ?? 0) != 0) {

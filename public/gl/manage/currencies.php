@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_CURRENCY';
 require_once __DIR__ . "/../../includes/session.inc";
 
-page(_($help_context = "Currencies"));
+page(_($GLOBALS['help_context'] = "Currencies"));
 
 require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../includes/banking.inc";

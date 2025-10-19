@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_CRSTATUS';
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($help_context = "Credit Status")); 
+page(_($GLOBALS['help_context'] = "Credit Status")); 
 
 require __DIR__ . "/../../sales/includes/db/credit_status_db.inc";
 

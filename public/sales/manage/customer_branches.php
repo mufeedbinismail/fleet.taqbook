@@ -18,7 +18,7 @@ $js = "";
 if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 	$js .= get_js_open_window(900, 500);
 
-page(_($help_context = "Customer Branches"), @$_REQUEST['popup'], false, "", $js);
+page(_($GLOBALS['help_context'] = "Customer Branches"), @$_REQUEST['popup'], false, "", $js);
 
 require __DIR__ . "/../../includes/ui.inc";
 require __DIR__ . "/../../includes/ui/contacts_view.inc";

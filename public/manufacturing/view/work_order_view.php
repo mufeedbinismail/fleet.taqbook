@@ -21,7 +21,7 @@ require_once __DIR__ . "/../../manufacturing/includes/manufacturing_ui.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(800, 500);
-page(_($help_context = "View Work Order"), true, false, "", $js);
+page(_($GLOBALS['help_context'] = "View Work Order"), true, false, "", $js);
 
 //-------------------------------------------------------------------------------------------------
 $woid = 0;

@@ -13,7 +13,7 @@ $GLOBALS['page_security'] = 'SA_OPEN';
 require_once __DIR__ . "/../../includes/session.inc";
 require_once __DIR__ . "/../../includes/packages.inc";
 
-page(_($help_context = "Package Details"), true);
+page(_($GLOBALS['help_context'] = "Package Details"), true);
 
 require_once __DIR__ . "/../../includes/ui.inc";
 

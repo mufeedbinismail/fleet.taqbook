@@ -14,18 +14,18 @@ require __DIR__ . "/../../includes/session.inc";
 
 if (isset($_GET['FixedAsset'])) {
   $GLOBALS['page_security'] = 'SA_ASSETCATEGORY';
-  $help_context = "Fixed Assets Categories";
+  $GLOBALS['help_context'] = "Fixed Assets Categories";
   $_POST['mb_flag'] = 'F';
 }
 else {
-  $help_context = "Item Categories";
+  $GLOBALS['help_context'] = "Item Categories";
 }
 
 $js = "";
 if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 	$js .= get_js_open_window(900, 500);
 
-page(_($help_context), false, false, "", $js);
+page(_($GLOBALS['help_context']), false, false, "", $js);
 
 require_once __DIR__ . "/../../includes/ui.inc";
 

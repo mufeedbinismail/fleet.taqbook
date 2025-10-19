@@ -20,7 +20,7 @@ require_once __DIR__ . "/../inventory/includes/inventory_db.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 	$js .= get_js_open_window(900, 500);
-page(_($help_context = "Reorder Levels"), false, false, "", $js);
+page(_($GLOBALS['help_context'] = "Reorder Levels"), false, false, "", $js);
 
 check_db_has_costable_items(_("There are no inventory items defined in the system (Purchased or manufactured items)."));
 

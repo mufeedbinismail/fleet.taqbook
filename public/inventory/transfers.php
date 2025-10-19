@@ -28,10 +28,10 @@ if (user_use_date_picker())
 if (isset($_GET['NewTransfer'])) {
 	if (isset($_GET['FixedAsset'])) {
 		$GLOBALS['page_security'] = 'SA_ASSETTRANSFER';
-		$_SESSION['page_title'] = _($help_context = "Fixed Assets Location Transfers");
+		$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Fixed Assets Location Transfers");
 	}
 	else {
-		$_SESSION['page_title'] = _($help_context = "Inventory Location Transfers");
+		$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Inventory Location Transfers");
 	}
 }
 page($_SESSION['page_title'], false, false, "", $js);

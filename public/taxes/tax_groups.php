@@ -13,7 +13,7 @@ $GLOBALS['page_security'] = 'SA_TAXGROUPS';
 
 require __DIR__ . "/../includes/session.inc";
 
-page(_($help_context = "Tax Groups"));
+page(_($GLOBALS['help_context'] = "Tax Groups"));
 
 require_once __DIR__ . "/../includes/data_checks.inc";
 require_once __DIR__ . "/../includes/ui.inc";

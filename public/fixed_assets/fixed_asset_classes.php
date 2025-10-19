@@ -17,7 +17,7 @@ require_once __DIR__ . "/../includes/ui.inc";
 require_once __DIR__ . "/../fixed_assets/includes/fixed_assets_db.inc";
 require_once __DIR__ . "/../fixed_assets/includes/fa_classes_db.inc";
 
-page(_($help_context = "Fixed asset classes"));
+page(_($GLOBALS['help_context'] = "Fixed asset classes"));
 
 simple_page_mode(true);
 

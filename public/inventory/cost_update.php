@@ -24,10 +24,10 @@ if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
 
 if (isset($_GET['FixedAsset'])) {
-	$_SESSION['page_title'] = _($help_context = "FA Revaluation");
+	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "FA Revaluation");
 	$_POST['fixed_asset'] = 1;
 } else {
-	$_SESSION['page_title'] = _($help_context = "Inventory Item Cost Update");
+	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Inventory Item Cost Update");
 }
 page($_SESSION['page_title'], false, false, "", $js);
 

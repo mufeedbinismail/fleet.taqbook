@@ -20,7 +20,7 @@ if ($SysPrefs->use_popup_windows)
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
-page(_($help_context = "Recurrent Invoices"), false, false, "", $js);
+page(_($GLOBALS['help_context'] = "Recurrent Invoices"), false, false, "", $js);
 
 check_db_has_template_orders(_("There is no template order in database.
 	You have to create at least one sales order marked as template to be able to define recurrent invoices."));

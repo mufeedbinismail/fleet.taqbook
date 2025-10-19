@@ -35,7 +35,7 @@ if (get_post('download')) {
 		display_error(_("Select backup file first."));
 }
 
-page(_($help_context = "Backup and Restore Database"), false, false, '', '');
+page(_($GLOBALS['help_context'] = "Backup and Restore Database"), false, false, '', '');
 
 check_paths();
 

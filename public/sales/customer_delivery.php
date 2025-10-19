@@ -43,10 +43,10 @@ if (user_use_date_picker()) {
 
 if (isset($_GET['ModifyDelivery'])) {
 	$_SESSION['page_title'] = sprintf(_("Modifying Delivery Note # %d."), $_GET['ModifyDelivery']);
-	$help_context = "Modifying Delivery Note";
+	$GLOBALS['help_context'] = "Modifying Delivery Note";
 	processing_start();
 } elseif (isset($_GET['OrderNumber'])) {
-	$_SESSION['page_title'] = _($help_context = "Deliver Items for a Sales Order");
+	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Deliver Items for a Sales Order");
 	processing_start();
 }
 

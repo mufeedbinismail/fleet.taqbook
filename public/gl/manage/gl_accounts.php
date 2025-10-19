@@ -16,7 +16,7 @@ $js = "";
 if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 	$js .= get_js_open_window(900, 500);
 
-page(_($help_context = "Chart of Accounts"), false, false, "", $js);
+page(_($GLOBALS['help_context'] = "Chart of Accounts"), false, false, "", $js);
 
 require __DIR__ . "/../../includes/ui.inc";
 require __DIR__ . "/../../gl/includes/gl_db.inc";

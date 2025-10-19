@@ -17,7 +17,7 @@ require __DIR__ . "/../../includes/session.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
-page(_($help_context = "View Purchase Order Delivery"), true, false, "", $js);
+page(_($GLOBALS['help_context'] = "View Purchase Order Delivery"), true, false, "", $js);
 
 require __DIR__ . "/../../purchasing/includes/purchasing_ui.inc";
 

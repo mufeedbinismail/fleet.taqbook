@@ -17,7 +17,7 @@ require_once __DIR__ . "/../admin/db/company_db.inc";
 require_once __DIR__ . "/../admin/db/maintenance_db.inc";
 require_once __DIR__ . "/../includes/ui.inc";
 
-page(_($help_context = "Create/Update Company"));
+page(_($GLOBALS['help_context'] = "Create/Update Company"));
 
 $comp_subdirs = array('images', 'pdf_files', 'backup','js_cache', 'reporting', 'attachments');
 

@@ -24,7 +24,7 @@ if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($help_context = "Work Order Entry"), false, false, "", $js);
+page(_($GLOBALS['help_context'] = "Work Order Entry"), false, false, "", $js);
 
 
 check_db_has_manufacturable_items(_("There are no manufacturable items defined in the system."));

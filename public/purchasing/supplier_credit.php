@@ -54,11 +54,11 @@ if (isset($_GET['New']))
 		$_SESSION['supp_trans']->trans_no = 0;
 		$_SESSION['supp_trans']->supp_reference = '';
 		$_SESSION['supp_trans']->reference = '';
-		$help_context = "Supplier Credit Note";
+		$GLOBALS['help_context'] = "Supplier Credit Note";
 		$_SESSION['page_title'] = _("Supplier Credit Note");
 
 	} else {
-		$help_context = "Supplier Credit Note";
+		$GLOBALS['help_context'] = "Supplier Credit Note";
 		$_SESSION['page_title'] = _("Supplier Credit Note");
 		$_SESSION['supp_trans'] = new supp_trans(ST_SUPPCREDIT);
 	}
