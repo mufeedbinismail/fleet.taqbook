@@ -9,7 +9,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$page_security = 'SA_ITEM';
+$GLOBALS['page_security'] = 'SA_ITEM';
 require __DIR__ . "/../../includes/session.inc";
 require __DIR__ . "/../../reporting/includes/tcpdf.php";
 
@@ -20,7 +20,7 @@ if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
 if (isset($_GET['FixedAsset'])) {
-  $page_security = 'SA_ASSET';
+  $GLOBALS['page_security'] = 'SA_ASSET';
   $_SESSION['page_title'] = _($help_context = "Fixed Assets");
   $_POST['mb_flag'] = 'F';
   $_POST['fixed_asset']  = 1;

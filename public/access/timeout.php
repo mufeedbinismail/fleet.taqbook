@@ -12,7 +12,7 @@
 /*
 	User authentication page popped up after login timeout during ajax call.
 */
-$page_security = 'SA_OPEN';
+$GLOBALS['page_security'] = 'SA_OPEN';
 require_once __DIR__ . "/../includes/session.inc";
 
 require __DIR__ . '/../access/login.php';

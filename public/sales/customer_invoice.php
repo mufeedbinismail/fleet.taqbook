@@ -14,7 +14,7 @@
 //	Entry/Modify Sales Invoice against single delivery
 //	Entry/Modify Batch Sales Invoice against batch of deliveries
 //
-$page_security = 'SA_SALESINVOICE';
+$GLOBALS['page_security'] = 'SA_SALESINVOICE';
 require_once __DIR__ . "/../sales/includes/cart_class.inc";
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/data_checks.inc";
@@ -35,7 +35,7 @@ if (isset($_GET['Marketplace']) || ($_SESSION['Items']->is_marketplace_trans ?? 
 }
 
 if (check_value('is_marketplace_trans')) {
-    $page_security = 'SA_MP_SALESINVOICE';
+    $GLOBALS['page_security'] = 'SA_MP_SALESINVOICE';
 }
 
 $js = "";

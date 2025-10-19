@@ -19,7 +19,7 @@ if (isset($_GET['Marketplace'])) {
     $_POST['is_marketplace_trans'] = 1;
 }
 
-$page_security = get_post('is_marketplace_trans')
+$GLOBALS['page_security'] = get_post('is_marketplace_trans')
     ? 'SA_MP_SALESTRANSVIEW'
     : 'SA_SALESTRANSVIEW';
 

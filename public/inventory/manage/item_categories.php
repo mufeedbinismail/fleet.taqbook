@@ -9,11 +9,11 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$page_security = 'SA_ITEMCATEGORY';
+$GLOBALS['page_security'] = 'SA_ITEMCATEGORY';
 require __DIR__ . "/../../includes/session.inc";
 
 if (isset($_GET['FixedAsset'])) {
-  $page_security = 'SA_ASSETCATEGORY';
+  $GLOBALS['page_security'] = 'SA_ASSETCATEGORY';
   $help_context = "Fixed Assets Categories";
   $_POST['mb_flag'] = 'F';
 }

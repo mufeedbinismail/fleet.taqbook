@@ -13,7 +13,7 @@
 //
 //	Entry/Modify Delivery Note against Sales Order
 //
-$page_security = 'SA_SALESDELIVERY';
+$GLOBALS['page_security'] = 'SA_SALESDELIVERY';
 
 require_once __DIR__ . "/../sales/includes/cart_class.inc";
 require_once __DIR__ . "/../includes/session.inc";
@@ -30,7 +30,7 @@ if (isset($_GET['ModifyDelivery']) && !isset($_GET['Marketplace'])) {
 }
 
 if (isset($_GET['Marketplace']) || @$_SESSION['Items']->is_marketplace_trans) {
-    $page_security = 'SA_MP_SALESDELIVERY';
+    $GLOBALS['page_security'] = 'SA_MP_SALESDELIVERY';
 }
 
 $js = "";

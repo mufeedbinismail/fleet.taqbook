@@ -9,7 +9,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$page_security = 'SA_BUDGETENTRY';
+$GLOBALS['page_security'] = 'SA_BUDGETENTRY';
 require_once __DIR__ . "/../includes/session.inc";
 
 add_js_file('budget.js');

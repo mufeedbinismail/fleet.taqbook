@@ -9,7 +9,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$page_security = 'SA_BANKREP';
+$GLOBALS['page_security'] = 'SA_BANKREP';
 // ----------------------------------------------------------------
 // $ Revision:	2.3.3-1
 // Creator:	Chaitanya-India <3chaitanya@gmail.com>

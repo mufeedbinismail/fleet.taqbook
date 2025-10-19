@@ -14,7 +14,7 @@
   in pages that have the item dropdown lists.
   Author: bogeyman2007 from Discussion Forum. Modified by Joe Hunt
 ***********************************************************************/
-$page_security = "SA_ITEM";
+$GLOBALS['page_security'] = "SA_ITEM";
 require_once __DIR__ . "/../../includes/session.inc";
 require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../inventory/includes/db/items_db.inc";

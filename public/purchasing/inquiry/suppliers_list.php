@@ -14,7 +14,7 @@
   in pages that have the supplier dropdown lists.
   Author: bogeyman2007 from Discussion Forum. Modified by Joe Hunt
 ***********************************************************************/
-$page_security = "SA_PURCHASEORDER";
+$GLOBALS['page_security'] = "SA_PURCHASEORDER";
 require_once __DIR__ . "/../../includes/session.inc";
 require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../purchasing/includes/db/suppliers_db.inc";

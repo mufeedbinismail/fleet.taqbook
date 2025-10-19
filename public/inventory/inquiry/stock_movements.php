@@ -9,7 +9,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$page_security = 'SA_ITEMSTRANSVIEW';
+$GLOBALS['page_security'] = 'SA_ITEMSTRANSVIEW';
 require_once __DIR__ . "/../../includes/session.inc";
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
@@ -24,7 +24,7 @@ if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
 if (isset($_GET['FixedAsset'])) {
-	$page_security = 'SA_ASSETSTRANSVIEW';
+	$GLOBALS['page_security'] = 'SA_ASSETSTRANSVIEW';
 	$_POST['fixed_asset'] = 1;
 	$_SESSION['page_title'] = _($help_context = "Fixed Assets Movement");
 } else {

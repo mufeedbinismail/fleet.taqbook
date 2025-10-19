@@ -14,7 +14,7 @@
 //	Entry/Modify Credit Note for selected Sales Invoice
 //
 
-$page_security = 'SA_SALESCREDITINV';
+$GLOBALS['page_security'] = 'SA_SALESCREDITINV';
 
 require_once __DIR__ . "/../sales/includes/cart_class.inc";
 require_once __DIR__ . "/../includes/session.inc";
@@ -47,7 +47,7 @@ if (isset($_GET['ModifyCredit'])) {
 }
 
 if (isset($_GET['Marketplace']) || ($_SESSION['Items']->is_marketplace_trans ?? 0) != 0) {
-    $page_security = 'SA_MP_SALESCREDITINV';
+    $GLOBALS['page_security'] = 'SA_MP_SALESCREDITINV';
 }
 
 page($_SESSION['page_title'], false, false, "", $js);

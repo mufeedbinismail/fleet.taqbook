@@ -13,7 +13,7 @@
         throw new \App\Exceptions\Legacy\FlowRedirectionException("/install/index.php");
     }
 
-	$page_security = 'SA_OPEN';
+	$GLOBALS['page_security'] = 'SA_OPEN';
 	ini_set('xdebug.auto_trace',1);
 	include_once("includes/session.inc");
 

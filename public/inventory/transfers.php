@@ -9,7 +9,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$page_security = 'SA_LOCATIONTRANSFER';
+$GLOBALS['page_security'] = 'SA_LOCATIONTRANSFER';
 require_once __DIR__ . "/../includes/ui/items_cart.inc";
 
 require_once __DIR__ . "/../includes/session.inc";
@@ -27,7 +27,7 @@ if (user_use_date_picker())
 
 if (isset($_GET['NewTransfer'])) {
 	if (isset($_GET['FixedAsset'])) {
-		$page_security = 'SA_ASSETTRANSFER';
+		$GLOBALS['page_security'] = 'SA_ASSETTRANSFER';
 		$_SESSION['page_title'] = _($help_context = "Fixed Assets Location Transfers");
 	}
 	else {

@@ -11,7 +11,7 @@
 ***********************************************************************/
 require_once __DIR__ . "/../includes/ui/items_cart.inc";
 require_once __DIR__ . "/../includes/session.inc";
-$page_security = isset($_GET['NewPayment']) || 
+$GLOBALS['page_security'] = isset($_GET['NewPayment']) || 
 	@($_SESSION['pay_items']->trans_type==ST_BANKPAYMENT)
  ? 'SA_PAYMENT' : 'SA_DEPOSIT';
 

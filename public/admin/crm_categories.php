@@ -9,7 +9,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$page_security = 'SA_CRMCATEGORY';
+$GLOBALS['page_security'] = 'SA_CRMCATEGORY';
 require __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/db/crm_contacts_db.inc";
 

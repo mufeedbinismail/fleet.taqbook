@@ -1,6 +1,6 @@
 <?php
 
-$page_security = 'SA_MARKETPLACE';
+$GLOBALS['page_security'] = 'SA_MARKETPLACE';
 
 require_once __DIR__ . "/../../includes/db_pager.inc";
 require_once __DIR__ . "/../../includes/session.inc";

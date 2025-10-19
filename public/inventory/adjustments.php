@@ -9,7 +9,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$page_security = 'SA_INVENTORYADJUSTMENT';
+$GLOBALS['page_security'] = 'SA_INVENTORYADJUSTMENT';
 require_once __DIR__ . "/../includes/ui/items_cart.inc";
 
 require_once __DIR__ . "/../includes/session.inc";
@@ -27,7 +27,7 @@ if (user_use_date_picker())
 	$js .= get_js_date_picker();
 if (isset($_GET['NewAdjustment'])) {
 	if (isset($_GET['FixedAsset'])) {
-		$page_security = 'SA_ASSETDISPOSAL';
+		$GLOBALS['page_security'] = 'SA_ASSETDISPOSAL';
 		$_SESSION['page_title'] = _($help_context = "Fixed Assets Disposal");
 	} else {
 		$_SESSION['page_title'] = _($help_context = "Item Adjustments Note");

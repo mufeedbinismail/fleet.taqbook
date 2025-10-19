@@ -9,7 +9,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$page_security = 'SA_SALESALLOC';
+$GLOBALS['page_security'] = 'SA_SALESALLOC';
 require __DIR__ . "/../../includes/db_pager.inc";
 require_once __DIR__ . "/../../includes/session.inc";
 
@@ -21,7 +21,7 @@ if (isset($_GET['Marketplace'])) {
 }
 
 if (check_value('is_marketplace_trans')) {
-    $page_security = 'SA_MP_SALESALLOC';
+    $GLOBALS['page_security'] = 'SA_MP_SALESALLOC';
 }
 
 $js = "";

@@ -13,7 +13,7 @@
 //
 //	Entry/Modify free hand Credit Note
 //
-$page_security = 'SA_SALESCREDIT';
+$GLOBALS['page_security'] = 'SA_SALESCREDIT';
 require_once __DIR__ . "/../sales/includes/cart_class.inc";
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/data_checks.inc";
@@ -48,7 +48,7 @@ if(isset($_GET['NewCredit'])) {
 }
 
 if (isset($_GET['Marketplace']) || ($_SESSION['Items']->is_marketplace_trans ?? 0) != 0) {
-    $page_security = 'SA_MP_SALESCREDIT';
+    $GLOBALS['page_security'] = 'SA_MP_SALESCREDIT';
 }
 
 page($_SESSION['page_title'],false, false, "", $js);

@@ -13,8 +13,7 @@
 	Print request redirector. This file is fired via print link or 
 	print button in reporting module. 
 */
-global $page_security;
-$page_security = 'SA_OPEN';	// this level is later overriden in rep file
+$GLOBALS['page_security'] = 'SA_OPEN';	// this level is later overriden in rep file
 require_once __DIR__ . "/../includes/session.inc";
 
 if (user_save_report_selections() > 0 && isset($_POST['REP_ID'])) {	// save parameters from Report Center

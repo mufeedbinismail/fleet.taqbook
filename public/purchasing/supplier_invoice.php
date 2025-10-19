@@ -9,7 +9,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$page_security = 'SA_SUPPLIERINVOICE';
+$GLOBALS['page_security'] = 'SA_SUPPLIERINVOICE';
 
 require_once __DIR__ . "/../purchasing/includes/purchasing_db.inc";
 

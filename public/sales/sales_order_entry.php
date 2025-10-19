@@ -17,7 +17,7 @@
 //	Entry Direct Invoice
 //
 
-$page_security = 'SA_SALESORDER';
+$GLOBALS['page_security'] = 'SA_SALESORDER';
 
 require_once __DIR__ . "/../sales/includes/cart_class.inc";
 require_once __DIR__ . "/../includes/session.inc";

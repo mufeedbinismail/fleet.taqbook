@@ -14,7 +14,7 @@
   selection in pages that have GL account dropdown lists.
   Author: bogeyman2007 from Discussion Forum. Modified by Joe Hunt
 ***********************************************************************/
-$page_security = "SA_GLACCOUNT";
+$GLOBALS['page_security'] = "SA_GLACCOUNT";
 require_once __DIR__ . "/../../includes/session.inc";
 require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../gl/includes/db/gl_db_accounts.inc";
