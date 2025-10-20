@@ -103,7 +103,7 @@ if (list_updated('stock_id'))
 	$Ajax->activate('price_table');
 //--------------------------------------------------------------------------------------------------
 
-$action = $_SERVER['PHP_SELF'];
+$action = url()->current();
 if ($page_nested)
 	$action .= "?stock_id=".get_post('stock_id');
 start_form(false, false, $action);

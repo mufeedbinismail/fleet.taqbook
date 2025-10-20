@@ -82,7 +82,7 @@ if (isset($_GET['AddedID'])) {
 
 	display_note(get_gl_view_str($trans_type, $credit_no, _("View the GL &Journal Entries for this Credit Note")));
 
-	hyperlink_params($_SERVER['PHP_SELF'], _("Enter Another &Credit Note"), "NewCredit=yes{$marketplace_flg}");
+	hyperlink_params(url()->current(), _("Enter Another &Credit Note"), "NewCredit=yes{$marketplace_flg}");
 
 	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), "filterType=$trans_type&trans_no=$credit_no");
 
@@ -223,7 +223,7 @@ if (isset($_POST['ProcessCredit']) && can_process()) {
         $marketplace_flg = $_SESSION['Items']->is_marketplace_trans ? "&Marketplace=Yes" : "";
 		new_doc_date($_SESSION['Items']->document_date);
 		processing_end();
-		meta_forward($_SERVER['PHP_SELF'], "AddedID=$credit_no{$marketplace_flg}");
+		meta_forward(url()->current(), "AddedID=$credit_no{$marketplace_flg}");
 	}
 } /*end of process credit note */
 

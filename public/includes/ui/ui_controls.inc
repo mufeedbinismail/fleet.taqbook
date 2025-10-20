@@ -67,7 +67,7 @@ function start_form($multi=false, $dummy=false, $action="", $name="")
 	if ($name != "")
 		$name = "name='$name'";
 	if ($action == "")
-		$action = $_SERVER['PHP_SELF'];
+		$action = url()->current();
 
 	if ($multi)
 		echo "<form enctype='multipart/form-data' method='post' action='$action' $name>\n";
@@ -247,7 +247,7 @@ function hyperlink_no_params($target, $label, $center=true)
 	$id = default_focus();
 	$pars = access_string($label);
 	if ($target == '')
-		$target = $_SERVER['PHP_SELF'];
+		$target = url()->current();
 	if ($center)
 		echo "<br><center>";
 	echo "<a href='$target' id='$id' $pars[1]>$pars[0]</a>\n";
@@ -316,7 +316,7 @@ function hyperlink_params($target, $label, $params, $center=true)
 	
 	$pars = access_string($label);
 	if ($target == '')
-		$target = $_SERVER['PHP_SELF'];
+		$target = url()->current();
 	if ($center)
 		echo "<br><center>";
 	echo "<a id='$id' href='$target?$params'$pars[1]>$pars[0]</a>\n";
@@ -554,7 +554,7 @@ function context_call($call, $ctx='')
 
 	array_unshift($_SESSION['Context'], array('name' => $ctx, 
 		'ctx' => $context,
-		'caller' => $_SERVER['PHP_SELF'],
+		'caller' => url()->current(),
 		'ret' => array()));
 	meta_forward($call);
 }
@@ -565,7 +565,7 @@ function context_call($call, $ctx='')
 function context_restore()
 {
 	if ( count($_SESSION['Context'])) {
-		if ($_SERVER['PHP_SELF'] == $_SESSION['Context'][0]['caller']) {
+		if (url()->current() == $_SESSION['Context'][0]['caller']) {
 			$ctx = array_shift($_SESSION['Context']);
 			if ($ctx) {
 				if (is_array($ctx['ctx'])) {

@@ -266,7 +266,7 @@ function display_balance_sheet()
 	}
 	
 	end_table(); // outer table
-	hyperlink_params($_SERVER['PHP_SELF'], _("Back"), "TransFromDate=". $from . "&TransToDate=" . $to . "&Dimension=" . $dimension . "&Dimension2=" . $dimension2);
+	hyperlink_params(url()->current(), _("Back"), "TransFromDate=". $from . "&TransToDate=" . $to . "&Dimension=" . $dimension . "&Dimension2=" . $dimension2);
 	div_end();
 }
 

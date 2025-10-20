@@ -142,5 +142,5 @@ function in_ajax() {
 //
 function absolute_url($url) 
 {
-   return strpos($url, '..')===0 ? dirname($_SERVER['PHP_SELF']).'/'.$url : $url;
+   return strpos($url, '..')===0 ? dirname(url()->current()).'/'.$url : $url;
 }

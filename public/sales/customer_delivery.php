@@ -316,9 +316,9 @@ if (isset($_POST['process_delivery']) && check_data()) {
         $marketplace = $dn->is_marketplace_trans ? "&Marketplace=Yes" : '';
 		processing_end();
 		if ($newdelivery) {
-			meta_forward($_SERVER['PHP_SELF'], "AddedID={$delivery_no}{$is_prepaid}{$marketplace}");
+			meta_forward(url()->current(), "AddedID={$delivery_no}{$is_prepaid}{$marketplace}");
 		} else {
-			meta_forward($_SERVER['PHP_SELF'], "UpdatedID={$delivery_no}{$is_prepaid}{$marketplace}");
+			meta_forward(url()->current(), "UpdatedID={$delivery_no}{$is_prepaid}{$marketplace}");
 		}
 	}
 }

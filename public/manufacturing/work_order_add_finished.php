@@ -161,7 +161,7 @@ if ((isset($_POST['Process']) || isset($_POST['ProcessAndClose'])) && can_proces
 	 $id = work_order_produce($_POST['selected_id'], $_POST['ref'], input_num('quantity'),
 			$_POST['date_'], $_POST['memo_'], $close_wo);
 
-	meta_forward($_SERVER['PHP_SELF'], "AddedID=".$_POST['selected_id']."&date=".$_POST['date_']);
+	meta_forward(url()->current(), "AddedID=".$_POST['selected_id']."&date=".$_POST['date_']);
 }
 
 //-------------------------------------------------------------------------------------

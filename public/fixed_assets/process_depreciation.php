@@ -56,7 +56,7 @@ function handle_submit()
 
   $trans_no = process_fixed_asset_depreciation($_POST['stock_id'], $gl_rows, $_POST['refline'], $_POST['memo_']);
 
-  meta_forward($_SERVER['PHP_SELF'], "AddedID=".$trans_no);
+  meta_forward(url()->current(), "AddedID=".$trans_no);
 }
 
 //---------------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ if (isset($_GET['AddedID']))
 
   display_note(get_gl_view_str($trans_type, $trans_no, _("View the GL &Postings for this Depreciation")), 1, 0);
 
-  hyperlink_no_params($_SERVER['PHP_SELF'], _("Depreciate &Another Fixed Asset"));
+  hyperlink_no_params(url()->current(), _("Depreciate &Another Fixed Asset"));
 
 	display_footer_exit();
 }

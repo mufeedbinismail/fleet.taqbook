@@ -267,7 +267,7 @@ function process_receive_po()
 	unset($_SESSION['PO']->line_items);
 	unset($_SESSION['PO']);
 
-	meta_forward($_SERVER['PHP_SELF'], "AddedID=$grn_no");
+	meta_forward(url()->current(), "AddedID=$grn_no");
 }
 
 //--------------------------------------------------------------------------------------------------

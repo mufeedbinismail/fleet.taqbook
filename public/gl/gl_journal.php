@@ -58,7 +58,7 @@ if (isset($_GET['AddedID']))
     display_note(get_gl_view_str($trans_type, $trans_no, _("&View this Journal Entry")));
 
 	reset_focus();
-	hyperlink_params($_SERVER['PHP_SELF'], _("Enter &New Journal Entry"), "NewJournal=Yes");
+	hyperlink_params(url()->current(), _("Enter &New Journal Entry"), "NewJournal=Yes");
 
 	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), "filterType=$trans_type&trans_no=$trans_no");
 
@@ -339,9 +339,9 @@ if (isset($_POST['Process']))
 	new_doc_date($_POST['date_']);
 	unset($_SESSION['journal_items']);
 	if($new)
-		meta_forward($_SERVER['PHP_SELF'], "AddedID=$trans_no");
+		meta_forward(url()->current(), "AddedID=$trans_no");
 	else
-		meta_forward($_SERVER['PHP_SELF'], "UpdatedID=$trans_no");
+		meta_forward(url()->current(), "UpdatedID=$trans_no");
 }
 
 //-----------------------------------------------------------------------------------------------

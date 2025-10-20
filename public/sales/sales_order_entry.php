@@ -549,17 +549,17 @@ if (isset($_POST['ProcessOrder']) && can_process()) {
 		processing_end();
 		if ($modified) {
 			if ($trans_type == ST_SALESQUOTE)
-				meta_forward($_SERVER['PHP_SELF'], "UpdatedQU=$trans_no");
+				meta_forward(url()->current(), "UpdatedQU=$trans_no");
 			else	
-				meta_forward($_SERVER['PHP_SELF'], "{$marketplace_flag}UpdatedID=$trans_no");
+				meta_forward(url()->current(), "{$marketplace_flag}UpdatedID=$trans_no");
 		} elseif ($trans_type == ST_SALESORDER) {
-			meta_forward($_SERVER['PHP_SELF'], "{$marketplace_flag}AddedID=$trans_no");
+			meta_forward(url()->current(), "{$marketplace_flag}AddedID=$trans_no");
 		} elseif ($trans_type == ST_SALESQUOTE) {
-			meta_forward($_SERVER['PHP_SELF'], "AddedQU=$trans_no");
+			meta_forward(url()->current(), "AddedQU=$trans_no");
 		} elseif ($trans_type == ST_SALESINVOICE) {
-			meta_forward($_SERVER['PHP_SELF'], "{$marketplace_flag}AddedDI=$trans_no&Type=$so_type");
+			meta_forward(url()->current(), "{$marketplace_flag}AddedDI=$trans_no&Type=$so_type");
 		} else {
-			meta_forward($_SERVER['PHP_SELF'], "{$marketplace_flag}AddedDN=$trans_no&Type=$so_type");
+			meta_forward(url()->current(), "{$marketplace_flag}AddedDN=$trans_no&Type=$so_type");
 		}
 	}	
 }

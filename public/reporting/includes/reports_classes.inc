@@ -73,7 +73,7 @@ class BoxReports
 
 			$acc = access_string($name);
 			$st_classes .= "<a href='"
-				.$_SERVER['PHP_SELF']."?Class=$class_id'"
+				.url()->current()."?Class=$class_id'"
 				." style='font-weight:". ($cur_class == $class_id ? 'bold' : 'normal')."'"
 				." class='repclass_link' id='".'class'.$class_id."'"
 				."$acc[1]>$acc[0]</a> <br>";
@@ -84,7 +84,7 @@ class BoxReports
 			{
 				$acc = access_string($report->name);
 				$st_reports .= "<tr><td><a class='repopts_link'"
-					." href='".$_SERVER['PHP_SELF']."?Class=$class_id&REP_ID=$report->id'"
+					." href='".url()->current()."?Class=$class_id&REP_ID=$report->id'"
 					." style='font-weight:". (@$_REQUEST['REP_ID'] == $report->id ? 'bold' : 'normal')."'"
 					." id='".$id = default_focus()."'"
 					."$acc[1]>$acc[0]</a><tr><td>\n";
@@ -95,7 +95,7 @@ class BoxReports
 
 				if (isset($_REQUEST['REP_ID']) && $_REQUEST['REP_ID']==$report->id) {
 					// parameters form
-					$action = $_SERVER['PHP_SELF'];
+					$action = url()->current();
 					$st_params = "<table><tr><td>\n"
 						. "<form method='POST' action='$action' target='_blank'>\n";
 					$st_params .= submit('Rep'.$report->id,  

@@ -53,9 +53,9 @@ if (isset($_GET['AddedID']))
   $itm = db_fetch(get_stock_transfer_items($_GET['AddedID']));
 
   if (is_fixed_asset($itm['mb_flag']))
-	  hyperlink_params($_SERVER['PHP_SELF'], _("Enter &Another Fixed Assets Transfer"), "NewTransfer=1&FixedAsset=1");
+	  hyperlink_params(url()->current(), _("Enter &Another Fixed Assets Transfer"), "NewTransfer=1&FixedAsset=1");
   else
-	  hyperlink_params($_SERVER['PHP_SELF'], _("Enter &Another Inventory Transfer"), "NewTransfer=1");
+	  hyperlink_params(url()->current(), _("Enter &Another Inventory Transfer"), "NewTransfer=1");
 
 	display_footer_exit();
 }
@@ -148,7 +148,7 @@ if (isset($_POST['Process']))
 	$_SESSION['transfer_items']->clear_items();
 	unset($_SESSION['transfer_items']);
 
-   	meta_forward($_SERVER['PHP_SELF'], "AddedID=$trans_no");
+   	meta_forward(url()->current(), "AddedID=$trans_no");
 } /*end of process credit note */
 
 //-----------------------------------------------------------------------------------------------

@@ -153,7 +153,7 @@ if (isset($_POST['ADD_ITEM']) || isset($_POST['UPDATE_ITEM']))
 		{
 			$id = add_dimension($_POST['ref'], $_POST['name'], $_POST['type_'], $_POST['date_'], $_POST['due_date'], $_POST['memo_']);
 			add_tag_associations($id, $_POST['dimension_tags']);
-			meta_forward($_SERVER['PHP_SELF'], "AddedID=$id");
+			meta_forward(url()->current(), "AddedID=$id");
 		} 
 		else 
 		{
@@ -161,7 +161,7 @@ if (isset($_POST['ADD_ITEM']) || isset($_POST['UPDATE_ITEM']))
 			update_dimension($selected_id, $_POST['name'], $_POST['type_'], $_POST['date_'], $_POST['due_date'], $_POST['memo_']);
 			update_tag_associations(TAG_DIMENSION, $selected_id, $_POST['dimension_tags']);
 
-			meta_forward($_SERVER['PHP_SELF'], "UpdatedID=$selected_id");
+			meta_forward(url()->current(), "UpdatedID=$selected_id");
 		}
 	}
 }
@@ -187,7 +187,7 @@ if (isset($_POST['delete']))
 		// delete
 		delete_dimension($selected_id);
 		delete_tag_associations(TAG_DIMENSION,$selected_id, true);
-		meta_forward($_SERVER['PHP_SELF'], "DeletedID=$selected_id");
+		meta_forward(url()->current(), "DeletedID=$selected_id");
 	}
 }
 
@@ -198,7 +198,7 @@ if (isset($_POST['close']))
 
 	// update the closed flag
 	close_dimension($selected_id);
-	meta_forward($_SERVER['PHP_SELF'], "ClosedID=$selected_id");
+	meta_forward(url()->current(), "ClosedID=$selected_id");
 }
 
 if (isset($_POST['reopen'])) 
@@ -206,7 +206,7 @@ if (isset($_POST['reopen']))
 
 	// update the closed flag
 	reopen_dimension($selected_id);
-	meta_forward($_SERVER['PHP_SELF'], "ReopenedID=$selected_id");
+	meta_forward(url()->current(), "ReopenedID=$selected_id");
 }
 //-------------------------------------------------------------------------------------
 

@@ -21,7 +21,7 @@ function processing_start()
 {
 	page_processing(false);
     processing_end();
-    $_SESSION['Processing'] = $_SERVER['PHP_SELF'];
+    $_SESSION['Processing'] = url()->current();
 }
 
 function processing_end()
@@ -36,7 +36,7 @@ function processing_end()
 
 function processing_active()
 {
-    return (isset($_SESSION['Processing']) && $_SESSION['Processing']==$_SERVER['PHP_SELF']);
+    return (isset($_SESSION['Processing']) && $_SESSION['Processing']==url()->current());
 }
 /*
 	Check if the cart was not destroyed during opening the edition page in

@@ -32,7 +32,7 @@ if ($id = find_submit('Delete', false))
 		unset($extensions[$id]);
 		if (update_extensions($extensions)) {
 			display_notification(_("Selected chart has been successfully deleted"));
-			meta_forward($_SERVER['PHP_SELF']);
+			meta_forward(url()->current());
 		}
 	}
 }

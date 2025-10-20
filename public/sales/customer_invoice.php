@@ -394,9 +394,9 @@ if (isset($_POST['process_invoice']) && check_data()) {
 
         $marketplace_flg = check_value('is_marketplace_trans') ? '&Marketplace=Yes' : '';
 		if ($newinvoice) {
-			meta_forward($_SERVER['PHP_SELF'], "AddedID=$invoice_no{$marketplace_flg}");
+			meta_forward(url()->current(), "AddedID=$invoice_no{$marketplace_flg}");
 		} else {
-			meta_forward($_SERVER['PHP_SELF'], "UpdatedID=$invoice_no{$marketplace_flg}");
+			meta_forward(url()->current(), "UpdatedID=$invoice_no{$marketplace_flg}");
 		}
 	}	
 }
@@ -646,7 +646,7 @@ foreach ($_SESSION['Items']->line_items as $line=>$ln_itm) {
 			$dn_line_cnt = $dspans[0];
 			$dspans = array_slice($dspans, 1);
 			label_cell($ln_itm->src_no, "rowspan=$dn_line_cnt class='oddrow'");
-			label_cell("<a href='" . $_SERVER['PHP_SELF'] . "?RemoveDN=".
+			label_cell("<a href='" . url()->current() . "?RemoveDN=".
 				$ln_itm->src_no."'>" . _("Remove") . "</a>", "rowspan=$dn_line_cnt class='oddrow'");
 		}
 		$dn_line_cnt--;

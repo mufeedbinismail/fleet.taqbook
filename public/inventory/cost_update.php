@@ -90,7 +90,7 @@ if (list_updated('stock_id') || $should_update) {
 }
 //-----------------------------------------------------------------------------------------
 
-$action = $_SERVER['PHP_SELF'];
+$action = url()->current();
 if ($page_nested)
 	$action .= "?stock_id=".get_post('stock_id');
 start_form(false, false, $action);

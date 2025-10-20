@@ -247,7 +247,7 @@ if (isset($_POST['ADD_ITEM']) && can_process())
 		$_POST['RequDate'], $_POST['memo_'], input_num('Costs'), $_POST['cr_acc'], input_num('Labour'), $_POST['cr_lab_acc']);
 
 	new_doc_date($_POST['date_']);
-	meta_forward($_SERVER['PHP_SELF'], "AddedID=$id&type=".$_POST['type']."&date=".$_POST['date_']);
+	meta_forward(url()->current(), "AddedID=$id&type=".$_POST['type']."&date=".$_POST['date_']);
 }
 
 //-------------------------------------------------------------------------------------
@@ -258,7 +258,7 @@ if (isset($_POST['UPDATE_ITEM']) && can_process())
 	update_work_order($selected_id, $_POST['StockLocation'], input_num('quantity'),
 		$_POST['stock_id'],  $_POST['date_'], $_POST['RequDate'], $_POST['memo_']);
 	new_doc_date($_POST['date_']);
-	meta_forward($_SERVER['PHP_SELF'], "UpdatedID=$selected_id");
+	meta_forward(url()->current(), "UpdatedID=$selected_id");
 }
 
 //--------------------------------------------------------------------------------------
@@ -283,7 +283,7 @@ if (isset($_POST['delete']))
 
 		// delete the actual work order
 		delete_work_order($selected_id, $_POST['stock_id'], $_POST['quantity'], $_POST['date_']);
-		meta_forward($_SERVER['PHP_SELF'], "DeletedID=$selected_id");
+		meta_forward(url()->current(), "DeletedID=$selected_id");
 	}
 }
 
@@ -294,7 +294,7 @@ if (isset($_POST['close']))
 
 	// update the closed flag in the work order
 	close_work_order($selected_id);
-	meta_forward($_SERVER['PHP_SELF'], "ClosedID=$selected_id");
+	meta_forward(url()->current(), "ClosedID=$selected_id");
 }
 
 //-------------------------------------------------------------------------------------

@@ -37,7 +37,7 @@ if (($id = find_submit('Delete', false)) && isset($installed_extensions[$id])
 		unset($extensions[$id]);
 		if (update_extensions($extensions)) {
 			display_notification(_("Selected theme has been successfully deleted"));
-			meta_forward($_SERVER['PHP_SELF']);
+			meta_forward(url()->current());
 		}
 	}
 }

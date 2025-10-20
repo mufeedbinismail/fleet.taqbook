@@ -194,7 +194,7 @@ function show_users_online()
 		}
 
 		// Add user to database
-		db_query("INSERT INTO ".TB_PREF."useronline (timestamp, ip, file) VALUES ('". $timestamp ."',". db_escape($ip) .",". db_escape($_SERVER['PHP_SELF']) .")");
+		db_query("INSERT INTO ".TB_PREF."useronline (timestamp, ip, file) VALUES ('". $timestamp ."',". db_escape($ip) .",". db_escape(url()->current()) .")");
 		//Remove users that were not online within $timeoutseconds.
 		db_query("DELETE FROM ".TB_PREF."useronline WHERE timestamp<". $timeout);
 

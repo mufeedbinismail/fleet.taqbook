@@ -64,7 +64,7 @@ function handle_submit()
 
 	$trans = add_exchange_variation_all($_POST['date'], $_POST['memo_']);
 
-	meta_forward($_SERVER['PHP_SELF'], "BA=".$trans[0]."&JE=".$trans[1]);
+	meta_forward(url()->current(), "BA=".$trans[0]."&JE=".$trans[1]);
 	//clear_data();
 }
 

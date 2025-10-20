@@ -304,7 +304,7 @@ if (get_post('AddPaymentItem') && can_process()) {
 
 	unset($_SESSION['alloc']);
     $marketplace_flg = check_value('is_marketplace_trans') ? 'Marketplace=Yes&' : '';
-	meta_forward($_SERVER['PHP_SELF'], $marketplace_flg . ($new_pmt ? "AddedID=$payment_no" : "UpdatedID=$payment_no"));
+	meta_forward(url()->current(), $marketplace_flg . ($new_pmt ? "AddedID=$payment_no" : "UpdatedID=$payment_no"));
 }
 
 //----------------------------------------------------------------------------------------------

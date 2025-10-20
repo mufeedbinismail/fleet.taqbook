@@ -248,9 +248,9 @@ if (isset($_POST['ProcessCredit']) && can_process()) {
 		processing_end();
         $marketplace_flg = $_SESSION['Items']->is_marketplace_trans ? "&Marketplace=Yes" : "";
 		if ($new_credit) {
-			meta_forward($_SERVER['PHP_SELF'], "AddedID=$credit_no{$marketplace_flg}");
+			meta_forward(url()->current(), "AddedID=$credit_no{$marketplace_flg}");
 		} else {
-			meta_forward($_SERVER['PHP_SELF'], "UpdatedID=$credit_no{$marketplace_flg}");
+			meta_forward(url()->current(), "UpdatedID=$credit_no{$marketplace_flg}");
 		}
 	}
 }

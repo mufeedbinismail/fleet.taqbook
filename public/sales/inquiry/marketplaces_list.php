@@ -13,7 +13,7 @@ if(get_post("search")) {
   $Ajax->activate("marketplace_tbl");
 }
 
-start_form(false, false, $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']);
+start_form(false, false, url()->current() . "?" . $_SERVER['QUERY_STRING']);
 
 start_table(TABLESTYLE_NOBORDER);
 

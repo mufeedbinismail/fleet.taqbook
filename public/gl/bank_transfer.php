@@ -46,7 +46,7 @@ if (isset($_GET['AddedID']))
 
 	display_note(get_gl_view_str($trans_type, $trans_no, _("&View the GL Journal Entries for this Transfer")));
 
-   	hyperlink_no_params($_SERVER['PHP_SELF'], _("Enter &Another Transfer"));
+   	hyperlink_no_params(url()->current(), _("Enter &Another Transfer"));
 
 	display_footer_exit();
 }
@@ -295,7 +295,7 @@ function bank_transfer_handle_submit()
 			$_POST['memo_'], $_POST['dimension_id'], $_POST['dimension2_id'], input_num('charge'), input_num('target_amount'));
 	}
 
-	meta_forward($_SERVER['PHP_SELF'], "AddedID=$trans_no");
+	meta_forward(url()->current(), "AddedID=$trans_no");
 }
 
 //----------------------------------------------------------------------------------------

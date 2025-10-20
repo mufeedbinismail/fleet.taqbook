@@ -443,12 +443,17 @@ if (!defined('FA_LOGOUT_PHP_FILE')){
 		// Show login screen
 		if (!isset($_POST["user_name_entry_field"]) or $_POST["user_name_entry_field"] == "")
 		{
+            $current_url = request()->fullUrl();
+            if ($current_url == '' || $current_url == url('/index.php') || $current_url == url('/')) {
+                $current_url = url('/index.php?application=orders');
+            }
+
 			// strip ajax marker from uri, to force synchronous page reload
 			$_SESSION['timeout'] = array(
                 'uri' => preg_replace(
                     '/JsHttpRequest=(?:(\d+)-)?([^&]+)/s',
 					'',
-                    request()->fullUrl()
+                    $current_url
                 ),
 				'post' => $_POST
             );

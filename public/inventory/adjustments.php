@@ -50,7 +50,7 @@ if (isset($_GET['AddedID']))
     display_note(get_trans_view_str($trans_type, $trans_no, _("&View this disposal")));
 
     display_note(get_gl_view_str($trans_type, $trans_no, _("View the GL &Postings for this Disposal")), 1, 0);
-	  hyperlink_params($_SERVER['PHP_SELF'], _("Enter &Another Disposal"), "NewAdjustment=1&FixedAsset=1");
+	  hyperlink_params(url()->current(), _("Enter &Another Disposal"), "NewAdjustment=1&FixedAsset=1");
   }
   else {
     display_notification_centered(_("Items adjustment has been processed"));
@@ -58,7 +58,7 @@ if (isset($_GET['AddedID']))
 
     display_note(get_gl_view_str($trans_type, $trans_no, _("View the GL &Postings for this Adjustment")), 1, 0);
 
-	  hyperlink_params($_SERVER['PHP_SELF'], _("Enter &Another Adjustment"), "NewAdjustment=1");
+	  hyperlink_params(url()->current(), _("Enter &Another Adjustment"), "NewAdjustment=1");
   }
 
 	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), "filterType=$trans_type&trans_no=$trans_no");
@@ -150,9 +150,9 @@ if (isset($_POST['Process']) && can_process()){
 	unset($_SESSION['adj_items']);
 
   if ($fixed_asset)
-   	meta_forward($_SERVER['PHP_SELF'], "AddedID=$trans_no&FixedAsset=1");
+   	meta_forward(url()->current(), "AddedID=$trans_no&FixedAsset=1");
   else
-   	meta_forward($_SERVER['PHP_SELF'], "AddedID=$trans_no");
+   	meta_forward(url()->current(), "AddedID=$trans_no");
 
 } /*end of process credit note */
 

@@ -81,9 +81,9 @@ if (isset($_GET['AddedID']))
 
 	display_note(get_gl_view_str($trans_type, $trans_no, _("&View the GL Postings for this Payment")));
 
-	hyperlink_params($_SERVER['PHP_SELF'], _("Enter Another &Payment"), "NewPayment=yes");
+	hyperlink_params(url()->current(), _("Enter Another &Payment"), "NewPayment=yes");
 
-	hyperlink_params($_SERVER['PHP_SELF'], _("Enter A &Deposit"), "NewDeposit=yes");
+	hyperlink_params(url()->current(), _("Enter A &Deposit"), "NewDeposit=yes");
 
 	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), "filterType=$trans_type&trans_no=$trans_no");
 
@@ -99,9 +99,9 @@ if (isset($_GET['UpdatedID']))
 
 	display_note(get_gl_view_str($trans_type, $trans_no, _("&View the GL Postings for this Payment")));
 
-	hyperlink_params($_SERVER['PHP_SELF'], _("Enter Another &Payment"), "NewPayment=yes");
+	hyperlink_params(url()->current(), _("Enter Another &Payment"), "NewPayment=yes");
 
-	hyperlink_params($_SERVER['PHP_SELF'], _("Enter A &Deposit"), "NewDeposit=yes");
+	hyperlink_params(url()->current(), _("Enter A &Deposit"), "NewDeposit=yes");
 
 	display_footer_exit();
 }
@@ -115,9 +115,9 @@ if (isset($_GET['AddedDep']))
 
 	display_note(get_gl_view_str($trans_type, $trans_no, _("View the GL Postings for this Deposit")));
 
-	hyperlink_params($_SERVER['PHP_SELF'], _("Enter Another Deposit"), "NewDeposit=yes");
+	hyperlink_params(url()->current(), _("Enter Another Deposit"), "NewDeposit=yes");
 
-	hyperlink_params($_SERVER['PHP_SELF'], _("Enter A Payment"), "NewPayment=yes");
+	hyperlink_params(url()->current(), _("Enter A Payment"), "NewPayment=yes");
 
 	display_footer_exit();
 }
@@ -130,9 +130,9 @@ if (isset($_GET['UpdatedDep']))
 
 	display_note(get_gl_view_str($trans_type, $trans_no, _("&View the GL Postings for this Deposit")));
 
-	hyperlink_params($_SERVER['PHP_SELF'], _("Enter Another &Deposit"), "NewDeposit=yes");
+	hyperlink_params(url()->current(), _("Enter Another &Deposit"), "NewDeposit=yes");
 
-	hyperlink_params($_SERVER['PHP_SELF'], _("Enter A &Payment"), "NewPayment=yes");
+	hyperlink_params(url()->current(), _("Enter A &Payment"), "NewPayment=yes");
 
 	display_footer_exit();
 }
@@ -313,10 +313,10 @@ if (isset($_POST['Process']) && !check_trans())
 	commit_transaction();
 
 	if ($new)
-		meta_forward($_SERVER['PHP_SELF'], $trans_type==ST_BANKPAYMENT ?
+		meta_forward(url()->current(), $trans_type==ST_BANKPAYMENT ?
 			"AddedID=$trans_no" : "AddedDep=$trans_no");
 	else
-		meta_forward($_SERVER['PHP_SELF'], $trans_type==ST_BANKPAYMENT ?
+		meta_forward(url()->current(), $trans_type==ST_BANKPAYMENT ?
 			"UpdatedID=$trans_no" : "UpdatedDep=$trans_no");
 
 }

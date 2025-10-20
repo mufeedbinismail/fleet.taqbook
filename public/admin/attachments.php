@@ -31,7 +31,7 @@ if ($view_id != -1)
 	if ($row['filename'] != "")
 	{
 		if(in_ajax()) {
-			$Ajax->popup($_SERVER['PHP_SELF'].'?vw='.$view_id);
+			$Ajax->popup(url()->current().'?vw='.$view_id);
 		} else {
             throw new \App\Exceptions\Legacy\FileStreamException(company_path(). "/attachments/".$row['unique_name']);
 		}
@@ -48,7 +48,7 @@ if ($download_id != -1)
 	if ($row['filename'] != "")
 	{
 		if(in_ajax()) {
-			$Ajax->redirect($_SERVER['PHP_SELF'].'?dl='.$download_id);
+			$Ajax->redirect(url()->current().'?dl='.$download_id);
 		} else {
             throw new \App\Exceptions\Legacy\FileDownloadException(
                 company_path(). "/attachments/".$row['unique_name'],

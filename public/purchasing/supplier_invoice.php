@@ -68,7 +68,7 @@ if (isset($_GET['AddedID']))
 	hyperlink_params(url("/purchasing/supplier_payment.php"), _("Entry supplier &payment for this invoice"),
 		"PInvoice=".$invoice_no."&trans_type=".$trans_type);
 
-	hyperlink_params($_SERVER['PHP_SELF'], _("Enter Another Invoice"), "New=1");
+	hyperlink_params(url()->current(), _("Enter Another Invoice"), "New=1");
 
 	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), "filterType=$trans_type&trans_no=$invoice_no");
 	
@@ -238,7 +238,7 @@ function handle_commit_invoice()
     $_SESSION['supp_trans']->clear_items();
     unset($_SESSION['supp_trans']);
 
-	meta_forward($_SERVER['PHP_SELF'], "AddedID=$invoice_no");
+	meta_forward(url()->current(), "AddedID=$invoice_no");
 }
 
 //--------------------------------------------------------------------------------------------------

@@ -91,7 +91,7 @@ if (isset($_GET['AddedID']))
 	hyperlink_params(url("/purchasing/po_receive_items.php"), _("&Receive Items on this Purchase Order"), "PONumber=$order_no");
 
   // TODO, for fixed asset
-	hyperlink_params($_SERVER['PHP_SELF'], _("Enter &Another Purchase Order"), "NewOrder=yes");
+	hyperlink_params(url()->current(), _("Enter &Another Purchase Order"), "NewOrder=yes");
 	
 	hyperlink_no_params(url("/purchasing/inquiry/po_search.php"), _("Select An &Outstanding Purchase Order"));
 	
@@ -116,7 +116,7 @@ if (isset($_GET['AddedID']))
 	hyperlink_params(url("/purchasing/supplier_invoice.php"),
 		_("Entry purchase &invoice for this receival"), "New=1");
 
-	hyperlink_params($_SERVER['PHP_SELF'], _("Enter &Another GRN"), "NewGRN=Yes");
+	hyperlink_params(url()->current(), _("Enter &Another GRN"), "NewGRN=Yes");
 	
 	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), 
 		"filterType=$trans_type&trans_no=$trans_no");
@@ -137,7 +137,7 @@ if (isset($_GET['AddedID']))
 	hyperlink_params(url("/purchasing/supplier_payment.php"), _("Entry supplier &payment for this invoice"),
 		"trans_type=$trans_type&PInvoice=".$trans_no);
 
-	hyperlink_params($_SERVER['PHP_SELF'], _("Enter &Another Direct Invoice"), "NewInvoice=Yes");
+	hyperlink_params(url()->current(), _("Enter &Another Direct Invoice"), "NewInvoice=Yes");
 
 	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"),
 		"filterType=$trans_type&trans_no=$trans_no");
@@ -424,16 +424,16 @@ function handle_commit_order()
 			if ($trans_no) {
 				unset($_SESSION['PO']);
 				if ($cart->trans_type == ST_PURCHORDER)
-	 				meta_forward($_SERVER['PHP_SELF'], "AddedID=$trans_no");
+	 				meta_forward(url()->current(), "AddedID=$trans_no");
 				elseif ($cart->trans_type == ST_SUPPRECEIVE)
-					meta_forward($_SERVER['PHP_SELF'], "AddedGRN=$trans_no");
+					meta_forward(url()->current(), "AddedGRN=$trans_no");
 				else
-					meta_forward($_SERVER['PHP_SELF'], "AddedPI=$trans_no");
+					meta_forward(url()->current(), "AddedPI=$trans_no");
 			}
 		} else { // order modification
 			$order_no = update_po($cart);
 			unset($_SESSION['PO']);
-        	meta_forward($_SERVER['PHP_SELF'], "AddedID=$order_no&Updated=1");	
+        	meta_forward(url()->current(), "AddedID=$order_no&Updated=1");	
 		}
 	}
 }

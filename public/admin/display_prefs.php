@@ -55,7 +55,7 @@ if (isset($_POST['setprefs']))
 		if ($chg_theme && $SysPrefs->allow_demo_mode)
 			$_SESSION["wa_current_user"]->prefs->theme = $_POST['theme'];
 		if ($chg_theme || $chg_lang || $chg_date_format || $chg_date_sep)
-			meta_forward($_SERVER['PHP_SELF']);
+			meta_forward(url()->current());
 
 		
 		if ($SysPrefs->allow_demo_mode)  

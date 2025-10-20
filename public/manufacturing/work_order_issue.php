@@ -114,7 +114,7 @@ if (isset($_POST['Process']) && can_process())
 	} 
 	else 
 	{
-		meta_forward($_SERVER['PHP_SELF'], "AddedID=".$_SESSION['issue_items']->order_id);
+		meta_forward(url()->current(), "AddedID=".$_SESSION['issue_items']->order_id);
 	}
 
 } /*end of process credit note */
