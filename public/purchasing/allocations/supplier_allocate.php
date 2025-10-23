@@ -11,7 +11,7 @@
 ***********************************************************************/
 $GLOBALS['page_security'] = 'SA_SUPPLIERALLOC';
 
-require __DIR__ . "/../../includes/ui/allocation_cart.inc";
+require_once __DIR__ . "/../../includes/ui/allocation_cart.inc";
 require_once __DIR__ . "/../../includes/session.inc";
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/ui.inc";

@@ -11,7 +11,7 @@
 ***********************************************************************/
 $GLOBALS['page_security'] = 'SA_SALESALLOC';
 
-require __DIR__ . "/../../includes/ui/allocation_cart.inc";
+require_once __DIR__ . "/../../includes/ui/allocation_cart.inc";
 require_once __DIR__ . "/../../includes/session.inc";
 require_once __DIR__ . "/../../includes/data_checks.inc";
 require_once __DIR__ . "/../../sales/includes/sales_ui.inc";

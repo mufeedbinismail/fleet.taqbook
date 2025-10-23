@@ -14,7 +14,7 @@ require __DIR__ . "/../../includes/session.inc";
 
 page(_($GLOBALS['help_context'] = "Sales Persons"));
 
-require __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../includes/ui.inc";
 
 simple_page_mode(true);
 //------------------------------------------------------------------------------------------------

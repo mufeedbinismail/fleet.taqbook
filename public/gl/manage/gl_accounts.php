@@ -18,8 +18,8 @@ if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 
 page(_($GLOBALS['help_context'] = "Chart of Accounts"), false, false, "", $js);
 
-require __DIR__ . "/../../includes/ui.inc";
-require __DIR__ . "/../../gl/includes/gl_db.inc";
+require_once __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../gl/includes/gl_db.inc";
 require_once __DIR__ . "/../../admin/db/tags_db.inc";
 require_once __DIR__ . "/../../includes/data_checks.inc";
 

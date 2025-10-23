@@ -11,7 +11,7 @@
 ***********************************************************************/
 $GLOBALS['page_security'] = 'SA_ITEM';
 require __DIR__ . "/../../includes/session.inc";
-require __DIR__ . "/../../reporting/includes/tcpdf.php";
+require_once __DIR__ . "/../../reporting/includes/tcpdf.php";
 
 $js = "";
 if ($SysPrefs->use_popup_windows)

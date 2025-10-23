@@ -10,7 +10,7 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $GLOBALS['page_security'] = 'SA_SUPPTRANSVIEW';
-require __DIR__ . "/../../purchasing/includes/po_class.inc";
+require_once __DIR__ . "/../../purchasing/includes/po_class.inc";
 
 require __DIR__ . "/../../includes/session.inc";
 
@@ -19,7 +19,7 @@ if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
 page(_($GLOBALS['help_context'] = "View Purchase Order Delivery"), true, false, "", $js);
 
-require __DIR__ . "/../../purchasing/includes/purchasing_ui.inc";
+require_once __DIR__ . "/../../purchasing/includes/purchasing_ui.inc";
 
 if (!isset($_GET['trans_no']))
 {

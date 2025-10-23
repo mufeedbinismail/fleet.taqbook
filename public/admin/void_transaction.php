@@ -10,7 +10,7 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $GLOBALS['page_security'] = 'SA_VOIDTRANSACTION';
-require __DIR__ . "/../includes/db_pager.inc";
+require_once __DIR__ . "/../includes/db_pager.inc";
 require_once __DIR__ . "/../includes/session.inc";
 
 require_once __DIR__ . "/../includes/date_functions.inc";

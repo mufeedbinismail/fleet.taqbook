@@ -11,7 +11,7 @@
 ***********************************************************************/
 $GLOBALS['page_security'] = 'SA_DIMTRANSVIEW';
 
-require __DIR__ . "/../../includes/db_pager.inc";
+require_once __DIR__ . "/../../includes/db_pager.inc";
 require_once __DIR__ . "/../../includes/session.inc";
 
 require_once __DIR__ . "/../../includes/date_functions.inc";

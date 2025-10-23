@@ -16,7 +16,7 @@ $GLOBALS['page_security'] = 'SA_OPEN';
 require __DIR__ . "/../includes/session.inc";
 add_js_file('login.js');
 
-require __DIR__ . "/../includes/page/header.inc";
+require_once __DIR__ . "/../includes/page/header.inc";
 page_header(_("Logout"), true, false, '');
 
 echo "<table width='100%' border='0'>

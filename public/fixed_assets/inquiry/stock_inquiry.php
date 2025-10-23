@@ -10,12 +10,12 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $GLOBALS['page_security'] = 'SA_ASSETSANALYTIC';
-require __DIR__ . "/../../includes/db_pager.inc";
+require_once __DIR__ . "/../../includes/db_pager.inc";
 require __DIR__ . "/../../includes/session.inc";
 
-require __DIR__ . "/../../purchasing/includes/purchasing_ui.inc";
-require __DIR__ . "/../../reporting/includes/reporting.inc";
-require __DIR__ . "/../../fixed_assets/includes/fixed_assets_db.inc";
+require_once __DIR__ . "/../../purchasing/includes/purchasing_ui.inc";
+require_once __DIR__ . "/../../reporting/includes/reporting.inc";
+require_once __DIR__ . "/../../fixed_assets/includes/fixed_assets_db.inc";
 
 $js = "";
 if ($SysPrefs->use_popup_windows)

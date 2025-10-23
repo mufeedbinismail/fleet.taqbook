@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_GLTRANSVIEW';
 require_once __DIR__ . "/../../includes/session.inc";
 
-require __DIR__ . "/../../includes/db_pager.inc";
+require_once __DIR__ . "/../../includes/db_pager.inc";
 
 require_once __DIR__ . "/../../admin/db/fiscalyears_db.inc";
 require_once __DIR__ . "/../../includes/date_functions.inc";

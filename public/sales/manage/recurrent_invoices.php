@@ -11,7 +11,7 @@
 ***********************************************************************/
 $GLOBALS['page_security'] = 'SA_SRECURRENT';
 require __DIR__ . "/../../includes/session.inc";
-require __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../sales/includes/sales_db.inc";
 
 $js = "";

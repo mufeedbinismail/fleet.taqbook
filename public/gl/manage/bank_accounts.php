@@ -10,7 +10,7 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $GLOBALS['page_security'] = 'SA_BANKACCOUNT';
-require __DIR__ . "/../../includes/db_pager.inc";
+require_once __DIR__ . "/../../includes/db_pager.inc";
 require __DIR__ . "/../../includes/session.inc";
 
 $js = "";
@@ -19,7 +19,7 @@ if (user_use_date_picker())
 
 page(_($GLOBALS['help_context'] = "Bank Accounts"), isset($_GET['bank_id']), false, "", $js);
 
-require __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../includes/ui/attachment.inc";
 
 simple_page_mode();

@@ -10,10 +10,10 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 $GLOBALS['page_security'] = 'SA_SALESINVOICE';
-require __DIR__ . "/../../includes/db_pager.inc";
+require_once __DIR__ . "/../../includes/db_pager.inc";
 require __DIR__ . "/../../includes/session.inc";
 
-require __DIR__ . "/../../sales/includes/sales_ui.inc";
+require_once __DIR__ . "/../../sales/includes/sales_ui.inc";
 require_once __DIR__ . "/../../reporting/includes/reporting.inc";
 
 if (isset($_GET['Marketplace'])) {

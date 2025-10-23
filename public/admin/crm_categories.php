@@ -15,7 +15,7 @@ require_once __DIR__ . "/../includes/db/crm_contacts_db.inc";
 
 page(_($GLOBALS['help_context'] = "Contact Categories"));
 
-require __DIR__ . "/../includes/ui.inc";
+require_once __DIR__ . "/../includes/ui.inc";
 
 simple_page_mode(true);
 

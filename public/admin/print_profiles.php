@@ -11,8 +11,8 @@
 ***********************************************************************/
 $GLOBALS['page_security'] = 'SA_PRINTPROFILE';
 require __DIR__ . "/../includes/session.inc";
-require __DIR__ . "/../admin/db/printers_db.inc";
-require __DIR__ . "/../includes/ui.inc";
+require_once __DIR__ . "/../admin/db/printers_db.inc";
+require_once __DIR__ . "/../includes/ui.inc";
 
 page(_($GLOBALS['help_context'] = "Printing Profiles"));
 

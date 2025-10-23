@@ -11,7 +11,7 @@
 ***********************************************************************/
 $GLOBALS['page_security'] = 'SA_CUSTOMER';
 
-require __DIR__ . "/../../includes/db_pager.inc";
+require_once __DIR__ . "/../../includes/db_pager.inc";
 require __DIR__ . "/../../includes/session.inc";
 
 $js = "";
@@ -20,8 +20,8 @@ if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 
 page(_($GLOBALS['help_context'] = "Customer Branches"), @$_REQUEST['popup'], false, "", $js);
 
-require __DIR__ . "/../../includes/ui.inc";
-require __DIR__ . "/../../includes/ui/contacts_view.inc";
+require_once __DIR__ . "/../../includes/ui.inc";
+require_once __DIR__ . "/../../includes/ui/contacts_view.inc";
 
 //-----------------------------------------------------------------------------------------------
 

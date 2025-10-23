@@ -19,10 +19,10 @@ require __DIR__ . "/../install/isession.inc";
 
 page(_("FrontAccouting ERP Installation Wizard"), true, false, "", '', false, 'stylesheet.css');
 
-require __DIR__ . "/../includes/ui.inc";
-require __DIR__ . "/../includes/system_tests.inc";
-require __DIR__ . "/../admin/db/maintenance_db.inc";
-require __DIR__ . "/../includes/packages.inc";
+require_once __DIR__ . "/../includes/ui.inc";
+require_once __DIR__ . "/../includes/system_tests.inc";
+require_once __DIR__ . "/../admin/db/maintenance_db.inc";
+require_once __DIR__ . "/../includes/packages.inc";
 if (file_exists(__DIR__ . "/../installed_extensions.php"))
 	require __DIR__ . "/../installed_extensions.php";
 //-------------------------------------------------------------------------------------------------

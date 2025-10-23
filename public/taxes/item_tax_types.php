@@ -18,7 +18,7 @@ page(_($GLOBALS['help_context'] = "Item Tax Types"));
 require_once __DIR__ . "/../taxes/db/item_tax_types_db.inc";
 require_once __DIR__ . "/../taxes/db/tax_types_db.inc";
 
-require __DIR__ . "/../includes/ui.inc";
+require_once __DIR__ . "/../includes/ui.inc";
 
 simple_page_mode(true);
 //-----------------------------------------------------------------------------------

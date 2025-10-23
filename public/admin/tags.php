@@ -12,7 +12,7 @@
 require __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/types.inc"; // For tag constants
 require_once __DIR__ . "/../admin/db/tags_db.inc";
-require __DIR__ . "/../includes/ui.inc";
+require_once __DIR__ . "/../includes/ui.inc";
 
 // Set up page security based on what type of tags we're working with
 if (@$_GET['type'] == "account" || get_post('type') == TAG_ACCOUNT) {
