@@ -69,7 +69,7 @@ function tst_sessionpath()
 {
 	$test['descr'] = _('Session save path');
 	$test['type'] = 0;
-	$test['test'] = session_save_path();
+	$test['test'] = config('session.files');
 	$test['result'] = true;
 
 	return $test;

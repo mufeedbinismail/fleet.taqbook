@@ -209,7 +209,7 @@ function create_cart($type, $trans_no)
 	$_POST['ref'] = $cart->reference;
 	$_POST['date_'] = $cart->tran_date;
 
-	$_SESSION['pay_items'] = &$cart;
+	$_SESSION['pay_items'] = $cart;
 }
 //-----------------------------------------------------------------------------------------------
 
@@ -292,7 +292,6 @@ if (isset($_POST['Process']) && !check_trans())
 {
 	begin_transaction();
 
-	$_SESSION['pay_items'] = &$_SESSION['pay_items'];
 	$new = $_SESSION['pay_items']->order_id == 0;
 
 	add_new_exchange_rate(get_bank_account_currency(get_post('bank_account')), get_post('date_'), input_num('_ex_rate'));

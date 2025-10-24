@@ -17,26 +17,6 @@ global $SysPrefs, $Ajax, $db_connections, $installed_extensions,
     $installed_languages, $Validate, $Editors, $Pagehelp, $Refs,
     $lang, $db, $version, $cur_error_level;
 
-class SessionManager
-{
-   	function sessionStart($name, $limit = 0, $path = '/', $domain = null, $secure = null)
-	{
-		// Set the cookie name
-		session_name($name);
-
-		// Set SSL level
-		$https = isset($secure) ? $secure : (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
-
-		// Set session cookie options
-		if (version_compare(PHP_VERSION, '5.2', '<')) // avoid failure on older php versions
-			session_set_cookie_params($limit, $path, $domain, $https);
-		else
-			session_set_cookie_params($limit, $path, $domain, $https, true);
-
-		session_start();
-    }
-}
-
 function output_html($text)
 {
 	global $before_box, $Ajax, $messages;
@@ -54,8 +34,7 @@ function output_html($text)
 
 function kill_login()
 {
-	session_unset();
-	session_destroy();
+	session_invalidate();
 }
 //----------------------------------------------------------------------------------------
 
@@ -286,6 +265,7 @@ function login_timeout()
 //============================================================================
 
 require_once __DIR__ . "/../includes/errors.inc";
+
 // colect all error msgs
 set_error_handler('error_handler' /*, errtypes */);
 
@@ -308,14 +288,9 @@ foreach ($installed_extensions as $ext)
 		require_once __DIR__ . '/../'.$ext['path'].'/hooks.php';
 }
 
-ini_set('session.gc_maxlifetime', 36000); // moved from below.
-
-$Session_manager = new SessionManager();
-$Session_manager->sessionStart('FA'.md5(dirname(__FILE__)), 0, '/', null, SECURE_ONLY);
-
 $SysPrefs = new sys_prefs();
 
-$_SESSION['SysPrefs'] = &$SysPrefs;
+$_SESSION['SysPrefs'] = $SysPrefs;
 
 //----------------------------------------------------------------------------------------
 // set to reasonable values if not set in config file (pre-2.3.12 installations)
@@ -339,17 +314,6 @@ if ($SysPrefs->error_logfile != '') {
 	ini_set("ignore_repeated_errors", "On");
 	ini_set("log_errors", "On");
 }
-
-/*
-	Uncomment the setting below when using FA on shared hosting
-	to avoid unexpeced session timeouts.
-	Make sure this directory exists and is writable!
-*/
-// ini_set('session.save_path', VARLIB_PATH.'/');
-
-// ini_set('session.gc_maxlifetime', 36000); // 10hrs - moved to before session_manager
-
-hook_session_start(@$_POST["company_login_name"]);
 
 // this is to fix the "back-do-you-want-to-refresh" issue - thanx PHPFreaks
 header("Cache-control: private");

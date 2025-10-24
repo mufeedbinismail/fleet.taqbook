@@ -552,10 +552,12 @@ function context_call($call, $ctx='')
 	} else 
 		$context = isset($_SESSION[$ctx]) ? $_SESSION[$ctx] : null;
 
-	array_unshift($_SESSION['Context'], array('name' => $ctx, 
+    session()->unshift('Context', [
+        'name' => $ctx, 
 		'ctx' => $context,
 		'caller' => url()->current(),
-		'ret' => array()));
+		'ret' => []
+    ]);
 	meta_forward($call);
 }
 /*
@@ -566,7 +568,7 @@ function context_restore()
 {
 	if ( count($_SESSION['Context'])) {
 		if (url()->current() == $_SESSION['Context'][0]['caller']) {
-			$ctx = array_shift($_SESSION['Context']);
+			$ctx = session()->shift('Context');
 			if ($ctx) {
 				if (is_array($ctx['ctx'])) {
 					foreach($ctx['ctx'] as $name => $val) 
@@ -588,10 +590,9 @@ function context_restore()
 */
 function context_return($ret)
 {
-	if ( count($_SESSION['Context'])) {
-		$ctx = &$_SESSION['Context'][0];
-		$ctx['ret'] = $ret;
-		meta_forward( $ctx['caller'] );
+	if ( count($_SESSION['Context']) ) {
+        session()->put('Context.0.ret', $ret);
+		meta_forward( session('Context.0.caller') );
 	}
 }
 /*

@@ -172,7 +172,7 @@ function create_cart($type=0, $trans_no=0)
 	$_POST['source_ref'] = $cart->source_ref;
 	if (isset($cart->tax_info['net_amount']) || (!$trans_no && get_company_pref('default_gl_vat')))
 		$_POST['taxable_trans'] = true;
-	$_SESSION['journal_items'] = &$cart;
+	$_SESSION['journal_items'] = $cart;
 }
 
 function update_tax_info()

@@ -313,7 +313,7 @@ elseif(get_post('install_coas'))
 }
 
 if (list_updated('inst_lang')) {
-	$_SESSION['inst_set']['inst_lang'] = get_post('inst_lang');
+    session()->put('inst_set.inst_lang', get_post('inst_lang'));
 	$Ajax->setEncoding($inst_langs[get_post('inst_lang')]['encoding']);
 	$Ajax->activate('welcome');
 }
@@ -407,8 +407,7 @@ start_form();
 		case '6': // final screen
 			subpage_title(_('FrontAccounting ERP has been installed successsfully.'));
 			display_note(_('Please do not forget to remove install wizard folder.'));
-			session_unset();
-			session_destroy();
+			session_invalidate();
 			hyperlink_no_params(url('/index.php'), _('Click here to start.'));
 			break;
 

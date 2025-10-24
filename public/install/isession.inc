@@ -82,9 +82,6 @@ require_once __DIR__ . "/../includes/ajax.inc";
 require_once __DIR__ . "/../includes/ui/ui_msgs.inc";
 require_once __DIR__ . "/../includes/prefs/sysprefs.inc";
 
-session_name('FAinstall');
-session_start();
-
 // this is to fix the "back-do-you-want-to-refresh" issue - thanx PHPFreaks
 header("Cache-control: private");
 

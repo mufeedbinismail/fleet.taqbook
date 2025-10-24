@@ -271,8 +271,9 @@ function check_ui_refresh($name=null)
 	$bt = debug_backtrace();
 	if (!$name)
 		$name = $bt[1]['function'];
-	$old = @$_SESSION['ui_context'][$name];
-	$new = $_SESSION['ui_context'][$name] = $bt[1]['args'];
+	$old = session()->get("ui_context.$name");
+	$new = $bt[1]['args'];
+    session()->put("ui_context.$name", $new);
 	return ($new != $old);
 }
 

@@ -210,9 +210,7 @@ $cols = array(
 //-----------------------------------------------------------------------------------
 if (isset($_SESSION['Batch']))
 {
-    foreach($_SESSION['Batch'] as $trans=>$del)
-    	unset($_SESSION['Batch'][$trans]);
-    unset($_SESSION['Batch']);
+    session()->forget('Batch');
 }
 
 $table =& new_db_pager('deliveries_tbl', $sql, $cols);

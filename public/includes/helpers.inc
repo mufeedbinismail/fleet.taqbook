@@ -43,3 +43,30 @@ function root_path(string $path = ''): string
 {
     return $path ? PATH_TO_ROOT . '/' . ltrim($path, '/') : PATH_TO_ROOT;
 }
+
+function session_invalidate()
+{
+    if ($_SESSION instanceof \App\Session\Store) {
+        $_SESSION->invalidate();
+    } else {
+        $_SESSION = [];
+    }
+}
+
+/**
+ * Get the current session instance
+ *
+ * @return \App\Session\Store|\Illuminate\Session\SessionManager|\Illuminate\Session\Store
+ */
+function session($key = null, $default = null)
+{
+    if (is_null($key)) {
+        return app(\App\Session\Store::class);
+    }
+
+    if (is_array($key)) {
+        return app(\App\Session\Store::class)->put($key);
+    }
+
+    return app(\App\Session\Store::class)->get($key, $default);
+}

@@ -74,13 +74,13 @@ class JsHttpRequest
         if (array_key_exists('QUERY_STRING', $_SERVER) && preg_match('/^(.*)(?:&|^)JsHttpRequest=(?:(\d+)-)?([^&]+)((?:&|$).*)$/s', @$_SERVER['QUERY_STRING'], $m)) {
             $this->ID = $m[2];
             $this->LOADER = strtolower($m[3]);
-            $_SERVER['QUERY_STRING'] = preg_replace('/^&+|&+$/s', '', preg_replace('/(^|&)'.session_name().'=[^&]*&?/s', '&', $m[1] . $m[4]));
+            $_SERVER['QUERY_STRING'] = preg_replace('/^&+|&+$/s', '', preg_replace('/(^|&)'.config('session.cookie').'=[^&]*&?/s', '&', $m[1] . $m[4]));
             unset(
                 $_GET['JsHttpRequest'],
                 $_REQUEST['JsHttpRequest'],
-                $_GET[session_name()],
-                $_POST[session_name()],
-                $_REQUEST[session_name()]
+                $_GET[config('session.cookie')],
+                $_POST[config('session.cookie')],
+                $_REQUEST[config('session.cookie')]
             );
             // Detect Unicode conversion method.
             $this->_unicodeConvMethod = function_exists('mb_convert_encoding')? 'mb' : (function_exists('iconv')? 'iconv' : null);
