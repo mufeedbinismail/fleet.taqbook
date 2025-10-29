@@ -1,0 +1,89 @@
+/* FrontAccounting Utility Classes */
+/* These are essential utility classes required for proper FA functionality */
+
+/* Form Input Utilities */
+input.big {
+    @apply w-[100px];
+}
+
+input.small {
+    @apply w-[50px];
+}
+
+/* Semantic Status Classes */
+.inactive {
+    @apply text-gray-400;
+
+    option& {
+        @apply line-through text-gray-400;
+    }
+}
+
+.oddrow {
+    &, & > td {
+        @apply bg-gray-100;
+    }
+}
+
+.evenrow {
+    &, & > td {
+        @apply bg-main-bg;
+    }
+}
+
+.settledbg {
+    &, & > td {
+        @apply bg-teal-100;
+    }
+}
+
+.settledfg {
+    &, & > td {
+        @apply text-primary-accent;
+    }
+}
+
+.inquirybg {
+    &, & > td {
+        @apply bg-amber-50;
+    }
+}
+
+.currencybg, .stockmankobg, .overduebg {
+    &, & > td {
+        @apply bg-red-100;
+    }
+}
+
+.stockmankofg, .overduefg, .currentfg {
+    &, & > td {
+        @apply text-error-accent;
+    }
+}
+
+/* Table & Layout Classes */
+.tablestyle_noborder {
+    td&,
+    & > thead > tr,
+    & > tbody > tr,
+    & > tfoot > tr,
+    & > tr {
+        & > td {
+            @apply border-0 p-1;
+        }
+    }
+}
+
+.redfg {
+    @apply text-error-accent;
+}
+
+.label {
+    @apply bg-label-bg;
+}
+
+
+/* Amount & Text Classes */
+.amount {
+    @apply text-right;
+}

@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
     content: [`${__dirname}/public/themes/cume/renderer.php`, `${__dirname}/resources/**/*.{js,css}`],
     theme: {
         fontFamily: {
@@ -36,6 +36,7 @@ module.exports = {
                 'warning-accent': '#ffb547',
                 'success-accent': '#4caf89',
                 'error-accent': '#e94f64',
+                'label-bg': '#f1f5f7'
             },
             width: {
                 sidebar: '280px',
