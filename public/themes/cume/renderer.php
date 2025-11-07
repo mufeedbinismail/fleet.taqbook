@@ -310,16 +310,6 @@ class renderer
     }
 
     protected function class_names(array $classes) {
-        $_classes = array_filter($classes);
-
-        foreach ($classes as $class => $condition) {
-            if (is_int($class)) {
-                $_classes[] = $condition;
-            } else if ($condition) {
-                $_classes[] = $class;
-            }
-        }
-        
-        return implode(' ', array_unique($_classes));
+        return conditional_join($classes);
     }
 }
