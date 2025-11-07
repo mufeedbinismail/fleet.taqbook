@@ -64,19 +64,13 @@ function send_css($css = '')
 
 function send_scripts()
 {
-    global $SysPrefs, $js_static, $js_path, $js_userlib;
+    global $js_static, $js_userlib;
 
 	$js ='';
 	foreach($js_static as $jsfile)
 	{
-		$cached_name = basename($jsfile);
-		$fpath = user_js_cache().'/'.$cached_name;
-	    // compress also static files
-	  	if (!file_exists($fpath) || $SysPrefs->go_debug)
-			cache_js_file($fpath, file_get_contents($js_path.$jsfile));
-
 	  	$js .= '<script language="javascript" type="text/javascript" src="'.
-            url_from_path($fpath) . '"></script>';
+            legacy_cached_js_url($jsfile) . '"></script>';
 	}
 	foreach($js_userlib as $jsfile)
 	{
