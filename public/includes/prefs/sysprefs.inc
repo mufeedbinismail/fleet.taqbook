@@ -19,7 +19,6 @@ require_once __DIR__ . "/../../admin/db/company_db.inc";
 class sys_prefs extends stdClass
 {
 	var $prefs;
-	var $db_ok; // check whether database has been upgraded after src update.
 
 	function __construct()
 	{
@@ -61,8 +60,6 @@ class sys_prefs extends stdClass
 			$this->prefs[$pref['name']] = $pref['value'];
 		}
 
-		// update current db status for info in log file
-		$this->db_ok = $this->prefs['version_id'] == $db_version;
 	}
 
 	function allow_negative_stock() 

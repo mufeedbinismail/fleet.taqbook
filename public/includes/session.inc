@@ -145,22 +145,9 @@ function check_page_security($page_security)
 {
 	global $SysPrefs;
 	
-	$msg = '';
-	
 	if (!$_SESSION["wa_current_user"]->check_user_access())
 	{
-		// notification after upgrade from pre-2.2 version
-		$msg = $_SESSION["wa_current_user"]->old_db ?
-			 _("Security settings have not been defined for your user account.")
-				. "<br>" . _("Please contact your system administrator.")	
-			: _("Please remove \$security_groups and \$security_headings arrays from config.php file!");
-	} elseif (!$SysPrefs->db_ok && !$_SESSION["wa_current_user"]->can_access('SA_SOFTWAREUPGRADE')) 
-	{
-		$msg = _('Access to application has been blocked until database upgrade tasks are completed by a system administrator.');
-	}
-	
-	if ($msg){
-		display_error($msg);
+		display_error(_("Security settings have not been defined for your user account.") . "<br>" . _("Please contact your system administrator."));
 		end_page(@$_REQUEST['popup']);
 		kill_login();
 		throw new \App\Exceptions\Legacy\FlowTerminatedException;
@@ -176,14 +163,6 @@ function check_page_security($page_security)
 		end_page(@$_REQUEST['popup']);
 		throw new \App\Exceptions\Legacy\FlowTerminatedException;
 	}
-	if (!$SysPrefs->db_ok 
-		&& !in_array($page_security, array('SA_SOFTWAREUPGRADE', 'SA_OPEN', 'SA_BACKUP')))
-	{
-		display_error(_('System is blocked after source upgrade until database upgrade tasks are completed by a system administrator.'));
-		end_page();
-		throw new \App\Exceptions\Legacy\FlowTerminatedException;
-	}
-
 }
 /*
 	Helper function for setting page security level depeding on 
@@ -370,7 +349,7 @@ if (!defined('FA_LOGOUT_PHP_FILE')){
 
 	login_timeout();
 
-	if (!$_SESSION["wa_current_user"]->old_db && file_exists(__DIR__ . '/../company/'.user_company().'/installed_extensions.php'))
+	if (file_exists(__DIR__ . '/../company/'.user_company().'/installed_extensions.php'))
 		require __DIR__ . '/../company/'.user_company().'/installed_extensions.php';
 
 	install_hooks();

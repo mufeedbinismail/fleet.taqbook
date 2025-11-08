@@ -94,8 +94,7 @@ function error_handler($errno, $errstr, $file, $line) {
 		}
 		else if ($errno&~E_NOTICE && $errstr != '') { // log all not displayed messages 
 			$user = @$_SESSION["wa_current_user"]->loginname;
-			$context = isset($SysPrefs) && !$SysPrefs->db_ok ? '[before upgrade]' : '';
-			error_log(user_company() . ":$user:". basename($file) .":$line:$context $errstr");
+			error_log(user_company() . ":$user:". basename($file) .":$line: $errstr");
 		}
 	}
 	

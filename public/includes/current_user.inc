@@ -29,7 +29,6 @@ class current_user
 	var $timeout;
 	var $last_act;
 	var $role_set = false;
-	var $old_db;
 	var $logged;
 	var $ui_mode = 0;
 	var $login_attempt=0;
@@ -60,7 +59,7 @@ class current_user
 
 	function login($company, $loginname, $password)
 	{
-		global $security_areas, $security_groups, $security_headings, $dflt_lang, $SysPrefs;
+		global $security_areas, $dflt_lang, $SysPrefs;
 
 		$this->set_company($company);
 	    $this->logged = false;
@@ -91,41 +90,18 @@ class current_user
 				$myrow = get_user_by_login($loginname);
 			}
 
-			$this->old_db = isset($myrow["full_access"]);
 			if (! @$myrow["inactive"]) {
-				if ($this->old_db) { 
-					// Transition code:
-					// db was not yet upgraded after source update to v.2.2
-					// give enough access for admin user to continue upgrade
-					if (!isset($security_groups) || !isset($security_headings)) {
-						echo "<center><br><br><font size='5' color='red'><b>";
-						echo _('Before software upgrade you have to include old $security_groups and $security_headings arrays from old config.php file to the new one.');
-						echo '<br>'."<a href=".url("/index.php").">"._("Back")."</a>";
-						echo "</b></font><br><br></center>";
-						throw new \App\Exceptions\Legacy\FlowTerminatedException;
+				$this->role_set = array();
+        	    $this->access = $myrow["role_id"];
+				// store area codes available for current user role
+				$role = get_security_role($this->access);
+				if (!$role)
+					return false;
+				foreach ($role['areas'] as $code) {
+					if (in_array($code & ~0xff, $role['sections'])) {
+						$this->role_set[] = $code;
 					}
-	        	    $this->access = $myrow["full_access"];
-	        	    if (in_array(20, $security_groups[$this->access]))
-						// temporary access for admin users
-						$this->role_set[] = $security_areas['SA_SOFTWAREUPGRADE'][0];
-					else {
-						echo "<center><br><br><font size='5' color='red'><b>";
-						echo _('System is available for site admin only until full database upgrade');
-						echo "</b></font><br><br></center>";
-						throw new \App\Exceptions\Legacy\FlowTerminatedException;
-					}
-	        	} else {
-					$this->role_set = array();
-	        	    $this->access = $myrow["role_id"];
-					// store area codes available for current user role
-					$role = get_security_role($this->access);
-					if (!$role) 
-						return false;
-					foreach( $role['areas'] as $code )
-						// filter only area codes for enabled security sections
-						if (in_array($code&~0xff, $role['sections'])) 
-							$this->role_set[] = $code;
-	        	}
+				}
         	    $this->name = $myrow["real_name"];
         	    $this->pos = $myrow["pos"];
         	    $this->loginname = $loginname;
@@ -176,25 +152,16 @@ class current_user
 
 	function check_user_access()
 	{
-		global $security_groups;
-		if ($this->old_db) {
-			// notification after upgrade from pre-2.2 version
-			return isset($security_groups) && is_array(@$security_groups[$this->access]);
-		} else
-			return !isset($security_groups) && is_array($this->role_set);
+		return is_array($this->role_set);
 	}
 
 	function can_access($sec_area)
 	{
-		global $security_groups, $security_areas;
-		if (isset($security_groups)) {
-			return is_admin_company() &&
-				in_array(20, $security_groups[$this->access]);
-		}
+		global $security_areas;
 
 		if ($sec_area === 'SA_OPEN') 
 			return true;
-		if ($sec_area === 'SA_DENIED' || $sec_area === '') 
+		if ($sec_area === 'SA_DENIED' || $sec_area === '' || !isset($security_areas[$sec_area])) 
 			return false;
 
 		$code = $security_areas[$sec_area][0];
