@@ -156,7 +156,7 @@ function check_page_security($page_security)
 			: _("Please remove \$security_groups and \$security_headings arrays from config.php file!");
 	} elseif (!$SysPrefs->db_ok && !$_SESSION["wa_current_user"]->can_access('SA_SOFTWAREUPGRADE')) 
 	{
-		$msg = _('Access to application has been blocked until database upgrade is completed by system administrator.');
+		$msg = _('Access to application has been blocked until database upgrade tasks are completed by a system administrator.');
 	}
 	
 	if ($msg){
@@ -179,7 +179,7 @@ function check_page_security($page_security)
 	if (!$SysPrefs->db_ok 
 		&& !in_array($page_security, array('SA_SOFTWAREUPGRADE', 'SA_OPEN', 'SA_BACKUP')))
 	{
-		display_error(_('System is blocked after source upgrade until database is updated on System/Software Upgrade page'));
+		display_error(_('System is blocked after source upgrade until database upgrade tasks are completed by a system administrator.'));
 		end_page();
 		throw new \App\Exceptions\Legacy\FlowTerminatedException;
 	}
