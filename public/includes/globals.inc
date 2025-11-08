@@ -2,7 +2,6 @@
 
 return [
     // Language and interface globals
-    'inst_langs'           => [],
     'installed_languages'  => [['code' => 'C', 'name' => 'English', 'encoding' => 'iso-8859-1']],
     'dflt_lang'            => 'C',
     'lang'                 => null,

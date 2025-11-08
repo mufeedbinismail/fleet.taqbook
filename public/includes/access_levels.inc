@@ -105,7 +105,6 @@ $GLOBALS['security_areas'] =array(
 //	Site administration
 //
 	'SA_CREATECOMPANY' =>array(SS_SADMIN|1, _("Install/update companies")),
-	'SA_CREATELANGUAGE' => array(SS_SADMIN|2, _("Install/update languages")),
 	'SA_CREATEMODULES' => array(SS_SADMIN|3, _("Install/upgrade modules")),
 //
 //	Company setup

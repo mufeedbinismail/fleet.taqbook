@@ -435,47 +435,6 @@ function uninstall_package($name)
 
 //---------------------------------------------------------------------------------------
 //
-//	Return merged list of available and installed languages in inform of local 
-// configuration array supplemented with installed versions information.
-//
-function get_languages_list()
-{
-	global $installed_languages;
-	
-	$pkgs = get_pkg_or_list('language', null, array(
-				'Package' => 'package',
-				'Version' => 'available',
-				'Name' => 'name',
-				'Language' => 'code',
-				'Encoding' => 'encoding',
-				'RTLDir' => 'rtl',
-				'Description' => 'Descr',
-				'InstallPath' => 'path'
-			));
-
-	// add/update languages already installed
-	// 
-	foreach($installed_languages as $id => $l) {
-		$list = array_search_keys($l['code'], $pkgs, 'code');	// get all packages with this code
-		foreach ($list as $name) {
-			if ($l['encoding'] == $pkgs[$name]['encoding']) {	// if the same encoding
-				$pkgs[$name]['version'] = @$l['version'];		// set installed version
-				$pkgs[$name]['local_id'] = $id;		// index in installed_languages
-				continue 2;
-			}
-		}
-		$l['local_id'] = $id;
-		if (!isset($l['package']) || $l['package'] == '' || !isset($pkgs[$l['package']]))
-			$pkgs[] = $l;
-		else
-			$pkgs[$l['package']] = array_merge($pkgs[$l['package']], $l);
-	}
-	if ($pkgs)
-		ksort($pkgs);
-	return $pkgs;
-}
-//---------------------------------------------------------------------------------------
-//
 //	Return merged list of available and installed extensions as a local 
 // configuration array supplemented with installed versions information.
 //
@@ -598,51 +557,6 @@ function get_charts_list()
 	if ($pkgs)
 		ksort($pkgs);
 	return $pkgs;
-}
-//---------------------------------------------------------------------------------------------
-//	Install/update package from repository
-//
-function install_language($pkg_name)
-{
-	global $installed_languages, $Ajax;
-	
-	$pkg = get_pkg_or_list('language', $pkg_name);
-
-	if ($pkg) {
-		$i = array_search_key($pkg['Language'], $installed_languages, 'code');
-		if ($i === null)
-			$i = count($installed_languages);
-		else {	// remove another already installed package for this language 
-			$old_pkg = @$installed_languages[$i]['package'];
-			if ($old_pkg && ($pkg['Package'] != $old_pkg))
-				uninstall_package($old_pkg);
-		}
-
-		$package = new package(VARLIB_PATH."/".$pkg['Filename'].'.pkg');
-		if ($package->install()) {
-			$lang = array(
-				'name' => $pkg['Name'],
-				'package' => $pkg['Package'],
-				'code' => $pkg['Language'],
-				'encoding' => $pkg['Encoding'],
-				'version' => $pkg['Version'],
-				'path' => $pkg['InstallPath']
-			);
-			if ($pkg['RTLDir']=='yes')
-				$lang['rtl'] = true;
-			$installed_languages[$i] = $lang;
-			write_lang($installed_languages);
-			unlink(VARLIB_PATH."/".$pkg['Filename'].'.pkg');
-			$Ajax->activate('lang_tbl');
-		} else {
-			display_error(implode('<br>', $package->error));
-			return false;
-		}
-	} else {
-		display_error(sprintf(_("Package '%s' not found."), $pkg_name));
-		return false;
-	}
-	return true;
 }
 //---------------------------------------------------------------------------------------------
 //	Install/update extension or theme package from repository

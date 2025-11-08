@@ -205,56 +205,6 @@ function update_extensions($extensions) {
 }
 
 
-function write_lang()
-{
-	global $installed_languages, $dflt_lang;
-
-	$installed_languages = array_natsort($installed_languages, 'code', 'code');
-	$msg = "<?php\n\n";
-
-	$msg .= "/* How to make new entries here for non-packaged languages:\n\n";
-	$msg .= "-- 'code' should match the name of the directory for the language under \\lang\n.";
-	$msg .= "-- 'name' is the name that will be displayed in the language selection list (in Users and Display Setup)\n";
-	$msg .= "-- 'rtl' only needs to be set for right-to-left languages like Arabic and Hebrew\n";
-	$msg .= "-- 'encoding' used in translation file\n";
-	$msg .= "-- 'version' always set to '' for manually installed languages.\n";
-	$msg .= "-- 'path' installation path related to FA root (e.g. 'lang/en_US').\n";
-	$msg .= "*/\n\n\n";
-
-	$msg .= "\$installed_languages = " . var_export($installed_languages, true);
-	$msg .= ";\n";
-	$msg .= "\n\$dflt_lang = '$dflt_lang';\n";
-
-	$path = PATH_TO_ROOT . "/lang";
-	$filename = $path.'/installed_languages.inc';
-	// Check if directory exists and is writable first.
-	if (file_exists($path) && is_writable($path))
-	{
-		if (!$zp = fopen($filename, 'w'))
-		{
-			display_error(_("Cannot open the languages file - ") . $filename);
-			return false;
-		}
-		else
-		{
-			if (!fwrite($zp, $msg))
-			{
-				display_error(_("Cannot write to the language file - ") . $filename);
-				fclose($zp);
-				return false;
-			}
-			// Close file
-			fclose($zp);
-			cache_invalidate($filename);
-		}
-	}
-	else
-	{
-		display_error(_("The language files folder ") . $path . _(" is not writable. Change its permissions so it is, then re-run the operation."));
-		return false;
-	}
-	return true;
-}
 /*
 	Database import:
 		$filename - sql file name
