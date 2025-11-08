@@ -500,39 +500,6 @@ function get_extensions_list($type = null)
 // Return merged list of available and installed extensions as a local
 // configuration array supplemented with installed versions information.
 //
-// Return merged list of available and installed COAs as a local 
-// configuration array supplemented with installed versions information.
-//
-function get_charts_list()
-{
-	$pkgs = get_pkg_or_list('chart', null, array(
-				'Package' => 'package',
-				'Version' => 'available',
-				'Name' => 'name',
-				'Description' => 'Descr',
-				'Type' => 'type',
-				'InstallPath' => 'path',
-				'Encoding' => 'encoding',
-				'SqlScript' => 'sql'
-			));
-
-	// add/update default charts
-	// 
-	$local = get_company_extensions();
-
-	foreach($local as $extno => $ext) {
-		if ($ext['type'] != 'chart') continue;
-		$ext['local_id'] = $extno;
-		if (!isset($pkgs[$ext['package']]) || $ext['package'] == '')
-			$pkgs[] = $ext;
-		else
-			$pkgs[$ext['package']] = array_merge($pkgs[$ext['package']], $ext);
-	}
-	if ($pkgs)
-		ksort($pkgs);
-	return $pkgs;
-}
-//---------------------------------------------------------------------------------------------
 //	Install/update extension or theme package from repository
 //
 function install_extension($pkg_name)
