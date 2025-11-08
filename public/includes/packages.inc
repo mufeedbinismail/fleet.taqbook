@@ -500,33 +500,7 @@ function get_extensions_list($type = null)
 // Return merged list of available and installed extensions as a local
 // configuration array supplemented with installed versions information.
 //
-function get_themes_list()
-{
-	$pkgs = get_pkg_or_list('theme', null, array(
-				'Package' => 'package',
-				'Version' => 'available',
-				'Name' => 'name',
-				'Description' => 'Descr'
-			));
-
-	// add/update extensions already installed
-	// 
-	$local = get_company_extensions();
-	
-	foreach($local as $extno => $ext) {
-		if (isset($pkgs[@$ext['package']])) {
-			$ext['local_id'] = $extno;
-			$pkgs[$ext['package']] = array_merge($pkgs[$ext['package']], $ext);
-		}
-	}
-	// TODO: Add other themes from themes directory
-	if ($pkgs)
-		ksort($pkgs);
-	return $pkgs;
-}
-//---------------------------------------------------------------------------------------
-//
-//	Return merged list of available and installed COAs as a local 
+// Return merged list of available and installed COAs as a local 
 // configuration array supplemented with installed versions information.
 //
 function get_charts_list()
