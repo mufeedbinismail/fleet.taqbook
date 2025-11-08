@@ -170,41 +170,6 @@ function write_extensions($extensions=null, $company = -1)
 	}
 	return true;
 }
-//---------------------------------------------------------------------------------------------
-//
-// Update per-company list of installed extensions
-//
-function update_extensions($extensions) {
-	global $db_connections;
-	
-	if (!write_extensions($extensions)) {
-		display_notification(_("Cannot update system extensions list."));
-		return false;
-	}
-
-	// update per company files
- 	$cnt = max(1, count_array($db_connections));
-	for($i = 0; $i < $cnt; $i++) 
-	{
-		$newexts = $extensions;
-		// update 'active' status 
-		$exts = get_company_extensions($i);
-		foreach ($exts as $key => $ext) 
-		{
-			if (isset($newexts[$key]))
-				$newexts[$key]['active'] = $exts[$key]['active'];
-		}
-		if(!write_extensions($newexts, $i)) 
-		{
-			display_notification(sprintf(_("Cannot update extensions list for company '%s'."),
-				$db_connections[$i]['name']));
-		 return false;
-		}
-	}
-	return true;
-}
-
-
 /*
 	Database import:
 		$filename - sql file name

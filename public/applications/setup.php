@@ -62,8 +62,6 @@ class setup_app extends application
 			"admin/backups.php?", 'SA_BACKUP', MENU_SYSTEM);
 		$this->add_rapp_function(2, _("Create/Update &Companies"),
 			"admin/create_coy.php?", 'SA_CREATECOMPANY', MENU_UPDATE);
-		$this->add_rapp_function(2, _("Install/Activate &Extensions"),
-			"admin/inst_module.php?", 'SA_CREATEMODULES', MENU_UPDATE);
 
 		$this->add_extensions();
 	}

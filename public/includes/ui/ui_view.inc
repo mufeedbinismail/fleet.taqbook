@@ -214,19 +214,6 @@ function get_journal_trans_view_str($type, $trans_no, $label="", $icon=false,
 
 //--------------------------------------------------------------------------------------
 
-function get_package_view_str($pkg, $label="", $icon=false, $class='', $id='')
-{
-	if ($label == "")
-	{
-		$label = _("Info");
-//		$icon = ICON_GL;
-	}
-	return viewer_link($label, "admin/view/view_package.php?id=$pkg", $class, $id, $icon);
-}
-
-
-//--------------------------------------------------------------------------------------
-
 function get_trans_view_str($type, $trans_no, $label="", $icon=false, 
 	$class='', $id='')
 {
