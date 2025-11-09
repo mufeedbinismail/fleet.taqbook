@@ -60,8 +60,6 @@ class setup_app extends application
 			"admin/attachments.php?filterType=20", 'SA_ATTACHDOCUMENT', MENU_MAINTENANCE);
 		$this->add_rapp_function(2, _("&Backup and Restore"),
 			"admin/backups.php?", 'SA_BACKUP', MENU_SYSTEM);
-		$this->add_rapp_function(2, _("Create/Update &Companies"),
-			"admin/create_coy.php?", 'SA_CREATECOMPANY', MENU_UPDATE);
 
 	}
 }

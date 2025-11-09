@@ -58,13 +58,6 @@ function array_natsort($aryData, $strIndex, $strSortBy, $strSortType=false)
    return $aryResult;
 }
 
-function update_admin_password($conn, $password)
-{
-	$sql = "UPDATE ".$conn['tbpref']."users SET password=".db_escape($password) . "
-		WHERE user_id='admin'";
-	db_query($sql, "could not update user password for 'admin'");
-}
-
 function write_config_db($new = false)
 {
 	global $def_coy, $db_connections, $tb_pref_counter;
@@ -804,17 +797,6 @@ function save_to_file($path, $zip, $fileData)
         	return false;
         }
     }
-}
-
-function create_comp_dirs($comp_path, $comp_subdirs)
-{
-	    $cdir = $comp_path;
-	    @mkdir($cdir);
-
-	    foreach($comp_subdirs as $dir)
-	    {
-			@mkdir($cdir.'/'.$dir);
-	    }
 }
 
 //

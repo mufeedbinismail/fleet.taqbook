@@ -101,11 +101,6 @@ $GLOBALS['security_sections'] = array(
 	Special value 'SA_OPEN' is used for publicly available pages like login/logout.
 */
 $GLOBALS['security_areas'] =array(
-//
-//	Site administration
-//
-	'SA_CREATECOMPANY' =>array(SS_SADMIN|1, _("Install/update companies")),
-//
 //	Company setup
 //
 	'SA_SETUPCOMPANY' => array(SS_SETUP|1, _("Company parameters")),

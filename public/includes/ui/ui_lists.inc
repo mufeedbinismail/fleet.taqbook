@@ -2595,32 +2595,6 @@ function payment_type_list_row($label, $name, $selected_id=null, $submit_on_chan
 	echo "</td></tr>\n";
 }
 
-function coa_list_row($label, $name, $value=null)
-{
-	$path = PATH_TO_ROOT.'/sql/';
-	$coas = array();
-	$sqldir = opendir($path);
-	while (false !== ($fname = readdir($sqldir)))
-	{
-		if (is_file($path.$fname) && substr($fname,-4)=='.sql' && @($fname[2] == '_'))
-		{
-			if ($fname == 'en_US-new.sql') { // two standard COAs
-				$descr = _("Standard new company American COA (4 digit)");
-			} elseif ($fname == 'en_US-demo.sql') {
-				$descr = _("Standard American COA (4 digit) with demo data");
-			} else
-				$descr = $fname;
-
-			$coas[$fname] =  $descr;
-		}
-	}
-	ksort($coas);
-
-	echo "<tr><td class='label'>$label</td>\n<td>";
-	echo array_selector( $name, $value, $coas );
-	echo "</td></tr>\n";
-}
-
 function payment_services($name)
 {
 	global $payment_services;
