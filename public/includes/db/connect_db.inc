@@ -11,10 +11,11 @@
 ***********************************************************************/
 define('MAX_DEADLOCK_RETRY', 3);
 
-if (function_exists('mysqli_connect'))
-	include_once("connect_db_mysqli.inc");
-else
-	include_once("connect_db_mysql.inc"); // use deprecated mysql_* API as fallback on old servers
+if (!function_exists('mysqli_connect')) {
+	die('The mysqli PHP extension is required.');
+}
+
+require_once __DIR__ . "/connect_db_mysqli.inc";
 
 function db_get_version()
 {

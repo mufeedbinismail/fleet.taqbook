@@ -333,16 +333,8 @@ function html_entity_decode_php4($text_to_convert) {
 	);
 	$return_text = strtr($text_to_convert, $htmlentities_table);
 
-	if (version_compare(PHP_VERSION, '5.3.0') >= 0 && function_exists("preg_replace_callback"))
-	{
-		$return_text = preg_replace_callback('~&#x([0-9a-f]+);~i', function ($m){ return chr(hexdec($m[1]));}, $return_text);
-		$return_text = preg_replace_callback('~&#([0-9]+);~', function ($m){ return chr($m[1]);}, $return_text);
-	}
-	else
-	{
-		$return_text = preg_replace('~&#x([0-9a-f]+);~ei', 'code_to_utf8(hexdec("\\1"))', $return_text);
-		$return_text = preg_replace('~&#([0-9]+);~e', 'code_to_utf8(\\1)', $return_text);
-	}
+	$return_text = preg_replace_callback('~&#x([0-9a-f]+);~i', function ($m){ return chr(hexdec($m[1]));}, $return_text);
+	$return_text = preg_replace_callback('~&#([0-9]+);~', function ($m){ return chr($m[1]);}, $return_text);
 	return $return_text;
 }
 
