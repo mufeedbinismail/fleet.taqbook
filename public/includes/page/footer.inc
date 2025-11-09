@@ -13,9 +13,6 @@ function page_footer($no_menu=false, $is_index=false)
 {
 	global $js_lib, $Validate, $Editors, $Ajax, $sql_queries;
 
-	$page_header_args = func_get_args();
-	hook_invoke_all('pre_footer', $page_header_args);
-
 	require_once __DIR__ . "/../../themes/".user_theme()."/renderer.php";
 	$rend = new renderer();
 	$rend->menu_footer($no_menu, $is_index);

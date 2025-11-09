@@ -53,7 +53,6 @@ class inventory_app extends application
 		$this->add_rapp_function(3, _("Standard &Costs"),
 			"inventory/cost_update.php?", 'SA_STANDARDCOST', MENU_MAINTENANCE);
 
-		$this->add_extensions();
 	}
 }
 

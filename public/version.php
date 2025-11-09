@@ -12,9 +12,8 @@ $GLOBALS['src_version'] = "2.4.18";
 $GLOBALS['version']     = isset($SysPrefs->version) ? $SysPrefs->version : $GLOBALS['src_version'];
 
 //======================================================================
-// Extension packages repository settings 
-//
-// Extensions repository. Can be overriden in config.php
+// Legacy extension repository settings (retained for compatibility only)
+// Can be overridden in config.php if third-party code still expects it.
 
 $GLOBALS['repo_auth']   = isset($SysPrefs->repo_auth)
     ? $SysPrefs->repo_auth

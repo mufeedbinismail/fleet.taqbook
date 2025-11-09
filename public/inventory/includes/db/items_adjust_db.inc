@@ -18,7 +18,6 @@ function add_stock_adjustment($items, $location, $date_, $reference, $memo_)
 	$args = func_get_args();
 	$args = (object)array_combine(array('items', 'location', 'date_', 'reference', 'memo_'), $args);
 	$args->trans_no = 0;
-	hook_db_prewrite($args, ST_INVADJUST);
 
 	$adj_id = get_next_trans_no(ST_INVADJUST);
 
@@ -51,7 +50,6 @@ function add_stock_adjustment($items, $location, $date_, $reference, $memo_)
 	add_audit_trail(ST_INVADJUST, $adj_id, $date_);
 
 	$args->trans_no = $adj_id;
-	hook_db_postwrite($args, ST_INVADJUST);
 	commit_transaction();
 	if ($SysPrefs->loc_notification() == 1 && count($st_ids) > 0)
 		send_reorder_email($loc, $st_ids, $st_names, $st_num, $st_reorder);
@@ -63,7 +61,6 @@ function add_stock_adjustment($items, $location, $date_, $reference, $memo_)
 
 function void_stock_adjustment($type_no)
 {
-	hook_db_prevoid(ST_INVADJUST, $type_no);
 	void_gl_trans(ST_INVADJUST, $type_no);
 	void_stock_move(ST_INVADJUST, $type_no);
 }

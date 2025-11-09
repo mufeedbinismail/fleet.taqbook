@@ -77,7 +77,6 @@ class customers_app extends application
 		$this->add_rapp_function(2, _("Credit &Status Setup"),
 			"sales/manage/credit_status.php?", 'SA_CRSTATUS', MENU_MAINTENANCE);
 
-		$this->add_extensions();
 	}
 }
 

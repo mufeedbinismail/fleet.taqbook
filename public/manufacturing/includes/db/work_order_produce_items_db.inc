@@ -20,7 +20,6 @@ function work_order_produce($woid, $ref, $quantity, $date_, $memo, $close_wo)
 	$args = (object)array_combine(array('woid', 'ref', 'quantity', 'date_', 'memo','close_wo'),
 		$args);
 	$args->trans_no = 0;
-	hook_db_prewrite($args, ST_MANURECEIVE);
 
 	$product = get_work_order($woid);
 
@@ -95,7 +94,6 @@ function work_order_produce($woid, $ref, $quantity, $date_, $memo, $close_wo)
 	add_audit_trail(ST_MANURECEIVE, $id, $date_, _("Production."));
 
 	$args->trans_no = $id;
-	hook_db_postwrite($args, ST_MANURECEIVE);
 
 	commit_transaction();
 }
@@ -148,7 +146,6 @@ function check_void_wo_production($prod_no)
 function void_work_order_produce($type_no)
 {
 	begin_transaction();
-	hook_db_prevoid(ST_MANURECEIVE, $type_no);
 
 	// Skip processing already voided entry i.e. explicitly voided
 	$void_entry = get_voided_entry(ST_MANURECEIVE, $type_no);

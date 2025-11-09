@@ -106,7 +106,6 @@ function write_journal_entries(&$cart)
 	$old_no = $cart->order_id;
 
 	begin_transaction();
-	hook_db_prewrite($cart, ST_JOURNAL);
 	if (!$new)
 	{
 		$msg = void_transaction($trans_type, $cart->order_id, Today(), _("Document reentered."));
@@ -146,7 +145,6 @@ function write_journal_entries(&$cart)
 	}
 
 	add_audit_trail($trans_type, $trans_id, $date_);
-	hook_db_postwrite($cart, ST_JOURNAL);
 	commit_transaction();
 
 	return $trans_id;

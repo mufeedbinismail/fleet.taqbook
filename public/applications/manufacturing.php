@@ -37,7 +37,6 @@ class manufacturing_app extends application
 		$this->add_lapp_function(2, _("&Work Centres"),
 			"manufacturing/manage/work_centres.php?", 'SA_WORKCENTRES', MENU_MAINTENANCE);
 
-		$this->add_extensions();
 	}
 }
 

@@ -65,16 +65,6 @@ function get_base_sales_type()
 	return get_company_pref('base_sales');
 }
 
-function get_company_extensions($id = -1) {
-
-	$file = PATH_TO_ROOT.($id == -1 ? '' : '/company/'.(int)$id).'/installed_extensions.php';
-	$installed_extensions = array();
-	if (is_file($file)) {
-		include($file);
-	}
-	return $installed_extensions;
-}
-
 function add_payment_terms($daysOrFoll, $terms, $dayNumber)
 {
 	if ($daysOrFoll) 

@@ -84,7 +84,6 @@ function add_grn(&$po)
 	$date_ = $po->orig_order_date;
 
 	begin_transaction();
-	hook_db_prewrite($po, ST_SUPPRECEIVE);
 
 	if (!is_company_currency($po->curr_code))
 	{
@@ -155,7 +154,6 @@ function add_grn(&$po)
 	add_audit_trail(ST_SUPPRECEIVE, $grn, $date_);
 
 	$po->trans_no = $grn;
-	hook_db_postwrite($po, ST_SUPPRECEIVE);
 	commit_transaction();
 
 	return $grn;
@@ -427,7 +425,6 @@ function void_grn($grn_batch)
 		return false;
 
 	begin_transaction();
-	hook_db_prevoid(ST_SUPPRECEIVE, $grn_batch);
 
 	void_bank_trans(ST_SUPPRECEIVE, $grn_batch, true);
 	void_gl_trans(ST_SUPPRECEIVE, $grn_batch, true);

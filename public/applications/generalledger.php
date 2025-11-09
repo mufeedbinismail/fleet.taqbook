@@ -76,7 +76,6 @@ class general_ledger_app extends application
 		$this->add_rapp_function(2, _("&Revaluation of Currency Accounts"),
 			"gl/manage/revaluate_currencies.php?", 'SA_EXCHANGERATE', MENU_MAINTENANCE);
 
-		$this->add_extensions();
 	}
 }
 

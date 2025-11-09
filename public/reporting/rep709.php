@@ -225,8 +225,6 @@ function print_tax_report()
 	$rep->Font();
 	$rep->NewLine();
 
-	hook_tax_report_done();
-
 	$rep->End();
 }
 

@@ -36,7 +36,6 @@ function write_credit_note(&$credit_note, $write_off_acc)
 	$credit_type = $write_off_acc == 0 ? 'Return' : 'WriteOff';
 
 	begin_transaction();
-	hook_db_prewrite($credit_note, ST_CUSTCREDIT);
 
 	$company_data = get_company_prefs();
     $customer_data = get_customer($credit_note->customer_id);
@@ -185,7 +184,6 @@ function write_credit_note(&$credit_note, $write_off_acc)
 	if ($trans_no == 0) {
 		$Refs->save(ST_CUSTCREDIT, $credit_no, $credit_note->reference);
 	}
-	hook_db_postwrite($credit_note, ST_CUSTCREDIT);
 	commit_transaction();
 
 	return $credit_no;

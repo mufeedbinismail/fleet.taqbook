@@ -217,7 +217,6 @@ function add_bank_transfer($from_account, $to_account, $date_,
 	$args = (object)array_combine(array('from_account', 'to_account', 'date_', 'amount',  
 		'ref', 'memo_', 'dimension_id', 'dimension2_id', 'charge', 'target_amount'), $args);
 	$args->trans_no = 0;
-	hook_db_prewrite($args, ST_BANKTRANSFER);
 
 	$trans_type = ST_BANKTRANSFER;
 
@@ -286,7 +285,6 @@ function add_bank_transfer($from_account, $to_account, $date_,
 	add_audit_trail($trans_type, $trans_no, $date_);
 
 	$args->trans_no = $trans_no;
-	hook_db_postwrite($args, ST_BANKTRANSFER);
 	commit_transaction();
 
 	return $trans_no;
@@ -392,7 +390,6 @@ function write_bank_transaction($trans_type, $trans_no, $from_account, $items, $
 	$args = (object)array_combine(array('trans_type', 'trans_no', 'from_account', 'items', 'date_',
 		'person_type_id', 'person_id', 'person_detail_id', 'ref', 'memo_', 'use_transaction', 'settled_amount'),
 		$args);
-	hook_db_prewrite($args, $trans_type);
 
 	$aid = 0;
 	if ($trans_no) {
@@ -529,7 +526,6 @@ function write_bank_transaction($trans_type, $trans_no, $from_account, $items, $
 
 
 	$args->trans_no = $trans_no;
-	hook_db_postwrite($args, $trans_type);
 	if ($use_transaction)
 		commit_transaction();
 

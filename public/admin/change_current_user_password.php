@@ -22,10 +22,10 @@ require_once __DIR__ . "/../admin/db/users_db.inc";
 function can_process()
 {
 
-	$Auth_Result = hook_authenticate($_SESSION["wa_current_user"]->username, $_POST['cur_password']);
-
-	if (!isset($Auth_Result))	// if not used external login: standard method
-		$Auth_Result = get_user_auth($_SESSION["wa_current_user"]->username, md5($_POST['cur_password']));
+	$Auth_Result = get_user_auth(
+        $_SESSION["wa_current_user"]->username,
+        md5($_POST['cur_password'])
+    );
 
 	if (!$Auth_Result)
    	{

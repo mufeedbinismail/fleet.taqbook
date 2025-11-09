@@ -119,9 +119,6 @@ function retrieve_exrate($curr_b, $date)
 	$xchg_rate_provider = ((isset($SysPrefs->xr_providers) && isset($SysPrefs->dflt_xr_provider)) 
 		? $SysPrefs->xr_providers[$SysPrefs->dflt_xr_provider] : 'ECB');
 
-	$rate = hook_retrieve_exrate($curr_b, $date);
-	if (is_numeric($rate))
-		return $rate;
 	return get_extern_rate($curr_b, $xchg_rate_provider, $date);
 }
 //-----------------------------------------------------------------------------

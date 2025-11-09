@@ -21,7 +21,6 @@ function write_sales_delivery(&$delivery,$bo_policy)
 
 	begin_transaction();
 	$delivery->bo_policy = $bo_policy;
-	hook_db_prewrite($delivery, ST_CUSTDELIVERY);
 
 	$customer = get_customer($delivery->customer_id);
 
@@ -200,7 +199,6 @@ function write_sales_delivery(&$delivery,$bo_policy)
 	if ($trans_no == 0) {
 			$Refs->save(ST_CUSTDELIVERY, $delivery_no, $delivery->reference);
 	}
-	hook_db_postwrite($delivery, ST_CUSTDELIVERY);
 	commit_transaction();
 
 	return $delivery_no;
@@ -225,7 +223,6 @@ function void_sales_delivery($type, $type_no, $transactions=true)
 	if ($transactions)
 		begin_transaction();
 
-	hook_db_prevoid($type, $type_no);
 	
 	void_gl_trans($type, $type_no, true);
 

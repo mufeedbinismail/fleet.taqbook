@@ -62,7 +62,6 @@ function write_customer_payment(
         ),
         $args
     );
-	hook_db_prewrite($args, ST_CUSTPAYMENT);
 
 	$company_record = get_company_prefs();
 
@@ -247,7 +246,6 @@ function write_customer_payment(
 	$Refs->save(ST_CUSTPAYMENT, $payment_no, $ref);
 
 	$args->trans_no = $payment_no;
-	hook_db_postwrite($args, ST_CUSTPAYMENT);
 	commit_transaction();
 
 	return $payment_no;
@@ -258,8 +256,6 @@ function write_customer_payment(
 function void_customer_payment($type, $type_no)
 {
 	begin_transaction();
-
-	hook_db_prevoid($type, $type_no);
 	void_bank_trans($type, $type_no, true);
 	void_gl_trans($type, $type_no, true);
 	void_cust_allocations($type, $type_no);

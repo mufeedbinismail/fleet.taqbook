@@ -50,7 +50,6 @@ class suppliers_app extends application
 		$this->add_lapp_function(2, _("&Suppliers"),
 			"purchasing/manage/suppliers.php?", 'SA_SUPPLIER', MENU_ENTRY);
 
-		$this->add_extensions();
 	}
 }
 

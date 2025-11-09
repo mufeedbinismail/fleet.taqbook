@@ -19,7 +19,6 @@
 	require_once __DIR__ . '/applications/dimensions.php';
 	require_once __DIR__ . '/applications/generalledger.php';
 	require_once __DIR__ . '/applications/setup.php';
-	require_once __DIR__ . '/installed_extensions.php';
 
 	class front_accounting
 	{
@@ -82,8 +81,6 @@
 			    $this->add_application(new assets_app());
 			$this->add_application(new dimensions_app());
 			$this->add_application(new general_ledger_app());
-
-			hook_invoke_all('install_tabs', $this);
 
 			$this->add_application(new setup_app());
 		}

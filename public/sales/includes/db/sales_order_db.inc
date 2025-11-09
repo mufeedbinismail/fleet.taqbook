@@ -15,7 +15,6 @@ function add_sales_order(&$order)
 	global $SysPrefs, $Refs;
 
 	begin_transaction();
-	hook_db_prewrite($order, $order->trans_type);
 	$order_no = get_next_trans_no($order->trans_type);
 	$del_date = date2sql($order->due_date);
 	$order_type = 0; // this is default on new order
@@ -76,7 +75,6 @@ function add_sales_order(&$order)
 	add_audit_trail($order->trans_type, $order_no, $order->document_date);
 	$Refs->save($order->trans_type, $order_no, $order->reference, null, $order->fixed_asset);
 
-	hook_db_postwrite($order, $order->trans_type);
 	commit_transaction();
 
 	if ($SysPrefs->loc_notification() == 1 && count($st_ids) > 0)
@@ -89,7 +87,6 @@ function add_sales_order(&$order)
 function delete_sales_order($order_no, $trans_type)
 {
 	begin_transaction();
-	hook_db_prevoid($trans_type, $order_no);
 
 	$order = get_sales_order_header($order_no, $trans_type);
 	
@@ -131,7 +128,6 @@ function update_sales_order($order)
 	$total = $order->get_trans_total();
 
 	begin_transaction();
-	hook_db_prewrite($order, $order->trans_type);
 
 	if ($order->trans_type == ST_SALESORDER)
 		$allocs = get_payments_for($order_no, $order->trans_type, $order->customer_id);
@@ -217,7 +213,6 @@ function update_sales_order($order)
 	add_audit_trail($order->trans_type, $order_no, $order->document_date, _("Updated."));
 	$Refs->save($order->trans_type, $order_no, $order->reference, null, $order->fixed_asset);
 
-	hook_db_postwrite($order, $order->trans_type);
 	commit_transaction();
 	if ($SysPrefs->loc_notification() == 1 && count($st_ids) > 0)
 		send_reorder_email($loc, $st_ids, $st_names, $st_num, $st_reorder);

@@ -23,7 +23,6 @@ function add_work_order($wo_ref, $loc_code, $units_reqd, $stock_id,
 		'type', 'date_', 'required_by', 'memo_', 'costs', 'cr_acc', 'labour', 'cr_lab_acc'), $args);
 
 	$args->woid = 0;
-	hook_db_prewrite($args, ST_WORKORDER);
 
 	if ($type != WO_ADVANCED)
 		$required_by = $date_;
@@ -45,7 +44,6 @@ function add_work_order($wo_ref, $loc_code, $units_reqd, $stock_id,
 	add_audit_trail(ST_WORKORDER, $woid, $date_);
 
 	$args->woid = $woid;
-	hook_db_postwrite($args, ST_WORKORDER);
 
 	if ($type != WO_ADVANCED)
 	{
@@ -78,7 +76,6 @@ function update_work_order($woid, $loc_code, $units_reqd, $stock_id,
 	$args = func_get_args();
 	$args = (object)array_combine(array('woid', 'loc_code', 'units_reqd', 'stock_id',
 		'date_', 'required_by', 'memo_'), $args);
-	hook_db_prewrite($args, ST_WORKORDER);
 
 	$date = date2sql($date_);
 	$required = date2sql($required_by);
@@ -94,14 +91,12 @@ function update_work_order($woid, $loc_code, $units_reqd, $stock_id,
 	update_comments(ST_WORKORDER, $woid, null, $memo_);
 	add_audit_trail(ST_WORKORDER, $woid, $date_, _("Updated."));
 
-	hook_db_postwrite($args, ST_WORKORDER);
 	commit_transaction();
 }
 
 function delete_work_order($woid, $stock_id, $qty, $date)
 {
 	begin_transaction();
-	hook_db_prevoid(ST_WORKORDER, $woid);
 
 	// delete the work order requirements
 	delete_wo_requirements($woid);
@@ -260,7 +255,6 @@ function reopen_work_order($woid)
 function void_work_order($woid)
 {
 	begin_transaction();
-	hook_db_prevoid(ST_WORKORDER, $woid);
 
 	$work_order = get_work_order($woid);
 

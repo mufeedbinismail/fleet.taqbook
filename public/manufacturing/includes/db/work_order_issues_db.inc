@@ -21,7 +21,6 @@ function add_work_order_issue($woid, $ref, $to_work_order, $items, $location, $w
 	$args = (object)array_combine(array('woid', 'ref', 'to_work_order', 'items', 'location', 
 		'workcentre', 'date_', 'memo_'), $args);
 	$args->trans_no = 0;
-	hook_db_prewrite($args, ST_MANUISSUE);
 
 	$sql = "INSERT INTO ".TB_PREF."wo_issues (workorder_id, reference, issue_date, loc_code, workcentre_id)
 		VALUES (".db_escape($woid).", ".db_escape($ref).", '" .
@@ -80,7 +79,6 @@ function add_work_order_issue($woid, $ref, $to_work_order, $items, $location, $w
 	add_audit_trail(ST_MANUISSUE, $number, $date_);
 
 	$args->trans_no = $number;
-	hook_db_postwrite($args, ST_MANUISSUE);
 
 	commit_transaction();
 }
@@ -163,7 +161,6 @@ function check_void_wo_issue($issue_no)
 function void_work_order_issue($type_no)
 {
 	begin_transaction();
-	hook_db_prevoid(ST_MANUISSUE, $type_no);
 
 	$void_entry = get_voided_entry(ST_MANUISSUE, $type_no);
 	if ($void_entry)

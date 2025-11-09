@@ -359,7 +359,7 @@ function copy_file($file, $from, $to)
 */
 function find_custom_file($rep)
 {
-	global $installed_extensions, $local_path_to_root;
+	global $local_path_to_root;
 
 	// customized per company version
 	$path = company_path();
@@ -369,21 +369,6 @@ function find_custom_file($rep)
 		$local_path_to_root = $path;
 		set_include_path(dirname($file).PATH_SEPARATOR.get_include_path());
 		return $file;
-	}
-	// file added by active extension modules
-	if (count($installed_extensions) > 0)
-	{
-		$extensions = $installed_extensions;
-		foreach ($extensions as $ext)
-			if (($ext['active'] && $ext['type'] == 'extension')) {
-				$path = root_path($ext['path']);
-				$file = $path.$rep;
-				if (file_exists($file)) {
-					set_include_path($path.PATH_SEPARATOR.get_include_path());
-					$local_path_to_root = $path;
-					return $file;
-				}
-			}
 	}
 	// standard location
 	$file = root_path($rep);

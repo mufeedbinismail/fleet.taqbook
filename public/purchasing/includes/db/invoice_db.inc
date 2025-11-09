@@ -138,7 +138,6 @@ function add_supp_invoice(&$supp_trans)
         ($supplier['dimension2_id'] ? $supplier['dimension2_id'] : 0);
 
 	begin_transaction();
-	hook_db_prewrite($supp_trans, $trans_type);
 	$tax_total = 0;
     $taxes = $supp_trans->get_taxes($supp_trans->tax_group_id);
 	if ($trans_no) {
@@ -400,7 +399,6 @@ function add_supp_invoice(&$supp_trans)
 
 	reallocate_payments($invoice_id, ST_SUPPINVOICE, $date_, $to_allocate, $allocs, $supp_trans->supplier_id);
 	$supp_trans->trans_no = $invoice_id;
-	hook_db_postwrite($supp_trans, $supp_trans->trans_type);
     commit_transaction();
 
     return $invoice_id;
@@ -536,8 +534,6 @@ function get_matching_invoice_item($stock_id, $po_item_id)
 function void_supp_invoice($type, $type_no)
 {
 	begin_transaction();
-
-	hook_db_prevoid($type, $type_no);
 	$trans = get_supp_trans($type_no, $type);
 
 	void_bank_trans($type, $type_no, true);

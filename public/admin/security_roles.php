@@ -12,8 +12,6 @@
 $GLOBALS['page_security'] = 'SA_SECROLES';
 require_once __DIR__ . "/../includes/session.inc";
 
-add_access_extensions();
-
 page(_($GLOBALS['help_context'] = "Access setup"));
 
 require_once __DIR__ . "/../includes/ui.inc";

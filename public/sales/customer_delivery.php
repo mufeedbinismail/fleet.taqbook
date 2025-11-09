@@ -454,24 +454,21 @@ foreach ($_SESSION['Items']->line_items as $line=>$ln_itm) {
 	// if it's a non-stock item (eg. service) don't show qoh
 	$row_classes = null;
 	if (has_stock_holding($ln_itm->mb_flag) && $ln_itm->qty_dispatched) {
-		// It's a stock : call get_dispatchable_quantity hook  to get which quantity to preset in the
-		// quantity input box. This allows for example a hook to modify the default quantity to what's dispatchable
-		// (if there is not enough in hand), check at other location or other order people etc ...
-		// This hook also returns a 'reason' (css classes) which can be used to theme the row.
-		//
-		// FIXME: hook_get_dispatchable definition does not allow qoh checks on transaction level
-		// (but anyway dispatch is checked again later before transaction is saved)
+		// It's a stock item: adjust the dispatchable quantity based on stock availability.
 
-		$qty = $ln_itm->qty_dispatched;
-		if ($check = check_negative_stock($ln_itm->stock_id, $ln_itm->qty_done-$ln_itm->qty_dispatched, $_POST['Location'], $_POST['DispatchDate']))
-			$qty = $check['qty'];
-
-		$q_class =  hook_get_dispatchable_quantity($ln_itm, $_POST['Location'], $_POST['DispatchDate'], $qty);
-
-		// Skip line if needed
-		if($q_class === 'skip')  continue;
-		if(is_array($q_class)) {
-		  list($ln_itm->qty_dispatched, $row_classes) = $q_class;
+		$qoh = $ln_itm->qty_dispatched;
+		if ($check = check_negative_stock(
+            $ln_itm->stock_id,
+            $ln_itm->qty_done - $ln_itm->qty_dispatched,
+            $_POST['Location'],
+            $_POST['DispatchDate']
+        )) {
+			$qoh = $check['qty'];
+		}
+        
+		if (!$SysPrefs->allow_negative_stock() && $ln_itm->qty_dispatched > $qoh) {
+			$ln_itm->qty_dispatched = max($qoh, 0);
+			$row_classes = 'stockmankobg';
 			$has_marked = true;
 		}
 	}

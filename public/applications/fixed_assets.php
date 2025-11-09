@@ -51,7 +51,6 @@ class assets_app extends application
 		$this->add_rapp_function(2, _("Fixed Assets Cl&asses"),
 			"fixed_assets/fixed_asset_classes.php", 'SA_ASSETCLASS', MENU_MAINTENANCE);
 
-		$this->add_extensions();
 	}
 }
 

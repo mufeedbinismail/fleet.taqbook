@@ -19,7 +19,6 @@ function write_supp_payment($trans_no, $supplier_id, $bank_account,
 	$args = (object)array_combine(array('trans_no', 'supplier_id', 'bank_account', 'date_',
 		 'ref', 'supp_amount', 'supp_discount', 'memo_', 'bank_charge', 'bank_amount', 'dimension', 'dimension2'), $args);
 	$args->trans_no = 0;
-	hook_db_prewrite( $args, ST_SUPPAYMENT);
 
 	if ($trans_no != 0) {
 	  delete_comments(ST_SUPPAYMENT, $trans_no);
@@ -87,7 +86,6 @@ function write_supp_payment($trans_no, $supplier_id, $bank_account,
 	$Refs->save(ST_SUPPAYMENT, $payment_id, $ref);
 
 	$args->trans_no = $payment_id;
-	hook_db_postwrite($args, ST_SUPPAYMENT);
 
 	commit_transaction();
 
@@ -99,7 +97,6 @@ function write_supp_payment($trans_no, $supplier_id, $bank_account,
 function void_supp_payment($type, $type_no)
 {
 	begin_transaction();
-	hook_db_prevoid($type, $type_no);
 
 	void_bank_trans($type, $type_no, true);
 	void_gl_trans($type, $type_no, true);

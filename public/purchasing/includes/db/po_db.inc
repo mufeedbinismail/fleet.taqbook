@@ -49,7 +49,6 @@ function delete_po($po)
 	global $Refs;
 
 	begin_transaction();
-	hook_db_prevoid(ST_PURCHORDER, $po);
 	$sql = "DELETE FROM ".TB_PREF."purch_orders WHERE order_no=".db_escape($po);
 	db_query($sql, "The order header could not be deleted");
 
@@ -67,7 +66,6 @@ function add_po(&$po_obj)
 	global $Refs;
 
 	begin_transaction();
-	hook_db_prewrite($po_obj, ST_PURCHORDER);
 
      /*Insert to purchase order header record */
      $sql = "INSERT INTO ".TB_PREF."purch_orders (supplier_id, Comments, ord_date, reference, 
@@ -110,7 +108,6 @@ function add_po(&$po_obj)
 	$Refs->save(ST_PURCHORDER, $po_obj->order_no, $po_obj->reference);
 
 	add_audit_trail(ST_PURCHORDER, $po_obj->order_no, $po_obj->orig_order_date);
-	hook_db_postwrite($po_obj, ST_PURCHORDER);
 	commit_transaction();
 
 	return $po_obj->order_no;
@@ -121,7 +118,6 @@ function add_po(&$po_obj)
 function update_po(&$po_obj)
 {
 	begin_transaction();
-	hook_db_prewrite($po_obj, ST_PURCHORDER);
 
     /*Update the purchase order header with any changes */
     $sql = "UPDATE ".TB_PREF."purch_orders SET Comments=" . db_escape($po_obj->Comments) . ",
@@ -164,7 +160,6 @@ function update_po(&$po_obj)
 	reallocate_payments($po_obj->order_no, ST_PURCHORDER, $po_obj->orig_order_date, $po_obj->get_trans_total(), $po_obj->prepayments, $po_obj->supplier_id);
 
 	add_audit_trail($po_obj->trans_type, $po_obj->order_no, Today(), _("Updated."));
-	hook_db_postwrite($po_obj, ST_PURCHORDER);
 	commit_transaction();
 
 	return $po_obj->order_no;

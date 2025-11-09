@@ -13,7 +13,7 @@ define('VARLIB_PATH', PATH_TO_ROOT.'/tmp');
 define('VARLOG_PATH', PATH_TO_ROOT.'/tmp');
 define('SECURE_ONLY', true); // if you really need also http (unsecure) access allowed, you can set this to NULL
 
-global $SysPrefs, $Ajax, $db_connections, $installed_extensions,
+global $SysPrefs, $Ajax, $db_connections,
     $installed_languages, $Validate, $Editors, $Pagehelp, $Refs,
     $lang, $db, $version, $cur_error_level;
 
@@ -257,16 +257,6 @@ require_once __DIR__ . "/../includes/ajax.inc";
 require_once __DIR__ . "/../includes/ui/ui_msgs.inc";
 require_once __DIR__ . "/../includes/prefs/sysprefs.inc";
 
-require_once __DIR__ . "/../includes/hooks.inc";
-//
-// include all extensions hook files.
-//
-foreach ($installed_extensions as $ext)
-{
-	if (file_exists(__DIR__ . '/../'.$ext['path'].'/hooks.php'))
-		require_once __DIR__ . '/../'.$ext['path'].'/hooks.php';
-}
-
 $SysPrefs = new sys_prefs();
 
 $_SESSION['SysPrefs'] = $SysPrefs;
@@ -348,11 +338,6 @@ html_cleanup($_SERVER);
 if (!defined('FA_LOGOUT_PHP_FILE')){
 
 	login_timeout();
-
-	if (file_exists(__DIR__ . '/../company/'.user_company().'/installed_extensions.php'))
-		require __DIR__ . '/../company/'.user_company().'/installed_extensions.php';
-
-	install_hooks();
 
 	if (!$_SESSION["wa_current_user"]->logged_in())
 	{

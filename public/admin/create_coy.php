@@ -158,8 +158,6 @@ function handle_submit($selected_id)
 	if ($new)
 	{
 		create_comp_dirs(company_path($selected_id), $comp_subdirs);
-		$exts = get_company_extensions();
-		write_extensions($exts, $selected_id);
 	}
 	display_notification($new ? _('New company has been created.') : _('Company has been updated.'));
 

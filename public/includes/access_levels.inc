@@ -292,52 +292,6 @@ $GLOBALS['security_areas'] =array(
 
 if (!@$SysPrefs->allow_gl_reopen)
 	unset($GLOBALS['security_areas']['SA_GLREOPEN']);
-/*
-	This function should be called whenever we want to extend core access level system
-	with new security areas and/or sections i.e.: 
-	. on any page with non-standard security areas
-	. in security roles editor
-	The call should be placed between session.inc inclusion and page() call.
-	Up to 155 security sections and 155 security areas for any extension can be installed.
-*/
-function add_access_extensions()
-{
-	global $security_areas, $security_sections, $installed_extensions;
-
-	foreach($installed_extensions as $extid => $ext) {
-		$accext = hook_invoke($ext['package'], 'install_access', $dummy);
-		if ($accext == null) continue;
-
-		$scode = 100;
-		$acode = 100;
-		$extsections = $accext[1];
-		$extareas = $accext[0];
-		$extcode = $extid<<16;
-		
-		$trans = array();
-		foreach($extsections as $code =>$name) {
-			$trans[$code] = $scode<<8;
-			// reassign section codes
-			$security_sections[$trans[$code]|$extcode] = $name;
-			$scode++;
-		}
-		foreach($extareas as $code => $area) {
-			$section = $area[0]&0xff00;
-			// extension modules:
-			// if area belongs to nonstandard section
-			// use translated section codes and
-			// preserve lower part of area code
-			if (isset($trans[$section])) {
-				$section = $trans[$section];
-			} 
-				// otherwise assign next available
-				// area code >99
-			$area[0] = $extcode | $section | ($acode++);
-			$security_areas[$code] = $area;
-		}
-	}
-}
-
 function check_edit_access($name)
 {
 	global $input_security;

@@ -35,7 +35,6 @@ class dimensions_app extends application
 			$this->add_lapp_function(2, _("Dimension &Tags"),
 				"admin/tags.php?type=dimension", 'SA_DIMTAGS', MENU_MAINTENANCE);
 
-			$this->add_extensions();
 		}
 	}
 }

@@ -69,13 +69,7 @@ class current_user
 		$lang->set_language($_SESSION['language']->code);
 		db_set_encoding($_SESSION['language']->encoding);
 
-		// Use external authentication source if any.
-		// Keep in mind you need to have user data set for $loginname
-		// in FA users table anyway to successfully log in.
-		$Auth_Result = hook_authenticate($loginname, $password);
-
-		if (!isset($Auth_Result))	// if not used: standard method
-			$Auth_Result = get_user_auth($loginname, md5($password));
+		$Auth_Result = get_user_auth($loginname, md5($password));
 
 		if ($SysPrefs->login_delay > 0)
 			write_login_filelog($loginname, $Auth_Result);

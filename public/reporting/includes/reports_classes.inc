@@ -526,22 +526,6 @@ function gl_systypes_list($name, $value=null, $spec_opt=false)
 */
 function add_custom_reports(&$reports)
 {
-	global $installed_extensions;
-	
-	// include reports installed inside extension modules
-	if (count($installed_extensions) > 0)
-	{
-		$extensions = $installed_extensions;
-		foreach ($extensions as $ext)
-			if (($ext['active'] && $ext['type'] == 'extension')) {
-				$file = root_path($ext['path']."/reporting/reports_custom.php");
-				if (file_exists($file)) {
-					set_ext_domain($ext['path']);
-					include_once($file);
-					set_ext_domain();
-				}
-			}
-	}
 	$file = company_path()."/reporting/reports_custom.php";
 	if (file_exists($file))
 		include_once($file);

@@ -389,16 +389,13 @@ function display_all()
 {
 	$today = calc_today();
 
-	table('100%', '25%');
+	table('100%', '33%');
 	echo "<div class='square square1'>"._('Users')."<p class='span1'>";
 	echo get_num_users()."</p></div>";
-	td('25%');
-	echo "<div class='square square1'>"._('Extensions')."<p class='span1'>";
-	echo get_num_extensions()."</p></div>";
-	td('25%');
+	td('33%');
 	echo "<div class='square square1'>"._('Languages')."<p class='span1'>";
 	echo get_num_languages()."</p></div>";
-	td('25%');
+	td('33%');
 	echo "<div class='square square1'>"._('Database Size')."<p class='span1'>";
 	echo get_database_size()."</p></div>";
 	table_end();
@@ -1457,12 +1454,6 @@ function get_num_users()
 	$result = db_query($sql, "could not get num users");
     $row = db_fetch($result);
 	return $row[0];
-}
-
-function get_num_extensions()
-{
-	global $installed_extensions;
-	return count($installed_extensions);
 }
 
 function get_num_languages()

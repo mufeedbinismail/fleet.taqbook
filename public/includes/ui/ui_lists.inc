@@ -2496,8 +2496,6 @@ function security_roles_list_row($label, $name, $selected_id=null, $new_item=fal
 
 function tab_list_row($label, $name, $selected_id=null)
 {
-	global $installed_extensions;
-	
 	$tabs = array();
 	foreach ($_SESSION['App']->applications as $app) {
 		$tabs[$app->id] = access_string($app->name, true);
@@ -2547,25 +2545,6 @@ function tag_list_row($label, $name, $height, $type, $mult=false, $all=false, $s
 	echo "<tr><td class='label'>$label</td>";
 	tag_list_cells(null, $name, $height, $type, $mult, $all, $spec_opt);
 	echo "</tr>\n";	
-}
-
-//---------------------------------------------------------------------------------------------
-//	List of sets of active extensions 
-//
-function extset_list($name, $value=null, $submit_on_change=false)
-{
-	global $db_connections;
-
-	$items = array();
-	foreach ($db_connections as $comp)
-		$items[] = sprintf(_("Activated for '%s'"), $comp['name']);
-	return array_selector( $name, $value, $items,
-		array(
-			'spec_option'=> _("Available and/or installed"),
-			'spec_id' => -1,
-			'select_submit'=> $submit_on_change,
-			'async' => true
-		));
 }
 
 function crm_category_types_list($name, $selected_id=null, $filter=array(), $submit_on_change=true)
@@ -2618,8 +2597,6 @@ function payment_type_list_row($label, $name, $selected_id=null, $submit_on_chan
 
 function coa_list_row($label, $name, $value=null)
 {
-	global $installed_extensions;
-
 	$path = PATH_TO_ROOT.'/sql/';
 	$coas = array();
 	$sqldir = opendir($path);
@@ -2627,10 +2604,7 @@ function coa_list_row($label, $name, $value=null)
 	{
 		if (is_file($path.$fname) && substr($fname,-4)=='.sql' && @($fname[2] == '_'))
 		{
-			$ext = array_search_value($fname, $installed_extensions, 'sql');
-			if ($ext!=null) {
-				$descr = $ext['name'];
-			} elseif ($fname == 'en_US-new.sql') { // two standard COAs
+			if ($fname == 'en_US-new.sql') { // two standard COAs
 				$descr = _("Standard new company American COA (4 digit)");
 			} elseif ($fname == 'en_US-demo.sql') {
 				$descr = _("Standard American COA (4 digit) with demo data");

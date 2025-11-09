@@ -74,15 +74,12 @@ return [
     'sql_queries'          => '',
     'login_faillog'        => [],
     'cur_error_level'      => null,
-    'Hooks'                => null,
     'SessionManager'       => null,
     'date_system'          => null,
     'test_level'           => null,
     'transaction_level'    => 0,
     
-    // Extensions and modules
-    'installed_extensions' => [],
-    'next_extension_id'    => 1,
+    // Version metadata
     'repo_auth'            => [],
     'src_version'          => null,
     

@@ -132,10 +132,6 @@ define('MENU_SYSTEM', 'menu_system');
 			$this->modules[$level]->rappfunctions[] = new app_function($label, $link, $access, $category);
 		}
 		
-		function add_extensions()
-		{
-			hook_invoke_all('install_options', $this);
-		}
 		//
 		// Helper returning link to report class added by extension module.
 		//
