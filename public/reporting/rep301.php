@@ -152,29 +152,29 @@ function print_inventory_valuation_report()
 	if ($category == ALL_NUMERIC)
 		$category = 0;
 	if ($category == 0)
-		$cat = _('All');
+		$cat = __('All');
 	else
 		$cat = get_category_name($category);
 
 	if ($location == ALL_TEXT)
 		$location = 'all';
 	if ($location == 'all')
-		$loc = _('All');
+		$loc = __('All');
 	else
 		$loc = get_location_name($location);
 
 	$cols = array(0, 75, 225, 250, 350, 450,	515);
 
-	$headers = array(_('Category'), '', _('UOM'), _('Quantity'), _('Unit Cost'), _('Value'));
+	$headers = array(__('Category'), '', __('UOM'), __('Quantity'), __('Unit Cost'), __('Value'));
 
 	$aligns = array('left',	'left',	'left', 'right', 'right', 'right');
 
     $params =   array( 	0 => $comments,
-    					1 => array('text' => _('End Date'), 'from' => $date, 		'to' => ''),
-    				    2 => array('text' => _('Category'), 'from' => $cat, 'to' => ''),
-    				    3 => array('text' => _('Location'), 'from' => $loc, 'to' => ''));
+    					1 => array('text' => __('End Date'), 'from' => $date, 		'to' => ''),
+    				    2 => array('text' => __('Category'), 'from' => $cat, 'to' => ''),
+    				    3 => array('text' => __('Location'), 'from' => $loc, 'to' => ''));
 
-    $rep = new FrontReport(_('Inventory Valuation Report'), "InventoryValReport", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Inventory Valuation Report'), "InventoryValReport", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
     $rep->Font();
@@ -193,7 +193,7 @@ function print_inventory_valuation_report()
 				if ($detail)
 				{
 					$rep->NewLine(2, 3);
-					$rep->TextCol(0, 4, _('Total'));
+					$rep->TextCol(0, 4, __('Total'));
 				}
 				$rep->AmountCol(5, 6, $total, $dec);
 				if ($detail)
@@ -225,7 +225,7 @@ function print_inventory_valuation_report()
 			$rep->NewLine();
 			$rep->fontSize -= 2;
 			$rep->TextCol(0, 1, $trans['stock_id']);
-			$rep->TextCol(1, 2, $trans['description'].($trans['inactive']==1 ? " ("._("Inactive").")" : ""), -1);
+			$rep->TextCol(1, 2, $trans['description'].($trans['inactive']==1 ? " (".__("Inactive").")" : ""), -1);
 			$rep->TextCol(2, 3, $trans['units']);
 			$rep->AmountCol(3, 4, $trans['QtyOnHand'], get_qty_dec($trans['stock_id']));
 			
@@ -241,7 +241,7 @@ function print_inventory_valuation_report()
 	if ($detail)
 	{
 		$rep->NewLine(2, 3);
-		$rep->TextCol(0, 4, _('Total'));
+		$rep->TextCol(0, 4, __('Total'));
 	}
 	$rep->Amountcol(5, 6, $total, $dec);
 	if ($detail)
@@ -250,7 +250,7 @@ function print_inventory_valuation_report()
 		$rep->NewLine();
 	}
 	$rep->NewLine(2, 1);
-	$rep->TextCol(0, 4, _('Grand Total'));
+	$rep->TextCol(0, 4, __('Grand Total'));
 	$rep->AmountCol(5, 6, $grandtotal, $dec);
 	$rep->Line($rep->row  - 4);
 	$rep->NewLine();

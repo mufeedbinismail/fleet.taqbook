@@ -193,48 +193,48 @@ function print_stock_check()
 	if ($category == ALL_NUMERIC)
 		$category = 0;
 	if ($category == 0)
-		$cat = _('All');
+		$cat = __('All');
 	else
 		$cat = get_category_name($category);
 
 	if ($location == ALL_TEXT)
 		$location = 'all';
 	if ($location == 'all')
-		$loc = _('All');
+		$loc = __('All');
 	else
 		$loc = get_location_name($location);
 	if ($shortage)
 	{
-		$short = _('Yes');
-		$available = _('Shortage');
+		$short = __('Yes');
+		$available = __('Shortage');
 	}
 	else
 	{
-		$short = _('No');
-		$available = _('Available');
+		$short = __('No');
+		$available = __('Available');
 	}
 	$barcodes = !empty($SysPrefs->prefs['barcodes_on_stock']);
-	if ($no_zeros) $nozeros = _('Yes');
-	else $nozeros = _('No');
+	if ($no_zeros) $nozeros = __('Yes');
+	else $nozeros = __('No');
 	if ($check)
 	{
 		$cols = array(0, 75, 225, 250, 295, 345, 390, 445,	515);
-		$headers = array(_('Stock ID'), _('Description'), _('UOM'), _('Quantity'), _('Check'), _('Demand'), $available, _('On Order'));
+		$headers = array(__('Stock ID'), __('Description'), __('UOM'), __('Quantity'), __('Check'), __('Demand'), $available, __('On Order'));
 		$aligns = array('left',	'left',	'left', 'right', 'right', 'right', 'right', 'right');
 	}
 	else
 	{
 		$cols = array(0, 75, 225, 250, 315, 380, 445,	515);
-		$headers = array(_('Stock ID'), _('Description'), _('UOM'), _('Quantity'), _('Demand'), $available, _('On Order'));
+		$headers = array(__('Stock ID'), __('Description'), __('UOM'), __('Quantity'), __('Demand'), $available, __('On Order'));
 		$aligns = array('left',	'left',	'left', 'right', 'right', 'right', 'right');
 	}
 
     $params =   array(
 		0 => $comments,
-    	1 => array('text' => _('Category'), 'from' => $cat, 'to' => ''),
-    	2 => array('text' => _('Location'), 'from' => $loc, 'to' => ''),
-    	3 => array('text' => _('Only Shortage'), 'from' => $short, 'to' => ''),
-		4 => array('text' => _('Suppress Zeros'), 'from' => $nozeros, 'to' => '')
+    	1 => array('text' => __('Category'), 'from' => $cat, 'to' => ''),
+    	2 => array('text' => __('Location'), 'from' => $loc, 'to' => ''),
+    	3 => array('text' => __('Only Shortage'), 'from' => $short, 'to' => ''),
+		4 => array('text' => __('Suppress Zeros'), 'from' => $nozeros, 'to' => '')
 	);
 
 	if ($barcodes)
@@ -257,7 +257,7 @@ function print_stock_check()
     	// write1DBarcode($code, $type, $x='', $y='', $w='', $h='', $xres=0.4, $style='', $align='')
     }	
 
-   	$rep = new FrontReport(_('Stock Check Sheets'), "StockCheckSheet", user_pagesize(), 9, $orientation);
+   	$rep = new FrontReport(__('Stock Check Sheets'), "StockCheckSheet", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -296,7 +296,7 @@ function print_stock_check()
 		$rep->NewLine();
 		$dec = get_qty_dec($trans['stock_id']);
 		$rep->TextCol(0, 1, $trans['stock_id']);
-		$rep->TextCol(1, 2, $trans['description'].($trans['inactive']==1 ? " ("._("Inactive").")" : ""), -1);
+		$rep->TextCol(1, 2, $trans['description'].($trans['inactive']==1 ? " (".__("Inactive").")" : ""), -1);
 		$rep->TextCol(2, 3, $trans['units']);
 		$rep->AmountCol(3, 4, $trans['QtyOnHand'], $dec);
 		if ($check)

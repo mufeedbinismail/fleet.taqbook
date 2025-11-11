@@ -95,19 +95,19 @@
 		$this->Font('italic');
 		if (@$this->company['phone'])
 		{
-			$this->Text($ccol, _("Phone"), $c2col);
+			$this->Text($ccol, __("Phone"), $c2col);
 			$this->Text($c2col, $this->company['phone'], $mcol);
 			$this->NewLine();
 		}
 		if (@$this->company['fax'])
 		{
-			$this->Text($ccol, _("Fax"), $c2col);
+			$this->Text($ccol, __("Fax"), $c2col);
 			$this->Text($c2col, $this->company['fax'], $mcol);
 			$this->NewLine();
 		}
 		if (@$this->company['email'])
 		{
-			$this->Text($ccol, _("Email"), $c2col);
+			$this->Text($ccol, __("Email"), $c2col);
 
 			$url = "mailto:" . $this->company['email'];
 			$this->SetTextColor(0, 0, 255);
@@ -119,20 +119,20 @@
 		}
 		if (@$this->company['gst_no'])
 		{
-			$this->Text($ccol, _("Our VAT No."), $c2col);
+			$this->Text($ccol, __("Our VAT No."), $c2col);
 			$this->Text($c2col, $this->company['gst_no'], $mcol);
 			$this->NewLine();
 		}
 		if (@$this->formData['domicile'])
 		{
-			$this->Text($ccol, _("Domicile"), $c2col);
+			$this->Text($ccol, __("Domicile"), $c2col);
 			$this->Text($c2col, $this->company['domicile'], $mcol);
 			$this->NewLine();
 		}
 		$this->Font();
 		$this->row = $adrline;
 		$this->NewLine(3);
-		$this->Text($mcol + 100, _("Date"));
+		$this->Text($mcol + 100, __("Date"));
 		$this->Text($mcol + 180, sql2date($this->formData['document_date']));
 
 		$this->NewLine();
@@ -141,7 +141,7 @@
 		$this->NewLine(2);
 	
 		if ($this->pageNumber > 1)
-			$this->Text($mcol + 180, _("Page") . ' ' . $this->pageNumber);
+			$this->Text($mcol + 180, __("Page") . ' ' . $this->pageNumber);
 		$this->row = $iline1 - $this->lineHeight;
 		$this->fontSize -= 4;
 		$this->Text($ccol, $Addr1['title'], $icol);

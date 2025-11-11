@@ -94,7 +94,7 @@ function add_gl_balance($type, $trans_id, $date_, $amount, $person_type_id=null,
 
 	if ($amount != 0.0)
 	{
-		error_log(sprintf( _("Rounding error %s encountered for trans_type:%s,trans_no:%s"), $amount, $type, $trans_id));
+		error_log(sprintf( __("Rounding error %s encountered for trans_type:%s,trans_no:%s"), $amount, $type, $trans_id));
 		return add_gl_trans($type, $trans_id, $date_, get_company_pref('exchange_diff_act'), 0, 0, "",
 			$amount, null, $person_type_id, $person_id, "The balanced GL transaction could not be inserted");
 	} else

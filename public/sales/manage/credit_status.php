@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_CRSTATUS';
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "Credit Status")); 
+page(__($GLOBALS['help_context'] = "Credit Status")); 
 
 require_once __DIR__ . "/../../sales/includes/db/credit_status_db.inc";
 
@@ -26,7 +26,7 @@ function can_process()
 	
 	if (strlen($_POST['reason_description']) == 0) 
 	{
-		display_error(_("The credit status description cannot be empty."));
+		display_error(__("The credit status description cannot be empty."));
 		set_focus('reason_description');
 		return false;
 	}	
@@ -40,7 +40,7 @@ if ($Mode=='ADD_ITEM' && can_process())
 {
 
 	add_credit_status($_POST['reason_description'], $_POST['DisallowInvoices']);
-	display_notification(_('New credit status has been added'));
+	display_notification(__('New credit status has been added'));
 	$Mode = 'RESET';
 } 
 
@@ -48,7 +48,7 @@ if ($Mode=='ADD_ITEM' && can_process())
 
 if ($Mode=='UPDATE_ITEM' && can_process()) 
 {
-	display_notification(_('Selected credit status has been updated'));
+	display_notification(__('Selected credit status has been updated'));
 	update_credit_status($selected_id, $_POST['reason_description'], $_POST['DisallowInvoices']);
 	$Mode = 'RESET';
 }
@@ -59,7 +59,7 @@ function can_delete($selected_id)
 {
 	if (key_in_foreign_table($selected_id, 'debtors_master', 'credit_status'))
 	{
-		display_error(_("Cannot delete this credit status because customer accounts have been created referring to it."));
+		display_error(__("Cannot delete this credit status because customer accounts have been created referring to it."));
 		return false;
 	}
 	
@@ -75,7 +75,7 @@ if ($Mode == 'Delete')
 	if (can_delete($selected_id))
 	{
 		delete_credit_status($selected_id);
-		display_notification(_('Selected credit status has been deleted'));
+		display_notification(__('Selected credit status has been deleted'));
 	}
 	$Mode = 'RESET';
 }
@@ -93,7 +93,7 @@ $result = get_all_credit_status(check_value('show_inactive'));
 
 start_form();
 start_table(TABLESTYLE, "width=40%");
-$th = array(_("Description"), _("Dissallow Invoices"),'','');
+$th = array(__("Description"), __("Dissallow Invoices"),'','');
 inactive_control_column($th);
 table_header($th);
 
@@ -105,18 +105,18 @@ while ($myrow = db_fetch($result))
 
 	if ($myrow["dissallow_invoices"] == 0) 
 	{
-		$disallow_text = _("Invoice OK");
+		$disallow_text = __("Invoice OK");
 	} 
 	else 
 	{
-		$disallow_text = "<b>" . _("NO INVOICING") . "</b>";
+		$disallow_text = "<b>" . __("NO INVOICING") . "</b>";
 	}
 	
 	label_cell($myrow["reason_description"]);
 	label_cell($disallow_text);
 	inactive_control_cell($myrow["id"], $myrow["inactive"], 'credit_status', 'id');
- 	edit_button_cell("Edit".$myrow['id'], _("Edit"));
- 	delete_button_cell("Delete".$myrow['id'], _("Delete"));
+ 	edit_button_cell("Edit".$myrow['id'], __("Edit"));
+ 	delete_button_cell("Delete".$myrow['id'], __("Delete"));
 	end_row();
 }
 
@@ -141,9 +141,9 @@ if ($selected_id != -1)
 	hidden('selected_id', $selected_id);
 } 
 
-text_row_ex(_("Description:"), 'reason_description', 50);
+text_row_ex(__("Description:"), 'reason_description', 50);
 
-yesno_list_row(_("Dissallow invoicing ?"), 'DisallowInvoices', null); 
+yesno_list_row(__("Dissallow invoicing ?"), 'DisallowInvoices', null); 
 
 end_table(1);
 

@@ -155,7 +155,7 @@ function check_recurrent_invoice_prices($id)
 		while($line = db_fetch($details))
 			if ($curr['curr_code'] != $template['curr_code'] && !get_price($line['stk_code'], $curr['curr_code'], $template['sales_type_id']))
 			{
-				display_error(sprintf(_("Unknown %s price for '%s' in pricelist '%s'"), $curr['curr_code'], $line['stk_code'], $template['sales_type']));
+				display_error(sprintf(__("Unknown %s price for '%s' in pricelist '%s'"), $curr['curr_code'], $line['stk_code'], $template['sales_type']));
 				$errors++;
 			}
 	}

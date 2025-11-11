@@ -26,7 +26,7 @@ if ($SysPrefs->use_popup_windows)
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
-page(_($GLOBALS['help_context'] = "Tax Inquiry"), false, false, '', $js);
+page(__($GLOBALS['help_context'] = "Tax Inquiry"), false, false, '', $js);
 
 //----------------------------------------------------------------------------------------------------
 // Ajax updates
@@ -57,9 +57,9 @@ function tax_inquiry_controls()
     start_table(TABLESTYLE_NOBORDER);
 	start_row();
 
-	date_cells(_("from:"), 'TransFromDate', '', null, -user_transaction_days());
-	date_cells(_("to:"), 'TransToDate');
-	submit_cells('Show',_("Show"),'','', 'default');
+	date_cells(__("from:"), 'TransFromDate', '', null, -user_transaction_days());
+	date_cells(__("to:"), 'TransToDate');
+	submit_cells('Show',__("Show"),'','', 'default');
 
     end_row();
 
@@ -76,7 +76,7 @@ function show_results()
 	div_start('trans_tbl');
 	start_table(TABLESTYLE);
 
-	$th = array(_("Type"), _("Description"), _("Amount"), _("Outputs")."/"._("Inputs"));
+	$th = array(__("Type"), __("Description"), __("Amount"), __("Outputs")."/".__("Inputs"));
 	table_header($th);
 	$k = 0;
 	$total = 0;
@@ -92,26 +92,26 @@ function show_results()
 		$total += $net;
 		alt_table_row_color($k);
 		label_cell($tx['name'] . " " . $tx['rate'] . "%");
-		label_cell(_("Charged on sales") . " (" . _("Output Tax")."):");
+		label_cell(__("Charged on sales") . " (" . __("Output Tax")."):");
 		amount_cell($payable);
 		amount_cell($tx['net_output']);
 		end_row();
 		alt_table_row_color($k);
 		label_cell($tx['name'] . " " . $tx['rate'] . "%");
-		label_cell(_("Paid on purchases") . " (" . _("Input Tax")."):");
+		label_cell(__("Paid on purchases") . " (" . __("Input Tax")."):");
 		amount_cell($collectible);
 		amount_cell(-$tx['net_input']);
 		end_row();
 		alt_table_row_color($k);
 		label_cell("<b>".$tx['name'] . " " . $tx['rate'] . "%</b>");
-		label_cell("<b>"._("Net payable or collectible") . ":</b>");
+		label_cell("<b>".__("Net payable or collectible") . ":</b>");
 		amount_cell($net, true);
 		label_cell("");
 		end_row();
 	}	
 	alt_table_row_color($k);
 	label_cell("");
-	label_cell("<b>"._("Total payable or refund") . ":</b>");
+	label_cell("<b>".__("Total payable or refund") . ":</b>");
 	amount_cell($total, true);
 	label_cell("");
 	end_row();

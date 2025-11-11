@@ -54,13 +54,13 @@ if (user_use_date_picker()) {
 }
 add_js_file('payalloc.js');
 
-page(_($GLOBALS['help_context'] = "Customer Payment Entry"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Customer Payment Entry"), false, false, "", $js);
 
 //----------------------------------------------------------------------------------------------
 
-check_db_has_customers(_("There are no customers defined in the system."));
+check_db_has_customers(__("There are no customers defined in the system."));
 
-check_db_has_bank_accounts(_("There are no bank accounts defined in the system."));
+check_db_has_bank_accounts(__("There are no bank accounts defined in the system."));
 
 //----------------------------------------------------------------------------------------
 if (isset($_GET['customer_id']))
@@ -103,7 +103,7 @@ if (!isset($_POST['bank_account'])) { // first page call
 			}
 			unset($inv);
 		} else
-			display_error(_("Invalid sales invoice number."));
+			display_error(__("Invalid sales invoice number."));
 	}
 }
 
@@ -133,37 +133,37 @@ if (!isset($_POST['DateBanked'])) {
 if (isset($_GET['AddedID'])) {
 	$payment_no = $_GET['AddedID'];
 
-	display_notification_centered(_("The customer payment has been successfully entered."));
+	display_notification_centered(__("The customer payment has been successfully entered."));
 
-	submenu_print(_("&Print This Receipt"), ST_CUSTPAYMENT, $payment_no."-".ST_CUSTPAYMENT, 'prtopt');
-	submenu_print(_("&Email This Receipt"), ST_CUSTPAYMENT, $payment_no."-".ST_CUSTPAYMENT, null, 1);
+	submenu_print(__("&Print This Receipt"), ST_CUSTPAYMENT, $payment_no."-".ST_CUSTPAYMENT, 'prtopt');
+	submenu_print(__("&Email This Receipt"), ST_CUSTPAYMENT, $payment_no."-".ST_CUSTPAYMENT, null, 1);
 
-	submenu_view(_("&View this Customer Payment"), ST_CUSTPAYMENT, $payment_no);
-	display_note(get_gl_view_str(ST_CUSTPAYMENT, $payment_no, _("&View the GL Journal Entries for this Customer Payment")), 0, 1);
+	submenu_view(__("&View this Customer Payment"), ST_CUSTPAYMENT, $payment_no);
+	display_note(get_gl_view_str(ST_CUSTPAYMENT, $payment_no, __("&View the GL Journal Entries for this Customer Payment")), 0, 1);
 
-	submenu_option(_("Enter Another &Customer Payment"), "/sales/customer_payments.php");
-	submenu_option(_("Enter Other &Deposit"), "/gl/gl_bank.php?NewDeposit=Yes");
-	submenu_option(_("Enter Payment to &Supplier"), "/purchasing/supplier_payment.php");
-	submenu_option(_("Enter Other &Payment"), "/gl/gl_bank.php?NewPayment=Yes");
-	submenu_option(_("Bank Account &Transfer"), "/gl/bank_transfer.php");
-	submenu_option(_("Add an Attachment"), "/admin/attachments.php?filterType=".ST_CUSTPAYMENT."&trans_no=$payment_no");
+	submenu_option(__("Enter Another &Customer Payment"), "/sales/customer_payments.php");
+	submenu_option(__("Enter Other &Deposit"), "/gl/gl_bank.php?NewDeposit=Yes");
+	submenu_option(__("Enter Payment to &Supplier"), "/purchasing/supplier_payment.php");
+	submenu_option(__("Enter Other &Payment"), "/gl/gl_bank.php?NewPayment=Yes");
+	submenu_option(__("Bank Account &Transfer"), "/gl/bank_transfer.php");
+	submenu_option(__("Add an Attachment"), "/admin/attachments.php?filterType=".ST_CUSTPAYMENT."&trans_no=$payment_no");
 
 	display_footer_exit();
 }
 elseif (isset($_GET['UpdatedID'])) {
 	$payment_no = $_GET['UpdatedID'];
 
-	display_notification_centered(_("The customer payment has been successfully updated."));
+	display_notification_centered(__("The customer payment has been successfully updated."));
 
-	submenu_print(_("&Print This Receipt"), ST_CUSTPAYMENT, $payment_no."-".ST_CUSTPAYMENT, 'prtopt');
+	submenu_print(__("&Print This Receipt"), ST_CUSTPAYMENT, $payment_no."-".ST_CUSTPAYMENT, 'prtopt');
 
-	display_note(get_gl_view_str(ST_CUSTPAYMENT, $payment_no, _("&View the GL Journal Entries for this Customer Payment")));
+	display_note(get_gl_view_str(ST_CUSTPAYMENT, $payment_no, __("&View the GL Journal Entries for this Customer Payment")));
 
-//	hyperlink_params(url("/sales/allocations/customer_allocate.php"), _("&Allocate this Customer Payment"), "trans_no=$payment_no&trans_type=12");
+//	hyperlink_params(url("/sales/allocations/customer_allocate.php"), __("&Allocate this Customer Payment"), "trans_no=$payment_no&trans_type=12");
 
-	hyperlink_no_params(url("/sales/inquiry/customer_inquiry.php"), _("Select Another Customer Payment for &Edition"));
+	hyperlink_no_params(url("/sales/inquiry/customer_inquiry.php"), __("Select Another Customer Payment for &Edition"));
 
-	hyperlink_no_params(url("/sales/customer_payments.php"), _("Enter Another &Customer Payment"));
+	hyperlink_no_params(url("/sales/customer_payments.php"), __("Enter Another &Customer Payment"));
 
 	display_footer_exit();
 }
@@ -176,30 +176,30 @@ function can_process()
 
 	if (!get_post('customer_id'))
 	{
-		display_error(_("There is no customer selected."));
+		display_error(__("There is no customer selected."));
 		set_focus('customer_id');
 		return false;
 	}
 
     if (check_value('is_marketplace_trans') && !get_post('marketplace_id')) {
-        display_error(_("There is no marketplace selected."));
+        display_error(__("There is no marketplace selected."));
         set_focus('marketplace_id');
         return false;
     }
 	
 	if (!get_post('BranchID'))
 	{
-		display_error(_("This customer has no branch defined."));
+		display_error(__("This customer has no branch defined."));
 		set_focus('BranchID');
 		return false;
 	} 
 	
 	if (!isset($_POST['DateBanked']) || !is_date($_POST['DateBanked'])) {
-		display_error(_("The entered date is invalid. Please enter a valid date for the payment."));
+		display_error(__("The entered date is invalid. Please enter a valid date for the payment."));
 		set_focus('DateBanked');
 		return false;
 	} elseif (!is_date_in_fiscalyear($_POST['DateBanked'])) {
-		display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+		display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 		set_focus('DateBanked');
 		return false;
 	}
@@ -210,20 +210,20 @@ function can_process()
 	}
 
 	if (!check_num('amount', 0)) {
-		display_error(_("The entered amount is invalid or negative and cannot be processed."));
+		display_error(__("The entered amount is invalid or negative and cannot be processed."));
 		set_focus('amount');
 		return false;
 	}
 
 	if (isset($_POST['charge']) && (!check_num('charge', 0) || $_POST['charge'] == $_POST['amount'])) {
-		display_error(_("The entered amount is invalid or negative and cannot be processed."));
+		display_error(__("The entered amount is invalid or negative and cannot be processed."));
 		set_focus('charge');
 		return false;
 	}
 	if (isset($_POST['charge']) && input_num('charge') > 0) {
 		$charge_acct = get_bank_charge_account($_POST['bank_account']);
 		if (get_gl_account($charge_acct) == false) {
-			display_error(_("The Bank Charge Account has not been set in System and General GL Setup."));
+			display_error(__("The Bank Charge Account has not been set in System and General GL Setup."));
 			set_focus('charge');
 			return false;
 		}	
@@ -235,20 +235,20 @@ function can_process()
 	}
 
 	if (!check_num('discount')) {
-		display_error(_("The entered discount is not a valid number."));
+		display_error(__("The entered discount is not a valid number."));
 		set_focus('discount');
 		return false;
 	}
 
 	if (input_num('amount') <= 0) {
-		display_error(_("The balance of the amount and discount is zero or negative. Please enter valid amounts."));
+		display_error(__("The balance of the amount and discount is zero or negative. Please enter valid amounts."));
 		set_focus('discount');
 		return false;
 	}
 
 	if (isset($_POST['bank_amount']) && input_num('bank_amount')<=0)
 	{
-		display_error(_("The entered payment amount is zero or negative."));
+		display_error(__("The entered payment amount is zero or negative."));
 		set_focus('bank_amount');
 		return false;
 	}
@@ -367,23 +367,23 @@ start_outer_table(TABLESTYLE2, "width='60%'", 5);
 table_section(1);
 
 if ($new)
-	customer_list_row(_("From Customer:"), 'customer_id', null, false, true);
+	customer_list_row(__("From Customer:"), 'customer_id', null, false, true);
 else {
-	label_cells(_("From Customer:"), $_SESSION['alloc']->person_name, "class='label'");
+	label_cells(__("From Customer:"), $_SESSION['alloc']->person_name, "class='label'");
 	hidden('customer_id', $_POST['customer_id']);
 }
 
 if (check_value('is_marketplace_trans')) {
     if ($new) {
-        marketplace_list_row(_("Marketplace:"), 'marketplace_id', null, '-- select --', true);
+        marketplace_list_row(__("Marketplace:"), 'marketplace_id', null, '-- select --', true);
     } else {
-        label_cells(_("Marketplace:"), get_marketplace_name($_POST['marketplace_id']), "class='label'");
+        label_cells(__("Marketplace:"), get_marketplace_name($_POST['marketplace_id']), "class='label'");
         hidden('marketplace_id', $_POST['marketplace_id']);
     }
 }
 
 if (db_customer_has_branches($_POST['customer_id'])) {
-	customer_branches_list_row(_("Branch:"), $_POST['customer_id'], 'BranchID', null, false, true, true);
+	customer_branches_list_row(__("Branch:"), $_POST['customer_id'], 'BranchID', null, false, true, true);
 } else {
 	hidden('BranchID', ANY_NUMERIC);
 }
@@ -404,20 +404,20 @@ if (
 	$Ajax->activate('_page_body');
 }
 
-bank_accounts_list_row(_("Into Bank Account:"), 'bank_account', null, true);
+bank_accounts_list_row(__("Into Bank Account:"), 'bank_account', null, true);
 
 read_customer_data();
 
 set_global_customer($_POST['customer_id']);
 if (isset($_POST['HoldAccount']) && $_POST['HoldAccount'] != 0)	
-	display_warning(_("This customer account is on hold."));
+	display_warning(__("This customer account is on hold."));
 $display_discount_percent = percent_format($_POST['pymt_discount']*100) . "%";
 
 table_section(2);
 
-date_row(_("Date of Deposit:"), 'DateBanked', '', true, 0, 0, 0, null, true);
+date_row(__("Date of Deposit:"), 'DateBanked', '', true, 0, 0, 0, null, true);
 
-ref_row(_("Reference:"), 'ref','' , null, '', ST_CUSTPAYMENT);
+ref_row(__("Reference:"), 'ref','' , null, '', ST_CUSTPAYMENT);
 
 table_section(3);
 
@@ -429,22 +429,22 @@ $_SESSION['alloc']->currency = $bank_currency = get_bank_account_currency($_POST
 
 if ($cust_currency != $bank_currency)
 {
-	amount_row(_("Payment Amount:"), 'bank_amount', null, '', $bank_currency);
+	amount_row(__("Payment Amount:"), 'bank_amount', null, '', $bank_currency);
 }
 
-amount_row(_("Bank Charge:"), 'charge', null, '', $bank_currency);
+amount_row(__("Bank Charge:"), 'charge', null, '', $bank_currency);
 
 $row = get_customer($_POST['customer_id']);
 $_POST['dimension_id'] = !$row ? 0 : $row['dimension_id'];
 $_POST['dimension2_id'] = !$row ? 0 : $row['dimension2_id'];
 $dim = get_company_pref('use_dimension');
 if ($dim > 0)
-    dimensions_list_row(_("Dimension").":", 'dimension_id',
+    dimensions_list_row(__("Dimension").":", 'dimension_id',
         null, true, ' ', false, 1, false);
 else
     hidden('dimension_id', 0);
 if ($dim > 1)
-    dimensions_list_row(_("Dimension")." 2:", 'dimension2_id',
+    dimensions_list_row(__("Dimension")." 2:", 'dimension2_id',
         null, true, ' ', false, 2, false);
 else
     hidden('dimension2_id', 0);
@@ -457,13 +457,13 @@ div_end();
 
 start_table(TABLESTYLE, "width='60%'");
 
-label_row(_("Customer prompt payment discount :"), $display_discount_percent);
+label_row(__("Customer prompt payment discount :"), $display_discount_percent);
 
-amount_row(_("Amount of Discount:"), 'discount', null, '', $cust_currency);
+amount_row(__("Amount of Discount:"), 'discount', null, '', $cust_currency);
 
-amount_row(_("Payment Amount:"), 'amount', null, '', $cust_currency);
+amount_row(__("Payment Amount:"), 'amount', null, '', $cust_currency);
 label_row(
-    _("Amount Receivable:"), 
+    __("Amount Receivable:"), 
     price_format(input_num('amount') + input_num('discount')),
     "",
     "",
@@ -471,10 +471,10 @@ label_row(
     "TotalAR"
 );
 if (check_value('is_marketplace_trans')) {
-    amount_row(_("Marketplace Cost:"), 'marketplace_cost', null, '', $cust_currency);
+    amount_row(__("Marketplace Cost:"), 'marketplace_cost', null, '', $cust_currency);
 }
 label_row(
-    _("Total Received to Bank Account:"),
+    __("Total Received to Bank Account:"),
     price_format(input_num('amount') - input_num('marketplace_cost') - input_num('charge')),
     "",
     "nowrap",
@@ -482,13 +482,13 @@ label_row(
     "TotalToBank"
 );
 
-textarea_row(_("Memo:"), 'memo_', null, 22, 4);
+textarea_row(__("Memo:"), 'memo_', null, 22, 4);
 end_table(1);
 
 if ($new)
-	submit_center('AddPaymentItem', _("Add Payment"), true, '', 'default');
+	submit_center('AddPaymentItem', __("Add Payment"), true, '', 'default');
 else
-	submit_center('AddPaymentItem', _("Update Payment"), true, '', 'default');
+	submit_center('AddPaymentItem', __("Update Payment"), true, '', 'default');
 
 br();
 

@@ -28,9 +28,9 @@ if (user_use_date_picker())
 if (isset($_GET['NewAdjustment'])) {
 	if (isset($_GET['FixedAsset'])) {
 		$GLOBALS['page_security'] = 'SA_ASSETDISPOSAL';
-		$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Fixed Assets Disposal");
+		$_SESSION['page_title'] = __($GLOBALS['help_context'] = "Fixed Assets Disposal");
 	} else {
-		$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Item Adjustments Note");
+		$_SESSION['page_title'] = __($GLOBALS['help_context'] = "Item Adjustments Note");
 	}
 }
 page($_SESSION['page_title'], false, false, "", $js);
@@ -46,22 +46,22 @@ if (isset($_GET['AddedID']))
   $row = db_fetch($result);
 
   if (is_fixed_asset($row['mb_flag'])) {
-    display_notification_centered(_("Fixed Assets disposal has been processed"));
-    display_note(get_trans_view_str($trans_type, $trans_no, _("&View this disposal")));
+    display_notification_centered(__("Fixed Assets disposal has been processed"));
+    display_note(get_trans_view_str($trans_type, $trans_no, __("&View this disposal")));
 
-    display_note(get_gl_view_str($trans_type, $trans_no, _("View the GL &Postings for this Disposal")), 1, 0);
-	  hyperlink_params(url()->current(), _("Enter &Another Disposal"), "NewAdjustment=1&FixedAsset=1");
+    display_note(get_gl_view_str($trans_type, $trans_no, __("View the GL &Postings for this Disposal")), 1, 0);
+	  hyperlink_params(url()->current(), __("Enter &Another Disposal"), "NewAdjustment=1&FixedAsset=1");
   }
   else {
-    display_notification_centered(_("Items adjustment has been processed"));
-    display_note(get_trans_view_str($trans_type, $trans_no, _("&View this adjustment")));
+    display_notification_centered(__("Items adjustment has been processed"));
+    display_note(get_trans_view_str($trans_type, $trans_no, __("&View this adjustment")));
 
-    display_note(get_gl_view_str($trans_type, $trans_no, _("View the GL &Postings for this Adjustment")), 1, 0);
+    display_note(get_gl_view_str($trans_type, $trans_no, __("View the GL &Postings for this Adjustment")), 1, 0);
 
-	  hyperlink_params(url()->current(), _("Enter &Another Adjustment"), "NewAdjustment=1");
+	  hyperlink_params(url()->current(), __("Enter &Another Adjustment"), "NewAdjustment=1");
   }
 
-	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), "filterType=$trans_type&trans_no=$trans_no");
+	hyperlink_params(url("/admin/attachments.php"), __("Add an Attachment"), "filterType=$trans_type&trans_no=$trans_no");
 
 	display_footer_exit();
 }
@@ -100,7 +100,7 @@ function can_process()
 	$adj = &$_SESSION['adj_items'];
 
 	if (count($adj->line_items) == 0)	{
-		display_error(_("You must enter at least one non empty item line."));
+		display_error(__("You must enter at least one non empty item line."));
 		set_focus('stock_id');
 		return false;
 	}
@@ -113,13 +113,13 @@ function can_process()
 
 	if (!is_date($_POST['AdjDate'])) 
 	{
-		display_error(_("The entered date for the adjustment is invalid."));
+		display_error(__("The entered date for the adjustment is invalid."));
 		set_focus('AdjDate');
 		return false;
 	} 
 	elseif (!is_date_in_fiscalyear($_POST['AdjDate'])) 
 	{
-		display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+		display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 		set_focus('AdjDate');
 		return false;
 	}
@@ -129,7 +129,7 @@ function can_process()
 
 		if ($low_stock)
 		{
-    		display_error(_("The adjustment cannot be processed because it would cause negative inventory balance for marked items as of document date or later."));
+    		display_error(__("The adjustment cannot be processed because it would cause negative inventory balance for marked items as of document date or later."));
 			unset($_POST['Process']);
 			return false;
 		}
@@ -162,14 +162,14 @@ function check_item_data()
 {
 	if (input_num('qty') == 0)
 	{
-		display_error(_("The quantity entered is invalid."));
+		display_error(__("The quantity entered is invalid."));
 		set_focus('qty');
 		return false;
 	}
 
 	if (!check_num('std_cost', 0))
 	{
-		display_error(_("The entered standard cost is negative or invalid."));
+		display_error(__("The entered standard cost is negative or invalid."));
 		set_focus('std_cost');
 		return false;
 	}
@@ -227,9 +227,9 @@ if (isset($_GET['NewAdjustment']) || !isset($_SESSION['adj_items']))
 {
 
 	if (isset($_GET['FixedAsset']))
-		check_db_has_disposable_fixed_assets(_("There are no fixed assets defined in the system."));
+		check_db_has_disposable_fixed_assets(__("There are no fixed assets defined in the system."));
 	else
-		check_db_has_costable_items(_("There are no inventory items defined in the system which can be adjusted (Purchased or Manufactured)."));
+		check_db_has_costable_items(__("There are no inventory items defined in the system which can be adjusted (Purchased or Manufactured)."));
 
 	handle_new_order();
 }
@@ -238,11 +238,11 @@ if (isset($_GET['NewAdjustment']) || !isset($_SESSION['adj_items']))
 start_form();
 
 if ($_SESSION['adj_items']->fixed_asset) {
-	$items_title = _("Disposal Items");
-	$button_title = _("Process Disposal");
+	$items_title = __("Disposal Items");
+	$button_title = __("Process Disposal");
 } else {
-	$items_title = _("Adjustment Items");
-	$button_title = _("Process Adjustment");
+	$items_title = __("Adjustment Items");
+	$button_title = __("Process Adjustment");
 }
 
 display_order_header($_SESSION['adj_items']);
@@ -254,7 +254,7 @@ adjustment_options_controls();
 
 end_outer_table(1, false);
 
-submit_center_first('Update', _("Update"), '', null);
+submit_center_first('Update', __("Update"), '', null);
 submit_center_last('Process', $button_title, '', 'default');
 
 end_form();

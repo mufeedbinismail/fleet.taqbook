@@ -13,7 +13,7 @@ $GLOBALS['page_security'] = 'SA_ITEMTAXTYPE';
 
 require __DIR__ . "/../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "Item Tax Types")); 
+page(__($GLOBALS['help_context'] = "Item Tax Types")); 
 
 require_once __DIR__ . "/../taxes/db/item_tax_types_db.inc";
 require_once __DIR__ . "/../taxes/db/tax_types_db.inc";
@@ -31,7 +31,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 	if (strlen($_POST['name']) == 0) 
 	{
 		$input_error = 1;
-		display_error(_("The item tax type description cannot be empty."));
+		display_error(__("The item tax type description cannot be empty."));
 		set_focus('name');
 	}
 
@@ -56,12 +56,12 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
     	if ($selected_id != -1) 
     	{    		
     		update_item_tax_type($selected_id, $_POST['name'], $_POST['exempt'], $exempt_from);
-			display_notification(_('Selected item tax type has been updated'));
+			display_notification(__('Selected item tax type has been updated'));
     	} 
     	else 
     	{
     		add_item_tax_type($_POST['name'], $_POST['exempt'], $exempt_from);
-			display_notification(_('New item tax type has been added'));
+			display_notification(__('New item tax type has been added'));
     	}
 		$Mode = 'RESET';
 	}
@@ -73,12 +73,12 @@ function can_delete($selected_id)
 {
 	if (key_in_foreign_table($selected_id, 'stock_master', 'tax_type_id'))
 	{
-		display_error(_("Cannot delete this item tax type because items have been created referring to it."));
+		display_error(__("Cannot delete this item tax type because items have been created referring to it."));
 		return false;
 	}
 	if (key_in_foreign_table($selected_id, 'stock_category', 'dflt_tax_type'))
 	{
-		display_error(_("Cannot delete this item tax type because item categories have been created referring to it."));
+		display_error(__("Cannot delete this item tax type because item categories have been created referring to it."));
 		return false;
 	}
 	
@@ -94,7 +94,7 @@ if ($Mode == 'Delete')
 	if (can_delete($selected_id))
 	{
 		delete_item_tax_type($selected_id);
-		display_notification(_('Selected item tax type has been deleted'));
+		display_notification(__('Selected item tax type has been deleted'));
 	}
 	$Mode = 'RESET';
 }
@@ -113,7 +113,7 @@ $result2 = $result = get_all_item_tax_types(check_value('show_inactive'));
 
 start_form();
 start_table(TABLESTYLE, "width='30%'");
-$th = array(_("Name"), _("Tax exempt"),'','');
+$th = array(__("Name"), __("Tax exempt"),'','');
 inactive_control_column($th);
 table_header($th);
 
@@ -125,18 +125,18 @@ while ($myrow = db_fetch($result2))
 
 	if ($myrow["exempt"] == 0) 
 	{
-		$disallow_text = _("No");
+		$disallow_text = __("No");
 	} 
 	else 
 	{
-		$disallow_text = _("Yes");
+		$disallow_text = __("Yes");
 	}
 	
 	label_cell($myrow["name"]);
 	label_cell($disallow_text);
 	inactive_control_cell($myrow["id"], $myrow["inactive"], 'item_tax_types', 'id');
- 	edit_button_cell("Edit".$myrow["id"], _("Edit"));
- 	delete_button_cell("Delete".$myrow["id"], _("Delete"));
+ 	edit_button_cell("Edit".$myrow["id"], __("Edit"));
+ 	delete_button_cell("Delete".$myrow["id"], __("Delete"));
 	end_row();
 }
 
@@ -169,19 +169,19 @@ if ($selected_id != -1)
 	hidden('selected_id', $selected_id);
 } 
 
-text_row_ex(_("Description:"), 'name', 50);
+text_row_ex(__("Description:"), 'name', 50);
 
-yesno_list_row(_("Is Fully Tax-exempt:"), 'exempt', null, "", "", true);
+yesno_list_row(__("Is Fully Tax-exempt:"), 'exempt', null, "", "", true);
 
 end_table(1);
 
 if (!isset($_POST['exempt']) || $_POST['exempt'] == 0) 
 {
 
-    display_note(_("Select which taxes this item tax type is exempt from."), 0, 1);
+    display_note(__("Select which taxes this item tax type is exempt from."), 0, 1);
     
     start_table(TABLESTYLE2);
-    $th = array(_("Tax Name"), _("Rate"), _("Is exempt"));
+    $th = array(__("Tax Name"), __("Rate"), __("Is exempt"));
     table_header($th);
     	
     $tax_types = get_all_tax_types_simple();    	

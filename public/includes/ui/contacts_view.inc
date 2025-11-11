@@ -37,8 +37,8 @@ class contacts extends simple_crud {
 			$contacts = get_crm_persons($this->class, $this->sub_class, $this->entity);
 			start_table(TABLESTYLE, "width='80%'");
 
-			$th = array(_('Assignment'), _("Reference"), _("Full Name"), _("Phone"), _("Sec Phone"), _("Fax"),
-				_("email"),  '',
+			$th = array(__('Assignment'), __("Reference"), __("Full Name"), __("Phone"), __("Sec Phone"), __("Fax"),
+				__("email"),  '',
 				"&nbsp;");
 
 			table_header($th);
@@ -58,10 +58,10 @@ class contacts extends simple_crud {
 					label_cell($last["fax"]);
 					email_cell($last["email"]);
 
-				 	edit_button_cell("{$this->name}Edit[{$last['id']}]", _("Edit"));
+				 	edit_button_cell("{$this->name}Edit[{$last['id']}]", __("Edit"));
 
 					// delete button removes only category unless this is the last contact for this person
-					delete_button_cell("{$this->name}Delete[{$last['id']}]", _("Delete"));
+					delete_button_cell("{$this->name}Delete[{$last['id']}]", __("Delete"));
 					end_row();
 					$description = array();
 					$last = $myrow;
@@ -84,29 +84,29 @@ class contacts extends simple_crud {
 		start_outer_table(TABLESTYLE);
 
 		table_section(1);
-		table_section_title(_("Contact data"));
+		table_section_title(__("Contact data"));
 
-		text_row(_("First Name:"), 'name', @$this->data['name'], 35, 40);
-		text_row(_("Last Name:"), 'name2', @$this->data['name2'], 35, 40);
-		text_row(_("Reference:"), 'ref', @$this->data['ref'], 35, 40);
+		text_row(__("First Name:"), 'name', @$this->data['name'], 35, 40);
+		text_row(__("Last Name:"), 'name2', @$this->data['name2'], 35, 40);
+		text_row(__("Reference:"), 'ref', @$this->data['ref'], 35, 40);
 
-		crm_category_types_list_row(_("Contact active for:"), 'assgn', @$this->data['contacts'],
+		crm_category_types_list_row(__("Contact active for:"), 'assgn', @$this->data['contacts'],
 			array('subclass' => @$this->sub_class,
 				'class' => @$this->class, 
 				'multi' =>true)
 				);
 
-		text_row(_("Phone:"), 'phone', @$this->data['phone'], 32, 30);
-		text_row(_("Secondary Phone Number:"), 'phone2', @$this->data['phone2'], 32, 30);
-		text_row(_("Fax Number:"), 'fax', @$this->data['fax'], 32, 30);
-		email_row(_("E-mail:"), 'email', @$this->data['email'], 35, 55);
+		text_row(__("Phone:"), 'phone', @$this->data['phone'], 32, 30);
+		text_row(__("Secondary Phone Number:"), 'phone2', @$this->data['phone2'], 32, 30);
+		text_row(__("Fax Number:"), 'fax', @$this->data['fax'], 32, 30);
+		email_row(__("E-mail:"), 'email', @$this->data['email'], 35, 55);
 
 		table_section(2);
 		table_section_title("&nbsp;");
-		textarea_row(_("Address:"), 'address', @$this->data['address'], 30, 4);
-		languages_list_row( _("Document Language:"), 'lang', @$this->data['lang'], _("Customer default"));
+		textarea_row(__("Address:"), 'address', @$this->data['address'], 30, 4);
+		languages_list_row( __("Document Language:"), 'lang', @$this->data['lang'], __("Customer default"));
 
-		textarea_row(_("Notes:"), 'notes', @$this->data['notes'], 30, 4);
+		textarea_row(__("Notes:"), 'notes', @$this->data['notes'], 30, 4);
 		end_outer_table(1);
 	}
 
@@ -125,17 +125,17 @@ class contacts extends simple_crud {
 
 	function insert_check() {
 		if (strlen($_POST['name']) == 0) {
-			display_error(_("The contact name cannot be empty."));
+			display_error(__("The contact name cannot be empty."));
 			set_focus('name');
 			return false;
 		}
 		if (strlen($_POST['ref']) == 0) {
-			display_error(_("Contact reference cannot be empty."));
+			display_error(__("Contact reference cannot be empty."));
 			set_focus('ref');
 			return false;
 		}
 		if (count_array(@$_POST['assgn']) == 0) {
-			display_error(_("You have to select at least one category."));
+			display_error(__("You have to select at least one category."));
 			set_focus('assgn');
 			return false;
 		}

@@ -72,22 +72,22 @@ function print_outstanding_GRN()
 
 	$orientation = ($orientation ? 'L' : 'P');
 	if ($fromsupp == ALL_TEXT)
-		$from = _('All');
+		$from = __('All');
 	else
 		$from = get_supplier_name($fromsupp);
     $dec = user_price_dec();
 
 	$cols = array(0, 40, 80, 190,	250, 320, 385, 450,	515);
 
-	$headers = array(_('GRN'), _('Order'), _('Item') . '/' . _('Description'), _('Qty Recd'), _('qty Inv'), _('Balance'),
-		_('Act Price'), _('Value'));
+	$headers = array(__('GRN'), __('Order'), __('Item') . '/' . __('Description'), __('Qty Recd'), __('qty Inv'), __('Balance'),
+		__('Act Price'), __('Value'));
 
 	$aligns = array('left',	'left',	'left',	'right', 'right', 'right', 'right', 'right');
 
     $params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Supplier'), 'from' => $from, 'to' => ''));
+    				    1 => array('text' => __('Supplier'), 'from' => $from, 'to' => ''));
 
-    $rep = new FrontReport(_('Outstanding GRNs Report'), "OutstandingGRN", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Outstanding GRNs Report'), "OutstandingGRN", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -108,7 +108,7 @@ function print_outstanding_GRN()
 			if ($Supplier != '')
 			{
 				$rep->NewLine(2);
-				$rep->TextCol(0, 7, _('Total'));
+				$rep->TextCol(0, 7, __('Total'));
 				$rep->AmountCol(7, 8, $SuppTot_Val, $dec);
 				$rep->Line($rep->row - 2);
 				$rep->NewLine(3);
@@ -136,14 +136,14 @@ function print_outstanding_GRN()
 	if ($Supplier != '')
 	{
 		$rep->NewLine();
-		$rep->TextCol(0, 7, _('Total'));
+		$rep->TextCol(0, 7, __('Total'));
 		$rep->AmountCol(7, 8, $SuppTot_Val, $dec);
 		$rep->Line($rep->row - 2);
 		$rep->NewLine(3);
 		$SuppTot_Val = 0;
 	}
 	$rep->NewLine(2);
-	$rep->TextCol(0, 7, _('Grand Total'));
+	$rep->TextCol(0, 7, __('Grand Total'));
 	$rep->AmountCol(7, 8, $Tot_Val, $dec);
 	$rep->Line($rep->row - 2);
 	$rep->NewLine();

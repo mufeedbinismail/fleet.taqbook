@@ -44,7 +44,7 @@ function process_fixed_asset_depreciation($stock_id, $gl_rows, $refline, $memo_)
   $new_cost = $old_cost - $value_of_change;
 
   if (empty($memo_))
-    $cart->memo_ = sprintf(_("Fixed asset has been deprecated by the value of %s"),
+    $cart->memo_ = sprintf(__("Fixed asset has been deprecated by the value of %s"),
         number_format2($value_of_change, user_price_dec()));
   else
     $cart->memo_ = $memo_;

@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_UOM';
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "Units of Measure"));
+page(__($GLOBALS['help_context'] = "Units of Measure"));
 
 require_once __DIR__ . "/../../includes/ui.inc";
 
@@ -30,28 +30,28 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 	if (strlen($_POST['abbr']) == 0)
 	{
 		$input_error = 1;
-		display_error(_("The unit of measure code cannot be empty."));
+		display_error(__("The unit of measure code cannot be empty."));
 		set_focus('abbr');
 	}
 	if (strlen(db_escape($_POST['abbr']))>(20+2))
 	{
 		$input_error = 1;
-		display_error(_("The unit of measure code is too long."));
+		display_error(__("The unit of measure code is too long."));
 		set_focus('abbr');
 	}
 	if (strlen($_POST['description']) == 0)
 	{
 		$input_error = 1;
-		display_error(_("The unit of measure description cannot be empty."));
+		display_error(__("The unit of measure description cannot be empty."));
 		set_focus('description');
 	}
 
 	if ($input_error !=1) {
     	write_item_unit($selected_id, $_POST['abbr'], $_POST['description'], $_POST['decimals'] );
 		if($selected_id != '')
-			display_notification(_('Selected unit has been updated'));
+			display_notification(__('Selected unit has been updated'));
 		else
-			display_notification(_('New unit has been added'));
+			display_notification(__('New unit has been added'));
 		$Mode = 'RESET';
 	}
 }
@@ -65,13 +65,13 @@ if ($Mode == 'Delete')
 
 	if (item_unit_used($selected_id))
 	{
-		display_error(_("Cannot delete this unit of measure because items have been created using this unit."));
+		display_error(__("Cannot delete this unit of measure because items have been created using this unit."));
 
 	}
 	else
 	{
 		delete_item_unit($selected_id);
-		display_notification(_('Selected unit has been deleted'));
+		display_notification(__('Selected unit has been deleted'));
 	}
 	$Mode = 'RESET';
 }
@@ -90,7 +90,7 @@ $result = get_all_item_units(check_value('show_inactive'));
 
 start_form();
 start_table(TABLESTYLE, "width='40%'");
-$th = array(_('Unit'), _('Description'), _('Decimals'), "", "");
+$th = array(__('Unit'), __('Description'), __('Decimals'), "", "");
 inactive_control_column($th);
 
 table_header($th);
@@ -103,11 +103,11 @@ while ($myrow = db_fetch($result))
 
 	label_cell($myrow["abbr"]);
 	label_cell($myrow["name"]);
-	label_cell(($myrow["decimals"]==-1?_("User Quantity Decimals"):$myrow["decimals"]));
+	label_cell(($myrow["decimals"]==-1?__("User Quantity Decimals"):$myrow["decimals"]));
 	$id = html_specials_encode($myrow["abbr"]);
 	inactive_control_cell($id, $myrow["inactive"], 'item_units', 'abbr');
- 	edit_button_cell("Edit".$id, _("Edit"));
- 	delete_button_cell("Delete".$id, _("Delete"));
+ 	edit_button_cell("Edit".$id, __("Edit"));
+ 	delete_button_cell("Delete".$id, __("Delete"));
 	end_row();
 }
 
@@ -132,13 +132,13 @@ if ($selected_id != '')
 	hidden('selected_id', $myrow["abbr"]);
 }
 if ($selected_id != '' && item_unit_used($selected_id)) {
-    label_row(_("Unit Abbreviation:"), $_POST['abbr']);
+    label_row(__("Unit Abbreviation:"), $_POST['abbr']);
     hidden('abbr', $_POST['abbr']);
 } else
-    text_row(_("Unit Abbreviation:"), 'abbr', null, 20, 20);
-text_row(_("Descriptive Name:"), 'description', null, 40, 40);
+    text_row(__("Unit Abbreviation:"), 'abbr', null, 20, 20);
+text_row(__("Descriptive Name:"), 'description', null, 40, 40);
 
-number_list_row(_("Decimal Places:"), 'decimals', null, 0, 6, _("User Quantity Decimals"));
+number_list_row(__("Decimal Places:"), 'decimals', null, 0, 6, __("User Quantity Decimals"));
 
 end_table(1);
 

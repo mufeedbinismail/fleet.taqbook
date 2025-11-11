@@ -16,13 +16,13 @@ $js = "";
 if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 	$js .= get_js_open_window(900, 500);
 
-page(_($GLOBALS['help_context'] = "Foreign Item Codes"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Foreign Item Codes"), false, false, "", $js);
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../includes/data_checks.inc";
 
-check_db_has_purchasable_items(_("There are no inventory items defined in the system."));
+check_db_has_purchasable_items(__("There are no inventory items defined in the system."));
 
 simple_page_mode(true);
 //--------------------------------------------------------------------------------------------------
@@ -34,19 +34,19 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
    	if ($_POST['stock_id'] == "" || !isset($_POST['stock_id']))
    	{
       	$input_error = 1;
-      	display_error( _("There is no item selected."));
+      	display_error( __("There is no item selected."));
 		set_focus('stock_id');
    	}
    	elseif (!input_num('quantity'))
    	{
       	$input_error = 1;
-      	display_error( _("The quantity entered was not positive number."));
+      	display_error( __("The quantity entered was not positive number."));
 		set_focus('quantity');
    	}
    	elseif ($_POST['description'] == '')
    	{
       	$input_error = 1;
-      	display_error( _("Item code description cannot be empty."));
+      	display_error( __("Item code description cannot be empty."));
 		set_focus('description');
    	}
 	elseif($selected_id == -1)
@@ -54,7 +54,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 		$kit = get_item_kit($_POST['item_code']);
     	if (db_num_rows($kit)) {
 		  	$input_error = 1;
-    	  	display_error( _("This item code is already assigned to stock item or sale kit."));
+    	  	display_error( __("This item code is already assigned to stock item or sale kit."));
 			set_focus('item_code');
 		}
    	}
@@ -66,13 +66,13 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 			add_item_code($_POST['item_code'], $_POST['stock_id'],
 				$_POST['description'], $_POST['category_id'], $_POST['quantity'], 1); 
 
-    		display_notification(_("New item code has been added."));
+    		display_notification(__("New item code has been added."));
        	} else
        	{
 			update_item_code($selected_id, $_POST['item_code'], $_POST['stock_id'],
 				$_POST['description'], $_POST['category_id'], $_POST['quantity'], 1); 
 
-    	  	display_notification(_("Item code has been updated."));
+    	  	display_notification(__("Item code has been updated."));
        	}
 		$Mode = 'RESET';
 	}
@@ -84,7 +84,7 @@ if ($Mode == 'Delete')
 {
 	delete_item_code($selected_id);
 	
-	display_notification(_("Item code has been sucessfully deleted."));
+	display_notification(__("Item code has been sucessfully deleted."));
 	$Mode = 'RESET';
 }
 
@@ -104,7 +104,7 @@ start_form();
 if (!isset($_POST['stock_id']))
 	$_POST['stock_id'] = get_global_stock_item();
 
-echo "<center>" . _("Item:"). "&nbsp;";
+echo "<center>" . __("Item:"). "&nbsp;";
 //Manufcatured item visible
 echo stock_items_list('stock_id', $_POST['stock_id'], false, true);
 
@@ -126,8 +126,8 @@ $result = get_all_item_codes($_POST['stock_id']);
 div_start('code_table');
 	start_table(TABLESTYLE, "width='60%'");
 
-	$th = array(_("EAN/UPC Code"), _("Quantity"), _("Units"), 
-		_("Description"),_("Category"), "", "");
+	$th = array(__("EAN/UPC Code"), __("Quantity"), __("Units"), 
+		__("Description"),__("Category"), "", "");
 
         table_header($th);
 
@@ -142,8 +142,8 @@ div_start('code_table');
             label_cell($units);
             label_cell($myrow["description"]);
             label_cell($myrow["cat_name"]);
-		 	edit_button_cell("Edit".$myrow['id'], _("Edit"));
-		 	edit_button_cell("Delete".$myrow['id'], _("Delete"));
+		 	edit_button_cell("Edit".$myrow['id'], __("Edit"));
+		 	edit_button_cell("Delete".$myrow['id'], __("Delete"));
             end_row();
 
             $j++;
@@ -180,10 +180,10 @@ start_table(TABLESTYLE2);
 
 hidden('code_id', $selected_id);
 
-text_row(_("UPC/EAN code:"), 'item_code', null, 20, 20);
-qty_row(_("Quantity:"), 'quantity', null, '', $units, $dec);
-text_row(_("Description:"), 'description', null, 50, 200);
-stock_categories_list_row(_("Category:"), 'category_id', null);
+text_row(__("UPC/EAN code:"), 'item_code', null, 20, 20);
+qty_row(__("Quantity:"), 'quantity', null, '', $units, $dec);
+text_row(__("Description:"), 'description', null, 50, 200);
+stock_categories_list_row(__("Category:"), 'category_id', null);
 
 end_table(1);
 

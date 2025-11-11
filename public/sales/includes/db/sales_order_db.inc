@@ -99,7 +99,7 @@ function delete_sales_order($order_no, $trans_type)
 		.db_escape($order_no) . " AND trans_type=".db_escape($trans_type);
 	db_query($sql, "order Detail Delete");
 
-	add_audit_trail($trans_type, $order_no, sql2date($order['ord_date']), _("Deleted."));
+	add_audit_trail($trans_type, $order_no, sql2date($order['ord_date']), __("Deleted."));
 	commit_transaction();
 }
 
@@ -210,7 +210,7 @@ function update_sales_order($order)
 
 	if ($order->trans_type == ST_SALESORDER)
 		reallocate_payments($order_no, ST_SALESORDER, $ord_date, $total, $allocs, $order->customer_id);
-	add_audit_trail($order->trans_type, $order_no, $order->document_date, _("Updated."));
+	add_audit_trail($order->trans_type, $order_no, $order->document_date, __("Updated."));
 	$Refs->save($order->trans_type, $order_no, $order->reference, null, $order->fixed_asset);
 
 	commit_transaction();

@@ -20,7 +20,7 @@ require_once __DIR__ . "/../../includes/banking.inc";
 $js = "";
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($GLOBALS['help_context'] = "Exchange Rates"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Exchange Rates"), false, false, "", $js);
 
 simple_page_mode(false);
 
@@ -29,19 +29,19 @@ function check_data($selected_id)
 {
 	if (!is_date($_POST['date_']))
 	{
-		display_error( _("The entered date is invalid."));
+		display_error( __("The entered date is invalid."));
 		set_focus('date_');
 		return false;
 	}
 	if (input_num('BuyRate') <= 0)
 	{
-		display_error( _("The exchange rate cannot be zero or a negative number."));
+		display_error( __("The exchange rate cannot be zero or a negative number."));
 		set_focus('BuyRate');
 		return false;
 	}
 	if (!$selected_id && get_date_exchange_rate($_POST['curr_abrev'], $_POST['date_']))
 	{
-		display_error( _("The exchange rate for the date is already there."));
+		display_error( __("The exchange rate for the date is already there."));
 		set_focus('date_');
 		return false;
 	}
@@ -90,12 +90,12 @@ function handle_delete()
 //---------------------------------------------------------------------------------------------
 function edit_link($row) 
 {
-  return button('Edit'.$row["id"], _("Edit"), true, ICON_EDIT);
+  return button('Edit'.$row["id"], __("Edit"), true, ICON_EDIT);
 }
 
 function del_link($row) 
 {
-  return button('Delete'.$row["id"], _("Delete"), true, ICON_DELETE);
+  return button('Delete'.$row["id"], __("Delete"), true, ICON_DELETE);
 }
 
 function display_rates($curr_code)
@@ -124,13 +124,13 @@ function display_rate_edit()
 		hidden('selected_id', $selected_id);
 		hidden('date_', $_POST['date_']);
 
-		label_row(_("Date to Use From:"), $_POST['date_']);
+		label_row(__("Date to Use From:"), $_POST['date_']);
 	}
 	else
 	{
 		$_POST['date_'] = Today();
 		$_POST['BuyRate'] = '';
-		date_row(_("Date to Use From:"), 'date_');
+		date_row(__("Date to Use From:"), 'date_');
 	}
 	if (isset($_POST['get_rate']))
 	{
@@ -138,14 +138,14 @@ function display_rate_edit()
 			maxprec_format(retrieve_exrate($_POST['curr_abrev'], $_POST['date_']));
 		$Ajax->activate('BuyRate');
 	}
-	amount_row(_("Exchange Rate:"), 'BuyRate', null, '',
-	  	submit('get_rate',_("Get"), false, _('Get current rate from') . ' ' . $xchg_rate_provider , true), 'max');
+	amount_row(__("Exchange Rate:"), 'BuyRate', null, '',
+	  	submit('get_rate',__("Get"), false, __('Get current rate from') . ' ' . $xchg_rate_provider , true), 'max');
 
 	end_table(1);
 
 	submit_add_or_update_center($selected_id == '', '', 'both');
 
-	display_note(_("Exchange rates are entered against the company currency."), 1);
+	display_note(__("Exchange rates are entered against the company currency."), 1);
 }
 
 //---------------------------------------------------------------------------------------------
@@ -176,7 +176,7 @@ if (!isset($_POST['curr_abrev']))
 	$_POST['curr_abrev'] = get_global_curr_code();
 
 echo "<center>";
-echo _("Select a currency :") . "  ";
+echo __("Select a currency :") . "  ";
 echo currencies_list('curr_abrev', null, true, true);
 echo "</center>";
 
@@ -192,8 +192,8 @@ set_global_curr_code(get_post('curr_abrev'));
 $sql = get_sql_for_exchange_rates(get_post('curr_abrev'));
 
 $cols = array(
-	_("Date to Use From") => 'date', 
-	_("Exchange Rate") => 'rate',
+	__("Date to Use From") => 'date', 
+	__("Exchange Rate") => 'rate',
 	array('insert'=>true, 'fun'=>'edit_link'),
 	array('insert'=>true, 'fun'=>'del_link'),
 );
@@ -202,8 +202,8 @@ $table =& new_db_pager('orders_tbl', $sql, $cols);
 if (is_company_currency(get_post('curr_abrev')))
 {
 
-	display_note(_("The selected currency is the company currency."), 2);
-	display_note(_("The company currency is the base currency so exchange rates cannot be set for it."), 1);
+	display_note(__("The selected currency is the company currency."), 2);
+	display_note(__("The company currency is the base currency so exchange rates cannot be set for it."), 1);
 }
 else
 {

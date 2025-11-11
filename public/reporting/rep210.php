@@ -82,7 +82,7 @@ function print_remittances()
 	$cur = get_company_Pref('curr_default');
 
 	if ($email == 0)
-		$rep = new FrontReport(_('REMITTANCE'), "RemittanceBulk", user_pagesize(), 9, $orientation);
+		$rep = new FrontReport(__('REMITTANCE'), "RemittanceBulk", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -107,7 +107,7 @@ function print_remittances()
 			if ($email == 1)
 			{
 				$rep = new FrontReport("", "", user_pagesize(), 9, $orientation);
-				$rep->title = _('REMITTANCE');
+				$rep->title = __('REMITTANCE');
 				$rep->filename = "Remittance" . $i . ".pdf";
 			}
 			$rep->currency = $cur;
@@ -123,7 +123,7 @@ function print_remittances()
 			$doctype = ST_SUPPAYMENT;
 
 			$total_allocated = 0;
-			$rep->TextCol(0, 4,	_("As advance / full / part / payment towards:"), -2);
+			$rep->TextCol(0, 4,	__("As advance / full / part / payment towards:"), -2);
 			$rep->NewLine(2);
 
 			while ($myrow2=db_fetch($result))
@@ -150,23 +150,23 @@ function print_remittances()
 			}
 			$rep->row = $rep->bottomMargin + (16 * $rep->lineHeight);
 
-			$rep->TextCol(3, 6, _("Total Allocated"), -2);
+			$rep->TextCol(3, 6, __("Total Allocated"), -2);
 			$rep->AmountCol(6, 7, $total_allocated, $dec, -2);
 			$rep->NewLine();
-			$rep->TextCol(3, 6, _("Left to Allocate"), -2);
+			$rep->TextCol(3, 6, __("Left to Allocate"), -2);
 			$myrow['Total'] *= -1;
 			$myrow['ov_discount'] *= -1;
 			$rep->AmountCol(6, 7, $myrow['Total'] + $myrow['ov_discount'] - $total_allocated, $dec, -2);
 			if (floatcmp($myrow['ov_discount'], 0))
 			{
 				$rep->NewLine();
-				$rep->TextCol(3, 6, _("Discount"), - 2);
+				$rep->TextCol(3, 6, __("Discount"), - 2);
 				$rep->AmountCol(6, 7, -$myrow['ov_discount'], $dec, -2);
 			}	
 
 			$rep->NewLine();
 			$rep->Font('bold');
-			$rep->TextCol(3, 6, _("TOTAL REMITTANCE"), - 2);
+			$rep->TextCol(3, 6, __("TOTAL REMITTANCE"), - 2);
 			$rep->AmountCol(6, 7, $myrow['Total'], $dec, -2);
 
 			$words = price_in_words($myrow['Total'], ST_SUPPAYMENT);

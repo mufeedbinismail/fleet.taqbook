@@ -63,29 +63,29 @@ function print_fixed_assets_valuation_report()
 	if ($class == ALL_NUMERIC)
 		$class = 0;
 	if ($class== 0)
-		$cln = _('All');
+		$cln = __('All');
 	else
 		$cln = get_fixed_asset_classname($class);
 
 	if ($location == ALL_TEXT)
 		$location = 'all';
 	if ($location == 'all')
-		$loc = _('All');
+		$loc = __('All');
 	else
 		$loc = get_location_name($location);
 
 	$cols = array(0, 75, 225, 250, 350, 450,	515);
 
-	$headers = array(_('Class'), '', _('UOM'),  _('Initial'), _('Depreciations'), _('Current'));
+	$headers = array(__('Class'), '', __('UOM'),  __('Initial'), __('Depreciations'), __('Current'));
 
 	$aligns = array('left',	'left',	'left', 'right', 'right', 'right', 'right');
 
     $params =   array( 	0 => $comments,
-    					1 => array('text' => _('End Date'), 'from' => $date, 		'to' => ''),
-    				    2 => array('text' => _('Class'), 'from' => $cln, 'to' => ''),
-    				    3 => array('text' => _('Location'), 'from' => $loc, 'to' => ''));
+    					1 => array('text' => __('End Date'), 'from' => $date, 		'to' => ''),
+    				    2 => array('text' => __('Class'), 'from' => $cln, 'to' => ''),
+    				    3 => array('text' => __('Location'), 'from' => $loc, 'to' => ''));
 
-    $rep = new FrontReport(_('Fixed Assets Valuation Report'), "FixedAssetsValReport", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Fixed Assets Valuation Report'), "FixedAssetsValReport", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
     $rep->Font();
@@ -116,7 +116,7 @@ function print_fixed_assets_valuation_report()
 				if ($detail)
 				{
 					$rep->NewLine(2, 3);
-					$rep->TextCol(0, 4, _('Total'));
+					$rep->TextCol(0, 4, __('Total'));
 				}
 				$rep->AmountCol(5, 6, $total, $dec);
 				if ($detail)
@@ -151,7 +151,7 @@ function print_fixed_assets_valuation_report()
 	if ($detail)
 	{
 		$rep->NewLine(2, 3);
-		$rep->TextCol(0, 4, _('Total'));
+		$rep->TextCol(0, 4, __('Total'));
 	}
 	$rep->Amountcol(5, 6, $total, $dec);
 	if ($detail)
@@ -160,7 +160,7 @@ function print_fixed_assets_valuation_report()
 		$rep->NewLine();
 	}
 	$rep->NewLine(2, 1);
-	$rep->TextCol(0, 4, _('Grand Total'));
+	$rep->TextCol(0, 4, __('Grand Total'));
 	$rep->AmountCol(5, 6, $grandtotal, $dec);
 	$rep->Line($rep->row  - 4);
 	$rep->NewLine();

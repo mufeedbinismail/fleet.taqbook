@@ -22,7 +22,7 @@ require_once __DIR__ . "/../dimensions/includes/dimensions_ui.inc";
 $js = "";
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($GLOBALS['help_context'] = "Dimension Entry"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Dimension Entry"), false, false, "", $js);
 
 //---------------------------------------------------------------------------------------
 
@@ -42,7 +42,7 @@ if (isset($_GET['AddedID']))
 {
 	$id = $_GET['AddedID'];
 
-	display_notification_centered(_("The dimension has been entered."));
+	display_notification_centered(__("The dimension has been entered."));
 
 	safe_exit();
 }
@@ -53,7 +53,7 @@ if (isset($_GET['UpdatedID']))
 {
 	$id = $_GET['UpdatedID'];
 
-	display_notification_centered(_("The dimension has been updated."));
+	display_notification_centered(__("The dimension has been updated."));
 	safe_exit();
 }
 
@@ -63,7 +63,7 @@ if (isset($_GET['DeletedID']))
 {
 	$id = $_GET['DeletedID'];
 
-	display_notification_centered(_("The dimension has been deleted."));
+	display_notification_centered(__("The dimension has been deleted."));
 	safe_exit();
 }
 
@@ -73,7 +73,7 @@ if (isset($_GET['ClosedID']))
 {
 	$id = $_GET['ClosedID'];
 
-	display_notification_centered(_("The dimension has been closed. There can be no more changes to it.") . " #$id");
+	display_notification_centered(__("The dimension has been closed. There can be no more changes to it.") . " #$id");
 	safe_exit();
 }
 
@@ -83,7 +83,7 @@ if (isset($_GET['ReopenedID']))
 {
 	$id = $_GET['ReopenedID'];
 
-	display_notification_centered(_("The dimension has been re-opened. ") . " #$id");
+	display_notification_centered(__("The dimension has been re-opened. ") . " #$id");
 	safe_exit();
 }
 
@@ -93,9 +93,9 @@ function safe_exit()
 {
 	global $id;
 
-	hyperlink_no_params("", _("Enter a &new dimension"));
-	hyperlink_no_params(url("/dimensions/inquiry/search_dimensions.php"), _("&Select an existing dimension"));
-    hyperlink_no_params(url("/admin/attachments.php", [ "filterType" => 40, "trans_no" => $id ]), _("&Add Attachment"));
+	hyperlink_no_params("", __("Enter a &new dimension"));
+	hyperlink_no_params(url("/dimensions/inquiry/search_dimensions.php"), __("&Select an existing dimension"));
+    hyperlink_no_params(url("/admin/attachments.php", [ "filterType" => 40, "trans_no" => $id ]), __("&Add Attachment"));
 
 	display_footer_exit();
 }
@@ -117,21 +117,21 @@ function can_process()
 
 	if (strlen($_POST['name']) == 0) 
 	{
-		display_error( _("The dimension name must be entered."));
+		display_error( __("The dimension name must be entered."));
 		set_focus('name');
 		return false;
 	}
 
 	if (!is_date($_POST['date_']))
 	{
-		display_error( _("The date entered is in an invalid format."));
+		display_error( __("The date entered is in an invalid format."));
 		set_focus('date_');
 		return false;
 	}
 
 	if (!is_date($_POST['due_date']))
 	{
-		display_error( _("The required by date entered is in an invalid format."));
+		display_error( __("The required by date entered is in an invalid format."));
 		set_focus('due_date');
 		return false;
 	}
@@ -176,7 +176,7 @@ if (isset($_POST['delete']))
 	// can't delete it there are productions or issues
 	if (dimension_has_payments($selected_id) || dimension_has_deposits($selected_id))
 	{
-		display_error(_("This dimension cannot be deleted because it has already been processed."));
+		display_error(__("This dimension cannot be deleted because it has already been processed."));
 		set_focus('ref');
 		$cancel_delete = true;
 	}
@@ -220,14 +220,14 @@ if ($selected_id != -1)
 
 	if ($myrow === false) 
 	{
-		display_error(_("The dimension sent is not valid."));
+		display_error(__("The dimension sent is not valid."));
 		display_footer_exit();
 	}
 
 	// if it's a closed dimension can't edit it
 	//if ($myrow["closed"] == 1) 
 	//{
-	//	display_error(_("This dimension is closed and cannot be edited."));
+	//	display_error(__("This dimension is closed and cannot be edited."));
 	//	display_footer_exit();
 	//}
 
@@ -247,48 +247,48 @@ if ($selected_id != -1)
 
 	hidden('ref', $_POST['ref']);
 
-	label_row(_("Dimension Reference:"), $_POST['ref']);
+	label_row(__("Dimension Reference:"), $_POST['ref']);
 
 	hidden('selected_id', $selected_id);
 } 
 else 
 {
 	$_POST['dimension_tags'] = array();
-	ref_row(_("Dimension Reference:"), 'ref', '', $Refs->get_next(ST_DIMENSION), false, ST_DIMENSION);
+	ref_row(__("Dimension Reference:"), 'ref', '', $Refs->get_next(ST_DIMENSION), false, ST_DIMENSION);
 }
 
-text_row_ex(_("Name") . ":", 'name', 50, 75);
+text_row_ex(__("Name") . ":", 'name', 50, 75);
 
 $dim = get_company_pref('use_dimension');
 
-number_list_row(_("Type"), 'type_', null, 1, $dim);
+number_list_row(__("Type"), 'type_', null, 1, $dim);
 
-date_row(_("Start Date") . ":", 'date_');
+date_row(__("Start Date") . ":", 'date_');
 
-date_row(_("Date Required By") . ":", 'due_date', '', null, $SysPrefs->default_dimension_required_by());
+date_row(__("Date Required By") . ":", 'due_date', '', null, $SysPrefs->default_dimension_required_by());
 
-tag_list_row(_("Tags:"), 'dimension_tags', 5, TAG_DIMENSION, true);
+tag_list_row(__("Tags:"), 'dimension_tags', 5, TAG_DIMENSION, true);
 
-textarea_row(_("Memo:"), 'memo_', null, 40, 5);
+textarea_row(__("Memo:"), 'memo_', null, 40, 5);
 
 end_table(1);
 
 if (isset($_POST['closed']) && $_POST['closed'] == 1)
-	display_note(_("This Dimension is closed."), 0, 0, "class='currentfg'");
+	display_note(__("This Dimension is closed."), 0, 0, "class='currentfg'");
 
 if ($selected_id != -1) 
 {
 	echo "<br>";
-	submit_center_first('UPDATE_ITEM', _("Update"), _('Save changes to dimension'), 'default');
+	submit_center_first('UPDATE_ITEM', __("Update"), __('Save changes to dimension'), 'default');
 	if ($_POST['closed'] == 1)
-		submit('reopen', _("Re-open This Dimension"), true, _('Mark this dimension as re-opened'), true);
+		submit('reopen', __("Re-open This Dimension"), true, __('Mark this dimension as re-opened'), true);
 	else	
-		submit('close', _("Close This Dimension"), true, _('Mark this dimension as closed'), true);
-	submit_center_last('delete', _("Delete This Dimension"), _('Delete unused dimension'), true);
+		submit('close', __("Close This Dimension"), true, __('Mark this dimension as closed'), true);
+	submit_center_last('delete', __("Delete This Dimension"), __('Delete unused dimension'), true);
 }
 else
 {
-	submit_center('ADD_ITEM', _("Add"), true, '', 'default');
+	submit_center('ADD_ITEM', __("Add"), true, '', 'default');
 }
 end_form();
 

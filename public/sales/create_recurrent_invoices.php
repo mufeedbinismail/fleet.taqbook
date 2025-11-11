@@ -22,7 +22,7 @@ if ($SysPrefs->use_popup_windows)
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
-page(_($GLOBALS['help_context'] = "Create and Print Recurrent Invoices"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Create and Print Recurrent Invoices"), false, false, "", $js);
 
 function create_recurrent_invoices($customer_id, $branch_id, $order_no, $tmpl_no, $date, $from, $to, $memo)
 {
@@ -88,7 +88,7 @@ function calculate_next($myrow)
 $id = find_submit("confirmed");
 if ($id != -1 && is_date_closed($_POST['trans_date']))
 {
-	display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+	display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 	set_focus('trans_date');
 	$_POST['create'.$id] = 1;	//re-display current page
 	$id = -1;
@@ -143,14 +143,14 @@ if ($id != -1)
 	}
 	else 
 		$min = $max = 0;
-	display_notification(sprintf(_("%s recurrent invoice(s) created, # %s - # %s."), count($invs), $min, $max));
+	display_notification(sprintf(__("%s recurrent invoice(s) created, # %s - # %s."), count($invs), $min, $max));
 	if (count($invs) > 0)
 	{
 		$ar = array('PARAM_0' => $min."-".ST_SALESINVOICE,	'PARAM_1' => $max."-".ST_SALESINVOICE, 'PARAM_2' => "",
 			'PARAM_3' => 0,	'PARAM_4' => 0,	'PARAM_5' => "", 'PARAM_6' => "", 'PARAM_7' => user_def_print_orientation());
-		display_note(print_link(sprintf(_("&Print Recurrent Invoices # %s - # %s"), $min, $max), 107, $ar), 0, 1);
+		display_note(print_link(sprintf(__("&Print Recurrent Invoices # %s - # %s"), $min, $max), 107, $ar), 0, 1);
 		$ar['PARAM_3'] = 1; // email
-		display_note(print_link(sprintf(_("&Email Recurrent Invoices # %s - # %s"), $min, $max), 107, $ar), 0, 1);
+		display_note(print_link(sprintf(__("&Email Recurrent Invoices # %s - # %s"), $min, $max), 107, $ar), 0, 1);
 	}
 }
 
@@ -166,34 +166,34 @@ if ($id != -1)
 	$to = add_days($to, $myrow['days']);
 
 	if (!is_date_in_fiscalyear($date))
-		display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+		display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 	elseif (!date1_greater_date2(add_days(Today(), 1), $to))
-		display_error(_("Recurrent invoice cannot be generated before last day of covered period."));
+		display_error(__("Recurrent invoice cannot be generated before last day of covered period."));
 	elseif (check_recurrent_invoice_prices($id))
-		display_error(_("Recurrent invoices cannot be generated because some items have no price defined in customer currency."));
+		display_error(__("Recurrent invoices cannot be generated because some items have no price defined in customer currency."));
 	elseif (!check_sales_order_type($myrow['order_no']))
-		display_error(_("Recurrent invoices cannot be generated because selected sales order template uses prepayment sales terms. Change payment terms and try again."));
+		display_error(__("Recurrent invoices cannot be generated because selected sales order template uses prepayment sales terms. Change payment terms and try again."));
 	else {
 		$count = recurrent_invoice_count($id);
 
 		$_POST['trans_date'] = $to;
 		start_form();
 		start_table(TABLESTYLE, "width=50%");
-		label_row(_('Description:'), $myrow["description"]);
-		label_row(_('Template:'), get_customer_trans_view_str(ST_SALESORDER, $myrow["order_no"]));
-		label_row(_('Number of invoices:'), $count);
-		date_row(_('Invoice date:'), 'trans_date');
+		label_row(__('Description:'), $myrow["description"]);
+		label_row(__('Template:'), get_customer_trans_view_str(ST_SALESORDER, $myrow["order_no"]));
+		label_row(__('Number of invoices:'), $count);
+		date_row(__('Invoice date:'), 'trans_date');
 		$newto = add_months($to, $myrow['monthly']);
 		$newto = add_days($newto, $myrow['days']);
-		text_row(_('Invoice notice:'), 'memo', sprintf(_("Recurrent Invoice covers period %s - %s."), $to,	 add_days($newto, -1)), 100, 100);
-		//text_row(_('Invoice notice:'), 'memo', sprintf(_("Recurrent Invoice covers period %s - %s."), //$from, add_days($to, -1)), 100, 100);
+		text_row(__('Invoice notice:'), 'memo', sprintf(__("Recurrent Invoice covers period %s - %s."), $to,	 add_days($newto, -1)), 100, 100);
+		//text_row(__('Invoice notice:'), 'memo', sprintf(__("Recurrent Invoice covers period %s - %s."), //$from, add_days($to, -1)), 100, 100);
 		end_table();
 		hidden('from', $from, true);
 		hidden('to', $to, true);
 		br();
-		submit_center_first('confirmed'.$id, _('Create'), _('Create recurrent invoices'), false, ICON_OK);
-		submit_center_last('cancel', _('Cancel'), _('Return to recurrent invoices'), false, ICON_ESCAPE);
-		submit_js_confirm("do_create".$id, sprintf(_("You are about to issue %s invoices.\n Do you want to continue?"), $count));
+		submit_center_first('confirmed'.$id, __('Create'), __('Create recurrent invoices'), false, ICON_OK);
+		submit_center_last('cancel', __('Cancel'), __('Return to recurrent invoices'), false, ICON_ESCAPE);
+		submit_js_confirm("do_create".$id, sprintf(__("You are about to issue %s invoices.\n Do you want to continue?"), $count));
 		end_form();
 
 		display_footer_exit();
@@ -205,7 +205,7 @@ $result = get_recurrent_invoices(Today());
 
 start_form();
 start_table(TABLESTYLE, "width=70%");
-$th = array(_("Description"), _("Template No"),_("Customer"),_("Branch")."/"._("Group"),_("Days"),_("Monthly"),_("Begin"),_("End"),_("Next invoice"),"");
+$th = array(__("Description"), __("Template No"),__("Customer"),__("Branch")."/".__("Group"),__("Days"),__("Monthly"),__("Begin"),__("End"),__("Next invoice"),"");
 table_header($th);
 $k = 0;
 $due = false;
@@ -242,7 +242,7 @@ while ($myrow = db_fetch($result))
 		$count = recurrent_invoice_count($myrow['id']);
 		if ($count)
 		{
-			button_cell("create".$myrow["id"], sprintf(_("Create %s Invoice(s)"), $count), "", ICON_DOC, 'process');
+			button_cell("create".$myrow["id"], sprintf(__("Create %s Invoice(s)"), $count), "", ICON_DOC, 'process');
 		} else {
 			label_cell('');
 		}
@@ -254,9 +254,9 @@ while ($myrow = db_fetch($result))
 end_table();
 end_form();
 if ($due)
-	display_note(_("Marked items are due."), 1, 0, "class='overduefg'");
+	display_note(__("Marked items are due."), 1, 0, "class='overduefg'");
 else
-	display_note(_("No recurrent invoices are due."), 1, 0);
+	display_note(__("No recurrent invoices are due."), 1, 0);
 
 br();
 }

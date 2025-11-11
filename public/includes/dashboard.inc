@@ -108,7 +108,7 @@ function display_title($title, $id=false, $type = false, $per = '', $num = false
 		else
 		{
 			$name = "select_$id";
-			$sel = array(1 => _("Vertical bars"), 2 => _("Horizontal bars"), 3 => _("Dots"), 4 => _("Lines"), 5 => _("Pie"), 6 => _("Donut"), 7 => _("Half Donut"), 8 => _("Splines"), 9 => _("Tables"));
+			$sel = array(1 => __("Vertical bars"), 2 => __("Horizontal bars"), 3 => __("Dots"), 4 => __("Lines"), 5 => __("Pie"), 6 => __("Donut"), 7 => __("Half Donut"), 8 => __("Splines"), 9 => __("Tables"));
 			echo array_selector($name, $type, $sel, $options);
 		}
 		if (list_updated($name))
@@ -131,7 +131,7 @@ function display_title($title, $id=false, $type = false, $per = '', $num = false
 		}
 		else
 		{
-			$sel = array(1 => _("Vertical bars"), 2 => _("Horizontal bars"), 3 => _("Dots"), 4 => _("Lines"), 5 => _("Pie"), 6 => _("Donut"), 7 => _("Half Donut"), 8 => _("Splines"), 9 => _("Tables"));
+			$sel = array(1 => __("Vertical bars"), 2 => __("Horizontal bars"), 3 => __("Dots"), 4 => __("Lines"), 5 => __("Pie"), 6 => __("Donut"), 7 => __("Half Donut"), 8 => __("Splines"), 9 => __("Tables"));
 			echo "<select id='select_$id' name='select_$id' style='border:1px solid #bbb;color:#555;' onchange='chart_update(this, \"$id\");'>";
 			foreach ($sel as $i => $s)
 			{
@@ -177,16 +177,16 @@ function headers($labels)
 function display_customer_topten()
 {
 	table('100%', '25%');
-	echo "<div class='square square1'>"._('Customers')."<p class='span1'>";
+	echo "<div class='square square1'>".__('Customers')."<p class='span1'>";
 	echo get_num_customers()."</p></div>";
 	td('25%');
-	echo "<div class='square square1'>"._('Branches')."<p class='span1'>";
+	echo "<div class='square square1'>".__('Branches')."<p class='span1'>";
 	echo get_num_branches()."</p></div>";
 	td('25%');
-	echo "<div class='square square1'>"._('Salesmen')."<p class='span1'>";
+	echo "<div class='square square1'>".__('Salesmen')."<p class='span1'>";
 	echo get_num_salesmen()."</p></div>";
 	td('25%');
-	echo "<div class='square square2'>"._('Overdue Invoices')."<p class='span1'>";
+	echo "<div class='square square2'>".__('Overdue Invoices')."<p class='span1'>";
 	echo get_num_overdue_sales()."</p></div>";
 	table_end();
 	$pg = new chart('horizontalBar', 'c1');
@@ -197,12 +197,12 @@ function display_customer_topten()
 	$title = customer_top($today, 10, 66, $pg);
 	$total = customer_aging($today, 66);
 	td('50%');
-	source_graphic($today, $title[0], _("Customer"), $pg);
+	source_graphic($today, $title[0], __("Customer"), $pg);
 	br(3);
-	echo "<div class='square square1'>"._('Sales Total')."<p class='span1'>";
+	echo "<div class='square square1'>".__('Sales Total')."<p class='span1'>";
 	echo number_format2($title[1])."</p></div>";
 	br(3);
-	echo "<div class='square square1'>"._('Aging Total')."<p class='span1'>";
+	echo "<div class='square square1'>".__('Aging Total')."<p class='span1'>";
 	echo number_format2($total)."</p></div>";
 	table_end();
 	table('100%', '100%');
@@ -214,16 +214,16 @@ function display_customer_topten()
 function display_supplier_topten()
 {
 	table('100%', '25%');
-	echo "<div class='square square2'>"._('Suppliers')."<p class='span1'>";
+	echo "<div class='square square2'>".__('Suppliers')."<p class='span1'>";
 	echo get_num_suppliers()."</p></div>";
 	td('25%');
-	echo "<div class='square square2'>"._('New Orders')."<p class='span1'>";
+	echo "<div class='square square2'>".__('New Orders')."<p class='span1'>";
 	echo get_new_purch_orders()."</p></div>";
 	td('25%');
-	echo "<div class='square square2'>"._('Invoices')."<p class='span1'>";
+	echo "<div class='square square2'>".__('Invoices')."<p class='span1'>";
 	echo get_num_supp_invoices()."</p></div>";
 	td('25%');
-	echo "<div class='square square2'>"._('Overdue Invoices')."<p class='span1'>";
+	echo "<div class='square square2'>".__('Overdue Invoices')."<p class='span1'>";
 	echo get_num_overdue_purch()."</p></div>";
 	table_end();
 	$pg = new chart('horizontalBar', 's1');
@@ -234,12 +234,12 @@ function display_supplier_topten()
 	$title = supplier_top($today, 10, 66, $pg);
 	$total = supplier_aging($today, 66);
 	td('50%');
-	source_graphic($today, $title[0], _("Supplier"), $pg);
+	source_graphic($today, $title[0], __("Supplier"), $pg);
 	br(3);
-	echo "<div class='square square2'>"._('Purchasable Total')."<p class='span1'>";
+	echo "<div class='square square2'>".__('Purchasable Total')."<p class='span1'>";
 	echo number_format2($title[1])."</p></div>";
 	br(3);
-	echo "<div class='square square2'>"._('Aging Total')."<p class='span1'>";
+	echo "<div class='square square2'>".__('Aging Total')."<p class='span1'>";
 	echo number_format2($total)."</p></div>";
 	table_end();
 	table('100%', '100%');
@@ -252,48 +252,48 @@ function display_stock_topten($type=0)
 	if ($type == 0)
 	{
 		table('100%', '25%');
-		echo "<div class='square square1'>"._('Items')."<p class='span1'>";
+		echo "<div class='square square1'>".__('Items')."<p class='span1'>";
 		echo get_num_items()."</p></div>";
 		td('25%');
-		echo "<div class='square square1'>"._('Locations')."<p class='span1'>";
+		echo "<div class='square square1'>".__('Locations')."<p class='span1'>";
 		echo get_num_locations()."</p></div>";
 		td('25%');
-		echo "<div class='square square1'>"._('Kits')."<p class='span1'>";
+		echo "<div class='square square1'>".__('Kits')."<p class='span1'>";
 		echo get_num_kits()."</p></div>";
 		td('25%');
-		echo "<div class='square square2'>"._('Below Reorder Level')."<p class='span1'>";
+		echo "<div class='square square2'>".__('Below Reorder Level')."<p class='span1'>";
 		echo get_num_reorder()."</p></div>";
 		table_end();
 	}
 	elseif ($type == 1)
 	{
 		table('100%', '25%');
-		echo "<div class='square square1'>"._('Assembled Items')."<p class='span1'>";
+		echo "<div class='square square1'>".__('Assembled Items')."<p class='span1'>";
 		echo get_num_assembled()."</p></div>";
 		td('25%');
-		echo "<div class='square square1'>"._('Manufactured Items')."<p class='span1'>";
+		echo "<div class='square square1'>".__('Manufactured Items')."<p class='span1'>";
 		echo get_num_manufactured()."</p></div>";
 		td('25%');
-		echo "<div class='square square1'>"._('Work Centres')."<p class='span1'>";
+		echo "<div class='square square1'>".__('Work Centres')."<p class='span1'>";
 		echo get_num_workcentres()."</p></div>";
 		td('25%');
-		echo "<div class='square square1'>"._('Open Workorders')."<p class='span1'>";
+		echo "<div class='square square1'>".__('Open Workorders')."<p class='span1'>";
 		echo get_open_workorders()."</p></div>";
 		table_end();
 	}
 	elseif ($type == 2)
 	{
 		table('100%', '25%');
-		echo "<div class='square square1'>"._('Fixed Assets')."<p class='span1'>";
+		echo "<div class='square square1'>".__('Fixed Assets')."<p class='span1'>";
 		echo get_num_fixed_assets()."</p></div>";
 		td('25%');
-		echo "<div class='square square1'>"._('Locations')."<p class='span1'>";
+		echo "<div class='square square1'>".__('Locations')."<p class='span1'>";
 		echo get_num_fixed_locations()."</p></div>";
 		td('25%');
-		echo "<div class='square square1'>"._('Categories')."<p class='span1'>";
+		echo "<div class='square square1'>".__('Categories')."<p class='span1'>";
 		echo get_num_fixed_categories()."</p></div>";
 		td('25%');
-		echo "<div class='square square1'>"._('Fixed Asset Classes')."<p class='span1'>";
+		echo "<div class='square square1'>".__('Fixed Asset Classes')."<p class='span1'>";
 		echo get_num_fixed_classes()."</p></div>";
 		table_end();
 	}
@@ -304,21 +304,21 @@ function display_stock_topten($type=0)
 	$today = calc_today();
 	$title = stock_top($today, 5, 66, $type, $pg);
 	table('50%', '25%');
-	echo "<div class='square square1'>"._('Total Sales')."<p class='span1'>";
+	echo "<div class='square square1'>".__('Total Sales')."<p class='span1'>";
 	echo number_format2($title[1])."</p></div>";
 	td('25%');
-	echo "<div class='square square2'>"._('Total Costs')."<p class='span1'>";
+	echo "<div class='square square2'>".__('Total Costs')."<p class='span1'>";
 	echo number_format2($title[2])."</p></div>";
 	table_end();
 	td('50%');
 	if ($type == 2)
-		$source = _("Fixed Assets");
+		$source = __("Fixed Assets");
 	elseif ($type == 1)
-		$source = _("Manufacturing");
+		$source = __("Manufacturing");
 	else	
-		$source = _("Items");
+		$source = __("Items");
 	source_graphic($today, $title[0], $source, $pg);
-	echo "<div class='square'><span>"._('Total Results')."<br />";
+	echo "<div class='square'><span>".__('Total Results')."<br />";
 	echo number_format2($title[3])."</div>";
 	table_end();
 	table('100%', '100%');
@@ -329,19 +329,19 @@ function display_stock_topten($type=0)
 function display_dimension_topten()
 {
 	table('100%', '25%');
-	echo "<div class='square square1'>"._('Dimensions')."<p class='span1'>";
+	echo "<div class='square square1'>".__('Dimensions')."<p class='span1'>";
 	echo get_num_dimensions()."</p></div>";
 	td('25%');
-	echo "<div class='square square1'>"._('Type 2 Dimensions')."<p class='span1'>";
+	echo "<div class='square square1'>".__('Type 2 Dimensions')."<p class='span1'>";
 	echo get_dim_type2()."</p></div>";
 	td('25%');
 	$res = get_dim_total();
 	$s = $res[0] < 0.0 ? 2 : 1;
-	echo "<div class='square square{$s}'>"._('Dimensions Total Balance')."<p class='span1'>";
+	echo "<div class='square square{$s}'>".__('Dimensions Total Balance')."<p class='span1'>";
 	echo number_format2($res[0])."</p></div>";
 	td('25%');
 	$s = $res[1] < 0.0 ? 2 : 1;
-	echo "<div class='square square{$s}'>"._('Dimensions Total Result')."<p class='span1'>";
+	echo "<div class='square square{$s}'>".__('Dimensions Total Result')."<p class='span1'>";
 	echo number_format2($res[1])."</p></div>";
 	table_end();
 	$pg = new chart('bar', 'd1');
@@ -351,7 +351,7 @@ function display_dimension_topten()
 	$today = calc_today();
 	$title = dimension_top($today, 5, 66, $pg);
 	td('50%');
-	source_graphic($today, $title, _("Dimension"), $pg);
+	source_graphic($today, $title, __("Dimension"), $pg);
 	table_end();
 }	
 
@@ -359,16 +359,16 @@ function display_gl_info()
 {
 	$today = calc_today();
 	table('100%', '25%');
-	echo "<div class='square square1'>"._('Receivables')."<p class='span1'>";
+	echo "<div class='square square1'>".__('Receivables')."<p class='span1'>";
 	echo number_format2(customer_balance($today))."</p></div>";
 	td('25%');
-	echo "<div class='square square2'>"._('Payables')."<p class='span1'>";
+	echo "<div class='square square2'>".__('Payables')."<p class='span1'>";
 	echo number_format2(-supplier_balance($today))."</p></div>";
 	td('25%');
-	echo "<div class='square square1'>"._('Todays Deposits')."<p class='span1'>";
+	echo "<div class='square square1'>".__('Todays Deposits')."<p class='span1'>";
 	echo number_format2(get_today_deposits($today))."</p></div>";
 	td('25%');
-	echo "<div class='square square2'>"._('Todays Payments')."<p class='span1'>";
+	echo "<div class='square square2'>".__('Todays Payments')."<p class='span1'>";
 	echo number_format2(get_today_payments($today))."</p></div>";
 	table_end();
 	$pg = new chart('halfDonut', 'g1');
@@ -376,7 +376,7 @@ function display_gl_info()
 		$pg->type = $_POST['select_g1'];
 	table('100%', '50%');
 	$title = gl_top($today, 66, $pg);
-	source_graphic($today, $title, _("Class"), $pg);
+	source_graphic($today, $title, __("Class"), $pg);
 	gl_month_performance($today, 66, 5);
 	td('50%');
 	gl_week_performance($today, 66, 4);
@@ -390,13 +390,13 @@ function display_all()
 	$today = calc_today();
 
 	table('100%', '33%');
-	echo "<div class='square square1'>"._('Users')."<p class='span1'>";
+	echo "<div class='square square1'>".__('Users')."<p class='span1'>";
 	echo get_num_users()."</p></div>";
 	td('33%');
-	echo "<div class='square square1'>"._('Languages')."<p class='span1'>";
+	echo "<div class='square square1'>".__('Languages')."<p class='span1'>";
 	echo get_num_languages()."</p></div>";
 	td('33%');
-	echo "<div class='square square1'>"._('Database Size')."<p class='span1'>";
+	echo "<div class='square square1'>".__('Database Size')."<p class='span1'>";
 	echo get_database_size()."</p></div>";
 	table_end();
 	$pg = new chart('horizontalBar', 'c2');
@@ -404,24 +404,24 @@ function display_all()
 		$pg->type = $_POST['select_c2'];
 	table('100%', '50%');
 	$title = customer_top($today, 3, 66, $pg);
-	source_graphic($today, $title[0], _("Customer"), $pg);
+	source_graphic($today, $title[0], __("Customer"), $pg);
 	$pg = new chart('horizontalBar', 's2');
 	if (isset($_POST['select_s2']))
 		$pg->type = $_POST['select_s2'];
 	$title = supplier_top($today, 3, 66, $pg);
-	source_graphic($today, $title[0], _("Supplier"), $pg);
+	source_graphic($today, $title[0], __("Supplier"), $pg);
 	$pg = new chart('bar', 'i2');
 	if (isset($_POST['select_i2']))
 		$pg->type = $_POST['select_i2'];
 	$title = stock_top($today, 3, 66, 0, $pg);
-	source_graphic($today, $title[0], _("Items"), $pg);
+	source_graphic($today, $title[0], __("Items"), $pg);
 	td('50%');
 	dimension_top($today, 3, 66);
 	$pg = new chart('pie', 'd2');
 	if (isset($_POST['select_d2']))
 		$pg->type = $_POST['select_d2'];
 	$title = gl_top($today, 66, $pg);
-	source_graphic($today, $title, _("Class"), $pg);
+	source_graphic($today, $title, __("Class"), $pg);
 	stock_top($today, 3, 66, 2);
 	stock_top($today, 3, 66, 1);
 	table_end();
@@ -436,9 +436,9 @@ function customer_top($today, $limit=10, $width='33', &$pg=null)
 		AND tran_date >= '$begin' AND tran_date <= '$today' GROUP by d.debtor_no ORDER BY total DESC, d.debtor_no
 		LIMIT $limit";
 	$result = db_query($sql);
-	$title = sprintf(_("Top %s customers in fiscal year"), $limit);
+	$title = sprintf(__("Top %s customers in fiscal year"), $limit);
 	display_title($title);
-	$th = array(_("Customer"), _("Amount"));
+	$th = array(__("Customer"), __("Amount"));
 	start_table(TABLESTYLE, "width='$width%'");
 	headers($th);
 	check_page_security('SA_SALESTRANSVIEW');
@@ -462,7 +462,7 @@ function customer_top($today, $limit=10, $width='33', &$pg=null)
 	if ($pg != null)
 	{
 		$pg->setLabels($names);
-		$pg->addSerie(_('Sales'), $totals);
+		$pg->addSerie(__('Sales'), $totals);
 	}
 	end_table(2);
 	return array($title, $sales);
@@ -478,9 +478,9 @@ function supplier_top($today, $limit=10, $width='33', &$pg=null)
 		AND tran_date >= '$begin' AND tran_date <= '$today' GROUP by s.supplier_id ORDER BY total DESC, s.supplier_id
 		LIMIT $limit";
 	$result = db_query($sql);
-	$title = sprintf(_("Top %s suppliers in fiscal year"), $limit);
+	$title = sprintf(__("Top %s suppliers in fiscal year"), $limit);
 	display_title($title);
-	$th = array(_("Supplier"), _("Amount"));
+	$th = array(__("Supplier"), __("Amount"));
 	start_table(TABLESTYLE, "width='$width%'");
 	headers($th);
 	check_page_security('SA_SUPPTRANSVIEW');
@@ -504,7 +504,7 @@ function supplier_top($today, $limit=10, $width='33', &$pg=null)
 	if ($pg != null)
 	{
 		$pg->setLabels($names);
-		$pg->addSerie(_('Purchases'), $totals);
+		$pg->addSerie(__('Purchases'), $totals);
 	}
 	end_table(2);
 	return array($title, $total);
@@ -543,16 +543,16 @@ function stock_top($today, $limit=10, $width='33', $type=0, &$pg=null)
 	$sql .= "AND tran_date <= '$today' GROUP by s.stock_id ORDER BY total DESC, s.stock_id LIMIT $limit";
 	$result = db_query($sql);
 	if ($type == 1)
-		$title = sprintf(_("Top %s Manufactured Items in fiscal year"), $limit);
+		$title = sprintf(__("Top %s Manufactured Items in fiscal year"), $limit);
 	elseif ($type == 2)
-		$title = sprintf(_("Top %s Fixed Assets"), $limit);
+		$title = sprintf(__("Top %s Fixed Assets"), $limit);
 	else	
-		$title = sprintf(_("Top %s Sold Items in fiscal year"), $limit);
+		$title = sprintf(__("Top %s Sold Items in fiscal year"), $limit);
 	display_title($title);	
 	if ($type == 0)	
-		$th = array(_("Item"), _("Sales"), _("Costs"), _("Results"), _("Quantity"));
+		$th = array(__("Item"), __("Sales"), __("Costs"), __("Results"), __("Quantity"));
 	else	
-		$th = array(_("Item"), _("Amount"), _("Quantity"));
+		$th = array(__("Item"), __("Amount"), __("Quantity"));
 	start_table(TABLESTYLE, "width='$width%'");
 	headers($th);
 	check_page_security($sec);
@@ -592,11 +592,11 @@ function stock_top($today, $limit=10, $width='33', $type=0, &$pg=null)
 	if ($pg != null)
 	{
 		$pg->setLabels($names);
-		$pg->addSerie(_('Sales'), $totals);
+		$pg->addSerie(__('Sales'), $totals);
 		if ($type == 0)
 		{
-			$pg->addSerie(_('Costs'), $costs);
-			$pg->addSerie(_('Results'), $results, 8);
+			$pg->addSerie(__('Costs'), $costs);
+			$pg->addSerie(__('Results'), $results, 8);
 		}
 	}
 	end_table(2);
@@ -616,9 +616,9 @@ function dimension_top($today, $limit=10, $width='33', &$pg=null)
 		WHERE IF(c.ctype > 3, tran_date >= '$begin', tran_date >= '0000-00-00') 
 		AND tran_date <= '$today'  AND d.reference IS NOT NULL GROUP BY d.reference ORDER BY result DESC LIMIT $limit"; 	
 	$result = db_query($sql, "Transactions could not be calculated");
-	$title = sprintf(_("Top %s Dimensions in fiscal year"), $limit);
+	$title = sprintf(__("Top %s Dimensions in fiscal year"), $limit);
 	display_title($title);
-	$th = array(_("Dimension"), _("Balance"), _("Result"));
+	$th = array(__("Dimension"), __("Balance"), __("Result"));
 	start_table(TABLESTYLE, "width='$width%'");
 	headers($th);
 	check_page_security('SA_DIMTRANSVIEW');
@@ -643,8 +643,8 @@ function dimension_top($today, $limit=10, $width='33', &$pg=null)
 	{
 		$pg->setLabels($names);
 		$pg->setValues(true);
-		$pg->addSerie(_('Balance'), $balances);
-		$pg->addSerie(_('Result'), $results);
+		$pg->addSerie(__('Balance'), $balances);
+		$pg->addSerie(__('Result'), $results);
 	}
 	end_table(2);
 	return $title;
@@ -661,7 +661,7 @@ function gl_top($today, $width='33', &$pg=null)
 		AND IF(c.ctype > 3, tran_date >= '$begin', tran_date >= '0000-00-00') 
 		AND tran_date <= '$today' GROUP BY c.cid ORDER BY c.cid"; 
 	$result = db_query($sql, "Transactions could not be calculated");
-	$title = _("Class Balances");
+	$title = __("Class Balances");
 	display_title($title);
 	start_table(TABLESTYLE2, "width='$width%'");
 	check_page_security('SA_GLANALYTIC');
@@ -681,7 +681,7 @@ function gl_top($today, $width='33', &$pg=null)
 		label_row($myrow['class_name'], number_format2($myrow['total'], user_price_dec()), 
 			"class='label' style='font-weight:bold;'", "style='font-weight:bold;' align=right");
 	}
-	$calculated = _("Calculated Return");
+	$calculated = __("Calculated Return");
 	label_row("&nbsp;", "");
 	label_row($calculated, number_format2($total, user_price_dec()), 
 		"class='label' style='font-weight:bold;'", "style='font-weight:bold;' align=right");
@@ -690,7 +690,7 @@ function gl_top($today, $width='33', &$pg=null)
 		$names[] = $calculated; 
 		$totals[] = $total;
 		$pg->setLabels($names);
-		$pg->addSerie(_('Totals'), $totals);
+		$pg->addSerie(__('Totals'), $totals);
 		$pg->setValues(true);
 		$pg->setDTitle(number_format2($total));
 	}
@@ -721,7 +721,7 @@ function gl_week_performance($today, $width="33", $weeks=4)
 			GROUP BY week_name ORDER BY week_name DESC LIMIT 0, $weeks) b 
 		GROUP BY week_name ORDER BY week_name ASC";
 	$result = db_query($sql, "Transactions could not be calculated");
-	$title = sprintf(_("Last %s weeks Performance"), $weeks);
+	$title = sprintf(__("Last %s weeks Performance"), $weeks);
 	check_page_security('SA_GLANALYTIC');
 	$week_names = $sales = $costs = $results = array();
 	while ($myrow = db_fetch($result))
@@ -732,10 +732,10 @@ function gl_week_performance($today, $width="33", $weeks=4)
 		$results[] = round($myrow['sales'] - $myrow['costs']);
 	}	
 	$pg->setLabels($week_names);
-	$pg->addSerie(_('Sales'), $sales, 'bar');
-	$pg->addSerie(_('Costs'), $costs, 'bar');
-	$pg->addSerie(_('Results'), $results, 'spline');
-	source_graphic($today, $title, _("Week"), $pg, _("Weeks"), $weeks);
+	$pg->addSerie(__('Sales'), $sales, 'bar');
+	$pg->addSerie(__('Costs'), $costs, 'bar');
+	$pg->addSerie(__('Results'), $results, 'spline');
+	source_graphic($today, $title, __("Week"), $pg, __("Weeks"), $weeks);
 }
 
 function gl_month_performance($today, $width="33", $months=5)
@@ -760,7 +760,7 @@ function gl_month_performance($today, $width="33", $months=5)
 			GROUP BY month_name ORDER BY month_name DESC LIMIT 0, $months) b 
 		GROUP BY month_name ORDER BY month_name ASC";
 	$result = db_query($sql, "Transactions could not be calculated");
-	$title = sprintf(_("Last %s Months Performance"), $months);
+	$title = sprintf(__("Last %s Months Performance"), $months);
 	check_page_security('SA_GLANALYTIC');
 	$month_names = $sales = $costs = $results = array();
 	while ($myrow = db_fetch($result))
@@ -771,10 +771,10 @@ function gl_month_performance($today, $width="33", $months=5)
 		$results[] = round($myrow['sales'] - $myrow['costs']);
 	}	
 	$pg->setLabels($month_names);
-	$pg->addSerie(_('Sales'), $sales, 'bar');
-	$pg->addSerie(_('Costs'), $costs, 'bar');
-	$pg->addSerie(_('Results'), $results, 'spline');
-	source_graphic($today, $title, _("Month"), $pg, _("Months"), $months);
+	$pg->addSerie(__('Sales'), $sales, 'bar');
+	$pg->addSerie(__('Costs'), $costs, 'bar');
+	$pg->addSerie(__('Results'), $results, 'spline');
+	source_graphic($today, $title, __("Month"), $pg, __("Months"), $months);
 }
 
 function customer_aging($today, $width="33")
@@ -808,18 +808,18 @@ function customer_aging($today, $width="33")
 
     $row = db_fetch($result);
 
-	$title = _("Total Customers Aged Analysis");
+	$title = __("Total Customers Aged Analysis");
 	check_page_security('SA_SALESTRANSVIEW');
 	$names = array();
 	$past1a = $past1 + 1;
 	$past2a = $past2 + 1;
-	$names = array(_('Current'),"1-$past1", "$past1a-$past2", "$past2+");
+	$names = array(__('Current'),"1-$past1", "$past1a-$past2", "$past2+");
 	$balances = array(round($row['Balance']-$row['Due']), round($row['Due'] - $row['Overdue1']), 
 		round($row['Overdue1'] - $row['Overdue2']), round($row['Overdue2']));
 	$total = round($row['Balance']);
 	$pg->setLabels($names);
-	$pg->addSerie(_('Balances'), $balances);
-	source_graphic($today, $title, _('Days'), $pg);
+	$pg->addSerie(__('Balances'), $balances);
+	source_graphic($today, $title, __('Days'), $pg);
 	return $total;
 }
 
@@ -864,18 +864,18 @@ function supplier_aging($today, $width="33")
 
     $row = db_fetch($result);
 
-	$title = _("Total Suppliers Aged Analysis");
+	$title = __("Total Suppliers Aged Analysis");
 	check_page_security('SA_SUPPLIERANALYTIC');
 	$names = array();
 	$past1a = $past1 + 1;
 	$past2a = $past2 + 1;
-	$names = array(_('Current'),"1-$past1", "$past1a-$past2", "$past2+");
+	$names = array(__('Current'),"1-$past1", "$past1a-$past2", "$past2+");
 	$balances = array(round($row['Balance']-$row['Due']), round($row['Due'] - $row['Overdue1']), 
 		round($row['Overdue1'] - $row['Overdue2']), round($row['Overdue2']));
 	$total = round($row['Balance']);
 	$pg->setLabels($names);
-	$pg->addSerie(_('Balances'), $balances);
-	source_graphic($today, $title, _('Days'), $pg);
+	$pg->addSerie(__('Balances'), $balances);
+	source_graphic($today, $title, __('Days'), $pg);
 	return $total;
 }
 
@@ -951,11 +951,11 @@ function cash_flow($today)
 		$date[$i] = $y.$sep.$m;
 		$total[$i] = round($total[$i]);
 	}
-	$title = sprintf(_("Last %s Months Cash Flow"), $months);
+	$title = sprintf(__("Last %s Months Cash Flow"), $months);
 	check_page_security('SA_BANKREP');
 	$pg->setLabels($date);
-	$pg->addSerie(_('Balances'), $total, false, true);
-	source_graphic($today, $title, _("Month"), $pg, _("Months"), $months);
+	$pg->addSerie(__('Balances'), $total, false, true);
+	source_graphic($today, $title, __("Month"), $pg, __("Months"), $months);
 }
 
 function source_graphic($today, $title, $x_axis, $pg, $per = '', $num = false)
@@ -966,18 +966,18 @@ function source_graphic($today, $title, $x_axis, $pg, $per = '', $num = false)
 	display_title("$title ($today)", $pg->id, $pg->type, $per, $num);	
 	if ($pg->isEmpty())
 	{
-		display_note(_("No Data available yet!"), 1);
+		display_note(__("No Data available yet!"), 1);
 		return;
 	}
 	if ($pg->type == 'horizontalBar')
 	{
 		$pg->setYTitle($x_axis);
-		$pg->setXTitle(_("Amount"));
+		$pg->setXTitle(__("Amount"));
 	}
 	else
 	{
 		$pg->setXTitle($x_axis);
-		$pg->setYTitle(_("Amount"));
+		$pg->setYTitle(__("Amount"));
 	}
 	if (empty($per))
 		div_start($pg->id);
@@ -1003,10 +1003,10 @@ function customer_trans($today)
 			+ trans.ov_freight_tax + trans.ov_discount - trans.alloc) > ".FLOAT_COMP_DELTA." 
 			AND DATEDIFF('$today', trans.due_date) > 0 ORDER BY days DESC";
 	$result = db_query($sql);
-	$title = db_num_rows($result) . _(" overdue Sales Invoices");
+	$title = db_num_rows($result) . __(" overdue Sales Invoices");
   	display_title($title);
-	$th = array("#", _("Ref."), _("Date"), _("Due Date"), _("Customer"), _("Branch"), _("Currency"), 
-		_("Total"), _("Remainder"),	_("Days"));
+	$th = array("#", __("Ref."), __("Date"), __("Due Date"), __("Customer"), __("Branch"), __("Currency"), 
+		__("Total"), __("Remainder"),	__("Days"));
 	start_table(TABLESTYLE, "width=90%");
 	headers($th);
   	$k = 0; //row colour counter
@@ -1043,9 +1043,9 @@ function calculate_next_invoice($myrow)
 function customer_recurrent_invoices($today)
 {
 	$result = get_recurrent_invoices($today);
-	$title = _("Overdue Recurrent Invoices");
+	$title = __("Overdue Recurrent Invoices");
   	display_title($title);
-	$th = array(_("Description"), _("Template No"),_("Customer"),_("Branch")."/"._("Group"),_("Next invoice"));
+	$th = array(__("Description"), __("Template No"),__("Customer"),__("Branch")."/".__("Group"),__("Next invoice"));
 	start_table(TABLESTYLE, "width=90%");
   	headers($th);
 	$k = 0;
@@ -1087,10 +1087,10 @@ function supplier_trans($today)
 			AND trans.type = ".ST_SUPPINVOICE." AND (ABS(trans.ov_amount + trans.ov_gst + 
 				trans.ov_discount) - trans.alloc) > ".FLOAT_COMP_DELTA." ORDER BY days DESC";
 	$result = db_query($sql);
-	$title = db_num_rows($result) . _(" unpaid Purchase Invoices");
+	$title = db_num_rows($result) . __(" unpaid Purchase Invoices");
 	display_title($title);
-	$th = array("#", _("Ref."), _("Date"), _("Due Date"), _("Supplier"), _("Currency"), _("Total"), 
-		_("Remainder"),	_("Days"));
+	$th = array("#", __("Ref."), __("Date"), __("Due Date"), __("Supplier"), __("Currency"), __("Total"), 
+		__("Remainder"),	__("Days"));
 	start_table(TABLESTYLE, "width=90%");
 	headers($th);
 	$k = 0; //row colour counter
@@ -1118,7 +1118,7 @@ function supplier_trans($today)
 	}
 	end_table();
 	if ($due)
-		display_note(_("Marked items are overdue."), 1, 0, "class='overduefg'");
+		display_note(__("Marked items are overdue."), 1, 0, "class='overduefg'");
 	br();
 }
 
@@ -1137,9 +1137,9 @@ function stock_below_reorder($today, $type)
           WHERE ISNULL(v.id) AND tran_date <= '$today' AND sm.mb_flag = 'B'
 			GROUP BY sm.stock_id HAVING q <= r";
 	$result = db_query($sql,"an item reorder could not be retreived");
-	$title = db_num_rows($result) . _(" items are below Reorder Level");
+	$title = db_num_rows($result) . __(" items are below Reorder Level");
 	display_title($title);
-	$th = array("#", _("Location"), _("Stock Id"), _('Description'), _("Reorder"), _("qty")); 
+	$th = array("#", __("Location"), __("Stock Id"), __('Description'), __("Reorder"), __("qty")); 
 	start_table(TABLESTYLE, "width=90%");
 	headers($th);
 	$k = 0; //row colour counter
@@ -1168,9 +1168,9 @@ function bank_balance($today, $width)
 	            GROUP BY bank_act, bank_account_name
 				ORDER BY bank_account_name";
 	$result = db_query($sql);
-	$title = _("Bank Account Balances");
+	$title = __("Bank Account Balances");
 	display_title($title);
-	$th = array(_("Account"), _("Currency"), _("Balance"));
+	$th = array(__("Account"), __("Currency"), __("Balance"));
 	start_table(TABLESTYLE, "width='$width%'");
 	headers($th);
 	$k = 0; //row colour counter

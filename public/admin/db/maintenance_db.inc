@@ -256,7 +256,7 @@ function db_import($filename, $connection, $force=true, $init=true, $protect=fal
 	{
 		if ($new_file) // import on old db is forbidden: this would destroy db content unless latin1 was used before in UI
 		{
-			$msg = _("This is new format backup file which cannot be restored on database not migrated to utf8.");
+			$msg = __("This is new format backup file which cannot be restored on database not migrated to utf8.");
 			if ($return_errors)
 				return $msg;
 			else
@@ -339,7 +339,7 @@ function db_import($filename, $connection, $force=true, $init=true, $protect=fal
 
 		// display first failure message; the rest are probably derivative 
 		$err = $sql_errors[0];
-		display_error(sprintf(_("SQL script execution failed in line %d: %s"),
+		display_error(sprintf(__("SQL script execution failed in line %d: %s"),
 			$err[1], $err[0]));
 		return false;
 	} else

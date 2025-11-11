@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_TAXRATES';
 
 require __DIR__ . "/../includes/session.inc";
-page(_($GLOBALS['help_context'] = "Tax Types"));
+page(__($GLOBALS['help_context'] = "Tax Types"));
 
 require_once __DIR__ . "/../includes/ui.inc";
 require_once __DIR__ . "/../taxes/db/tax_types_db.inc";
@@ -26,19 +26,19 @@ function can_process()
 	
 	if (strlen($_POST['name']) == 0)
 	{
-		display_error(_("The tax type name cannot be empty."));
+		display_error(__("The tax type name cannot be empty."));
 		set_focus('name');
 		return false;
 	}
 	elseif (!check_num('rate', 0))
 	{
-		display_error( _("The default tax rate must be numeric and not less than zero."));
+		display_error( __("The default tax rate must be numeric and not less than zero."));
 		set_focus('rate');
 		return false;
 	}
 
 	if (!is_tax_gl_unique(get_post('sales_gl_code'), get_post('purchasing_gl_code'), $selected_id)) {
-		display_error( _("Selected GL Accounts cannot be used by another tax type."));
+		display_error( __("Selected GL Accounts cannot be used by another tax type."));
 		set_focus('sales_gl_code');
 		return false;
 	}
@@ -52,7 +52,7 @@ if ($Mode=='ADD_ITEM' && can_process())
 
 	add_tax_type($_POST['name'], $_POST['sales_gl_code'],
 		$_POST['purchasing_gl_code'], input_num('rate', 0));
-	display_notification(_('New tax type has been added'));
+	display_notification(__('New tax type has been added'));
 	$Mode = 'RESET';
 }
 
@@ -63,7 +63,7 @@ if ($Mode=='UPDATE_ITEM' && can_process())
 
 	update_tax_type($selected_id, $_POST['name'],
     	$_POST['sales_gl_code'], $_POST['purchasing_gl_code'], input_num('rate'));
-	display_notification(_('Selected tax type has been updated'));
+	display_notification(__('Selected tax type has been updated'));
 	$Mode = 'RESET';
 }
 
@@ -73,7 +73,7 @@ function can_delete($selected_id)
 {
 	if (key_in_foreign_table($selected_id, 'tax_group_items', 'tax_type_id'))
 	{
-		display_error(_("Cannot delete this tax type because tax groups been created referring to it."));
+		display_error(__("Cannot delete this tax type because tax groups been created referring to it."));
 
 		return false;
 	}
@@ -90,7 +90,7 @@ if ($Mode == 'Delete')
 	if (can_delete($selected_id))
 	{
 		delete_tax_type($selected_id);
-		display_notification(_('Selected tax type has been deleted'));
+		display_notification(__('Selected tax type has been deleted'));
 	}
 	$Mode = 'RESET';
 }
@@ -108,11 +108,11 @@ $result = get_all_tax_types(check_value('show_inactive'));
 
 start_form();
 
-display_note(_("To avoid problems with manual journal entry all tax types should have unique Sales/Purchasing GL accounts."), 0, 1);
+display_note(__("To avoid problems with manual journal entry all tax types should have unique Sales/Purchasing GL accounts."), 0, 1);
 start_table(TABLESTYLE);
 
-$th = array(_("Description"), _("Default Rate (%)"),
-	_("Sales GL Account"), _("Purchasing GL Account"), "", "");
+$th = array(__("Description"), __("Default Rate (%)"),
+	__("Sales GL Account"), __("Purchasing GL Account"), "", "");
 inactive_control_column($th);
 table_header($th);
 
@@ -128,8 +128,8 @@ while ($myrow = db_fetch($result))
 	label_cell($myrow["purchasing_gl_code"] . "&nbsp;" . $myrow["PurchasingAccountName"]);
 
 	inactive_control_cell($myrow["id"], $myrow["inactive"], 'tax_types', 'id');
- 	edit_button_cell("Edit".$myrow["id"], _("Edit"));
- 	delete_button_cell("Delete".$myrow["id"], _("Delete"));
+ 	edit_button_cell("Edit".$myrow["id"], __("Edit"));
+ 	delete_button_cell("Delete".$myrow["id"], __("Delete"));
 
 	end_row();
 }
@@ -154,11 +154,11 @@ if ($selected_id != -1)
 	}
 	hidden('selected_id', $selected_id);
 }
-text_row_ex(_("Description:"), 'name', 50);
-small_amount_row(_("Default Rate:"), 'rate', '', "", "%", user_percent_dec());
+text_row_ex(__("Description:"), 'name', 50);
+small_amount_row(__("Default Rate:"), 'rate', '', "", "%", user_percent_dec());
 
-gl_all_accounts_list_row(_("Sales GL Account:"), 'sales_gl_code', null);
-gl_all_accounts_list_row(_("Purchasing GL Account:"), 'purchasing_gl_code', null);
+gl_all_accounts_list_row(__("Sales GL Account:"), 'sales_gl_code', null);
+gl_all_accounts_list_row(__("Purchasing GL Account:"), 'purchasing_gl_code', null);
 
 end_table(1);
 

@@ -47,7 +47,7 @@ function db_has_currency_rates($currency, $date_, $msg=false)
 		return 1;
 	$ret = check_empty_result("SELECT COUNT(*) FROM ".TB_PREF."exchange_rates WHERE curr_code = '$currency' && date_ <= '$date'");
 	if ($ret == 0 && $msg)
-		display_error(sprintf(_("Cannot retrieve exchange rate for currency %s as of %s. Please add exchange rate manually on Exchange Rates page."),
+		display_error(sprintf(__("Cannot retrieve exchange rate for currency %s as of %s. Please add exchange rate manually on Exchange Rates page."),
 					 $currency, $date_), true);
 	return $ret;
 }
@@ -575,7 +575,7 @@ function check_is_closed($type, $type_no, $msg=null)
     if (($type_no > 0) && is_closed_trans($type, $type_no))
     {
     	if (!$msg)
-    		$msg = sprintf(_("%s #%s is closed for further edition."), $systypes_array[$type], $type_no);
+    		$msg = sprintf(__("%s #%s is closed for further edition."), $systypes_array[$type], $type_no);
 	   	display_error($msg, true);
 		display_footer_exit();
 	}
@@ -615,7 +615,7 @@ function check_is_editable($trans_type, $trans_no, $msg=null)
 		if ($_SESSION['wa_current_user']->user != $audit['user'])
 		{
 	    	if (!$msg)
-		    	$msg = '<b>'._("You have no edit access to transactions created by other users.").'</b>';
+		    	$msg = '<b>'.__("You have no edit access to transactions created by other users.").'</b>';
 			display_note($msg);
 			display_footer_exit();
 		}
@@ -630,11 +630,11 @@ function check_reference($reference, $trans_type, $trans_no=0, $context=null, $l
 
 	if (!$Refs->is_valid($reference, $trans_type, $context, $line))
 	{
-		display_error(_("The entered reference is invalid.")); return false;
+		display_error(__("The entered reference is invalid.")); return false;
 	}
 	elseif (!$Refs->is_new_reference($reference, $trans_type, $trans_no))
 	{
-		display_error( _("The entered reference is already in use.")); return false;
+		display_error( __("The entered reference is already in use.")); return false;
 	}
 	return true;
 }

@@ -70,21 +70,21 @@ function print_bank_transactions_reconcile()
 	else
 		require_once __DIR__ . "/../reporting/includes/pdf_report.inc";
 
-	$rep = new FrontReport(_('Bank Statement w/Reconcile'), "BankStatementReconcile", user_pagesize(), 9, "L");
+	$rep = new FrontReport(__('Bank Statement w/Reconcile'), "BankStatementReconcile", user_pagesize(), 9, "L");
 	$dec = user_price_dec();
 
 	$cols = array(0, 90, 120, 170, 225, 450, 500, 550, 600, 660, 700);
 
 	$aligns = array('left',	'left',	'left',	'left',	'left',	'right', 'right', 'right', 'center', 'left');
 
-	$headers = array(_('Type'),	_('#'),	_('Reference'), _('Date'), _('Person/Item'),
-		_('Debit'),	_('Credit'), _('Balance'), _('Reco Date'), _('Narration'));
+	$headers = array(__('Type'),	__('#'),	__('Reference'), __('Date'), __('Person/Item'),
+		__('Debit'),	__('Credit'), __('Balance'), __('Reco Date'), __('Narration'));
 
 	$account = get_bank_account($acc);
 	$act = $account['bank_account_name']." - ".$account['bank_curr_code']." - ".$account['bank_account_number'];
    	$params =   array( 	0 => $comments,
-	    1 => array('text' => _('Period'), 'from' => $from, 'to' => $to),
-	    2 => array('text' => _('Bank Account'),'from' => $act,'to' => ''));
+	    1 => array('text' => __('Period'), 'from' => $from, 'to' => $to),
+	    2 => array('text' => __('Bank Account'),'from' => $act,'to' => ''));
 
 	$rep->Font();
 	$rep->Info($params, $cols, $headers, $aligns);
@@ -100,7 +100,7 @@ function print_bank_transactions_reconcile()
 	{
 		$rep->Font('bold');
 		$rep->TextCol(0, 3,	$act);
-		$rep->TextCol(3, 5, _('Opening Balance'));
+		$rep->TextCol(3, 5, __('Opening Balance'));
 		if ($prev_balance > 0.0)
 			$rep->AmountCol(5, 6, abs($prev_balance), $dec);
 		else
@@ -148,13 +148,13 @@ function print_bank_transactions_reconcile()
 		}
 		
 		// Print totals for the debit and credit columns.
-		$rep->TextCol(3, 5, _("Total Debit / Credit"));
+		$rep->TextCol(3, 5, __("Total Debit / Credit"));
 		$rep->AmountCol(5, 6, $total_debit, $dec);
 		$rep->AmountCol(6, 7, $total_credit, $dec);
 		$rep->NewLine(2);
 
 		$rep->Font('bold');
-		$rep->TextCol(3, 5,	_("Ending Balance"));
+		$rep->TextCol(3, 5,	__("Ending Balance"));
 		if ($total > 0.0)
 			$rep->AmountCol(5, 6, abs($total), $dec);
 		else
@@ -164,7 +164,7 @@ function print_bank_transactions_reconcile()
 		
 		// Print the difference between starting and ending balances.
 		$net_change = ($total - $prev_balance); 
-		$rep->TextCol(3, 5, _("Net Change"));
+		$rep->TextCol(3, 5, __("Net Change"));
 		if ($total > 0.0)
 			$rep->AmountCol(5, 6, $net_change, $dec, 0, 0, 0, 0, null, 1, True);
 		else
@@ -192,7 +192,7 @@ function print_bank_transactions_reconcile()
 		
 		// Bank Balance (by Reco)
 		$rep->Font('bold');
-		$rep->TextCol(3, 5,	_("Bank Balance"));
+		$rep->TextCol(3, 5,	__("Bank Balance"));
 		if ($reconciled > 0.0)
 			$rep->AmountCol(5, 6, abs($reconciled), $dec);
 		else
@@ -202,7 +202,7 @@ function print_bank_transactions_reconcile()
 
 		// Reco Difference
 		$rep->Font('bold');
-		$rep->TextCol(3, 5,	_("Difference"));
+		$rep->TextCol(3, 5,	__("Difference"));
 		if ($difference > 0.0)
 			$rep->AmountCol(5, 6, abs($difference), $dec);
 		else

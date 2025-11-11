@@ -83,7 +83,7 @@ function print_receipts()
 	$cur = get_company_Pref('curr_default');
 
 	if ($email == 0)
-		$rep = new FrontReport(_('RECEIPT'), "ReceiptBulk", user_pagesize(), 9, $orientation);
+		$rep = new FrontReport(__('RECEIPT'), "ReceiptBulk", user_pagesize(), 9, $orientation);
    	if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -108,7 +108,7 @@ function print_receipts()
 			if ($email == 1)
 			{
 				$rep = new FrontReport("", "", user_pagesize(), 9, $orientation);
-				$rep->title = _('RECEIPT');
+				$rep->title = __('RECEIPT');
 				$rep->filename = "Receipt" . $i . ".pdf";
 			}
 			$rep->currency = $cur;
@@ -124,7 +124,7 @@ function print_receipts()
 			$doctype = ST_CUSTPAYMENT;
 
 			$total_allocated = 0;
-			$rep->TextCol(0, 4,	_("As advance / full / part / payment towards:"), -2);
+			$rep->TextCol(0, 4,	__("As advance / full / part / payment towards:"), -2);
 			$rep->NewLine(2);
 
 			while ($myrow2=db_fetch($result))
@@ -152,20 +152,20 @@ function print_receipts()
 
 			$rep->row = $rep->bottomMargin + (16 * $rep->lineHeight);
 
-			$rep->TextCol(3, 6, _("Total Allocated"), -2);
+			$rep->TextCol(3, 6, __("Total Allocated"), -2);
 			$rep->AmountCol(6, 7, $total_allocated, $dec, -2);
 			$rep->NewLine();
-			$rep->TextCol(3, 6, _("Left to Allocate"), -2);
+			$rep->TextCol(3, 6, __("Left to Allocate"), -2);
 			$rep->AmountCol(6, 7, $myrow['Total'] + $myrow['ov_discount'] - $total_allocated, $dec, -2);
 			if (floatcmp($myrow['ov_discount'], 0))
 			{
 				$rep->NewLine();
-				$rep->TextCol(3, 6, _("Discount"), - 2);
+				$rep->TextCol(3, 6, __("Discount"), - 2);
 				$rep->AmountCol(6, 7, -$myrow['ov_discount'], $dec, -2);
 			}	
 			$rep->NewLine();
 			$rep->Font('bold');
-			$rep->TextCol(3, 6, _("TOTAL RECEIPT"), - 2);
+			$rep->TextCol(3, 6, __("TOTAL RECEIPT"), - 2);
 			$rep->AmountCol(6, 7, $myrow['Total'], $dec, -2);
 
 			$words = price_in_words($myrow['Total'], ST_CUSTPAYMENT);
@@ -176,16 +176,16 @@ function print_receipts()
 			}
 			$rep->Font();
 			$rep->NewLine();
-			$rep->TextCol(6, 7, _("Received / Sign"), - 2);
+			$rep->TextCol(6, 7, __("Received / Sign"), - 2);
 			$rep->NewLine();
-			$rep->TextCol(0, 2, _("By Cash / Cheque* / Draft No."), - 2);
+			$rep->TextCol(0, 2, __("By Cash / Cheque* / Draft No."), - 2);
 			$rep->TextCol(2, 4, "______________________________", - 2);
-			$rep->TextCol(4, 5, _("Dated"), - 2);
+			$rep->TextCol(4, 5, __("Dated"), - 2);
 			$rep->TextCol(5, 6, "__________________", - 2);
 			$rep->NewLine(1);
-			$rep->TextCol(0, 2, _("Drawn on Bank"), - 2);
+			$rep->TextCol(0, 2, __("Drawn on Bank"), - 2);
 			$rep->TextCol(2, 4, "______________________________", - 2);
-			$rep->TextCol(4, 5, _("Branch"), - 2);
+			$rep->TextCol(4, 5, __("Branch"), - 2);
 			$rep->TextCol(5, 6, "__________________", - 2);
 			$rep->TextCol(6, 7, "__________________");
 			if ($email == 1)

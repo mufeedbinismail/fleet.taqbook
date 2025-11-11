@@ -67,9 +67,9 @@
 		{
 			global $SysPrefs;
 
-			$this->menu = new menu(_("Main  Menu"));
-			$this->menu->add_item(_("Main  Menu"), "index.php");
-			$this->menu->add_item(_("Logout"), "/account/access/logout.php");
+			$this->menu = new menu(__("Main  Menu"));
+			$this->menu->add_item(__("Main  Menu"), "index.php");
+			$this->menu->add_item(__("Logout"), "/account/access/logout.php");
 			$this->applications = array();
 			$this->add_application(new customers_app());
 			$this->add_application(new marketplaces_app());

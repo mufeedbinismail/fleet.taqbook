@@ -101,14 +101,14 @@ function print_grn_valuation()
    	$dec = user_price_dec();
 
 	$cols = array(0, 75, 225, 260, 295, 330, 370, 410, 455, 515);
-	$headers = array(_('Stock ID'), _('Description'), _('PO No'), _('GRN')."#", _('Inv')."#", _('Qty'), _('Inv Price'), _('PO Price'), _('Total'));
+	$headers = array(__('Stock ID'), __('Description'), __('PO No'), __('GRN')."#", __('Inv')."#", __('Qty'), __('Inv Price'), __('PO Price'), __('Total'));
 
 	$aligns = array('left',	'left',	'left', 'left', 'left', 'right', 'right', 'right', 'right');
 
     $params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'),'from' => $from, 'to' => $to));
+    				    1 => array('text' => __('Period'),'from' => $from, 'to' => $to));
 
-    $rep = new FrontReport(_('GRN Valuation Report'), "GRNValuationReport", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('GRN Valuation Report'), "GRNValuationReport", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -127,7 +127,7 @@ function print_grn_valuation()
 			{
 				$rep->Line($rep->row  - 4);
 				$rep->NewLine(2);
-				$rep->TextCol(0, 3, _('Total'));
+				$rep->TextCol(0, 3, __('Total'));
 				$rep->AmountCol(5, 6, $qtotal, $qdec);
 				$rep->AmountCol(8, 9, $total, $dec);
 				$rep->NewLine();
@@ -183,12 +183,12 @@ function print_grn_valuation()
 	{
 		$rep->Line($rep->row  - 4);
 		$rep->NewLine(2);
-		$rep->TextCol(0, 3, _('Total'));
+		$rep->TextCol(0, 3, __('Total'));
 		$rep->AmountCol(5, 6, $qtotal, $qdec);
 		$rep->AmountCol(8, 9, $total, $dec);
 		$rep->Line($rep->row  - 4);
 		$rep->NewLine(2);
-		$rep->TextCol(0, 7, _('Grand Total'));
+		$rep->TextCol(0, 7, __('Grand Total'));
 		$rep->AmountCol(8, 9, $grandtotal, $dec);
 	}
 

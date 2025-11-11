@@ -69,9 +69,9 @@ function print_sales_summary_report()
 	$orientation = $_POST['PARAM_4'];
 	$destination = $_POST['PARAM_5'];
 	if ($tax_id == 0)
-		$tid = _('No');
+		$tid = __('No');
 	else
-		$tid = _('Yes');
+		$tid = __('Yes');
 
 
 	if ($destination)
@@ -82,15 +82,15 @@ function print_sales_summary_report()
 
 	$dec = user_price_dec();
 
-	$rep = new FrontReport(_('Sales Summary Report'), "SalesSummaryReport", user_pagesize(), 9, $orientation);
+	$rep = new FrontReport(__('Sales Summary Report'), "SalesSummaryReport", user_pagesize(), 9, $orientation);
 
 	$params =   array( 	0 => $comments,
-						1 => array('text' => _('Period'), 'from' => $from, 'to' => $to),
-						2 => array(  'text' => _('Tax Id Only'),'from' => $tid,'to' => ''));
+						1 => array('text' => __('Period'), 'from' => $from, 'to' => $to),
+						2 => array(  'text' => __('Tax Id Only'),'from' => $tid,'to' => ''));
 
 	$cols = array(0, 130, 180, 270, 350, 500);
 
-	$headers = array(_('Customer'), _('Tax Id'), _('Total ex. Tax'), _('Tax'));
+	$headers = array(__('Customer'), __('Tax Id'), __('Total ex. Tax'), __('Tax'));
 	$aligns = array('left', 'left', 'right', 'right');
     if ($orientation == 'L')
     	recalculate_cols($cols);
@@ -103,7 +103,7 @@ function print_sales_summary_report()
 	$totaltax = 0.0;
 	$transactions = getTaxTransactions($from, $to, $tax_id);
 
-	$rep->TextCol(0, 4, _('Balances in Home Currency'));
+	$rep->TextCol(0, 4, __('Balances in Home Currency'));
 	$rep->NewLine(2);
 	
 	$custno = 0;
@@ -156,7 +156,7 @@ function print_sales_summary_report()
 	$rep->Font('bold');
 	$rep->NewLine();
 	$rep->Line($rep->row + $rep->lineHeight);
-	$rep->TextCol(0, 2,	_("Total"));
+	$rep->TextCol(0, 2,	__("Total"));
 	$rep->AmountCol(2, 3, $totalnet, $dec);
 	$rep->AmountCol(3, 4, $totaltax, $dec);
 	$rep->Line($rep->row - 5);

@@ -20,14 +20,14 @@ function display_dimension_balance($id, $from, $to)
 
     if (db_num_rows($result) == 0)
     {
-    	display_note(_("There are no transactions for this dimension for the selected period."));
+    	display_note(__("There are no transactions for this dimension for the selected period."));
     }
     else
     {
-		display_heading2(_("Balance for this Dimension"));
+		display_heading2(__("Balance for this Dimension"));
 		br();
 		start_table(TABLESTYLE);
-		$th = array(_("Account"), _("Debit"), _("Credit"));
+		$th = array(__("Account"), __("Debit"), __("Credit"));
 		table_header($th);
 
         $total = $k = 0;
@@ -41,7 +41,7 @@ function display_dimension_balance($id, $from, $to)
 			end_row();
 		}
 		start_row();
-		label_cell("<b>"._("Balance")."</b>");
+		label_cell("<b>".__("Balance")."</b>");
 		if ($total >= 0)
 		{
 			amount_cell($total, true);

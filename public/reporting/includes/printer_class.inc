@@ -36,7 +36,7 @@ class remote_printer {
         //Open a new connection to send the control file and data.
 		$stream = @fsockopen("tcp://".$this->host, $this->port, $errNo, $errStr, $this->timeout);
         if(!$stream){
-            return _('Cannot open connection to printer').":<br>$errStr";
+            return __('Cannot open connection to printer').":<br>$errStr";
         }
 		if (!isset($_SESSION['_print_job'])) {
 			$_SESSION['print_job'] = 0;
@@ -47,7 +47,7 @@ class remote_printer {
 		$ack = fread($stream, 1);
         if ($ack != 0) {
 			fclose($stream);
-           	return _('Printer does not acept the job').' ('.ord($ack).')';
+           	return __('Printer does not acept the job').' ('.ord($ack).')';
 		}
             
         // Send Control file.
@@ -58,14 +58,14 @@ class remote_printer {
         $ack = fread($stream, 1);
         if ($ack != 0) {
 			fclose($stream);
-            return _('Error sending print job control file').' ('.ord($ack).')';
+            return __('Error sending print job control file').' ('.ord($ack).')';
 		}
            
         fwrite($stream, $ctrl.chr(0)); //Write null to indicate end of stream
         $ack = fread($stream, 1);
         if ($ack != 0) {
 			fclose($stream);
-           	return _('Print control file not accepted').' ('.ord($ack).')';
+           	return __('Print control file not accepted').' ('.ord($ack).')';
 		}
                        
         $data = fopen($fname, "rb");    
@@ -73,7 +73,7 @@ class remote_printer {
         $ack = fread($stream, 1);
         if ($ack != 0) {
 			fclose($stream);
-           	return _('Cannot send report to printer').' ('.ord($ack).')';
+           	return __('Cannot send report to printer').' ('.ord($ack).')';
 		}
                 
         while(!feof($data)){
@@ -83,7 +83,7 @@ class remote_printer {
         $ack = fread($stream, 1);
         if ($ack != 0) {
 			fclose($stream);
-            return _('No ack after report printout').' ('.ord($ack).')';
+            return __('No ack after report printout').' ('.ord($ack).')';
 		}
              
         fclose($data);                
@@ -97,7 +97,7 @@ class remote_printer {
     function flush_queue($queue){
 		$stream = @fsockopen("tcp://".$this->host, $this->port,$errNo, $errStr, $this->timeout);
         if (!$stream){
-            return _('Cannot flush printing queue').":<br>$errStr";
+            return __('Cannot flush printing queue').":<br>$errStr";
 			// .':<br>' . $errNo." (".$errStr.")"; return 0 (success) even on failure
         } else {
             //Print any waiting jobs

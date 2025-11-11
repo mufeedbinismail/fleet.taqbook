@@ -16,7 +16,7 @@ require_once __DIR__ . "/../../includes/session.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
-page(_($GLOBALS['help_context'] = "View Work Order Costs"), true, false, "", $js);
+page(__($GLOBALS['help_context'] = "View Work Order Costs"), true, false, "", $js);
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/data_checks.inc";
@@ -56,27 +56,27 @@ function display_wo_costs($prod_id)
 	br(1);
     start_table(TABLESTYLE);
 
-	$th = array(_("Date"), _("Transaction"), _("Account Code"), _("Account Name"),
-		_("Debit"), _("Credit"), _("Memo"));
+	$th = array(__("Date"), __("Transaction"), __("Account Code"), __("Account Name"),
+		__("Debit"), __("Credit"), __("Memo"));
 
    	table_header($th);
 
 	$productions = get_gl_wo_productions($prod_id, true);
-	print_gl_rows($productions, _("Finished Product Requirements"));
+	print_gl_rows($productions, __("Finished Product Requirements"));
 
 	$issues = get_gl_wo_issue_trans($prod_id, -1, true);
-	print_gl_rows($issues, _("Additional Material Issues"));
+	print_gl_rows($issues, __("Additional Material Issues"));
 
     $costs = get_gl_wo_cost_trans($prod_id, -1, true);
-	print_gl_rows($costs, _("Additional Costs"));
+	print_gl_rows($costs, __("Additional Costs"));
 
 	$wo = get_gl_trans(ST_WORKORDER, $prod_id);
-	print_gl_rows($wo, _("Finished Product Receival"));
+	print_gl_rows($wo, __("Finished Product Receival"));
 	end_table(1);
 }
 
 //-------------------------------------------------------------------------------------------------
-display_heading(sprintf(_("Production Costs for Work Order # %d"), $wo_id));
+display_heading(sprintf(__("Production Costs for Work Order # %d"), $wo_id));
 
 display_wo_details($wo_id, true);
 

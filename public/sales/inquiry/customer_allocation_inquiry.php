@@ -29,7 +29,7 @@ if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($GLOBALS['help_context'] = "Customer Allocation Inquiry"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Customer Allocation Inquiry"), false, false, "", $js);
 
 if (isset($_GET['customer_id']))
 {
@@ -48,21 +48,21 @@ start_row();
 
 hidden('is_marketplace_trans', check_value('is_marketplace_trans'));
 if (check_value('is_marketplace_trans')) {
-    marketplace_list_cells(_("Marketplace:"), 'marketplace_id', null, true);
+    marketplace_list_cells(__("Marketplace:"), 'marketplace_id', null, true);
 }
-customer_list_cells(_("Select a customer: "), 'customer_id', $_POST['customer_id'], true);
+customer_list_cells(__("Select a customer: "), 'customer_id', $_POST['customer_id'], true);
 
 end_row();
 start_row();
 
-date_cells(_("from:"), 'TransAfterDate', '', null, -user_transaction_days());
-date_cells(_("to:"), 'TransToDate', '', null, 1);
+date_cells(__("from:"), 'TransAfterDate', '', null, -user_transaction_days());
+date_cells(__("to:"), 'TransToDate', '', null, 1);
 
-cust_allocations_list_cells(_("Type:"), 'filterType', null);
+cust_allocations_list_cells(__("Type:"), 'filterType', null);
 
-check_cells(" " . _("show settled:"), 'showSettled', null);
+check_cells(" " . __("show settled:"), 'showSettled', null);
 
-submit_cells('RefreshInquiry', _("Search"),'',_('Refresh Inquiry'), 'default');
+submit_cells('RefreshInquiry', __("Search"),'',__('Refresh Inquiry'), 'default');
 
 set_global_customer($_POST['customer_id']);
 
@@ -108,7 +108,7 @@ function alloc_link($row)
 {
     $marketplace_flg = check_value('is_marketplace_trans') ? "&Marketplace=Yes" : "";
 	$link = 
-	pager_link(_("Allocation"),
+	pager_link(__("Allocation"),
 		"/sales/allocations/customer_allocate.php?trans_no=" . $row["trans_no"] 
 		."&trans_type=" . $row["type"]."&debtor_no=" . $row["debtor_no"] . $marketplace_flg, ICON_ALLOC);
 
@@ -131,7 +131,7 @@ function alloc_link($row)
 		return '';
 	} elseif (($row["type"] == ST_SALESINVOICE && ($row['TotalAmount'] - $row['Allocated']) > 0) || 
 		($row["type"] == ST_JOURNAL && (ABS($row['TotalAmount']) - $row['Allocated']) > 0) || $row["type"] == ST_BANKPAYMENT)
-		return pager_link(_("Payment"),
+		return pager_link(__("Payment"),
 			"/sales/customer_payments.php?customer_id=".$row["debtor_no"]."&SInvoice=" . $row["trans_no"]."&Type=".$row["type"].$marketplace_flg, ICON_MONEY);
 
 }
@@ -166,29 +166,29 @@ $sql = get_sql_for_customer_allocation_inquiry(
 
 //------------------------------------------------------------------------------------------------
 $cols = array(
-	_("Type") => array('fun'=>'systype_name'),
-	_("#") => array('fun'=>'view_link', 'align'=>'right'),
-	_("Reference"), 
-	_("Tracking No"), 
-	_("Order") => array('fun'=>'order_link', 'ord'=>'', 'align'=>'right'), 
-	_("Date") => array('name'=>'tran_date', 'type'=>'date', 'ord'=>'asc'),
-	_("Due Date") => array('type'=>'date', 'fun'=>'due_date'),
-	_("Customer") => array('name' =>'name',  'ord'=>'asc'), 
-	_("Currency") => array('align'=>'center'),
-	_("Debit") => array('align'=>'right','fun'=>'fmt_debit'), 
-	_("Credit") => array('align'=>'right','insert'=>true, 'fun'=>'fmt_credit'), 
-	_("Allocated") => 'amount', 
-	_("Balance") => array('type'=>'amount', 'insert'=>true, 'fun'=>'fmt_balance'),
+	__("Type") => array('fun'=>'systype_name'),
+	__("#") => array('fun'=>'view_link', 'align'=>'right'),
+	__("Reference"), 
+	__("Tracking No"), 
+	__("Order") => array('fun'=>'order_link', 'ord'=>'', 'align'=>'right'), 
+	__("Date") => array('name'=>'tran_date', 'type'=>'date', 'ord'=>'asc'),
+	__("Due Date") => array('type'=>'date', 'fun'=>'due_date'),
+	__("Customer") => array('name' =>'name',  'ord'=>'asc'), 
+	__("Currency") => array('align'=>'center'),
+	__("Debit") => array('align'=>'right','fun'=>'fmt_debit'), 
+	__("Credit") => array('align'=>'right','insert'=>true, 'fun'=>'fmt_credit'), 
+	__("Allocated") => 'amount', 
+	__("Balance") => array('type'=>'amount', 'insert'=>true, 'fun'=>'fmt_balance'),
 	array('insert'=>true, 'fun'=>'alloc_link')
 	);
 
 if ($_POST['customer_id'] != ALL_TEXT) {
-	$cols[_("Customer")] = 'skip';
-	$cols[_("Currency")] = 'skip';
+	$cols[__("Customer")] = 'skip';
+	$cols[__("Currency")] = 'skip';
 }
 
 $table =& new_db_pager('doc_tbl', $sql, $cols);
-$table->set_marker('check_overdue', _("Marked items are overdue."));
+$table->set_marker('check_overdue', __("Marked items are overdue."));
 
 $table->width = "80%";
 

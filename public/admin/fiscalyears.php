@@ -21,7 +21,7 @@ require_once __DIR__ . "/../admin/db/maintenance_db.inc";
 $js = "";
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($GLOBALS['help_context'] = "Fiscal Years"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Fiscal Years"), false, false, "", $js);
 
 simple_page_mode(true);
 //---------------------------------------------------------------------------------------------
@@ -30,25 +30,25 @@ function check_data()
 {
 	if (!is_date($_POST['from_date']) || is_date_in_fiscalyears($_POST['from_date']))
 	{
-		display_error( _("Invalid BEGIN date in fiscal year."));
+		display_error( __("Invalid BEGIN date in fiscal year."));
 		set_focus('from_date');
 		return false;
 	}
 	if (!is_date($_POST['to_date']) || is_date_in_fiscalyears($_POST['to_date']))
 	{
-		display_error( _("Invalid END date in fiscal year."));
+		display_error( __("Invalid END date in fiscal year."));
 		set_focus('to_date');
 		return false;
 	}
 	if (!check_begin_end_date($_POST['from_date'], $_POST['to_date']))
 	{
-		display_error( _("Invalid BEGIN or END date in fiscal year."));
+		display_error( __("Invalid BEGIN or END date in fiscal year."));
 		set_focus('from_date');
 		return false;
 	}
 	if (date1_greater_date2($_POST['from_date'], $_POST['to_date']))
 	{
-		display_error( _("BEGIN date bigger than END date."));
+		display_error( __("BEGIN date bigger than END date."));
 		set_focus('from_date');
 		return false;
 	}
@@ -66,7 +66,7 @@ function handle_submit()
 		{
 			if (check_years_before($_POST['from_date'], false))
 			{
-				display_error( _("Cannot CLOSE this year because there are open fiscal years before"));
+				display_error( __("Cannot CLOSE this year because there are open fiscal years before"));
 				set_focus('closed');
 				return false;
 			}	
@@ -77,7 +77,7 @@ function handle_submit()
 		if ($ok)
 		{
    			update_fiscalyear($selected_id, $_POST['closed']);
-			display_notification(_('Selected fiscal year has been updated'));
+			display_notification(__('Selected fiscal year has been updated'));
 		}	
 	}
 	else
@@ -85,7 +85,7 @@ function handle_submit()
 		if (!check_data())
 			return false;
    		add_fiscalyear($_POST['from_date'], $_POST['to_date'], $_POST['closed']);
-		display_notification(_('New fiscal year has been added'));
+		display_notification(__('New fiscal year has been added'));
 	}
 	$Mode = 'RESET';
 }
@@ -98,12 +98,12 @@ function check_can_delete($selected_id)
 	// PREVENT DELETES IF DEPENDENT RECORDS IN gl_trans
 	if (check_years_before(sql2date($myrow['begin']), true))
 	{
-		display_error(_("Cannot delete this fiscal year because there are fiscal years before."));
+		display_error(__("Cannot delete this fiscal year because there are fiscal years before."));
 		return false;
 	}
 	if ($myrow['closed'] == 0)
 	{
-		display_error(_("Cannot delete this fiscal year because the fiscal year is not closed."));
+		display_error(__("Cannot delete this fiscal year because the fiscal year is not closed."));
 		return false;
 	}
 	return true;
@@ -116,7 +116,7 @@ function handle_delete()
 	if (check_can_delete($selected_id)) {
 	//only delete if used in neither customer or supplier, comp prefs, bank trans accounts
 		delete_this_fiscalyear($selected_id);
-		display_notification(_('Selected fiscal year has been deleted'));
+		display_notification(__('Selected fiscal year has been deleted'));
 	}
 	$Mode = 'RESET';
 }
@@ -129,12 +129,12 @@ function display_fiscalyears()
 
 	$result = get_all_fiscalyears();
 	start_form();
-	display_note(_("Warning: Deleting a fiscal year all transactions 
+	display_note(__("Warning: Deleting a fiscal year all transactions 
 		are removed and converted into relevant balances. This process is irreversible!"), 
 		0, 1, "class='currentfg'");
 	start_table(TABLESTYLE);
 
-	$th = array(_("Fiscal Year Begin"), _("Fiscal Year End"), _("Closed"), "", "");
+	$th = array(__("Fiscal Year Begin"), __("Fiscal Year End"), __("Closed"), "", "");
 	table_header($th);
 
 	$k=0;
@@ -151,20 +151,20 @@ function display_fiscalyears()
 		$to = sql2date($myrow["end"]);
 		if ($myrow["closed"] == 0)
 		{
-			$closed_text = _("No");
+			$closed_text = __("No");
 		}
 		else
 		{
-			$closed_text = _("Yes");
+			$closed_text = __("Yes");
 		}
 		label_cell($from);
 		label_cell($to);
 		label_cell($closed_text);
-	 	edit_button_cell("Edit".$myrow['id'], _("Edit"));
+	 	edit_button_cell("Edit".$myrow['id'], __("Edit"));
 		if ($myrow["id"] != $company_year) {
- 			delete_button_cell("Delete".$myrow['id'], _("Delete"));
+ 			delete_button_cell("Delete".$myrow['id'], __("Delete"));
 			submit_js_confirm("Delete".$myrow['id'],
-				sprintf(_("Are you sure you want to delete fiscal year %s - %s? All transactions are deleted and converted into relevant balances. Do you want to continue ?"), $from, $to));
+				sprintf(__("Are you sure you want to delete fiscal year %s - %s? All transactions are deleted and converted into relevant balances. Do you want to continue ?"), $from, $to));
 		} else
 			label_cell('');
 		end_row();
@@ -172,7 +172,7 @@ function display_fiscalyears()
 
 	end_table();
 	end_form();
-	display_note(_("The marked fiscal year is the current fiscal year which cannot be deleted."), 0, 0, "class='currentfg'");
+	display_note(__("The marked fiscal year is the current fiscal year which cannot be deleted."), 0, 0, "class='currentfg'");
 }
 
 //---------------------------------------------------------------------------------------------
@@ -196,8 +196,8 @@ function display_fiscalyear_edit($selected_id)
 		}
 		hidden('from_date');
 		hidden('to_date');
-		label_row(_("Fiscal Year Begin:"), $_POST['from_date']);
-		label_row(_("Fiscal Year End:"), $_POST['to_date']);
+		label_row(__("Fiscal Year Begin:"), $_POST['from_date']);
+		label_row(__("Fiscal Year End:"), $_POST['to_date']);
 	}
 	else
 	{
@@ -207,12 +207,12 @@ function display_fiscalyear_edit($selected_id)
 			$_POST['from_date'] = $begin;
 			$_POST['to_date'] = end_month(add_months($begin, 11));
 		}
-		date_row(_("Fiscal Year Begin:"), 'from_date', '', null, 0, 0, 1001);
-		date_row(_("Fiscal Year End:"), 'to_date', '', null, 0, 0, 1001);
+		date_row(__("Fiscal Year Begin:"), 'from_date', '', null, 0, 0, 1001);
+		date_row(__("Fiscal Year End:"), 'to_date', '', null, 0, 0, 1001);
 	}
 	hidden('selected_id', $selected_id);
 
-	yesno_list_row(_("Is Closed:"), 'closed', null, "", "", false);
+	yesno_list_row(__("Is Closed:"), 'closed', null, "", "", false);
 
 	end_table(1);
 

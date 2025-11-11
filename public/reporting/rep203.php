@@ -65,7 +65,7 @@ function print_payment_report()
 
 	$orientation = ($orientation ? 'L' : 'P');
 	if ($fromsupp == ALL_TEXT)
-		$from = _('All');
+		$from = __('All');
 	else
 		$from = get_supplier_name($fromsupp);
 
@@ -74,28 +74,28 @@ function print_payment_report()
 	if ($currency == ALL_TEXT)
 	{
 		$convert = true;
-		$currency = _('Balances in Home Currency');
+		$currency = __('Balances in Home Currency');
 	}
 	else
 		$convert = false;
 
-	if ($no_zeros) $nozeros = _('Yes');
-	else $nozeros = _('No');
+	if ($no_zeros) $nozeros = __('Yes');
+	else $nozeros = __('No');
 
 	$cols = array(0, 100, 160, 210,	250, 320, 385, 450,	515);
 
-	$headers = array(_('Trans Type'), _('#'), _('Due Date'), '', '',
-		'', _('Total'), _('Balance'));
+	$headers = array(__('Trans Type'), __('#'), __('Due Date'), '', '',
+		'', __('Total'), __('Balance'));
 
 	$aligns = array('left',	'left',	'left',	'left',	'right', 'right', 'right', 'right');
 
     $params =   array( 	0 => $comments,
-    			1 => array('text' => _('End Date'), 'from' => $to, 'to' => ''),
-    			2 => array('text' => _('Supplier'), 'from' => $from, 'to' => ''),
-    			3 => array(  'text' => _('Currency'),'from' => $currency, 'to' => ''),
-				4 => array('text' => _('Suppress Zeros'), 'from' => $nozeros, 'to' => ''));
+    			1 => array('text' => __('End Date'), 'from' => $to, 'to' => ''),
+    			2 => array('text' => __('Supplier'), 'from' => $from, 'to' => ''),
+    			3 => array(  'text' => __('Currency'),'from' => $currency, 'to' => ''),
+				4 => array('text' => __('Suppress Zeros'), 'from' => $nozeros, 'to' => ''));
 
-    $rep = new FrontReport(_('Payment Report'), "PaymentReport", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Payment Report'), "PaymentReport", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -122,7 +122,7 @@ function print_payment_report()
 		if ($no_zeros && db_num_rows($res)==0) continue;
 
 		$rep->fontSize += 2;
-		$rep->TextCol(0, 6, $myrow['name'].($myrow['inactive']==1 ? " ("._("Inactive").")" : "") . " - " . $myrow['terms']);
+		$rep->TextCol(0, 6, $myrow['name'].($myrow['inactive']==1 ? " (".__("Inactive").")" : "") . " - " . $myrow['terms']);
 		if ($convert)
 			$rep->TextCol(6, 7,	$myrow['curr_code']);
 		$rep->fontSize -= 2;
@@ -162,7 +162,7 @@ function print_payment_report()
 		}
 		$rep->Line($rep->row - 8);
 		$rep->NewLine(2);
-		$rep->TextCol(0, 3,	_('Total'));
+		$rep->TextCol(0, 3,	__('Total'));
 		for ($i = 0; $i < 2; $i++)
 		{
 			$rep->AmountCol($i + 6, $i + 7, $total[$i], $dec);
@@ -172,7 +172,7 @@ function print_payment_report()
     	$rep->NewLine(2);
 	}
 	$rep->fontSize += 2;
-	$rep->TextCol(0, 3,	_('Grand Total'));
+	$rep->TextCol(0, 3,	__('Grand Total'));
 	$rep->fontSize -= 2;
 	for ($i = 0; $i < 2; $i++)
 		$rep->AmountCol($i + 6, $i + 7,$grandtotal[$i], $dec);

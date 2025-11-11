@@ -321,7 +321,7 @@ function adjust_deliveries($stock_id, $material_cost, $to)
 			$cart->tran_date = end_fiscalyear();
 		$cart->reference = $Refs->get_next(ST_COSTUPDATE, null, $cart->tran_date, $to);
 
-		$cart->memo_ = _("Cost was ") . $old_cost. _(" changed to ") . $new_cost . _(" for item ")."'$stock_id'";
+		$cart->memo_ = __("Cost was ") . $old_cost. __(" changed to ") . $new_cost . __(" for item ")."'$stock_id'";
 
 		$cart->add_gl_item($stock_gl_code["cogs_account"], $stock_gl_code["dimension_id"], $stock_gl_code["dimension2_id"], $diff);
 		$cart->add_gl_item($stock_gl_code["inventory_account"], 0, 0, -$diff);
@@ -381,7 +381,7 @@ function handle_negative_inventory($stock_id, $quantity, $standard_cost, $date_)
 			$Refs->save(ST_JOURNAL, $id, $ref);
 
 			$stock_gl_code = get_stock_gl_code($stock_id);
-			$memo = _("Zero/negative inventory handling");
+			$memo = __("Zero/negative inventory handling");
 			//Reverse the inventory effect if $qoh <=0
 			add_gl_trans_std_cost(ST_JOURNAL, $id, $date_, 
 				$stock_gl_code["inventory_account"],

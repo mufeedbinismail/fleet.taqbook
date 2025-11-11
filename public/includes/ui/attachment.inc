@@ -70,7 +70,7 @@ class attachments extends simple_crud {
 			$attachments[] = $row;
 
 		start_table(TABLESTYLE, "width=80%");
-		$th = array(_("ID"), _("Doc Title"), _("Filename"), _("Size"), _("Filetype"), _("Doc Date"),  "",  "", "", "");	
+		$th = array(__("ID"), __("Doc Title"), __("Filename"), __("Size"), __("Filetype"), __("Doc Date"),  "",  "", "", "");	
 		table_header($th);	
 		if($attachments){	
 			foreach($attachments as $de) {
@@ -80,11 +80,11 @@ class attachments extends simple_crud {
 				label_cell($de['filesize']);
 				label_cell($de['filetype']);
 				label_cell(sql2date($de['tran_date']));
-				edit_button_cell("{$this->name}Edit[{$de['id']}]", _("Edit"));
+				edit_button_cell("{$this->name}Edit[{$de['id']}]", __("Edit"));
 				label_cell('<a target="_blank" class="viewlink" href="'.url('/admin/attachments.php', ['vw' => $de['id']]).'" onclick="javascript:openWindow(this.href,this.target); return false;" accesskey="V"><img src="'.url('/themes/'.user_theme().'/images/view.gif').'" style="vertical-align:middle;width:12px;height:12px;border:0;"></a>', 'style="text-align: center;" ');
-				button_cell("{$this->name}Download[{$de['id']}]", _("Download"), false, ICON_DOWN);
+				button_cell("{$this->name}Download[{$de['id']}]", __("Download"), false, ICON_DOWN);
 				
-				delete_button_cell("{$this->name}Delete[{$de['id']}]", _("Delete"));
+				delete_button_cell("{$this->name}Delete[{$de['id']}]", __("Delete"));
 				end_row();	
 			}
 		}
@@ -98,7 +98,7 @@ class attachments extends simple_crud {
 		start_outer_table(TABLESTYLE);
 	
 		table_section(1);
-		table_section_title(_("Attachment Detail"));
+		table_section_title(__("Attachment Detail"));
 		
 		if($this->selected_id != null && $this->selected_id != "") {
 			$sql = "SELECT * FROM ".TB_PREF."attachments WHERE id = ".db_escape($this->selected_id);
@@ -117,22 +117,22 @@ class attachments extends simple_crud {
 
 		
 		if($type_no==ST_CUSTOMER) // 5
-			$id_word = _("Customer ID");
+			$id_word = __("Customer ID");
 		elseif($type_no==ST_SUPPLIER) // 6
-			$id_word = _("Supplier ID");
+			$id_word = __("Supplier ID");
 		elseif($type_no==ST_ITEM) 
-			$id_word = _("Item ID");
+			$id_word = __("Item ID");
 		elseif($type_no==ST_FIXEDASSET) 
-			$id_word = _("Fixed Asset ID");
+			$id_word = __("Fixed Asset ID");
 		elseif($type_no==ST_BANKACCOUNT) 
-			$id_word = _("Bank Account ID");
+			$id_word = __("Bank Account ID");
 
-		label_row(_($id_word), $_POST['trans_no']);	
-		date_row(_("Date"), 'tran_date');
-		text_row_ex(_("Doc Title").':', 'description', 40);
+		label_row(__($id_word), $_POST['trans_no']);	
+		date_row(__("Date"), 'tran_date');
+		text_row_ex(__("Doc Title").':', 'description', 40);
 		if ($this->selected_id)
-			label_row(_("File:"), sprintf(_("%s [%s bytes]"), $row['filename'], $row['filesize']));
-		file_row( ($this->selected_id ? _("File change") : _("Select file")) . ":", 'file_attachment_name', 'file_attachment_name');
+			label_row(__("File:"), sprintf(__("%s [%s bytes]"), $row['filename'], $row['filesize']));
+		file_row( ($this->selected_id ? __("File change") : __("Select file")) . ":", 'file_attachment_name', 'file_attachment_name');
 		hidden('type_no', $_GET['type_no']);
 		end_outer_table(1);	
 		div_end();
@@ -155,15 +155,15 @@ class attachments extends simple_crud {
 		echo "<center>";
 
 		if ($this->Mode == '' || $this->Mode == 'RESET')
-			submit("{$base}NEW", _("Add new"), true, $title, $async);
+			submit("{$base}NEW", __("Add new"), true, $title, $async);
 		else {
 			if ($this->Mode == 'NEW' || $this->selected_id==$this->_none)
 				
-				submit("{$base}ADD", _("Add"), true, $title, $async);
+				submit("{$base}ADD", __("Add"), true, $title, $async);
 			else {
-				submit("{$base}UPDATE[{$this->selected_id}]", _("Update"), true, _("Submit changes"), $async);				
+				submit("{$base}UPDATE[{$this->selected_id}]", __("Update"), true, __("Submit changes"), $async);				
 			}
-			submit("{$base}RESET", _("Cancel"), true, _("Cancel edition"), $cancel);
+			submit("{$base}RESET", __("Cancel"), true, __("Cancel edition"), $cancel);
 		}
 		echo "</center>";
 	}
@@ -199,7 +199,7 @@ class attachments extends simple_crud {
 			if (file_exists($filename)){
 				$result = unlink($filename);
 				if (!$result) 	{
-					display_error(_('The existing Docs could not be removed'));
+					display_error(__('The existing Docs could not be removed'));
 					$upload_file ='No';
 				}
 			}	
@@ -216,7 +216,7 @@ class attachments extends simple_crud {
 					   . db_escape($filesize) . ","
 					   . db_escape($filetype) . ")";
 				if(db_query($sql, 'Could not add Attachment'))
-					display_notification(_("A New Attachment Added Successfully"));
+					display_notification(__("A New Attachment Added Successfully"));
 			}
 		}
 	}
@@ -250,7 +250,7 @@ class attachments extends simple_crud {
 			if (file_exists($filename)){
 				$result = unlink($filename);
 				if (!$result) 	{
-					display_error(_('The existing Docs could not be removed'));
+					display_error(__('The existing Docs could not be removed'));
 					$upload_file ='No';
 				}
 			}
@@ -271,12 +271,12 @@ class attachments extends simple_crud {
 					. "`filetype` = " . db_escape($filetype);
 			$sql .=  " WHERE id = " . db_escape($this->selected_id);
 				if(db_query($sql, "Could not Update Attachment $this->selected_id"))
-					display_notification(_("The Selected Attachment $this->selected_id Updated Successfully"));
+					display_notification(__("The Selected Attachment $this->selected_id Updated Successfully"));
 	}
 
 	function insert_check() {
 		if (strlen($_POST['description']) == 0) {
-			display_error(_("Description cannot be empty."));
+			display_error(__("Description cannot be empty."));
 			set_focus('description');
 			return false;
 		}
@@ -306,7 +306,7 @@ class attachments extends simple_crud {
 
 		$sql = "DELETE FROM ".TB_PREF."attachments WHERE id = ".db_escape($this->selected_id);
 		if(db_query($sql, "Could not Delete Attachment $this->selected_id"))
-			display_notification(_("The Selected Attachment is Deleted Successfully"));
+			display_notification(__("The Selected Attachment is Deleted Successfully"));
 		return false;
 	}
 }

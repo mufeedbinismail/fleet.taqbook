@@ -75,11 +75,11 @@ function print_supplier_details_listing()
     $dec = 0;
 
 	if ($more != '')
-		$morestr = _('Greater than ') . number_format2($more, $dec);
+		$morestr = __('Greater than ') . number_format2($more, $dec);
 	else
 		$morestr = '';
 	if ($less != '')
-		$lessstr = _('Less than ') . number_format2($less, $dec);
+		$lessstr = __('Less than ') . number_format2($less, $dec);
 	else
 		$lessstr = '';
 
@@ -88,16 +88,16 @@ function print_supplier_details_listing()
 
 	$cols = array(0, 150, 300, 425, 550);
 
-	$headers = array(_('Mailing Address:'), _('Turnover'),	_('Contact Information'),
-		_('Physical Address'));
+	$headers = array(__('Mailing Address:'), __('Turnover'),	__('Contact Information'),
+		__('Physical Address'));
 
 	$aligns = array('left',	'left',	'left',	'left');
 
     $params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Activity Since'), 	'from' => $from, 		'to' => ''),
-    				    2 => array('text' => _('Activity'), 		'from' => $morestr, 	'to' => $lessstr . " " . get_company_pref("curr_default")));
+    				    1 => array('text' => __('Activity Since'), 	'from' => $from, 		'to' => ''),
+    				    2 => array('text' => __('Activity'), 		'from' => $morestr, 	'to' => $lessstr . " " . get_company_pref("curr_default")));
 
-    $rep = new FrontReport(_('Supplier Details Listing'), "SupplierDetailsListing", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Supplier Details Listing'), "SupplierDetailsListing", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -125,7 +125,7 @@ function print_supplier_details_listing()
 			// Here starts the new report lines
 			$contacts = get_supplier_contacts($myrow['supplier_id']);
 			$rep->TextCol(0, 1,	$myrow['supp_name']);
-			$rep->TextCol(1, 2,	_('Tax_Id') . ": " . $myrow['gst_no']);
+			$rep->TextCol(1, 2,	__('Tax_Id') . ": " . $myrow['gst_no']);
 			$rep->TextCol(2, 3,	$myrow['contact']);
 			$rep->NewLine();
 			$adr = Explode("\n", $myrow['address']);
@@ -136,7 +136,7 @@ function print_supplier_details_listing()
 			$count1 = max($count1, 4); 
 			if (isset($adr[0]))
 				$rep->TextCol(0, 1, $adr[0]);
-			$rep->TextCol(1, 2,	_('Currency') . ": " . $myrow['curr_code']);
+			$rep->TextCol(1, 2,	__('Currency') . ": " . $myrow['curr_code']);
 			if (isset($contacts[0]))
 				$rep->TextCol(2, 3, $contacts[0]['name']. " " .$contacts[0]['name2']);
 			if (isset($adr2[0]))	
@@ -147,10 +147,10 @@ function print_supplier_details_listing()
 			if ($myrow['dimension_id'] != 0)
 			{
 				$dim = get_dimension($myrow['dimension_id']);
-				$rep->TextCol(1, 2,	_('Dimension') . ": " . $dim['name']);
+				$rep->TextCol(1, 2,	__('Dimension') . ": " . $dim['name']);
 			}		
 			if (isset($contacts[0]))
-				$rep->TextCol(2, 3, _('Ph') . ": " . $contacts[0]['phone']);
+				$rep->TextCol(2, 3, __('Ph') . ": " . $contacts[0]['phone']);
 			if (isset($adr2[1]))
 				$rep->TextCol(3, 4, $adr2[1]);
 			$rep->NewLine();
@@ -159,29 +159,29 @@ function print_supplier_details_listing()
 			if ($myrow['dimension2_id'] != 0)
 			{
 				$dim = get_dimension($myrow['dimension2_id']);
-				$rep->TextCol(1, 2,	_('Dimension') . " 2: " . $dim['name']);
+				$rep->TextCol(1, 2,	__('Dimension') . " 2: " . $dim['name']);
 			}
 			if ($myrow['notes'] != '')
 			{
 				$oldrow = $rep->row;
 				$rep->NewLine();
-				$rep->TextColLines(1, 2, _("General Notes:")." ".$myrow['notes'], -2);
+				$rep->TextColLines(1, 2, __("General Notes:")." ".$myrow['notes'], -2);
 				$newrow = $rep->row;
 				$rep->row = $oldrow;
 			}	
 			if (isset($contacts[0]))
-				$rep->TextCol(2, 3, _('Fax') . ": " . $contacts[0]['fax']);
+				$rep->TextCol(2, 3, __('Fax') . ": " . $contacts[0]['fax']);
 			if (isset($adr2[2]))
 				$rep->TextCol(3, 4, $adr2[2]);
 			if ($more != 0.0 || $less != 0.0)
-				$rep->TextCol(1, 2,	_('Turnover') . ": " . number_format2($turnover, $dec));
+				$rep->TextCol(1, 2,	__('Turnover') . ": " . number_format2($turnover, $dec));
 			for ($i = 3; $i < $count1; $i++)
 			{
 				$rep->NewLine();
 				if (isset($adr[$i]))
 					$rep->TextCol(0, 1, $adr[$i]);
 				if ($i == 3 && isset($contacts[0]) && isset($contacts[0]['email']))	
-					$rep->TextCol(2, 3, _('Email') . ": " . $contacts[0]['email']);
+					$rep->TextCol(2, 3, __('Email') . ": " . $contacts[0]['email']);
 				if (isset($adr2[$i]))
 					$rep->TextCol(3, 4, $adr2[$i]);
 			}	

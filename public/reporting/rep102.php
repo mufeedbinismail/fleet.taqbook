@@ -85,51 +85,51 @@ function print_aged_customer_analysis()
 	}
 
 	if ($fromcust == ALL_TEXT)
-		$from = _('All');
+		$from = __('All');
 	else
 		$from = get_customer_name($fromcust);
     	$dec = user_price_dec();
 
 	if ($summaryOnly == 1)
-		$summary = _('Summary Only');
+		$summary = __('Summary Only');
 	else
-		$summary = _('Detailed Report');
+		$summary = __('Detailed Report');
 	if ($currency == ALL_TEXT)
 	{
 		$convert = true;
-		$currency = _('Balances in Home Currency');
+		$currency = __('Balances in Home Currency');
 	}
 	else
 		$convert = false;
 
-	if ($no_zeros) $nozeros = _('Yes');
-	else $nozeros = _('No');
-	if ($show_all) $show = _('Yes');
-	else $show = _('No');
+	if ($no_zeros) $nozeros = __('Yes');
+	else $nozeros = __('No');
+	if ($show_all) $show = __('Yes');
+	else $show = __('No');
 
 	$PastDueDays1 = get_company_pref('past_due_days');
 	$PastDueDays2 = 2 * $PastDueDays1;
-	$nowdue = "1-" . $PastDueDays1 . " " . _('Days');
-	$pastdue1 = $PastDueDays1 + 1 . "-" . $PastDueDays2 . " " . _('Days');
-	$pastdue2 = _('Over') . " " . $PastDueDays2 . " " . _('Days');
+	$nowdue = "1-" . $PastDueDays1 . " " . __('Days');
+	$pastdue1 = $PastDueDays1 + 1 . "-" . $PastDueDays2 . " " . __('Days');
+	$pastdue2 = __('Over') . " " . $PastDueDays2 . " " . __('Days');
 
 	$cols = array(0, 100, 130, 190,	250, 320, 385, 450,	515);
-	$headers = array(_('Customer'),	'',	'',	_('Current'), $nowdue, $pastdue1, $pastdue2,
-		_('Total Balance'));
+	$headers = array(__('Customer'),	'',	'',	__('Current'), $nowdue, $pastdue1, $pastdue2,
+		__('Total Balance'));
 
 	$aligns = array('left',	'left',	'left',	'right', 'right', 'right', 'right',	'right');
 
     	$params =   array( 	0 => $comments,
-    				1 => array('text' => _('End Date'), 'from' => $to, 'to' => ''),
-    				2 => array('text' => _('Customer'),	'from' => $from, 'to' => ''),
-    				3 => array('text' => _('Currency'), 'from' => $currency, 'to' => ''),
-                    		4 => array('text' => _('Type'),		'from' => $summary,'to' => ''),
-                    5 => array('text' => _('Show Also Allocated'), 'from' => $show, 'to' => ''),		
-				6 => array('text' => _('Suppress Zeros'), 'from' => $nozeros, 'to' => ''));
+    				1 => array('text' => __('End Date'), 'from' => $to, 'to' => ''),
+    				2 => array('text' => __('Customer'),	'from' => $from, 'to' => ''),
+    				3 => array('text' => __('Currency'), 'from' => $currency, 'to' => ''),
+                    		4 => array('text' => __('Type'),		'from' => $summary,'to' => ''),
+                    5 => array('text' => __('Show Also Allocated'), 'from' => $show, 'to' => ''),		
+				6 => array('text' => __('Suppress Zeros'), 'from' => $nozeros, 'to' => ''));
 
 	if ($convert)
-		$headers[2] = _('Currency');
-    $rep = new FrontReport(_('Aged Customer Analysis'), "AgedCustomerAnalysis", user_pagesize(), 9, $orientation);
+		$headers[2] = __('Currency');
+    $rep = new FrontReport(__('Aged Customer Analysis'), "AgedCustomerAnalysis", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -167,7 +167,7 @@ function print_aged_customer_analysis()
 		if ($no_zeros && floatcmp(array_sum($str), 0) == 0) continue;
 
 		$rep->fontSize += 2;
-		$rep->TextCol(0, 2, $myrow["name"].($myrow['inactive']==1 ? " ("._("Inactive").")" : ""));
+		$rep->TextCol(0, 2, $myrow["name"].($myrow['inactive']==1 ? " (".__("Inactive").")" : ""));
 		if ($convert) $rep->TextCol(2, 3,	$myrow['curr_code']);
 		$rep->fontSize -= 2;
 		$total[0] += ($custrec["Balance"] - $custrec["Due"]);
@@ -211,7 +211,7 @@ function print_aged_customer_analysis()
     	$rep->NewLine();
 	}
 	$rep->fontSize += 2;
-	$rep->TextCol(0, 3, _('Grand Total'));
+	$rep->TextCol(0, 3, __('Grand Total'));
 	$rep->fontSize -= 2;
 	$serie = array();
 	for ($i = 0; $i < count($total); $i++)
@@ -226,11 +226,11 @@ function print_aged_customer_analysis()
    	if ($graphics)
    	{
 		$pg->setStream('png');
-		$pg->addSerie(_('Balances'), $serie);
-		$pg->setLabels(array(_('Current'), $nowdue, $pastdue1, $pastdue2));
+		$pg->addSerie(__('Balances'), $serie);
+		$pg->setLabels(array(__('Current'), $nowdue, $pastdue1, $pastdue2));
 		$pg->setTitle($rep->title);
-		$pg->setXTitle(_("Days"));
-		$pg->setYTitle(_("Amount"));
+		$pg->setXTitle(__("Days"));
+		$pg->setYTitle(__("Amount"));
 		$pg->setDTitle(number_format2($total[4]));
 		$pg->setValues(true);
 		$pg->latin_notation = ($SysPrefs->decseps[user_dec_sep()] != ".");

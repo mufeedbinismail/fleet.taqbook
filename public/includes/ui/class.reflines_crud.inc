@@ -34,8 +34,8 @@ class fa_reflines extends simple_crud_view {
 
 		start_table(TABLESTYLE);
 
-		$th = array(_("Transaction type"), _("Prefix"),
-			_("Pattern"), _("Default"), _("Memo"),  "", "");
+		$th = array(__("Transaction type"), __("Prefix"),
+			__("Pattern"), __("Default"), __("Memo"),  "", "");
 
 		inactive_control_column($th);
 
@@ -53,7 +53,7 @@ class fa_reflines extends simple_crud_view {
 			label_cell($systypes_array[$rec['trans_type']]);
 			label_cell($rec['prefix']);
 			label_cell($rec['pattern']);
-			label_cell($rec['default'] ? _("Yes") : _("No"));
+			label_cell($rec['default'] ? __("Yes") : __("No"));
 			label_cell($rec['description']);
 
 			if (check_value('show_inactive') && $rec['default'])
@@ -87,22 +87,22 @@ class fa_reflines extends simple_crud_view {
 
 		if ($fresh)
 		{
-			systypes_list_row(_("Transaction Type:"), $this->name.'trans_type');
+			systypes_list_row(__("Transaction Type:"), $this->name.'trans_type');
 			$prefix = text_input($this->name.'prefix', null, 5, 30);
 		} else {
-			label_row(_("Transaction Type:"), $systypes_array[get_post($this->name.'trans_type')]);
+			label_row(__("Transaction Type:"), $systypes_array[get_post($this->name.'trans_type')]);
 			hidden($this->name.'trans_type');
 			$prefix = get_post($this->name.'prefix') . hidden($this->name.'prefix');
 		}
 
-		label_row(_("Reference Pattern:"), $prefix . text_input($this->name.'pattern', null, 30, 60));
+		label_row(__("Reference Pattern:"), $prefix . text_input($this->name.'pattern', null, 30, 60));
 
 		if (get_post($this->name.'default'))
-			{ label_row(_("Default for This Type:"), _("Yes")); hidden($this->name.'default', 1); }
+			{ label_row(__("Default for This Type:"), __("Yes")); hidden($this->name.'default', 1); }
 		else
-			check_row(_("Set as Default for This Type:"), $this->name.'default');
+			check_row(__("Set as Default for This Type:"), $this->name.'default');
 
-		text_row_ex(_("Memo:"), $this->name.'description', 30, 60);
+		text_row_ex(__("Memo:"), $this->name.'description', 30, 60);
 
 		end_table(1);
 		hidden($this->name.'selected_id', $selected_id);

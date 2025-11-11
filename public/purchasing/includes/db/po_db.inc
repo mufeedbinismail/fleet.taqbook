@@ -159,7 +159,7 @@ function update_po(&$po_obj)
 
 	reallocate_payments($po_obj->order_no, ST_PURCHORDER, $po_obj->orig_order_date, $po_obj->get_trans_total(), $po_obj->prepayments, $po_obj->supplier_id);
 
-	add_audit_trail($po_obj->trans_type, $po_obj->order_no, Today(), _("Updated."));
+	add_audit_trail($po_obj->trans_type, $po_obj->order_no, Today(), __("Updated."));
 	commit_transaction();
 
 	return $po_obj->order_no;

@@ -476,7 +476,7 @@ class Cart
 			$this->line_items[$line_no] = $line;
 			return 1;
 		} else
-			display_error(_("You have to enter valid stock code or nonempty description"));
+			display_error(__("You have to enter valid stock code or nonempty description"));
 		return 0;
 	}
 

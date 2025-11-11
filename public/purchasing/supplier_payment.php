@@ -27,7 +27,7 @@ if (user_use_date_picker())
 
 add_js_file('payalloc.js');
 
-page(_($GLOBALS['help_context'] = "Supplier Payment Entry"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Supplier Payment Entry"), false, false, "", $js);
 
 if (isset($_GET['supplier_id']))
 {
@@ -36,9 +36,9 @@ if (isset($_GET['supplier_id']))
 
 //----------------------------------------------------------------------------------------
 
-check_db_has_suppliers(_("There are no suppliers defined in the system."));
+check_db_has_suppliers(__("There are no suppliers defined in the system."));
 
-check_db_has_bank_accounts(_("There are no bank accounts defined in the system."));
+check_db_has_bank_accounts(__("There are no bank accounts defined in the system."));
 
 //----------------------------------------------------------------------------------------
 
@@ -80,30 +80,30 @@ if (!isset($_POST['bank_account'])) { // first page call
 			}
 			unset($inv);
 		} else
-			display_error(_("Invalid purchase invoice number."));
+			display_error(__("Invalid purchase invoice number."));
 	}
 }
 if (isset($_GET['AddedID'])) {
 	$payment_id = $_GET['AddedID'];
 
-   	display_notification_centered( _("Payment has been sucessfully entered"));
+   	display_notification_centered( __("Payment has been sucessfully entered"));
 
-	submenu_print(_("&Print This Remittance"), ST_SUPPAYMENT, $payment_id."-".ST_SUPPAYMENT, 'prtopt');
-	submenu_print(_("&Email This Remittance"), ST_SUPPAYMENT, $payment_id."-".ST_SUPPAYMENT, null, 1);
+	submenu_print(__("&Print This Remittance"), ST_SUPPAYMENT, $payment_id."-".ST_SUPPAYMENT, 'prtopt');
+	submenu_print(__("&Email This Remittance"), ST_SUPPAYMENT, $payment_id."-".ST_SUPPAYMENT, null, 1);
 
-	submenu_view(_("View this Payment"), ST_SUPPAYMENT, $payment_id);
-    display_note(get_gl_view_str(ST_SUPPAYMENT, $payment_id, _("View the GL &Journal Entries for this Payment")), 0, 1);
+	submenu_view(__("View this Payment"), ST_SUPPAYMENT, $payment_id);
+    display_note(get_gl_view_str(ST_SUPPAYMENT, $payment_id, __("View the GL &Journal Entries for this Payment")), 0, 1);
 
-	submenu_option(_("Enter another supplier &payment"), "/purchasing/supplier_payment.php?supplier_id=".$_POST['supplier_id']);
+	submenu_option(__("Enter another supplier &payment"), "/purchasing/supplier_payment.php?supplier_id=".$_POST['supplier_id']);
 
-	submenu_option(_("Enter &Supplier Invoice"), "/purchasing/supplier_invoice.php?New=1");
-	submenu_option(_("Enter direct &Invoice"), "/purchasing/po_entry_items.php?NewInvoice=Yes");
+	submenu_option(__("Enter &Supplier Invoice"), "/purchasing/supplier_invoice.php?New=1");
+	submenu_option(__("Enter direct &Invoice"), "/purchasing/po_entry_items.php?NewInvoice=Yes");
 
-	submenu_option(_("Enter Other &Payment"), "/gl/gl_bank.php?NewPayment=Yes");
-	submenu_option(_("Enter &Customer Payment"), "/sales/customer_payments.php");
-	submenu_option(_("Enter Other &Deposit"), "/gl/gl_bank.php?NewDeposit=Yes");
-	submenu_option(_("Bank Account &Transfer"), "/gl/bank_transfer.php");
-	submenu_option(_("Add an Attachment"), "/admin/attachments.php?filterType=".ST_SUPPAYMENT."&trans_no=$payment_id");
+	submenu_option(__("Enter Other &Payment"), "/gl/gl_bank.php?NewPayment=Yes");
+	submenu_option(__("Enter &Customer Payment"), "/sales/customer_payments.php");
+	submenu_option(__("Enter Other &Deposit"), "/gl/gl_bank.php?NewDeposit=Yes");
+	submenu_option(__("Bank Account &Transfer"), "/gl/bank_transfer.php");
+	submenu_option(__("Add an Attachment"), "/admin/attachments.php?filterType=".ST_SUPPAYMENT."&trans_no=$payment_id");
 
 	display_footer_exit();
 }
@@ -127,7 +127,7 @@ function check_inputs()
 
 	if (!get_post('supplier_id')) 
 	{
-		display_error(_("There is no supplier selected."));
+		display_error(__("There is no supplier selected."));
 		set_focus('supplier_id');
 		return false;
 	} 
@@ -139,13 +139,13 @@ function check_inputs()
 
 	if (!check_num('amount', 0))
 	{
-		display_error(_("The entered amount is invalid or less than zero."));
+		display_error(__("The entered amount is invalid or less than zero."));
 		set_focus('amount');
 		return false;
 	}
 
 	if (isset($_POST['charge']) && !check_num('charge', 0)) {
-		display_error(_("The entered amount is invalid or less than zero."));
+		display_error(__("The entered amount is invalid or less than zero."));
 		set_focus('charge');
 		return false;
 	}
@@ -153,7 +153,7 @@ function check_inputs()
 	if (isset($_POST['charge']) && input_num('charge') > 0) {
 		$charge_acct = get_bank_charge_account($_POST['bank_account']);
 		if (get_gl_account($charge_acct) == false) {
-			display_error(_("The Bank Charge Account has not been set in System and General GL Setup."));
+			display_error(__("The Bank Charge Account has not been set in System and General GL Setup."));
 			set_focus('charge');
 			return false;
 		}	
@@ -166,7 +166,7 @@ function check_inputs()
 
 	if (!check_num('discount', 0))
 	{
-		display_error(_("The entered discount is invalid or less than zero."));
+		display_error(__("The entered discount is invalid or less than zero."));
 		set_focus('amount');
 		return false;
 	}
@@ -174,14 +174,14 @@ function check_inputs()
 	//if (input_num('amount') - input_num('discount') <= 0) 
 	if (input_num('amount') <= 0) 
 	{
-		display_error(_("The total of the amount and the discount is zero or negative. Please enter positive values."));
+		display_error(__("The total of the amount and the discount is zero or negative. Please enter positive values."));
 		set_focus('amount');
 		return false;
 	}
 
 	if (isset($_POST['bank_amount']) && input_num('bank_amount')<=0)
 	{
-		display_error(_("The entered bank amount is zero or negative."));
+		display_error(__("The entered bank amount is zero or negative."));
 		set_focus('bank_amount');
 		return false;
 	}
@@ -189,13 +189,13 @@ function check_inputs()
 
    	if (!is_date($_POST['DatePaid']))
    	{
-		display_error(_("The entered date is invalid."));
+		display_error(__("The entered date is invalid."));
 		set_focus('DatePaid');
 		return false;
 	} 
 	elseif (!is_date_in_fiscalyear($_POST['DatePaid'])) 
 	{
-		display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+		display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 		set_focus('DatePaid');
 		return false;
 	}
@@ -204,7 +204,7 @@ function check_inputs()
 
 	if (($limit !== null) && (floatcmp($limit, input_num('amount')) < 0))
 	{
-		display_error(sprintf(_("The total bank amount exceeds allowed limit (%s)."), price_format($limit)));
+		display_error(sprintf(__("The total bank amount exceeds allowed limit (%s)."), price_format($limit)));
 		set_focus('amount');
 		return false;
 	}
@@ -271,7 +271,7 @@ start_form();
 
 	table_section(1);
 
-    supplier_list_row(_("Payment To:"), 'supplier_id', null, false, true);
+    supplier_list_row(__("Payment To:"), 'supplier_id', null, false, true);
 
 	if (list_updated('supplier_id')) {
 		$_POST['amount'] = price_format(0);
@@ -296,15 +296,15 @@ start_form();
 		$_POST['amount'] = price_format(0);
 	}
 
-    bank_accounts_list_row(_("From Bank Account:"), 'bank_account', null, true);
+    bank_accounts_list_row(__("From Bank Account:"), 'bank_account', null, true);
 
 	bank_balance_row($_POST['bank_account']);
 
 	table_section(2);
 
-    date_row(_("Date Paid") . ":", 'DatePaid', '', true, 0, 0, 0, null, true);
+    date_row(__("Date Paid") . ":", 'DatePaid', '', true, 0, 0, 0, null, true);
 
-    ref_row(_("Reference:"), 'ref', '', $Refs->get_next(ST_SUPPAYMENT, null, 
+    ref_row(__("Reference:"), 'ref', '', $Refs->get_next(ST_SUPPAYMENT, null, 
     	array('supplier'=>get_post('supplier_id'), 'date'=>get_post('DatePaid'))), false, ST_SUPPAYMENT);
 
 
@@ -318,22 +318,22 @@ start_form();
 
 	if ($bank_currency != $supplier_currency) 
 	{
-		amount_row(_("Bank Amount:"), 'bank_amount', null, '', $bank_currency);
+		amount_row(__("Bank Amount:"), 'bank_amount', null, '', $bank_currency);
 	}
 
-	amount_row(_("Bank Charge:"), 'charge', null, '', $bank_currency);
+	amount_row(__("Bank Charge:"), 'charge', null, '', $bank_currency);
 
 	$row = get_supplier($_POST['supplier_id']);
 	$_POST['dimension_id'] = @$row['dimension_id'];
 	$_POST['dimension2_id'] = @$row['dimension2_id'];
 	$dim = get_company_pref('use_dimension');
 	if ($dim > 0)
-		dimensions_list_row(_("Dimension").":", 'dimension_id',
+		dimensions_list_row(__("Dimension").":", 'dimension_id',
 			null, true, ' ', false, 1, false);
 	else
 		hidden('dimension_id', 0);
 	if ($dim > 1)
-		dimensions_list_row(_("Dimension")." 2:", 'dimension2_id',
+		dimensions_list_row(__("Dimension")." 2:", 'dimension2_id',
 			null, true, ' ', false, 2, false);
 	else
 		hidden('dimension2_id', 0);
@@ -345,12 +345,12 @@ start_form();
 	div_end();
 
 	start_table(TABLESTYLE, "width='60%'");
-	amount_row(_("Amount of Discount:"), 'discount', null, '', $supplier_currency);
-	amount_row(_("Amount of Payment:"), 'amount', null, '', $supplier_currency);
-	textarea_row(_("Memo:"), 'memo_', null, 22, 4);
+	amount_row(__("Amount of Discount:"), 'discount', null, '', $supplier_currency);
+	amount_row(__("Amount of Payment:"), 'amount', null, '', $supplier_currency);
+	textarea_row(__("Memo:"), 'memo_', null, 22, 4);
 	end_table(1);
 
-	submit_center('ProcessSuppPayment',_("Enter Payment"), true, '', 'default');
+	submit_center('ProcessSuppPayment',__("Enter Payment"), true, '', 'default');
 
 end_form();
 

@@ -73,9 +73,9 @@ class language
 	}
 }
 
-if (!function_exists("_")) 
+if (!function_exists("__")) 
 {
-	function _($text) 
+	function __($text) 
 	{
 		global $GetText;
 		if (!isset($GetText)) // Don't allow using gettext if not is net.

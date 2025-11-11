@@ -204,6 +204,6 @@ function show_users_online()
 	}
 	else
 		$users = 1;
-	return "$users ".($users == 1 ? _("user online") : _("users online"));
+	return "$users ".($users == 1 ? __("user online") : __("users online"));
 
 }

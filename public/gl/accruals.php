@@ -26,7 +26,7 @@ if (user_use_date_picker())
 // Begin the UI
 require_once __DIR__ . "/../includes/ui.inc";
 
-$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Revenue / Cost Accruals");
+$_SESSION['page_title'] = __($GLOBALS['help_context'] = "Revenue / Cost Accruals");
 page($_SESSION['page_title'], false, false,'', $js);
 
 //--------------------------------------------------------------------------------------------------
@@ -38,25 +38,25 @@ if (isset($_POST['go']) || isset($_POST['show']))
 	$input_error = 0;
 	if (!is_date($_POST['date_']))
 	{
-		display_error(_("The entered date is invalid."));
+		display_error(__("The entered date is invalid."));
 		set_focus('date_');
 		$input_error = 1;
 	}
 	elseif (!is_date_in_fiscalyear($_POST['date_']))
 	{
-		display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+		display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 		set_focus('date_');
 		$input_error = 1;
 	}
 	elseif (input_num('amount', 0) == 0.0)
 	{
-		display_error(_("The amount can not be 0."));
+		display_error(__("The amount can not be 0."));
 		set_focus('amount');
 		$input_error = 1;
 	}
 	elseif (input_num('periods', 0) < 1)
 	{
-		display_error(_("The periods must be greater than 0."));
+		display_error(__("The periods must be greater than 0."));
 		set_focus('periods');
 		$input_error = 1;
 	}
@@ -77,7 +77,7 @@ if (isset($_POST['go']) || isset($_POST['show']))
 			end_month(add_months($date_, 3*$per)))));
 		if (!is_date_in_fiscalyears($lastdate, false))
 		{
-			display_error(_("Some of the period dates are outside the fiscal year or are closed for further data entry. Create a new fiscal year first!"));
+			display_error(__("Some of the period dates are outside the fiscal year or are closed for further data entry. Create a new fiscal year first!"));
 			set_focus('date_');
 			$input_error = 1;
 		}
@@ -92,7 +92,7 @@ if (isset($_POST['go']) || isset($_POST['show']))
 			if (get_post('memo_') != "")
 				$memo = $_POST['memo_'];
 			else
-				$memo = sprintf(_("Accruals for %s"), $amount);
+				$memo = sprintf(__("Accruals for %s"), $amount);
 			if (isset($_POST['go']))
 				begin_transaction();
 			else
@@ -100,15 +100,15 @@ if (isset($_POST['go']) || isset($_POST['show']))
 				start_table(TABLESTYLE);
 				$dim = get_company_pref('use_dimension');
 
-				$first_cols = array(_("Date"), _("Account"));
+				$first_cols = array(__("Date"), __("Account"));
 				if ($dim == 2)
-					$dim_cols = array(_("Dimension"). " 1", _("Dimension"). " 2");
+					$dim_cols = array(__("Dimension"). " 1", __("Dimension"). " 2");
 				elseif ($dim == 1)
-					$dim_cols = array(_("Dimension"));
+					$dim_cols = array(__("Dimension"));
 				else
 					$dim_cols = array();
 
-				$remaining_cols = array(_("Debit"), _("Credit"), _("Memo"));
+				$remaining_cols = array(__("Debit"), __("Credit"), __("Memo"));
 
 				$th = array_merge($first_cols, $dim_cols, $remaining_cols);
 				table_header($th);
@@ -174,13 +174,13 @@ if (isset($_POST['go']) || isset($_POST['show']))
 			if (isset($_POST['go']))
 			{
 				commit_transaction();
-				display_notification_centered(_("Revenue / Cost Accruals have been processed."));
+				display_notification_centered(__("Revenue / Cost Accruals have been processed."));
 				$_POST['date_'] = $_POST['amount'] = $_POST['periods'] = "";
 			}
 			else
 			{
 				end_table(1);
-				display_notification_centered(_("Showing GL Transactions."));
+				display_notification_centered(__("Showing GL Transactions."));
 			}
 		}
 	}
@@ -192,10 +192,10 @@ function frequency_list_row($label, $name, $selected=null)
 	label_cell($label, "class='label'");
 	echo "<td>\n";
 	$freq = array(
-		'1'=> _("Weekly"),
-		'2'=> _("Bi-weekly"),
-		'3' => _("Monthly"),
-		'4' => _("Quarterly"),
+		'1'=> __("Weekly"),
+		'2'=> __("Bi-weekly"),
+		'3' => __("Monthly"),
+		'4' => __("Quarterly"),
 	);
 	echo array_selector($name, $selected, $freq);
 	echo "</td>\n";
@@ -207,30 +207,30 @@ $dim = get_company_pref('use_dimension');
 start_form(false, false, "", "accrual");
 start_table(TABLESTYLE2);
 
-date_row(_("Date"), 'date_', _('First date of Accruals'), true, 0, 0, 0, null, true);
+date_row(__("Date"), 'date_', __('First date of Accruals'), true, 0, 0, 0, null, true);
 start_row();
-label_cell(_("Accrued Balance Account"), "class='label'");
+label_cell(__("Accrued Balance Account"), "class='label'");
 gl_all_accounts_list_cells(null, 'acc_act', null, true, false, false, true);
 end_row();
-gl_all_accounts_list_row(_("Revenue / Cost Account"), 'res_act', null, true);
+gl_all_accounts_list_row(__("Revenue / Cost Account"), 'res_act', null, true);
 
 if ($dim >= 1)
-	dimensions_list_row(_("Dimension"), 'dimension_id', null, true, " ", false, 1);
+	dimensions_list_row(__("Dimension"), 'dimension_id', null, true, " ", false, 1);
 if ($dim > 1)
-	dimensions_list_row(_("Dimension")." 2", 'dimension2_id', null, true, " ", false, 2);
+	dimensions_list_row(__("Dimension")." 2", 'dimension2_id', null, true, " ", false, 2);
 
 $url = "gl/view/accrual_trans.php?act=".get_post('acc_act')."&date=".get_post('date_');
-amount_row(_("Amount"), 'amount', null, null, viewer_link(_("Search Amount"), $url, "", "", ICON_VIEW));
+amount_row(__("Amount"), 'amount', null, null, viewer_link(__("Search Amount"), $url, "", "", ICON_VIEW));
 
-frequency_list_row(_("Frequency"), 'freq', null);
+frequency_list_row(__("Frequency"), 'freq', null);
 
-text_row(_("Periods"), 'periods', null, 3, 3);
-textarea_row(_("Memo"), 'memo_', null, 35, 3);
+text_row(__("Periods"), 'periods', null, 3, 3);
+textarea_row(__("Memo"), 'memo_', null, 35, 3);
 
 end_table(1);
-submit_center_first('show', _("Show GL Rows"));//,true,false,'process',ICON_SUBMIT);
-submit_center_last('go', _("Process Accruals"));//,true,false,'process',ICON_SUBMIT);
-submit_js_confirm('go', _("Are you sure you want to post accruals?"));
+submit_center_first('show', __("Show GL Rows"));//,true,false,'process',ICON_SUBMIT);
+submit_center_last('go', __("Process Accruals"));//,true,false,'process',ICON_SUBMIT);
+submit_js_confirm('go', __("Are you sure you want to post accruals?"));
 
 end_form();
 

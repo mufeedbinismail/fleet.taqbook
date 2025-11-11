@@ -137,7 +137,7 @@ class current_user
 			else
 				$header = "From: $sender";
 
-			mail($email, _("New password for")." ".$SysPrefs->app_title, $password, $header);
+			mail($email, __("New password for")." ".$SysPrefs->app_title, $password, $header);
 
 			return true;
 		}
@@ -574,7 +574,7 @@ function add_user_js_data() {
     $js = "\n"
 	  . "var user = {\n"
 	  . "theme: '". url('/themes/'. user_theme()). "/',\n"
-	  . "loadtxt: '"._('Requesting data...')."',\n"
+	  . "loadtxt: '".__('Requesting data...')."',\n"
 	  . "date: '".Today()."',\n"	// server date
 	  . "datesys: ".$SysPrefs->date_system.",\n"
 	  . "datefmt: ".user_date_format().",\n"

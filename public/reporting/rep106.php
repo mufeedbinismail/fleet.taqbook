@@ -77,29 +77,29 @@ function print_salesman_list()
 	$orientation = ($orientation ? 'L' : 'P');
 
 	if ($summary == 0)
-		$sum = _("No");
+		$sum = __("No");
 	else
-		$sum = _("Yes");
+		$sum = __("Yes");
 
 	$dec = user_price_dec();
 
 	$cols = array(0, 60, 150, 220, 325,	385, 450, 515);
 
-	$headers = array(_('Invoice'), _('Customer'), _('Branch'), _('Customer Ref'),
-		_('Inv Date'),	_('Total'),	_('Provision'));
+	$headers = array(__('Invoice'), __('Customer'), __('Branch'), __('Customer Ref'),
+		__('Inv Date'),	__('Total'),	__('Provision'));
 
 	$aligns = array('left',	'left',	'left', 'left', 'left', 'right',	'right');
 
-	$headers2 = array(_('Salesman'), " ",	_('Phone'), _('Email'),	_('Provision'),
-		_('Break Pt.'), _('Provision')." 2");
+	$headers2 = array(__('Salesman'), " ",	__('Phone'), __('Email'),	__('Provision'),
+		__('Break Pt.'), __('Provision')." 2");
 
     $params =   array( 	0 => $comments,
-	    				1 => array(  'text' => _('Period'), 'from' => $from, 'to' => $to),
-	    				2 => array(  'text' => _('Summary Only'),'from' => $sum,'to' => ''));
+	    				1 => array(  'text' => __('Period'), 'from' => $from, 'to' => $to),
+	    				2 => array(  'text' => __('Summary Only'),'from' => $sum,'to' => ''));
 
 	$aligns2 = $aligns;
 
-	$rep = new FrontReport(_('Salesman Listing'), "SalesmanListing", user_pagesize(), 9, $orientation);
+	$rep = new FrontReport(__('Salesman Listing'), "SalesmanListing", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 	$cols2 = $cols;
@@ -121,7 +121,7 @@ function print_salesman_list()
 			{
 				$rep->Line($rep->row - 8);
 				$rep->NewLine(2);
-				$rep->TextCol(0, 3, _('Total'));
+				$rep->TextCol(0, 3, __('Total'));
 				$rep->AmountCol(5, 6, $subtotal, $dec);
 				$rep->AmountCol(6, 7, $subprov, $dec);
     			$rep->Line($rep->row  - 4);
@@ -168,7 +168,7 @@ function print_salesman_list()
 	{
 		$rep->Line($rep->row - 4);
 		$rep->NewLine(2);
-		$rep->TextCol(0, 3, _('Total'));
+		$rep->TextCol(0, 3, __('Total'));
 		$rep->AmountCol(5, 6, $subtotal, $dec);
 		$rep->AmountCol(6, 7, $subprov, $dec);
 		$rep->Line($rep->row  - 4);
@@ -177,7 +177,7 @@ function print_salesman_list()
 		$provtotal += $subprov;
 	}
 	$rep->fontSize += 2;
-	$rep->TextCol(0, 3, _('Grand Total'));
+	$rep->TextCol(0, 3, __('Grand Total'));
 	$rep->fontSize -= 2;
 	$rep->AmountCol(5, 6, $total, $dec);
 	$rep->AmountCol(6, 7, $provtotal, $dec);

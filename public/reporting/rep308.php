@@ -208,28 +208,28 @@ function inventory_movements()
 	if ($category == ALL_NUMERIC)
 		$category = 0;
 	if ($category == 0)
-		$cat = _('All');
+		$cat = __('All');
 	else
 		$cat = get_category_name($category);
 
 	if ($location == '')
-		$loc = _('All');
+		$loc = __('All');
 	else
 		$loc = get_location_name($location);
 
 	$cols = array(0, 60, 134, 160, 185, 215, 250, 275, 305, 340, 365, 395, 430, 455, 485, 520);
 
-	$headers = array(_('Category'), _('Description'),	_('UOM'), '', '', _('OpeningStock'), '', '',_('StockIn'), '', '', _('Delivery'), '', '', _('ClosingStock'));
-	$headers2 = array("", "", "", _("QTY"), _("Rate"), _("Value"), _("QTY"), _("Rate"), _("Value"), _("QTY"), _("Rate"), _("Value"), _("QTY"), _("Rate"), _("Value"));
+	$headers = array(__('Category'), __('Description'),	__('UOM'), '', '', __('OpeningStock'), '', '',__('StockIn'), '', '', __('Delivery'), '', '', __('ClosingStock'));
+	$headers2 = array("", "", "", __("QTY"), __("Rate"), __("Value"), __("QTY"), __("Rate"), __("Value"), __("QTY"), __("Rate"), __("Value"), __("QTY"), __("Rate"), __("Value"));
 
 	$aligns = array('left',	'left',	'left', 'right', 'right', 'right', 'right','right' ,'right', 'right', 'right','right', 'right', 'right', 'right');
 
     $params =   array( 	0 => $comments,
-						1 => array('text' => _('Period'), 'from' => $from_date, 'to' => $to_date),
-    				    2 => array('text' => _('Category'), 'from' => $cat, 'to' => ''),
-						3 => array('text' => _('Location'), 'from' => $loc, 'to' => ''));
+						1 => array('text' => __('Period'), 'from' => $from_date, 'to' => $to_date),
+    				    2 => array('text' => __('Category'), 'from' => $cat, 'to' => ''),
+						3 => array('text' => __('Location'), 'from' => $loc, 'to' => ''));
 
-    $rep = new FrontReport(_('Costed Inventory Movements'), "CostedInventoryMovements", user_pagesize(), 8, $orientation);
+    $rep = new FrontReport(__('Costed Inventory Movements'), "CostedInventoryMovements", user_pagesize(), 8, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -300,13 +300,13 @@ function inventory_movements()
 	}
 	$rep->Line($rep->row  - 4);
 	$rep->NewLine(2);
-	$rep->TextCol(0, 1,	_("Total Movement"));
+	$rep->TextCol(0, 1,	__("Total Movement"));
 	$rep->AmountCol(5, 6, $totval_open);
 	$rep->AmountCol(8, 9, $totval_in);
 	$rep->AmountCol(11, 12, $totval_out);
 	$rep->AmountCol(14, 15, $totval_open + $totval_in - $totval_out);
 	$rep->NewLine(1);
-	$rep->TextCol(0, 1,	_("Total Out"));
+	$rep->TextCol(0, 1,	__("Total Out"));
 	$rep->AmountCol(14, 15, $totval_close);
 	$rep->Line($rep->row  - 4);
 

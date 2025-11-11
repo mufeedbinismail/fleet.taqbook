@@ -19,14 +19,14 @@ function display_bom($item_check)
 
     if (db_num_rows($result) == 0)
     {
-    	display_note(_("The bill of material for this item is empty."), 0, 1);
+    	display_note(__("The bill of material for this item is empty."), 0, 1);
     }
     else
     {
 
         start_table(TABLESTYLE);
-        $th = array(_("Component"), _("Description"), _("Work Centre"),
-        	_("From Location"), _("Quantity"), _("Unit Cost"), _("Cost"));
+        $th = array(__("Component"), __("Description"), __("Work Centre"),
+        	__("From Location"), __("Quantity"), __("Unit Cost"), __("Cost"));
 
         table_header($th);
 
@@ -63,7 +63,7 @@ function display_bom($item_check)
 		{
 			$total_cost += $item['labour_cost'];
 			alt_table_row_color($k);
-	        label_cells(_("Standard Labour Cost"), number_format2($item['labour_cost'],user_price_dec()),
+	        label_cells(__("Standard Labour Cost"), number_format2($item['labour_cost'],user_price_dec()),
     	    	"colspan=6 align=left", "class=odd_row nowrap align=right");
     	    end_row();
 		}
@@ -71,11 +71,11 @@ function display_bom($item_check)
 		{
 			$total_cost += $item['overhead_cost'];
 			alt_table_row_color($k);
-	        label_cells(_("Standard Overhead Cost"), number_format2($item['overhead_cost'],user_price_dec()),
+	        label_cells(__("Standard Overhead Cost"), number_format2($item['overhead_cost'],user_price_dec()),
     	    	"colspan=6 align=left", "nowrap align=right");
     	    end_row();
 		}
-        label_row("<b>" . _("Total Cost") . "</b>", "<b>" . number_format2($total_cost,user_price_dec()) ."</b>",
+        label_row("<b>" . __("Total Cost") . "</b>", "<b>" . number_format2($total_cost,user_price_dec()) ."</b>",
         	"colspan=6 align=right", "nowrap align=right");
 		end_table();
     }
@@ -91,14 +91,14 @@ function display_wo_requirements($woid, $quantity, $show_qoh=false, $date=null)
 
     if (db_num_rows($result) == 0)
     {
-    	display_note(_("There are no Requirements for this Order."), 1, 0);
+    	display_note(__("There are no Requirements for this Order."), 1, 0);
     }
     else
     {
 
         start_table(TABLESTYLE, "width='80%'");
-        $th = array(_("Component"), _("From Location"), _("Work Centre"),
-        	_("Unit Quantity"), _("Total Quantity"), _("Units Issued"), _("On Hand"));
+        $th = array(__("Component"), __("From Location"), __("Work Centre"),
+        	__("Unit Quantity"), __("Total Quantity"), __("Units Issued"), __("On Hand"));
 
         table_header($th);
 
@@ -152,7 +152,7 @@ function display_wo_requirements($woid, $quantity, $show_qoh=false, $date=null)
 		end_table();
 
 		if ($has_marked)
-			display_note(_("Marked items have insufficient quantities in stock."), 0, 0, "class='red'");
+			display_note(__("Marked items have insufficient quantities in stock."), 0, 0, "class='red'");
     }
 }
 
@@ -164,12 +164,12 @@ function display_wo_productions($woid)
 
     if (db_num_rows($result) == 0)
     {
-    	display_note(_("There are no Productions for this Order."), 1, 1);
+    	display_note(__("There are no Productions for this Order."), 1, 1);
     }
     else
     {
         start_table(TABLESTYLE);
-        $th = array(_("#"), _("Reference"), _("Date"), _("Quantity"));
+        $th = array(__("#"), __("Reference"), __("Date"), __("Quantity"));
 
         table_header($th);
 
@@ -190,7 +190,7 @@ function display_wo_productions($woid)
 			end_row();
 		}//end of while
 
-		label_row(_("Total"), number_format2($total_qty,user_qty_dec()),
+		label_row(__("Total"), number_format2($total_qty,user_qty_dec()),
 			"colspan=3", "nowrap align=right");
 
 		end_table();
@@ -205,12 +205,12 @@ function display_wo_issues($woid)
 
     if (db_num_rows($result) == 0)
     {
-    	display_note(_("There are no Issues for this Order."), 0, 1);
+    	display_note(__("There are no Issues for this Order."), 0, 1);
     }
     else
     {
         start_table(TABLESTYLE);
-        $th = array(_("#"), _("Reference"), _("Date"));
+        $th = array(__("#"), __("Reference"), __("Date"));
 
         table_header($th);
 
@@ -241,12 +241,12 @@ function display_wo_payments($woid)
 
     if (db_num_rows($result) == 0)
     {
-    	display_note(_("There are no additional costs for this Order."), 0, 1);
+    	display_note(__("There are no additional costs for this Order."), 0, 1);
     }
     else
     {
         start_table(TABLESTYLE);
-        $th = array(_("#"), _("Type"), _("Date"), _("Amount"));
+        $th = array(__("#"), __("Type"), __("Date"), __("Amount"));
 
         table_header($th);
 
@@ -277,19 +277,19 @@ function display_wo_details($woid, $suppress_view_link=false)
 
     if ($myrow == false)
     {
-    	display_note(_("The work order number sent is not valid."));
+    	display_note(__("The work order number sent is not valid."));
     	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }
 
    	start_table(TABLESTYLE, "width='80%'");
 
 	if ($myrow["released"] == true)
-		$th = array(_("#"), _("Reference"), _("Type"), _("Manufactured Item"),
-			_("Into Location"), _("Date"), _("Required By"), _("Quantity Required"),
-			_("Released Date"), _("Manufactured"));
+		$th = array(__("#"), __("Reference"), __("Type"), __("Manufactured Item"),
+			__("Into Location"), __("Date"), __("Required By"), __("Quantity Required"),
+			__("Released Date"), __("Manufactured"));
 	else
-		$th = array(_("#"), _("Reference"), _("Type"), _("Manufactured Item"),
-			_("Into Location"), _("Date"), _("Required By"), _("Quantity Required"));
+		$th = array(__("#"), __("Reference"), __("Type"), __("Manufactured Item"),
+			__("Into Location"), __("Date"), __("Required By"), __("Quantity Required"));
 
 	table_header($th);
 	start_row();
@@ -319,7 +319,7 @@ function display_wo_details($woid, $suppress_view_link=false)
 
     if ($myrow["closed"] == true)
     {
-    	display_note(_("This work order is closed."));
+    	display_note(__("This work order is closed."));
     }
 }
 
@@ -333,14 +333,14 @@ function display_wo_details_quick($woid, $suppress_view_link=false)
 
     if ($myrow === false)
     {
-    	display_note(_("The work order number sent is not valid."));
+    	display_note(__("The work order number sent is not valid."));
     	throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }
 
    	start_table(TABLESTYLE, "width='80%'");
 
-	$th = array(_("#"), _("Reference"), _("Type"), _("Manufactured Item"),
-		_("Into Location"), _("Date"), _("Quantity"));
+	$th = array(__("#"), __("Reference"), __("Type"), __("Manufactured Item"),
+		__("Into Location"), __("Date"), __("Quantity"));
 	table_header($th);
 
 	start_row();
@@ -364,7 +364,7 @@ function display_wo_details_quick($woid, $suppress_view_link=false)
 
     if ($myrow["closed"] == true)
     {
-    	display_note(_("This work order is closed."));
+    	display_note(__("This work order is closed."));
     }
 }
 

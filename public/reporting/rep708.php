@@ -47,7 +47,7 @@ function display_type ($type, $typename, &$dec, &$rep, $from, $to, $zero, $balan
 		if (!$printtitle)
 		{	
 			$rep->row -= 4;
-			$rep->TextCol(0, 8, _("Group")." - ".$type ." - ".$typename);	
+			$rep->TextCol(0, 8, __("Group")." - ".$type ." - ".$typename);	
 			$printtitle = 1;
 			$rep->row -= 4;
 			$rep->Line($rep->row);
@@ -122,7 +122,7 @@ function display_type ($type, $typename, &$dec, &$rep, $from, $to, $zero, $balan
 		if (!$printtitle)
 		{
 			$rep->row -= 4;
-			$rep->TextCol(0, 8, _("Group")." - ".$type ." - ".$typename);	
+			$rep->TextCol(0, 8, __("Group")." - ".$type ." - ".$typename);	
 			$printtitle = 1;
 			$rep->row -= 4;
 			$rep->Line($rep->row);
@@ -180,41 +180,41 @@ function print_trial_balance()
 	$cols2 = array(0, 50, 190, 310, 430, 530);
 	//-------------0--1---2----3----4----5--
 
-	$headers2 = array('', '', _('Brought Forward'),	_('This Period'), _('Balance'));
+	$headers2 = array('', '', __('Brought Forward'),	__('This Period'), __('Balance'));
 
 	$aligns2 = array('left', 'left', 'left', 'left', 'left');
 
 	$cols = array(0, 50, 150, 210, 270,	330, 390, 450, 510,	570);
 	//------------0--1---2----3----4----5----6----7----8--
 
-	$headers = array(_('Account'), _('Account Name'), _('Debit'), _('Credit'), _('Debit'),
-		_('Credit'), _('Debit'), _('Credit'));
+	$headers = array(__('Account'), __('Account Name'), __('Debit'), __('Credit'), __('Debit'),
+		__('Credit'), __('Debit'), __('Credit'));
 
 	$aligns = array('left',	'left',	'right', 'right', 'right', 'right',	'right', 'right');
 
     if ($dim == 2)
     {
     	$params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'),'from' => $from, 'to' => $to),
-                    	2 => array('text' => _('Dimension')." 1",
+    				    1 => array('text' => __('Period'),'from' => $from, 'to' => $to),
+                    	2 => array('text' => __('Dimension')." 1",
                             'from' => get_dimension_string($dimension), 'to' => ''),
-                    	3 => array('text' => _('Dimension')." 2",
+                    	3 => array('text' => __('Dimension')." 2",
                             'from' => get_dimension_string($dimension2), 'to' => ''));
     }
     elseif ($dim == 1)
     {
     	$params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'),'from' => $from, 'to' => $to),
-                    	2 => array('text' => _('Dimension'),
+    				    1 => array('text' => __('Period'),'from' => $from, 'to' => $to),
+                    	2 => array('text' => __('Dimension'),
                             'from' => get_dimension_string($dimension), 'to' => ''));
     }
     else
     {
     	$params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'),'from' => $from, 'to' => $to));
+    				    1 => array('text' => __('Period'),'from' => $from, 'to' => $to));
     }
 
-	$rep = new FrontReport(_('Trial Balance'), "TrialBalance", user_pagesize(), 9, $orientation);
+	$rep = new FrontReport(__('Trial Balance'), "TrialBalance", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     {
     	recalculate_cols($cols);
@@ -248,7 +248,7 @@ function print_trial_balance()
 
 	if ($balances == 0)
 	{
-		$rep->TextCol(0, 2, _("Total"));
+		$rep->TextCol(0, 2, __("Total"));
 		$rep->AmountCol(2, 3, $pdeb, $dec);
 		$rep->AmountCol(3, 4, $pcre, $dec);
 		$rep->AmountCol(4, 5, $cdeb, $dec);
@@ -257,7 +257,7 @@ function print_trial_balance()
 		$rep->AmountCol(7, 8, $tcre, $dec);
 		$rep->NewLine();
 	}	
-	$rep->TextCol(0, 2, _("Ending Balance"));
+	$rep->TextCol(0, 2, __("Ending Balance"));
 
 	if ($pbal >= 0.0)
 		$rep->AmountCol(2, 3, $pbal, $dec);
@@ -278,7 +278,7 @@ function print_trial_balance()
 	{
 		$rep->NewLine(2);
 		$rep->Font();
-		$rep->TextCol(0, 8, _("The Opening Balance is not in balance, probably due to a non closed Previous Fiscalyear."));
+		$rep->TextCol(0, 8, __("The Opening Balance is not in balance, probably due to a non closed Previous Fiscalyear."));
 	}	
 	$rep->End();
 }

@@ -37,17 +37,17 @@ if (user_use_date_picker())
 
 if (isset($_GET['ModifyOrderNumber']) && is_numeric($_GET['ModifyOrderNumber'])) {
 
-	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Modify Purchase Order #") . $_GET['ModifyOrderNumber'];
+	$_SESSION['page_title'] = __($GLOBALS['help_context'] = "Modify Purchase Order #") . $_GET['ModifyOrderNumber'];
 	create_new_po(ST_PURCHORDER, $_GET['ModifyOrderNumber']);
 	copy_from_cart();
 } elseif (isset($_GET['NewOrder'])) {
 
-	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Purchase Order Entry");
+	$_SESSION['page_title'] = __($GLOBALS['help_context'] = "Purchase Order Entry");
 	create_new_po(ST_PURCHORDER, 0);
 	copy_from_cart();
 } elseif (isset($_GET['NewGRN'])) {
 
-	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Direct GRN Entry");
+	$_SESSION['page_title'] = __($GLOBALS['help_context'] = "Direct GRN Entry");
 	create_new_po(ST_SUPPRECEIVE, 0);
 	copy_from_cart();
 } elseif (isset($_GET['NewInvoice'])) {
@@ -56,10 +56,10 @@ if (isset($_GET['ModifyOrderNumber']) && is_numeric($_GET['ModifyOrderNumber']))
 	copy_from_cart();
 
 	if (isset($_GET['FixedAsset'])) {
-		$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Fixed Asset Purchase Invoice Entry");
+		$_SESSION['page_title'] = __($GLOBALS['help_context'] = "Fixed Asset Purchase Invoice Entry");
 		$_SESSION['PO']->fixed_asset = true;
 	} else
-		$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Direct Purchase Invoice Entry");
+		$_SESSION['page_title'] = __($GLOBALS['help_context'] = "Direct Purchase Invoice Entry");
 }
 
 page($_SESSION['page_title'], false, false, "", $js);
@@ -69,7 +69,7 @@ if (isset($_GET['ModifyOrderNumber']))
 
 //---------------------------------------------------------------------------------------------------
 
-check_db_has_suppliers(_("There are no suppliers defined in the system."));
+check_db_has_suppliers(__("There are no suppliers defined in the system."));
 
 //---------------------------------------------------------------------------------------------------------------
 
@@ -79,23 +79,23 @@ if (isset($_GET['AddedID']))
 	$trans_type = ST_PURCHORDER;	
 
 	if (!isset($_GET['Updated']))
-		display_notification_centered(_("Purchase Order has been entered"));
+		display_notification_centered(__("Purchase Order has been entered"));
 	else
-		display_notification_centered(_("Purchase Order has been updated") . " #$order_no");
-	display_note(get_trans_view_str($trans_type, $order_no, _("&View this order")), 0, 1);
+		display_notification_centered(__("Purchase Order has been updated") . " #$order_no");
+	display_note(get_trans_view_str($trans_type, $order_no, __("&View this order")), 0, 1);
 
-	display_note(print_document_link($order_no, _("&Print This Order"), true, $trans_type), 0, 1);
+	display_note(print_document_link($order_no, __("&Print This Order"), true, $trans_type), 0, 1);
 
-	display_note(print_document_link($order_no, _("&Email This Order"), true, $trans_type, false, "printlink", "", 1));
+	display_note(print_document_link($order_no, __("&Email This Order"), true, $trans_type, false, "printlink", "", 1));
 
-	hyperlink_params(url("/purchasing/po_receive_items.php"), _("&Receive Items on this Purchase Order"), "PONumber=$order_no");
+	hyperlink_params(url("/purchasing/po_receive_items.php"), __("&Receive Items on this Purchase Order"), "PONumber=$order_no");
 
   // TODO, for fixed asset
-	hyperlink_params(url()->current(), _("Enter &Another Purchase Order"), "NewOrder=yes");
+	hyperlink_params(url()->current(), __("Enter &Another Purchase Order"), "NewOrder=yes");
 	
-	hyperlink_no_params(url("/purchasing/inquiry/po_search.php"), _("Select An &Outstanding Purchase Order"));
+	hyperlink_no_params(url("/purchasing/inquiry/po_search.php"), __("Select An &Outstanding Purchase Order"));
 	
-	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), 
+	hyperlink_params(url("/admin/attachments.php"), __("Add an Attachment"), 
 		"filterType=$trans_type&trans_no=$order_no");
 
 	display_footer_exit();	
@@ -105,20 +105,20 @@ if (isset($_GET['AddedID']))
 	$trans_no = $_GET['AddedGRN'];
 	$trans_type = ST_SUPPRECEIVE;
 
-	display_notification_centered(_("Direct GRN has been entered"));
+	display_notification_centered(__("Direct GRN has been entered"));
 
-	display_note(get_trans_view_str($trans_type, $trans_no, _("&View this GRN")), 0);
+	display_note(get_trans_view_str($trans_type, $trans_no, __("&View this GRN")), 0);
 
     $clearing_act = get_company_pref('grn_clearing_act');
 	if ($clearing_act)	
-		display_note(get_gl_view_str($trans_type, $trans_no, _("View the GL Journal Entries for this Delivery")), 1);
+		display_note(get_gl_view_str($trans_type, $trans_no, __("View the GL Journal Entries for this Delivery")), 1);
 
 	hyperlink_params(url("/purchasing/supplier_invoice.php"),
-		_("Entry purchase &invoice for this receival"), "New=1");
+		__("Entry purchase &invoice for this receival"), "New=1");
 
-	hyperlink_params(url()->current(), _("Enter &Another GRN"), "NewGRN=Yes");
+	hyperlink_params(url()->current(), __("Enter &Another GRN"), "NewGRN=Yes");
 	
-	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), 
+	hyperlink_params(url("/admin/attachments.php"), __("Add an Attachment"), 
 		"filterType=$trans_type&trans_no=$trans_no");
 
 	display_footer_exit();	
@@ -128,27 +128,27 @@ if (isset($_GET['AddedID']))
 	$trans_no = $_GET['AddedPI'];
 	$trans_type = ST_SUPPINVOICE;
 
-	display_notification_centered(_("Direct Purchase Invoice has been entered"));
+	display_notification_centered(__("Direct Purchase Invoice has been entered"));
 
-	display_note(get_trans_view_str($trans_type, $trans_no, _("&View this Invoice")), 0);
+	display_note(get_trans_view_str($trans_type, $trans_no, __("&View this Invoice")), 0);
 
-	display_note(get_gl_view_str($trans_type, $trans_no, _("View the GL Journal Entries for this Invoice")), 1);
+	display_note(get_gl_view_str($trans_type, $trans_no, __("View the GL Journal Entries for this Invoice")), 1);
 
-	hyperlink_params(url("/purchasing/supplier_payment.php"), _("Entry supplier &payment for this invoice"),
+	hyperlink_params(url("/purchasing/supplier_payment.php"), __("Entry supplier &payment for this invoice"),
 		"trans_type=$trans_type&PInvoice=".$trans_no);
 
-	hyperlink_params(url()->current(), _("Enter &Another Direct Invoice"), "NewInvoice=Yes");
+	hyperlink_params(url()->current(), __("Enter &Another Direct Invoice"), "NewInvoice=Yes");
 
-	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"),
+	hyperlink_params(url("/admin/attachments.php"), __("Add an Attachment"),
 		"filterType=$trans_type&trans_no=$trans_no");
 
 	display_footer_exit();	
 }
 
 if ($_SESSION['PO']->fixed_asset)
-  check_db_has_purchasable_fixed_assets(_("There are no purchasable fixed assets defined in the system."));
+  check_db_has_purchasable_fixed_assets(__("There are no purchasable fixed assets defined in the system."));
 else
-  check_db_has_purchasable_items(_("There are no purchasable inventory items defined in the system."));
+  check_db_has_purchasable_items(__("There are no purchasable inventory items defined in the system."));
 //--------------------------------------------------------------------------------------------------
 
 function line_start_focus() {
@@ -177,7 +177,7 @@ function handle_delete_item($line_no)
 	} 
 	else 
 	{
-		display_error(_("This item cannot be deleted because some of it has already been received."));
+		display_error(__("This item cannot be deleted because some of it has already been received."));
 	}	
     line_start_focus();
 }
@@ -190,8 +190,8 @@ function handle_cancel_po()
 	if(($_SESSION['PO']->order_no != 0) && 
 		$_SESSION['PO']->any_already_received() == 1)
 	{
-		display_error(_("This order cannot be cancelled because some of it has already been received.") 
-			. "<br>" . _("The line item quantities may be modified to quantities more than already received. prices cannot be altered for lines that have already been received and quantities cannot be reduced below the quantity already received."));
+		display_error(__("This order cannot be cancelled because some of it has already been received.") 
+			. "<br>" . __("The line item quantities may be modified to quantities more than already received. prices cannot be altered for lines that have already been received and quantities cannot be reduced below the quantity already received."));
 		return;
 	}
 
@@ -211,9 +211,9 @@ function handle_cancel_po()
 	$_SESSION['PO']->clear_items();
 	$_SESSION['PO'] = new purch_order;
 
-	display_notification(_("This purchase order has been cancelled."));
+	display_notification(__("This purchase order has been cancelled."));
 
-	hyperlink_params(url("/purchasing/po_entry_items.php"), _("Enter a new purchase order"), "NewOrder=Yes");
+	hyperlink_params(url("/purchasing/po_entry_items.php"), __("Enter a new purchase order"), "NewOrder=Yes");
 	echo "<br>";
 
 	end_page();
@@ -225,7 +225,7 @@ function handle_cancel_po()
 function check_data()
 {
 	if(!get_post('stock_id_text', true)) {
-		display_error( _("Item description cannot be empty."));
+		display_error( __("Item description cannot be empty."));
 		set_focus('stock_id_edit');
 		return false;
 	}
@@ -235,19 +235,19 @@ function check_data()
     if (!check_num('qty',$min))
     {
     	$min = number_format2($min, $dec);
-	   	display_error(_("The quantity of the order item must be numeric and not less than ").$min);
+	   	display_error(__("The quantity of the order item must be numeric and not less than ").$min);
 		set_focus('qty');
 	   	return false;
     }
 
     if (!check_num('price', 0))
     {
-	   	display_error(_("The price entered must be numeric and not less than zero."));
+	   	display_error(__("The price entered must be numeric and not less than zero."));
 		set_focus('price');
 	   	return false;	   
     }
     if ($_SESSION['PO']->trans_type == ST_PURCHORDER && !is_date($_POST['req_del_date'])){
-    		display_error(_("The date entered is in an invalid format."));
+    		display_error(__("The date entered is in an invalid format."));
 		set_focus('req_del_date');
    		return false;    	 
     }
@@ -266,8 +266,8 @@ function handle_update_item()
 		if ($_SESSION['PO']->line_items[$_POST['line_no']]->qty_inv > input_num('qty') ||
 			$_SESSION['PO']->line_items[$_POST['line_no']]->qty_received > input_num('qty'))
 		{
-			display_error(_("You are attempting to make the quantity ordered a quantity less than has already been invoiced or received.  This is prohibited.") .
-				"<br>" . _("The quantity received can only be modified by entering a negative receipt and the quantity invoiced can only be reduced by entering a credit note against this item."));
+			display_error(__("You are attempting to make the quantity ordered a quantity less than has already been invoiced or received.  This is prohibited.") .
+				"<br>" . __("The quantity received can only be modified by entering a negative receipt and the quantity invoiced can only be reduced by entering a credit note against this item."));
 			set_focus('qty');
 			return;
 		}
@@ -295,7 +295,7 @@ function handle_add_new_item()
     			is not already on this order */
    			    if (($order_item->stock_id == $_POST['stock_id'])) 
    			    {
-					display_warning(_("The selected item is already on this order."));
+					display_warning(__("The selected item is already on this order."));
 			    }
 		    } /* end of the foreach loop to look for pre-existing items of the same code */
 		}
@@ -321,7 +321,7 @@ function handle_add_new_item()
 	   		} 
 	   		else 
 	   		{
-			     display_error(_("The selected item does not exist or it is a kit part and therefore cannot be purchased."));
+			     display_error(__("The selected item does not exist or it is a kit part and therefore cannot be purchased."));
 		   	}
 
 		} /* end of if not already on the order and allow input was true*/
@@ -335,27 +335,27 @@ function can_commit()
 {
 	if (!get_post('supplier_id')) 
 	{
-		display_error(_("There is no supplier selected."));
+		display_error(__("There is no supplier selected."));
 		set_focus('supplier_id');
 		return false;
 	} 
 
 	if (!is_date($_POST['OrderDate'])) 
 	{
-		display_error(_("The entered order date is invalid."));
+		display_error(__("The entered order date is invalid."));
 		set_focus('OrderDate');
 		return false;
 	} 
 	if (($_SESSION['PO']->trans_type == ST_SUPPRECEIVE || $_SESSION['PO']->trans_type == ST_SUPPINVOICE) 
 		&& !is_date_in_fiscalyear($_POST['OrderDate'])) {
-		display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+		display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 		set_focus('OrderDate');
 		return false;
 	}
 
 	if (($_SESSION['PO']->trans_type==ST_SUPPINVOICE) && !is_date($_POST['due_date'])) 
 	{
-		display_error(_("The entered due date is invalid."));
+		display_error(__("The entered due date is invalid."));
 		set_focus('due_date');
 		return false;
 	} 
@@ -371,26 +371,26 @@ function can_commit()
 
 	if ($_SESSION['PO']->trans_type == ST_SUPPINVOICE && trim(get_post('supp_ref')) == false)
 	{
-		display_error(_("You must enter a supplier's invoice reference."));
+		display_error(__("You must enter a supplier's invoice reference."));
 		set_focus('supp_ref');
 		return false;
 	}
 	if ($_SESSION['PO']->trans_type==ST_SUPPINVOICE 
 		&& is_reference_already_there($_SESSION['PO']->supplier_id, get_post('supp_ref'), $_SESSION['PO']->order_no))
 	{
-		display_error(_("This invoice number has already been entered. It cannot be entered again.") . " (" . get_post('supp_ref') . ")");
+		display_error(__("This invoice number has already been entered. It cannot be entered again.") . " (" . get_post('supp_ref') . ")");
 		set_focus('supp_ref');
 		return false;
 	}
 	if ($_SESSION['PO']->trans_type == ST_PURCHORDER && get_post('delivery_address') == '')
 	{
-		display_error(_("There is no delivery address specified."));
+		display_error(__("There is no delivery address specified."));
 		set_focus('delivery_address');
 		return false;
 	} 
 	if (get_post('StkLocation') == '')
 	{
-		display_error(_("There is no location specified to move any items into."));
+		display_error(__("There is no location specified to move any items into."));
 		set_focus('StkLocation');
 		return false;
 	} 
@@ -398,12 +398,12 @@ function can_commit()
 		return false;
 	if ($_SESSION['PO']->order_has_items() == false)
 	{
-     	display_error (_("The order cannot be placed because there are no lines entered on this order."));
+     	display_error (__("The order cannot be placed because there are no lines entered on this order."));
      	return false;
 	}
 	if (floatcmp(input_num('prep_amount'), $_SESSION['PO']->get_trans_total()) > 0)
 	{
-		display_error(_("Required prepayment is greater than total invoice value."));
+		display_error(__("Required prepayment is greater than total invoice value."));
 		set_focus('prep_amount');
 		return false;
 	}
@@ -480,26 +480,26 @@ start_table(TABLESTYLE2);
 
 
 if ($_SESSION['PO']->trans_type == ST_SUPPINVOICE) {
-	cash_accounts_list_row(_("Payment:"), 'cash_account', null, false, _('Delayed'));
+	cash_accounts_list_row(__("Payment:"), 'cash_account', null, false, __('Delayed'));
 }
 
-textarea_row(_("Memo:"), 'Comments', null, 70, 4);
+textarea_row(__("Memo:"), 'Comments', null, 70, 4);
 
 end_table(1);
 
 div_start('controls', 'items_table');
-$process_txt = _("Place Order");
-$update_txt = _("Update Order");
-$cancel_txt = _("Cancel Order");
+$process_txt = __("Place Order");
+$update_txt = __("Update Order");
+$cancel_txt = __("Cancel Order");
 if ($_SESSION['PO']->trans_type == ST_SUPPRECEIVE) {
-	$process_txt = _("Process GRN");
-	$update_txt = _("Update GRN");
-	$cancel_txt = _("Cancel GRN");
+	$process_txt = __("Process GRN");
+	$update_txt = __("Update GRN");
+	$cancel_txt = __("Cancel GRN");
 }	
 elseif ($_SESSION['PO']->trans_type == ST_SUPPINVOICE) {
-	$process_txt = _("Process Invoice");
-	$update_txt = _("Update Invoice");
-	$cancel_txt = _("Cancel Invoice");
+	$process_txt = __("Process Invoice");
+	$update_txt = __("Update Invoice");
+	$cancel_txt = __("Cancel Invoice");
 }	
 if ($_SESSION['PO']->order_has_items()) 
 {

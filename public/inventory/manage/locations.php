@@ -18,12 +18,12 @@ require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../inventory/includes/inventory_db.inc";
 
 if (isset($_GET['FixedAsset'])) {
-	$GLOBALS['help_context'] = _("Fixed Assets Locations");
+	$GLOBALS['help_context'] = __("Fixed Assets Locations");
 	$_POST['fixed_asset'] = 1;
 } else
-	$GLOBALS['help_context'] = _("Inventory Locations");
+	$GLOBALS['help_context'] = __("Inventory Locations");
 
-page(_($GLOBALS['help_context']));
+page(__($GLOBALS['help_context']));
 
 simple_page_mode(true);
 
@@ -42,13 +42,13 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 	if ((strlen(db_escape($_POST['loc_code'])) > 7) || empty($_POST['loc_code'])) //check length after conversion
 	{
 		$input_error = 1;
-		display_error( _("The location code must be five characters or less long (including converted special chars)."));
+		display_error( __("The location code must be five characters or less long (including converted special chars)."));
 		set_focus('loc_code');
 	} 
 	elseif (strlen($_POST['location_name']) == 0) 
 	{
 		$input_error = 1;
-		display_error( _("The location name must be entered."));		
+		display_error( __("The location name must be entered."));		
 		set_focus('location_name');
 	}
 
@@ -59,7 +59,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
     
     		update_item_location($selected_id, $_POST['location_name'], $_POST['delivery_address'],
 				$_POST['phone'], $_POST['phone2'], $_POST['fax'], $_POST['email'], $_POST['contact'], check_value('fixed_asset'));
-			display_notification(_('Selected location has been updated'));
+			display_notification(__('Selected location has been updated'));
     	} 
     	else 
     	{
@@ -68,7 +68,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
     	
     		add_item_location($_POST['loc_code'], $_POST['location_name'], $_POST['delivery_address'], 
 				$_POST['phone'], $_POST['phone2'], $_POST['fax'], $_POST['email'], $_POST['contact'], check_value('fixed_asset'));
-			display_notification(_('New location has been added'));
+			display_notification(__('New location has been added'));
     	}
 		
 		$Mode = 'RESET';
@@ -79,46 +79,46 @@ function can_delete($selected_id)
 {
 	if (key_in_foreign_table($selected_id, 'stock_moves', 'loc_code'))
 	{
-		display_error(_("Cannot delete this location because item movements have been created using this location."));
+		display_error(__("Cannot delete this location because item movements have been created using this location."));
 		return false;
 	}
 
 	if (key_in_foreign_table($selected_id, 'workorders', 'loc_code'))
 	{
-		display_error(_("Cannot delete this location because it is used by some work orders records."));
+		display_error(__("Cannot delete this location because it is used by some work orders records."));
 		return false;
 	}
 
 	if (key_in_foreign_table($selected_id, 'cust_branch', 'default_location'))
 	{
-		display_error(_("Cannot delete this location because it is used by some branch records as the default location to deliver from."));
+		display_error(__("Cannot delete this location because it is used by some branch records as the default location to deliver from."));
 		return false;
 	}
 	
 	if (key_in_foreign_table($selected_id, 'bom', 'loc_code'))
 	{
-		display_error(_("Cannot delete this location because it is used by some related records in other tables."));
+		display_error(__("Cannot delete this location because it is used by some related records in other tables."));
 		return false;
 	}
 	
 	if (key_in_foreign_table($selected_id, 'grn_batch', 'loc_code'))
 	{
-		display_error(_("Cannot delete this location because it is used by some related records in other tables."));
+		display_error(__("Cannot delete this location because it is used by some related records in other tables."));
 		return false;
 	}
 	if (key_in_foreign_table($selected_id, 'purch_orders', 'into_stock_location'))
 	{
-		display_error(_("Cannot delete this location because it is used by some related records in other tables."));
+		display_error(__("Cannot delete this location because it is used by some related records in other tables."));
 		return false;
 	}
 	if (key_in_foreign_table($selected_id, 'sales_orders', 'from_stk_loc'))
 	{
-		display_error(_("Cannot delete this location because it is used by some related records in other tables."));
+		display_error(__("Cannot delete this location because it is used by some related records in other tables."));
 		return false;
 	}
 	if (key_in_foreign_table($selected_id, 'sales_pos', 'pos_location'))
 	{
-		display_error(_("Cannot delete this location because it is used by some related records in other tables."));
+		display_error(__("Cannot delete this location because it is used by some related records in other tables."));
 		return false;
 	}
 	return true;
@@ -132,7 +132,7 @@ if ($Mode == 'Delete')
 	if (can_delete($selected_id)) 
 	{
 		delete_item_location($selected_id);
-		display_notification(_('Selected location has been deleted'));
+		display_notification(__('Selected location has been deleted'));
 	} //end if Delete Location
 	$Mode = 'RESET';
 }
@@ -151,7 +151,7 @@ $result = get_item_locations(check_value('show_inactive'), get_post('fixed_asset
 
 start_form();
 start_table(TABLESTYLE);
-$th = array(_("Location Code"), _("Location Name"), _("Address"), _("Phone"), _("Secondary Phone"), "", "");
+$th = array(__("Location Code"), __("Location Name"), __("Address"), __("Phone"), __("Secondary Phone"), "", "");
 inactive_control_column($th);
 table_header($th);
 $k = 0; //row colour counter
@@ -166,8 +166,8 @@ while ($myrow = db_fetch($result))
 	label_cell($myrow["phone"]);
 	label_cell($myrow["phone2"]);
 	inactive_control_cell($myrow["loc_code"], $myrow["inactive"], 'locations', 'loc_code');
- 	edit_button_cell("Edit".$myrow["loc_code"], _("Edit"));
- 	delete_button_cell("Delete".$myrow["loc_code"], _("Delete"));
+ 	edit_button_cell("Edit".$myrow["loc_code"], __("Edit"));
+ 	delete_button_cell("Delete".$myrow["loc_code"], __("Delete"));
 	end_row();
 }
 	//END WHILE LIST LOOP
@@ -198,22 +198,22 @@ if ($selected_id != -1)
 	}
 	hidden("selected_id", $selected_id);
 	hidden("loc_code");
-	label_row(_("Location Code:"), $_POST['loc_code']);
+	label_row(__("Location Code:"), $_POST['loc_code']);
 } 
 else 
 { //end of if $selected_id only do the else when a new record is being entered
-	text_row(_("Location Code:"), 'loc_code', null, 5, 5);
+	text_row(__("Location Code:"), 'loc_code', null, 5, 5);
 }
 
-text_row_ex(_("Location Name:"), 'location_name', 50, 50);
-text_row_ex(_("Contact for deliveries:"), 'contact', 30, 30);
+text_row_ex(__("Location Name:"), 'location_name', 50, 50);
+text_row_ex(__("Contact for deliveries:"), 'contact', 30, 30);
 
-textarea_row(_("Address:"), 'delivery_address', null, 34, 5);	
+textarea_row(__("Address:"), 'delivery_address', null, 34, 5);	
 
-text_row_ex(_("Telephone No:"), 'phone', 32, 30);
-text_row_ex(_("Secondary Phone Number:"), 'phone2', 32, 30);
-text_row_ex(_("Facsimile No:"), 'fax', 32, 30);
-email_row_ex(_("E-mail:"), 'email', 50);
+text_row_ex(__("Telephone No:"), 'phone', 32, 30);
+text_row_ex(__("Secondary Phone Number:"), 'phone2', 32, 30);
+text_row_ex(__("Facsimile No:"), 'fax', 32, 30);
+email_row_ex(__("E-mail:"), 'email', 50);
 
 end_table(1);
 submit_add_or_update_center($selected_id == -1, '', 'both');

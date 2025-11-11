@@ -164,7 +164,7 @@ function display_db_pager(&$pager) {
 	start_row("class='navibar'");
 	$colspan = count($pager->columns);
 		$inact = @$pager->inactive_ctrl==true 
-			? ' '.checkbox(null, 'show_inactive', null, true). _("Show also Inactive") : '';
+			? ' '.checkbox(null, 'show_inactive', null, true). __("Show also Inactive") : '';
 	 if($pager->rec_count) {
 		echo "<td colspan=$colspan class='navibar' style='border:none;padding:3px;'>";
 		echo "<div style='float:right;'>";
@@ -172,11 +172,11 @@ function display_db_pager(&$pager) {
 	    start_table();
 		start_row();
 		if (@$pager->inactive_ctrl) 
-				submit('Update', _('Update'), true, '', null); // inactive update
-		echo navi_button_cell($but_pref.'first', _('First'), $pager->first_page, 'right');
-		echo navi_button_cell($but_pref.'prev', _('Prev'), $pager->prev_page,'right');
-		echo navi_button_cell($but_pref.'next', _('Next'), $pager->next_page,'right');
-		echo navi_button_cell($but_pref.'last', _('Last'), $pager->last_page, 'right');
+				submit('Update', __('Update'), true, '', null); // inactive update
+		echo navi_button_cell($but_pref.'first', __('First'), $pager->first_page, 'right');
+		echo navi_button_cell($but_pref.'prev', __('Prev'), $pager->prev_page,'right');
+		echo navi_button_cell($but_pref.'next', __('Next'), $pager->next_page,'right');
+		echo navi_button_cell($but_pref.'last', __('Last'), $pager->last_page, 'right');
 		end_row(); 
 		end_table();
 		echo "</div>";
@@ -185,11 +185,11 @@ function display_db_pager(&$pager) {
 		if ($to > $pager->rec_count)
 		  $to = $pager->rec_count;
 		$all = $pager->rec_count;
-		echo sprintf( _('Records %d-%d of %d'), $from, $to, $all);
+		echo sprintf( __('Records %d-%d of %d'), $from, $to, $all);
 		echo $inact;
 		echo "</td>";
 	} else {
-	  	label_cell( _('No records') . $inact, "colspan=$colspan class='navibar'");
+	  	label_cell( __('No records') . $inact, "colspan=$colspan class='navibar'");
 	}
 
 	end_row();

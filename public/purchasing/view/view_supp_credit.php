@@ -19,7 +19,7 @@ require_once __DIR__ . "/../../purchasing/includes/purchasing_ui.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
-page(_($GLOBALS['help_context'] = "View Supplier Credit Note"), true, false, "", $js);
+page(__($GLOBALS['help_context'] = "View Supplier Credit Note"), true, false, "", $js);
 
 if (isset($_GET["trans_no"]))
 {
@@ -34,18 +34,18 @@ $supp_trans = new supp_trans(ST_SUPPCREDIT);
 
 read_supp_invoice($trans_no, ST_SUPPCREDIT, $supp_trans);
 
-display_heading("<font color=red>" . _("SUPPLIER CREDIT NOTE") . " # " . $trans_no . "</font>");
+display_heading("<font color=red>" . __("SUPPLIER CREDIT NOTE") . " # " . $trans_no . "</font>");
 echo "<br>";
 start_table(TABLESTYLE, "width='95%'");
 start_row();
-label_cells(_("Supplier"), $supp_trans->supplier_name, "class='tableheader2'");
-label_cells(_("Reference"), $supp_trans->reference, "class='tableheader2'");
-label_cells(_("Supplier's Reference"), $supp_trans->supp_reference, "class='tableheader2'");
+label_cells(__("Supplier"), $supp_trans->supplier_name, "class='tableheader2'");
+label_cells(__("Reference"), $supp_trans->reference, "class='tableheader2'");
+label_cells(__("Supplier's Reference"), $supp_trans->supp_reference, "class='tableheader2'");
 end_row();
 start_row();
-label_cells(_("Invoice Date"), $supp_trans->tran_date, "class='tableheader2'");
-label_cells(_("Due Date"), $supp_trans->due_date, "class='tableheader2'");
-label_cells(_("Currency"), get_supplier_currency($supp_trans->supplier_id), "class='tableheader2'");
+label_cells(__("Invoice Date"), $supp_trans->tran_date, "class='tableheader2'");
+label_cells(__("Due Date"), $supp_trans->due_date, "class='tableheader2'");
+label_cells(__("Currency"), get_supplier_currency($supp_trans->supplier_id), "class='tableheader2'");
 end_row();
 comments_display_row(ST_SUPPCREDIT, $trans_no);
 end_table(1);
@@ -56,18 +56,18 @@ $total_grn = display_grn_items($supp_trans, 2);
 $display_sub_tot = number_format2($total_gl+$total_grn,user_price_dec());
 
 start_table(TABLESTYLE, "width='95%'");
-label_row(_("Sub Total"), $display_sub_tot, "align=right", "nowrap align=right width='17%'");
+label_row(__("Sub Total"), $display_sub_tot, "align=right", "nowrap align=right width='17%'");
 
 $tax_items = get_trans_tax_details(ST_SUPPCREDIT, $trans_no);
 display_supp_trans_tax_details($tax_items, 1);
 
 $display_total = number_format2(-($supp_trans->ov_amount + $supp_trans->ov_gst),user_price_dec());
-label_row("<font color=red>" . _("TOTAL CREDIT NOTE") . "</font", "<font color=red>$display_total</font>", 
+label_row("<font color=red>" . __("TOTAL CREDIT NOTE") . "</font", "<font color=red>$display_total</font>", 
 	"colspan=1 align=right", "nowrap align=right");
 
 end_table(1);
 
-$voided = is_voided_display(ST_SUPPCREDIT, $trans_no, _("This credit note has been voided."));
+$voided = is_voided_display(ST_SUPPCREDIT, $trans_no, __("This credit note has been voided."));
 
 if (!$voided)
 {

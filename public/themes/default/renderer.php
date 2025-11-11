@@ -24,7 +24,7 @@
 
 		function wa_header()
 		{
-			page(_($GLOBALS['help_context'] = "Main Menu"), false, true);
+			page(__($GLOBALS['help_context'] = "Main Menu"), false, true);
 		}
 
 		function wa_footer()
@@ -65,24 +65,24 @@
 				echo "</div>";
 				echo "</td></tr></table>";
 				// top status bar
-				$rimg = "<img src='".url("/themes/".user_theme()."/images/report.png")."' style='width:14px;height:14px;border:0;vertical-align:middle;' alt='"._('Dashboard')."'>&nbsp;&nbsp;";
-				$pimg = "<img src='".url("/themes/".user_theme()."/images/preferences.gif")."' style='width:14px;height:14px; border:0;vertical-align:middle;' alt='"._('Preferences')."'>&nbsp;&nbsp;";
-				$limg = "<img src='".url("/themes/".user_theme()."/images/lock.gif")."' style='width:14px;height:14px;border:0;vertical-align:middle;' alt='"._('Change Password')."'>&nbsp;&nbsp;";
-				$img = "<img src='".url("/themes/".user_theme()."/images/login.gif")."' style='width:14px;height:14px;border:0;vertical-align:middle;' alt='"._('Logout')."'>&nbsp;&nbsp;";
-				$himg = "<img src='".url("/themes/".user_theme()."/images/help.gif")."' style='width:14px;height:14px;border:0;vertical-align:middle;'' alt='"._('Help')."'>&nbsp;&nbsp;";
+				$rimg = "<img src='".url("/themes/".user_theme()."/images/report.png")."' style='width:14px;height:14px;border:0;vertical-align:middle;' alt='".__('Dashboard')."'>&nbsp;&nbsp;";
+				$pimg = "<img src='".url("/themes/".user_theme()."/images/preferences.gif")."' style='width:14px;height:14px; border:0;vertical-align:middle;' alt='".__('Preferences')."'>&nbsp;&nbsp;";
+				$limg = "<img src='".url("/themes/".user_theme()."/images/lock.gif")."' style='width:14px;height:14px;border:0;vertical-align:middle;' alt='".__('Change Password')."'>&nbsp;&nbsp;";
+				$img = "<img src='".url("/themes/".user_theme()."/images/login.gif")."' style='width:14px;height:14px;border:0;vertical-align:middle;' alt='".__('Logout')."'>&nbsp;&nbsp;";
+				$himg = "<img src='".url("/themes/".user_theme()."/images/help.gif")."' style='width:14px;height:14px;border:0;vertical-align:middle;'' alt='".__('Help')."'>&nbsp;&nbsp;";
 				echo "<table class='logoutBar'>";
 				echo "<tr><td class='headingtext3'>" . $db_connections[user_company()]["name"] . " | " . $_SERVER['SERVER_NAME'] . " | " . $_SESSION["wa_current_user"]->name . "</td>";
 				echo "<td class='logoutBarRight'><img id='ajaxmark' src='$indicator' align='center' style='visibility:hidden;' alt='ajaxmark'></td>";
-				echo "<td class='logoutBarRight'><a href='".url("/admin/dashboard.php", ['sel_app' => $sel_app])."'>$rimg" . _("Dashboard") . "</a>&nbsp;&nbsp;&nbsp;\n";
+				echo "<td class='logoutBarRight'><a href='".url("/admin/dashboard.php", ['sel_app' => $sel_app])."'>$rimg" . __("Dashboard") . "</a>&nbsp;&nbsp;&nbsp;\n";
 				
-				echo "<a class='shortcut' href='".url("/admin/display_prefs.php")."'>$pimg" . _("Preferences") . "</a>&nbsp;&nbsp;&nbsp;\n";
-				echo "  <a class='shortcut' href='".url("/admin/change_current_user_password.php", ['selected_id' => $_SESSION["wa_current_user"]->username])."'>$limg" . _("Change password") . "</a>&nbsp;&nbsp;&nbsp;\n";
+				echo "<a class='shortcut' href='".url("/admin/display_prefs.php")."'>$pimg" . __("Preferences") . "</a>&nbsp;&nbsp;&nbsp;\n";
+				echo "  <a class='shortcut' href='".url("/admin/change_current_user_password.php", ['selected_id' => $_SESSION["wa_current_user"]->username])."'>$limg" . __("Change password") . "</a>&nbsp;&nbsp;&nbsp;\n";
 
 				if ($SysPrefs->help_base_url != null)
 				{
-					echo "<a target = '_blank' onclick=" .'"'."javascript:openWindow(this.href,this.target); return false;".'" '. "href='". help_url()."'>$himg" . _("Help") . "</a>&nbsp;&nbsp;&nbsp;";
+					echo "<a target = '_blank' onclick=" .'"'."javascript:openWindow(this.href,this.target); return false;".'" '. "href='". help_url()."'>$himg" . __("Help") . "</a>&nbsp;&nbsp;&nbsp;";
 				}
-				echo "<a class='shortcut' href='".url("/access/logout.php")."'>$img" . _("Logout") . "</a>&nbsp;&nbsp;&nbsp;";
+				echo "<a class='shortcut' href='".url("/access/logout.php")."'>$img" . __("Logout") . "</a>&nbsp;&nbsp;&nbsp;";
 				echo "</td></tr><tr><td colspan=3>";
 				echo "</td></tr></table>";
 			}
@@ -131,7 +131,7 @@
 				echo "<table align='center' id='footer'>\n";
 				echo "<tr>\n";
 				echo "<td align='center' class='footer'><a target='_blank' href='".$SysPrefs->power_url."' tabindex='-1'><font color='#ffffff'>".$SysPrefs->app_title
-					." $version - " . _("Theme:") . " " . user_theme() . " - ".show_users_online()."</font></a></td>\n";
+					." $version - " . __("Theme:") . " " . user_theme() . " - ".show_users_online()."</font></a></td>\n";
 				echo "</tr>\n";
 				echo "<tr>\n";
 				echo "<td align='center' class='footer'><a target='_blank' href='".$SysPrefs->power_url

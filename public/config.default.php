@@ -78,7 +78,7 @@
  	// $old_style_help = 1; // this setting is depreciated and subject to removal in next FA versions
 	$old_style_help = 0;
 	// 	locally installed wiki module
-	// $help_base_url =  __DIR__.'/modules/wiki/index.php?n='._('Help').'.';
+	// $help_base_url =  __DIR__.'/modules/wiki/index.php?n='.__('Help').'.';
 	// 	context help feed from frontaccounting.com
 	$help_base_url = 'http://frontaccounting.com/fawiki/index.php?n=Help.';
 	// 	set to null if not used:

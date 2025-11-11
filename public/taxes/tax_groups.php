@@ -13,7 +13,7 @@ $GLOBALS['page_security'] = 'SA_TAXGROUPS';
 
 require __DIR__ . "/../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "Tax Groups"));
+page(__($GLOBALS['help_context'] = "Tax Groups"));
 
 require_once __DIR__ . "/../includes/data_checks.inc";
 require_once __DIR__ . "/../includes/ui.inc";
@@ -23,7 +23,7 @@ require_once __DIR__ . "/../taxes/db/tax_types_db.inc";
 
 simple_page_mode(true);
 	
-check_db_has_tax_types(_("There are no tax types defined. Define tax types before defining tax groups."));
+check_db_has_tax_types(__("There are no tax types defined. Define tax types before defining tax groups."));
 
 //-----------------------------------------------------------------------------------
 
@@ -36,7 +36,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 	if (strlen($_POST['name']) == 0) 
 	{
 		$input_error = 1;
-		display_error(_("The tax group name cannot be empty."));
+		display_error(__("The tax group name cannot be empty."));
 		set_focus('name');
 	} 
 	if ($input_error != 1) 
@@ -59,12 +59,12 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
     	if ($selected_id != -1) 
     	{
 	   		update_tax_group($selected_id, $_POST['name'], $taxes, $tax_shippings);
-			display_notification(_('Selected tax group has been updated'));
+			display_notification(__('Selected tax group has been updated'));
     	} 
     	else 
     	{
 	   		add_tax_group($_POST['name'], $taxes, $tax_shippings);
-			display_notification(_('New tax group has been added'));
+			display_notification(__('New tax group has been added'));
     	}
 
 		$Mode = 'RESET';
@@ -79,13 +79,13 @@ function can_delete($selected_id)
 		return false;
 	if (key_in_foreign_table($selected_id, 'cust_branch', 'tax_group_id'))	
 	{
-		display_error(_("Cannot delete this tax group because customer branches been created referring to it."));
+		display_error(__("Cannot delete this tax group because customer branches been created referring to it."));
 		return false;
 	}
 
 	if (key_in_foreign_table($selected_id, 'suppliers', 'tax_group_id'))
 	{
-		display_error(_("Cannot delete this tax group because suppliers been created referring to it."));
+		display_error(__("Cannot delete this tax group because suppliers been created referring to it."));
 		return false;
 	}
 
@@ -102,7 +102,7 @@ if ($Mode == 'Delete')
 	if (can_delete($selected_id))
 	{
 		delete_tax_group($selected_id);
-		display_notification(_('Selected tax group has been deleted'));
+		display_notification(__('Selected tax group has been deleted'));
 	}
 	$Mode = 'RESET';
 }
@@ -122,7 +122,7 @@ $result = get_all_tax_groups(check_value('show_inactive'));
 start_form();
 
 start_table(TABLESTYLE);
-$th = array(_("Description"), "", "");
+$th = array(__("Description"), "", "");
 inactive_control_column($th);
 
 table_header($th);
@@ -136,8 +136,8 @@ while ($myrow = db_fetch($result))
 	label_cell($myrow["name"]);
 
 	inactive_control_cell($myrow["id"], $myrow["inactive"], 'tax_groups', 'id');
- 	edit_button_cell("Edit".$myrow["id"], _("Edit"));
- 	delete_button_cell("Delete".$myrow["id"], _("Delete"));
+ 	edit_button_cell("Edit".$myrow["id"], __("Edit"));
+ 	delete_button_cell("Delete".$myrow["id"], __("Delete"));
 	end_row();
 }
 
@@ -161,16 +161,16 @@ if ($selected_id != -1)
 	hidden('selected_id', $selected_id);
 
 }
-text_row_ex(_("Description:"), 'name', 40);
+text_row_ex(__("Description:"), 'name', 40);
 
 end_table();
 
-display_note(_("Select the taxes that are included in this group."), 1, 1);
+display_note(__("Select the taxes that are included in this group."), 1, 1);
 
 $items = get_tax_group_rates($selected_id!=-1 ? $selected_id : null);
 
 start_table(TABLESTYLE2);
-$th = array(_("Tax"), "", _("Shipping Tax"));
+$th = array(__("Tax"), "", __("Shipping Tax"));
 table_header($th);
 
 while($item = db_fetch($items)) 

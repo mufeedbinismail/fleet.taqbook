@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_PAYTERMS';
 require __DIR__ . "/../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "Payment Terms"));
+page(__($GLOBALS['help_context'] = "Payment Terms"));
 
 require_once __DIR__ . "/../includes/ui.inc";
 
@@ -47,13 +47,13 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 	if (!is_numeric($_POST['DayNumber']))
 	{
 		$input_error = 1;
-		display_error( _("The number of days or the day in the following month must be numeric."));
+		display_error( __("The number of days or the day in the following month must be numeric."));
 		set_focus('DayNumber');
 	} 
 	elseif (strlen($_POST['terms']) == 0) 
 	{
 		$input_error = 1;
-		display_error( _("The Terms description must be entered."));
+		display_error( __("The Terms description must be entered."));
 		set_focus('terms');
 	}
 
@@ -73,12 +73,12 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
     	if ($selected_id != -1) 
     	{
     		update_payment_terms($selected_id, $from_now, $_POST['terms'], $days); 
- 			$note = _('Selected payment terms have been updated');
+ 			$note = __('Selected payment terms have been updated');
     	} 
     	else 
     	{
 			add_payment_terms($from_now, $_POST['terms'], $days);
-			$note = _('New payment terms have been added');
+			$note = __('New payment terms have been added');
     	}
     	//run the sql from either of the above possibilites
 		display_notification($note);
@@ -91,19 +91,19 @@ if ($Mode == 'Delete')
 	// PREVENT DELETES IF DEPENDENT RECORDS IN debtors_master
 	if (key_in_foreign_table($selected_id, 'debtors_master', 'payment_terms'))
 	{
-		display_error(_("Cannot delete this payment term, because customer accounts have been created referring to this term."));
+		display_error(__("Cannot delete this payment term, because customer accounts have been created referring to this term."));
 	} 
 	else 
 	{
 		if (key_in_foreign_table($selected_id, 'suppliers', 'payment_terms'))
 		{
-			display_error(_("Cannot delete this payment term, because supplier accounts have been created referring to this term"));
+			display_error(__("Cannot delete this payment term, because supplier accounts have been created referring to this term"));
 		} 
 		else 
 		{
 			//only delete if used in neither customer or supplier accounts
 			delete_payment_terms($selected_id);
-			display_notification(_('Selected payment terms have been deleted'));
+			display_notification(__('Selected payment terms have been deleted'));
 		}
 	}
 	//end if payment terms used in customer or supplier accounts
@@ -123,7 +123,7 @@ $result = get_payment_terms_all(check_value('show_inactive'));
 
 start_form();
 start_table(TABLESTYLE);
-$th = array(_("Description"), _("Type"), _("Due After/Days"), "", "");
+$th = array(__("Description"), __("Type"), __("Due After/Days"), "", "");
 inactive_control_column($th);
 table_header($th);
 
@@ -136,10 +136,10 @@ while ($myrow = db_fetch($result))
 	$days = term_days($myrow);
     label_cell($myrow["terms"]);
     label_cell($pterm_types[$type]);
-    label_cell($type == PTT_DAYS ? "$days "._("days") : ($type == PTT_FOLLOWING ? $days : _("N/A")));
+    label_cell($type == PTT_DAYS ? "$days ".__("days") : ($type == PTT_FOLLOWING ? $days : __("N/A")));
 	inactive_control_cell($myrow["terms_indicator"], $myrow["inactive"], 'payment_terms', "terms_indicator");
- 	edit_button_cell("Edit".$myrow["terms_indicator"], _("Edit"));
- 	delete_button_cell("Delete".$myrow["terms_indicator"], _("Delete"));
+ 	edit_button_cell("Edit".$myrow["terms_indicator"], __("Edit"));
+ 	delete_button_cell("Delete".$myrow["terms_indicator"], __("Delete"));
     end_row();
 
 }
@@ -170,12 +170,12 @@ if ($selected_id != -1)
 	hidden('selected_id', $selected_id);
 }
 
-text_row(_("Terms Description:"), 'terms', null, 40, 40);
+text_row(__("Terms Description:"), 'terms', null, 40, 40);
 
-payment_type_list_row(_("Payment type:"), 'type', null, true);
+payment_type_list_row(__("Payment type:"), 'type', null, true);
 
 if ( in_array(get_post('type'), array(PTT_FOLLOWING, PTT_DAYS))) 
-	text_row_ex(_("Days (Or Day In Following Month):"), 'DayNumber', 3);
+	text_row_ex(__("Days (Or Day In Following Month):"), 'DayNumber', 3);
 else
 	hidden('DayNumber', 0);
 

@@ -24,19 +24,19 @@ if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
 
 if (isset($_GET['FixedAsset'])) {
-	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "FA Revaluation");
+	$_SESSION['page_title'] = __($GLOBALS['help_context'] = "FA Revaluation");
 	$_POST['fixed_asset'] = 1;
 } else {
-	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Inventory Item Cost Update");
+	$_SESSION['page_title'] = __($GLOBALS['help_context'] = "Inventory Item Cost Update");
 }
 page($_SESSION['page_title'], false, false, "", $js);
 
 //--------------------------------------------------------------------------------------
 
 if (get_post('fixed_asset') == 1)
-	check_db_has_disposable_fixed_assets(_("There are no fixed assets defined in the system."));
+	check_db_has_disposable_fixed_assets(__("There are no fixed assets defined in the system."));
 else
-	check_db_has_costable_items(_("There are no costable inventory items defined in the system (Purchased or manufactured items)."));
+	check_db_has_costable_items(__("There are no costable inventory items defined in the system (Purchased or manufactured items)."));
 
 if (isset($_GET['stock_id']))
 {
@@ -57,13 +57,13 @@ if (isset($_POST['UpdateData']))
 	if (!check_num('material_cost') || !check_num('labour_cost') ||
 		!check_num('overhead_cost'))
 	{
-		display_error( _("The entered cost is not numeric."));
+		display_error( __("The entered cost is not numeric."));
 		set_focus('material_cost');
    	 	$should_update = false;
 	}
 	elseif ($old_cost == $new_cost)
 	{
-   	 	display_error( _("The new cost is the same as the old cost. Cost was not updated."));
+   	 	display_error( __("The new cost is the same as the old cost. Cost was not updated."));
    	 	$should_update = false;
 	}
 
@@ -74,11 +74,11 @@ if (isset($_POST['UpdateData']))
 		    input_num('overhead_cost'),	$old_cost, 
         $_POST['refline'], $_POST['memo_']);
 
-        display_notification(_("Cost has been updated."));
+        display_notification(__("Cost has been updated."));
 
         if ($update_no > 0)
         {
-    		display_notification(get_gl_view_str(ST_COSTUPDATE, $update_no, _("View the GL Journal Entries for this Cost Update")));
+    		display_notification(get_gl_view_str(ST_COSTUPDATE, $update_no, __("View the GL Journal Entries for this Cost Update")));
         }
 
    	}
@@ -102,7 +102,7 @@ if (!isset($_POST['stock_id']))
 
 if (!$page_nested)
 {
-	echo "<center>" . _("Item:"). "&nbsp;";
+	echo "<center>" . __("Item:"). "&nbsp;";
 	if (get_post('fixed_asset') == 1)
 		echo stock_disposable_fa_list('stock_id', $_POST['stock_id'], false, true);
 	else
@@ -127,24 +127,24 @@ if ($myrow) {
 	$_POST['overhead_cost'] = price_decimal_format($myrow["overhead_cost"], $dec3);
 }
 
-amount_row(_("Unit cost"), "material_cost", null, "class='tableheader2'", null, $dec1);
+amount_row(__("Unit cost"), "material_cost", null, "class='tableheader2'", null, $dec1);
 
 if ($myrow && $myrow["mb_flag"]=='M')
 {
-	amount_row(_("Standard Labour Cost Per Unit"), "labour_cost", null, "class='tableheader2'", null, $dec2);
-	amount_row(_("Standard Overhead Cost Per Unit"), "overhead_cost", null, "class='tableheader2'", null, $dec3);
+	amount_row(__("Standard Labour Cost Per Unit"), "labour_cost", null, "class='tableheader2'", null, $dec2);
+	amount_row(__("Standard Overhead Cost Per Unit"), "overhead_cost", null, "class='tableheader2'", null, $dec3);
 }
 else
 {
 	hidden("labour_cost", 0);
 	hidden("overhead_cost", 0);
 }
-refline_list_row(_("Reference line:"), 'refline', ST_COSTUPDATE, null, false, get_post('fixed_asset'));
-textarea_row(_("Memo"), 'memo_', null, 40, 4);
+refline_list_row(__("Reference line:"), 'refline', ST_COSTUPDATE, null, false, get_post('fixed_asset'));
+textarea_row(__("Memo"), 'memo_', null, 40, 4);
 
 end_table(1);
 div_end();
-submit_center('UpdateData', _("Update"), true, false, 'default');
+submit_center('UpdateData', __("Update"), true, false, 'default');
 
 end_form();
 end_page();

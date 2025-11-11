@@ -93,7 +93,7 @@ function print_invoices()
 	$cur = get_company_Pref('curr_default');
 
 	if ($email == 0)
-		$rep = new FrontReport(_('INVOICE'), "InvoiceBulk", user_pagesize(), 9, $orientation);
+		$rep = new FrontReport(__('INVOICE'), "InvoiceBulk", user_pagesize(), 9, $orientation);
 	if ($orientation == 'L')
 		recalculate_cols($cols);
 
@@ -125,7 +125,7 @@ function print_invoices()
 			if ($email == 1)
 			{
 				$rep = new FrontReport("", "", user_pagesize(), 9, $orientation);
-				$rep->title = _('INVOICE');
+				$rep->title = __('INVOICE');
 				$rep->filename = "Invoice" . $myrow['reference'] . ".pdf";
 			}	
 			$rep->currency = $cur;
@@ -216,15 +216,15 @@ function print_invoices()
 			if (isset($prepayments))
 			{
 				// Partial invoices table
-				$rep->TextCol(0, 3,_("Prepayments invoiced to this order up to day:"));
+				$rep->TextCol(0, 3,__("Prepayments invoiced to this order up to day:"));
 				$rep->TextCol(0, 3,	str_pad('', 150, '_'));
 				$rep->cols[2] -= 20;
 				$rep->aligns[2] = 'right';
 				$rep->NewLine(); $c = 0; $tot_pym=0;
 				$rep->TextCol(0, 3,	str_pad('', 150, '_'));
-				$rep->TextCol($c++, $c, _("Date"));
-				$rep->TextCol($c++, $c,	_("Invoice reference"));
-				$rep->TextCol($c++, $c,	_("Amount"));
+				$rep->TextCol($c++, $c, __("Date"));
+				$rep->TextCol($c++, $c,	__("Invoice reference"));
+				$rep->TextCol($c++, $c,	__("Amount"));
 
 				foreach ($prepayments as $invoice)
 				{
@@ -240,7 +240,7 @@ function print_invoices()
 				}
 				$rep->TextCol(0, 3,	str_pad('', 150, '_'));
 				$rep->NewLine();
-				$rep->TextCol(1, 2,	_("Total payments:"));
+				$rep->TextCol(1, 2,	__("Total payments:"));
 				$rep->TextCol(2, 3,	number_format2($tot_pym, $dec));
 			}
 
@@ -251,13 +251,13 @@ function print_invoices()
 			$rep->cols[3] += 20;
 			$rep->aligns[3] = 'left';
 
-			$rep->TextCol(3, 6, _("Sub-total"), -2);
+			$rep->TextCol(3, 6, __("Sub-total"), -2);
 			$rep->TextCol(6, 7,	$DisplaySubTot, -2);
 			$rep->NewLine();
 			if ($myrow['ov_freight'] != 0.0)
 			{
    				$DisplayFreight = number_format2($sign*$myrow["ov_freight"],$dec);
-				$rep->TextCol(3, 6, _("Shipping"), -2);
+				$rep->TextCol(3, 6, __("Shipping"), -2);
 				$rep->TextCol(6, 7,	$DisplayFreight, -2);
 				$rep->NewLine();
 			}	
@@ -280,7 +280,7 @@ function print_invoices()
     				{
     					if ($first)
     					{
-							$rep->TextCol(3, 6, _("Total Tax Excluded"), -2);
+							$rep->TextCol(3, 6, __("Total Tax Excluded"), -2);
 							$rep->TextCol(6, 7,	number_format2($sign*$tax_item['net_amount'], $dec), -2);
 							$rep->NewLine();
     					}
@@ -289,7 +289,7 @@ function print_invoices()
 						$first = false;
     				}
     				else
-						$rep->TextCol(3, 6, _("Included") . " " . $tax_type_name . _("Amount") . ": " . $DisplayTax, -2);
+						$rep->TextCol(3, 6, __("Included") . " " . $tax_type_name . __("Amount") . ": " . $DisplayTax, -2);
 				}
     			else
     			{
@@ -304,13 +304,13 @@ function print_invoices()
 				$myrow["ov_amount"]+$myrow["ov_freight_tax"]),$dec);
 			$rep->Font('bold');
 			if (!$myrow['prepaid']) $rep->Font('bold');
-				$rep->TextCol(3, 6, $rep->formData['prepaid'] ? _("TOTAL ORDER VAT INCL.") : _("TOTAL INVOICE"), - 2);
+				$rep->TextCol(3, 6, $rep->formData['prepaid'] ? __("TOTAL ORDER VAT INCL.") : __("TOTAL INVOICE"), - 2);
 			$rep->TextCol(6, 7, $DisplayTotal, -2);
 			if ($rep->formData['prepaid'])
 			{
 				$rep->NewLine();
 				$rep->Font('bold');
-				$rep->TextCol(3, 6, $rep->formData['prepaid']=='final' ? _("THIS INVOICE") : _("TOTAL INVOICE"), - 2);
+				$rep->TextCol(3, 6, $rep->formData['prepaid']=='final' ? __("THIS INVOICE") : __("TOTAL INVOICE"), - 2);
 				$rep->TextCol(6, 7, number_format2($myrow['prep_amount'], $dec), -2);
 			}
 			$words = price_in_words($rep->formData['prepaid'] ? $myrow['prep_amount'] : $myrow['Total']
@@ -323,7 +323,7 @@ function print_invoices()
 			$rep->Font();
 			if ($email == 1)
 			{
-				$rep->End($email, sprintf(_("Invoice %s from %s"), $myrow['reference'], htmlspecialchars_decode(get_company_pref('coy_name'))));
+				$rep->End($email, sprintf(__("Invoice %s from %s"), $myrow['reference'], htmlspecialchars_decode(get_company_pref('coy_name'))));
 			}
 	}
 	if ($email == 0)

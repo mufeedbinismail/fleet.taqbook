@@ -127,7 +127,7 @@ function print_customer_balances()
 
     $orientation = ($orientation ? 'L' : 'P');
     if ($fromcust == ALL_TEXT)
-        $cust = _('All');
+        $cust = __('All');
     else
         $cust = get_customer_name($fromcust);
     $dec = user_price_dec();
@@ -136,43 +136,43 @@ function print_customer_balances()
         $area = 0;
 
     if ($area == 0)
-        $sarea = _('All Areas');
+        $sarea = __('All Areas');
     else
         $sarea = get_area_name($area);
 
     if ($folk == ALL_NUMERIC)
         $folk = 0;
     if ($folk == 0)
-        $salesfolk = _('All Sales Man');
+        $salesfolk = __('All Sales Man');
      else
         $salesfolk = get_salesman_name($folk);
 
     if ($currency == ALL_TEXT)
     {
         $convert = true;
-        $currency = _('Balances in Home Currency');
+        $currency = __('Balances in Home Currency');
     }
     else
         $convert = false;
 
-    if ($no_zeros) $nozeros = _('Yes');
-    else $nozeros = _('No');
+    if ($no_zeros) $nozeros = __('Yes');
+    else $nozeros = __('No');
 
     $cols = array(0, 100, 130, 190, 250, 320, 385, 450, 515);
 
-    $headers = array(_('Name'), '', '', _('Open Balance'), _('Debit'), _('Credit'), '', _('Balance'));
+    $headers = array(__('Name'), '', '', __('Open Balance'), __('Debit'), __('Credit'), '', __('Balance'));
 
     $aligns = array('left', 'left', 'left', 'right', 'right', 'right', 'right', 'right');
 
     $params =   array(  0 => $comments,
-                        1 => array('text' => _('Period'), 'from' => $from,   'to' => $to),
-                        2 => array('text' => _('Customer'), 'from' => $cust, 'to' => ''),
-    				    3 => array('text' => _('Sales Areas'), 'from' => $sarea, 		'to' => ''),
-    				    4 => array('text' => _('Sales Folk'), 'from' => $salesfolk, 	'to' => ''),
-                        5 => array('text' => _('Currency'), 'from' => $currency, 'to' => ''),
-                        6 => array('text' => _('Suppress Zeros'), 'from' => $nozeros, 'to' => ''));
+                        1 => array('text' => __('Period'), 'from' => $from,   'to' => $to),
+                        2 => array('text' => __('Customer'), 'from' => $cust, 'to' => ''),
+    				    3 => array('text' => __('Sales Areas'), 'from' => $sarea, 		'to' => ''),
+    				    4 => array('text' => __('Sales Folk'), 'from' => $salesfolk, 	'to' => ''),
+                        5 => array('text' => __('Currency'), 'from' => $currency, 'to' => ''),
+                        6 => array('text' => __('Suppress Zeros'), 'from' => $nozeros, 'to' => ''));
 
-    $rep = new FrontReport(_('Customer Trial Balance'), "CustomerTB", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Customer Trial Balance'), "CustomerTB", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
         recalculate_cols($cols);
     $rep->Font();
@@ -228,7 +228,7 @@ function print_customer_balances()
 
         if (db_num_rows($res) == 0 && !$no_zeros) 
         {
-            $rep->TextCol(0, 2, $myrow['name'].($myrow['inactive']==1 ? " ("._("Inactive").")" : ""));
+            $rep->TextCol(0, 2, $myrow['name'].($myrow['inactive']==1 ? " (".__("Inactive").")" : ""));
             $rep->AmountCol(3, 4, $curr_open, $dec);
             $rep->AmountCol(7, 8, $curr_open, $dec);
             $rep->NewLine(1);
@@ -248,7 +248,7 @@ function print_customer_balances()
         $tot_cur_cr += $curr_cr;
 
         if ($no_zeros && $curr_open == 0.0 && $curr_db == 0.0 && $curr_cr == 0.0) continue;
-        $rep->TextCol(0, 2, $myrow['name'].($myrow['inactive']==1 ? " ("._("Inactive").")" : ""));
+        $rep->TextCol(0, 2, $myrow['name'].($myrow['inactive']==1 ? " (".__("Inactive").")" : ""));
         $rep->AmountCol(3, 4, $curr_open, $dec);
         $rep->AmountCol(4, 5, $curr_db, $dec);
         $rep->AmountCol(5, 6, $curr_cr, $dec);
@@ -260,7 +260,7 @@ function print_customer_balances()
     $rep->Line($rep->row + 4);
     $rep->NewLine();
     $rep->fontSize += 2;
-    $rep->TextCol(0, 3, _('Grand Total'));
+    $rep->TextCol(0, 3, __('Grand Total'));
     $rep->fontSize -= 2;
 
     $tot_bal = $tot_open+$tot_cur_db-$tot_cur_cr;

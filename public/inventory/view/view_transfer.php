@@ -13,7 +13,7 @@ $GLOBALS['page_security'] = 'SA_ITEMSTRANSVIEW';
 
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "View Inventory Transfer"), true);
+page(__($GLOBALS['help_context'] = "View Inventory Transfer"), true);
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/ui.inc";
@@ -32,12 +32,12 @@ echo "<br>";
 start_table(TABLESTYLE2, "width='90%'");
 
 start_row();
-label_cells(_("Reference"), $trans['reference'], "class='tableheader2'");
-label_cells(_("Date"), sql2date($trans['tran_date']), "class='tableheader2'");
+label_cells(__("Reference"), $trans['reference'], "class='tableheader2'");
+label_cells(__("Date"), sql2date($trans['tran_date']), "class='tableheader2'");
 end_row();
 start_row();
-label_cells(_("From Location"), $trans['from_name'], "class='tableheader2'");
-label_cells(_("To Location"), $trans['to_name'], "class='tableheader2'");
+label_cells(__("From Location"), $trans['from_name'], "class='tableheader2'");
+label_cells(__("To Location"), $trans['to_name'], "class='tableheader2'");
 end_row();
 
 comments_display_row(ST_LOCTRANSFER, $trans_no);
@@ -46,7 +46,7 @@ end_table(2);
 
 start_table(TABLESTYLE, "width='90%'");
 
-$th = array(_("Item Code"), _("Description"), _("Quantity"), _("Units"));
+$th = array(__("Item Code"), __("Description"), __("Quantity"), __("Units"));
 table_header($th);
 $transfer_items = get_stock_moves(ST_LOCTRANSFER, $trans_no);
 $k = 0;
@@ -66,6 +66,6 @@ while ($item = db_fetch($transfer_items))
 
 end_table(1);
 
-is_voided_display(ST_LOCTRANSFER, $trans_no, _("This transfer has been voided."));
+is_voided_display(ST_LOCTRANSFER, $trans_no, __("This transfer has been voided."));
 
 end_page(true, false, false, ST_LOCTRANSFER, $trans_no);

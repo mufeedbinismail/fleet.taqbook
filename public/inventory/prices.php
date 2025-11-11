@@ -24,13 +24,13 @@ require_once __DIR__ . "/../inventory/includes/inventory_db.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 	$js .= get_js_open_window(900, 500);
-page(_($GLOBALS['help_context'] = "Inventory Item Sales prices"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Inventory Item Sales prices"), false, false, "", $js);
 
 //---------------------------------------------------------------------------------------------------
 
-check_db_has_stock_items(_("There are no items defined in the system."));
+check_db_has_stock_items(__("There are no items defined in the system."));
 
-check_db_has_sales_types(_("There are no sales types in the system. Please set up sales types befor entering pricing."));
+check_db_has_sales_types(__("There are no sales types in the system. Please set up sales types befor entering pricing."));
 
 simple_page_mode(true);
 //---------------------------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ if (!isset($_POST['stock_id']))
 
 if (!$page_nested)
 {
-	echo "<center>" . _("Item:"). "&nbsp;";
+	echo "<center>" . __("Item:"). "&nbsp;";
 	echo sales_items_list('stock_id', $_POST['stock_id'], false, true, '', array('editable' => false));
 	echo "<hr></center>";
 }
@@ -77,13 +77,13 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 	if (!check_num('price', 0))
 	{
 		$input_error = 1;
-		display_error( _("The price entered must be numeric."));
+		display_error( __("The price entered must be numeric."));
 		set_focus('price');
 	}
    	elseif ($Mode == 'ADD_ITEM' && get_stock_price_type_currency($_POST['stock_id'], $_POST['sales_type_id'], $_POST['curr_abrev']))
    	{
       	$input_error = 1;
-      	display_error( _("The sales pricing for this item, sales type and currency has already been added."));
+      	display_error( __("The sales pricing for this item, sales type and currency has already been added."));
 		set_focus('supplier_id');
 	}
 
@@ -96,7 +96,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 			update_item_price($selected_id, $_POST['sales_type_id'],
 			$_POST['curr_abrev'], input_num('price'));
 
-			$msg = _("This price has been updated.");
+			$msg = __("This price has been updated.");
 		}
 		else
 		{
@@ -104,7 +104,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 			add_item_price($_POST['stock_id'], $_POST['sales_type_id'],
 			    $_POST['curr_abrev'], input_num('price'));
 
-			$msg = _("The new price has been added.");
+			$msg = __("The new price has been added.");
 		}
 		display_notification($msg);
 		$Mode = 'RESET';
@@ -118,7 +118,7 @@ if ($Mode == 'Delete')
 {
 	//the link to delete a selected record was clicked
 	delete_item_price($selected_id);
-	display_notification(_("The selected price has been deleted."));
+	display_notification(__("The selected price has been deleted."));
 	$Mode = 'RESET';
 }
 
@@ -146,7 +146,7 @@ $prices_list = get_prices($_POST['stock_id']);
 div_start('price_table');
 start_table(TABLESTYLE, "width='30%'");
 
-$th = array(_("Currency"), _("Sales Type"), _("Price"), "", "");
+$th = array(__("Currency"), __("Sales Type"), __("Price"), "", "");
 table_header($th);
 $k = 0; //row colour counter
 $calculated = false;
@@ -158,8 +158,8 @@ while ($myrow = db_fetch($prices_list))
 	label_cell($myrow["curr_abrev"]);
     label_cell($myrow["sales_type"]);
     amount_cell($myrow["price"]);
- 	edit_button_cell("Edit".$myrow['id'], _("Edit"));
- 	delete_button_cell("Delete".$myrow['id'], _("Delete"));
+ 	edit_button_cell("Edit".$myrow['id'], __("Edit"));
+ 	delete_button_cell("Delete".$myrow['id'], __("Delete"));
     end_row();
 
 }
@@ -168,7 +168,7 @@ if (db_num_rows($prices_list) == 0)
 {
 	if (get_company_pref('add_pct') != -1)
 		$calculated = true;
-	display_note(_("There are no prices set up for this part."), 1);
+	display_note(__("There are no prices set up for this part."), 1);
 }
 div_end();
 //------------------------------------------------------------------------------------------------
@@ -188,9 +188,9 @@ hidden('selected_id', $selected_id);
 div_start('price_details');
 start_table(TABLESTYLE2);
 
-currencies_list_row(_("Currency:"), 'curr_abrev', null, true);
+currencies_list_row(__("Currency:"), 'curr_abrev', null, true);
 
-sales_types_list_row(_("Sales Type:"), 'sales_type_id', null, true);
+sales_types_list_row(__("Sales Type:"), 'sales_type_id', null, true);
 
 if (!isset($_POST['price'])) {
 	$_POST['price'] = price_format(get_kit_price(get_post('stock_id'), 
@@ -199,11 +199,11 @@ if (!isset($_POST['price'])) {
 
 $kit = get_item_code_dflts($_POST['stock_id']);
 $units = $kit ? $kit["units"] : '';
-small_amount_row(_("Price:"), 'price', null, '', _('per') .' '.$units);
+small_amount_row(__("Price:"), 'price', null, '', __('per') .' '.$units);
 
 end_table(1);
 if ($calculated)
-	display_note(_("The price is calculated."), 0, 1);
+	display_note(__("The price is calculated."), 0, 1);
 
 submit_add_or_update_center($selected_id == -1, '', 'both');
 div_end();

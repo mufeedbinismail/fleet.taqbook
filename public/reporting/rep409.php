@@ -55,7 +55,7 @@ function print_workorders()
 	$cur = get_company_Pref('curr_default');
 
 	if ($email == 0)
-		$rep = new FrontReport(_('WORK ORDER'), "WorkOrderBulk", user_pagesize(), 9, $orientation);
+		$rep = new FrontReport(__('WORK ORDER'), "WorkOrderBulk", user_pagesize(), 9, $orientation);
    	if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -67,7 +67,7 @@ function print_workorders()
 		if ($email == 1)
 		{
 			$rep = new FrontReport("", "", user_pagesize(), 9, $orientation);
-			$rep->title = _('WORK ORDER');
+			$rep->title = __('WORK ORDER');
 			$rep->filename = "WorkOrder" . $myrow['wo_ref'] . ".pdf";
 		}
 		$rep->currency = $cur;
@@ -82,7 +82,7 @@ function print_workorders()
 		$rep->NewPage();
 
 		$result = get_wo_requirements($i);
-		$rep->TextCol(0, 5,_("Work Order Requirements"), -2);
+		$rep->TextCol(0, 5,__("Work Order Requirements"), -2);
 		$rep->NewLine(2);
 		while ($myrow2=db_fetch($result))
 		{

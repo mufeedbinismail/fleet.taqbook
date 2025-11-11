@@ -27,7 +27,7 @@ if (check_value('is_marketplace_trans')) {
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
-page(_($GLOBALS['help_context'] = "Customer Allocations"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Customer Allocations"), false, false, "", $js);
 
 //--------------------------------------------------------------------------------
 
@@ -37,16 +37,16 @@ start_form();
 if (!isset($_POST['customer_id']))
 	$_POST['customer_id'] = get_global_customer();
 
-echo "<center>" . _("Select a customer: ") . "&nbsp;&nbsp;";
+echo "<center>" . __("Select a customer: ") . "&nbsp;&nbsp;";
 echo customer_list('customer_id', null, true);
 if (check_value('is_marketplace_trans')) {
-    echo "&nbsp;&nbsp;" . _("Marketplace:") . "&nbsp;&nbsp;";
+    echo "&nbsp;&nbsp;" . __("Marketplace:") . "&nbsp;&nbsp;";
     echo marketplace_list('marketplace_id', null, true);
 }
 hidden('is_marketplace_trans', check_value('is_marketplace_trans'));
 echo "<br>";
-check(_("Show Settled Items:"), 'ShowSettled', null, true);
-submit('Search', _("Search"), true, '', 'default');
+check(__("Show Settled Items:"), 'ShowSettled', null, true);
+submit('Search', __("Search"), true, '', 'default');
 echo "</center><br><br>";
 
 set_global_customer($_POST['customer_id']);
@@ -80,7 +80,7 @@ function trans_view($trans)
 function alloc_link($row)
 {
     $marketplace_flg = check_value('is_marketplace_trans') ? "&Marketplace=Yes" : "";
-	return pager_link(_("Allocate"),
+	return pager_link(__("Allocate"),
 		"/sales/allocations/customer_allocate.php?trans_no="
 			.$row["trans_no"] . "&trans_type=" . $row["type"]. "&debtor_no=" . $row["debtor_no"] . $marketplace_flg, ICON_ALLOC);
 }
@@ -104,24 +104,24 @@ function check_settled($row)
 $sql = get_allocatable_from_cust_sql($customer_id, $settled, check_value('is_marketplace_trans'), get_post('marketplace_id'));
 
 $cols = array(
-	_("Transaction Type") => array('fun'=>'systype_name'),
-	_("#") => array('fun'=>'trans_view', 'align'=>'right'),
-	_("Reference"), 
-	_("Date") => array('name'=>'tran_date', 'type'=>'date', 'ord'=>'asc'),
-	_("Customer") => array('ord'=>''),
-	_("Currency") => array('align'=>'center'),
-	_("Total") => array('align'=>'right','fun'=>'amount_total'), 
-	_("Left to Allocate") => array('align'=>'right','insert'=>true, 'fun'=>'amount_left'), 
+	__("Transaction Type") => array('fun'=>'systype_name'),
+	__("#") => array('fun'=>'trans_view', 'align'=>'right'),
+	__("Reference"), 
+	__("Date") => array('name'=>'tran_date', 'type'=>'date', 'ord'=>'asc'),
+	__("Customer") => array('ord'=>''),
+	__("Currency") => array('align'=>'center'),
+	__("Total") => array('align'=>'right','fun'=>'amount_total'), 
+	__("Left to Allocate") => array('align'=>'right','insert'=>true, 'fun'=>'amount_left'), 
 	array('insert'=>true, 'fun'=>'alloc_link')
 	);
 
 if (isset($_POST['customer_id'])) {
-	$cols[_("Customer")] = 'skip';
-	$cols[_("Currency")] = 'skip';
+	$cols[__("Customer")] = 'skip';
+	$cols[__("Currency")] = 'skip';
 }
 
 $table =& new_db_pager('alloc_tbl', $sql, $cols);
-$table->set_marker('check_settled', _("Marked items are settled."), 'settledbg', 'settledfg');
+$table->set_marker('check_settled', __("Marked items are settled."), 'settledbg', 'settledfg');
 
 $table->width = "75%";
 

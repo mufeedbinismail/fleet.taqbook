@@ -199,9 +199,9 @@ function add_credit_movements_item(&$credit_note, &$credit_line,
     //Chaitanya : Stamp current cost in stock moves $credit_line does not fetch cost
     $curr_std_cost = get_unit_cost($credit_line->stock_id);
 
-	$reference = _("Return");
+	$reference = __("Return");
 	if ($credited_invoice) 
-		$reference .= ' '._("Ex Inv:").' ' . $credited_invoice;
+		$reference .= ' '.__("Ex Inv:").' ' . $credited_invoice;
 
     add_stock_move(ST_CUSTCREDIT,  $credit_line->stock_id,
 	    key($credit_note->trans_no), $credit_note->Location,

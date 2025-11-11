@@ -88,21 +88,21 @@ function print_inventory_sales()
 	if ($category == ALL_NUMERIC)
 		$category = 0;
 	if ($category == 0)
-		$cat = _('All');
+		$cat = __('All');
 	else
 		$cat = get_category_name($category);
 
 	$cols = array(0, 100, 260, 300, 350, 425, 430, 515);
 
-	$headers = array(_('Item/Category'), _('Description'), _('Qty'), _('Unit Price'), _('Sales'), '', _('Remark'));	
+	$headers = array(__('Item/Category'), __('Description'), __('Qty'), __('Unit Price'), __('Sales'), '', __('Remark'));	
 
 	$aligns = array('left',	'left',	'right', 'right', 'right', 'right', 'left');
 
     $params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'),'from' => $from, 'to' => $to),
-    				    2 => array('text' => _('Category'), 'from' => $cat, 'to' => ''));
+    				    1 => array('text' => __('Period'),'from' => $from, 'to' => $to),
+    				    2 => array('text' => __('Category'), 'from' => $cat, 'to' => ''));
 
-    $rep = new FrontReport(_('Item Sales Summary Report'), "ItemSalesSummaryReport", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Item Sales Summary Report'), "ItemSalesSummaryReport", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -120,7 +120,7 @@ function print_inventory_sales()
 			if ($catt != '')
 			{
 				$rep->NewLine(2, 3);
-				$rep->TextCol(0, 4, _('Total'));
+				$rep->TextCol(0, 4, __('Total'));
 				$rep->AmountCol(4, 5, $total, $dec);
 				$rep->Line($rep->row - 2);
 				$rep->NewLine();
@@ -141,18 +141,18 @@ function print_inventory_sales()
 		$rep->AmountCol(3, 4, $trans['unit_price'], $dec);
 		$rep->AmountCol(4, 5, $trans['quantity']*$trans['unit_price'], $dec);
 		if ($trans['unit_price'] == 0)
-			$rep->TextCol(6, 7, _('Gift'));
+			$rep->TextCol(6, 7, __('Gift'));
 		$rep->fontSize += 2;
 		$total += $trans['quantity']*$trans['unit_price'];
 		$grandtotal += $trans['quantity']*$trans['unit_price'];
 	}
 	$rep->NewLine(2, 3);
-	$rep->TextCol(0, 4, _('Total'));
+	$rep->TextCol(0, 4, __('Total'));
 	$rep->AmountCol(4, 5, $total, $dec);
 	$rep->Line($rep->row - 2);
 	$rep->NewLine();
 	$rep->NewLine(2, 1);
-	$rep->TextCol(0, 4, _('Grand Total'));
+	$rep->TextCol(0, 4, __('Grand Total'));
 	$rep->AmountCol(4, 5, $grandtotal, $dec);
 
 	$rep->Line($rep->row  - 4);

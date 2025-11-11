@@ -105,13 +105,13 @@ function print_Chart_of_Accounts()
 
 	$cols = array(0, 60, 300, 425, 500);
 
-	$headers = array(_('Account'), _('Account Name'), _('Account Code'), _('Balance'));
+	$headers = array(__('Account'), __('Account Name'), __('Account Code'), __('Balance'));
 	
 	$aligns = array('left',	'left',	'left',	'right');
 	
 	$params = array(0 => $comments);
 
-	$rep = new FrontReport(_('Chart of Accounts'), "ChartOfAccounts", user_pagesize(), 9, $orientation);
+	$rep = new FrontReport(__('Chart of Accounts'), "ChartOfAccounts", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 	

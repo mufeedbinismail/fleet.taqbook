@@ -60,7 +60,7 @@ function print_sales_quotations()
 	$cur = get_company_Pref('curr_default');
 
 	if ($email == 0)
-		$rep = new FrontReport(_("SALES QUOTATION"), "SalesQuotationBulk", user_pagesize(), 9, $orientation);
+		$rep = new FrontReport(__("SALES QUOTATION"), "SalesQuotationBulk", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -149,19 +149,19 @@ function print_sales_quotations()
 		$rep->row = $rep->bottomMargin + (15 * $rep->lineHeight);
 		$doctype = ST_SALESQUOTE;
 
-		$rep->TextCol(3, 6, _("Sub-total"), -2);
+		$rep->TextCol(3, 6, __("Sub-total"), -2);
 		$rep->TextCol(6, 7,	$DisplaySubTot, -2);
 		$rep->NewLine();
 		if ($myrow['freight_cost'] != 0.0)
 		{
 			$DisplayFreight = number_format2($myrow["freight_cost"],$dec);
-			$rep->TextCol(3, 6, _("Shipping"), -2);
+			$rep->TextCol(3, 6, __("Shipping"), -2);
 			$rep->TextCol(6, 7,	$DisplayFreight, -2);
 			$rep->NewLine();
 		}	
 		$DisplayTotal = number_format2($myrow["freight_cost"] + $SubTotal, $dec);
 		if ($myrow['tax_included'] == 0) {
-			$rep->TextCol(3, 6, _("TOTAL ORDER EX VAT"), - 2);
+			$rep->TextCol(3, 6, __("TOTAL ORDER EX VAT"), - 2);
 			$rep->TextCol(6, 7,	$DisplayTotal, -2);
 			$rep->NewLine();
 		}
@@ -183,7 +183,7 @@ function print_sales_quotations()
 				{
 					if ($first)
 					{
-						$rep->TextCol(3, 6, _("Total Tax Excluded"), -2);
+						$rep->TextCol(3, 6, __("Total Tax Excluded"), -2);
 						$rep->TextCol(6, 7,	number_format2($tax_item['net_amount'], $dec), -2);
 						$rep->NewLine();
 					}
@@ -192,7 +192,7 @@ function print_sales_quotations()
 					$first = false;
 				}
 				else
-					$rep->TextCol(3, 7, _("Included") . " " . $tax_type_name . " " . _("Amount") . ": " . $DisplayTax, -2);
+					$rep->TextCol(3, 7, __("Included") . " " . $tax_type_name . " " . __("Amount") . ": " . $DisplayTax, -2);
 			}
 			else
 			{
@@ -207,7 +207,7 @@ function print_sales_quotations()
 
 		$DisplayTotal = number_format2($myrow["freight_cost"] + $SubTotal, $dec);
 		$rep->Font('bold');
-		$rep->TextCol(3, 6, _("TOTAL ORDER VAT INCL."), - 2);
+		$rep->TextCol(3, 6, __("TOTAL ORDER VAT INCL."), - 2);
 		$rep->TextCol(6, 7,	$DisplayTotal, -2);
 		$words = price_in_words($myrow["freight_cost"] + $SubTotal, ST_SALESQUOTE);
 		if ($words != "")

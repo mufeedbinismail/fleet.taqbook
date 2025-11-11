@@ -28,13 +28,13 @@ if (user_use_date_picker())
 
 add_js_file('reconcile.js');
 
-page(_($GLOBALS['help_context'] = "Reconcile Bank Account"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Reconcile Bank Account"), false, false, "", $js);
 
-check_db_has_bank_accounts(_("There are no bank accounts defined in the system."));
+check_db_has_bank_accounts(__("There are no bank accounts defined in the system."));
 
 function check_date() {
 	if (!is_date(get_post('reconcile_date'))) {
-		display_error(_("Invalid reconcile date format"));
+		display_error(__("Invalid reconcile date format"));
 		set_focus('reconcile_date');
 		return false;
 	}
@@ -51,7 +51,7 @@ function rec_checkbox($row)
 	$value = $row['reconciled'] != '';
 
 // save also in hidden field for testing during 'Reconcile'
-	return is_closed_trans($row['type'], $row['trans_no']) ? "--" : checkbox(null, $name, $value, true, _('Reconcile this transaction'))
+	return is_closed_trans($row['type'], $row['trans_no']) ? "--" : checkbox(null, $name, $value, true, __('Reconcile this transaction'))
  		. hidden($hidden, $value, false);
 }
 
@@ -195,10 +195,10 @@ if (isset($_POST['last']) && isset($_POST['ReconcileAll'])) {
 start_form();
 start_table(TABLESTYLE_NOBORDER);
 start_row();
-bank_accounts_list_cells(_("Account:"), 'bank_account', null, true);
+bank_accounts_list_cells(__("Account:"), 'bank_account', null, true);
 
-bank_reconciliation_list_cells(_("Bank Statement:"), get_post('bank_account'),
-	'bank_date', null, true, _("New"));
+bank_reconciliation_list_cells(__("Bank Statement:"), get_post('bank_account'),
+	'bank_date', null, true, __("New"));
 end_row();
 end_table();
 
@@ -227,12 +227,12 @@ echo "<hr>";
 div_start('summary');
 
 start_table(TABLESTYLE);
-$th = array(_("Reconcile Date"), _("Beginning<br>Balance"), 
-	_("Ending<br>Balance"), _("Account<br>Total"),_("Reconciled<br>Amount"), _("Difference"));
+$th = array(__("Reconcile Date"), __("Beginning<br>Balance"), 
+	__("Ending<br>Balance"), __("Account<br>Total"),__("Reconciled<br>Amount"), __("Difference"));
 table_header($th);
 start_row();
 
-date_cells("", "reconcile_date", _('Date of bank statement to reconcile'), 
+date_cells("", "reconcile_date", __('Date of bank statement to reconcile'), 
 	get_post('bank_date')=='', 0, 0, 0, null, true);
 
 amount_cells_ex("", "beg_balance", 15);
@@ -262,14 +262,14 @@ display_heading($act['bank_account_name']." - ".$act['bank_curr_code']);
 
 	$cols =
 	array(
-		_("Type") => array('fun'=>'systype_name', 'ord'=>''),
-		_("#") => array('fun'=>'trans_view', 'ord'=>''),
-		_("Reference"), 
-		_("Date") => 'date',
-		_("Debit") => array('align'=>'right', 'fun'=>'fmt_debit'), 
-		_("Credit") => array('align'=>'right','insert'=>true, 'fun'=>'fmt_credit'), 
-	    _("Person/Item") => array('fun'=>'fmt_person'), 
-		_("Memo") => array('fun'=>'fmt_memo'),
+		__("Type") => array('fun'=>'systype_name', 'ord'=>''),
+		__("#") => array('fun'=>'trans_view', 'ord'=>''),
+		__("Reference"), 
+		__("Date") => 'date',
+		__("Debit") => array('align'=>'right', 'fun'=>'fmt_debit'), 
+		__("Credit") => array('align'=>'right','insert'=>true, 'fun'=>'fmt_credit'), 
+	    __("Person/Item") => array('fun'=>'fmt_person'), 
+		__("Memo") => array('fun'=>'fmt_memo'),
 		array('insert'=>true, 'fun'=>'gl_view'),
 		"X"=>array('insert'=>true, 'fun'=>'rec_checkbox')
 	   );
@@ -280,8 +280,8 @@ display_heading($act['bank_account_name']." - ".$act['bank_curr_code']);
 
 br(1);
 echo '<center>';
-submit('Reconcile', _("Reconcile"), true, '', null);
-submit('ReconcileAll', _("Reconcile All"), true, '');
+submit('Reconcile', __("Reconcile"), true, '', null);
+submit('ReconcileAll', __("Reconcile All"), true, '');
 echo '</center>';
 end_form();
 

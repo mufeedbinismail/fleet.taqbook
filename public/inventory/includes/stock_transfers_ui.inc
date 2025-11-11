@@ -19,7 +19,7 @@ function add_to_order(&$order, $new_item, $new_item_qty, $standard_cost)
 	$kit = get_item_kit($new_item);
 	foreach($kit as $item) {
 		if ($order->find_cart_item($item['stock_id']))
-			display_error(_("For Part :") . $item['stock_id'] . " " . "This item is already on this document. You can change the quantity on the existing line if necessary.");
+			display_error(__("For Part :") . $item['stock_id'] . " " . "This item is already on this document. You can change the quantity on the existing line if necessary.");
 		else
 			$order->add_to_cart (count($order->line_items), $item['stock_id'], $new_item_qty * $item['quantity'], $standard_cost);
 	}
@@ -35,14 +35,14 @@ function display_order_header(&$order)
 
 	table_section(1);
 	
-	locations_list_row(_("From Location:"), 'FromStockLocation', null, false, false, $order->fixed_asset);
-	locations_list_row(_("To Location:"), 'ToStockLocation', null,false, false, $order->fixed_asset);
+	locations_list_row(__("From Location:"), 'FromStockLocation', null, false, false, $order->fixed_asset);
+	locations_list_row(__("To Location:"), 'ToStockLocation', null,false, false, $order->fixed_asset);
 
 	table_section(2, "50%");
 
-    date_row(_("Date:"), 'AdjDate', '', true);
+    date_row(__("Date:"), 'AdjDate', '', true);
 
-	ref_row(_("Reference:"), 'ref', '', $Refs->get_next(ST_LOCTRANSFER, null, array('date'=>get_post('AdjDate'), 'location'=> get_post('FromStockLocation'))), false, ST_LOCTRANSFER);
+	ref_row(__("Reference:"), 'ref', '', $Refs->get_next(ST_LOCTRANSFER, null, array('date'=>get_post('AdjDate'), 'location'=> get_post('FromStockLocation'))), false, ST_LOCTRANSFER);
 
 	end_outer_table(1); // outer table
 }
@@ -54,7 +54,7 @@ function display_transfer_items($title, &$order)
 	display_heading($title);
     div_start('items_table');
 	start_table(TABLESTYLE, "width='80%'");
-	$th = array(_("Item Code"), _("Item Description"), _("Quantity"), _("Unit"), '');
+	$th = array(__("Item Code"), __("Item Description"), __("Quantity"), __("Unit"), '');
 	if (!$order->fixed_asset && count($order->line_items)) $th[] = '';
 	table_header($th);
 	$k = 0;  //row colour counter
@@ -80,8 +80,8 @@ function display_transfer_items($title, &$order)
     		label_cell($stock_item->units);
 
 	     	if (!$order->fixed_asset)
-				edit_button_cell("Edit$line_no", _("Edit"),	_('Edit document line'));
-			delete_button_cell("Delete$line_no", _("Delete"), _('Remove line from document'));
+				edit_button_cell("Edit$line_no", __("Edit"),	__('Edit document line'));
+			delete_button_cell("Delete$line_no", __("Delete"), __('Remove line from document'));
     		end_row();
 		}
 		else
@@ -93,7 +93,7 @@ function display_transfer_items($title, &$order)
 
     end_table();
 	if ($low_stock)
-		display_note(_("Marked items have insufficient quantities in stock as on day of transfer."), 0, 1, "class='stockmankofg'");
+		display_note(__("Marked items have insufficient quantities in stock as on day of transfer."), 0, 1, "class='stockmankofg'");
 	div_end();
 }
 
@@ -145,13 +145,13 @@ function transfer_edit_item_controls(&$order, $line_no=-1)
 
 	if ($id != -1)
 	{
-		button_cell('UpdateItem', _("Update"), _('Confirm changes'), ICON_UPDATE);
-		button_cell('CancelItemChanges', _("Cancel"), _('Cancel changes'), ICON_CANCEL);
+		button_cell('UpdateItem', __("Update"), __('Confirm changes'), ICON_UPDATE);
+		button_cell('CancelItemChanges', __("Cancel"), __('Cancel changes'), ICON_CANCEL);
 		hidden('LineNo', $line_no);
  		set_focus('qty');
 	}
 	else
-		submit_cells('AddItem', _("Add Item"), "colspan=2", _('Add new item to document'), true);
+		submit_cells('AddItem', __("Add Item"), "colspan=2", __('Add new item to document'), true);
 
 	end_row();
 }
@@ -164,7 +164,7 @@ function transfer_options_controls()
     echo "<br>";
     start_table();
 
-	textarea_row(_("Memo"), 'memo_', null, 50, 3);
+	textarea_row(__("Memo"), 'memo_', null, 50, 3);
 
 	end_table(1);
 }

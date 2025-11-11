@@ -25,7 +25,7 @@ $js = "";
 if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 	$js .= get_js_open_window(900, 500);
 
-page(_($GLOBALS['help_context']), false, false, "", $js);
+page(__($GLOBALS['help_context']), false, false, "", $js);
 
 require_once __DIR__ . "/../../includes/ui.inc";
 
@@ -43,7 +43,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 	if (strlen($_POST['description']) == 0) 
 	{
 		$input_error = 1;
-		display_error(_("The item category description cannot be empty."));
+		display_error(__("The item category description cannot be empty."));
 		set_focus('description');
 	}
 
@@ -57,7 +57,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 				$_POST['adjustment_account'], $_POST['wip_account'],
 				$_POST['units'], $_POST['mb_flag'],	$_POST['dim1'],	$_POST['dim2'],
 				check_value('no_sale'), check_value('no_purchase'));
-			display_notification(_('Selected item category has been updated'));
+			display_notification(__('Selected item category has been updated'));
     	} 
     	else 
     	{
@@ -67,7 +67,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 				$_POST['adjustment_account'], $_POST['wip_account'], 
 				$_POST['units'], $_POST['mb_flag'],	$_POST['dim1'],	
 				$_POST['dim2'],	check_value('no_sale'), check_value('no_purchase'));
-			display_notification(_('New item category has been added'));
+			display_notification(__('New item category has been added'));
     	}
 		$Mode = 'RESET';
 	}
@@ -81,12 +81,12 @@ if ($Mode == 'Delete')
 	// PREVENT DELETES IF DEPENDENT RECORDS IN 'stock_master'
 	if (key_in_foreign_table($selected_id, 'stock_master', 'category_id'))
 	{
-		display_error(_("Cannot delete this item category because items have been created using this item category."));
+		display_error(__("Cannot delete this item category because items have been created using this item category."));
 	} 
 	else 
 	{
 		delete_item_category($selected_id);
-		display_notification(_('Selected item category has been deleted'));
+		display_notification(__('Selected item category has been deleted'));
 	}
 	$Mode = 'RESET';
 }
@@ -113,13 +113,13 @@ $result = get_item_categories(check_value('show_inactive'), $fixed_asset);
 start_form();
 start_table(TABLESTYLE, "width='80%'");
 if ($fixed_asset) {
-	$th = array(_("Name"), _("Tax type"), _("Units"), _("Sales Act"),
-		_("Asset Account"), _("Deprecation Cost Account"),
-		_("Depreciation/Disposal Account"), "", "");
+	$th = array(__("Name"), __("Tax type"), __("Units"), __("Sales Act"),
+		__("Asset Account"), __("Deprecation Cost Account"),
+		__("Depreciation/Disposal Account"), "", "");
 } else {
-	$th = array(_("Name"), _("Tax type"), _("Units"), _("Type"), _("Sales Act"),
-		_("Inventory Account"), _("COGS Account"), _("Adjustment Account"),
-		_("Assembly Account"), "", "");
+	$th = array(__("Name"), __("Tax type"), __("Units"), __("Type"), __("Sales Act"),
+		__("Inventory Account"), __("COGS Account"), __("Adjustment Account"),
+		__("Assembly Account"), "", "");
 }
 inactive_control_column($th);
 
@@ -143,8 +143,8 @@ while ($myrow = db_fetch($result))
 	if (!$fixed_asset)
 		label_cell($myrow["dflt_wip_act"], "align=center");
 	inactive_control_cell($myrow["category_id"], $myrow["inactive"], 'stock_category', 'category_id');
- 	edit_button_cell("Edit".$myrow["category_id"], _("Edit"));
- 	delete_button_cell("Delete".$myrow["category_id"], _("Delete"));
+ 	edit_button_cell("Edit".$myrow["category_id"], __("Edit"));
+ 	delete_button_cell("Delete".$myrow["category_id"], __("Delete"));
 	end_row();
 }
 
@@ -204,59 +204,59 @@ if ($selected_id != -1)
 
 }
 
-text_row(_("Category Name:"), 'description', null, 30, 30);  
+text_row(__("Category Name:"), 'description', null, 30, 30);  
 
-table_section_title(_("Default values for new items"));
+table_section_title(__("Default values for new items"));
 
-item_tax_types_list_row(_("Item Tax Type:"), 'tax_type_id', null);
+item_tax_types_list_row(__("Item Tax Type:"), 'tax_type_id', null);
 
 if (is_fixed_asset(get_post('mb_flag')))
 	hidden('mb_flag', 'F');
 else
-	stock_item_types_list_row(_("Item Type:"), 'mb_flag', null, true);
+	stock_item_types_list_row(__("Item Type:"), 'mb_flag', null, true);
 
-stock_units_list_row(_("Units of Measure:"), 'units', null);
+stock_units_list_row(__("Units of Measure:"), 'units', null);
 
 if (is_fixed_asset($_POST['mb_flag'])) 
 	hidden('no_sale', 0);
 else
-	check_row(_("Exclude from sales:"), 'no_sale');
+	check_row(__("Exclude from sales:"), 'no_sale');
 
-check_row(_("Exclude from purchases:"), 'no_purchase');
+check_row(__("Exclude from purchases:"), 'no_purchase');
 
-gl_all_accounts_list_row(_("Sales Account:"), 'sales_account', $_POST['sales_account']);
+gl_all_accounts_list_row(__("Sales Account:"), 'sales_account', $_POST['sales_account']);
 
 if (is_service($_POST['mb_flag']))
 {
-	gl_all_accounts_list_row(_("C.O.G.S. Account:"), 'cogs_account', $_POST['cogs_account']);
+	gl_all_accounts_list_row(__("C.O.G.S. Account:"), 'cogs_account', $_POST['cogs_account']);
 	hidden('inventory_account', $_POST['inventory_account']);
 	hidden('adjustment_account', $_POST['adjustment_account']);
 }
 elseif (is_fixed_asset($_POST['mb_flag'])) 
 {
-	gl_all_accounts_list_row(_("Asset account:"), 'inventory_account', $_POST['inventory_account']);
-	gl_all_accounts_list_row(_("Depreciation cost account:"), 'cogs_account', $_POST['cogs_account']);
-	gl_all_accounts_list_row(_("Depreciation/Disposal account:"), 'adjustment_account', $_POST['adjustment_account']);
+	gl_all_accounts_list_row(__("Asset account:"), 'inventory_account', $_POST['inventory_account']);
+	gl_all_accounts_list_row(__("Depreciation cost account:"), 'cogs_account', $_POST['cogs_account']);
+	gl_all_accounts_list_row(__("Depreciation/Disposal account:"), 'adjustment_account', $_POST['adjustment_account']);
 }
 else
 {
-	gl_all_accounts_list_row(_("Inventory Account:"), 'inventory_account', $_POST['inventory_account']);
+	gl_all_accounts_list_row(__("Inventory Account:"), 'inventory_account', $_POST['inventory_account']);
 
-	gl_all_accounts_list_row(_("C.O.G.S. Account:"), 'cogs_account', $_POST['cogs_account']);
-	gl_all_accounts_list_row(_("Inventory Adjustments Account:"), 'adjustment_account', $_POST['adjustment_account']);
+	gl_all_accounts_list_row(__("C.O.G.S. Account:"), 'cogs_account', $_POST['cogs_account']);
+	gl_all_accounts_list_row(__("Inventory Adjustments Account:"), 'adjustment_account', $_POST['adjustment_account']);
 }
 
 if (is_manufactured($_POST['mb_flag']))
-	gl_all_accounts_list_row(_("Item Assembly Costs Account:"), 'wip_account', $_POST['wip_account']);
+	gl_all_accounts_list_row(__("Item Assembly Costs Account:"), 'wip_account', $_POST['wip_account']);
 else
 	hidden('wip_account', $_POST['wip_account']);
 
 $dim = get_company_pref('use_dimension');
 if ($dim >= 1)
 {
-	dimensions_list_row(_("Dimension")." 1", 'dim1', null, true, " ", false, 1);
+	dimensions_list_row(__("Dimension")." 1", 'dim1', null, true, " ", false, 1);
 	if ($dim > 1)
-		dimensions_list_row(_("Dimension")." 2", 'dim2', null, true, " ", false, 2);
+		dimensions_list_row(__("Dimension")." 2", 'dim2', null, true, " ", false, 2);
 }
 if ($dim < 1)
 	hidden('dim1', 0);

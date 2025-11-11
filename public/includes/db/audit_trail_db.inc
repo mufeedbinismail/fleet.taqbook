@@ -100,7 +100,7 @@ function close_transactions($todate) {
 	}
 
 	if ($errors) 
-		display_warning(_("Some transactions journal GL postings were not indexed due to lack of audit trail record."));
+		display_warning(__("Some transactions journal GL postings were not indexed due to lack of audit trail record."));
 	else
 		update_company_prefs(array('gl_closing_date'=> date2sql($todate)));
 	commit_transaction();

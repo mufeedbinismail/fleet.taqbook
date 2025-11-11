@@ -24,7 +24,7 @@ if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($GLOBALS['help_context'] = "Produce or Unassemble Finished Items From Work Order"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Produce or Unassemble Finished Items From Work Order"), false, false, "", $js);
 
 if (isset($_GET['trans_no']) && $_GET['trans_no'] != "")
 {
@@ -39,15 +39,15 @@ if (isset($_GET['AddedID']))
 	$id = $_GET['AddedID'];
 	$stype = ST_WORKORDER;
 
-	display_notification(_("The manufacturing process has been entered."));
+	display_notification(__("The manufacturing process has been entered."));
 	
-    display_note(get_trans_view_str($stype, $id, _("View this Work Order")));
+    display_note(get_trans_view_str($stype, $id, __("View this Work Order")));
 
-   	display_note(get_gl_view_str($stype, $id, _("View the GL Journal Entries for this Work Order")), 1);
+   	display_note(get_gl_view_str($stype, $id, __("View the GL Journal Entries for this Work Order")), 1);
    	$ar = array('PARAM_0' => $_GET['date'], 'PARAM_1' => $_GET['date'], 'PARAM_2' => $stype); 
-   	display_note(print_link(_("Print the GL Journal Entries for this Work Order"), 702, $ar), 1);
+   	display_note(print_link(__("Print the GL Journal Entries for this Work Order"), 702, $ar), 1);
 
-	hyperlink_no_params("search_work_orders.php", _("Select another &Work Order to Process"));
+	hyperlink_no_params("search_work_orders.php", __("Select another &Work Order to Process"));
 	br();
 
 	end_page();
@@ -60,7 +60,7 @@ $wo_details = get_work_order($_POST['selected_id'], true);
 
 if ($wo_details === false)
 {
-	display_error(_("The order number sent is not valid."));
+	display_error(__("The order number sent is not valid."));
 	throw new \App\Exceptions\Legacy\FlowTerminatedException;
 }
 
@@ -78,33 +78,33 @@ function can_process($wo_details)
 
 	if (!check_num('quantity', 0))
 	{
-		display_error(_("The quantity entered is not a valid number or less then zero."));
+		display_error(__("The quantity entered is not a valid number or less then zero."));
 		set_focus('quantity');
 		return false;
 	}
 
 	if (!is_date($_POST['date_']))
 	{
-		display_error(_("The entered date is invalid."));
+		display_error(__("The entered date is invalid."));
 		set_focus('date_');
 		return false;
 	}
 	elseif (!is_date_in_fiscalyear($_POST['date_']))
 	{
-		display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+		display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 		set_focus('date_');
 		return false;
 	}
 	if (date_diff2(sql2date($wo_details["released_date"]), $_POST['date_'], "d") > 0)
 	{
-		display_error(_("The production date cannot be before the release date of the work order."));
+		display_error(__("The production date cannot be before the release date of the work order."));
 		set_focus('date_');
 		return false;
 	}
 	// don't produce more that required. Otherwise change the Work Order.
 	if (input_num('quantity') > ($wo_details["units_reqd"] - $wo_details["units_issued"]))
 	{
-		display_error(_("The production exceeds the quantity needed. Please change the Work Order."));
+		display_error(__("The production exceeds the quantity needed. Please change the Work Order."));
 		set_focus('quantity');
 		return false;
 	}
@@ -113,7 +113,7 @@ function can_process($wo_details)
 	{
 		if (check_negative_stock($wo_details["stock_id"], -input_num('quantity'), $wo_details["loc_code"], $_POST['date_']))
 		{
-			display_error(_("The unassembling cannot be processed because there is insufficient stock."));
+			display_error(__("The unassembling cannot be processed because there is insufficient stock."));
 			set_focus('quantity');
 			return false;
 		}
@@ -131,7 +131,7 @@ function can_process($wo_details)
 
 			if (check_negative_stock($row["stock_id"], -$row['units_req'] * input_num('quantity'), $row["loc_code"], $_POST['date_']))
 			{
-    			display_error( _("The production cannot be processed because a required item would cause a negative inventory balance :") .
+    			display_error( __("The production cannot be processed because a required item would cause a negative inventory balance :") .
     				" " . $row['stock_id'] . " - " .  $row['description']);
     			$err = true;
 			}
@@ -181,23 +181,23 @@ if (!isset($_POST['quantity']) || $_POST['quantity'] == '')
 start_table(TABLESTYLE2);
 br();
 
-date_row(_("Date:"), 'date_');
-ref_row(_("Reference:"), 'ref', '', $Refs->get_next(ST_MANURECEIVE, null, get_post('date_')), false, ST_MANURECEIVE);
+date_row(__("Date:"), 'date_');
+ref_row(__("Reference:"), 'ref', '', $Refs->get_next(ST_MANURECEIVE, null, get_post('date_')), false, ST_MANURECEIVE);
 
 if (!isset($_POST['ProductionType']))
 	$_POST['ProductionType'] = 1;
 
-yesno_list_row(_("Type:"), 'ProductionType', $_POST['ProductionType'],
-	_("Produce Finished Items"), _("Return Items to Work Order"));
+yesno_list_row(__("Type:"), 'ProductionType', $_POST['ProductionType'],
+	__("Produce Finished Items"), __("Return Items to Work Order"));
 
-small_qty_row(_("Quantity:"), 'quantity', null, null, null, $dec);
+small_qty_row(__("Quantity:"), 'quantity', null, null, null, $dec);
 
-textarea_row(_("Memo:"), 'memo_', null, 40, 3);
+textarea_row(__("Memo:"), 'memo_', null, 40, 3);
 
 end_table(1);
 
-submit_center_first('Process', _("Process"), '', 'default');
-submit_center_last('ProcessAndClose', _("Process And Close Order"), '', true);
+submit_center_first('Process', __("Process"), '', 'default');
+submit_center_last('ProcessAndClose', __("Process And Close Order"), '', true);
 
 end_form();
 

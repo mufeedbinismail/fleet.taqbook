@@ -356,7 +356,7 @@ class items_cart
 		{
 			$this->add_gl_item(get_company_pref($delta>0 ? 'rounding_db_act' : 'rounding_cr_act'),
 				0, 0, -$delta, '');
-			error_log(sprintf( _("Rounding error %s encountered for trans_type:%s,trans_no:%s"), $delta, $this->trans_type, $this->order_id));
+			error_log(sprintf( __("Rounding error %s encountered for trans_type:%s,trans_no:%s"), $delta, $this->trans_type, $this->order_id));
 		}
 
 		$bank_trans = $supp_trans = $cust_trans = array();
@@ -392,7 +392,7 @@ class items_cart
 		// post currency roundings if any
 		if ($check_balance && floatcmp($total_gl, 0))
 			add_gl_trans($this->trans_type, $this->order_id, $this->tran_date, 
-				get_company_pref($total_gl>0 ? 'rounding_db_act' : 'rounding_cr_act'), 0, 0, _('Exchange rate roundings'), -$total_gl);
+				get_company_pref($total_gl>0 ? 'rounding_db_act' : 'rounding_cr_act'), 0, 0, __('Exchange rate roundings'), -$total_gl);
 
 		// update bank ledger if used
 		foreach($bank_trans as $bank_id => $amount)

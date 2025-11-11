@@ -102,7 +102,7 @@ function display_type ($type, $typename, $from, $to, $convert, &$dec, &$rep, $di
 		$rep->row += 6;
 		$rep->Line($rep->row);
 		$rep->NewLine();
-		$rep->TextCol(0, 2,	_('Total') . " " . $typename);
+		$rep->TextCol(0, 2,	__('Total') . " " . $typename);
 		$rep->AmountCol(2, 3, ($code_open_balance + $open_balance_total) * $convert, $dec);
 		$rep->AmountCol(3, 4, ($code_period_balance + $period_balance_total) * $convert, $dec);
 		$rep->AmountCol(4, 5, ($code_open_balance + $open_balance_total + $code_period_balance + $period_balance_total) * $convert, $dec);		
@@ -184,37 +184,37 @@ function print_balance_sheet()
 	$cols = array(0, 60, 200, 350, 425,	500);
 	//------------0--1---2----3----4----5--
 
-	$headers = array(_('Account'), _('Account Name'), _('Open Balance'), _('Period'),
-		_('Close Balance'));
+	$headers = array(__('Account'), __('Account Name'), __('Open Balance'), __('Period'),
+		__('Close Balance'));
 
 	$aligns = array('left',	'left',	'right', 'right', 'right');
 
     if ($dim == 2)
     {
     	$params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'),'from' => $from, 'to' => $to),
-                    	2 => array('text' => _('Dimension')." 1",
+    				    1 => array('text' => __('Period'),'from' => $from, 'to' => $to),
+                    	2 => array('text' => __('Dimension')." 1",
                             'from' => get_dimension_string($dimension), 'to' => ''),
-                    	3 => array('text' => _('Dimension')." 2",
+                    	3 => array('text' => __('Dimension')." 2",
                             'from' => get_dimension_string($dimension2), 'to' => ''),
-                        4 => array('text' => _('Tags'), 'from' => get_tag_names($tags), 'to' => ''));
+                        4 => array('text' => __('Tags'), 'from' => get_tag_names($tags), 'to' => ''));
     }
     elseif ($dim == 1)
     {
     	$params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'),'from' => $from, 'to' => $to),
-                    	2 => array('text' => _('Dimension'),
+    				    1 => array('text' => __('Period'),'from' => $from, 'to' => $to),
+                    	2 => array('text' => __('Dimension'),
                             'from' => get_dimension_string($dimension), 'to' => ''),
-                        3 => array('text' => _('Tags'), 'from' => get_tag_names($tags), 'to' => ''));
+                        3 => array('text' => __('Tags'), 'from' => get_tag_names($tags), 'to' => ''));
     }
     else
     {
     	$params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'),'from' => $from, 'to' => $to),
-    				    2 => array('text' => _('Tags'), 'from' => get_tag_names($tags), 'to' => ''));
+    				    1 => array('text' => __('Period'),'from' => $from, 'to' => $to),
+    				    2 => array('text' => __('Tags'), 'from' => get_tag_names($tags), 'to' => ''));
     }
 
-	$rep = new FrontReport(_('Balance Sheet'), "BalanceSheet", user_pagesize(), 9, $orientation);
+	$rep = new FrontReport(__('Balance Sheet'), "BalanceSheet", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 	$rep->Font();
@@ -253,7 +253,7 @@ function print_balance_sheet()
 		$rep->Line($rep->row);
 		$rep->NewLine();
 		$rep->Font('bold');
-		$rep->TextCol(0, 2,	_('Total') . " " . $class["class_name"]);
+		$rep->TextCol(0, 2,	__('Total') . " " . $class["class_name"]);
 		$rep->AmountCol(2, 3, $class_open_total * $convert, $dec);
 		$rep->AmountCol(3, 4, $class_period_total * $convert, $dec);
 		$rep->AmountCol(4, 5, ($class_open_total + $class_period_total) * $convert, $dec);
@@ -276,7 +276,7 @@ function print_balance_sheet()
 		}
 	}
 	$rep->Font();	
-	$rep->TextCol(0, 2,	_('Calculated Return'));
+	$rep->TextCol(0, 2,	__('Calculated Return'));
 	if ($lconvert == 1)
 	{
 		$calc_open *= -1;
@@ -288,7 +288,7 @@ function print_balance_sheet()
 	$rep->NewLine(2);
 
 	$rep->Font('bold');	
-	$rep->TextCol(0, 2,	_('Total') . " " . _('Liabilities') . _(' and ') . _('Equities'));
+	$rep->TextCol(0, 2,	__('Total') . " " . __('Liabilities') . __(' and ') . __('Equities'));
 	$topen = $equity_open * $econvert + $liability_open * $lconvert + $calc_open;
 	$tperiod = $equity_period * $econvert + $liability_period * $lconvert + $calc_period;
 	$tclose = $topen + $tperiod;
@@ -301,7 +301,7 @@ function print_balance_sheet()
 	$rep->Line($rep->row);
 	if ($graphics)
 	{
-		$labels[] = _('Calculated Return');
+		$labels[] = __('Calculated Return');
 		$serie1[] = abs($calc_period);
 		$serie2[] = abs($calc_open + $calc_period);
 		$pg->setStream('png');
@@ -309,8 +309,8 @@ function print_balance_sheet()
 		$pg->addSerie($headers[3], $serie1);
 		$pg->addSerie($headers[4], $serie2);
 		$pg->setTitle($rep->title);
-		$pg->setXTitle(_("Group"));
-		$pg->setYTitle(_("Amount"));
+		$pg->setXTitle(__("Group"));
+		$pg->setYTitle(__("Amount"));
 		$pg->setDTitle(number_format2(abs($calc_open + $calc_period)));
 		$pg->setValues(true);
 		$pg->latin_notation = ($SysPrefs->decseps[user_dec_sep()] != ".");

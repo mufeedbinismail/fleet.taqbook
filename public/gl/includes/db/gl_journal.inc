@@ -108,7 +108,7 @@ function write_journal_entries(&$cart)
 	begin_transaction();
 	if (!$new)
 	{
-		$msg = void_transaction($trans_type, $cart->order_id, Today(), _("Document reentered."));
+		$msg = void_transaction($trans_type, $cart->order_id, Today(), __("Document reentered."));
 		if ($msg)
 		{
 			display_error($msg);

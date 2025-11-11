@@ -30,7 +30,7 @@
 	if ($SysPrefs->use_popup_windows)
 		$js .= get_js_open_window(800, 500);
 
-	page(_($GLOBALS['help_context'] = "Dashboard"), false, false, "", $js);
+	page(__($GLOBALS['help_context'] = "Dashboard"), false, false, "", $js);
 	dashboard($app);
 	end_page();
 	throw new \App\Exceptions\Legacy\FlowCompletedException;

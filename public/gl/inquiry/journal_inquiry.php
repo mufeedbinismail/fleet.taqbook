@@ -23,7 +23,7 @@ if ($SysPrefs->use_popup_windows)
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
-page(_($GLOBALS['help_context'] = "Journal Inquiry"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Journal Inquiry"), false, false, "", $js);
 
 //-----------------------------------------------------------------------------------
 // Ajax updates
@@ -41,20 +41,20 @@ start_form();
 start_table(TABLESTYLE_NOBORDER);
 start_row();
 
-ref_cells(_("Reference:"), 'Ref', '',null, _('Enter reference fragment or leave empty'));
+ref_cells(__("Reference:"), 'Ref', '',null, __('Enter reference fragment or leave empty'));
 
-journal_types_list_cells(_("Type:"), "filterType");
-date_cells(_("From:"), 'FromDate', '', null, -user_transaction_days());
-date_cells(_("To:"), 'ToDate');
+journal_types_list_cells(__("Type:"), "filterType");
+date_cells(__("From:"), 'FromDate', '', null, -user_transaction_days());
+date_cells(__("To:"), 'ToDate');
 
 end_row();
 start_row();
-ref_cells(_("Memo:"), 'Memo', '',null, _('Enter memo fragment or leave empty'));
-users_list_cells(_("User:"), 'userid', null, false);
+ref_cells(__("Memo:"), 'Memo', '',null, __('Enter memo fragment or leave empty'));
+users_list_cells(__("User:"), 'userid', null, false);
 if (get_company_pref('use_dimension') && isset($_POST['dimension'])) // display dimension only, when started in dimension mode
-	dimensions_list_cells(_('Dimension:'), 'dimension', null, true, null, true);
-check_cells( _("Show closed:"), 'AlsoClosed', null);
-submit_cells('Search', _("Search"), '', '', 'default');
+	dimensions_list_cells(__('Dimension:'), 'dimension', null, true, null, true);
+check_cells( __("Show closed:"), 'AlsoClosed', null);
+submit_cells('Search', __("Search"), '', '', 'default');
 end_row();
 end_table();
 
@@ -108,27 +108,27 @@ $sql = get_sql_for_journal_inquiry(get_post('filterType', -1), get_post('FromDat
 	get_post('ToDate'), get_post('Ref'), get_post('Memo'), check_value('AlsoClosed'), get_post('userid'));
 
 $cols = array(
-	_("#") => array('fun'=>'journal_pos', 'align'=>'center'), 
-	_("Date") =>array('name'=>'tran_date','type'=>'date','ord'=>'desc'),
-	_("Type") => array('fun'=>'systype_name'), 
-	_("Trans #") => array('fun'=>'view_link'), 
-	_("Counterparty") => array('fun' => 'person_link'),
-	_("Supplier's Reference") => 'skip',
-	_("Reference"), 
-	_("Amount") => array('type'=>'amount'),
-	_("Memo"),
-	_("User"),
-	_("View") => array('insert'=>true, 'fun'=>'gl_link'),
+	__("#") => array('fun'=>'journal_pos', 'align'=>'center'), 
+	__("Date") =>array('name'=>'tran_date','type'=>'date','ord'=>'desc'),
+	__("Type") => array('fun'=>'systype_name'), 
+	__("Trans #") => array('fun'=>'view_link'), 
+	__("Counterparty") => array('fun' => 'person_link'),
+	__("Supplier's Reference") => 'skip',
+	__("Reference"), 
+	__("Amount") => array('type'=>'amount'),
+	__("Memo"),
+	__("User"),
+	__("View") => array('insert'=>true, 'fun'=>'gl_link'),
 	array('insert'=>true, 'fun'=>'edit_link')
 );
 
 if (!check_value('AlsoClosed')) {
-	$cols[_("#")] = 'skip';
+	$cols[__("#")] = 'skip';
 }
 
 if($_POST['filterType'] == ST_SUPPINVOICE) //add the payment column if shown supplier invoices only
 {
-	$cols[_("Supplier's Reference")] = array('fun'=>'invoice_supp_reference', 'align'=>'center');
+	$cols[__("Supplier's Reference")] = array('fun'=>'invoice_supp_reference', 'align'=>'center');
 }
 
 $table =& new_db_pager('journal_tbl', $sql, $cols);

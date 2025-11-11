@@ -26,12 +26,12 @@ if (user_use_date_picker())
 if (isset($_GET['outstanding_only']) && $_GET['outstanding_only'])
 {
 	$outstanding_only = 1;
-	page(_($GLOBALS['help_context'] = "Search Outstanding Dimensions"), false, false, "", $js);
+	page(__($GLOBALS['help_context'] = "Search Outstanding Dimensions"), false, false, "", $js);
 }
 else
 {
 	$outstanding_only = 0;
-	page(_($GLOBALS['help_context'] = "Search Dimensions"), false, false, "", $js);
+	page(__($GLOBALS['help_context'] = "Search Dimensions"), false, false, "", $js);
 }
 //-----------------------------------------------------------------------------------
 // Ajax updates
@@ -69,22 +69,22 @@ start_form(false, false, url()->current() ."?outstanding_only=$outstanding_only"
 start_table(TABLESTYLE_NOBORDER);
 start_row();
 
-ref_cells(_("Reference:"), 'OrderNumber', '',null, '', true);
+ref_cells(__("Reference:"), 'OrderNumber', '',null, '', true);
 
-number_list_cells(_("Type"), 'type_', null, 1, 2, _("All"));
-date_cells(_("From:"), 'FromDate', '', null, 0, 0, -5);
-date_cells(_("To:"), 'ToDate');
+number_list_cells(__("Type"), 'type_', null, 1, 2, __("All"));
+date_cells(__("From:"), 'FromDate', '', null, 0, 0, -5);
+date_cells(__("To:"), 'ToDate');
 
-check_cells( _("Only Overdue:"), 'OverdueOnly', null);
+check_cells( __("Only Overdue:"), 'OverdueOnly', null);
 
 if (!$outstanding_only)
 {
-   	check_cells( _("Only Open:"), 'OpenOnly', null);
+   	check_cells( __("Only Open:"), 'OpenOnly', null);
 }
 else
 	$_POST['OpenOnly'] = 1;
 
-submit_cells('SearchOrders', _("Search"), '', '', 'default');
+submit_cells('SearchOrders', __("Search"), '', '', 'default');
 
 end_row();
 end_table();
@@ -103,7 +103,7 @@ function sum_dimension($row)
 
 function is_closed($row)
 {
-	return $row['closed'] ? _('Yes') : _('No');
+	return $row['closed'] ? __('Yes') : __('No');
 }
 
 function is_overdue($row)
@@ -113,13 +113,13 @@ function is_overdue($row)
 
 function edit_link($row)
 {
-	return pager_link(_("Edit"),
+	return pager_link(__("Edit"),
 			"/dimensions/dimension_entry.php?trans_no=" . $row["id"], ICON_EDIT);
 }
 
 function prt_link($row)
 {
-	return print_document_link($row['id'], _("Print"), true, ST_DIMENSION, ICON_PRINT);
+	return print_document_link($row['id'], __("Print"), true, ST_DIMENSION, ICON_PRINT);
 }
 
 
@@ -127,24 +127,24 @@ $sql = get_sql_for_search_dimensions($dim, $_POST['FromDate'], $_POST['ToDate'],
 	$_POST['OrderNumber'], $_POST['type_'], check_value('OpenOnly'), check_value('OverdueOnly'));
 
 $cols = array(
-	_("#") => array('fun'=>'view_link'), 
-	_("Reference"), 
-	_("Name"), 
-	_("Type"), 
-	_("Date") =>'date',
-	_("Due Date") => array('name'=>'due_date', 'type'=>'date', 'ord'=>'asc'), 
-	_("Closed") => array('fun'=>'is_closed'),
-	_("Balance") => array('type'=>'amount', 'insert'=>true, 'fun'=>'sum_dimension'),
+	__("#") => array('fun'=>'view_link'), 
+	__("Reference"), 
+	__("Name"), 
+	__("Type"), 
+	__("Date") =>'date',
+	__("Due Date") => array('name'=>'due_date', 'type'=>'date', 'ord'=>'asc'), 
+	__("Closed") => array('fun'=>'is_closed'),
+	__("Balance") => array('type'=>'amount', 'insert'=>true, 'fun'=>'sum_dimension'),
 	array('insert'=>true, 'fun'=>'edit_link'),
 	array('insert'=>true, 'fun'=>'prt_link')
 );
 
 if ($outstanding_only) {
-	$cols[_("Closed")] = 'skip';
+	$cols[__("Closed")] = 'skip';
 }
 
 $table =& new_db_pager('dim_tbl', $sql, $cols);
-$table->set_marker('is_overdue', _("Marked dimensions are overdue."));
+$table->set_marker('is_overdue', __("Marked dimensions are overdue."));
 
 $table->width = "80%";
 

@@ -59,7 +59,7 @@ class BoxReports
 		$display_class = $class==null ? $temp[0] : $this->ar_classes[$class];
 		$st_reports = "";
 		$st_params = "";
-		$st_classes = "<b>" . _("Report Classes:") . "</b><br>";
+		$st_classes = "<b>" . __("Report Classes:") . "</b><br>";
 
 		if (isset($_GET['Class']))
 			set_focus('class'.$_GET['Class']);
@@ -79,7 +79,7 @@ class BoxReports
 				."$acc[1]>$acc[0]</a> <br>";
 
 			$style = $class_id==$cur_class ? '' : "style='display:none'";
-			$st_reports .= "<table class='repclass' id='TAB_" . $class_id ."' $style cellpadding='0' cellspacing='0' border='0' width='100%'><tr><td><b>" . _("Reports For Class: ") . "&nbsp;$name</b></td></tr>\n";
+			$st_reports .= "<table class='repclass' id='TAB_" . $class_id ."' $style cellpadding='0' cellspacing='0' border='0' width='100%'><tr><td><b>" . __("Reports For Class: ") . "&nbsp;$name</b></td></tr>\n";
 			foreach($this->ar_reports[$class_id] as $rep_id => $report)
 			{
 				$acc = access_string($report->name);
@@ -99,7 +99,7 @@ class BoxReports
 					$st_params = "<table><tr><td>\n"
 						. "<form method='POST' action='$action' target='_blank'>\n";
 					$st_params .= submit('Rep'.$report->id,  
-						_("Display: ") . access_string($report->name, true),
+						__("Display: ") . access_string($report->name, true),
 						false, '', $SysPrefs->pdf_debug ? false : 'default process popup') . hidden('REP_ID', $report->id, false).'<br><br>';
 					$st_params .= $this->getOptions($report->get_controls(), $report->id);
 					$st_params .= "\n<input type=hidden name='Class' value=".$cur_class.">"
@@ -150,7 +150,7 @@ class BoxReports
 				$st .= $ctrl;
 				$st .= "<br><br>";
 			} else {
-				display_error(_('Unknown report parameter type:').$type);
+				display_error(__('Unknown report parameter type:').$type);
 			}
 			$cnt++;
 		}
@@ -178,7 +178,7 @@ class BoxReports
 			{
 				case 'CURRENCY':
 					$sql = "SELECT curr_abrev, concat(curr_abrev,' - ', currency) AS name FROM ".TB_PREF."currencies";
-					return combo_input($name, '', $sql, 'curr_abrev', 'name',array('spec_option'=>_("No Currency Filter"),'spec_id'=>ALL_TEXT,'order'=>false));
+					return combo_input($name, '', $sql, 'curr_abrev', 'name',array('spec_option'=>__("No Currency Filter"),'spec_id'=>ALL_TEXT,'order'=>false));
 
 				case 'DATE':
 				case 'DATEBEGIN':
@@ -225,7 +225,7 @@ class BoxReports
                                 : "/themes/default/images/cal.gif"
                         );
 						$st .= "<a href=\"javascript:date_picker(document.forms[0].$name);\">"
-						. "	<img src='$calc_image' style='vertical-align:middle;padding-bottom:4px;width:16px;height:16px;border:0;' alt='"._('Click Here to Pick up the date')."'></a>\n";
+						. "	<img src='$calc_image' style='vertical-align:middle;padding-bottom:4px;width:16px;height:16px;border:0;' alt='".__('Click Here to Pick up the date')."'></a>\n";
 					}	
 					return $st;
 					break;
@@ -237,33 +237,33 @@ class BoxReports
 					return payment_services($name, null);
 
 				case 'DESTINATION':
-					$sel = array(_("PDF/Printer"), "Excel");
+					$sel = array(__("PDF/Printer"), "Excel");
 					$def = 0;
 					if (user_def_print_destination() == 1)
 						$def = 1;
 					return array_selector($name, $def, $sel);
 
 				case 'ORIENTATION':
-					$sel = array(_("Portrait"), _("Landscape"));
+					$sel = array(__("Portrait"), __("Landscape"));
 					$def = 0;
 					if (user_def_print_orientation() == 1)
 						$def = 1;
 					return array_selector($name, $def, $sel);
 
 				case 'COMPARE':
-					$sel = array(_("Accumulated"), _("Period Y-1"), _("Budget"));
+					$sel = array(__("Accumulated"), __("Period Y-1"), __("Budget"));
 					return array_selector($name, null, $sel);
 
 				case 'GRAPHIC':
-					$sel = array(_("No Graphics"), _("Vertical bars"), _("Horizontal bars"), 
-								_("Dots"), _("Lines"), _("Pie"), _("Donut"), _("Half Donut"), _("Splines"));
+					$sel = array(__("No Graphics"), __("Vertical bars"), __("Horizontal bars"), 
+								__("Dots"), __("Lines"), __("Pie"), __("Donut"), __("Half Donut"), __("Splines"));
 					return array_selector($name, null, $sel);
 
 				case 'SYS_TYPES':
-					return gl_systypes_list($name, null, _("No Type Filter"));
+					return gl_systypes_list($name, null, __("No Type Filter"));
 
 				case 'SYS_TYPES_ALL':
-					return systypes_list($name, null, _("No Type Filter"));
+					return systypes_list($name, null, __("No Type Filter"));
 
 				case 'TEXT':
 					return "<input type='text' name='$name'>";
@@ -273,7 +273,7 @@ class BoxReports
 					return "<textarea rows=4 cols=30 maxlength=130 name='$name'>$value</textarea>";
 
 				case 'ACCOUNTS': // not used
-					return gl_account_types_list($name, null, _("No Account Group Filter"), true);
+					return gl_account_types_list($name, null, __("No Account Group Filter"), true);
 
 				case 'ACCOUNTS_NO_FILTER': // not used
 					return gl_account_types_list($name);
@@ -284,7 +284,7 @@ class BoxReports
 				case 'BANK_ACCOUNTS_NO_FILTER':
 				case 'BANK_ACCOUNTS':
 					if ($type == 'BANK_ACCOUNTS_NO_FILTER')
-						return bank_accounts_list($name, null, false, _("All"));
+						return bank_accounts_list($name, null, false, __("All"));
 					else
 						return bank_accounts_list($name);
 
@@ -292,31 +292,31 @@ class BoxReports
 					return dimensions_list($name, null, false, ' ', false, true, 0);
 					
 				case 'DIMENSIONS':
-					return dimensions_list($name, null, true, _("No Dimension Filter"), false, true, 0);
+					return dimensions_list($name, null, true, __("No Dimension Filter"), false, true, 0);
 
 				case 'DIMENSION1':
 					return dimensions_list($name, null, false, ' ', false, true, 1);
 
 				case 'DIMENSIONS1':
-					return dimensions_list($name, null, true, _("No Dimension Filter"), false, true, 1);
+					return dimensions_list($name, null, true, __("No Dimension Filter"), false, true, 1);
 
 				case 'DIMENSION2':
 					return dimensions_list($name, null, false, ' ', false, true, 2);
 
 				case 'DIMENSIONS2':
-					return dimensions_list($name, null, true, _("No Dimension Filter"), false, true, 2);
+					return dimensions_list($name, null, true, __("No Dimension Filter"), false, true, 2);
 
 				case 'CUSTOMERS_NO_FILTER':
 				case 'CUSTOMERS':
 					if ($type == 'CUSTOMERS_NO_FILTER')
-						return customer_list($name, null, _("No Customer Filter"));
+						return customer_list($name, null, __("No Customer Filter"));
 					else
 						return customer_list($name);
 
 				case 'SUPPLIERS_NO_FILTER':
 				case 'SUPPLIERS':
 					if ($type == 'SUPPLIERS_NO_FILTER')
-						return supplier_list($name, null, _("No Supplier Filter"));
+						return supplier_list($name, null, __("No Supplier Filter"));
 					else
 						return supplier_list($name);
 
@@ -439,31 +439,31 @@ class BoxReports
 					return combo_input($name, '', $sql, 'id', 'IName',array('order'=>false));
 
 				case 'LOCATIONS':
-					return  locations_list($name, null, _("No Location Filter"));
+					return  locations_list($name, null, __("No Location Filter"));
 				case 'FLOCATIONS':
-					return  locations_list($name, null, _("No Location Filter"), false, true);
+					return  locations_list($name, null, __("No Location Filter"), false, true);
 
 				case 'CATEGORIES':
-					return stock_categories_list($name, null, _("No Category Filter"));
+					return stock_categories_list($name, null, __("No Category Filter"));
 				case 'FCATEGORIES':
-					return stock_categories_list($name, null, _("No Category Filter"), false, true);
+					return stock_categories_list($name, null, __("No Category Filter"), false, true);
 				case 'FCLASS':
-					return fixed_asset_classes_list($name, null, _("No Class Filter"), false);
+					return fixed_asset_classes_list($name, null, __("No Class Filter"), false);
 				case 'SALESTYPES':
 					return sales_types_list($name);
 
 				case 'AREAS':
-					return sales_areas_list($name, null, _("No Areas Filter"));
+					return sales_areas_list($name, null, __("No Areas Filter"));
 
 				case 'SALESMEN':
-					return sales_persons_list($name, null, _("No Sales Folk Filter"));
+					return sales_persons_list($name, null, __("No Sales Folk Filter"));
 					
 				case 'TRANS_YEARS':
 					return fiscalyears_list($name);
 
 				case 'USERS':
 					$sql = "SELECT id, user_id FROM ".TB_PREF."users";
-					return combo_input($name, '', $sql, 'id', 'user_id',array('spec_option'=>_("No Users Filter"),'spec_id'=>ALL_NUMERIC));
+					return combo_input($name, '', $sql, 'id', 'user_id',array('spec_option'=>__("No Users Filter"),'spec_id'=>ALL_NUMERIC));
 
 				case 'ACCOUNTTAGS':
 				case 'DIMENSIONTAGS':

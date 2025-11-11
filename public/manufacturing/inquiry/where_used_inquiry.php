@@ -13,18 +13,18 @@ $GLOBALS['page_security'] = 'SA_WORKORDERANALYTIC';
 require_once __DIR__ . "/../../includes/db_pager.inc";
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "Inventory Item Where Used Inquiry"));
+page(__($GLOBALS['help_context'] = "Inventory Item Where Used Inquiry"));
 
 require_once __DIR__ . "/../../includes/ui.inc";
 
-check_db_has_stock_items(_("There are no items defined in the system."));
+check_db_has_stock_items(__("There are no items defined in the system."));
 
 start_form(false, true);
 
 if (!isset($_POST['stock_id']))
 	$_POST['stock_id'] = get_global_stock_item();
 
-echo "<center>" . _("Select an item to display its parent item(s).") . "&nbsp;";
+echo "<center>" . __("Select an item to display its parent item(s).") . "&nbsp;";
 echo stock_items_list('stock_id', $_POST['stock_id'], false, true);
 echo "<hr></center>";
 
@@ -39,10 +39,10 @@ function select_link($row)
 $sql = get_sql_for_where_used(get_post('stock_id'));
 
    $cols = array(
-   	_("Parent Item") => array('fun'=>'select_link'), 
-	_("Work Centre"), 
-	_("Location"), 
-	_("Quantity Required")
+   	__("Parent Item") => array('fun'=>'select_link'), 
+	__("Work Centre"), 
+	__("Location"), 
+	__("Quantity Required")
 	);
 
 $table =& new_db_pager('usage_table', $sql, $cols);

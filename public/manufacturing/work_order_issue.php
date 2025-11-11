@@ -27,20 +27,20 @@ if ($SysPrefs->use_popup_windows)
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
-page(_($GLOBALS['help_context'] = "Issue Items to Work Order"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Issue Items to Work Order"), false, false, "", $js);
 
 //-----------------------------------------------------------------------------------------------
 
 if (isset($_GET['AddedID'])) 
 {
 	$id = $_GET['AddedID'];
-   	display_notification(_("The work order issue has been entered."));
+   	display_notification(__("The work order issue has been entered."));
 
-    display_note(get_trans_view_str(ST_WORKORDER, $id, _("View this Work Order")));
+    display_note(get_trans_view_str(ST_WORKORDER, $id, __("View this Work Order")));
 
-   	display_note(get_gl_view_str(ST_WORKORDER, $id, _("View the GL Journal Entries for this Work Order")), 1);
+   	display_note(get_gl_view_str(ST_WORKORDER, $id, __("View the GL Journal Entries for this Work Order")), 1);
 
-   	hyperlink_no_params("search_work_orders.php", _("Select another &Work Order to Process"));
+   	hyperlink_no_params("search_work_orders.php", __("Select another &Work Order to Process"));
 
 	display_footer_exit();
 }
@@ -72,13 +72,13 @@ function can_process()
 {
 	if (!is_date($_POST['date_']))
 	{
-		display_error(_("The entered date for the issue is invalid."));
+		display_error(__("The entered date for the issue is invalid."));
 		set_focus('date_');
 		return false;
 	} 
 	elseif (!is_date_in_fiscalyear($_POST['date_']))
 	{
-		display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+		display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 		set_focus('date_');
 		return false;
 	}
@@ -91,7 +91,7 @@ function can_process()
 	$failed_item = $_SESSION['issue_items']->check_qoh($_POST['Location'], $_POST['date_'], !$_POST['IssueType']);
 	if ($failed_item)
 	{
-   		display_error(_("The issue cannot be processed because it would cause negative inventory balance for marked items as of document date or later."));
+   		display_error(__("The issue cannot be processed because it would cause negative inventory balance for marked items as of document date or later."));
 		return false;
 	}
 
@@ -108,9 +108,9 @@ if (isset($_POST['Process']) && can_process())
 
 	if ($failed_data != null) 
 	{
-		display_error(_("The process cannot be completed because there is an insufficient total quantity for a component.") . "<br>"
-		. _("Component is :"). $failed_data[0] . "<br>"
-		. _("From location :"). $failed_data[1] . "<br>");
+		display_error(__("The process cannot be completed because there is an insufficient total quantity for a component.") . "<br>"
+		. __("Component is :"). $failed_data[0] . "<br>"
+		. __("From location :"). $failed_data[1] . "<br>");
 	} 
 	else 
 	{
@@ -125,14 +125,14 @@ function check_item_data()
 {
 	if (input_num('qty') == 0 || !check_num('qty', 0))
 	{
-		display_error(_("The quantity entered is negative or invalid."));
+		display_error(__("The quantity entered is negative or invalid."));
 		set_focus('qty');
 		return false;
 	}
 
 	if (!check_num('std_cost', 0))
 	{
-		display_error(_("The entered standard cost is negative or invalid."));
+		display_error(__("The entered standard cost is negative or invalid."));
 		set_focus('std_cost');
 		return false;
 	}
@@ -203,13 +203,13 @@ start_form();
 
 start_table(TABLESTYLE, "width='90%'", 10);
 echo "<tr><td>";
-display_issue_items(_("Items to Issue"), $_SESSION['issue_items']);
+display_issue_items(__("Items to Issue"), $_SESSION['issue_items']);
 issue_options_controls();
 echo "</td></tr>";
 
 end_table();
 
-submit_center('Process', _("Process Issue"), true, '', 'default');
+submit_center('Process', __("Process Issue"), true, '', 'default');
 
 end_form();
 

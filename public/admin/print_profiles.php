@@ -14,7 +14,7 @@ require __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../admin/db/printers_db.inc";
 require_once __DIR__ . "/../includes/ui.inc";
 
-page(_($GLOBALS['help_context'] = "Printing Profiles"));
+page(__($GLOBALS['help_context'] = "Printing Profiles"));
 
 $selected_id = get_post('profile_id','');
 
@@ -29,7 +29,7 @@ function get_reports() {
 		$paths = array (
 			PATH_TO_ROOT.'/reporting/',
 			company_path(). '/reporting/');
-		$reports = array( '' => _('Default printing destination'));
+		$reports = array( '' => __('Default printing destination'));
 
 		foreach($paths as $dirno => $path) {
 			$repdir = opendir($path);
@@ -86,7 +86,7 @@ if ( get_post('submit'))
 	if ($_POST['profile_id'] == '' && empty($_POST['name']))
 	{
 		$error = 1;
-		display_error( _("Printing profile name cannot be empty."));
+		display_error( __("Printing profile name cannot be empty."));
 		set_focus('name');
 	} 
 
@@ -102,10 +102,10 @@ if ( get_post('submit'))
 		
 		update_printer_profile($_POST['profile_id'], $prof);
 		if ($selected_id == '') {
-			display_notification_centered(_('New printing profile has been created')); 
+			display_notification_centered(__('New printing profile has been created')); 
 			clear_form($selected_id);
 		} else {
-			display_notification_centered(_('Printing profile has been updated'));
+			display_notification_centered(__('Printing profile has been updated'));
 		}
 	}
 }
@@ -114,7 +114,7 @@ if(get_post('delete'))
 {
  	if (!check_delete(get_post('name'))) {
 		delete_printer_profile($selected_id);
-		display_notification(_('Selected printing profile has been deleted'));
+		display_notification(__('Selected printing profile has been deleted'));
 		clear_form();
  	}
 }
@@ -125,15 +125,15 @@ if(get_post('_profile_id_update')) {
 
 start_form();
 start_table();
-print_profiles_list_row(_('Select printing profile'). ':', 'profile_id', null,
-	_('New printing profile'), true);
+print_profiles_list_row(__('Select printing profile'). ':', 'profile_id', null,
+	__('New printing profile'), true);
 end_table();
 echo '<hr>';
 start_table();
 if (get_post('profile_id') == '')
-	text_row(_("Printing Profile Name").':', 'name', null, 30, 30);
+	text_row(__("Printing Profile Name").':', 'name', null, 30, 30);
 else
-	label_cells(_("Printing Profile Name").':', get_post('profile_id'));
+	label_cells(__("Printing Profile Name").':', get_post('profile_id'));
 end_table(1);
 
 $result = get_print_profile(get_post('profile_id'));
@@ -143,7 +143,7 @@ while ($myrow = db_fetch($result)) {
 }
 
 start_table(TABLESTYLE);
-$th = array(_("Report Id"), _("Description"), _("Printer"));
+$th = array(__("Report Id"), __("Description"), __("Printer"));
 table_header($th);
 
 $k = 0;
@@ -153,29 +153,29 @@ foreach(get_reports() as $rep => $descr)
 	alt_table_row_color($k);
 
     label_cell($rep=='' ? '-' : $rep, 'align=center');
-    label_cell($descr == '' ? '???<sup>1)</sup>' : _($descr));
+    label_cell($descr == '' ? '???<sup>1)</sup>' : __($descr));
 	$_POST['Prn'.$rep] = isset($prints[$rep]) ? $prints[$rep] : '';
     echo '<td>';
 	echo printers_list('Prn'.$rep, null, 
-		$rep == '' ? _('Browser support') : _('Default'));
+		$rep == '' ? __('Browser support') : __('Default'));
 	echo '</td>';
 	if ($descr == '') $unkn = 1;
     end_row();
 }
 end_table();
 if ($unkn)
-	display_note('<sup>1)</sup>&nbsp;-&nbsp;'._("no title was found in this report definition file."), 0, 1, '');
+	display_note('<sup>1)</sup>&nbsp;-&nbsp;'.__("no title was found in this report definition file."), 0, 1, '');
 else
 	echo '<br>';
 
 div_start('controls');
 if (get_post('profile_id') == '') {
-	submit_center('submit', _("Add New Profile"), true, '', 'default');
+	submit_center('submit', __("Add New Profile"), true, '', 'default');
 } else {
-	submit_center_first('submit', _("Update Profile"), 
-	  _('Update printer profile'), 'default');
-	submit_center_last('delete', _("Delete Profile"), 
-	  _('Delete printer profile (only if not used by any user)'), true);
+	submit_center_first('submit', __("Update Profile"), 
+	  __('Update printer profile'), 'default');
+	submit_center_last('delete', __("Delete Profile"), 
+	  __('Delete printer profile (only if not used by any user)'), true);
 }
 div_end();
 

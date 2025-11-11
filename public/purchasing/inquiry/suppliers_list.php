@@ -25,7 +25,7 @@ if ($mode != 0)
 else
 	$js = get_js_select_combo_item();
 
-page(_($GLOBALS['help_context'] = "Suppliers"), true, false, "", $js);
+page(__($GLOBALS['help_context'] = "Suppliers"), true, false, "", $js);
 
 if(get_post("search")) {
   $Ajax->activate("supplier_tbl");
@@ -37,8 +37,8 @@ start_table(TABLESTYLE_NOBORDER);
 
 start_row();
 
-text_cells(_("Supplier"), "supplier");
-submit_cells("search", _("Search"), "", _("Search suppliers"), "default");
+text_cells(__("Supplier"), "supplier");
+submit_cells("search", __("Search"), "", __("Search suppliers"), "default");
 
 end_row();
 
@@ -49,7 +49,7 @@ div_start("supplier_tbl");
 
 start_table(TABLESTYLE);
 
-$th = array("", _("Supplier"), _("Short Name"), _("Address"), _("Tax ID"));
+$th = array("", __("Supplier"), __("Short Name"), __("Address"), __("Tax ID"));
 
 table_header($th);
 
@@ -61,10 +61,10 @@ while ($myrow = db_fetch_assoc($result)) {
 	$value = $myrow['supplier_id'];
 	if ($mode != 0) {
 		$text = $myrow['supp_name'];
-  		ahref_cell(_("Select"), 'javascript:void(0)', '', 'setComboItem(window.opener.document, "'.$name.'",  "'.$value.'", "'.$text.'")');
+  		ahref_cell(__("Select"), 'javascript:void(0)', '', 'setComboItem(window.opener.document, "'.$name.'",  "'.$value.'", "'.$text.'")');
 	}
 	else {
-  		ahref_cell(_("Select"), 'javascript:void(0)', '', 'selectComboItem(window.opener.document, "'.$name.'", "'.$value.'")');
+  		ahref_cell(__("Select"), 'javascript:void(0)', '', 'selectComboItem(window.opener.document, "'.$name.'", "'.$value.'")');
 	}
   	label_cell($myrow["supp_name"]);
   	label_cell($myrow["supp_ref"]);

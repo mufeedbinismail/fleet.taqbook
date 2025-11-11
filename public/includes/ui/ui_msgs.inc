@@ -65,7 +65,7 @@ function stock_item_heading($stock_id)
         
     	display_heading("$stock_id - $myrow[0]"); 
     	$units = $myrow[1];
-    	display_heading2(_("in units of : ") . $units);        	
+    	display_heading2(__("in units of : ") . $units);        	
 	}
 }
 

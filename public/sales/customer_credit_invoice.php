@@ -33,7 +33,7 @@ if (user_use_date_picker()) {
 }
 
 if (isset($_GET['ModifyCredit'])) {
-	$_SESSION['page_title'] = sprintf(_("Modifying Credit Invoice # %d."), $_GET['ModifyCredit']);
+	$_SESSION['page_title'] = sprintf(__("Modifying Credit Invoice # %d."), $_GET['ModifyCredit']);
 	$GLOBALS['help_context'] = "Modifying Credit Invoice";
 	processing_start();
 } elseif (isset($_GET['InvoiceNumber'])) {
@@ -42,7 +42,7 @@ if (isset($_GET['ModifyCredit'])) {
             $_GET['Marketplace'] = 'Yes';
         }
     }
-	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Credit all or part of an Invoice");
+	$_SESSION['page_title'] = __($GLOBALS['help_context'] = "Credit all or part of an Invoice");
 	processing_start();
 }
 
@@ -58,16 +58,16 @@ if (isset($_GET['AddedID'])) {
 	$credit_no = $_GET['AddedID'];
 	$trans_type = ST_CUSTCREDIT;
 
-	display_notification_centered(_("Credit Note has been processed"));
+	display_notification_centered(__("Credit Note has been processed"));
 
-	display_note(get_customer_trans_view_str($trans_type, $credit_no, _("&View This Credit Note")), 0, 0);
+	display_note(get_customer_trans_view_str($trans_type, $credit_no, __("&View This Credit Note")), 0, 0);
 
-	display_note(print_document_link($credit_no."-".$trans_type, _("&Print This Credit Note"), true, $trans_type),1);
-	display_note(print_document_link($credit_no."-".$trans_type, _("&Email This Credit Note"), true, $trans_type, false, "printlink", "", 1),1);
+	display_note(print_document_link($credit_no."-".$trans_type, __("&Print This Credit Note"), true, $trans_type),1);
+	display_note(print_document_link($credit_no."-".$trans_type, __("&Email This Credit Note"), true, $trans_type, false, "printlink", "", 1),1);
 
- 	display_note(get_gl_view_str($trans_type, $credit_no, _("View the GL &Journal Entries for this Credit Note")),1);
+ 	display_note(get_gl_view_str($trans_type, $credit_no, __("View the GL &Journal Entries for this Credit Note")),1);
 
-	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), "filterType=$trans_type&trans_no=$credit_no");
+	hyperlink_params(url("/admin/attachments.php"), __("Add an Attachment"), "filterType=$trans_type&trans_no=$credit_no");
 
 	display_footer_exit();
 
@@ -75,14 +75,14 @@ if (isset($_GET['AddedID'])) {
 	$credit_no = $_GET['UpdatedID'];
 	$trans_type = ST_CUSTCREDIT;
 
-	display_notification_centered(_("Credit Note has been updated"));
+	display_notification_centered(__("Credit Note has been updated"));
 
-	display_note(get_customer_trans_view_str($trans_type, $credit_no, _("&View This Credit Note")), 0, 0);
+	display_note(get_customer_trans_view_str($trans_type, $credit_no, __("&View This Credit Note")), 0, 0);
 
-	display_note(print_document_link($credit_no."-".$trans_type, _("&Print This Credit Note"), true, $trans_type),1);
-	display_note(print_document_link($credit_no."-".$trans_type, _("&Email This Credit Note"), true, $trans_type, false, "printlink", "", 1),1);
+	display_note(print_document_link($credit_no."-".$trans_type, __("&Print This Credit Note"), true, $trans_type),1);
+	display_note(print_document_link($credit_no."-".$trans_type, __("&Email This Credit Note"), true, $trans_type, false, "printlink", "", 1),1);
 
- 	display_note(get_gl_view_str($trans_type, $credit_no, _("View the GL &Journal Entries for this Credit Note")),1);
+ 	display_note(get_gl_view_str($trans_type, $credit_no, __("View the GL &Journal Entries for this Credit Note")),1);
 
 	display_footer_exit();
 } else
@@ -96,25 +96,25 @@ function can_process()
 	global $Refs;
 
 	if (!is_date($_POST['CreditDate'])) {
-		display_error(_("The entered date is invalid."));
+		display_error(__("The entered date is invalid."));
 		set_focus('CreditDate');
 		return false;
 	} elseif (!is_date_in_fiscalyear($_POST['CreditDate']))	{
-		display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+		display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 		set_focus('CreditDate');
 		return false;
 	}
 
     if ($_SESSION['Items']->trans_no==0) {
 		if (!$Refs->is_valid($_POST['ref'], ST_CUSTCREDIT)) {
-			display_error(_("You must enter a reference."));
+			display_error(__("You must enter a reference."));
 			set_focus('ref');
 			return false;
 		}
 
     }
 	if (!check_num('ChargeFreightCost', 0)) {
-		display_error(_("The entered shipping cost is invalid or less than zero."));
+		display_error(__("The entered shipping cost is invalid or less than zero."));
 		set_focus('ChargeFreightCost');
 		return false;
 	}
@@ -147,7 +147,7 @@ if (isset($_GET['InvoiceNumber']) && $_GET['InvoiceNumber'] > 0) {
 
 } elseif (!processing_active()) {
 	/* This page can only be called with an invoice number for crediting*/
-	display_error(_("This page can only be opened if an invoice has been selected for crediting."));
+	display_error(__("This page can only be opened if an invoice has been selected for crediting."));
     throw new \App\Exceptions\Legacy\FlowTerminatedException;
 } else check_item_data();
 
@@ -158,7 +158,7 @@ $options = [
 function check_item_data()
 {
     if (!check_quantities()) {
-        display_error(_("Selected quantity cannot be less than zero nor more than quantity not credited yet."));
+        display_error(__("Selected quantity cannot be less than zero nor more than quantity not credited yet."));
         return false;
     }
 
@@ -242,7 +242,7 @@ if (isset($_POST['ProcessCredit']) && can_process()) {
 	$credit_no = $_SESSION['Items']->write($_POST['WriteOffGLCode']);
 	if ($credit_no == -1)
 	{
-		display_error(_("The entered reference is already in use."));
+		display_error(__("The entered reference is already in use."));
 		set_focus('ref');
 	} elseif($credit_no) {
 		processing_end();
@@ -274,33 +274,33 @@ function display_credit_items()
 
     start_table(TABLESTYLE, "width='100%'");
     start_row();
-    label_cells(_("Customer"), $_SESSION['Items']->customer_name, "class='tableheader2'");
-	label_cells(_("Branch"), get_branch_name($_SESSION['Items']->Branch), "class='tableheader2'");
-    label_cells(_("Currency"), $_SESSION['Items']->customer_currency, "class='tableheader2'");
+    label_cells(__("Customer"), $_SESSION['Items']->customer_name, "class='tableheader2'");
+	label_cells(__("Branch"), get_branch_name($_SESSION['Items']->Branch), "class='tableheader2'");
+    label_cells(__("Currency"), $_SESSION['Items']->customer_currency, "class='tableheader2'");
     end_row();
     start_row();
 
     if ($_SESSION['Items']->trans_no==0) {
-		ref_cells(_("Reference"), 'ref', '', null, "class='tableheader2'", false, ST_CUSTCREDIT,
+		ref_cells(__("Reference"), 'ref', '', null, "class='tableheader2'", false, ST_CUSTCREDIT,
 		array('customer' => $_SESSION['Items']->customer_id,
 			'branch' => $_SESSION['Items']->Branch,
 			'date' => get_post('CreditDate')));
 	} else {
-		label_cells(_("Reference"), $_SESSION['Items']->reference, "class='tableheader2'");
+		label_cells(__("Reference"), $_SESSION['Items']->reference, "class='tableheader2'");
 	}
-    label_cells(_("Crediting Invoice"), get_customer_trans_view_str(ST_SALESINVOICE, array_keys($_SESSION['Items']->src_docs)), "class='tableheader2'");
+    label_cells(__("Crediting Invoice"), get_customer_trans_view_str(ST_SALESINVOICE, array_keys($_SESSION['Items']->src_docs)), "class='tableheader2'");
 
 	if (!isset($_POST['ShipperID'])) {
 		$_POST['ShipperID'] = $_SESSION['Items']->ship_via;
 	}
-	label_cell(_("Shipping Company"), "class='tableheader2'");
+	label_cell(__("Shipping Company"), "class='tableheader2'");
 	shippers_list_cells(null, 'ShipperID', $_POST['ShipperID']);
 
 	end_row();
     start_row();
-    label_cells(_("Tracking No"), $_SESSION['Items']->tracking_no, "class='tableheader2'");
+    label_cells(__("Tracking No"), $_SESSION['Items']->tracking_no, "class='tableheader2'");
     if ($_SESSION['Items']->is_marketplace_trans) {
-        label_cells(_("Marketplace"), get_marketplace_name($_SESSION['Items']->marketplace_id), "class='tableheader2'");
+        label_cells(__("Marketplace"), get_marketplace_name($_SESSION['Items']->marketplace_id), "class='tableheader2'");
     }
     end_row();
 	end_table();
@@ -309,9 +309,9 @@ function display_credit_items()
 
     start_table(TABLESTYLE, "width='100%'");
 
-    label_row(_("Invoice Date"), $_SESSION['Items']->src_date, "class='tableheader2'");
+    label_row(__("Invoice Date"), $_SESSION['Items']->src_date, "class='tableheader2'");
 
-    date_row(_("Credit Note Date"), 'CreditDate', '', $_SESSION['Items']->trans_no==0, 0, 0, 0, "class='tableheader2'");
+    date_row(__("Credit Note Date"), 'CreditDate', '', $_SESSION['Items']->trans_no==0, 0, 0, 0, "class='tableheader2'");
 
     end_table();
 
@@ -322,18 +322,18 @@ function display_credit_items()
 	div_start('credit_items');
     start_table(TABLESTYLE, "width='80%'");
     $th = [];
-    $th[] = _("Item Code");
-    $th[] = _("Item Description");
-    $th[] = _("Invoiced Quantity");
-    $th[] = _("Units");
-    $th[] = _("Credit Quantity");
-    $th[] = _("Price");
-    $th[] = _("Discount %");
+    $th[] = __("Item Code");
+    $th[] = __("Item Description");
+    $th[] = __("Invoiced Quantity");
+    $th[] = __("Units");
+    $th[] = __("Credit Quantity");
+    $th[] = __("Price");
+    $th[] = __("Discount %");
     if ($options['show_marketplace_cols']) {
-        $th[] = _("Marketplace Commission");
-        $th[] = _("Marketplace Shipping");
+        $th[] = __("Marketplace Commission");
+        $th[] = __("Marketplace Shipping");
     }
-    $th[] = _("Total");
+    $th[] = __("Total");
     table_header($th);
 
     $k = 0; //row colour counter
@@ -364,14 +364,14 @@ function display_credit_items()
                 'Line'.$line_no.'MktCommission',
                 price_format($ln_itm->marketplace_commission),
                 null,
-                "<br><small>("._("Original:")." ".price_format($ln_itm->bk_marketplace_commission ?? 0).")</small>",
+                "<br><small>(".__("Original:")." ".price_format($ln_itm->bk_marketplace_commission ?? 0).")</small>",
                 $dec
             );
             amount_cells(null,
                 'Line'.$line_no.'MktShipping',
                 price_format($ln_itm->marketplace_shipping),
                 null,
-                "<br><small>("._("Original:")." ".price_format($ln_itm->bk_marketplace_shipping ?? 0).")</small>",
+                "<br><small>(".__("Original:")." ".price_format($ln_itm->bk_marketplace_shipping ?? 0).")</small>",
                 $dec
             );
         }
@@ -384,14 +384,14 @@ function display_credit_items()
     }
 	$colspan = 7 + ($options['show_marketplace_cols'] ? 2 : 0);
 	start_row();
-	label_cell(_("Credit Shipping Cost"), "colspan=$colspan align=right");
+	label_cell(__("Credit Shipping Cost"), "colspan=$colspan align=right");
 	small_amount_cells(null, "ChargeFreightCost", price_format(get_post('ChargeFreightCost',0)));
 	end_row();
 
     $inv_items_total = $_SESSION['Items']->get_items_total_dispatch();
 
     $display_sub_total = price_format($inv_items_total + input_num($_POST['ChargeFreightCost']));
-    label_row(_("Sub-total"), $display_sub_total, "colspan=$colspan align=right", "align=right");
+    label_row(__("Sub-total"), $display_sub_total, "colspan=$colspan align=right", "align=right");
 
     $taxes = $_SESSION['Items']->get_taxes(input_num($_POST['ChargeFreightCost']));
 
@@ -399,18 +399,18 @@ function display_credit_items()
 
     $credit_total = ($inv_items_total + input_num('ChargeFreightCost') + $tax_total);
 
-    label_row(_("Credit Note Total"), price_format($credit_total), "colspan=$colspan align=right", "align=right");
+    label_row(__("Credit Note Total"), price_format($credit_total), "colspan=$colspan align=right", "align=right");
 
     if ($options['show_marketplace_cols']) {
         $market_cost = $_SESSION['Items']->get_total_marketplace_cost();
         label_row(
-            _("Total Marketplace Cost"),
+            __("Total Marketplace Cost"),
             price_format($market_cost),
             "colspan=$colspan align=right",
             "align=right"
         );
         label_row(
-            _("Net Refundable to Marketplace"),
+            __("Net Refundable to Marketplace"),
             price_format($credit_total - $market_cost),
             "colspan=$colspan align=right",
             "align=right"
@@ -433,7 +433,7 @@ function display_credit_options()
  	div_start('options');
 	start_table(TABLESTYLE2);
 
-	credit_type_list_row(_("Credit Note Type"), 'CreditType', null, true);
+	credit_type_list_row(__("Credit Note Type"), 'CreditType', null, true);
 
 	if ($_POST['CreditType'] == "Return")
 	{
@@ -441,15 +441,15 @@ function display_credit_options()
 		/*if the credit note is a return of goods then need to know which location to receive them into */
 		if (!isset($_POST['Location']))
 			$_POST['Location'] = $_SESSION['Items']->Location;
-	   	locations_list_row(_("Items Returned to Location"), 'Location', $_POST['Location']);
+	   	locations_list_row(__("Items Returned to Location"), 'Location', $_POST['Location']);
 	}
 	else
 	{
 		/* the goods are to be written off to somewhere */
-		gl_all_accounts_list_row(_("Write off the cost of the items to"), 'WriteOffGLCode', null);
+		gl_all_accounts_list_row(__("Write off the cost of the items to"), 'WriteOffGLCode', null);
 	}
 
-	textarea_row(_("Memo"), "CreditText", null, 51, 3);
+	textarea_row(__("Memo"), "CreditText", null, 51, 3);
 	echo "</table>";
  div_end();
 }
@@ -466,9 +466,9 @@ display_credit_items();
 display_credit_options();
 
 echo "<br><center>";
-submit('Update', _("Update"), true, _('Update credit value for quantities entered'), true);
+submit('Update', __("Update"), true, __('Update credit value for quantities entered'), true);
 echo "&nbsp";
-submit('ProcessCredit', _("Process Credit Note"), true, '', 'default');
+submit('ProcessCredit', __("Process Credit Note"), true, '', 'default');
 echo "</center>";
 
 end_form();

@@ -59,7 +59,7 @@ function get_gl_view_str($type, $trans_no, $label="", $force=false, $class='', $
 	$icon = false;
 	if ($label == "")
 	{
-		$label = _("GL");
+		$label = __("GL");
 		$icon = ICON_GL;
 	}
 	$url = ($type == ST_WORKORDER) ? "manufacturing/view/wo_costs_view.php?trans_no=$trans_no"
@@ -303,7 +303,7 @@ function exchange_rate_display($from_currency, $to_currency, $date_, $force_edit
  				{
  					$rate = retrieve_exrate($currency, $date_);
 					if (!$rate)
-						display_warning(sprintf(_("Cannot retrieve exchange rate for currency %s. Please adjust approximate rate if needed."), $currency));
+						display_warning(sprintf(__("Cannot retrieve exchange rate for currency %s. Please adjust approximate rate if needed."), $currency));
 					elseif ($SysPrefs->xr_provider_authoritative) {
 						// if the remote exrate is considered authoritative we can store the rate here,
 						// otherwise exrate will be stored during transaction write
@@ -327,7 +327,7 @@ function exchange_rate_display($from_currency, $to_currency, $date_, $force_edit
 	    else
 	    	$ctrl = "<span id=\"_ex_rate\">$rate</span>";
 
-		label_row(_("Exchange Rate:"), $span = "<span style='vertical-align:top;' id='_ex_rate_span'>$ctrl $from_currency = 1 $to_currency</span>" );
+		label_row(__("Exchange Rate:"), $span = "<span style='vertical-align:top;' id='_ex_rate_span'>$ctrl $from_currency = 1 $to_currency</span>" );
 
 	  	$Ajax->addUpdate('_ex_rate_span', '_ex_rate_span', $span);
 	}
@@ -344,9 +344,9 @@ function is_voided_display($type, $id, $label)
 
 	start_table(TABLESTYLE, "width='50%'");
 	echo "<tr><td align=center><font color=red>$label</font><br>";
-	echo "<font color=red>" . _("Date Voided:") . " " . sql2date($void_entry["date_"]) . "</font><br>";
+	echo "<font color=red>" . __("Date Voided:") . " " . sql2date($void_entry["date_"]) . "</font><br>";
 	if (strlen($void_entry["memo_"]) > 0)
-		echo "<center><font color=red>" . _("Memo:") . " " . $void_entry["memo_"] . "</font></center><br>";
+		echo "<center><font color=red>" . __("Memo:") . " " . $void_entry["memo_"] . "</font></center><br>";
 	echo "</td></tr>";
 	end_table(1);
 
@@ -443,13 +443,13 @@ function display_customer_trans_tax_details($tax_items, $columns)
 			if ($SysPrefs->alternative_tax_include_on_docs() == 1)
   			{
   				if ($first)
-  					label_row(_("Total Tax Excluded"), number_format2($tax_item['net_amount'], user_price_dec()),
+  					label_row(__("Total Tax Excluded"), number_format2($tax_item['net_amount'], user_price_dec()),
   						"colspan=$columns align=right", "align=right");
         		label_row($tax_type_name, $tax, "colspan=$columns align=right", "align=right");
         		$first = false;
         	}
         	else
-        		label_row(_("Included") . " " . $tax_type_name
+        		label_row(__("Included") . " " . $tax_type_name
         			. ": $tax", "", "colspan=$columns align=right", "align=right");
         }			
     	else
@@ -468,7 +468,7 @@ function display_supp_trans_tax_details($tax_items, $columns)
 
     	$tax = number_format2(abs($tax_item['amount']),user_price_dec());
     	if ($tax_item['included_in_price'])
-        	label_row(_("Included") . " " . $tax_item['tax_type_name'] . " (" . $tax_item['rate'] . "%) "
+        	label_row(__("Included") . " " . $tax_item['tax_type_name'] . " (" . $tax_item['rate'] . "%) "
         		. ": $tax", '', "colspan=$columns align=right", "align=right");
     	else
         	label_row($tax_item['tax_type_name'] . " (" . $tax_item['rate'] . "%)",
@@ -492,7 +492,7 @@ function display_edit_tax_items($taxes, $columns, $tax_included, $rightspan=0, $
 				start_row();
 				if ($tax_included) {
 					$colspan = $columns-1;
-					label_cell(_("Included") . " " . $taxitem['tax_type_name'].":",
+					label_cell(__("Included") . " " . $taxitem['tax_type_name'].":",
 						"colspan={$colspan} align='right'");
 					amount_cells(null, 'mantax['.$taxitem['tax_type_id'].']',
 						null, "colspan=$columns align=right", '<td></td>', user_price_dec());
@@ -509,7 +509,7 @@ function display_edit_tax_items($taxes, $columns, $tax_included, $rightspan=0, $
 				$value = number_format2($taxitem['Value'],user_price_dec());
 				if ($tax_included)
 				{
-					label_row(_("Included") . " " . $taxitem['tax_type_name']
+					label_row(__("Included") . " " . $taxitem['tax_type_name']
 						. " " . $value , "", "colspan=$columns align=right", "align=right", $rightspan);
 				}
 				else
@@ -547,8 +547,8 @@ function display_allocations($alloc_result, $total, $title, $show_summary=true)
 
     start_table(TABLESTYLE, "width='80%'");
 
-    $th = array( _("Type"), _("Number"), _("Date"), _("Total Amount"),
-    	_("Left to Allocate"), _("This Allocation"));
+    $th = array( __("Type"), __("Number"), __("Date"), __("Total Amount"),
+    	__("Left to Allocate"), __("This Allocation"));
 	table_header($th);
     $k = $total_allocated = 0;
 
@@ -571,13 +571,13 @@ function display_allocations($alloc_result, $total, $title, $show_summary=true)
     	$total_allocated += $alloc_row['amt'];
     }
     start_row();
-   	label_cell(_("Total Allocated:"), "align=right colspan=5");
+   	label_cell(__("Total Allocated:"), "align=right colspan=5");
 	amount_cell($total_allocated);
 	end_row();
 	if ($show_summary)
 	{
 		start_row();
-	    label_cell(_("Left to Allocate:"), "align=right colspan=5");
+	    label_cell(__("Left to Allocate:"), "align=right colspan=5");
 	    $total = round2($total, user_price_dec());
     	amount_cell($total - $total_allocated);
     	end_row();
@@ -593,11 +593,11 @@ function display_allocations_from($person_type, $person_id, $type, $type_no, $to
 	{
 		case PT_CUSTOMER :
 			$alloc_result = get_allocatable_to_cust_transactions($person_id, $type_no, $type);
-			display_allocations($alloc_result, $total, _("Allocations"));
+			display_allocations($alloc_result, $total, __("Allocations"));
 			return;
 		case PT_SUPPLIER :
 			$alloc_result = get_allocatable_to_supp_transactions($person_id, $type_no, $type);
-			display_allocations($alloc_result, $total, _("Allocations"));
+			display_allocations($alloc_result, $total, __("Allocations"));
 			return;
 	}
 }
@@ -610,11 +610,11 @@ function display_allocations_to($person_type, $person_id, $type, $type_no, $tota
 	{
 		case PT_CUSTOMER :
 			$alloc_result = get_allocatable_from_cust_transactions($person_id, $type_no, $type);
-			display_allocations($alloc_result, $total, $type == ST_SALESORDER ? _("Pre-Payments") : _("Payments"), false);
+			display_allocations($alloc_result, $total, $type == ST_SALESORDER ? __("Pre-Payments") : __("Payments"), false);
 			return;
 		case PT_SUPPLIER :
 			$alloc_result = get_allocatable_from_supp_transactions($person_id, $type_no, $type);
-			display_allocations($alloc_result, $total, $type == ST_PURCHORDER ? _("Pre-Payments") : _("Payments"), false);
+			display_allocations($alloc_result, $total, $type == ST_PURCHORDER ? __("Pre-Payments") : __("Payments"), false);
 			return;
 	}
 }
@@ -630,7 +630,7 @@ function display_quick_entries(&$cart, $id, $base, $type, $descr='')
 
 	if (!isset($id) || $id == null || $id == "")
 	{
-		display_error( _("No Quick Entries are defined."));
+		display_error( __("No Quick Entries are defined."));
 		set_focus('totamount');
 	}
 	else
@@ -645,12 +645,12 @@ function display_quick_entries(&$cart, $id, $base, $type, $descr='')
 
 		if ($qe_lines === 0)
 		{
-			display_error( _("No Quick Entry lines are defined."));
+			display_error( __("No Quick Entry lines are defined."));
 			set_focus('totamount');
 			return 0;
 		} elseif ($qe_lines === -1)
 		{
-			display_error(_("Cannot post to GL account used by more than one tax type."));
+			display_error(__("Cannot post to GL account used by more than one tax type."));
 			return 0;
 		}
 		foreach($qe_lines as $qe_line)
@@ -871,7 +871,7 @@ function price_in_words($amount, $document=0)
 		$divisor = pow(10, $dec);
         $frac = round2($amount - floor($amount), $dec) * $divisor;
 		$frac = sprintf("%0{$dec}d", round2($frac, 0));
-		$and = _("and");
+		$and = __("and");
     	$frac = " $and $frac/$divisor";
     }
     else
@@ -1000,10 +1000,10 @@ function get_js_date_picker()
 	$how = user_date_format();				// 0 = us/ca, 1 = eu, au, nz, 2 = jp, sw
 	$sep = $dateseps[user_date_sep()];		// date separator
 	$wstart = (($date_system == 1 || $date_system == 2 || $date_system == 3) ? 6 : ($how == 0 || $how == 3 ? 0 : 1));	// weekstart (sun = 0, mon = 1)
-	$months = array(_("January"),_("February"),_("March"),_("April"),_("May"),_("June"),_("July"),_("August"),_("September"),_("October"),_("November"),_("December"));
-	$wdays = array(_("Su"),_("Mo"),_("Tu"),_("We"),_("Th"),_("Fr"),_("Sa"));
-	$wno = _("W"); // week no
-	$back = _("Back");
+	$months = array(__("January"),__("February"),__("March"),__("April"),__("May"),__("June"),__("July"),__("August"),__("September"),__("October"),__("November"),__("December"));
+	$wdays = array(__("Su"),__("Mo"),__("Tu"),__("We"),__("Th"),__("Fr"),__("Sa"));
+	$wno = __("W"); // week no
+	$back = __("Back");
 	if ($date_system == 1)
 		list($cyear, $cmon, $cday) = gregorian_to_jalali(date("Y"), date("n"), date("j"));
 	elseif ($date_system == 2)
@@ -1537,7 +1537,7 @@ function payment_link($name, $options)
         $result = db_query($sql, "could not retrieve $name bank account number");
         $row = db_fetch($result);
         if ($row == false) {
-        	display_error(sprintf(_("Could not retrieve %s bank account number"), $name));
+        	display_error(sprintf(__("Could not retrieve %s bank account number"), $name));
         	return false;
         }
         $account = $row['bank_account_number'];
@@ -1552,7 +1552,7 @@ function payment_link($name, $options)
         $result = db_query($sql, "could not retrieve exchange rate for $curr_code - $date");
         $row = db_fetch($result);
         if ($row == false) {
-        	display_error(sprintf(_("Could not retrieve exchange rate for %s - %s"), $curr_code, $date));
+        	display_error(sprintf(__("Could not retrieve exchange rate for %s - %s"), $curr_code, $date));
         	return false;
         }
         $exchange_rate = $row['rate_buy'];
@@ -1596,8 +1596,8 @@ function trans_editor_link($type, $trans_no)
 	);
 
 	return !isset($editor_url[$type]) ? '--' :
-		(is_closed_trans($type, $trans_no) ? set_icon(ICON_CLOSED, _('Closed')) :
-			pager_link(_("Edit"), sprintf($editor_url[$type], $trans_no, $type), ICON_EDIT));
+		(is_closed_trans($type, $trans_no) ? set_icon(ICON_CLOSED, __('Closed')) :
+			pager_link(__("Edit"), sprintf($editor_url[$type], $trans_no, $type), ICON_EDIT));
 }
 
 function company_logo_on_view()

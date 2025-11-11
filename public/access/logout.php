@@ -17,7 +17,7 @@ require __DIR__ . "/../includes/session.inc";
 add_js_file('login.js');
 
 require_once __DIR__ . "/../includes/page/header.inc";
-page_header(_("Logout"), true, false, '');
+page_header(__("Logout"), true, false, '');
 
 echo "<table width='100%' border='0'>
   <tr>
@@ -28,7 +28,7 @@ echo "<table width='100%' border='0'>
   </tr>
   <tr>
     <td><div align='center'><font size=2>";
-echo _("Thank you for using") . " ";
+echo __("Thank you for using") . " ";
 
 echo "<strong>".$SysPrefs->app_title." $version</strong>";
 
@@ -39,7 +39,7 @@ echo "</font></div></td>
   </tr>
   <tr>
     <td><div align='center'>";
-echo "<a href='".url('/index.php')."'><b>" . _("Click here to Login Again.") . "</b></a>";
+echo "<a href='".url('/index.php')."'><b>" . __("Click here to Login Again.") . "</b></a>";
 echo "</div></td>
   </tr>
 </table>

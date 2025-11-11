@@ -15,7 +15,7 @@ require_once __DIR__ . "/../../includes/session.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
-page(_($GLOBALS['help_context'] = "View Work Order Issue"), true, false, "", $js);
+page(__($GLOBALS['help_context'] = "View Work Order Issue"), true, false, "", $js);
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/data_checks.inc";
@@ -38,8 +38,8 @@ function display_wo_issue($issue_no)
 
 	br(1);
     start_table(TABLESTYLE);
-    $th = array(_("Issue #"), _("Reference"), _("For Work Order #"),
-    	_("Item"), _("From Location"), _("To Work Centre"), _("Date of Issue"));
+    $th = array(__("Issue #"), __("Reference"), __("For Work Order #"),
+    	__("Item"), __("From Location"), __("To Work Centre"), __("Date of Issue"));
     table_header($th);
 
 	start_row();
@@ -56,7 +56,7 @@ function display_wo_issue($issue_no)
 
 	end_table(1);
 
-	is_voided_display(ST_MANUISSUE, $issue_no, _("This issue has been voided."));
+	is_voided_display(ST_MANUISSUE, $issue_no, __("This issue has been voided."));
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -67,12 +67,12 @@ function display_wo_issue_details($issue_no)
 
     if (db_num_rows($result) == 0)
     {
-    	display_note(_("There are no items for this issue."));
+    	display_note(__("There are no items for this issue."));
     }
     else
     {
         start_table(TABLESTYLE);
-        $th = array(_("Component"), _("Quantity"), _("Units"), _("Unit Cost"));
+        $th = array(__("Component"), __("Quantity"), __("Units"), __("Unit Cost"));
 
         table_header($th);
 
@@ -110,7 +110,7 @@ display_heading($systypes_array[ST_MANUISSUE] . " # " . $wo_issue_no);
 
 display_wo_issue($wo_issue_no);
 
-display_heading2(_("Items for this Issue"));
+display_heading2(__("Items for this Issue"));
 
 display_wo_issue_details($wo_issue_no);
 

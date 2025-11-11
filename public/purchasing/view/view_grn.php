@@ -17,28 +17,28 @@ require __DIR__ . "/../../includes/session.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
-page(_($GLOBALS['help_context'] = "View Purchase Order Delivery"), true, false, "", $js);
+page(__($GLOBALS['help_context'] = "View Purchase Order Delivery"), true, false, "", $js);
 
 require_once __DIR__ . "/../../purchasing/includes/purchasing_ui.inc";
 
 if (!isset($_GET['trans_no']))
 {
-	display_error("<BR>" . _("This page must be called with a Purchase Order Delivery number to review."));
+	display_error("<BR>" . __("This page must be called with a Purchase Order Delivery number to review."));
     throw new \App\Exceptions\Legacy\FlowTerminatedException;
 }
 
 $purchase_order = new purch_order;
 read_grn($_GET["trans_no"], $purchase_order);
 
-display_heading(_("Purchase Order Delivery") . " #" . $_GET['trans_no']);
+display_heading(__("Purchase Order Delivery") . " #" . $_GET['trans_no']);
 echo "<BR>";
 display_grn_summary($purchase_order);
 
-display_heading2(_("Line Details"));
+display_heading2(__("Line Details"));
 
 start_table(TABLESTYLE, "width='90%'");
-$th = array(_("Item Code"), _("Item Description"), _("Required by"), _("Quantity"),
-	_("Unit"), _("Price"), _("Line Total"), _("Quantity Invoiced"));
+$th = array(__("Item Code"), __("Item Description"), __("Required by"), __("Quantity"),
+	__("Unit"), __("Price"), __("Line Total"), __("Quantity Invoiced"));
 
 table_header($th);
 
@@ -77,7 +77,7 @@ foreach ($purchase_order->line_items as $stock_item)
 }
 
 $display_sub_tot = number_format2($total,user_price_dec());
-label_row(_("Sub Total"), $display_sub_tot,
+label_row(__("Sub Total"), $display_sub_tot,
 	"align=right colspan=6", "nowrap align=right", 1);
 
 $taxes = $purchase_order->get_taxes();
@@ -86,7 +86,7 @@ $tax_total = display_edit_tax_items($taxes, 6, $purchase_order->tax_included, 1)
 $display_total = price_format(($total + $tax_total));
 
 start_row();
-label_cells(_("Amount Total"), $display_total, "colspan=6 align='right'","align='right'");
+label_cells(__("Amount Total"), $display_total, "colspan=6 align='right'","align='right'");
 label_cell('');
 end_row();
 
@@ -94,9 +94,9 @@ end_row();
 end_table(1);
 
 if ($overdue_items)
-	display_note(_("Marked items were delivered overdue."), 0, 0, "class='overduefg'");
+	display_note(__("Marked items were delivered overdue."), 0, 0, "class='overduefg'");
 
-is_voided_display(ST_SUPPRECEIVE, $_GET['trans_no'], _("This delivery has been voided."));
+is_voided_display(ST_SUPPRECEIVE, $_GET['trans_no'], __("This delivery has been voided."));
 
 end_page(true, false, false, ST_SUPPRECEIVE, $_GET['trans_no']);
 

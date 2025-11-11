@@ -110,7 +110,7 @@ function display_type ($type, $typename, $from, $to, $begin, $end, $compare, $co
 		$rep->row += 6;
 		$rep->Line($rep->row);
 		$rep->NewLine();
-		$rep->TextCol(0, 2,	_('Total') . " " . $typename);
+		$rep->TextCol(0, 2,	__('Total') . " " . $typename);
 		$rep->AmountCol(2, 3, ($code_per_balance + $per_balance_total) * $convert, $dec);
 		$rep->AmountCol(3, 4, ($code_acc_balance + $acc_balance_total) * $convert, $dec);
 		$rep->AmountCol(4, 5, Achieve(($code_per_balance + $per_balance_total), ($code_acc_balance + $acc_balance_total)), $pdec);		
@@ -208,33 +208,33 @@ function print_profit_and_loss_statement()
 	$cols = array(0, 60, 200, 350, 425,	500);
 	//------------0--1---2----3----4----5--
 
-	$headers = array(_('Account'), _('Account Name'), _('Period'), _('Accumulated'), _('Achieved %'));
+	$headers = array(__('Account'), __('Account Name'), __('Period'), __('Accumulated'), __('Achieved %'));
 
 	$aligns = array('left',	'left',	'right', 'right', 'right');
 
     if ($dim == 2)
     {
     	$params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'),'from' => $from, 'to' => $to),
-                    	2 => array('text' => _('Dimension')." 1",
+    				    1 => array('text' => __('Period'),'from' => $from, 'to' => $to),
+                    	2 => array('text' => __('Dimension')." 1",
                             'from' => get_dimension_string($dimension), 'to' => ''),
-                    	3 => array('text' => _('Dimension')." 2",
+                    	3 => array('text' => __('Dimension')." 2",
                             'from' => get_dimension_string($dimension2), 'to' => ''),
-                        4 => array('text' => _('Tags'), 'from' => get_tag_names($tags), 'to' => ''));
+                        4 => array('text' => __('Tags'), 'from' => get_tag_names($tags), 'to' => ''));
     }
     elseif ($dim == 1)
     {
     	$params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'),'from' => $from, 'to' => $to),
-                    	2 => array('text' => _('Dimension'),
+    				    1 => array('text' => __('Period'),'from' => $from, 'to' => $to),
+                    	2 => array('text' => __('Dimension'),
                             'from' => get_dimension_string($dimension), 'to' => ''),
-                        3 => array('text' => _('Tags'), 'from' => get_tag_names($tags), 'to' => ''));
+                        3 => array('text' => __('Tags'), 'from' => get_tag_names($tags), 'to' => ''));
     }
     else
     {
     	$params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'),'from' => $from, 'to' => $to),
-    				    2 => array('text' => _('Tags'), 'from' => get_tag_names($tags), 'to' => ''));
+    				    1 => array('text' => __('Period'),'from' => $from, 'to' => $to),
+    				    2 => array('text' => __('Tags'), 'from' => get_tag_names($tags), 'to' => ''));
     }
 
 
@@ -244,7 +244,7 @@ function print_profit_and_loss_statement()
 		if ($compare == 2)
 		{
 			$begin = $from;
-			$headers[3] = _('Budget');
+			$headers[3] = __('Budget');
 		}
 		else
 			$begin = begin_fiscalyear();
@@ -255,10 +255,10 @@ function print_profit_and_loss_statement()
 		$end = add_months($to, -12);
 		if (date_comp($to, end_month($to)) == 0) // compensate for leap years. If to-date equal end month 
 			$end = end_month($end);				 // then the year-1 should also be end month	
-		$headers[3] = _('Period Y-1');
+		$headers[3] = __('Period Y-1');
 	}
 
-	$rep = new FrontReport(_('Profit and Loss Statement'), "ProfitAndLoss", user_pagesize(), 9, $orientation);
+	$rep = new FrontReport(__('Profit and Loss Statement'), "ProfitAndLoss", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -296,7 +296,7 @@ function print_profit_and_loss_statement()
 		$rep->Line($rep->row);
 		$rep->NewLine();
 		$rep->Font('bold');
-		$rep->TextCol(0, 2,	_('Total') . " " . $class["class_name"]);
+		$rep->TextCol(0, 2,	__('Total') . " " . $class["class_name"]);
 		$rep->AmountCol(2, 3, $class_per_total * $convert, $dec);
 		$rep->AmountCol(3, 4, $class_acc_total * $convert, $dec);
 		$rep->AmountCol(4, 5, Achieve($class_per_total, $class_acc_total), $pdec);
@@ -308,7 +308,7 @@ function print_profit_and_loss_statement()
 	}
 	
 	$rep->Font('bold');	
-	$rep->TextCol(0, 2,	_('Calculated Return'));
+	$rep->TextCol(0, 2,	__('Calculated Return'));
 	$rep->AmountCol(2, 3, $salesper *-1, $dec); // always convert
 	$rep->AmountCol(3, 4, $salesacc * -1, $dec);
 	$rep->AmountCol(4, 5, Achieve($salesper, $salesacc), $pdec);
@@ -317,7 +317,7 @@ function print_profit_and_loss_statement()
 	$rep->Line($rep->row);
 	if ($graphics)
 	{
-		$labels[] = _('Calculated Return');
+		$labels[] = __('Calculated Return');
 		$serie1[] = abs($salesper);
 		$serie2[] = abs($salesacc);
 		$pg->setStream('png');
@@ -325,8 +325,8 @@ function print_profit_and_loss_statement()
 		$pg->addSerie($headers[2], $serie1);
 		$pg->addSerie($headers[3], $serie2);
 		$pg->setTitle($rep->title);
-		$pg->setXTitle(_("Group"));
-		$pg->setYTitle(_("Amount"));
+		$pg->setXTitle(__("Group"));
+		$pg->setYTitle(__("Amount"));
 		$pg->setDTitle(number_format2(abs($salesper)));
 		$pg->setValues(true);
 		$pg->latin_notation = ($SysPrefs->decseps[user_dec_sep()] != ".");

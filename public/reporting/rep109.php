@@ -70,15 +70,15 @@ function print_sales_orders()
 		$branch = get_branch($myrow["branch_code"]);
 
         if ($i == $from || $email == 1)
-            $rep = new FrontReport(_("SALES ORDER"), "SalesOrderBulk", user_pagesize(), 9, $orientation);
+            $rep = new FrontReport(__("SALES ORDER"), "SalesOrderBulk", user_pagesize(), 9, $orientation);
         if ($print_as_quote == 1)
         {
-            $rep->title = _('QUOTE');
+            $rep->title = __('QUOTE');
             $rep->filename = "Quote" . $i . ".pdf";
         }
         else
         {
-            $rep->title = _("SALES ORDER");
+            $rep->title = __("SALES ORDER");
             $rep->filename = "SalesOrder" . $i . ".pdf";
         }		
 		$rep->SetHeaderType('Header2');
@@ -134,19 +134,19 @@ function print_sales_orders()
 		$rep->row = $rep->bottomMargin + (15 * $rep->lineHeight);
 		$doctype = ST_SALESORDER;
 
-		$rep->TextCol(3, 6, _("Sub-total"), -2);
+		$rep->TextCol(3, 6, __("Sub-total"), -2);
 		$rep->TextCol(6, 7,	$DisplaySubTot, -2);
 		$rep->NewLine();
 		if ($myrow['freight_cost'] != 0.0)
 		{
 			$DisplayFreight = number_format2($myrow["freight_cost"],$dec);
-			$rep->TextCol(3, 6, _("Shipping"), -2);
+			$rep->TextCol(3, 6, __("Shipping"), -2);
 			$rep->TextCol(6, 7,	$DisplayFreight, -2);
 			$rep->NewLine();
 		}	
 		$DisplayTotal = number_format2($myrow["freight_cost"] + $SubTotal, $dec);
 		if ($myrow['tax_included'] == 0) {
-			$rep->TextCol(3, 6, _("TOTAL ORDER EX VAT"), - 2);
+			$rep->TextCol(3, 6, __("TOTAL ORDER EX VAT"), - 2);
 			$rep->TextCol(6, 7,	$DisplayTotal, -2);
 			$rep->NewLine();
 		}
@@ -168,7 +168,7 @@ function print_sales_orders()
 				{
 					if ($first)
 					{
-						$rep->TextCol(3, 6, _("Total Tax Excluded"), -2);
+						$rep->TextCol(3, 6, __("Total Tax Excluded"), -2);
 						$rep->TextCol(6, 7,	number_format2($tax_item['net_amount'], $dec), -2);
 						$rep->NewLine();
 					}
@@ -177,7 +177,7 @@ function print_sales_orders()
 					$first = false;
 				}
 				else
-					$rep->TextCol(3, 7, _("Included") . " " . $tax_type_name . " " . _("Amount"). ": " . $DisplayTax, -2);
+					$rep->TextCol(3, 7, __("Included") . " " . $tax_type_name . " " . __("Amount"). ": " . $DisplayTax, -2);
 			}
 			else
 			{
@@ -192,7 +192,7 @@ function print_sales_orders()
 
 		$DisplayTotal = number_format2($myrow["freight_cost"] + $SubTotal, $dec);
 		$rep->Font('bold');
-		$rep->TextCol(3, 6, _("TOTAL ORDER VAT INCL."), - 2);
+		$rep->TextCol(3, 6, __("TOTAL ORDER VAT INCL."), - 2);
 		$rep->TextCol(6, 7,	$DisplayTotal, -2);
 		$words = price_in_words($myrow["freight_cost"] + $SubTotal, ST_SALESORDER);
 		if ($words != "")

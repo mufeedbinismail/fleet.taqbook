@@ -19,7 +19,7 @@ if ($SysPrefs->use_popup_windows)
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
 	
-page(_($GLOBALS['help_context'] = "Customers"), @$_REQUEST['popup'], false, "", $js); 
+page(__($GLOBALS['help_context'] = "Customers"), @$_REQUEST['popup'], false, "", $js); 
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/banking.inc";
@@ -39,35 +39,35 @@ function can_process()
 {
 	if (strlen($_POST['CustName']) == 0) 
 	{
-		display_error(_("The customer name cannot be empty."));
+		display_error(__("The customer name cannot be empty."));
 		set_focus('CustName');
 		return false;
 	} 
 
 	if (strlen($_POST['cust_ref']) == 0) 
 	{
-		display_error(_("The customer short name cannot be empty."));
+		display_error(__("The customer short name cannot be empty."));
 		set_focus('cust_ref');
 		return false;
 	} 
 	
 	if (!check_num('credit_limit', 0))
 	{
-		display_error(_("The credit limit must be numeric and not less than zero."));
+		display_error(__("The credit limit must be numeric and not less than zero."));
 		set_focus('credit_limit');
 		return false;		
 	} 
 	
 	if (!check_num('pymt_discount', 0, 100)) 
 	{
-		display_error(_("The payment discount must be numeric and is expected to be less than 100% and greater than or equal to 0."));
+		display_error(__("The payment discount must be numeric and is expected to be less than 100% and greater than or equal to 0."));
 		set_focus('pymt_discount');
 		return false;		
 	} 
 	
 	if (!check_num('discount', 0, 100)) 
 	{
-		display_error(_("The discount percentage must be numeric and is expected to be less than 100% and greater than or equal to 0."));
+		display_error(__("The discount percentage must be numeric and is expected to be less than 100% and greater than or equal to 0."));
 		set_focus('discount');
 		return false;		
 	} 
@@ -95,7 +95,7 @@ function handle_submit(&$selected_id)
 			'debtors_master', 'debtor_no');
 
 		$Ajax->activate('customer_id'); // in case of status change
-		display_notification(_("Customer has been updated."));
+		display_notification(__("Customer has been updated."));
 	} 
 	else 
 	{ 	//it is a new customer
@@ -127,10 +127,10 @@ function handle_submit(&$selected_id)
 		}
 		commit_transaction();
 
-		display_notification(_("A new customer has been added."));
+		display_notification(__("A new customer has been added."));
 
 		if (isset($SysPrefs->auto_create_branch) && $SysPrefs->auto_create_branch == 1)
-			display_notification(_("A default Branch has been automatically created, please check default Branch values by using link below."));
+			display_notification(__("A default Branch has been automatically created, please check default Branch values by using link below."));
 		
 		$Ajax->activate('_page_body');
 	}
@@ -153,21 +153,21 @@ if (isset($_POST['delete']))
 	if (key_in_foreign_table($selected_id, 'debtor_trans', 'debtor_no'))
 	{
 		$cancel_delete = 1;
-		display_error(_("This customer cannot be deleted because there are transactions that refer to it."));
+		display_error(__("This customer cannot be deleted because there are transactions that refer to it."));
 	} 
 	else 
 	{
 		if (key_in_foreign_table($selected_id, 'sales_orders', 'debtor_no'))
 		{
 			$cancel_delete = 1;
-			display_error(_("Cannot delete the customer record because orders have been created against it."));
+			display_error(__("Cannot delete the customer record because orders have been created against it."));
 		} 
 		else 
 		{
 			if (key_in_foreign_table($selected_id, 'cust_branch', 'debtor_no'))
 			{
 				$cancel_delete = 1;
-				display_error(_("Cannot delete this customer because there are branch records set up against it."));
+				display_error(__("Cannot delete this customer because there are branch records set up against it."));
 				//echo "<br> There are " . $myrow[0] . " branch records relating to this customer";
 			}
 		}
@@ -178,7 +178,7 @@ if (isset($_POST['delete']))
 	
 		delete_customer($selected_id);
 
-		display_notification(_("Selected customer has been deleted."));
+		display_notification(__("Selected customer has been deleted."));
 		unset($_POST['customer_id']);
 		$selected_id = '';
 		$Ajax->activate('_page_body');
@@ -227,54 +227,54 @@ function customer_settings($selected_id)
 
 	start_outer_table(TABLESTYLE2);
 	table_section(1);
-	table_section_title(_("Name and Address"));
+	table_section_title(__("Name and Address"));
 
-	text_row(_("Customer Name:"), 'CustName', $_POST['CustName'], 40, 80);
-	text_row(_("Customer Short Name:"), 'cust_ref', null, 30, 30);
-	textarea_row(_("Address:"), 'address', $_POST['address'], 35, 5);
+	text_row(__("Customer Name:"), 'CustName', $_POST['CustName'], 40, 80);
+	text_row(__("Customer Short Name:"), 'cust_ref', null, 30, 30);
+	textarea_row(__("Address:"), 'address', $_POST['address'], 35, 5);
 
-	text_row(_("GSTNo:"), 'tax_id', null, 40, 40);
+	text_row(__("GSTNo:"), 'tax_id', null, 40, 40);
 
 
 	if (!$selected_id || is_new_customer($selected_id) || (!key_in_foreign_table($selected_id, 'debtor_trans', 'debtor_no') &&
 		!key_in_foreign_table($selected_id, 'sales_orders', 'debtor_no'))) 
 	{
-		currencies_list_row(_("Customer's Currency:"), 'curr_code', $_POST['curr_code']);
+		currencies_list_row(__("Customer's Currency:"), 'curr_code', $_POST['curr_code']);
 	} 
 	else 
 	{
-		label_row(_("Customer's Currency:"), $_POST['curr_code']);
+		label_row(__("Customer's Currency:"), $_POST['curr_code']);
 		hidden('curr_code', $_POST['curr_code']);				
 	}
-	sales_types_list_row(_("Sales Type/Price List:"), 'sales_type', $_POST['sales_type']);
+	sales_types_list_row(__("Sales Type/Price List:"), 'sales_type', $_POST['sales_type']);
 
 	if($selected_id)
-		record_status_list_row(_("Customer status:"), 'inactive');
+		record_status_list_row(__("Customer status:"), 'inactive');
 	elseif (isset($SysPrefs->auto_create_branch) && $SysPrefs->auto_create_branch == 1)
 	{
-		table_section_title(_("Branch"));
-		text_row(_("Phone:"), 'phone', null, 32, 30);
-		text_row(_("Secondary Phone Number:"), 'phone2', null, 32, 30);
-		text_row(_("Fax Number:"), 'fax', null, 32, 30);
-		email_row(_("E-mail:"), 'email', null, 35, 55);
-		text_row(_("Bank Account Number:"), 'bank_account', null, 30, 60);
-		sales_persons_list_row( _("Sales Person:"), 'salesman', null);
+		table_section_title(__("Branch"));
+		text_row(__("Phone:"), 'phone', null, 32, 30);
+		text_row(__("Secondary Phone Number:"), 'phone2', null, 32, 30);
+		text_row(__("Fax Number:"), 'fax', null, 32, 30);
+		email_row(__("E-mail:"), 'email', null, 35, 55);
+		text_row(__("Bank Account Number:"), 'bank_account', null, 30, 60);
+		sales_persons_list_row( __("Sales Person:"), 'salesman', null);
 	}
 	table_section(2);
 
-	table_section_title(_("Sales"));
+	table_section_title(__("Sales"));
 
-	percent_row(_("Discount Percent:"), 'discount', $_POST['discount']);
-	percent_row(_("Prompt Payment Discount Percent:"), 'pymt_discount', $_POST['pymt_discount']);
-	amount_row(_("Credit Limit:"), 'credit_limit', $_POST['credit_limit']);
+	percent_row(__("Discount Percent:"), 'discount', $_POST['discount']);
+	percent_row(__("Prompt Payment Discount Percent:"), 'pymt_discount', $_POST['pymt_discount']);
+	amount_row(__("Credit Limit:"), 'credit_limit', $_POST['credit_limit']);
 
-	payment_terms_list_row(_("Payment Terms:"), 'payment_terms', $_POST['payment_terms']);
-	credit_status_list_row(_("Credit Status:"), 'credit_status', $_POST['credit_status']); 
+	payment_terms_list_row(__("Payment Terms:"), 'payment_terms', $_POST['payment_terms']);
+	credit_status_list_row(__("Credit Status:"), 'credit_status', $_POST['credit_status']); 
 	$dim = get_company_pref('use_dimension');
 	if ($dim >= 1)
-		dimensions_list_row(_("Dimension")." 1:", 'dimension_id', $_POST['dimension_id'], true, " ", false, 1);
+		dimensions_list_row(__("Dimension")." 1:", 'dimension_id', $_POST['dimension_id'], true, " ", false, 1);
 	if ($dim > 1)
-		dimensions_list_row(_("Dimension")." 2:", 'dimension2_id', $_POST['dimension2_id'], true, " ", false, 2);
+		dimensions_list_row(__("Dimension")." 2:", 'dimension2_id', $_POST['dimension2_id'], true, " ", false, 2);
 	if ($dim < 1)
 		hidden('dimension_id', 0);
 	if ($dim < 2)
@@ -282,21 +282,21 @@ function customer_settings($selected_id)
 
 	if ($selected_id)  {
 		start_row();
-		echo '<td class="label">'._('Customer branches').':</td>';
+		echo '<td class="label">'.__('Customer branches').':</td>';
 	  	hyperlink_params_td(url("/sales/manage/customer_branches.php"),
-			'<b>'. ($page_nested ?  _("Select or &Add") : _("&Add or Edit ")).'</b>', 
+			'<b>'. ($page_nested ?  __("Select or &Add") : __("&Add or Edit ")).'</b>', 
 			"debtor_no=".$selected_id.($page_nested ? '&popup=1':''));
 		end_row();
 	}
 
-	textarea_row(_("General Notes:"), 'notes', null, 35, 5);
+	textarea_row(__("General Notes:"), 'notes', null, 35, 5);
 	if (!$selected_id && isset($SysPrefs->auto_create_branch) && $SysPrefs->auto_create_branch == 1)
 	{
-		table_section_title(_("Branch"));
-		locations_list_row(_("Default Inventory Location:"), 'location');
-		shippers_list_row(_("Default Shipping Company:"), 'ship_via');
-		sales_areas_list_row( _("Sales Area:"), 'area', null);
-		tax_groups_list_row(_("Tax Group:"), 'tax_group_id', null);
+		table_section_title(__("Branch"));
+		locations_list_row(__("Default Inventory Location:"), 'location');
+		shippers_list_row(__("Default Shipping Company:"), 'ship_via');
+		sales_areas_list_row( __("Sales Area:"), 'area', null);
+		tax_groups_list_row(__("Tax Group:"), 'tax_group_id', null);
 	}
 	end_outer_table(1);
 
@@ -304,22 +304,22 @@ function customer_settings($selected_id)
 	if (@$_REQUEST['popup']) hidden('popup', 1);
 	if (!$selected_id)
 	{
-		submit_center('submit', _("Add New Customer"), true, '', false);
+		submit_center('submit', __("Add New Customer"), true, '', false);
 	} 
 	else 
 	{
-		submit_center_first('submit', _("Update Customer"), 
-		  _('Update customer data'), $page_nested ? true : false);
-		submit_return('select', $selected_id, _("Select this customer and return to document entry."));
-		submit_center_last('delete', _("Delete Customer"), 
-		  _('Delete customer data if have been never used'), true);
+		submit_center_first('submit', __("Update Customer"), 
+		  __('Update customer data'), $page_nested ? true : false);
+		submit_return('select', $selected_id, __("Select this customer and return to document entry."));
+		submit_center_last('delete', __("Delete Customer"), 
+		  __('Delete customer data if have been never used'), true);
 	}
 	div_end();
 }
 
 //--------------------------------------------------------------------------------------------
 
-check_db_has_sales_types(_("There are no sales types defined. Please define at least one sales type before adding a customer."));
+check_db_has_sales_types(__("There are no sales types defined. Please define at least one sales type before adding a customer."));
  
 start_form(true);
 
@@ -327,9 +327,9 @@ if (db_has_customers())
 {
 	start_table(TABLESTYLE_NOBORDER);
 	start_row();
-	customer_list_cells(_("Select a customer: "), 'customer_id', null,
-		_('New customer'), true, check_value('show_inactive'));
-	check_cells(_("Show inactive:"), 'show_inactive', null, true);
+	customer_list_cells(__("Select a customer: "), 'customer_id', null,
+		__('New customer'), true, check_value('show_inactive'));
+	check_cells(__("Show inactive:"), 'show_inactive', null, true);
 	end_row();
 	end_table();
 
@@ -348,11 +348,11 @@ if (!$selected_id)
 	unset($_POST['_tabs_sel']); // force settings tab for new customer
 
 tabbed_content_start('tabs', array(
-		'settings' => array(_('&General settings'), $selected_id),
-		'contacts' => array(_('&Contacts'), $selected_id),
-		'transactions' => array(_('&Transactions'), (user_check_access('SA_SALESTRANSVIEW') ? $selected_id : null)),
-		'orders' => array(_('Sales &Orders'), (user_check_access('SA_SALESTRANSVIEW') ? $selected_id : null)),
-		'attachments' => array(_('Attachments'), (user_check_access('SA_ATTACHDOCUMENT') ? $selected_id : null)),
+		'settings' => array(__('&General settings'), $selected_id),
+		'contacts' => array(__('&Contacts'), $selected_id),
+		'transactions' => array(__('&Transactions'), (user_check_access('SA_SALESTRANSVIEW') ? $selected_id : null)),
+		'orders' => array(__('Sales &Orders'), (user_check_access('SA_SALESTRANSVIEW') ? $selected_id : null)),
+		'attachments' => array(__('Attachments'), (user_check_access('SA_ATTACHDOCUMENT') ? $selected_id : null)),
 	));
 	
 	switch (get_post('_tabs_sel')) {

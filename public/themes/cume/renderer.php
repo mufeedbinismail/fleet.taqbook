@@ -77,7 +77,7 @@ class renderer
 
     function wa_header()
     {
-        page(_($GLOBALS['help_context'] = "Main Menu"), false, true);
+        page(__($GLOBALS['help_context'] = "Main Menu"), false, true);
     }
 
     function wa_footer()
@@ -184,22 +184,22 @@ class renderer
             'dashboard' => [
                 'link' => url("/admin/dashboard.php", ['sel_app' => $sel_app]),
                 'icon' => 'icon-statistics',
-                'label' => _('Dashboard')
+                'label' => __('Dashboard')
             ],
             'preferences' => [
                 'link' => url("/admin/display_prefs.php"),
                 'icon' => 'icon-prefs',
-                'label' => _('Preferences')
+                'label' => __('Preferences')
             ],
             'change_password' => [
                 'link' => url("/admin/change_current_user_password.php", ['selected_id' => $user->username]),
                 'icon' => 'icon-security',
-                'label' => _('Change password')
+                'label' => __('Change password')
             ],
             'logout' => [
                 'link' => url("/access/logout.php"),
                 'icon' => 'icon-logout',
-                'label' => _('Logout')
+                'label' => __('Logout')
             ]
         ];
 

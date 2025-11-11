@@ -99,14 +99,14 @@ function print_inventory_planning()
 	if ($category == ALL_NUMERIC)
 		$category = 0;
 	if ($category == 0)
-		$cat = _('All');
+		$cat = __('All');
 	else
 		$cat = get_category_name($category);
 
 	if ($location == ALL_TEXT)
 		$location = 'all';
 	if ($location == 'all')
-		$loc = _('All');
+		$loc = __('All');
 	else
 		$loc = get_location_name($location);
 
@@ -117,17 +117,17 @@ function print_inventory_planning()
 	$per2 = $tmonths[date('n',mktime(0,0,0,date('m')-2,1,date('Y')))];
 	$per3 = $tmonths[date('n',mktime(0,0,0,date('m')-3,1,date('Y')))];
 	$per4 = $tmonths[date('n',mktime(0,0,0,date('m')-4,1,date('Y')))];
-	$headers = array(_('Category'), '', $per4, $per3, $per2, $per1, $per0, _('3*M'),
-		_('QOH'), _('Cust Ord'), _('Supp Ord'), _('Sugg Ord'));
+	$headers = array(__('Category'), '', $per4, $per3, $per2, $per1, $per0, __('3*M'),
+		__('QOH'), __('Cust Ord'), __('Supp Ord'), __('Sugg Ord'));
 
 	$aligns = array('left',	'left',	'right', 'right', 'right', 'right', 'right', 'right',
 		'right', 'right', 'right', 'right');
 
     $params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Category'), 'from' => $cat, 'to' => ''),
-    				    2 => array('text' => _('Location'), 'from' => $loc, 'to' => ''));
+    				    1 => array('text' => __('Category'), 'from' => $cat, 'to' => ''),
+    				    2 => array('text' => __('Location'), 'from' => $loc, 'to' => ''));
 
-    $rep = new FrontReport(_('Inventory Planning Report'), "InventoryPlanning", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Inventory Planning Report'), "InventoryPlanning", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -163,7 +163,7 @@ function print_inventory_planning()
 		$rep->NewLine();
 		$dec = get_qty_dec($trans['stock_id']);
 		$rep->TextCol(0, 1, $trans['stock_id']);
-		$rep->TextCol(1, 2, $trans['description'].($trans['inactive']==1 ? " ("._("Inactive").")" : ""), -1);
+		$rep->TextCol(1, 2, $trans['description'].($trans['inactive']==1 ? " (".__("Inactive").")" : ""), -1);
 		$rep->AmountCol(2, 3, $period['prd0'], $dec);
 		$rep->AmountCol(3, 4, $period['prd1'], $dec);
 		$rep->AmountCol(4, 5, $period['prd2'], $dec);

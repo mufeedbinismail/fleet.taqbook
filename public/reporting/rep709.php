@@ -95,11 +95,11 @@ function print_tax_report()
 	$orientation = ($orientation ? 'L' : 'P');
 	$dec = user_price_dec();
 
-	$rep = new FrontReport(_('Tax Report'), "TaxReport", user_pagesize(), 9, $orientation);
+	$rep = new FrontReport(__('Tax Report'), "TaxReport", user_pagesize(), 9, $orientation);
 	if ($summaryOnly == 1)
-		$summary = _('Summary Only');
+		$summary = __('Summary Only');
 	else
-		$summary = _('Detailed Report');
+		$summary = __('Detailed Report');
 
 	$res = getTaxTypes();
 
@@ -108,13 +108,13 @@ function print_tax_report()
 		$taxes[$tax['id']] = array('in'=>0, 'out'=>0, 'taxin'=>0, 'taxout'=>0);
 
 	$params =   array( 	0 => $comments,
-						1 => array('text' => _('Period'), 'from' => $from, 'to' => $to),
-						2 => array('text' => _('Type'), 'from' => $summary, 'to' => ''));
+						1 => array('text' => __('Period'), 'from' => $from, 'to' => $to),
+						2 => array('text' => __('Type'), 'from' => $summary, 'to' => ''));
 
 	$cols = array(0, 80, 130, 180, 270, 350, 400, 430, 480, 485, 520);
 
-	$headers = array(_('Trans Type'), _('Ref'), _('Date'), _('Name'), _('Branch Name'),
-		_('Net'), _('Rate'), _('Tax'), '', _('Name'));
+	$headers = array(__('Trans Type'), __('Ref'), __('Date'), __('Name'), __('Branch Name'),
+		__('Net'), __('Rate'), __('Tax'), '', __('Name'));
 	$aligns = array('left', 'left', 'left', 'left', 'left', 'right', 'right', 'right', 'right','left');
     if ($orientation == 'L')
     	recalculate_cols($cols);
@@ -187,7 +187,7 @@ function print_tax_report()
     if ($orientation == 'L')
     	recalculate_cols($cols2);
 
-	$headers2 = array(_('Tax Rate'), _('Outputs'), _('Output Tax'),	_('Inputs'), _('Input Tax'), _('Net Tax'));
+	$headers2 = array(__('Tax Rate'), __('Outputs'), __('Output Tax'),	__('Inputs'), __('Input Tax'), __('Net Tax'));
 
 	$aligns2 = array('left', 'right', 'right', 'right',	'right', 'right', 'right');
 
@@ -205,7 +205,7 @@ function print_tax_report()
 			$tx = getTaxInfo($id);
 			$rep->TextCol(0, 1, $tx['name'] . " " . number_format2($tx['rate'], $dec) . "%");
 		} else {
-			$rep->TextCol(0, 1, _('Exempt'));
+			$rep->TextCol(0, 1, __('Exempt'));
 		}
 		$rep->AmountCol(1, 2, $sum['out'], $dec);
 		$rep->AmountCol(2, 3, $sum['taxout'], $dec);
@@ -219,7 +219,7 @@ function print_tax_report()
 	$rep->Font('bold');
 	$rep->NewLine();
 	$rep->Line($rep->row + $rep->lineHeight);
-	$rep->TextCol(3, 5,	_("Total payable or refund"));
+	$rep->TextCol(3, 5,	__("Total payable or refund"));
 	$rep->AmountCol(5, 6, $taxtotal, $dec);
 	$rep->Line($rep->row - 5);
 	$rep->Font();

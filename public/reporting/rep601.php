@@ -69,15 +69,15 @@ function print_bank_transactions()
 		require_once __DIR__ . "/../reporting/includes/pdf_report.inc";
 
 	$orientation = ($orientation ? 'L' : 'P');
-	$rep = new FrontReport(_('Bank Statement'), "BankStatement", user_pagesize(), 9, $orientation);
+	$rep = new FrontReport(__('Bank Statement'), "BankStatement", user_pagesize(), 9, $orientation);
 	$dec = user_price_dec();
 
 	$cols = array(0, 90, 120, 170, 225, 350, 400, 460, 520);
 
 	$aligns = array('left',	'left',	'left',	'left',	'left',	'right', 'right', 'right');
 
-	$headers = array(_('Type'),	_('#'),	_('Reference'), _('Date'), _('Person/Item'),
-		_('Debit'),	_('Credit'), _('Balance'));
+	$headers = array(__('Type'),	__('#'),	__('Reference'), __('Date'), __('Person/Item'),
+		__('Debit'),	__('Credit'), __('Balance'));
 
 	if ($orientation == 'L')
 		recalculate_cols($cols);
@@ -89,8 +89,8 @@ function print_bank_transactions()
 	{
 		$act = $account['bank_account_name']." - ".$account['bank_curr_code']." - ".$account['bank_account_number'];
 		$params =   array( 	0 => $comments,
-			1 => array('text' => _('Period'), 'from' => $from, 'to' => $to),
-			2 => array('text' => _('Bank Account'),'from' => $act,'to' => ''));
+			1 => array('text' => __('Period'), 'from' => $from, 'to' => $to),
+			2 => array('text' => __('Bank Account'),'from' => $act,'to' => ''));
 
 		$rep->Font();
 		$rep->pageNumber = 0;
@@ -107,7 +107,7 @@ function print_bank_transactions()
 		{
 			$rep->Font('bold');
 			$rep->TextCol(0, 3,	$act);
-			$rep->TextCol(3, 5, _('Opening Balance'));
+			$rep->TextCol(3, 5, __('Opening Balance'));
 			if ($prev_balance > 0.0)
 				$rep->AmountCol(5, 6, abs($prev_balance), $dec);
 			else
@@ -154,13 +154,13 @@ function print_bank_transactions()
 			}
 			
 			// Print totals for the debit and credit columns.
-			$rep->TextCol(3, 5, _("Total Debit / Credit"));
+			$rep->TextCol(3, 5, __("Total Debit / Credit"));
 			$rep->AmountCol(5, 6, $total_debit, $dec);
 			$rep->AmountCol(6, 7, $total_credit, $dec);
 			$rep->NewLine(2);
 
 			$rep->Font('bold');
-			$rep->TextCol(3, 5,	_("Ending Balance"));
+			$rep->TextCol(3, 5,	__("Ending Balance"));
 			if ($total > 0.0)
 				$rep->AmountCol(5, 6, abs($total), $dec);
 			else
@@ -171,7 +171,7 @@ function print_bank_transactions()
 			
 			// Print the difference between starting and ending balances.
 			$net_change = ($total - $prev_balance); 
-			$rep->TextCol(3, 5, _("Net Change"));
+			$rep->TextCol(3, 5, __("Net Change"));
 			if ($total > 0.0)
 				$rep->AmountCol(5, 6, $net_change, $dec, 0, 0, 0, 0, null, 1, True);
 			else

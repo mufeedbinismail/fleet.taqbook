@@ -7,7 +7,7 @@ require_once __DIR__ . "/../../sales/includes/db/marketplaces_db.inc";
 
 $js = get_js_select_combo_item();
 
-page(_($GLOBALS['help_context'] = "Marketplaces"), true, false, "", $js);
+page(__($GLOBALS['help_context'] = "Marketplaces"), true, false, "", $js);
 
 if(get_post("search")) {
   $Ajax->activate("marketplace_tbl");
@@ -19,8 +19,8 @@ start_table(TABLESTYLE_NOBORDER);
 
 start_row();
 
-text_cells(_("Marketplace"), "marketplace");
-submit_cells("search", _("Search"), "", _("Search marketplaces"), "default");
+text_cells(__("Marketplace"), "marketplace");
+submit_cells("search", __("Search"), "", __("Search marketplaces"), "default");
 
 end_row();
 
@@ -32,7 +32,7 @@ div_start("marketplace_tbl");
 
 start_table(TABLESTYLE);
 
-$th = array("", _("Marketplace"), _("Code"), _("Payable Account"));
+$th = array("", __("Marketplace"), __("Code"), __("Payable Account"));
 
 table_header($th);
 
@@ -42,7 +42,7 @@ $result = get_marketplaces_search(get_post("marketplace"));
 while ($myrow = db_fetch_assoc($result)) {
 	alt_table_row_color($k);
 	$value = $myrow['id'];
-    ahref_cell(_("Select"), 'javascript:void(0)', '', 'selectComboItem(window.opener.document, "'.$name.'", "'.$value.'")');
+    ahref_cell(__("Select"), 'javascript:void(0)', '', 'selectComboItem(window.opener.document, "'.$name.'", "'.$value.'")');
   	label_cell($myrow["name"]);
   	label_cell($myrow["code"]);
   	label_cell($myrow["payable_account"] . " - " . $myrow["payable_account_name"]);

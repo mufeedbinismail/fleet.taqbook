@@ -14,10 +14,10 @@ require_once __DIR__ . "/../../includes/types.inc";
 require_once __DIR__ . "/../../includes/current_user.inc";
 
 define('SEARCH_BUTTON', "<input %s type='submit' class='combo_submit' style='border:0;background:url(".url("/themes/"
-	."%s/images/locate.png").") no-repeat;%s' aspect='fallback' name='%s' value=' ' title='"._("Set filter")."'> ");
+	."%s/images/locate.png").") no-repeat;%s' aspect='fallback' name='%s' value=' ' title='".__("Set filter")."'> ");
 
 define('SELECT_BUTTON', "<input %s type='submit' class='combo_select' style='border:0;background:url(".url("/themes/"
-	."%s/images/button_ok.png").") no-repeat;%s' aspect='fallback' name='%s' value=' ' title='"._("Select")."'> ");
+	."%s/images/button_ok.png").") no-repeat;%s' aspect='fallback' name='%s' value=' ' title='".__("Select")."'> ");
 
 //----------------------------------------------------------------------------
 //	Universal sql combo generator
@@ -96,12 +96,12 @@ $opts = array(		// default options
 	}
 	if ($opts['sel_hint'] === null) 
 		$opts['sel_hint'] = $by_id || $search_box==false ?
-			'' : _('Press Space tab for search pattern entry');
+			'' : __('Press Space tab for search pattern entry');
 
 	if ($opts['box_hint'] === null)
 		$opts['box_hint'] = $search_box && $search_submit != false ?
-			($by_id ? _('Enter code fragment to search or * for all')
-			: _('Enter description fragment to search or * for all')) :'';
+			($by_id ? __('Enter code fragment to search or * for all')
+			: __('Enter description fragment to search or * for all')) :'';
 
 	if ($selected_id == null) {
 		$selected_id = get_post($name, (string)$opts['default']);
@@ -306,54 +306,54 @@ $opts = array(		// default options
 	    		switch (strtolower($type)) {
 	      			case "stock":
 	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'all', 'client_id' => $id]);
-	        			$img_title = _("Search items");
+	        			$img_title = __("Search items");
 	        			break;
 	      			case "stock_manufactured":
 	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'manufactured', 'client_id' => $id]);
-	        			$img_title = _("Search items");
+	        			$img_title = __("Search items");
 	        			break;
 	      			case "stock_purchased":
 	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'purchasable', 'client_id' => $id]);
-	        			$img_title = _("Search items");
+	        			$img_title = __("Search items");
 	        			break;
 	      			case "stock_sales":
 	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'sales', 'client_id' => $id]);
-	        			$img_title = _("Search items");
+	        			$img_title = __("Search items");
 	        			break;
 	      			case "stock_costable":
 	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'costable', 'client_id' => $id]);
-	        			$img_title = _("Search items");
+	        			$img_title = __("Search items");
 	        			break;
 	      			case "component":
 	      				$parent = $opts['parent'];
 	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'component', 'parent' => $parent, 'client_id' => $id]);
-	        			$img_title = _("Search items");
+	        			$img_title = __("Search items");
 	        			break;
 	      			case "kits":
 	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'kits', 'client_id' => $id]);
-	        			$img_title = _("Search items");
+	        			$img_title = __("Search items");
 	        			break;
 	      			case "customer":
 	        			$link = url("/sales/inquiry/customers_list.php", ['popup' => 1, 'client_id' => $id]);
-	        			$img_title = _("Search customers");
+	        			$img_title = __("Search customers");
 	        			break;
 	      			case "marketplace":
 	        			$link = url("/sales/inquiry/marketplaces_list.php", ['popup' => 1, 'client_id' => $id]);
-	        			$img_title = _("Search marketplaces");
+	        			$img_title = __("Search marketplaces");
 	        			break;
 	      			case "branch":
 	        			$link = url("/sales/inquiry/customer_branches_list.php", ['popup' => 1, 'client_id' => "{$id}#customer_id"]);
-	        			$img_title = _("Search branches");
+	        			$img_title = __("Search branches");
 	        			break;
 	      			case "supplier":
 	        			$link = url("/purchasing/inquiry/suppliers_list.php", ['popup' => 1, 'client_id' => $id]);
-	        			$img_title = _("Search suppliers");
+	        			$img_title = __("Search suppliers");
 	        			break;
 	      			case "account":
 	      			case "account2":
 	      				$skip = strtolower($type) == "account" ? false : true;
 	        			$link = url("/gl/inquiry/accounts_list.php", ['popup' => 1, 'skip' => $skip, 'client_id' => $id]);
-	        			$img_title = _("Search GL accounts");
+	        			$img_title = __("Search GL accounts");
 	        			break;
 	    		}
 	    	}
@@ -541,12 +541,12 @@ function supplier_list($name, $selected_id=null, $spec_option=false, $submit_on_
 		'search_box' => $mode!=0,
 		'type' => 1,
         'search' => array("supp_ref","supp_name","gst_no"),        
-		'spec_option' => $spec_option === true ? _("All Suppliers") : $spec_option,
+		'spec_option' => $spec_option === true ? __("All Suppliers") : $spec_option,
 		'spec_id' => ALL_TEXT,
 		'select_submit'=> $submit_on_change,
 		'async' => false,
-		'sel_hint' => $mode ? _('Press Space tab to filter by name fragment') :
-		_('Select supplier'),
+		'sel_hint' => $mode ? __('Press Space tab to filter by name fragment') :
+		__('Select supplier'),
 		'show_inactive'=>$all,
 		'editlink' => $editkey ? add_edit_combo('supplier') : false
 		), "supplier");
@@ -596,12 +596,12 @@ function customer_list($name, $selected_id=null, $spec_option=false, $submit_on_
 		'type' => 1,
 		'size' => 20,
         'search' => array("debtor_ref","name","tax_id"),        
-		'spec_option' => $spec_option === true ? _("All Customers") : $spec_option,
+		'spec_option' => $spec_option === true ? __("All Customers") : $spec_option,
 		'spec_id' => ALL_TEXT,
 		'select_submit'=> $submit_on_change,
 		'async' => false,
-		'sel_hint' => $mode ? _('Press Space tab to filter by name fragment; F2 - entry new customer') :
-		_('Select customer'),
+		'sel_hint' => $mode ? __('Press Space tab to filter by name fragment; F2 - entry new customer') :
+		__('Select customer'),
 		'show_inactive' => $show_inactive,
 		'editlink' => $editkey ? add_edit_combo('customer') : false
 	), "customer" );
@@ -658,11 +658,11 @@ function marketplace_list($name, $selected_id=null, $spec_option=false, $submit_
             'type' => 1,
             'size' => 20,
             'search' => array("code","name","payable_account"),        
-            'spec_option' => $spec_option === true ? _("All Marketplaces") : $spec_option,
+            'spec_option' => $spec_option === true ? __("All Marketplaces") : $spec_option,
             'spec_id' => ALL_TEXT,
             'select_submit'=> $submit_on_change,
             'async' => false,
-            'sel_hint' => _('Select marketplace'),
+            'sel_hint' => __('Select marketplace'),
             'show_inactive' => $show_inactive,
             'editlink' => $editkey ? add_edit_combo('marketplace') : false
         ),
@@ -708,10 +708,10 @@ function customer_branches_list($customer_id, $name, $selected_id=null,
 	array(
 		'where' => $where,
 		'order' => array('branch_ref'),
-		'spec_option' => $spec_option === true ? _('All branches') : $spec_option,
+		'spec_option' => $spec_option === true ? __('All branches') : $spec_option,
 		'spec_id' => ALL_TEXT,
 		'select_submit'=> $submit_on_change,
-		'sel_hint' => _('Select customer branch'),
+		'sel_hint' => __('Select customer branch'),
 		'editlink' => $editkey ? add_edit_combo('branch') : false
 	), "branch" );
 	return $ret;
@@ -747,7 +747,7 @@ function locations_list($name, $selected_id=null, $all_option=false, $submit_on_
 
 	return combo_input($name, $selected_id, $sql, 'loc_code', 'location_name',
 		array(
-			'spec_option' => $all_option === true ? _("All Locations") : $all_option,
+			'spec_option' => $all_option === true ? __("All Locations") : $all_option,
 			'spec_id' => ALL_TEXT,
 			'select_submit'=> $submit_on_change
 		) );
@@ -824,7 +824,7 @@ function fiscalyears_list($name, $selected_id=null, $submit_on_change=false)
 function _format_fiscalyears($row)
 {
 	return sql2date($row[1]) . "&nbsp;-&nbsp;" . sql2date($row[2])
-	. "&nbsp;&nbsp;" . ($row[3] ? _('Closed') : _('Active'));
+	. "&nbsp;&nbsp;" . ($row[3] ? __('Closed') : __('Active'));
 }
 
 function fiscalyears_list_cells($label, $name, $selected_id=null)
@@ -904,7 +904,7 @@ function stock_items_list($name, $selected_id=null, $all_option=false,
 		array_merge(
 		  array(
 			'format' => '_format_stock_items',
-			'spec_option' => $all_option===true ?  _("All Items") : $all_option,
+			'spec_option' => $all_option===true ?  __("All Items") : $all_option,
 			'spec_id' => ALL_TEXT,
 			'search_box' => true,
 			'search' => array("stock_id", "c.description","s.description"),
@@ -988,7 +988,7 @@ function sales_items_list($name, $selected_id=null, $all_option=false,
 		array_merge(
 		  array(
 			'format' => '_format_stock_items',
-			'spec_option' => $all_option===true ?  _("All Items") : $all_option,
+			'spec_option' => $all_option===true ?  __("All Items") : $all_option,
 			'spec_id' => ALL_TEXT,
 			'search_box' => true,
 			'search' => array("i.item_code", "c.description", "i.description"),
@@ -1436,7 +1436,7 @@ function sales_groups_list_row($label, $name, $selected_id=null, $special_option
 
 function _format_template_items($row)
 {
-	return ($row[0] . "&nbsp;- &nbsp;" . _("Amount") . "&nbsp;".$row[1]);
+	return ($row[0] . "&nbsp;- &nbsp;" . __("Amount") . "&nbsp;".$row[1]);
 }
 
 function templates_list($name, $selected_id=null, $special_option=false)
@@ -1547,7 +1547,7 @@ function sales_types_list($name, $selected_id=null, $submit_on_change=false, $sp
 
 	return combo_input($name, $selected_id, $sql, 'id', 'sales_type',
 	array(
-		'spec_option' => $special_option===true ? _("All Sales Types") : $special_option,
+		'spec_option' => $special_option===true ? __("All Sales Types") : $special_option,
 		'spec_id' => 0,
 		'select_submit'=> $submit_on_change,
 	) );
@@ -1615,7 +1615,7 @@ function workcenter_list($name, $selected_id=null, $all_option=false)
 
 	return combo_input($name, $selected_id, $sql, 'id', 'name',
 		array(
-			'spec_option' =>$all_option===true ? _("All Suppliers") : $all_option,
+			'spec_option' =>$all_option===true ? __("All Suppliers") : $all_option,
 			'spec_id' => ALL_TEXT,
 		) );
 }
@@ -1916,7 +1916,7 @@ function gl_all_accounts_list($name, $selected_id=null, $skip_bank_accounts=fals
 	return combo_input($name, $selected_id, $sql, 'chart.account_code', 'chart.account_name',
 		array(
 			'format' => '_format_account',
-			'spec_option' => $all_option===true ?  _("Use Item Sales Accounts") : $all_option,
+			'spec_option' => $all_option===true ?  __("Use Item Sales Accounts") : $all_option,
 			'spec_id' => '',
 			'type' => 2,
 			'order' => array('type.class_id','type.id','account_code'),
@@ -1964,8 +1964,8 @@ function gl_all_accounts_list_row($label, $name, $selected_id=null,
 function yesno_list($name, $selected_id=null, $name_yes="", $name_no="", $submit_on_change=false)
 {
 	$items = array();
-	$items['0'] = strlen($name_no) ? $name_no : _("No");
-	$items['1'] = strlen($name_yes) ? $name_yes : _("Yes");
+	$items['0'] = strlen($name_no) ? $name_no : __("No");
+	$items['1'] = strlen($name_yes) ? $name_yes : __("Yes");
 
 	return array_selector($name, $selected_id, $items, 
 		array( 
@@ -2211,7 +2211,7 @@ function journal_types_list_cells($label, $name, $value=null, $submit_on_change=
 	
 	echo array_selector($name, $value, $items, 
 		array( 
-			'spec_option'=> _("All"),
+			'spec_option'=> __("All"),
 			'spec_id' => -1,
 			'select_submit'=> $submit_on_change,
 			'async' => false
@@ -2227,13 +2227,13 @@ function cust_allocations_list_cells($label, $name, $selected=null, $submit_on_c
 		label_cell($label);
 	echo "<td>\n";
 	$allocs = array( 
-		ALL_TEXT=>_("All Types"),
-		'1'=> _("Sales Invoices"),
-		'2'=> _("Unsettled transactions"),
-		'3' => _("Payments"),
-		'4' => _("Credit Notes"),
-		'5' => _("Delivery Notes"),
-		'6' => _("Journal Entries")
+		ALL_TEXT=>__("All Types"),
+		'1'=> __("Sales Invoices"),
+		'2'=> __("Unsettled transactions"),
+		'3' => __("Payments"),
+		'4' => __("Credit Notes"),
+		'5' => __("Delivery Notes"),
+		'6' => __("Journal Entries")
 	);
 	echo array_selector($name, $selected, $allocs, array('select_submit'=> $submit_on_change));
 	echo "</td>\n";
@@ -2244,13 +2244,13 @@ function supp_allocations_list_cell($name, $selected=null)
 
 	echo "<td>\n";
 	$allocs = array( 
-		ALL_TEXT=>_("All Types"),
-		'1'=> _("Invoices"),
-		'2'=> _("Overdue Invoices"),
-		'3' => _("Payments"),
-		'4' => _("Credit Notes"),
-		'5' => _("Overdue Credit Notes"),
-		'6' => _("Journal Entries")
+		ALL_TEXT=>__("All Types"),
+		'1'=> __("Invoices"),
+		'2'=> __("Overdue Invoices"),
+		'3' => __("Payments"),
+		'4' => __("Credit Notes"),
+		'5' => __("Overdue Credit Notes"),
+		'6' => __("Journal Entries")
 	);
 	echo array_selector($name, $selected, $allocs);
 	echo "</td>\n";
@@ -2261,14 +2261,14 @@ function supp_transactions_list_cell($name, $selected=null, $submit_on_change=fa
 
 	echo "<td>\n";
 	$allocs = array( 
-		ALL_TEXT=>_("All Types"),
-		'6'=>_("GRNs"),
-		'1'=> _("Invoices"),
-		'2'=> _("Unsettled transactions"),
-		'3' => _("Payments"),
-		'4' => _("Credit Notes"),
-		'5' => _("Overdue Credit Notes"),
-		'7' => _("Journal Entries")
+		ALL_TEXT=>__("All Types"),
+		'6'=>__("GRNs"),
+		'1'=> __("Invoices"),
+		'2'=> __("Unsettled transactions"),
+		'3' => __("Payments"),
+		'4' => __("Credit Notes"),
+		'5' => __("Overdue Credit Notes"),
+		'7' => __("Journal Entries")
 	);
 
 	echo array_selector($name, $selected, $allocs, array('select_submit'=> $submit_on_change));
@@ -2281,8 +2281,8 @@ function policy_list_cells($label, $name, $selected=null)
 		label_cell($label);
 	echo "<td>\n";
 	echo array_selector($name, $selected, 
-				array( '' => _("Automatically put balance on back order"),
-			 		'CAN' => _("Cancel any quantites not delivered")) );
+				array( '' => __("Automatically put balance on back order"),
+			 		'CAN' => __("Cancel any quantites not delivered")) );
 	echo "</td>\n";
 }
 
@@ -2299,8 +2299,8 @@ function credit_type_list_cells($label, $name, $selected=null, $submit_on_change
 		label_cell($label);
 	echo "<td>\n";
 	echo array_selector($name, $selected, 
-			array( 'Return' => _("Items Returned to Inventory Location"),
-		 		'WriteOff' => _("Items Written Off")),
+			array( 'Return' => __("Items Returned to Inventory Location"),
+		 		'WriteOff' => __("Items Written Off")),
 			array( 'select_submit'=> $submit_on_change ) );
 	echo "</td>\n";
 }
@@ -2444,7 +2444,7 @@ function quick_entry_types_list_row($label, $name, $selected_id=null, $submit_on
 }
 
 function record_status_list_row($label, $name) {
-	return yesno_list_row($label, $name, null, 	_('Inactive'), _('Active'));
+	return yesno_list_row($label, $name, null, 	__('Inactive'), __('Active'));
 }
 
 function class_types_list_row($label, $name, $selected_id=null, $submit_on_change=false)
@@ -2469,7 +2469,7 @@ function security_roles_list($name, $selected_id=null, $new_item=false, $submit_
 
 	return combo_input($name, $selected_id, $sql, 'id', 'description',
 		array(
-			'spec_option'=>$new_item ? _("New role") : false,
+			'spec_option'=>$new_item ? __("New role") : false,
 			'spec_id' => '',
 			'select_submit'=> $submit_on_change,
 			'show_inactive' => $show_inactive
@@ -2518,7 +2518,7 @@ function tag_list($name, $height, $type, $multi=false, $all=false, $spec_opt = f
 		$tags[$tag['id']] = $tag['name'];
 	
 	if (!isset($tags)) {
-		$tags[''] = $all ? _("No tags defined.") : _("No active tags defined.");
+		$tags[''] = $all ? __("No tags defined.") : __("No active tags defined.");
 		$spec_opt = false;
 	}
 	return array_selector($name, null, $tags,
@@ -2602,7 +2602,7 @@ function payment_services($name)
 	$services = (object)array_combine(array_keys($payment_services), array_keys($payment_services));
 
 	return array_selector($name, null, $services, array(
-			'spec_option'=> _("No payment Link"),
+			'spec_option'=> __("No payment Link"),
 			'spec_id' => '',
 		));
 }
@@ -2716,7 +2716,7 @@ function subledger_list($name, $account, $selected_id=null)
             'type' => 1,
             'size' => 20,
             'async' => false,
-            'spec_option' => _("-- select --"),
+            'spec_option' => __("-- select --"),
             'spec_id' => '',
         )
     );
@@ -2744,7 +2744,7 @@ function accounts_type_list_row($label, $name, $selected_id=null)
 	if ($label != null)
 		echo "<td class='label'>$label</td>\n";
 	echo "<td>";
-	$sel = array(_("Numeric"), _("Alpha Numeric"), _("ALPHA NUMERIC"));
+	$sel = array(__("Numeric"), __("Alpha Numeric"), __("ALPHA NUMERIC"));
 	echo array_selector($name, $selected_id, $sel); 
 	echo "</td></tr>\n";
 }
@@ -2760,7 +2760,7 @@ function users_list_cells($label, $name, $selected_id=null, $submit_on_change=fa
 
     echo combo_input($name, $selected_id, $sql, 'user_id', 'real_name',
         array(
-            'spec_option' => $spec_opt===true ?_("All users") : $spec_opt,
+            'spec_option' => $spec_opt===true ?__("All users") : $spec_opt,
             'spec_id' => '',
             'order' => 'real_name',
             'select_submit'=> $submit_on_change,

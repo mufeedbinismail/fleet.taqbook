@@ -19,7 +19,7 @@ if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 if (isset($_GET['stock_id']))
 	$_POST['stock_id'] = $_GET['stock_id'];
 
-page(_($GLOBALS['help_context'] = "Inventory Item Status"), isset($_GET['stock_id']), false, "", $js);
+page(__($GLOBALS['help_context'] = "Inventory Item Status"), isset($_GET['stock_id']), false, "", $js);
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/ui.inc";
@@ -32,7 +32,7 @@ if (list_updated('stock_id'))
 	$Ajax->activate('status_tbl');
 //----------------------------------------------------------------------------------------------------
 
-check_db_has_stock_items(_("There are no items defined in the system."));
+check_db_has_stock_items(__("There are no items defined in the system."));
 
 start_form();
 
@@ -41,7 +41,7 @@ if (!isset($_POST['stock_id']))
 
 if (!$page_nested)
 {
-	echo "<center> " . _("Item:"). " ";
+	echo "<center> " . __("Item:"). " ";
 	echo stock_costable_items_list('stock_id', $_POST['stock_id'], false, true);
 }
 echo "<br>";
@@ -56,7 +56,7 @@ $kitset_or_service = false;
 div_start('status_tbl');
 if (is_service($mb_flag))
 {
-	display_note(_("This is a service and cannot have a stock holding, only the total quantity on outstanding sales orders is shown."), 0, 1);
+	display_note(__("This is a service and cannot have a stock holding, only the total quantity on outstanding sales orders is shown."), 0, 1);
 	$kitset_or_service = true;
 }
 
@@ -66,12 +66,12 @@ start_table(TABLESTYLE);
 
 if ($kitset_or_service == true)
 {
-	$th = array(_("Location"), _("Demand"));
+	$th = array(__("Location"), __("Demand"));
 }
 else
 {
-	$th = array(_("Location"), _("Quantity On Hand"), _("Re-Order Level"),
-		_("Demand"), _("Available"), _("On Order"));
+	$th = array(__("Location"), __("Quantity On Hand"), __("Re-Order Level"),
+		__("Demand"), __("Available"), __("On Order"));
 }
 table_header($th);
 $dec = get_qty_dec($_POST['stock_id']);

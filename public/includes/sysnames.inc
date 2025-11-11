@@ -21,63 +21,63 @@ global $systypes_array, $bank_account_types, $bank_transfer_types,
     $supported_collations, $depreciation_methods, $fa_systypes_array;
 
 $systypes_array = array (
-	ST_JOURNAL => _("Journal Entry"),
-	ST_BANKPAYMENT => _("Bank Payment"),
-	ST_BANKDEPOSIT => _("Bank Deposit"),
-	ST_BANKTRANSFER => _("Funds Transfer"),
-	ST_SALESINVOICE => _("Sales Invoice"),
-	ST_CUSTCREDIT => _("Customer Credit Note"),
-	ST_CUSTPAYMENT => _("Customer Payment"),
-	ST_CUSTDELIVERY => _("Delivery Note"),
-	ST_LOCTRANSFER => _("Location Transfer"),
-	ST_INVADJUST => _("Inventory Adjustment"),
-	ST_PURCHORDER => _("Purchase Order"),
-	ST_SUPPINVOICE => _("Supplier Invoice"),
-	ST_SUPPCREDIT => _("Supplier Credit Note"),
-	ST_SUPPAYMENT => _("Supplier Payment"),
-	ST_SUPPRECEIVE => _("Purchase Order Delivery"),
-	ST_WORKORDER => _("Work Order"),
-	ST_MANUISSUE => _("Work Order Issue"),
-	ST_MANURECEIVE => _("Work Order Production"),
-	ST_SALESORDER => _("Sales Order"),
-	ST_SALESQUOTE => _("Sales Quotation"),
-	ST_COSTUPDATE => _("Cost Update"),
-	ST_DIMENSION => _("Dimension"),
-	ST_CUSTOMER => _("Customer"),
-	ST_SUPPLIER => _("Supplier"),
-	ST_ITEM => _("Item"),
-	ST_FIXEDASSET => _("Fixed Asset"),
-	ST_BANKACCOUNT => _("Bank Account"),
+	ST_JOURNAL => __("Journal Entry"),
+	ST_BANKPAYMENT => __("Bank Payment"),
+	ST_BANKDEPOSIT => __("Bank Deposit"),
+	ST_BANKTRANSFER => __("Funds Transfer"),
+	ST_SALESINVOICE => __("Sales Invoice"),
+	ST_CUSTCREDIT => __("Customer Credit Note"),
+	ST_CUSTPAYMENT => __("Customer Payment"),
+	ST_CUSTDELIVERY => __("Delivery Note"),
+	ST_LOCTRANSFER => __("Location Transfer"),
+	ST_INVADJUST => __("Inventory Adjustment"),
+	ST_PURCHORDER => __("Purchase Order"),
+	ST_SUPPINVOICE => __("Supplier Invoice"),
+	ST_SUPPCREDIT => __("Supplier Credit Note"),
+	ST_SUPPAYMENT => __("Supplier Payment"),
+	ST_SUPPRECEIVE => __("Purchase Order Delivery"),
+	ST_WORKORDER => __("Work Order"),
+	ST_MANUISSUE => __("Work Order Issue"),
+	ST_MANURECEIVE => __("Work Order Production"),
+	ST_SALESORDER => __("Sales Order"),
+	ST_SALESQUOTE => __("Sales Quotation"),
+	ST_COSTUPDATE => __("Cost Update"),
+	ST_DIMENSION => __("Dimension"),
+	ST_CUSTOMER => __("Customer"),
+	ST_SUPPLIER => __("Supplier"),
+	ST_ITEM => __("Item"),
+	ST_FIXEDASSET => __("Fixed Asset"),
+	ST_BANKACCOUNT => __("Bank Account"),
 	);
 
 $fa_systypes_array = array (
-	ST_INVADJUST => _("Fixed Assets Disposal"),
-	ST_COSTUPDATE => _("Fixed Assets Revaluation"),
+	ST_INVADJUST => __("Fixed Assets Disposal"),
+	ST_COSTUPDATE => __("Fixed Assets Revaluation"),
 	);
 
 $type_shortcuts = array(
-	ST_JOURNAL => _("GJ"), // general journal
-	ST_BANKPAYMENT => _("BP"),
-	ST_BANKDEPOSIT => _("BD"),
-	ST_BANKTRANSFER => _("BT"),
-	ST_SALESINVOICE => _("SI"),
-	ST_CUSTCREDIT => _("CN"),
-	ST_CUSTPAYMENT => _("CP"),
-	ST_CUSTDELIVERY => _("DN"),
-	ST_LOCTRANSFER => _("IT"), // inventory transfer
-	ST_INVADJUST => _("IA"),
-	ST_PURCHORDER => _("PO"),
-	ST_SUPPINVOICE => _("PI"), // purchase invoice
-	ST_SUPPCREDIT => _("PC"),
-	ST_SUPPAYMENT => _("SP"),
-	ST_SUPPRECEIVE => _("GRN"),
-	ST_WORKORDER => _("WO"),
-	ST_MANUISSUE => _("WI"),
-	ST_MANURECEIVE => _("WP"),
-	ST_SALESORDER => _("SO"),
-	ST_SALESQUOTE => _("SQ"),
-	ST_COSTUPDATE => _("CU"),
-	ST_DIMENSION => _("Dim")
+	ST_JOURNAL => __("GJ"), // general journal
+	ST_BANKPAYMENT => __("BP"),
+	ST_BANKDEPOSIT => __("BD"),
+	ST_BANKTRANSFER => __("BT"),
+	ST_SALESINVOICE => __("SI"),
+	ST_CUSTCREDIT => __("CN"),
+	ST_CUSTPAYMENT => __("CP"),
+	ST_CUSTDELIVERY => __("DN"),
+	ST_LOCTRANSFER => __("IT"), // inventory transfer
+	ST_INVADJUST => __("IA"),
+	ST_PURCHORDER => __("PO"),
+	ST_SUPPINVOICE => __("PI"), // purchase invoice
+	ST_SUPPCREDIT => __("PC"),
+	ST_SUPPAYMENT => __("SP"),
+	ST_SUPPRECEIVE => __("GRN"),
+	ST_WORKORDER => __("WO"),
+	ST_MANUISSUE => __("WI"),
+	ST_MANURECEIVE => __("WP"),
+	ST_SALESORDER => __("SO"),
+	ST_SALESQUOTE => __("SQ"),
+	ST_COSTUPDATE => __("CU"),
+	ST_DIMENSION => __("Dim")
 );
 
 
@@ -85,17 +85,17 @@ $type_shortcuts = array(
 //		Bank transaction types
 //
 $bank_account_types = array (
-	BT_TRANSFER => _("Savings Account"),
-		_("Chequing Account"),
-		_("Credit Account"),
-		_("Cash Account")
+	BT_TRANSFER => __("Savings Account"),
+		__("Chequing Account"),
+		__("Credit Account"),
+		__("Cash Account")
 	);
 
 $bank_transfer_types = array(
-	BT_TRANSFER => _("Transfer"),
-			_("Cheque"),
-			_("Credit"),
-			_("Cash")
+	BT_TRANSFER => __("Transfer"),
+			__("Cheque"),
+			__("Credit"),
+			__("Cash")
 	);
 
 //----------------------------------------------------------------------------------
@@ -103,146 +103,146 @@ $bank_transfer_types = array(
 //
 
 $payment_person_types = array (
-	PT_MISC => _("Miscellaneous"),
-    PT_WORKORDER =>	_("Work Order"),
-	PT_CUSTOMER => _("Customer"),
-	PT_SUPPLIER => _("Supplier"),
-	PT_QUICKENTRY => _("Quick Entry"),
-	PT_MARKETPLACE => _("Marketplace"),
+	PT_MISC => __("Miscellaneous"),
+    PT_WORKORDER =>	__("Work Order"),
+	PT_CUSTOMER => __("Customer"),
+	PT_SUPPLIER => __("Supplier"),
+	PT_QUICKENTRY => __("Quick Entry"),
+	PT_MARKETPLACE => __("Marketplace"),
 );
 
 //----------------------------------------------------------------------------------
 //	Manufacturing types
 //
 $wo_types_array = array (
-	WO_ASSEMBLY => _("Assemble"),
-	WO_UNASSEMBLY => _("Unassemble"),
-	WO_ADVANCED => _("Advanced Manufacture")
+	WO_ASSEMBLY => __("Assemble"),
+	WO_UNASSEMBLY => __("Unassemble"),
+	WO_ADVANCED => __("Advanced Manufacture")
 	);
 
 $wo_cost_types = array(
-	WO_LABOUR => _("Labour Cost"),
-	WO_OVERHEAD => _("Overhead Cost"),
-	WO_MATERIALS => _("Materials")
+	WO_LABOUR => __("Labour Cost"),
+	WO_OVERHEAD => __("Overhead Cost"),
+	WO_MATERIALS => __("Materials")
 );
 
 //----------------------------------------------------------------------------------
 //	GL account classes
 //
 $class_types = array(
-	CL_ASSETS => _("Assets"),
-	CL_LIABILITIES => _("Liabilities"),
-	CL_EQUITY => _("Equity"),
-	CL_INCOME => _("Income"),
-	CL_COGS => _("Cost of Goods Sold"),
-	CL_EXPENSE => _("Expense"),
+	CL_ASSETS => __("Assets"),
+	CL_LIABILITIES => __("Liabilities"),
+	CL_EQUITY => __("Equity"),
+	CL_INCOME => __("Income"),
+	CL_COGS => __("Cost of Goods Sold"),
+	CL_EXPENSE => __("Expense"),
 );
 
 //----------------------------------------------------------------------------------
 //	Quick entry types
 //
 $quick_actions = array(
-	'=' => _('Remainder'), // post current base amount to GL account
-	'a' => _('Amount'), // post amount to GL account
-	'a+' => _('Amount, increase base'), // post amount to GL account and increase base
-	'a-' => _('Amount, reduce base'), // post amount to GL account and reduce base
-	'%' => _('% amount of base'),	// store acc*amount% to GL account
-	'%+' => _('% amount of base, increase base'),	// ditto & increase base amount
-	'%-' => _('% amount of base, reduce base'),	// ditto & reduce base amount
-	'T' => _('Taxes added'), // post taxes calculated on base amount
-	'T+' => _('Taxes added, increase base'), // ditto & increase base amount
-	'T-' => _('Taxes added, reduce base'), // ditto & reduce base amount
-	't' => _('Taxes included'), // post taxes calculated on base amount
-	't+' => _('Taxes included, increase base'), // ditto & increase base amount
-	't-' => _('Taxes included, reduce base') // ditto & reduce base amount
+	'=' => __('Remainder'), // post current base amount to GL account
+	'a' => __('Amount'), // post amount to GL account
+	'a+' => __('Amount, increase base'), // post amount to GL account and increase base
+	'a-' => __('Amount, reduce base'), // post amount to GL account and reduce base
+	'%' => __('% amount of base'),	// store acc*amount% to GL account
+	'%+' => __('% amount of base, increase base'),	// ditto & increase base amount
+	'%-' => __('% amount of base, reduce base'),	// ditto & reduce base amount
+	'T' => __('Taxes added'), // post taxes calculated on base amount
+	'T+' => __('Taxes added, increase base'), // ditto & increase base amount
+	'T-' => __('Taxes added, reduce base'), // ditto & reduce base amount
+	't' => __('Taxes included'), // post taxes calculated on base amount
+	't+' => __('Taxes included, increase base'), // ditto & increase base amount
+	't-' => __('Taxes included, reduce base') // ditto & reduce base amount
 );
 
 $quick_entry_types = array(
-	QE_DEPOSIT => _("Bank Deposit"),
-	QE_PAYMENT => _("Bank Payment"),
-	QE_JOURNAL => _("Journal Entry"),
-	QE_SUPPINV => _("Supplier Invoice/Credit")
+	QE_DEPOSIT => __("Bank Deposit"),
+	QE_PAYMENT => __("Bank Payment"),
+	QE_JOURNAL => __("Journal Entry"),
+	QE_SUPPINV => __("Supplier Invoice/Credit")
 );
 
 //----------------------------------------------------------------------------------
 // depreciation methods
 $depreciation_methods = array(
-  'D' => _("Declining balance"),
-  'S' => _("Straight line"),
-  'N' => _("Sum of the Year Digits"),
-  'O' => _("One-time"),
+  'D' => __("Declining balance"),
+  'S' => __("Straight line"),
+  'N' => __("Sum of the Year Digits"),
+  'O' => __("One-time"),
 );
 
 //----------------------------------------------------------------------------------
 // Types of stock items
 $stock_types = array(
-	'M' => _("Manufactured"),
-	'B' => _("Purchased"),
-	'D' => _("Service")
+	'M' => __("Manufactured"),
+	'B' => __("Purchased"),
+	'D' => __("Service")
 );
 
 //----------------------------------------------------------------------------------
 
 $tag_types = array (
-	TAG_ACCOUNT   => _("Account"),
-	TAG_DIMENSION => _("Dimension")
+	TAG_ACCOUNT   => __("Account"),
+	TAG_DIMENSION => __("Dimension")
 );
 
 //----------------------------------------------------------------------------------
 // crm contacts categories
 $sys_crm_cats = array (
-	'cust_branch' => _("Customer branch"),
-	'supplier' => _("Supplier"),
-	'shipper' => _("Shipper"),
-	'company' => _("Company internal")
+	'cust_branch' => __("Customer branch"),
+	'supplier' => __("Supplier"),
+	'shipper' => __("Shipper"),
+	'company' => __("Company internal")
 );
 //----------------------------------------------------------------------------------
 
 $pterm_types = array(
-	PTT_PRE => _("Prepayment"),
-	PTT_CASH => _("Cash"),
-	PTT_DAYS => _("After No. of Days"),
-	PTT_FOLLOWING => _("Day In Following Month")
+	PTT_PRE => __("Prepayment"),
+	PTT_CASH => __("Cash"),
+	PTT_DAYS => __("After No. of Days"),
+	PTT_FOLLOWING => __("Day In Following Month")
 );
 
 $tax_algorithms = array( 
-	TCA_LINES => _("Sum per line taxes"), 
-	TCA_TOTALS => _("Taxes from totals")
+	TCA_LINES => __("Sum per line taxes"), 
+	TCA_TOTALS => __("Taxes from totals")
 );
 //----------------------------------------------------------------------------------
 
 $bank_owner_types = array(
-	BO_UNKNOWN => _("Unknown"),
-	BO_COMPANY => _("Company"),
-	BO_CUSTBRANCH => _("Customer"),
-	BO_SUPPLIER => _("Supplier")
+	BO_UNKNOWN => __("Unknown"),
+	BO_COMPANY => __("Company"),
+	BO_CUSTBRANCH => __("Customer"),
+	BO_SUPPLIER => __("Supplier")
 );
 
 // This month array is for use with the last 3 dateformats. 
-$tmonths = array("", _("Jan"),_("Feb"),_("Mar"),_("Apr"),_("May"),_("Jun"),_("Jul"),_("Aug"),_("Sep"),_("Oct"),_("Nov"),_("Dec"));
+$tmonths = array("", __("Jan"),__("Feb"),__("Mar"),__("Apr"),__("May"),__("Jun"),__("Jul"),__("Aug"),__("Sep"),__("Oct"),__("Nov"),__("Dec"));
 
 //
 //	FA supported db backend language settings.
 //
 $supported_collations = array(
-  'utf8_xx' => _('Unicode (multilanguage)'),
-  'utf8_is' => _('Icelandic'),
-  'utf8_lv' => _('Latvian'),
-  'utf8_ro' => _('Romanian'),
-  'utf8_sl' => _('Slovenian'),
-  'utf8_pl' => _('Polish'),
-  'utf8_et' => _('Estonian'),
-  'utf8_es' => _('Spanish'), // or 'spanish2',
-  'utf8_sw' => _('Swedish'),
-  'utf8_tr' => _('Turkish'),
-  'utf8_cs' => _('Czech'),
-  'utf8_da' => _('Danish'),
-  'utf8_lt' => _('Lithuanian'),
-  'utf8_sk' => _('Slovak'),
-  'utf8_sp' => _('Spanish (alternative)'),
-  'utf8_fa' => _('Persian'),
-  'utf8_hu' => _('Hungarian'),
-  'utf8_fr' => _('French'),
-  'utf8_it' => _('Italian'),
+  'utf8_xx' => __('Unicode (multilanguage)'),
+  'utf8_is' => __('Icelandic'),
+  'utf8_lv' => __('Latvian'),
+  'utf8_ro' => __('Romanian'),
+  'utf8_sl' => __('Slovenian'),
+  'utf8_pl' => __('Polish'),
+  'utf8_et' => __('Estonian'),
+  'utf8_es' => __('Spanish'), // or 'spanish2',
+  'utf8_sw' => __('Swedish'),
+  'utf8_tr' => __('Turkish'),
+  'utf8_cs' => __('Czech'),
+  'utf8_da' => __('Danish'),
+  'utf8_lt' => __('Lithuanian'),
+  'utf8_sk' => __('Slovak'),
+  'utf8_sp' => __('Spanish (alternative)'),
+  'utf8_fa' => __('Persian'),
+  'utf8_hu' => __('Hungarian'),
+  'utf8_fr' => __('French'),
+  'utf8_it' => __('Italian'),
 );
 

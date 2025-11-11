@@ -30,7 +30,7 @@ if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($GLOBALS['help_context'] = "Customer Transactions"), isset($_GET['customer_id']), false, "", $js);
+page(__($GLOBALS['help_context'] = "Customer Transactions"), isset($_GET['customer_id']), false, "", $js);
 
 //------------------------------------------------------------------------------------------------
 
@@ -80,10 +80,10 @@ function credit_link($row)
 	{
         $marketplace_flg = check_value('is_marketplace_trans') ? "&Marketplace=Yes" : "";
 		if ($row['type'] == ST_CUSTDELIVERY)
-			return pager_link(_('Invoice'), "/sales/customer_invoice.php?DeliveryNumber=" 
+			return pager_link(__('Invoice'), "/sales/customer_invoice.php?DeliveryNumber=" 
 				.$row['trans_no'].$marketplace_flg, ICON_DOC);
 		else if ($row['type'] == ST_SALESINVOICE)
-			return pager_link(_("Credit This") ,
+			return pager_link(__("Credit This") ,
 			"/sales/customer_credit_invoice.php?InvoiceNumber=". $row['trans_no'].$marketplace_flg, ICON_CREDIT);
 	}	
 }
@@ -106,21 +106,21 @@ function copy_link($row)
     if ($page_nested)
         return '';
     if ($row['type'] == ST_CUSTDELIVERY)
-        return pager_link(_("Copy Delivery"), "/sales/sales_order_entry.php?NewDelivery=" 
+        return pager_link(__("Copy Delivery"), "/sales/sales_order_entry.php?NewDelivery=" 
             .$row['order_'], ICON_DOC);
     elseif ($row['type'] == ST_SALESINVOICE)
-        return pager_link(_("Copy Invoice"),    "/sales/sales_order_entry.php?NewInvoice="
+        return pager_link(__("Copy Invoice"),    "/sales/sales_order_entry.php?NewInvoice="
             . $row['order_'], ICON_DOC);
 }
 
 function prt_link($row)
 {
   	if ($row['type'] == ST_CUSTPAYMENT || $row['type'] == ST_BANKDEPOSIT) 
-		return print_document_link($row['trans_no']."-".$row['type'], _("Print Receipt"), true, ST_CUSTPAYMENT, ICON_PRINT);
+		return print_document_link($row['trans_no']."-".$row['type'], __("Print Receipt"), true, ST_CUSTPAYMENT, ICON_PRINT);
   	elseif ($row['type'] == ST_BANKPAYMENT) // bank payment printout not defined yet.
 		return '';
  	else
- 		return print_document_link($row['trans_no']."-".$row['type'], _("Print"), true, $row['type'], ICON_PRINT);
+ 		return print_document_link($row['trans_no']."-".$row['type'], __("Print"), true, $row['type'], ICON_PRINT);
 }
 
 function check_overdue($row)
@@ -136,16 +136,16 @@ function display_customer_summary($customer_record)
 	$past2 = 2 * $past1;
     if ($customer_record && $customer_record["dissallow_invoices"] != 0)
     {
-    	echo "<center><font color=red size=4><b>" . _("CUSTOMER ACCOUNT IS ON HOLD") . "</font></b></center>";
+    	echo "<center><font color=red size=4><b>" . __("CUSTOMER ACCOUNT IS ON HOLD") . "</font></b></center>";
     }
 
-	$nowdue = "1-" . $past1 . " " . _('Days');
-	$pastdue1 = $past1 + 1 . "-" . $past2 . " " . _('Days');
-	$pastdue2 = _('Over') . " " . $past2 . " " . _('Days');
+	$nowdue = "1-" . $past1 . " " . __('Days');
+	$pastdue1 = $past1 + 1 . "-" . $past2 . " " . __('Days');
+	$pastdue2 = __('Over') . " " . $past2 . " " . __('Days');
 
     start_table(TABLESTYLE, "width='80%'");
-    $th = array(_("Currency"), _("Terms"), _("Current"), $nowdue,
-    	$pastdue1, $pastdue2, _("Total Balance"));
+    $th = array(__("Currency"), __("Terms"), __("Current"), $nowdue,
+    	$pastdue1, $pastdue2, __("Total Balance"));
     table_header($th);
     if ($customer_record != false)
     {
@@ -178,26 +178,26 @@ if (!isset($_POST['customer_id']))
 start_table(TABLESTYLE_NOBORDER);
 start_row();
 
-ref_cells(_("Reference:"), 'Ref', '', NULL, _('Enter reference fragment or leave empty'));
+ref_cells(__("Reference:"), 'Ref', '', NULL, __('Enter reference fragment or leave empty'));
 
 if (!$page_nested || check_value('is_marketplace_trans'))
-	customer_list_cells(_("Select a customer: "), 'customer_id', null, true, true, false, true);
+	customer_list_cells(__("Select a customer: "), 'customer_id', null, true, true, false, true);
 
 if (check_value('is_marketplace_trans') && !$page_nested)
-    marketplace_list_cells(_("Marketplace:"), 'marketplace_id', null, true);
+    marketplace_list_cells(__("Marketplace:"), 'marketplace_id', null, true);
 
 cust_allocations_list_cells(null, 'filterType', null, true, true);
 end_row();
 start_row();
 if ($_POST['filterType'] != '2')
 {
-	date_cells(_("From:"), 'TransAfterDate', '', null, -user_transaction_days());
-	date_cells(_("To:"), 'TransToDate', '', null);
+	date_cells(__("From:"), 'TransAfterDate', '', null, -user_transaction_days());
+	date_cells(__("To:"), 'TransToDate', '', null);
 }
-check_cells(_("Zero values"), 'show_voided');
+check_cells(__("Zero values"), 'show_voided');
 hidden('is_marketplace_trans', check_value('is_marketplace_trans'));
 
-submit_cells('RefreshInquiry', _("Search"),'',_('Refresh Inquiry'), 'default');
+submit_cells('RefreshInquiry', __("Search"),'',__('Refresh Inquiry'), 'default');
 end_row();
 end_table();
 
@@ -240,18 +240,18 @@ $sql = get_sql_for_customer_inquiry(
 //db_query("set @bal:=0");
 
 $cols = array(
-	_("Type") => array('fun'=>'systype_name', 'ord'=>''),
-	_("#") => array('fun'=>'trans_view', 'ord'=>'', 'align'=>'right'),
-	_("Order") => array('fun'=>'order_view', 'align'=>'right'), 
-	_("Reference"), 
-	_("Tracking No"), 
-	_("Date") => array('name'=>'tran_date', 'type'=>'date', 'ord'=>'desc'),
-	_("Due Date") => array('type'=>'date', 'fun'=>'due_date'),
-	_("Customer") => array('ord'=>''), 
-	_("Branch") => array('ord'=>''), 
-	_("Currency") => array('align'=>'center'),
-	_("Amount") => array('align'=>'right', 'fun'=>'fmt_amount'), 
-	_("Balance") => array('align'=>'right', 'type'=>'amount'),
+	__("Type") => array('fun'=>'systype_name', 'ord'=>''),
+	__("#") => array('fun'=>'trans_view', 'ord'=>'', 'align'=>'right'),
+	__("Order") => array('fun'=>'order_view', 'align'=>'right'), 
+	__("Reference"), 
+	__("Tracking No"), 
+	__("Date") => array('name'=>'tran_date', 'type'=>'date', 'ord'=>'desc'),
+	__("Due Date") => array('type'=>'date', 'fun'=>'due_date'),
+	__("Customer") => array('ord'=>''), 
+	__("Branch") => array('ord'=>''), 
+	__("Currency") => array('align'=>'center'),
+	__("Amount") => array('align'=>'right', 'fun'=>'fmt_amount'), 
+	__("Balance") => array('align'=>'right', 'type'=>'amount'),
 		array('insert'=>true, 'fun'=>'gl_view'),
 		array('insert'=>true, 'fun'=>'edit_link'),
 		array('insert'=>true, 'fun'=>'copy_link'),
@@ -261,14 +261,14 @@ $cols = array(
 
 
 if ($_POST['customer_id'] != ALL_TEXT) {
-	$cols[_("Customer")] = 'skip';
-	$cols[_("Currency")] = 'skip';
+	$cols[__("Customer")] = 'skip';
+	$cols[__("Currency")] = 'skip';
 }
 if ($_POST['filterType'] != '2')
-	$cols[_("Balance")] = 'skip';
+	$cols[__("Balance")] = 'skip';
 
 $table =& new_db_pager('trans_tbl', $sql, $cols);
-$table->set_marker('check_overdue', _("Marked items are overdue."));
+$table->set_marker('check_overdue', __("Marked items are overdue."));
 
 $table->width = "85%";
 

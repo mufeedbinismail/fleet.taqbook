@@ -91,36 +91,36 @@ function print_price_listing()
 	if ($salestype == ALL_NUMERIC)
 		$salestype = 0;
 	if ($category == 0)
-		$cat = _('All');
+		$cat = __('All');
 	else
 		$cat = get_category_name($category);
 	if ($salestype == 0)
-		$stype = _('All');
+		$stype = __('All');
 	else
 		$stype = get_sales_type_name($salestype);
 	if ($showGP == 0)
-		$GP = _('No');
+		$GP = __('No');
 	else
-		$GP = _('Yes');
+		$GP = __('Yes');
 
 	$cols = array(0, 100, 360, 385, 450, 515);
 
-	$headers = array(_('Category/Items'), _('Description'),	_('UOM'), _('Price'),	_('GP %'));
+	$headers = array(__('Category/Items'), __('Description'),	__('UOM'), __('Price'),	__('GP %'));
 
 	$aligns = array('left',	'left',	'left', 'right', 'right');
 
     $params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Currency'), 'from' => $curr_sel, 'to' => ''),
-    				    2 => array('text' => _('Category'), 'from' => $cat, 'to' => ''),
-    				    3 => array('text' => _('Sales Type'), 'from' => $stype, 'to' => ''),
-    				    4 => array(  'text' => _('Show GP %'),'from' => $GP,'to' => ''));
+    				    1 => array('text' => __('Currency'), 'from' => $curr_sel, 'to' => ''),
+    				    2 => array('text' => __('Category'), 'from' => $cat, 'to' => ''),
+    				    3 => array('text' => __('Sales Type'), 'from' => $stype, 'to' => ''),
+    				    4 => array(  'text' => __('Show GP %'),'from' => $GP,'to' => ''));
 
 	if ($pictures)
 		$user_comp = user_company();
 	else
 		$user_comp = "";
 
-    $rep = new FrontReport(_('Price Listing'), "PriceListing", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Price Listing'), "PriceListing", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -189,7 +189,7 @@ function print_price_listing()
 			{
 				$rep->NewLine(2);
 				$rep->fontSize += 2;
-				$rep->TextCol(0, 3, _("Sales Kits"));
+				$rep->TextCol(0, 3, __("Sales Kits"));
 				$rep->fontSize -= 2;
 			}
 			$rep->Line($rep->row  - $rep->lineHeight);

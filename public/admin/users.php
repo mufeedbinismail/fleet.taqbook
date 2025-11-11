@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_USERS';
 require_once __DIR__ . "/../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "Users"));
+page(__($GLOBALS['help_context'] = "Users"));
 
 require_once __DIR__ . "/../includes/date_functions.inc";
 require_once __DIR__ . "/../includes/ui.inc";
@@ -27,7 +27,7 @@ function can_process($new)
 
 	if (strlen($_POST['user_id']) < 4)
 	{
-		display_error( _("The user login entered must be at least 4 characters long."));
+		display_error( __("The user login entered must be at least 4 characters long."));
 		set_focus('user_id');
 		return false;
 	}
@@ -36,14 +36,14 @@ function can_process($new)
 	{
     	if (strlen($_POST['password']) < 4)
     	{
-    		display_error( _("The password entered must be at least 4 characters long."));
+    		display_error( __("The password entered must be at least 4 characters long."));
 			set_focus('password');
     		return false;
     	}
 
     	if (strstr($_POST['password'], $_POST['user_id']) != false)
     	{
-    		display_error( _("The password cannot contain the user login."));
+    		display_error( __("The password cannot contain the user login."));
 			set_focus('password');
     		return false;
     	}
@@ -68,7 +68,7 @@ if (($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM') && check_csrf_token())
     		if ($_POST['password'] != "")
     			update_user_password($selected_id, $_POST['user_id'], md5($_POST['password']));
 
-    		display_notification_centered(_("The selected user has been updated."));
+    		display_notification_centered(__("The selected user has been updated."));
     	} 
     	else 
     	{
@@ -82,7 +82,7 @@ if (($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM') && check_csrf_token())
 			update_user_prefs($id, array_merge($prefs, get_post(array('print_profile',
 				'rep_popup' => 0, 'language'))));
 
-			display_notification_centered(_("A new user has been added."));
+			display_notification_centered(__("A new user has been added."));
     	}
 		$Mode = 'RESET';
 	}
@@ -96,12 +96,12 @@ if ($Mode == 'Delete' && check_csrf_token())
     if (key_in_foreign_table($selected_id, 'audit_trail', 'user'))
     {
         $cancel_delete = 1;
-        display_error(_("Cannot delete this user because entries are associated with this user."));
+        display_error(__("Cannot delete this user because entries are associated with this user."));
     }
     if ($cancel_delete == 0) 
     {
     	delete_user($selected_id);
-    	display_notification_centered(_("User has been deleted."));
+    	display_notification_centered(__("User has been deleted."));
     } //end if Delete group
     $Mode = 'RESET';
 }
@@ -119,8 +119,8 @@ $result = get_users(check_value('show_inactive'));
 start_form();
 start_table(TABLESTYLE);
 
-$th = array(_("User login"), _("Full Name"), _("Phone"),
-	_("E-mail"), _("Last Visit"), _("Access Level"), "", "");
+$th = array(__("User login"), __("Full Name"), __("Phone"),
+	__("E-mail"), __("Last Visit"), __("Access Level"), "", "");
 
 inactive_control_column($th);
 table_header($th);	
@@ -151,9 +151,9 @@ while ($myrow = db_fetch($result))
 	elseif (check_value('show_inactive'))
 		label_cell('');
 
-	edit_button_cell("Edit".$myrow["id"], _("Edit"));
+	edit_button_cell("Edit".$myrow["id"], __("Edit"));
     if ($not_me)
- 		delete_button_cell("Delete".$myrow["id"], _("Delete"));
+ 		delete_button_cell("Delete".$myrow["id"], __("Delete"));
 	else
 		label_cell('');
 	end_row();
@@ -187,41 +187,41 @@ if ($selected_id != -1)
 	hidden('user_id');
 
 	start_row();
-	label_row(_("User login:"), $_POST['user_id']);
+	label_row(__("User login:"), $_POST['user_id']);
 } 
 else 
 { //end of if $selected_id only do the else when a new record is being entered
-	text_row(_("User Login:"), "user_id",  null, 22, 20);
+	text_row(__("User Login:"), "user_id",  null, 22, 20);
 	$_POST['language'] = user_language();
 	$_POST['print_profile'] = user_print_profile();
 	$_POST['rep_popup'] = user_rep_popup();
 	$_POST['pos'] = user_pos();
 }
 $_POST['password'] = "";
-password_row(_("Password:"), 'password', $_POST['password']);
+password_row(__("Password:"), 'password', $_POST['password']);
 
 if ($selected_id != -1) 
 {
-	table_section_title(_("Enter a new password to change, leave empty to keep current."));
+	table_section_title(__("Enter a new password to change, leave empty to keep current."));
 }
 
-text_row_ex(_("Full Name").":", 'real_name',  50);
+text_row_ex(__("Full Name").":", 'real_name',  50);
 
-text_row_ex(_("Telephone No.:"), 'phone', 30);
+text_row_ex(__("Telephone No.:"), 'phone', 30);
 
-email_row_ex(_("Email Address:"), 'email', 50);
+email_row_ex(__("Email Address:"), 'email', 50);
 
-security_roles_list_row(_("Access Level:"), 'role_id', null); 
+security_roles_list_row(__("Access Level:"), 'role_id', null); 
 
-languages_list_row(_("Language:"), 'language', null);
+languages_list_row(__("Language:"), 'language', null);
 
-pos_list_row(_("User's POS"). ':', 'pos', null);
+pos_list_row(__("User's POS"). ':', 'pos', null);
 
-print_profiles_list_row(_("Printing profile"). ':', 'print_profile', null,
-	_('Browser printing support'));
+print_profiles_list_row(__("Printing profile"). ':', 'print_profile', null,
+	__('Browser printing support'));
 
-check_row(_("Use popup window for reports:"), 'rep_popup', $_POST['rep_popup'],
-	false, _('Set this option to on if your browser directly supports pdf files'));
+check_row(__("Use popup window for reports:"), 'rep_popup', $_POST['rep_popup'],
+	false, __('Set this option to on if your browser directly supports pdf files'));
 
 end_table(1);
 

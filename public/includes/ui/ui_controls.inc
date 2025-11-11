@@ -27,17 +27,17 @@ $GLOBALS['ajax_divs'] = array();
  */
 $GLOBALS['popup_editors'] = array(
 	'customer' => array('/sales/manage/customers.php?debtor_no=', 
-		113,	_("Customers"), 900, 550),
+		113,	__("Customers"), 900, 550),
 	'branch' => array('/sales/manage/customer_branches.php?SelectedBranch=', 
-		114, _("Branches"), 900, 650),
+		114, __("Branches"), 900, 650),
 	'supplier' => array('/purchasing/manage/suppliers.php?supplier_id=', 
-		113, _("Suppliers"), 1150, 550),
+		113, __("Suppliers"), 1150, 550),
 	'item' => array('/inventory/manage/items.php?stock_id=', 
-		115, _("Items"), 1000, 500),
+		115, __("Items"), 1000, 500),
 	'fa_item' => array('/inventory/manage/items.php?FixedAsset=1&stock_id=', 
-		115, _("Items"), 1000, 500),
+		115, __("Items"), 1000, 500),
     'marketplace' => array('/sales/manage/marketplaces.php?debtor_no=', 
-		116, _("Marketplace"), 900, 550),
+		116, __("Marketplace"), 900, 550),
 );
 
 function get_post($name, $dflt='')
@@ -113,8 +113,8 @@ function check_csrf_token()
 {
 	if ($_SESSION['csrf_token'] != @$_POST['_token'])
 	{
-		display_error(_("Request from outside of this page is forbidden."));
-		error_log(_("CSRF attack detected from: ").@$_SERVER['HTTP_HOST'].' ('.@$_SERVER['HTTP_REFERER'].')');
+		display_error(__("Request from outside of this page is forbidden."));
+		error_log(__("CSRF attack detected from: ").@$_SERVER['HTTP_HOST'].' ('.@$_SERVER['HTTP_REFERER'].')');
 		return false;
 	}
 	return true;
@@ -184,8 +184,8 @@ function meta_forward($forward_to, $params="", $timeout=0, $return=false)
 {
     global $Ajax;
 	echo "<meta http-equiv='Refresh' content='".$timeout."; url=$forward_to?$params'>\n";
-	echo "<center><br>" . _("You should automatically be forwarded.");
-	echo " " . _("If this does not happen") . " " . "<a href='$forward_to?$params'>" . _("click here") . "</a> " . _("to continue") . ".<br><br></center>\n";
+	echo "<center><br>" . __("You should automatically be forwarded.");
+	echo " " . __("If this does not happen") . " " . "<a href='$forward_to?$params'>" . __("click here") . "</a> " . __("to continue") . ".<br><br></center>\n";
 	if ($params !='') $params = '?'.$params;
 	$Ajax->redirect($forward_to.$params);
 	if (!$return) throw new \App\Exceptions\Legacy\FlowCompletedException;
@@ -232,9 +232,9 @@ function hyperlink_back($center=true, $no_menu=true, $type_no=0, $trans_no=0, $f
 	start_row();
 	if ($no_menu)
 	{
-		echo "<td align=center><a href='javascript:window.print();'>"._("Print")."</a></td>\n";
+		echo "<td align=center><a href='javascript:window.print();'>".__("Print")."</a></td>\n";
 	}	
-	echo "<td align=center><a href='javascript:goBack(".($final ? '-2' : '').");'>".($no_menu ? _("Close") : _("Back"))."</a></td>\n";
+	echo "<td align=center><a href='javascript:goBack(".($final ? '-2' : '').");'>".($no_menu ? __("Close") : __("Back"))."</a></td>\n";
 	end_row();
 	end_table();
 	if ($center)
@@ -641,8 +641,8 @@ function confirm_dialog($submit, $msg) {
 	if (find_post($submit)) {
 		display_warning($msg);
 		br();
-		submit_center_first('DialogConfirm', _("Proceed"), '', true);
-		submit_center_last('DialogCancel', _("Cancel"), '', 'cancel');
+		submit_center_first('DialogConfirm', __("Proceed"), '', true);
+		submit_center_last('DialogCancel', __("Cancel"), '', 'cancel');
 		return 0;
 	} else
 		return get_post('DialogConfirm', 0);
@@ -671,7 +671,7 @@ function page_processing($msg = false)
 	global $Ajax;
 
 	if ($msg === true)
-		$msg = _("Entered data has not been saved yet.\nDo you want to abandon changes?");
+		$msg = __("Entered data has not been saved yet.\nDo you want to abandon changes?");
 
 	$js = "_validate._processing=" . (
 		$msg ? '\''.strtr($msg, array("\n"=>'\\n')) . '\';' : 'null;');

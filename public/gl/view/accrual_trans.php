@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_ACCRUALS';
 require_once __DIR__ . "/../../includes/session.inc";
 
-$_SESSION['page_title'] = _($GLOBALS['help_context'] = _("Search General Ledger Transactions for account: ").$_GET['act']);
+$_SESSION['page_title'] = __($GLOBALS['help_context'] = __("Search General Ledger Transactions for account: ").$_GET['act']);
 
 page($_SESSION['page_title'], true);
 
@@ -37,7 +37,7 @@ echo $js;
 if (!isset($_GET['act']) || !isset($_GET['date']))
 { /*Script was not passed the correct parameters */
 
-	echo "<p>" . _("The script must be called with a valid transaction type and transaction number to review the general ledger postings for.") . "</p>";
+	echo "<p>" . __("The script must be called with a valid transaction type and transaction number to review the general ledger postings for.") . "</p>";
 	throw new \App\Exceptions\Legacy\FlowTerminatedException;
 }
 
@@ -48,15 +48,15 @@ br();
 start_table(TABLESTYLE);
 $dim = get_company_pref('use_dimension');
 
-$first_cols = array(_("Type"), "#", _("Date"));
+$first_cols = array(__("Type"), "#", __("Date"));
 if ($dim == 2)
-	$dim_cols = array(_("Dimension")." 1", _("Dimension")." 2");
+	$dim_cols = array(__("Dimension")." 1", __("Dimension")." 2");
 elseif ($dim == 1)
-	$dim_cols = array(_("Dimension"));
+	$dim_cols = array(__("Dimension"));
 else
 	$dim_cols = array();
 
-$remaining_cols = array(_("Person/Item"), _("Debit"), _("Credit"), _("Memo"));
+$remaining_cols = array(__("Person/Item"), __("Debit"), __("Credit"), __("Memo"));
 
 $th = array_merge($first_cols, $dim_cols, $remaining_cols);
 

@@ -112,42 +112,42 @@ function print_customer_balances()
 
 	$orientation = ($orientation ? 'L' : 'P');
 	if ($fromcust == ALL_TEXT)
-		$cust = _('All');
+		$cust = __('All');
 	else
 		$cust = get_customer_name($fromcust);
     $dec = user_price_dec();
 
-	if ($show_balance) $sb = _('Yes');
-	else $sb = _('No');
+	if ($show_balance) $sb = __('Yes');
+	else $sb = __('No');
 
 	if ($currency == ALL_TEXT)
 	{
 		$convert = true;
-		$currency = _('Balances in Home Currency');
+		$currency = __('Balances in Home Currency');
 	}
 	else
 		$convert = false;
 
-	if ($no_zeros) $nozeros = _('Yes');
-	else $nozeros = _('No');
+	if ($no_zeros) $nozeros = __('Yes');
+	else $nozeros = __('No');
 
 	$cols = array(0, 95, 140, 200,	250, 320, 385, 450,	515);
 
-	$headers = array(_('Trans Type'), _('#'), _('Date'), _('Due Date'), _('Debits'), _('Credits'),
-		_('Allocated'), 	_('Outstanding'));
+	$headers = array(__('Trans Type'), __('#'), __('Date'), __('Due Date'), __('Debits'), __('Credits'),
+		__('Allocated'), 	__('Outstanding'));
 
 	if ($show_balance)
-		$headers[7] = _('Balance');
+		$headers[7] = __('Balance');
 	$aligns = array('left',	'left',	'left',	'left',	'right', 'right', 'right', 'right');
 
     $params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'), 'from' => $from, 		'to' => $to),
-    				    2 => array('text' => _('Customer'), 'from' => $cust,   	'to' => ''),
-    				    3 => array('text' => _('Show Balance'), 'from' => $sb,   	'to' => ''),
-    				    4 => array('text' => _('Currency'), 'from' => $currency, 'to' => ''),
-						5 => array('text' => _('Suppress Zeros'), 'from' => $nozeros, 'to' => ''));
+    				    1 => array('text' => __('Period'), 'from' => $from, 		'to' => $to),
+    				    2 => array('text' => __('Customer'), 'from' => $cust,   	'to' => ''),
+    				    3 => array('text' => __('Show Balance'), 'from' => $sb,   	'to' => ''),
+    				    4 => array('text' => __('Currency'), 'from' => $currency, 'to' => ''),
+						5 => array('text' => __('Suppress Zeros'), 'from' => $nozeros, 'to' => ''));
 
-    $rep = new FrontReport(_('Customer Balances'), "CustomerBalances", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Customer Balances'), "CustomerBalances", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
     $rep->Font();
@@ -186,11 +186,11 @@ function print_customer_balances()
 		if ($no_zeros && db_num_rows($res) == 0) continue;
 
 		$rep->fontSize += 2;
-		$rep->TextCol(0, 2, $myrow['name'].($myrow['inactive']==1 ? " ("._("Inactive").")" : ""));
+		$rep->TextCol(0, 2, $myrow['name'].($myrow['inactive']==1 ? " (".__("Inactive").")" : ""));
 		if ($convert)
 			$rep->TextCol(2, 3,	$myrow['curr_code']);
 		$rep->fontSize -= 2;
-		$rep->TextCol(3, 4,	_("Open Balance"));
+		$rep->TextCol(3, 4,	__("Open Balance"));
 		$rep->AmountCol(4, 5, $init[0], $dec);
 		$rep->AmountCol(5, 6, $init[1], $dec);
 		$rep->AmountCol(6, 7, $init[2], $dec);
@@ -258,14 +258,14 @@ function print_customer_balances()
 		}
 		$rep->Line($rep->row - 8);
 		$rep->NewLine(2);
-		$rep->TextCol(0, 3, _('Total'));
+		$rep->TextCol(0, 3, __('Total'));
 		for ($i = 0; $i < 4; $i++)
 			$rep->AmountCol($i + 4, $i + 5, $total[$i], $dec);
    		$rep->Line($rep->row  - 4);
    		$rep->NewLine(2);
 	}
 	$rep->fontSize += 2;
-	$rep->TextCol(0, 3, _('Grand Total'));
+	$rep->TextCol(0, 3, __('Grand Total'));
 	$rep->fontSize -= 2;
 	if ($show_balance)
 		$grandtotal[3] = $grandtotal[0] - $grandtotal[1];

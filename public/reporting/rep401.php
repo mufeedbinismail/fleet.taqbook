@@ -66,14 +66,14 @@ function print_bill_of_material()
 	$orientation = ($orientation ? 'L' : 'P');
 	$cols = array(0, 50, 305, 375, 445,	515);
 
-	$headers = array(_('Component'), _('Description'), _('Loc'), _('Wrk Ctr'), _('Quantity'));
+	$headers = array(__('Component'), __('Description'), __('Loc'), __('Wrk Ctr'), __('Quantity'));
 
 	$aligns = array('left',	'left',	'left', 'left', 'right');
 
     $params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Component'), 'from' => $frompart, 'to' => $topart));
+    				    1 => array('text' => __('Component'), 'from' => $frompart, 'to' => $topart));
 
-    $rep = new FrontReport(_('Bill of Material Listing'), "BillOfMaterial", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Bill of Material Listing'), "BillOfMaterial", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 

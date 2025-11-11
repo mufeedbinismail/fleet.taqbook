@@ -149,7 +149,7 @@ function submit($name, $value, $echo=true, $title=false, $atype=false, $icon=fal
 			switch($type) {
 				case 'selector':
 					$aspect = " aspect='selector' rel = '$value'"; 
-					$value = _("Select");
+					$value = __("Select");
 					if ($icon===false) $icon=ICON_SUBMIT; break;
 
 				case 'default':
@@ -222,12 +222,12 @@ function submit_add_or_update($add=true, $title=false, $async=false, $clone=fals
 		$async = true;
 	
 	if ($add)
-		submit('ADD_ITEM', _("Add new"), true, $title, $async);
+		submit('ADD_ITEM', __("Add new"), true, $title, $async);
 	else {
-		submit('UPDATE_ITEM', _("Update"), true, _('Submit changes'), $async);
-		if ($clone) submit('CLONE', _("Clone"), true, 
-			_('Edit new record with current data'), $async);
-		submit('RESET', _("Cancel"), true, _('Cancel edition'), $cancel);
+		submit('UPDATE_ITEM', __("Update"), true, __('Submit changes'), $async);
+		if ($clone) submit('CLONE', __("Clone"), true, 
+			__('Edit new record with current data'), $async);
+		submit('RESET', __("Cancel"), true, __('Cancel edition'), $cancel);
 	}
 }
 
@@ -297,11 +297,11 @@ function button($name, $value, $title=false, $icon=false,  $aspect='')
 	$rel = '';
 	if ($aspect == 'selector') {
 		$rel = " rel='$value'";
-		$value = _("Select");
+		$value = __("Select");
 	}
 	if (user_graphic_links() && $icon)
 	{
-		if ($value == _("Delete")) // Helper during implementation
+		if ($value == __("Delete")) // Helper during implementation
 			$icon = ICON_DELETE;
 		return "<button type='submit' class='editbutton' name='"
 			.html_specials_encode(strtr($name, array('.'=>'=2E', '='=>'=3D',// ' '=>'=20','['=>'=5B'
@@ -660,7 +660,7 @@ function date_cells($label, $name, $title = null, $check=null, $inc_days=0,
                 : "/themes/default/images/cal.gif"
         );
 		$post_label = "<a tabindex='-1' href=\"javascript:date_picker(document.getElementsByName('$name')[0]);\">"
-		. "	<img src='$calc_image' style='vertical-align:middle;padding-bottom:4px;width:16px;height:16px;border:0;' alt='"._('Click Here to Pick up the date')."'></a>\n";
+		. "	<img src='$calc_image' style='vertical-align:middle;padding-bottom:4px;width:16px;height:16px;border:0;' alt='".__('Click Here to Pick up the date')."'></a>\n";
 	}	
 	else
 		$post_label = "";
@@ -976,9 +976,9 @@ function inactive_control_cell($id, $value, $table, $key)
 function inactive_control_row($th) {
 	echo  "<tr><td colspan=".(count($th)).">"
 		."<div style='float:left;'>"
-		. checkbox(null, 'show_inactive', null, true). _("Show also Inactive")
+		. checkbox(null, 'show_inactive', null, true). __("Show also Inactive")
 		."</div><div style='float:right;'>"
-		. submit('Update', _('Update'), false, '', null)
+		. submit('Update', __('Update'), false, '', null)
 		."</div></td></tr>";
 }
 //
@@ -988,7 +988,7 @@ function inactive_control_column(&$th) {
 	global $Ajax;
 	
 	if (check_value('show_inactive')) 
-		array_insert($th, count($th)-2 , _("Inactive"));
+		array_insert($th, count($th)-2 , __("Inactive"));
 	if (get_post('_show_inactive_update')) {
 		$Ajax->activate('_page_body');
 	}
@@ -996,7 +996,7 @@ function inactive_control_column(&$th) {
 
 function customer_credit_row($customer, $credit, $parms='')
 {
-	label_row( _("Current Credit:"),
+	label_row( __("Current Credit:"),
 		"<a target='_blank' " . ($credit<0 ? 'class="redfg"' : '')
 		."href='".url('/sales/inquiry/customer_inquiry.php', ['customer_id' => $customer])."'"
 		." onclick=\"javascript:openWindow(this.href,this.target); return false;\" >"
@@ -1006,7 +1006,7 @@ function customer_credit_row($customer, $credit, $parms='')
 
 function supplier_credit_row($supplier, $credit, $parms='')
 {
-	label_row( _("Current Credit:"),
+	label_row( __("Current Credit:"),
 		"<a target='_blank' " . ($credit<0 ? 'class="redfg"' : '')
 		."href='".url('/purchasing/inquiry/supplier_inquiry.php', ['supplier_id' => $supplier])."'"
 		." onclick=\"javascript:openWindow(this.href,this.target); return false;\" >"
@@ -1018,7 +1018,7 @@ function bank_balance_row($bank_acc, $parms='')
 {
 	$to = add_days(Today(), 1);
 	$bal = get_balance_before_for_bank_account($bank_acc, $to);
-	label_row( _("Bank Balance:"),
+	label_row( __("Bank Balance:"),
 		"<a target='_blank' " . ($bal<0 ? 'class="redfg"' : '')
 		."href='".url('/gl/inquiry/bank_inquiry.php', ['bank_account' => $bank_acc])."'"
 		." onclick=\"javascript:openWindow(this.href,this.target); return false;\" >&nbsp;"

@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_GLACCOUNTCLASS';
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "GL Account Classes"));
+page(__($GLOBALS['help_context'] = "GL Account Classes"));
 
 require_once __DIR__ . "/../../gl/includes/gl_db.inc";
 
@@ -27,13 +27,13 @@ function can_process()
 
 	if (strlen(trim($_POST['id'])) == 0) 
 	{
-		display_error( _("The account class ID cannot be empty."));
+		display_error( __("The account class ID cannot be empty."));
 		set_focus('id');
 		return false;
 	}
 	if (strlen(trim($_POST['name'])) == 0) 
 	{
-		display_error( _("The account class name cannot be empty."));
+		display_error( __("The account class name cannot be empty."));
 		set_focus('name');
 		return false;
 	}
@@ -53,12 +53,12 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
     	if ($selected_id != "") 
     	{
     		if(update_account_class($selected_id, $_POST['name'], $_POST['ctype']))
-				display_notification(_('Selected account class settings has been updated'));
+				display_notification(__('Selected account class settings has been updated'));
     	} 
     	else 
     	{
     		if(add_account_class($_POST['id'], $_POST['name'], $_POST['ctype'])) {
-				display_notification(_('New account class has been added'));
+				display_notification(__('New account class has been added'));
 				$Mode = 'RESET';
 			}
     	}
@@ -73,7 +73,7 @@ function can_delete($selected_id)
 		return false;
 	if (key_in_foreign_table($selected_id, 'chart_types', 'class_id'))	
 	{
-		display_error(_("Cannot delete this account class because GL account types have been created referring to it."));
+		display_error(__("Cannot delete this account class because GL account types have been created referring to it."));
 		return false;
 	}
 
@@ -89,7 +89,7 @@ if ($Mode == 'Delete')
 	if (can_delete($selected_id))
 	{
 		delete_account_class($selected_id);
-		display_notification(_('Selected account class has been deleted'));
+		display_notification(__('Selected account class has been deleted'));
 	}
 	$Mode = 'RESET';
 }
@@ -106,9 +106,9 @@ $result = get_account_classes(check_value('show_inactive'));
 
 start_form();
 start_table(TABLESTYLE);
-$th = array(_("Class ID"), _("Class Name"), _("Class Type"), "", "");
+$th = array(__("Class ID"), __("Class Name"), __("Class Type"), "", "");
 if (isset($SysPrefs->use_oldstyle_convert) && $SysPrefs->use_oldstyle_convert == 1)
-	$th[2] = _("Balance Sheet");
+	$th[2] = __("Balance Sheet");
 inactive_control_column($th);
 table_header($th);
 
@@ -122,13 +122,13 @@ while ($myrow = db_fetch($result))
 	if (isset($SysPrefs->use_oldstyle_convert) && $SysPrefs->use_oldstyle_convert == 1)
 	{
 		$myrow['ctype'] = ($myrow["ctype"] >= CL_ASSETS && $myrow["ctype"] < CL_INCOME ? 1 : 0);
-		label_cell(($myrow['ctype'] == 1 ? _("Yes") : _("No")));
+		label_cell(($myrow['ctype'] == 1 ? __("Yes") : __("No")));
 	}	
 	else	
 		label_cell($class_types[$myrow["ctype"]]);
 	inactive_control_cell($myrow["cid"], $myrow["inactive"], 'chart_class', 'cid');
-	edit_button_cell("Edit".$myrow["cid"], _("Edit"));
-	delete_button_cell("Delete".$myrow["cid"], _("Delete"));
+	edit_button_cell("Edit".$myrow["cid"], __("Edit"));
+	delete_button_cell("Delete".$myrow["cid"], __("Delete"));
 	end_row();
 }
 inactive_control_row($th);
@@ -152,21 +152,21 @@ if ($selected_id != "")
 		hidden('selected_id', $selected_id);
  	}
 	hidden('id');
-	label_row(_("Class ID:"), $_POST['id']);
+	label_row(__("Class ID:"), $_POST['id']);
 
 } 
 else 
 {
 
-	text_row_ex(_("Class ID:"), 'id', 3);
+	text_row_ex(__("Class ID:"), 'id', 3);
 }
 
-text_row_ex(_("Class Name:"), 'name', 50, 60);
+text_row_ex(__("Class Name:"), 'name', 50, 60);
 
 if (isset($SysPrefs->use_oldstyle_convert) && $SysPrefs->use_oldstyle_convert == 1)
-	check_row(_("Balance Sheet"), 'ctype', null);
+	check_row(__("Balance Sheet"), 'ctype', null);
 else
-	class_types_list_row(_("Class Type:"), 'ctype', null);
+	class_types_list_row(__("Class Type:"), 'ctype', null);
 
 end_table(1);
 

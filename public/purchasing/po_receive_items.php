@@ -21,7 +21,7 @@ if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($GLOBALS['help_context'] = "Receive Purchase Order Items"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Receive Purchase Order Items"), false, false, "", $js);
 
 //---------------------------------------------------------------------------------------------------------------
 
@@ -30,19 +30,19 @@ if (isset($_GET['AddedID']))
 	$grn = $_GET['AddedID'];
 	$trans_type = ST_SUPPRECEIVE;
 
-	display_notification_centered(_("Purchase Order Delivery has been processed"));
+	display_notification_centered(__("Purchase Order Delivery has been processed"));
 
-	display_note(get_trans_view_str($trans_type, $grn, _("&View this Delivery")));
+	display_note(get_trans_view_str($trans_type, $grn, __("&View this Delivery")));
 	
     $clearing_act = get_company_pref('grn_clearing_act');
 	if ($clearing_act)	
-		display_note(get_gl_view_str($trans_type, $grn, _("View the GL Journal Entries for this Delivery")), 1);
+		display_note(get_gl_view_str($trans_type, $grn, __("View the GL Journal Entries for this Delivery")), 1);
 
-	hyperlink_params(url("/purchasing/supplier_invoice.php"), _("Entry purchase &invoice for this receival"), "New=1");
+	hyperlink_params(url("/purchasing/supplier_invoice.php"), __("Entry purchase &invoice for this receival"), "New=1");
 
-	hyperlink_no_params(url("/purchasing/inquiry/po_search.php"), _("Select a different &purchase order for receiving items against"));
+	hyperlink_no_params(url("/purchasing/inquiry/po_search.php"), __("Select a different &purchase order for receiving items against"));
 
-	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), 
+	hyperlink_params(url("/admin/attachments.php"), __("Add an Attachment"), 
 		"filterType=$trans_type&trans_no=$grn");
 
 	display_footer_exit();
@@ -52,7 +52,7 @@ if (isset($_GET['AddedID']))
 
 if ((!isset($_GET['PONumber']) || $_GET['PONumber'] == 0) && !isset($_SESSION['PO']))
 {
-	display_error(_("This page can only be opened if a purchase order has been selected. Please select a purchase order first."));
+	display_error(__("This page can only be opened if a purchase order has been selected. Please select a purchase order first."));
     throw new \App\Exceptions\Legacy\FlowTerminatedException;
 }
 
@@ -62,8 +62,8 @@ function display_po_receive_items()
 {
 	div_start('grn_items');
     start_table(TABLESTYLE, "colspan=7 width='90%'");
-    $th = array(_("Item Code"), _("Description"), _("Ordered"), _("Units"), _("Received"),
-    	_("Outstanding"), _("This Delivery"), _("Price"), _("Total"));
+    $th = array(__("Item Code"), __("Description"), __("Ordered"), __("Units"), __("Received"),
+    	__("Outstanding"), __("This Delivery"), __("Price"), __("Total"));
     table_header($th);
 
     /*show the line items on the order with the quantity being received for modification */
@@ -114,7 +114,7 @@ function display_po_receive_items()
 
 	$display_sub_total = price_format($total/* + input_num('freight_cost')*/);
 
-	label_row(_("Sub-total"), $display_sub_total, "colspan=$colspan align=right","align=right");
+	label_row(__("Sub-total"), $display_sub_total, "colspan=$colspan align=right","align=right");
 	$taxes = $_SESSION['PO']->get_taxes(input_num('freight_cost'), true);
 	
 	$tax_total = display_edit_tax_items($taxes, $colspan, $_SESSION['PO']->tax_included);
@@ -122,7 +122,7 @@ function display_po_receive_items()
 	$display_total = price_format(($total + input_num('freight_cost') + $tax_total));
 
 	start_row();
-	label_cells(_("Amount Total"), $display_total, "colspan=$colspan align='right'","align='right'");
+	label_cells(__("Amount Total"), $display_total, "colspan=$colspan align='right'","align='right'");
 	end_row();
     end_table();
 	div_end();
@@ -168,18 +168,18 @@ function can_process()
 	
 	if (count($_SESSION['PO']->line_items) <= 0)
 	{
-        display_error(_("There is nothing to process. Please enter valid quantities greater than zero."));
+        display_error(__("There is nothing to process. Please enter valid quantities greater than zero."));
     	return false;
 	}
 
 	if (!is_date($_POST['DefaultReceivedDate']))
 	{
-		display_error(_("The entered date is invalid."));
+		display_error(__("The entered date is invalid."));
 		set_focus('DefaultReceivedDate');
 		return false;
 	}
 	if (!is_date_in_fiscalyear($_POST['DefaultReceivedDate'])) {
-		display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+		display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 		set_focus('DefaultReceivedDate');
 		return false;
 	}
@@ -214,14 +214,14 @@ function can_process()
 
     if ($something_received == 0)
     { 	/*Then dont bother proceeding cos nothing to do ! */
-        display_error(_("There is nothing to process. Please enter valid quantities greater than zero."));
+        display_error(__("There is nothing to process. Please enter valid quantities greater than zero."));
     	return false;
     }
     elseif ($delivery_qty_too_large == 1)
     {
-    	display_error(_("Entered quantities cannot be greater than the quantity entered on the purchase order including the allowed over-receive percentage") . " (" . $SysPrefs->over_receive_allowance() ."%)."
+    	display_error(__("Entered quantities cannot be greater than the quantity entered on the purchase order including the allowed over-receive percentage") . " (" . $SysPrefs->over_receive_allowance() ."%)."
     		. "<br>" .
-    	 	_("Modify the ordered items on the purchase order if you wish to increase the quantities."));
+    	 	__("Modify the ordered items on the purchase order if you wish to increase the quantities."));
     	return false;
     }
 
@@ -239,13 +239,13 @@ function process_receive_po()
 
 	if (check_po_changed())
 	{
-		display_error(_("This order has been changed or invoiced since this delivery was started to be actioned. Processing halted. To enter a delivery against this purchase order, it must be re-selected and re-read again to update the changes made by the other user."));
+		display_error(__("This order has been changed or invoiced since this delivery was started to be actioned. Processing halted. To enter a delivery against this purchase order, it must be re-selected and re-read again to update the changes made by the other user."));
 
 		hyperlink_no_params(url("/purchasing/inquiry/po_search.php"),
-		 _("Select a different purchase order for receiving goods against"));
+		 __("Select a different purchase order for receiving goods against"));
 
 		hyperlink_params(url("/purchasing/po_receive_items.php"),
-			 _("Re-Read the updated purchase order for receiving goods against"),
+			 __("Re-Read the updated purchase order for receiving goods against"),
 			 "PONumber=" . $_SESSION['PO']->order_no);
 
 		unset($_SESSION['PO']->line_items);
@@ -321,12 +321,12 @@ if (isset($_POST['ProcessGoodsReceived']))
 start_form();
 
 edit_grn_summary($_SESSION['PO'], true);
-display_heading(_("Items to Receive"));
+display_heading(__("Items to Receive"));
 display_po_receive_items();
 
 echo '<br>';
-submit_center_first('Update', _("Update"), '', true);
-submit_center_last('ProcessGoodsReceived', _("Process Receive Items"), _("Clear all GL entry fields"), 'default');
+submit_center_first('Update', __("Update"), '', true);
+submit_center_last('ProcessGoodsReceived', __("Process Receive Items"), __("Clear all GL entry fields"), 'default');
 
 end_form();
 

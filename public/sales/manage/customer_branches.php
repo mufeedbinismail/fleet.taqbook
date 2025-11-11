@@ -18,22 +18,22 @@ $js = "";
 if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 	$js .= get_js_open_window(900, 500);
 
-page(_($GLOBALS['help_context'] = "Customer Branches"), @$_REQUEST['popup'], false, "", $js);
+page(__($GLOBALS['help_context'] = "Customer Branches"), @$_REQUEST['popup'], false, "", $js);
 
 require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../includes/ui/contacts_view.inc";
 
 //-----------------------------------------------------------------------------------------------
 
-check_db_has_customers(_("There are no customers defined in the system. Please define a customer to add customer branches."));
+check_db_has_customers(__("There are no customers defined in the system. Please define a customer to add customer branches."));
 
-check_db_has_sales_people(_("There are no sales people defined in the system. At least one sales person is required before proceeding."));
+check_db_has_sales_people(__("There are no sales people defined in the system. At least one sales person is required before proceeding."));
 
-check_db_has_sales_areas(_("There are no sales areas defined in the system. At least one sales area is required before proceeding."));
+check_db_has_sales_areas(__("There are no sales areas defined in the system. At least one sales area is required before proceeding."));
 
-check_db_has_shippers(_("There are no shipping companies defined in the system. At least one shipping company is required before proceeding."));
+check_db_has_shippers(__("There are no shipping companies defined in the system. At least one shipping company is required before proceeding."));
 
-check_db_has_tax_groups(_("There are no tax groups defined in the system. At least one tax group is required before proceeding."));
+check_db_has_tax_groups(__("There are no tax groups defined in the system. At least one tax group is required before proceeding."));
 
 simple_page_mode(true);
 //-----------------------------------------------------------------------------------------------
@@ -63,14 +63,14 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 	if (strlen($_POST['br_name']) == 0)
 	{
 		$input_error = 1;
-		display_error(_("The Branch name cannot be empty."));
+		display_error(__("The Branch name cannot be empty."));
 		set_focus('br_name');
 	}
 
 	if (strlen($_POST['br_ref']) == 0)
 	{
 		$input_error = 1;
-		display_error(_("The Branch short name cannot be empty."));
+		display_error(__("The Branch short name cannot be empty."));
 		set_focus('br_ref');
 	}
 
@@ -86,7 +86,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 				$_POST['default_location'], $_POST['br_post_address'], $_POST['group_no'],
 				$_POST['default_ship_via'], $_POST['notes'], $_POST['bank_account']);
 
-			$note =_('Selected customer branch has been updated');
+			$note =__('Selected customer branch has been updated');
   		}
 		else
 		{
@@ -104,7 +104,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 			add_crm_contact('cust_branch', 'general', $selected_id, db_insert_id());
 
 
-			$note = _('New customer branch has been added');
+			$note = __('New customer branch has been added');
 		}
 		commit_transaction();
 		display_notification($note);
@@ -120,19 +120,19 @@ elseif ($Mode == 'Delete')
 
 	if (branch_in_foreign_table($_POST['customer_id'], $_POST['branch_code'], 'debtor_trans'))
 	{
-		display_error(_("Cannot delete this branch because customer transactions have been created to this branch."));
+		display_error(__("Cannot delete this branch because customer transactions have been created to this branch."));
 
 	}
 	else
 	{
 		if (branch_in_foreign_table($_POST['customer_id'], $_POST['branch_code'], 'sales_orders'))
 		{
-			display_error(_("Cannot delete this branch because sales orders exist for it. Purge old sales orders first."));
+			display_error(__("Cannot delete this branch because sales orders exist for it. Purge old sales orders first."));
 		}
 		else
 		{
 			delete_branch($_POST['customer_id'], $_POST['branch_code']);
-			display_notification(_('Selected customer branch has been deleted'));
+			display_notification(__('Selected customer branch has been deleted'));
 		}
 	}
 	$Mode = 'RESET';
@@ -154,11 +154,11 @@ function branch_email($row) {
 }
 
 function edit_link($row) {
-	return button("Edit".$row["branch_code"],_("Edit"), '', ICON_EDIT);
+	return button("Edit".$row["branch_code"],__("Edit"), '', ICON_EDIT);
 }
 
 function del_link($row) {
-	return button("Delete".$row["branch_code"],_("Delete"), '', ICON_DELETE);
+	return button("Delete".$row["branch_code"],__("Delete"), '', ICON_DELETE);
 }
 
 function select_link($row) {
@@ -205,7 +205,7 @@ function branch_settings($selected_id, $num_branches) {
 		if($myrow && !$num_branches) {
 			$_POST['br_name'] = $myrow["name"];
 			$_POST['br_ref'] = $myrow["debtor_ref"];
-			$_POST['contact_name'] = _('Main Branch');
+			$_POST['contact_name'] = __('Main Branch');
 			$_POST['br_address'] = $_POST['br_post_address'] = $myrow["address"];
 		}
 		$_POST['branch_code'] = "";
@@ -224,41 +224,41 @@ function branch_settings($selected_id, $num_branches) {
 	}
 	hidden('popup', @$_REQUEST['popup']);
 
-	table_section_title(_("Name and Contact"));
-	text_row(_("Branch Name:"), 'br_name', null, 50, 60);
-	text_row(_("Branch Short Name:"), 'br_ref', null, 30, 30);
+	table_section_title(__("Name and Contact"));
+	text_row(__("Branch Name:"), 'br_name', null, 50, 60);
+	text_row(__("Branch Short Name:"), 'br_ref', null, 30, 30);
 
-	table_section_title(_("Sales"));
-	sales_persons_list_row( _("Sales Person:"), 'salesman', null);
-	sales_areas_list_row( _("Sales Area:"), 'area', null);
-	sales_groups_list_row(_("Sales Group:"), 'group_no', null, true);
-	locations_list_row(_("Default Inventory Location:"), 'default_location', null);
-	shippers_list_row(_("Default Shipping Company:"), 'default_ship_via', null);
-	tax_groups_list_row(_("Tax Group:"), 'tax_group_id', null);
+	table_section_title(__("Sales"));
+	sales_persons_list_row( __("Sales Person:"), 'salesman', null);
+	sales_areas_list_row( __("Sales Area:"), 'area', null);
+	sales_groups_list_row(__("Sales Group:"), 'group_no', null, true);
+	locations_list_row(__("Default Inventory Location:"), 'default_location', null);
+	shippers_list_row(__("Default Shipping Company:"), 'default_ship_via', null);
+	tax_groups_list_row(__("Tax Group:"), 'tax_group_id', null);
 
-	table_section_title(_("GL Accounts"));
+	table_section_title(__("GL Accounts"));
 
-	gl_all_accounts_list_row(_("Sales Account:"), 'sales_account', null, false, false, true);
-	gl_all_accounts_list_row(_("Sales Discount Account:"), 'sales_discount_account');
-	gl_all_accounts_list_row(_("Accounts Receivable Account:"), 'receivables_account', null, true);
-	gl_all_accounts_list_row(_("Prompt Payment Discount Account:"), 'payment_discount_account');
-	text_row(_("Bank Account Number:"), 'bank_account', null, 30, 60);
+	gl_all_accounts_list_row(__("Sales Account:"), 'sales_account', null, false, false, true);
+	gl_all_accounts_list_row(__("Sales Discount Account:"), 'sales_discount_account');
+	gl_all_accounts_list_row(__("Accounts Receivable Account:"), 'receivables_account', null, true);
+	gl_all_accounts_list_row(__("Prompt Payment Discount Account:"), 'payment_discount_account');
+	text_row(__("Bank Account Number:"), 'bank_account', null, 30, 60);
 
 	table_section(2);
 
 	if($selected_id==-1) {
-		table_section_title(_("General contact data"));
-		text_row(_("Contact Person:"), 'contact_name', null, 35, 40);
-		text_row(_("Phone Number:"), 'phone', null, 32, 30);
-		text_row(_("Secondary Phone Number:"), 'phone2', null, 32, 30);
-		text_row(_("Fax Number:"), 'fax', null, 32, 30);
-		email_row(_("E-mail:"), 'email', null, 35, 55);
-		languages_list_row( _("Document Language:"), 'rep_lang', null, _("Customer default"));
+		table_section_title(__("General contact data"));
+		text_row(__("Contact Person:"), 'contact_name', null, 35, 40);
+		text_row(__("Phone Number:"), 'phone', null, 32, 30);
+		text_row(__("Secondary Phone Number:"), 'phone2', null, 32, 30);
+		text_row(__("Fax Number:"), 'fax', null, 32, 30);
+		email_row(__("E-mail:"), 'email', null, 35, 55);
+		languages_list_row( __("Document Language:"), 'rep_lang', null, __("Customer default"));
 	}
-	table_section_title(_("Addresses"));
-	textarea_row(_("Mailing Address:"), 'br_post_address', null, 35, 4);
-	textarea_row(_("Billing Address:"), 'br_address', null, 35, 4);
-	textarea_row(_("General Notes:"), 'notes', null, 35, 4);
+	table_section_title(__("Addresses"));
+	textarea_row(__("Mailing Address:"), 'br_post_address', null, 35, 4);
+	textarea_row(__("Billing Address:"), 'br_address', null, 35, 4);
+	textarea_row(__("General Notes:"), 'notes', null, 35, 4);
 
 	end_outer_table(1);
 	submit_add_or_update_center($selected_id == -1, '', 'both');
@@ -266,7 +266,7 @@ function branch_settings($selected_id, $num_branches) {
 
 start_form();
 
-echo "<center>" . _("Select a customer: ") . "&nbsp;&nbsp;";
+echo "<center>" . __("Select a customer: ") . "&nbsp;&nbsp;";
 echo customer_list('customer_id', null, false, true);
 echo "</center><br>";
 
@@ -279,16 +279,16 @@ if ($num_branches)
 {
 $cols = array(
 	'branch_code' => 'skip',
-	_("Short Name"),
-	_("Name"),
-	_("Contact"),
-	_("Sales Person"),
-	_("Area"),
-	_("Phone No"),
-	_("Fax No"),
-	_("E-mail") => 'email',
-	_("Tax Group"),
-	_("Inactive") => 'inactive',
+	__("Short Name"),
+	__("Name"),
+	__("Contact"),
+	__("Sales Person"),
+	__("Area"),
+	__("Phone No"),
+	__("Fax No"),
+	__("E-mail") => 'email',
+	__("Tax Group"),
+	__("Inactive") => 'inactive',
 		' '=> array('insert'=>true, 'fun'=>'select_link'),
 		array('insert'=>true, 'fun'=>'edit_link'),
 		array('insert'=>true, 'fun'=>'del_link')
@@ -303,11 +303,11 @@ $table->set_inactive_ctrl('cust_branch', 'branch_code');
 display_db_pager($table);
 }
 else
-	display_note(_("The selected customer does not have any branches. Please create at least one branch."));
+	display_note(__("The selected customer does not have any branches. Please create at least one branch."));
 
 tabbed_content_start('tabs', array(
-		'settings' => array(_('&General settings'), $selected_id!=-1),
-		'contacts' => array(_('&Contacts'), $selected_id!=-1),
+		'settings' => array(__('&General settings'), $selected_id!=-1),
+		'contacts' => array(__('&Contacts'), $selected_id!=-1),
 //		'orders' => array('S&ales orders', $selected_id!=-1) // not implemented
 	));
 	

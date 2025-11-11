@@ -126,19 +126,19 @@ function print_customer_details_listing()
 		$folk = 0;
 
 	if ($area == 0)
-		$sarea = _('All Areas');
+		$sarea = __('All Areas');
 	else
 		$sarea = get_area_name($area);
 	if ($folk == 0)
-		$salesfolk = _('All Sales Folk');
+		$salesfolk = __('All Sales Folk');
 	else
 		$salesfolk = get_salesman_name($folk);
 	if ($more != '')
-		$morestr = _('Greater than ') . number_format2($more, $dec);
+		$morestr = __('Greater than ') . number_format2($more, $dec);
 	else
 		$morestr = '';
 	if ($less != '')
-		$lessstr = _('Less than ') . number_format2($less, $dec);
+		$lessstr = __('Less than ') . number_format2($less, $dec);
 	else
 		$lessstr = '';
 
@@ -147,18 +147,18 @@ function print_customer_details_listing()
 
 	$cols = array(0, 150, 300, 425, 550);
 
-	$headers = array(_('Customer Postal Address'), _('Price/Turnover'),	_('Branch Contact Information'),
-		_('Branch Delivery Address'));
+	$headers = array(__('Customer Postal Address'), __('Price/Turnover'),	__('Branch Contact Information'),
+		__('Branch Delivery Address'));
 
 	$aligns = array('left',	'left',	'left',	'left');
 
     $params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Activity Since'), 	'from' => $from, 		'to' => ''),
-    				    2 => array('text' => _('Sales Areas'), 		'from' => $sarea, 		'to' => ''),
-    				    3 => array('text' => _('Sales Folk'), 		'from' => $salesfolk, 	'to' => ''),
-    				    4 => array('text' => _('Activity'), 		'from' => $morestr, 	'to' => $lessstr . " " . get_company_pref("curr_default")));
+    				    1 => array('text' => __('Activity Since'), 	'from' => $from, 		'to' => ''),
+    				    2 => array('text' => __('Sales Areas'), 		'from' => $sarea, 		'to' => ''),
+    				    3 => array('text' => __('Sales Folk'), 		'from' => $salesfolk, 	'to' => ''),
+    				    4 => array('text' => __('Activity'), 		'from' => $morestr, 	'to' => $lessstr . " " . get_company_pref("curr_default")));
 
-    $rep = new FrontReport(_('Customer Details Listing'), "CustomerDetailsListing", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Customer Details Listing'), "CustomerDetailsListing", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -189,7 +189,7 @@ function print_customer_details_listing()
 				$rep->fontSize += 2;
 				$rep->NewLine(2, 7);
 				$rep->Font('bold');
-				$rep->TextCol(0, 3,	_('Customers in') . " " . $myrow['description']);
+				$rep->TextCol(0, 3,	__('Customers in') . " " . $myrow['description']);
 				$carea = $myrow['description'];
 				$rep->fontSize -= 2;
 				$rep->Font();
@@ -210,7 +210,7 @@ function print_customer_details_listing()
 			// Here starts the new report lines
 			$contacts = get_contacts_for_branch($myrow['branch_code']);
 			$rep->TextCol(0, 1,	$myrow['name']);
-			$rep->TextCol(1, 2,	_('Price List') . ": " . $myrow['sales_type']);
+			$rep->TextCol(1, 2,	__('Price List') . ": " . $myrow['sales_type']);
 			$rep->TextCol(2, 3,	$myrow['br_name']);
 			$rep->NewLine();
 			$adr = $myrow['address'] != NULL ? Explode("\n", $myrow['address']) : array();
@@ -224,7 +224,7 @@ function print_customer_details_listing()
 			$count1 = max($count1, 4); 
 			if (isset($adr[0]))
 				$rep->TextCol(0, 1, $adr[0]);
-			$rep->TextCol(1, 2,	_('Currency') . ": " . $myrow['curr_code']);
+			$rep->TextCol(1, 2,	__('Currency') . ": " . $myrow['curr_code']);
 			if (isset($contacts[0]))
 				$rep->TextCol(2, 3, $contacts[0]['name']. " " .$contacts[0]['name2']);
 			if (isset($adr2[0]))	
@@ -235,10 +235,10 @@ function print_customer_details_listing()
 			if ($myrow['dimension_id'] != 0)
 			{
 				$dim = get_dimension($myrow['dimension_id']);
-				$rep->TextCol(1, 2,	_('Dimension') . ": " . $dim['name']);
+				$rep->TextCol(1, 2,	__('Dimension') . ": " . $dim['name']);
 			}		
 			if (isset($contacts[0]))
-				$rep->TextCol(2, 3, _('Ph') . ": " . $contacts[0]['phone']);
+				$rep->TextCol(2, 3, __('Ph') . ": " . $contacts[0]['phone']);
 			if (isset($adr2[1]))
 				$rep->TextCol(3, 4, $adr2[1]);
 			$rep->NewLine();
@@ -247,29 +247,29 @@ function print_customer_details_listing()
 			if ($myrow['dimension2_id'] != 0)
 			{
 				$dim = get_dimension($myrow['dimension2_id']);
-				$rep->TextCol(1, 2,	_('Dimension') . " 2: " . $dim['name']);
+				$rep->TextCol(1, 2,	__('Dimension') . " 2: " . $dim['name']);
 			}	
 			if ($myrow['notes'] != '')
 			{
 				$oldrow = $rep->row;
 				$rep->NewLine();
-				$rep->TextColLines(1, 2, _("General Notes:")." ".$myrow['notes'], -2);
+				$rep->TextColLines(1, 2, __("General Notes:")." ".$myrow['notes'], -2);
 				$newrow = $rep->row;
 				$rep->row = $oldrow;
 			}	
 			if (isset($contacts[0]))
-				$rep->TextCol(2, 3, _('Fax') . ": " . $contacts[0]['fax']);
+				$rep->TextCol(2, 3, __('Fax') . ": " . $contacts[0]['fax']);
 			if (isset($adr2[2]))
 				$rep->TextCol(3, 4, $adr2[2]);
 			if ($more != 0.0 || $less != 0.0)
-				$rep->TextCol(1, 2,	_('Turnover') . ": " . number_format2($turnover, $dec));
+				$rep->TextCol(1, 2,	__('Turnover') . ": " . number_format2($turnover, $dec));
 			for ($i = 3; $i < $count1; $i++)
 			{
 				$rep->NewLine();
 				if (isset($adr[$i]))
 					$rep->TextCol(0, 1, $adr[$i]);
 				if ($i == 3 && isset($contacts[0]) && isset($contacts[0]['email']))	
-					$rep->TextCol(2, 3, _('Email') . ": " . $contacts[0]['email']);
+					$rep->TextCol(2, 3, __('Email') . ": " . $contacts[0]['email']);
 				if (isset($adr2[$i]))
 					$rep->TextCol(3, 4, $adr2[$i]);
 			}	

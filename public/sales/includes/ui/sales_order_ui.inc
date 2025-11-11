@@ -72,8 +72,8 @@ function add_to_order(
 			{
 				if (strcasecmp($order_item->stock_id, $item['stock_id']) == 0)
 				{
-					display_warning(_("For Part :").$item['stock_id']. " " 
-						. _("This item is already on this document. You have been warned."));
+					display_warning(__("For Part :").$item['stock_id']. " " 
+						. __("This item is already on this document. You have been warned."));
 					break;
 				}
 			}
@@ -109,7 +109,7 @@ function get_customer_details_to_order(&$order, $customer_id, $branch_id)
 	$name = $myrow['name'];
 
 	if ($myrow['dissallow_invoices'] == 1)
-		$ret_error = _("The selected customer account is currently on hold. Please contact the credit control personnel to discuss.");
+		$ret_error = __("The selected customer account is currently on hold. Please contact the credit control personnel to discuss.");
 
 	$deliver = $myrow['address']; // in case no branch address use company address
 
@@ -131,7 +131,7 @@ function get_customer_details_to_order(&$order, $customer_id, $branch_id)
 
 	if (db_num_rows($result) == 0)
 	{
-		return _("The selected customer and branch are not valid, or the customer does not have any branches.");
+		return __("The selected customer and branch are not valid, or the customer does not have any branches.");
 	}
 
 	$myrow = db_fetch($result);
@@ -177,18 +177,18 @@ function display_order_summary($title, &$order, $editable_items=false)
 	];
 
 	$th = [];
-    $th[] = _("Item Code");
-    $th[] = _("Item Description");
-    $th[] = _("Quantity");
-    $th[] = _("Delivered");
-    $th[] = _("Unit");
-    $th[] = $order->tax_included ? _("Price after Tax") : _("Price before Tax");
-    $th[] = _("Discount %");
+    $th[] = __("Item Code");
+    $th[] = __("Item Description");
+    $th[] = __("Quantity");
+    $th[] = __("Delivered");
+    $th[] = __("Unit");
+    $th[] = $order->tax_included ? __("Price after Tax") : __("Price before Tax");
+    $th[] = __("Discount %");
     if ($options['show_marketplace_cols']) {
-        $th[] = _("Marketplace Commission");
-        $th[] = _("Marketplace Shipping");
+        $th[] = __("Marketplace Commission");
+        $th[] = __("Marketplace Shipping");
     }
-    $th[] = _("Total");
+    $th[] = __("Total");
     $th[] = "";
 
 	if ($order->trans_no == 0) {
@@ -241,10 +241,10 @@ function display_order_summary($title, &$order, $editable_items=false)
 
 			if ($editable_items)
 			{
-				edit_button_cell("Edit$line_no", _("Edit"),
-				_('Edit document line'));
-				delete_button_cell("Delete$line_no", _("Delete"),
-				_('Remove line from document'));
+				edit_button_cell("Edit$line_no", __("Edit"),
+				__('Edit document line'));
+				delete_button_cell("Delete$line_no", __("Delete"),
+				__('Remove line from document'));
 			}
 			end_row();
 		}
@@ -263,34 +263,34 @@ function display_order_summary($title, &$order, $editable_items=false)
 	if ($order->trans_no!=0)
 		++$colspan;
 	start_row();
-	label_cell(_("Shipping Charge"), "colspan=$colspan align=right");
+	label_cell(__("Shipping Charge"), "colspan=$colspan align=right");
 	small_amount_cells(null, 'freight_cost', price_format(get_post('freight_cost',0)));
 	label_cell('', 'colspan=2');
 	end_row();
 	$display_sub_total = price_format($total + input_num('freight_cost'));
-	label_row(_("Sub-total"), $display_sub_total, "colspan=$colspan align=right","align=right", 2);
+	label_row(__("Sub-total"), $display_sub_total, "colspan=$colspan align=right","align=right", 2);
 	$taxes = $order->get_taxes(input_num('freight_cost'));
 	$tax_total = display_edit_tax_items($taxes, $colspan, $order->tax_included, 2);
 
 	$inv_total = $total + input_num('freight_cost') + $tax_total;
 
 	start_row();
-	label_cells(_("Amount Total"), price_format($inv_total), "colspan=$colspan align=right","align=right");
+	label_cells(__("Amount Total"), price_format($inv_total), "colspan=$colspan align=right","align=right");
     if ($options['show_marketplace_cols']) {
         end_row();
         $market_cost = $order->get_total_marketplace_cost();
-        label_row(_("Marketplace Cost"), price_format($market_cost), "colspan=$colspan align=right","align=right");
+        label_row(__("Marketplace Cost"), price_format($market_cost), "colspan=$colspan align=right","align=right");
 
         start_row();
-        label_cells(_("Net Receivable From Marketplace"), price_format($inv_total - $market_cost), "colspan=$colspan align=right","align=right");
+        label_cells(__("Net Receivable From Marketplace"), price_format($inv_total - $market_cost), "colspan=$colspan align=right","align=right");
     }
         
-	submit_cells('update', _("Update"), "colspan=2 align='center'", _("Refresh"), true);
+	submit_cells('update', __("Update"), "colspan=2 align='center'", __("Refresh"), true);
 	end_row();
 
 	end_table();
 	if ($low_stock)
-		display_note(_("Marked items have insufficient quantities in stock as on day of delivery."), 0, 1, "class='stockmankofg'");
+		display_note(__("Marked items have insufficient quantities in stock as on day of delivery."), 0, 1, "class='stockmankofg'");
 
     div_end();
 }
@@ -321,14 +321,14 @@ function display_order_header(&$order, $editable, $date_text)
 	}
 	else
 	{
-		customer_list_row(_("Customer:"), 'customer_id', null, false, true, false, true);
+		customer_list_row(__("Customer:"), 'customer_id', null, false, true, false, true);
 
 		if ($order->customer_id != get_post('customer_id', -1))
 		{
 			// customer has changed
 			$Ajax->activate('branch_id');
   		}
-		customer_branches_list_row(_("Branch:"),
+		customer_branches_list_row(__("Branch:"),
 	  	  $_POST['customer_id'], 'branch_id', null, false, true, true, true);
 
 		if( ($order->customer_id != get_post('customer_id', -1)) ||
@@ -340,9 +340,9 @@ function display_order_header(&$order, $editable, $date_text)
 			{
 				// ignore errors on customer search box call
 				if ($_POST['customer_id'] == '')
-					$customer_error = _("No customer found for entered text.");
+					$customer_error = __("No customer found for entered text.");
 				else
-					$customer_error = _("The selected customer does not have any branches. Please create at least one branch.");
+					$customer_error = __("The selected customer does not have any branches. Please create at least one branch.");
 				unset($_POST['branch_id']);
 				$order->Branch = 0;
 			} 
@@ -366,7 +366,7 @@ function display_order_header(&$order, $editable, $date_text)
 							// and pos have no permitions for terms selected in customer record.
 							// Terms are set to first terms in allowed category below.
 							display_warning(
-								sprintf(_("Customer's payment terms '%s' cannot be selected on this POS"),
+								sprintf(__("Customer's payment terms '%s' cannot be selected on this POS"),
 									$order->payment_terms['terms']));
 							$order->payment = '';
 				} elseif (get_post('payment') !== $order->payment) {
@@ -411,34 +411,34 @@ function display_order_header(&$order, $editable, $date_text)
 		{
 			$row = get_customer_to_order($_POST['customer_id']);
 			if ($row && $row['dissallow_invoices'] == 1)
-				$customer_error = _("The selected customer account is currently on hold. Please contact the credit control personnel to discuss.");
+				$customer_error = __("The selected customer account is currently on hold. Please contact the credit control personnel to discuss.");
 		}
 	}
 
-	ref_row(_("Reference").':', 'ref', _('Reference number unique for this document type'), null, '', $order->trans_type, array('date'=> @$_POST['OrderDate']));
-    text_row(_("Tracking No:"), 'tracking_no', $order->tracking_no, 20, 60);
+	ref_row(__("Reference").':', 'ref', __('Reference number unique for this document type'), null, '', $order->trans_type, array('date'=> @$_POST['OrderDate']));
+    text_row(__("Tracking No:"), 'tracking_no', $order->tracking_no, 20, 60);
 
 	table_section(2);
 
     if ($order->is_marketplace_trans) {
         if (!$editable) {
-            label_row(_("Marketplace:"), get_marketplace_name($order->marketplace_id));
+            label_row(__("Marketplace:"), get_marketplace_name($order->marketplace_id));
             hidden('marketplace_id', $order->marketplace_id);
         } else {
-            marketplace_list_row(_("Marketplace:"), 'marketplace_id', null, '-- select --', false, false, true);
+            marketplace_list_row(__("Marketplace:"), 'marketplace_id', null, '-- select --', false, false, true);
         }
     }
 
 	if (!is_company_currency($order->customer_currency) && in_array($order->trans_type, array(ST_SALESINVOICE, ST_CUSTDELIVERY)))
 	{
-		label_row(_("Customer Currency:"), $order->customer_currency);
+		label_row(__("Customer Currency:"), $order->customer_currency);
 		exchange_rate_display(get_company_currency(), $order->customer_currency,
 			($editable ? $_POST['OrderDate'] : $order->document_date));
 	}
 
 	customer_credit_row($_POST['customer_id'], $order->credit);
 
-	label_row(_("Customer Discount:"), ($order->default_discount * 100) . "%");
+	label_row(__("Customer Discount:"), ($order->default_discount * 100) . "%");
 
 	table_section(3);
 	start_row();
@@ -460,16 +460,16 @@ function display_order_header(&$order, $editable, $date_text)
 			(!$order->pos['credit_sale'] ? PM_CASH : PM_ANY);
 		// all terms are available for SO
 		$is_order = in_array($order->trans_type, array(ST_SALESQUOTE, ST_SALESORDER));
-		sale_payment_list_cells(_('Payment:'), 'payment', $is_order ? PM_ANY : $paymcat, null, true, $is_order);
+		sale_payment_list_cells(__('Payment:'), 'payment', $is_order ? PM_ANY : $paymcat, null, true, $is_order);
 	} else {
-		label_cells(_('Payment:'), $order->payment_terms['terms'], "class='label'");
+		label_cells(__('Payment:'), $order->payment_terms['terms'], "class='label'");
 	}
 	end_row();
 
 	if($editable) {
-		$str = sales_types_list_row(_("Price List:"), 'sales_type', null, true);
+		$str = sales_types_list_row(__("Price List:"), 'sales_type', null, true);
 	} else {
-		label_row(_("Price List:"), $order->sales_type_name);
+		label_row(__("Price List:"), $order->sales_type_name);
 	}
 	if ($order->sales_type != $_POST['sales_type']) {
 		$myrow = get_sales_type($_POST['sales_type']);
@@ -486,7 +486,7 @@ function display_order_header(&$order, $editable, $date_text)
 		if (!isset($_POST['OrderDate']) || $_POST['OrderDate'] == "")
 			$_POST['OrderDate'] = $order->document_date;
 
-		date_row($date_text, 'OrderDate', _('Date of order receive'),
+		date_row($date_text, 'OrderDate', __('Date of order receive'),
 			$order->trans_no==0, 0, 0, 0, null, true);
 		if (isset($_POST['_OrderDate_changed']) || list_updated('payment')) {
 			if (!is_company_currency($order->customer_currency) 
@@ -505,12 +505,12 @@ function display_order_header(&$order, $editable, $date_text)
 		{	// 2008-11-12 Joe Hunt added dimensions
 			$dim = get_company_pref('use_dimension');
 			if ($dim > 0)
-				dimensions_list_row(_("Dimension").":", 'dimension_id', 
+				dimensions_list_row(__("Dimension").":", 'dimension_id', 
 					null, true, ' ', false, 1, false);
 			else
 				hidden('dimension_id', 0);
 			if ($dim > 1)
-				dimensions_list_row(_("Dimension")." 2:", 'dimension2_id', 
+				dimensions_list_row(__("Dimension")." 2:", 'dimension2_id', 
 					null, true, ' ', false, 2, false);
 			else
 				hidden('dimension2_id', 0);
@@ -569,7 +569,7 @@ function sales_order_item_controls(&$order, &$rowcounter, $line_no=-1, $options=
 	else	// prepare new line
 	{
 		if ($order->fixed_asset)
-            stock_disposable_fa_list_cells(null,'stock_id', null, _('[Select item]'), true, $order->line_items);
+            stock_disposable_fa_list_cells(null,'stock_id', null, __('[Select item]'), true, $order->line_items);
         else {
             if (!isset($_POST['stock_id'])) {   // Check if stock_id dosesn't exist
 				$_POST['stock_id'] = last_sales_order_detail($order, 'stk_code');  //get the llast sales stock id.
@@ -630,17 +630,17 @@ function sales_order_item_controls(&$order, &$rowcounter, $line_no=-1, $options=
 
 	if ($id!=-1)
 	{
-		button_cell('UpdateItem', _("Update"),
-				_('Confirm changes'), ICON_UPDATE);
-		button_cell('CancelItemChanges', _("Cancel"),
-				_('Cancel changes'), ICON_CANCEL);
+		button_cell('UpdateItem', __("Update"),
+				__('Confirm changes'), ICON_UPDATE);
+		button_cell('CancelItemChanges', __("Cancel"),
+				__('Cancel changes'), ICON_CANCEL);
 		hidden('LineNo', $line_no);
 		set_focus('qty');
 	}
 	else
 	{
-		submit_cells('AddItem', _("Add Item"), "colspan=2 align='center'",
-		    _('Add new item to document'), true);
+		submit_cells('AddItem', __("Add Item"), "colspan=2 align='center'",
+		    __('Add new item to document'), true);
 	}
 
 	end_row();
@@ -657,72 +657,72 @@ function display_delivery_details(&$order)
 
 	if ($order->payment_terms['cash_sale']) {	// Direct payment sale
 		$Ajax->activate('items_table');
-		display_heading(_('Cash payment'));
+		display_heading(__('Cash payment'));
 		start_table(TABLESTYLE2, "width='60%'");
 
-		locations_list_row(_("Deliver from Location:"), 'Location', null, false, true);
+		locations_list_row(__("Deliver from Location:"), 'Location', null, false, true);
  		if (list_updated('Location'))
  			$Ajax->activate('items_table');
-		label_row(_("Cash account:"), $order->pos['bank_account_name']);
-		textarea_row(_("Comments:"), "Comments", $order->Comments, 31, 5);
+		label_row(__("Cash account:"), $order->pos['bank_account_name']);
+		textarea_row(__("Comments:"), "Comments", $order->Comments, 31, 5);
 		end_table();
 		hidden('delivery_date', $order->due_date);
 	} else {
 		if ($order->trans_type==ST_SALESINVOICE)
 		{
-			$title = _("Delivery Details");
-			$delname = _("Due Date").':';
+			$title = __("Delivery Details");
+			$delname = __("Due Date").':';
 		}
 		elseif ($order->trans_type==ST_CUSTDELIVERY)
 		{
-			$title = _("Invoice Delivery Details");
-			$delname = _("Invoice before").':';
+			$title = __("Invoice Delivery Details");
+			$delname = __("Invoice before").':';
 		}
 		elseif ($order->trans_type==ST_SALESQUOTE)
 		{
-			$title = _("Quotation Delivery Details");
-			$delname = _("Valid until").':';
+			$title = __("Quotation Delivery Details");
+			$delname = __("Valid until").':';
 		}
 		else
 		{
-			$title = _("Order Delivery Details");
-			$delname = _("Required Delivery Date").':';
+			$title = __("Order Delivery Details");
+			$delname = __("Required Delivery Date").':';
 		}
 		display_heading($title);
 		start_outer_table(TABLESTYLE2, "width='90%'");
 		table_section(1);
 
-		locations_list_row(_("Deliver from Location:"), 'Location', null, false, true, $order->fixed_asset);
+		locations_list_row(__("Deliver from Location:"), 'Location', null, false, true, $order->fixed_asset);
 		if ($order->payment_terms['days_before_due'] == -1)
 		{
 			$Ajax->addUpdate('items_table', 'prep_amount', price_format($order->get_trans_total())); // bind to items_table update
 			if (!$order->is_started())
-				amount_row(_("Pre-Payment Required:"), 'prep_amount');
+				amount_row(__("Pre-Payment Required:"), 'prep_amount');
 			else
-				label_row(_("Pre-Payment Required:"), price_format($order->prep_amount), "class='label'");
+				label_row(__("Pre-Payment Required:"), price_format($order->prep_amount), "class='label'");
 		}
 		if (list_updated('Location'))
 			$Ajax->activate('items_table');
 
 
 		date_row($delname, 'delivery_date',
-			$order->trans_type==ST_SALESORDER ?  _('Enter requested day of delivery') 
-				: ($order->trans_type==ST_SALESQUOTE ? _('Enter Valid until Date') : ''));
-		text_row(_("Deliver To:"), 'deliver_to', $order->deliver_to, 50, 60,
-			_('Additional identifier for delivery e.g. name of receiving person'));
+			$order->trans_type==ST_SALESORDER ?  __('Enter requested day of delivery') 
+				: ($order->trans_type==ST_SALESQUOTE ? __('Enter Valid until Date') : ''));
+		text_row(__("Deliver To:"), 'deliver_to', $order->deliver_to, 50, 60,
+			__('Additional identifier for delivery e.g. name of receiving person'));
 
-		textarea_row(_("Address:"), 'delivery_address', $order->delivery_address, 35, 5, 255,
-			_('Delivery address. Default is address of customer branch'));
+		textarea_row(__("Address:"), 'delivery_address', $order->delivery_address, 35, 5, 255,
+			__('Delivery address. Default is address of customer branch'));
 
 		table_section(2);
 
-		text_row(_("Contact Phone Number:"), 'phone', $order->phone, 25, 25,
-		    _('Phone number of ordering person. Defaults to branch phone number'));
-		text_row(_("Customer Reference:"), 'cust_ref', $order->cust_ref, 25, 25,
-		  _('Customer reference number for this order (if any)'));
-		textarea_row(_("Comments:"), "Comments", $order->Comments, 31, 5);
+		text_row(__("Contact Phone Number:"), 'phone', $order->phone, 25, 25,
+		    __('Phone number of ordering person. Defaults to branch phone number'));
+		text_row(__("Customer Reference:"), 'cust_ref', $order->cust_ref, 25, 25,
+		  __('Customer reference number for this order (if any)'));
+		textarea_row(__("Comments:"), "Comments", $order->Comments, 31, 5);
 
-		shippers_list_row(_("Shipping Company:"), 'ship_via', $order->ship_via);
+		shippers_list_row(__("Shipping Company:"), 'ship_via', $order->ship_via);
 
 		end_outer_table(1);
 	}

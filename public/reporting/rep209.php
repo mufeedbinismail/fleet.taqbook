@@ -84,7 +84,7 @@ function print_po()
 	$cur = get_company_Pref('curr_default');
 
 	if ($email == 0)
-		$rep = new FrontReport(_('PURCHASE ORDER'), "PurchaseOrderBulk", user_pagesize(), 9, $orientation);
+		$rep = new FrontReport(__('PURCHASE ORDER'), "PurchaseOrderBulk", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -100,7 +100,7 @@ function print_po()
 		if ($email == 1)
 		{
 			$rep = new FrontReport("", "", user_pagesize(), 9, $orientation);
-			$rep->title = _('PURCHASE ORDER');
+			$rep->title = __('PURCHASE ORDER');
 			$rep->filename = "PurchaseOrder" . $i . ".pdf";
 		}	
 		$rep->currency = $cur;
@@ -163,7 +163,7 @@ function print_po()
 		$rep->row = $rep->bottomMargin + (15 * $rep->lineHeight);
 		$doctype = ST_PURCHORDER;
 
-		$rep->TextCol(3, 6, _("Sub-total"), -2);
+		$rep->TextCol(3, 6, __("Sub-total"), -2);
 		$rep->TextCol(6, 7,	$DisplaySubTot, -2);
 		$rep->NewLine();
 
@@ -184,7 +184,7 @@ function print_po()
 				{
 					if ($first)
 					{
-						$rep->TextCol(3, 6, _("Total Tax Excluded"), -2);
+						$rep->TextCol(3, 6, __("Total Tax Excluded"), -2);
 						$rep->TextCol(6, 7,	number_format2($tax_item['net_amount'], $dec), -2);
 						$rep->NewLine();
 					}
@@ -193,7 +193,7 @@ function print_po()
 					$first = false;
 				}
 				else
-					$rep->TextCol(3, 7, _("Included") . " " . $tax_type_name . _("Amount") . ": " . $DisplayTax, -2);
+					$rep->TextCol(3, 7, __("Included") . " " . $tax_type_name . __("Amount") . ": " . $DisplayTax, -2);
 			}
 			else
 			{
@@ -207,7 +207,7 @@ function print_po()
 		$rep->NewLine();
 		$DisplayTotal = number_format2($SubTotal, $dec);
 		$rep->Font('bold');
-		$rep->TextCol(3, 6, _("TOTAL PO"), - 2);
+		$rep->TextCol(3, 6, __("TOTAL PO"), - 2);
 		$rep->TextCol(6, 7,	$DisplayTotal, -2);
 		$words = price_in_words($SubTotal, ST_PURCHORDER);
 		if ($words != "")

@@ -21,9 +21,9 @@ function display_bank_header(&$order)
 
 	table_section(1);
 	
-    date_row(_("Date:"), 'date_', '', true, 0, 0, 0, null, true);
+    date_row(__("Date:"), 'date_', '', true, 0, 0, 0, null, true);
 
-	ref_row(_("Reference:"), 'ref', '', $order->reference, false, $order->trans_type, get_post('date_'));
+	ref_row(__("Reference:"), 'ref', '', $order->reference, false, $order->trans_type, get_post('date_'));
 
 	table_section(2, "33%");
 
@@ -49,23 +49,23 @@ function display_bank_header(&$order)
 		$Ajax->activate('editors');
 		$Ajax->activate('footer');
 	}
-    payment_person_types_list_row( $payment ? _("Pay To:"):_("From:"),
+    payment_person_types_list_row( $payment ? __("Pay To:"):__("From:"),
 		 'PayType', $_POST['PayType'], true);
     switch ($_POST['PayType'])
     {
 		case PT_MISC :
-    		text_row_ex($payment ?_("To the Order of:"):_("Name:"),
+    		text_row_ex($payment ?__("To the Order of:"):__("Name:"),
 				 'person_id', 40, 50);
     		break;
 		case PT_SUPPLIER :
-    		supplier_list_row(_("Supplier:"), 'person_id', null, false, true, false, true);
+    		supplier_list_row(__("Supplier:"), 'person_id', null, false, true, false, true);
     		break;
 		case PT_CUSTOMER :
-    		customer_list_row(_("Customer:"), 'person_id', null, false, true, false, true);
+    		customer_list_row(__("Customer:"), 'person_id', null, false, true, false, true);
 
         	if (db_customer_has_branches($_POST['person_id']))
         	{
-        		customer_branches_list_row(_("Branch:"), $_POST['person_id'], 
+        		customer_branches_list_row(__("Branch:"), $_POST['person_id'], 
 					'PersonDetailID', null, false, true, true, true);
         	}
         	else
@@ -79,15 +79,15 @@ function display_bank_header(&$order)
         		if ($payment)
         		{
         			$customer_error = true;
-					display_error(_("This customer account is on hold."));
+					display_error(__("This customer account is on hold."));
         		}
         		else
-					display_warning(_("This customer account is on hold."));
+					display_warning(__("This customer account is on hold."));
         	}
     		break;
 
 		case PT_QUICKENTRY :
-			quick_entries_list_row(_("Type").":", 'person_id', null, ($payment ? QE_PAYMENT : QE_DEPOSIT), true);
+			quick_entries_list_row(__("Type").":", 'person_id', null, ($payment ? QE_PAYMENT : QE_DEPOSIT), true);
 			$qid = get_quick_entry(get_post('person_id'));
 			if (list_updated('person_id')) {
 				unset($_POST['totamount']); // enable default
@@ -95,7 +95,7 @@ function display_bank_header(&$order)
 				$Ajax->activate('totamount');
 			}
 			amount_row($qid['base_desc'].":", 'totamount', price_format($qid['base_amount']),
-				 null, "&nbsp;&nbsp;".submit('go', _("Go"), false, false, true));
+				 null, "&nbsp;&nbsp;".submit('go', __("Go"), false, false, true));
 			break;	
     }
 
@@ -111,7 +111,7 @@ function display_bank_header(&$order)
 			unset($_POST['bank_account']);
 	}		
     
-    bank_accounts_list_row( $payment ? _("From:") : _("Into:"), 'bank_account', null, true);
+    bank_accounts_list_row( $payment ? __("From:") : __("Into:"), 'bank_account', null, true);
     if ($payment)
 		bank_balance_row($_POST['bank_account']);
 
@@ -142,14 +142,14 @@ function display_gl_items($title, &$order)
 	start_table(TABLESTYLE, "width='95%'");
 
 	if ($dim == 2)
-		$th = array(_("Account Code"), _("Account Description"), _("Dimension")." 1",
-			_("Dimension")." 2", _("Amount"), _("Memo"), "");
+		$th = array(__("Account Code"), __("Account Description"), __("Dimension")." 1",
+			__("Dimension")." 2", __("Amount"), __("Memo"), "");
 	elseif ($dim == 1)
-		$th = array(_("Account Code"), _("Account Description"), _("Dimension"),
-			_("Amount"), _("Memo"), "");
+		$th = array(__("Account Code"), __("Account Description"), __("Dimension"),
+			__("Amount"), __("Memo"), "");
 	else
-		$th = array(_("Account Code"), _("Account Description"),
-			_("Amount"), _("Memo"), "");
+		$th = array(__("Account Code"), __("Account Description"),
+			__("Amount"), __("Memo"), "");
 
 	if (count($order->gl_items)) $th[] = '';
 
@@ -175,10 +175,10 @@ function display_gl_items($title, &$order)
 				amount_cell($item->amount);
 			label_cell($item->reference);
 
-			edit_button_cell("Edit$line", _("Edit"),
-				_('Edit document line'));
-			delete_button_cell("Delete$line", _("Delete"),
-				_('Remove line from document'));
+			edit_button_cell("Edit$line", __("Edit"),
+				__('Edit document line'));
+			delete_button_cell("Delete$line", __("Delete"),
+				__('Remove line from document'));
     		end_row();
 		}
 		else
@@ -191,7 +191,7 @@ function display_gl_items($title, &$order)
 		gl_edit_item_controls($order, $dim);
 
 	if ($order->count_gl_items())
-		label_row(_("Total"), number_format2(abs($order->gl_items_total()), user_price_dec()),"colspan=" . $colspan . " align=right", "align=right",3);
+		label_row(__("Total"), number_format2(abs($order->gl_items_total()), user_price_dec()),"colspan=" . $colspan . " align=right", "align=right",3);
 
     end_table();
 	div_end();
@@ -261,16 +261,16 @@ function gl_edit_item_controls(&$order, $dim, $Index=null)
 
 	if ($id != -1)
 	{
-		button_cell('UpdateItem', _("Update"),
-				_('Confirm changes'), ICON_UPDATE);
-		button_cell('CancelItemChanges', _("Cancel"),
-				_('Cancel changes'), ICON_CANCEL);
+		button_cell('UpdateItem', __("Update"),
+				__('Confirm changes'), ICON_UPDATE);
+		button_cell('CancelItemChanges', __("Cancel"),
+				__('Cancel changes'), ICON_CANCEL);
  		set_focus('amount');
 	}
 	else
 	{
-		submit_cells('AddItem', _("Add Item"), "colspan=2",
-		    _('Add new item to document'), true);
+		submit_cells('AddItem', __("Add Item"), "colspan=2",
+		    __('Add new item to document'), true);
 	}
 
 	end_row();
@@ -293,10 +293,10 @@ function gl_options_controls($order)
 	{
 		$_POST['settled_amount'] =
 			price_format(abs($order->gl_items_total() / get_exchange_rate_from_to($bank_curr, $person_curr, get_post('date_'))));
-		amount_row($type == PT_CUSTOMER ? _("Settled AR Amount:") :  _("Settled AP Amount:"),
+		amount_row($type == PT_CUSTOMER ? __("Settled AR Amount:") :  __("Settled AP Amount:"),
 			 'settled_amount', null, null, $person_curr, user_price_dec());
 	}
-	textarea_row(_("Memo"), 'memo_', null, 50, 3);
+	textarea_row(__("Memo"), 'memo_', null, 50, 3);
 
   	echo "</table>";
   	div_end();

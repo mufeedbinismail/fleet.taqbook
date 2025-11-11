@@ -35,12 +35,12 @@ if (isset($_GET['New']))
 		unset ($_SESSION['supp_trans']);
 	}
 	$GLOBALS['help_context'] = "Enter Supplier Invoice";
-	$_SESSION['page_title'] = _("Enter Supplier Invoice");
+	$_SESSION['page_title'] = __("Enter Supplier Invoice");
 
 	$_SESSION['supp_trans'] = new supp_trans(ST_SUPPINVOICE);
 } else if(isset($_GET['ModifyInvoice'])) {
 	$GLOBALS['help_context'] = 'Modifying Purchase Invoice';
-	$_SESSION['page_title'] = sprintf( _("Modifying Purchase Invoice # %d"), $_GET['ModifyInvoice']);
+	$_SESSION['page_title'] = sprintf( __("Modifying Purchase Invoice # %d"), $_GET['ModifyInvoice']);
 	$_SESSION['supp_trans'] = new supp_trans(ST_SUPPINVOICE, $_GET['ModifyInvoice']);
 }
 
@@ -49,7 +49,7 @@ page($_SESSION['page_title'], false, false, "", $js);
 if (isset($_GET['ModifyInvoice']))
 	check_is_editable(ST_SUPPINVOICE, $_GET['ModifyInvoice']);
 
-check_db_has_suppliers(_("There are no suppliers defined in the system."));
+check_db_has_suppliers(__("There are no suppliers defined in the system."));
 
 //---------------------------------------------------------------------------------------------------------------
 
@@ -60,17 +60,17 @@ if (isset($_GET['AddedID']))
 
 
     echo "<center>";
-    display_notification_centered(_("Supplier invoice has been processed."));
-    display_note(get_trans_view_str($trans_type, $invoice_no, _("View this Invoice")));
+    display_notification_centered(__("Supplier invoice has been processed."));
+    display_note(get_trans_view_str($trans_type, $invoice_no, __("View this Invoice")));
 
-	display_note(get_gl_view_str($trans_type, $invoice_no, _("View the GL Journal Entries for this Invoice")), 1);
+	display_note(get_gl_view_str($trans_type, $invoice_no, __("View the GL Journal Entries for this Invoice")), 1);
 
-	hyperlink_params(url("/purchasing/supplier_payment.php"), _("Entry supplier &payment for this invoice"),
+	hyperlink_params(url("/purchasing/supplier_payment.php"), __("Entry supplier &payment for this invoice"),
 		"PInvoice=".$invoice_no."&trans_type=".$trans_type);
 
-	hyperlink_params(url()->current(), _("Enter Another Invoice"), "New=1");
+	hyperlink_params(url()->current(), __("Enter Another Invoice"), "New=1");
 
-	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), "filterType=$trans_type&trans_no=$invoice_no");
+	hyperlink_params(url("/admin/attachments.php"), __("Add an Attachment"), "filterType=$trans_type&trans_no=$invoice_no");
 	
 	display_footer_exit();
 }
@@ -131,7 +131,7 @@ if (isset($_POST['AddGLCodeToTrans'])){
 	$result = get_gl_account_info($_POST['gl_code']);
 	if (db_num_rows($result) == 0)
 	{
-		display_error(_("The account code entered is not a valid code, this line cannot be added to the transaction."));
+		display_error(__("The account code entered is not a valid code, this line cannot be added to the transaction."));
 		set_focus('gl_code');
 		$input_error = true;
 	}
@@ -141,14 +141,14 @@ if (isset($_POST['AddGLCodeToTrans'])){
 		$gl_act_name = $myrow[1];
 		if (!check_num('amount'))
 		{
-			display_error(_("The amount entered is not numeric. This line cannot be added to the transaction."));
+			display_error(__("The amount entered is not numeric. This line cannot be added to the transaction."));
 			set_focus('amount');
 			$input_error = true;
 		}
 	}
 
 	if (!is_tax_gl_unique(get_post('gl_code'))) {
-   		display_error(_("Cannot post to GL account used by more than one tax type."));
+   		display_error(__("Cannot post to GL account used by more than one tax type."));
 		set_focus('gl_code');
    		$input_error = true;
 	}
@@ -171,14 +171,14 @@ function check_data()
 
 	if (!get_post('supplier_id')) 
 	{
-		display_error(_("There is no supplier selected."));
+		display_error(__("There is no supplier selected."));
 		set_focus('supplier_id');
 		return false;
 	} 
 
 	if (!$_SESSION['supp_trans']->is_valid_trans_to_post())
 	{
-		display_error(_("The invoice cannot be processed because the there are no items or values on the invoice.  Invoices are expected to have a charge."));
+		display_error(__("The invoice cannot be processed because the there are no items or values on the invoice.  Invoices are expected to have a charge."));
 		return false;
 	}
 
@@ -190,33 +190,33 @@ function check_data()
 
 	if (!is_date( $_SESSION['supp_trans']->tran_date))
 	{
-		display_error(_("The invoice as entered cannot be processed because the invoice date is in an incorrect format."));
+		display_error(__("The invoice as entered cannot be processed because the invoice date is in an incorrect format."));
 		set_focus('trans_date');
 		return false;
 	} 
 	elseif (!is_date_in_fiscalyear($_SESSION['supp_trans']->tran_date)) 
 	{
-		display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+		display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 		set_focus('trans_date');
 		return false;
 	}
 	if (!is_date( $_SESSION['supp_trans']->due_date))
 	{
-		display_error(_("The invoice as entered cannot be processed because the due date is in an incorrect format."));
+		display_error(__("The invoice as entered cannot be processed because the due date is in an incorrect format."));
 		set_focus('due_date');
 		return false;
 	}
 
 	if (trim(get_post('supp_reference')) == false)
 	{
-		display_error(_("You must enter a supplier's invoice reference."));
+		display_error(__("You must enter a supplier's invoice reference."));
 		set_focus('supp_reference');
 		return false;
 	}
 
 	if (is_reference_already_there($_SESSION['supp_trans']->supplier_id, $_POST['supp_reference'], $_SESSION['supp_trans']->trans_no))
 	{ 	/*Transaction reference already entered */
-		display_error(_("This invoice number has already been entered. It cannot be entered again.") . " (" . $_POST['supp_reference'] . ")");
+		display_error(__("This invoice number has already been entered. It cannot be entered again.") . " (" . $_POST['supp_reference'] . ")");
 		set_focus('supp_reference');
 		return false;
 	}
@@ -254,14 +254,14 @@ function check_item_data($n)
 
 	if (!check_num('this_quantity_inv'.$n, 0) || input_num('this_quantity_inv'.$n)==0)
 	{
-		display_error( _("The quantity to invoice must be numeric and greater than zero."));
+		display_error( __("The quantity to invoice must be numeric and greater than zero."));
 		set_focus('this_quantity_inv'.$n);
 		return false;
 	}
 
 	if (!check_num('ChgPrice'.$n))
 	{
-		display_error( _("The price is not numeric."));
+		display_error( __("The price is not numeric."));
 		set_focus('ChgPrice'.$n);
 		return false;
 	}
@@ -274,8 +274,8 @@ function check_item_data($n)
 				input_num('ChgPrice'.$n)/$_POST['order_price'.$n] >
 			    (1 + ($margin/ 100)))
 		    {
-			display_error(_("The price being invoiced is more than the purchase order price by more than the allowed over-charge percentage. The system is set up to prohibit this. See the system administrator to modify the set up parameters if necessary.") .
-			_("The over-charge percentage allowance is :") . $margin . "%");
+			display_error(__("The price being invoiced is more than the purchase order price by more than the allowed over-charge percentage. The system is set up to prohibit this. See the system administrator to modify the set up parameters if necessary.") .
+			__("The over-charge percentage allowance is :") . $margin . "%");
 			set_focus('ChgPrice'.$n);
 			return false;
 		    }
@@ -288,8 +288,8 @@ function check_item_data($n)
 		if (input_num('this_quantity_inv'.$n) / ($_POST['qty_recd'.$n] - $_POST['prev_quantity_inv'.$n]) >
 			(1+ ($margin / 100)))
 		{
-			display_error( _("The quantity being invoiced is more than the outstanding quantity by more than the allowed over-charge percentage. The system is set up to prohibit this. See the system administrator to modify the set up parameters if necessary.")
-			. _("The over-charge percentage allowance is :") . $margin . "%");
+			display_error( __("The quantity being invoiced is more than the outstanding quantity by more than the allowed over-charge percentage. The system is set up to prohibit this. See the system administrator to modify the set up parameters if necessary.")
+			. __("The over-charge percentage allowance is :") . $margin . "%");
 			set_focus('this_quantity_inv'.$n);
 			return false;
 		}
@@ -370,7 +370,7 @@ if ($_SESSION["wa_current_user"]->can_access('SA_GRNDELETE'))
 	if ($id2 != -1) 
 	{
 		remove_not_invoice_item($id2);
-		display_notification(sprintf(_('All yet non-invoiced items on delivery line # %d has been removed.'), $id2));
+		display_notification(sprintf(__('All yet non-invoiced items on delivery line # %d has been removed.'), $id2));
 
 	}
 }
@@ -388,7 +388,7 @@ start_form();
 invoice_header($_SESSION['supp_trans']);
 
 if ($_POST['supplier_id']=='') 
-		display_error(_("There is no supplier selected."));
+		display_error(__("There is no supplier selected."));
 else {
 	display_grn_items($_SESSION['supp_trans'], 1);
 
@@ -412,7 +412,7 @@ if (get_post('AddGLCodeToTrans') || get_post('update'))
 	$Ajax->activate('inv_tot');
 
 br();
-submit_center('PostInvoice', _("Enter Invoice"), true, '', 'default');
+submit_center('PostInvoice', __("Enter Invoice"), true, '', 'default');
 br();
 
 end_form();

@@ -25,7 +25,7 @@ if (user_use_date_picker())
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(800, 500);
 	
-page(_($GLOBALS['help_context'] = "Void a Transaction"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Void a Transaction"), false, false, "", $js);
 
 simple_page_mode(true);
 //----------------------------------------------------------------------------------------
@@ -120,8 +120,8 @@ function select_link($row)
 	if (!isset($row['type']))
 		$row['type'] = $_POST['filterType'];
 	if (!is_date_in_fiscalyear($row['trans_date'], true))
-		return _("N/A");
-  	return button('Edit'.$row["trans_no"], _("Select"), _("Select"), ICON_EDIT);
+		return __("N/A");
+  	return button('Edit'.$row["trans_no"], __("Select"), __("Select"), ICON_EDIT);
 }
 
 function gl_view($row)
@@ -158,7 +158,7 @@ function voiding_controls()
     start_table(TABLESTYLE_NOBORDER);
 	start_row();
 
-	systypes_list_cells(_("Transaction Type:"), 'filterType', null, true, $not_implemented);
+	systypes_list_cells(__("Transaction Type:"), 'filterType', null, true, $not_implemented);
 	if (list_updated('filterType'))
 		$selected_id = -1;
 
@@ -167,11 +167,11 @@ function voiding_controls()
     if (!isset($_POST['ToTransNo']))
         $_POST['ToTransNo'] = "999999";
 
-    ref_cells(_("from #:"), 'FromTransNo');
+    ref_cells(__("from #:"), 'FromTransNo');
 
-    ref_cells(_("to #:"), 'ToTransNo');
+    ref_cells(__("to #:"), 'ToTransNo');
 
-    submit_cells('ProcessSearch', _("Search"), '', '', 'default');
+    submit_cells('ProcessSearch', __("Search"), '', '', 'default');
 
 	end_row();
     end_table(1);
@@ -182,15 +182,15 @@ function voiding_controls()
 		return;
 
 	$cols = array(
-		_("#") => array('insert'=>true, 'fun'=>'view_link'),
-		_("Reference") => array('fun'=>'ref_view'),
-		_("Date") => array('type'=>'date', 'fun'=>'date_view'),
-		_("GL") => array('insert'=>true, 'fun'=>'gl_view'),
-		_("Select") => array('insert'=>true, 'fun'=>'select_link')
+		__("#") => array('insert'=>true, 'fun'=>'view_link'),
+		__("Reference") => array('fun'=>'ref_view'),
+		__("Date") => array('type'=>'date', 'fun'=>'date_view'),
+		__("GL") => array('insert'=>true, 'fun'=>'gl_view'),
+		__("Select") => array('insert'=>true, 'fun'=>'select_link')
 	);
 
 	$table =& new_db_pager('transactions', $sql, $cols);
-	$table->set_marker('is_selected', _("Marked transactions will be voided.")); //Added by Faisal
+	$table->set_marker('is_selected', __("Marked transactions will be voided.")); //Added by Faisal
 
 	$table->width = "40%";
 	display_db_pager($table);
@@ -207,25 +207,25 @@ function voiding_controls()
 		hidden('trans_no', '');
 		$_POST['memo_'] = '';
 	}	
-    label_row(_("Transaction #:"), ($selected_id==-1?'':$selected_id));
+    label_row(__("Transaction #:"), ($selected_id==-1?'':$selected_id));
 
-    date_row(_("Voiding Date:"), 'date_');
+    date_row(__("Voiding Date:"), 'date_');
 
-    textarea_row(_("Memo:"), 'memo_', null, 30, 4);
+    textarea_row(__("Memo:"), 'memo_', null, 30, 4);
 
 	end_table(1);
 
     if (!isset($_POST['ProcessVoiding']))
-    	submit_center('ProcessVoiding', _("Void Transaction"), true, '', 'default');
+    	submit_center('ProcessVoiding', __("Void Transaction"), true, '', 'default');
     else 
     {
  		if (!exist_transaction($_POST['filterType'],$_POST['trans_no']))
  		{
-			display_error(_("The entered transaction does not exist or cannot be voided."));
+			display_error(__("The entered transaction does not exist or cannot be voided."));
 			unset($_POST['trans_no']);
 			unset($_POST['memo_']);
 			unset($_POST['date_']);
-    		submit_center('ProcessVoiding', _("Void Transaction"), true, '', 'default');
+    		submit_center('ProcessVoiding', __("Void Transaction"), true, '', 'default');
 		}	
  		else
  		{
@@ -236,9 +236,9 @@ function voiding_controls()
                         if (is_inventory_item($myrow["item_code"])) {
                             if (check_negative_stock($myrow["item_code"], -$myrow["qty_recd"], null, $_POST['date_'])) {
                                 $stock = get_item($myrow["item_code"]);
-                                display_error(_("The void cannot be processed because there is an insufficient quantity for item:") .
+                                display_error(__("The void cannot be processed because there is an insufficient quantity for item:") .
                                     " " . $stock['stock_id'] . " - " . $stock['description'] . " - " .
-                                    _("Quantity On Hand") . " = " . number_format2(get_qoh_on_date($stock['stock_id'], null, 
+                                    __("Quantity On Hand") . " = " . number_format2(get_qoh_on_date($stock['stock_id'], null, 
                                     $_POST['date_']), get_qty_dec($stock['stock_id'])));
                                 return false;
                             }
@@ -246,10 +246,10 @@ function voiding_controls()
                     }
                 }
             }
-       		display_warning(_("Are you sure you want to void this transaction ? This action cannot be undone."), 0, 1);
+       		display_warning(__("Are you sure you want to void this transaction ? This action cannot be undone."), 0, 1);
    			br();
-    		submit_center_first('ConfirmVoiding', _("Proceed"), '', true);
-    		submit_center_last('CancelVoiding', _("Cancel"), '', 'cancel');
+    		submit_center_first('ConfirmVoiding', __("Proceed"), '', true);
+    		submit_center_last('CancelVoiding', __("Cancel"), '', 'cancel');
     	}	
     }
 
@@ -262,26 +262,26 @@ function check_valid_entries()
 {
 	if (is_closed_trans($_POST['filterType'],$_POST['trans_no']))
 	{
-		display_error(_("The selected transaction was closed for edition and cannot be voided."));
+		display_error(__("The selected transaction was closed for edition and cannot be voided."));
 		set_focus('trans_no');
 		return false;
 	}
 	if (!is_date($_POST['date_']))
 	{
-		display_error(_("The entered date is invalid."));
+		display_error(__("The entered date is invalid."));
 		set_focus('date_');
 		return false;
 	}
 	if (!is_date_in_fiscalyear($_POST['date_']))
 	{
-		display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+		display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 		set_focus('date_');
 		return false;
 	}
 
 	if (!is_numeric($_POST['trans_no']) OR $_POST['trans_no'] <= 0)
 	{
-		display_error(_("The transaction number is expected to be numeric and greater than zero."));
+		display_error(__("The transaction number is expected to be numeric and greater than zero."));
 		set_focus('trans_no');
 		return false;
 	}
@@ -298,7 +298,7 @@ function handle_void_transaction()
 		$void_entry = get_voided_entry($_POST['filterType'], $_POST['trans_no']);
 		if ($void_entry != null) 
 		{
-			display_error(_("The selected transaction has already been voided."), true);
+			display_error(__("The selected transaction has already been voided."), true);
 			unset($_POST['trans_no']);
 			unset($_POST['memo_']);
 			unset($_POST['date_']);
@@ -311,7 +311,7 @@ function handle_void_transaction()
 
 		if (!$msg) 
 		{
-			display_notification_centered(_("Selected transaction has been voided."));
+			display_notification_centered(__("Selected transaction has been voided."));
 			unset($_POST['trans_no']);
 			unset($_POST['memo_']);
 		}

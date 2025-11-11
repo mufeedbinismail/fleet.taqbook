@@ -16,7 +16,7 @@ require_once __DIR__ . "/../../includes/session.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
-page(_($GLOBALS['help_context'] = "View Work Order Production"), true, false, "", $js);
+page(__($GLOBALS['help_context'] = "View Work Order Production"), true, false, "", $js);
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/data_checks.inc";
@@ -39,8 +39,8 @@ function display_wo_production($prod_id)
 
 	br(1);
     start_table(TABLESTYLE);
-    $th = array(_("Production #"), _("Reference"), _("For Work Order #"),
-    	_("Item"), _("Quantity Manufactured"), _("Date"));
+    $th = array(__("Production #"), __("Reference"), __("For Work Order #"),
+    	__("Item"), __("Quantity Manufactured"), __("Date"));
     table_header($th);
 
 	start_row();
@@ -56,7 +56,7 @@ function display_wo_production($prod_id)
 
 	end_table(1);
 
-	is_voided_display(ST_MANURECEIVE, $prod_id, _("This production has been voided."));
+	is_voided_display(ST_MANURECEIVE, $prod_id, __("This production has been voided."));
 }
 
 //-------------------------------------------------------------------------------------------------

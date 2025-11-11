@@ -26,18 +26,18 @@ if (user_use_date_picker())
 if (isset($_GET['FixedAsset'])) {
 	$GLOBALS['page_security'] = 'SA_ASSETSTRANSVIEW';
 	$_POST['fixed_asset'] = 1;
-	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Fixed Assets Movement");
+	$_SESSION['page_title'] = __($GLOBALS['help_context'] = "Fixed Assets Movement");
 } else {
-	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Inventory Item Movement");
+	$_SESSION['page_title'] = __($GLOBALS['help_context'] = "Inventory Item Movement");
 }
 
 page($_SESSION['page_title'], isset($_GET['stock_id']), false, "", $js);
 //------------------------------------------------------------------------------------------------
 
 if (get_post('fixed_asset') == 1)
-	check_db_has_fixed_assets(_("There are no fixed asset defined in the system."));
+	check_db_has_fixed_assets(__("There are no fixed asset defined in the system."));
 else
-	check_db_has_stock_items(_("There are no items defined in the system."));
+	check_db_has_stock_items(__("There are no items defined in the system."));
 
 if(get_post('ShowMoves'))
 {
@@ -61,16 +61,16 @@ start_row();
 if (!$page_nested)
 {
 	if (get_post('fixed_asset') == 1) {
-		stock_items_list_cells(_("Item:"), 'stock_id', $_POST['stock_id'],
+		stock_items_list_cells(__("Item:"), 'stock_id', $_POST['stock_id'],
 			false, false, check_value('show_inactive'), false, array('fixed_asset' => true));
-		check_cells(_("Show inactive:"), 'show_inactive', null, true);
+		check_cells(__("Show inactive:"), 'show_inactive', null, true);
 
 		if (get_post('_show_inactive_update')) {
 			$Ajax->activate('stock_id');
 			set_focus('stock_id');
 		}
 	} else
-		stock_costable_items_list_cells(_("Item:"), 'stock_id', $_POST['stock_id']);
+		stock_costable_items_list_cells(__("Item:"), 'stock_id', $_POST['stock_id']);
 }
 
 end_row();
@@ -79,12 +79,12 @@ end_table();
 start_table(TABLESTYLE_NOBORDER);
 start_row();
 
-locations_list_cells(_("From Location:"), 'StockLocation', null, true, false, (get_post('fixed_asset') == 1));
+locations_list_cells(__("From Location:"), 'StockLocation', null, true, false, (get_post('fixed_asset') == 1));
 
-date_cells(_("From:"), 'AfterDate', '', null, -user_transaction_days());
-date_cells(_("To:"), 'BeforeDate');
+date_cells(__("From:"), 'AfterDate', '', null, -user_transaction_days());
+date_cells(__("To:"), 'BeforeDate');
 
-submit_cells('ShowMoves',_("Show Movements"),'',_('Refresh Inquiry'), 'default');
+submit_cells('ShowMoves',__("Show Movements"),'',__('Refresh Inquiry'), 'default');
 end_row();
 end_table();
 end_form();
@@ -100,12 +100,12 @@ $result = get_stock_movements($_POST['stock_id'], $_POST['StockLocation'],
 
 div_start('doc_tbl');
 start_table(TABLESTYLE);
-$th = array(_("Type"), _("#"), _("Reference"));
+$th = array(__("Type"), __("#"), __("Reference"));
 
 if ($display_location)
-	array_push($th, _("Location"));
+	array_push($th, __("Location"));
 
-array_push($th, _("Date"), _("Detail"), _("Quantity In"), _("Quantity Out"), _("Quantity On Hand"));
+array_push($th, __("Date"), __("Detail"), __("Quantity In"), __("Quantity Out"), __("Quantity On Hand"));
 
 table_header($th);
 
@@ -115,7 +115,7 @@ $after_qty = $before_qty;
 
 start_row("class='inquirybg'");
 $header_span = $display_location ? 6 : 5;
-label_cell("<b>"._("Quantity on hand before") . " " . $_POST['AfterDate']."</b>", "align=center colspan=$header_span");
+label_cell("<b>".__("Quantity on hand before") . " " . $_POST['AfterDate']."</b>", "align=center colspan=$header_span");
 label_cell("&nbsp;", "colspan=2");
 $dec = get_qty_dec($_POST['stock_id']);
 qty_cell($before_qty, false, $dec);
@@ -180,7 +180,7 @@ while ($myrow = db_fetch($result))
 }
 
 start_row("class='inquirybg'");
-label_cell("<b>"._("Quantity on hand after") . " " . $_POST['BeforeDate']."</b>", "align=center colspan=$header_span");
+label_cell("<b>".__("Quantity on hand after") . " " . $_POST['BeforeDate']."</b>", "align=center colspan=$header_span");
 qty_cell($total_in, false, $dec);
 qty_cell($total_out, false, $dec);
 qty_cell($after_qty, false, $dec);

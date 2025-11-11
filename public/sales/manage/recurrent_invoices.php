@@ -20,9 +20,9 @@ if ($SysPrefs->use_popup_windows)
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
-page(_($GLOBALS['help_context'] = "Recurrent Invoices"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Recurrent Invoices"), false, false, "", $js);
 
-check_db_has_template_orders(_("There is no template order in database.
+check_db_has_template_orders(__("There is no template order in database.
 	You have to create at least one sales order marked as template to be able to define recurrent invoices."));
 
 simple_page_mode(true);
@@ -36,44 +36,44 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 	{
 		$input_error = 1;
 		if (get_post('debtor_no'))
-			display_error(_("This customer has no branches. Please define at least one branch for this customer first."));
+			display_error(__("This customer has no branches. Please define at least one branch for this customer first."));
 		else
-			display_error(_("There are no tax groups defined in the system. At least one tax group is required before proceeding."));
+			display_error(__("There are no tax groups defined in the system. At least one tax group is required before proceeding."));
 		set_focus('debtor_no');
 	}
 	if (strlen($_POST['description']) == 0) 
 	{
 		$input_error = 1;
-		display_error(_("The invoice description cannot be empty."));
+		display_error(__("The invoice description cannot be empty."));
 		set_focus('description');
 	}
 	if (!check_recurrent_invoice_description($_POST['description'], $selected_id))
 	{
 		$input_error = 1;
-		display_error(_("This recurrent invoice description is already in use."));
+		display_error(__("This recurrent invoice description is already in use."));
 		set_focus('description');
 	}
 	if (!is_date($_POST['begin']))
 	{
 		$input_error = 1;
-		display_error(_("The entered date is invalid."));
+		display_error(__("The entered date is invalid."));
 		set_focus('begin');
 	}
 	if (!is_date($_POST['end']))
 	{
 		$input_error = 1;
-		display_error(_("The entered date is invalid."));
+		display_error(__("The entered date is invalid."));
 		set_focus('end');
 	}
 	if (isset($_POST['last_sent']) && !is_date($_POST['last_sent'])) {
 		$input_error = 1;
-		display_error(_("The entered date is invalid."));
+		display_error(__("The entered date is invalid."));
 		set_focus('last_sent');
 	}
 	if (!$_POST['days'] && !$_POST['monthly'])
 	{
 		$input_error = 1;
-		display_error(_("No recurence interval has been entered."));
+		display_error(__("No recurence interval has been entered."));
 		set_focus('days');
 	}
 
@@ -85,13 +85,13 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
     			input_num('group_no'), input_num('days', 0), input_num('monthly', 0), $_POST['begin'], $_POST['end']);
     		if (isset($_POST['last_sent']))	
 				update_last_sent_recurrent_invoice($selected_id, $_POST['last_sent']);
-			$note = _('Selected recurrent invoice has been updated');
+			$note = __('Selected recurrent invoice has been updated');
     	} 
     	else 
     	{
     		add_recurrent_invoice($_POST['description'], $_POST['order_no'], input_num('debtor_no'), input_num('group_no'),
     			input_num('days', 0), input_num('monthly', 0), $_POST['begin'], $_POST['end']);
-			$note = _('New recurrent invoice has been added');
+			$note = __('New recurrent invoice has been added');
     	}
     
 		display_notification($note);
@@ -108,7 +108,7 @@ if ($Mode == 'Delete')
 	{
 		delete_recurrent_invoice($selected_id);
 
-		display_notification(_('Selected recurrent invoice has been deleted'));
+		display_notification(__('Selected recurrent invoice has been deleted'));
 	} //end if Delete area
 	$Mode = 'RESET';
 } 
@@ -124,7 +124,7 @@ $result = get_recurrent_invoices();
 
 start_form();
 start_table(TABLESTYLE, "width=70%");
-$th = array(_("Description"), _("Template No"),_("Customer"),_("Branch")."/"._("Group"),_("Days"),_("Monthly"),_("Begin"),_("End"),_("Last Created"),"", "");
+$th = array(__("Description"), __("Template No"),__("Customer"),__("Branch")."/".__("Group"),__("Days"),__("Monthly"),__("Begin"),__("End"),__("Last Created"),"", "");
 table_header($th);
 $k = 0;
 while ($myrow = db_fetch($result)) 
@@ -152,8 +152,8 @@ while ($myrow = db_fetch($result))
 	label_cell($begin);
 	label_cell($end);
 	label_cell($last_sent);
- 	edit_button_cell("Edit".$myrow["id"], _("Edit"));
- 	delete_button_cell("Delete".$myrow["id"], _("Delete"));
+ 	edit_button_cell("Edit".$myrow["id"], __("Edit"));
+ 	delete_button_cell("Delete".$myrow["id"], __("Delete"));
  	end_row();
 }
 end_table();
@@ -187,27 +187,27 @@ if ($selected_id != -1)
 }
 
 
-text_row_ex(_("Description:"), 'description', 50); 
+text_row_ex(__("Description:"), 'description', 50); 
 
-templates_list_row(_("Template:"), 'order_no');
+templates_list_row(__("Template:"), 'order_no');
 
-customer_list_row(_("Customer:"), 'debtor_no', null, " ", true);
+customer_list_row(__("Customer:"), 'debtor_no', null, " ", true);
 
 if ($_POST['debtor_no'] > 0)
-	customer_branches_list_row(_("Branch:"), $_POST['debtor_no'], 'group_no', null, false);
+	customer_branches_list_row(__("Branch:"), $_POST['debtor_no'], 'group_no', null, false);
 else	
-	sales_groups_list_row(_("Sales Group:"), 'group_no', null);
+	sales_groups_list_row(__("Sales Group:"), 'group_no', null);
 
-small_amount_row(_("Days:"), 'days', 0, null, null, 0);
+small_amount_row(__("Days:"), 'days', 0, null, null, 0);
 
-small_amount_row(_("Monthly:"), 'monthly', 0, null, null, 0);
+small_amount_row(__("Monthly:"), 'monthly', 0, null, null, 0);
 
-date_row(_("Begin:"), 'begin');
+date_row(__("Begin:"), 'begin');
 
-date_row(_("End:"), 'end', null, null, 0, 0, 5);
+date_row(__("End:"), 'end', null, null, 0, 0, 5);
 
 if ($selected_id != -1 && @$_POST['last_sent'] != "")
-	date_row(_("Last Created"), 'last_sent');
+	date_row(__("Last Created"), 'last_sent');
 
 end_table(1);
 

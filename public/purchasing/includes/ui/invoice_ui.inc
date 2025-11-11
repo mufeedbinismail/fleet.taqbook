@@ -87,7 +87,7 @@ function invoice_header(&$supp_trans)
 	{
 		$_POST['supplier_id'] = $supp_trans->supplier_id;
 		$supp = $supp_trans->supplier_name." - ".$supp_trans->currency;
-		label_row(_("Supplier:"), $supp.hidden('supplier_id', $_POST['supplier_id'], false));
+		label_row(__("Supplier:"), $supp.hidden('supplier_id', $_POST['supplier_id'], false));
 	}
 	else
 	{
@@ -95,9 +95,9 @@ function invoice_header(&$supp_trans)
     		$_POST['supplier_id'] = get_global_supplier();
 
 		if (!$supp_trans->trans_no)
-			supplier_list_row(_("Supplier:"), 'supplier_id', $_POST['supplier_id'], false, true);
+			supplier_list_row(__("Supplier:"), 'supplier_id', $_POST['supplier_id'], false, true);
 		else
-			label_row(_("Supplier:"), $supp_trans->supplier_name
+			label_row(__("Supplier:"), $supp_trans->supplier_name
 			.($supp_trans->currency ? ' - '.$supp_trans->currency  : '')
 			.hidden('supplier_id', $_POST['supplier_id'], false));
 	}
@@ -112,16 +112,16 @@ function invoice_header(&$supp_trans)
 		copy_from_trans($supp_trans);
 	}
 
-   	date_row(_("Date") . ":", 'tran_date', '', true, 0, 0, 0, "", true);
+   	date_row(__("Date") . ":", 'tran_date', '', true, 0, 0, 0, "", true);
 
-   	ref_row(_("Reference:"), 'reference', '', $Refs->get_next($supp_trans->trans_type, null, 
+   	ref_row(__("Reference:"), 'reference', '', $Refs->get_next($supp_trans->trans_type, null, 
    		array('supplier' => get_post('supplier_id'), 'date' => get_post('tran_date'))), false, $supp_trans->trans_type);
 
 	if ($supp_trans->trans_type == ST_SUPPCREDIT)
 	{
-		label_row(_("Source Invoices:"), implode(',' , $supp_trans->src_docs),'','','src_docs');
+		label_row(__("Source Invoices:"), implode(',' , $supp_trans->src_docs),'','','src_docs');
 	}
-		text_row(_("Supplier's Ref.:"), 'supp_reference', $_POST['supp_reference'], 20, 60);
+		text_row(__("Supplier's Ref.:"), 'supp_reference', $_POST['supp_reference'], 20, 60);
 
 	table_section(2, "33%");
 
@@ -133,15 +133,15 @@ function invoice_header(&$supp_trans)
 		$Ajax->activate('due_date');
 	}
 
-    date_row(_("Due Date") . ":", 'due_date');
+    date_row(__("Due Date") . ":", 'due_date');
 
-    label_row(_("Terms:"), $supp_trans->terms['description']);
+    label_row(__("Terms:"), $supp_trans->terms['description']);
 
 	if (get_company_pref('use_dimension'))
-		dimensions_list_row(_('Dimension').':', 'dimension', null, true, _('Default'), false, 1);
+		dimensions_list_row(__('Dimension').':', 'dimension', null, true, __('Default'), false, 1);
 
 	if (get_company_pref('use_dimension') == 2)
-		dimensions_list_row(_('Dimension 2').':', 'dimension2', null, true, _('Default'), false, 2);
+		dimensions_list_row(__('Dimension 2').':', 'dimension2', null, true, __('Default'), false, 2);
 
 	table_section(3, "33%");
 
@@ -151,11 +151,11 @@ function invoice_header(&$supp_trans)
 
 	if ($supp_trans->currency != $company_currency)
 	{
-        label_row(_("Supplier's Currency:"), "<b>" . $supp_trans->currency . "</b>");
+        label_row(__("Supplier's Currency:"), "<b>" . $supp_trans->currency . "</b>");
 		exchange_rate_display($company_currency, $supp_trans->currency, $_POST['tran_date']);
 	}
 
-  	label_row(_("Tax Group:"), $supp_trans->tax_description);
+  	label_row(__("Tax Group:"), $supp_trans->tax_description);
 	supplier_credit_row($supp_trans->supplier_id, $supp_trans->credit);
 
 	end_outer_table(1);
@@ -172,7 +172,7 @@ function invoice_totals(&$supp_trans)
 	$colspan = 2;
  	div_start('tax_table');
    	start_table(TABLESTYLE, "width='95%'");
-   	label_row(_("Sub-total:"), price_format( $supp_trans->ov_amount), "width=80% colspan=$colspan align=right", "width=10% align=right", 2);
+   	label_row(__("Sub-total:"), price_format( $supp_trans->ov_amount), "width=80% colspan=$colspan align=right", "width=10% align=right", 2);
 
     $taxes = $supp_trans->get_taxes($supp_trans->tax_group_id);
     $tax_total = display_edit_tax_items($taxes, $colspan, $supp_trans->tax_included, 0, true);
@@ -180,16 +180,16 @@ function invoice_totals(&$supp_trans)
     $display_total = price_format($supp_trans->ov_amount + $tax_total);
 	start_row();
 	if ($supp_trans->trans_type == ST_SUPPINVOICE)
-    	label_cells(_("Invoice Total:"), 
+    	label_cells(__("Invoice Total:"), 
     		$display_total, "colspan=$colspan width=80% align=right style='font-weight:bold;'", "width=10% align=right style='font-weight:bold;'");
     else
-		label_cells(_("Credit Note Total"),
+		label_cells(__("Credit Note Total"),
 			$display_total, "colspan=$colspan width=80% align=right style='font-weight:bold;color:red;'", "width=10% nowrap align=right style='font-weight:bold;color:red;'");
-	submit_cells('update', _("Update"), "width=10% colspan=2 align='right'", _("Refresh"), true);
+	submit_cells('update', __("Update"), "width=10% colspan=2 align='right'", __("Refresh"), true);
 	end_row();
     end_table(1);
     start_table(TABLESTYLE2);
-    textarea_row(_("Memo:"), "Comments", null, 50, 3);
+    textarea_row(__("Memo:"), "Comments", null, 50, 3);
     end_table(1);
 	div_end();
 }
@@ -216,10 +216,10 @@ function display_gl_controls(&$supp_trans, $k)
 		text_cells_ex(null, 'memo_', 35, 50, null, null, null, hidden('dimension2_id', 0, false));
 	else	
 		text_cells_ex(null, 'memo_', 35, 50, null, null, null);
-	submit_cells('AddGLCodeToTrans', _("Add"), "",
-		    _('Add GL Line'), true);
-	submit_cells('ClearFields', _("Reset"), "",
-		    _("Clear all GL entry fields"), true);
+	submit_cells('AddGLCodeToTrans', __("Add"), "",
+		    __('Add GL Line'), true);
+	submit_cells('ClearFields', __("Reset"), "",
+		    __("Clear all GL entry fields"), true);
 	end_row();	
 }
 
@@ -237,9 +237,9 @@ function display_gl_items(&$supp_trans, $mode=0)
     	return 0;
 
 	if ($supp_trans->trans_type == ST_SUPPINVOICE)
-		$heading = _("GL Items for this Invoice");
+		$heading = __("GL Items for this Invoice");
 	else
-		$heading = _("GL Items for this Credit Note");
+		$heading = __("GL Items for this Credit Note");
 
 	start_outer_table(TABLESTYLE, "width='95%'");
 
@@ -249,7 +249,7 @@ function display_gl_items(&$supp_trans, $mode=0)
 		if ($qes !== false)
 		{
 			echo "<div style='float:right;'>";
-			echo _("Quick Entry:")."&nbsp;"; 
+			echo __("Quick Entry:")."&nbsp;"; 
 			echo quick_entries_list('qid', null, QE_SUPPINV, true);
 			$qid = get_quick_entry(get_post('qid'));
 			if (list_updated('qid')) {
@@ -261,7 +261,7 @@ function display_gl_items(&$supp_trans, $mode=0)
 			$amount = input_num('totamount', $qid['base_amount']);
 			$dec = user_price_dec();
 			echo "<input class='amount' type='text' name='totamount' size='7' maxlength='12' dec='$dec' value='$amount'>&nbsp;";
-			submit('go', _("Go"), true, false, true);
+			submit('go', __("Go"), true, false, true);
 			echo "</div>";
 
 		}	
@@ -275,11 +275,11 @@ function display_gl_items(&$supp_trans, $mode=0)
 
 	$dim = get_company_pref('use_dimension');
 	if ($dim == 2)
-    	$th = array(_("Account"), _("Name"), _("Dimension")." 1", _("Dimension")." 2", _("Amount"), _("Memo"));
+    	$th = array(__("Account"), __("Name"), __("Dimension")." 1", __("Dimension")." 2", __("Amount"), __("Memo"));
 	elseif ($dim == 1)
-    	$th = array(_("Account"), _("Name"), _("Dimension"), _("Amount"), _("Memo"));
+    	$th = array(__("Account"), __("Name"), __("Dimension"), __("Amount"), __("Memo"));
     else
-    	$th = array(_("Account"), _("Name"), _("Amount"), _("Memo"));
+    	$th = array(__("Account"), __("Name"), __("Amount"), __("Memo"));
 
 	if ($mode == 1)
 	{
@@ -314,10 +314,10 @@ function display_gl_items(&$supp_trans, $mode=0)
 
 			if ($mode == 1)
 			{
-				delete_button_cell("Delete2" . $entered_gl_code->Counter, _("Delete"),
-					  _('Remove line from document'));
-                edit_button_cell("Edit" . $entered_gl_code->Counter, _("Edit"),
-                      _('Edit line from document'));
+				delete_button_cell("Delete2" . $entered_gl_code->Counter, __("Delete"),
+					  __('Remove line from document'));
+                edit_button_cell("Edit" . $entered_gl_code->Counter, __("Edit"),
+                      __('Edit line from document'));
 			}	
 			end_row();
 			if ($mode > 1) {
@@ -339,7 +339,7 @@ function display_gl_items(&$supp_trans, $mode=0)
 	if ($mode == 1)
 		display_gl_controls($supp_trans, $k);
 	$colspan = ($dim == 2 ? 4 : ($dim == 1 ? 3 : 2));
-	label_row(_("Total"), price_format($total),
+	label_row(__("Total"), price_format($total),
 		"colspan=".$colspan." align=right", "nowrap align=right", ($mode==1?3:1));
 
 	end_table(1);
@@ -418,13 +418,13 @@ function display_grn_items_for_selection(&$supp_trans, $k)
             	amount_cell(round2($myrow["act_price"] * max($myrow['quantity_inv'], 0), user_price_dec()));
             }	
             if ($supp_trans->trans_type == ST_SUPPINVOICE)
-        		submit_cells('grn_item_id'.$n, _("Add"), '', _("Add to Invoice"), true);
+        		submit_cells('grn_item_id'.$n, __("Add"), '', __("Add to Invoice"), true);
         	else	
-        		submit_cells('grn_item_id'.$n, _("Add"), '', _("Add to Credit Note"), true);
+        		submit_cells('grn_item_id'.$n, __("Add"), '', __("Add to Credit Note"), true);
     		if (($supp_trans->trans_type == ST_SUPPINVOICE) && $_SESSION["wa_current_user"]->can_access('SA_GRNDELETE')) {	// Added 2008-10-18 by Joe Hunt. Special access rights needed.
-        		submit_cells('void_item_id'.$n, _("Remove"), '', _("WARNING! Be careful with removal. The operation is executed immediately and cannot be undone !!!"), true);
+        		submit_cells('void_item_id'.$n, __("Remove"), '', __("WARNING! Be careful with removal. The operation is executed immediately and cannot be undone !!!"), true);
 				submit_js_confirm('void_item_id'.$n,
-					sprintf(_('You are about to remove all yet non-invoiced items from delivery line #%d. This operation also irreversibly changes related order line. Do you want to continue ?'), $n));
+					sprintf(__('You are about to remove all yet non-invoiced items from delivery line #%d. This operation also irreversibly changes related order line. Do you want to continue ?'), $n));
 			}
 			end_row();
     	}
@@ -453,19 +453,19 @@ function display_grn_items(&$supp_trans, $mode=0)
 	{
 		if ($supp_trans->trans_type == ST_SUPPINVOICE)
 		{
-			$heading = _("Items Received Yet to be Invoiced");
+			$heading = __("Items Received Yet to be Invoiced");
     		if ($_SESSION["wa_current_user"]->can_access('SA_GRNDELETE'))	// Added 2008-10-18 by Joe Hunt. Only admins can remove GRNs
-				$heading2 = _("WARNING! Be careful with removal. The operation is executed immediately and cannot be undone !!!");
+				$heading2 = __("WARNING! Be careful with removal. The operation is executed immediately and cannot be undone !!!");
 		}
 		else
-			$heading = _("Delivery Item Selected For Adding To A Supplier Credit Note");
+			$heading = __("Delivery Item Selected For Adding To A Supplier Credit Note");
 	}
 	else
 	{
 		if ($supp_trans->trans_type == ST_SUPPINVOICE)
-			$heading = _("Received Items Charged on this Invoice");
+			$heading = __("Received Items Charged on this Invoice");
 		else
-			$heading = _("Received Items Credited on this Note");
+			$heading = __("Received Items Credited on this Note");
 	}
 
 	display_heading($heading);
@@ -475,10 +475,10 @@ function display_grn_items(&$supp_trans, $mode=0)
 		if ($supp_trans->trans_type == ST_SUPPCREDIT)
 		{
 			echo "</td>";
-			date_cells(_("Received between"), 'receive_begin', "", null, 
+			date_cells(__("Received between"), 'receive_begin', "", null, 
 				-user_transaction_days(), 0, 0, "valign=middle");
-			date_cells(_("and"), 'receive_end', '', null, 1, 0, 0, "valign=middle");
-			submit_cells('RefreshInquiry', _("Search"),'',_('Refresh Inquiry'), true);
+			date_cells(__("and"), 'receive_end', '', null, 1, 0, 0, "valign=middle");
+			submit_cells('RefreshInquiry', __("Search"),'',__('Refresh Inquiry'), true);
 			echo "<td>";
 		}
 
@@ -487,7 +487,7 @@ function display_grn_items(&$supp_trans, $mode=0)
 			display_note($heading2, 0, 0, "class='overduefg'");
 		}
 		echo "</td><td width='10%' align='right'>";
-		submit('InvGRNAll', _("Add All Items"), true, false,true);
+		submit('InvGRNAll', __("Add All Items"), true, false,true);
 	}
 
 	end_outer_table(0, false);
@@ -496,20 +496,20 @@ function display_grn_items(&$supp_trans, $mode=0)
 	start_table(TABLESTYLE, "width='95%'");
 	if ($mode == 1)
 	{
-    	$th = array(_("Delivery"), _("P.O."), _("Item"), _("Description"),
-    		_("Received On"), _("Quantity Received"), _("Quantity Invoiced"),
-    		_("Qty Yet To Invoice"), $supp_trans->tax_included ? _("Price after Tax") : _("Price before Tax"), 
-    		_("Total"), "");
+    	$th = array(__("Delivery"), __("P.O."), __("Item"), __("Description"),
+    		__("Received On"), __("Quantity Received"), __("Quantity Invoiced"),
+    		__("Qty Yet To Invoice"), $supp_trans->tax_included ? __("Price after Tax") : __("Price before Tax"), 
+    		__("Total"), "");
     	if (($supp_trans->trans_type == ST_SUPPINVOICE) && $_SESSION["wa_current_user"]->can_access('SA_GRNDELETE'))	// Added 2008-10-18 by Joe Hunt. Only admins can remove GRNs
     		$th[] = "";
 		if ($supp_trans->trans_type == ST_SUPPCREDIT)
 		{
-			$th[7] = _("Qty Yet To Credit");
+			$th[7] = __("Qty Yet To Credit");
 		}
     }
     else
-		$th = array(_("Delivery"), _("Item"), _("Description"),
-			_("Quantity"), _("Price"), _("Line Value"));
+		$th = array(__("Delivery"), __("Item"), __("Description"),
+			__("Quantity"), __("Price"), __("Line Value"));
 
 	table_header($th);
     $total_grn_value = 0;
@@ -546,7 +546,7 @@ function display_grn_items(&$supp_trans, $mode=0)
 
 			if ($mode == 1)
 			{
-				delete_button_cell("Delete" . $entered_grn->id, _("Edit"), _('Edit document line'));
+				delete_button_cell("Delete" . $entered_grn->id, __("Edit"), __('Edit document line'));
 				if (($supp_trans->trans_type == ST_SUPPINVOICE) && $_SESSION["wa_current_user"]->can_access('SA_GRNDELETE'))	  
 					label_cell("");
 			}	
@@ -570,18 +570,18 @@ function display_grn_items(&$supp_trans, $mode=0)
 	}
 	else
 		$colspan = 5;
-	label_row(_("Total"), price_format($total_grn_value),
+	label_row(__("Total"), price_format($total_grn_value),
 		"colspan=$colspan align=right", "nowrap align=right");
 	if (!$ret)
 	{
 		start_row();
 		echo "<td colspan=".($colspan + 1).">";
 		if ($supp_trans->trans_type == ST_SUPPINVOICE)
-			display_note(_("There are no outstanding items received from this supplier that have not been invoiced by them."), 0, 0);
+			display_note(__("There are no outstanding items received from this supplier that have not been invoiced by them."), 0, 0);
 		else
 		{
-			display_note(_("There are no received items for the selected supplier that have been invoiced."));
-			display_note(_("Credits can only be applied to invoiced items."), 0, 0);
+			display_note(__("There are no received items for the selected supplier that have been invoiced."));
+			display_note(__("Credits can only be applied to invoiced items."), 0, 0);
 		}
 		echo "</td>";
 		end_row();

@@ -13,7 +13,7 @@ $GLOBALS['page_security'] = 'SA_BANKTRANSVIEW';
 
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "View Bank Deposit"), true);
+page(__($GLOBALS['help_context'] = "View Bank Deposit"), true);
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/ui.inc";
@@ -47,7 +47,7 @@ if (!empty($SysPrefs->prefs['company_logo_on_views']))
 
 echo "<center>";
 
-display_heading(_("GL Deposit") . " #$trans_no");
+display_heading(__("GL Deposit") . " #$trans_no");
 
 echo "<br>";
 start_table(TABLESTYLE, "width='80%'");
@@ -63,54 +63,54 @@ else
 	$colspan2 = 5;
 }
 start_row();
-label_cells(_("To Bank Account"), $to_trans['bank_account_name'], "class='tableheader2'");
+label_cells(__("To Bank Account"), $to_trans['bank_account_name'], "class='tableheader2'");
 if ($show_currencies)
-	label_cells(_("Currency"), $to_trans['bank_curr_code'], "class='tableheader2'");
-label_cells(_("Amount"), number_format2($to_trans['amount'], user_price_dec()), "class='tableheader2'", "align=right");
-label_cells(_("Date"), sql2date($to_trans['trans_date']), "class='tableheader2'");
+	label_cells(__("Currency"), $to_trans['bank_curr_code'], "class='tableheader2'");
+label_cells(__("Amount"), number_format2($to_trans['amount'], user_price_dec()), "class='tableheader2'", "align=right");
+label_cells(__("Date"), sql2date($to_trans['trans_date']), "class='tableheader2'");
 end_row();
 start_row();
-label_cells(_("From"), get_counterparty_name(ST_BANKDEPOSIT, $to_trans['trans_no']), "class='tableheader2'", "colspan=$colspan1");
+label_cells(__("From"), get_counterparty_name(ST_BANKDEPOSIT, $to_trans['trans_no']), "class='tableheader2'", "colspan=$colspan1");
 if ($show_currencies)
 {
-	label_cells(_("Settle currency"), $to_trans['settle_curr'], "class='tableheader2'");
-	label_cells(_("Settled amount"),  number_format2($to_trans['settled_amount'], user_price_dec()), "class='tableheader2'");
+	label_cells(__("Settle currency"), $to_trans['settle_curr'], "class='tableheader2'");
+	label_cells(__("Settled amount"),  number_format2($to_trans['settled_amount'], user_price_dec()), "class='tableheader2'");
 }
-label_cells(_("Deposit Type"), $bank_transfer_types[$to_trans['account_type']], "class='tableheader2'");
+label_cells(__("Deposit Type"), $bank_transfer_types[$to_trans['account_type']], "class='tableheader2'");
 end_row();
 start_row();
-label_cells(_("Reference"), $to_trans['ref'], "class='tableheader2'", "colspan=$colspan2");
+label_cells(__("Reference"), $to_trans['ref'], "class='tableheader2'", "colspan=$colspan2");
 end_row();
 comments_display_row(ST_BANKDEPOSIT, $trans_no);
 
 end_table(1);
 
-is_voided_display(ST_BANKDEPOSIT, $trans_no, _("This deposit has been voided."));
+is_voided_display(ST_BANKDEPOSIT, $trans_no, __("This deposit has been voided."));
 
 $items = get_gl_trans(ST_BANKDEPOSIT, $trans_no);
 
 if (db_num_rows($items) == 0)
 {
-	display_note(_("There are no items for this deposit."));
+	display_note(__("There are no items for this deposit."));
 }
 else
 {
 
-	display_heading2(_("Items for this Deposit"));
+	display_heading2(__("Items for this Deposit"));
 	if ($show_currencies)
-		display_heading2(_("Item Amounts are Shown in:") . " " . $company_currency);
+		display_heading2(__("Item Amounts are Shown in:") . " " . $company_currency);
 
     start_table(TABLESTYLE, "width='80%'");
     $dim = get_company_pref('use_dimension');
     if ($dim == 2)
-        $th = array(_("Account Code"), _("Account Description"), _("Dimension")." 1", _("Dimension")." 2",
-            _("Amount"), _("Memo"));
+        $th = array(__("Account Code"), __("Account Description"), __("Dimension")." 1", __("Dimension")." 2",
+            __("Amount"), __("Memo"));
     elseif ($dim == 1)
-        $th = array(_("Account Code"), _("Account Description"), _("Dimension"),
-            _("Amount"), _("Memo"));
+        $th = array(__("Account Code"), __("Account Description"), __("Dimension"),
+            __("Amount"), __("Memo"));
     else
-        $th = array(_("Account Code"), _("Account Description"),
-            _("Amount"), _("Memo"));
+        $th = array(__("Account Code"), __("Account Description"),
+            __("Amount"), __("Memo"));
     table_header($th);
 
     $k = 0; //row colour counter
@@ -136,7 +136,7 @@ else
 		}
 	}
 
-	label_row(_("Total"), number_format2(-$total_amount, user_price_dec()),"colspan=".(2+$dim)." align=right", "align=right");
+	label_row(__("Total"), number_format2(-$total_amount, user_price_dec()),"colspan=".(2+$dim)." align=right", "align=right");
 
 	end_table(1);
 

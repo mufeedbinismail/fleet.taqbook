@@ -73,19 +73,19 @@ function print_audit_trail()
 
     $cols = array(0, 60, 120, 180, 240, 340, 400, 460, 520);
 
-    $headers = array(_('Date'), _('Time'), _('User'), _('Trans Date'),
-    	_('Type'), _('#'), _('Action'), _('Amount'));
+    $headers = array(__('Date'), __('Time'), __('User'), __('Trans Date'),
+    	__('Type'), __('#'), __('Action'), __('Amount'));
 
     $aligns = array('left', 'left', 'left', 'left', 'left', 'left', 'left', 'right');
 
 	$usr = get_user($user);
 	$user_id = isset($usr['user_id']) ? $usr['user_id'] : "";
     $params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'), 'from' => $from,'to' => $to),
-                    	2 => array('text' => _('Type'), 'from' => ($systype != -1 ? $systypes_array[$systype] : _('All')), 'to' => ''),
-                    	3 => array('text' => _('User'), 'from' => ($user != -1 ? $user_id : _('All')), 'to' => ''));
+    				    1 => array('text' => __('Period'), 'from' => $from,'to' => $to),
+                    	2 => array('text' => __('Type'), 'from' => ($systype != -1 ? $systypes_array[$systype] : __('All')), 'to' => ''),
+                    	3 => array('text' => __('User'), 'from' => ($user != -1 ? $user_id : __('All')), 'to' => ''));
 
-    $rep = new FrontReport(_('Audit Trail'), "AuditTrail", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Audit Trail'), "AuditTrail", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -108,9 +108,9 @@ function print_audit_trail()
         $rep->TextCol(4, 5, $systypes_array[$myrow['type']]);
         $rep->TextCol(5, 6, $myrow['trans_no']);
         if ($myrow['gl_seq'] == null)
-        	$action = _('Changed');
+        	$action = __('Changed');
         else
-        	$action = _('Closed');
+        	$action = __('Closed');
         $rep->TextCol(6, 7, $action);
         if ($myrow['amount'] != null) {
         	$rep->AmountCol(7, 8, $myrow['amount'], $dec);
@@ -122,7 +122,7 @@ function print_audit_trail()
     $rep->Line($rep->row  + 4);
 	if ($systype != -1) {
         $rep->NewLine(1, 2);
-        $rep->TextCol(6, 7, _('Total'));
+        $rep->TextCol(6, 7, __('Total'));
 		$rep->AmountCol(7, 8, $tot_amount, $dec);
 	}
     $rep->End();

@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_SALESAREA';
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "Sales Areas"));
+page(__($GLOBALS['help_context'] = "Sales Areas"));
 
 require_once __DIR__ . "/../../includes/ui.inc";
 
@@ -26,7 +26,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 	if (strlen($_POST['description']) == 0) 
 	{
 		$input_error = 1;
-		display_error(_("The area description cannot be empty."));
+		display_error(__("The area description cannot be empty."));
 		set_focus('description');
 	}
 
@@ -35,12 +35,12 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
     	if ($selected_id != -1) 
     	{
     		update_sales_area($selected_id, $_POST['description']);
-			$note = _('Selected sales area has been updated');
+			$note = __('Selected sales area has been updated');
     	} 
     	else 
     	{
     		add_sales_area($_POST['description']);
-			$note = _('New sales area has been added');
+			$note = __('New sales area has been added');
     	}
     
 		display_notification($note);    	
@@ -58,13 +58,13 @@ if ($Mode == 'Delete')
 	if (key_in_foreign_table($selected_id, 'cust_branch', 'area'))
 	{
 		$cancel_delete = 1;
-		display_error(_("Cannot delete this area because customer branches have been created using this area."));
+		display_error(__("Cannot delete this area because customer branches have been created using this area."));
 	} 
 	if ($cancel_delete == 0) 
 	{
 		delete_sales_area($selected_id);
 
-		display_notification(_('Selected sales area has been deleted'));
+		display_notification(__('Selected sales area has been deleted'));
 	} //end if Delete area
 	$Mode = 'RESET';
 } 
@@ -84,7 +84,7 @@ $result = get_sales_areas(check_value('show_inactive'));
 start_form();
 start_table(TABLESTYLE, "width='30%'");
 
-$th = array(_("Area Name"), "", "");
+$th = array(__("Area Name"), "", "");
 inactive_control_column($th);
 
 table_header($th);
@@ -99,8 +99,8 @@ while ($myrow = db_fetch($result))
 	
 	inactive_control_cell($myrow["area_code"], $myrow["inactive"], 'areas', 'area_code');
 
- 	edit_button_cell("Edit".$myrow["area_code"], _("Edit"));
- 	delete_button_cell("Delete".$myrow["area_code"], _("Delete"));
+ 	edit_button_cell("Edit".$myrow["area_code"], __("Edit"));
+ 	delete_button_cell("Delete".$myrow["area_code"], __("Delete"));
 	end_row();
 }
 	
@@ -123,7 +123,7 @@ if ($selected_id != -1)
 	hidden("selected_id", $selected_id);
 } 
 
-text_row_ex(_("Area Name:"), 'description', 30); 
+text_row_ex(__("Area Name:"), 'description', 30); 
 
 end_table(1);
 

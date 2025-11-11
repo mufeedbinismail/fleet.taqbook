@@ -23,7 +23,7 @@ require_once __DIR__ . "/../reporting/includes/reporting.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(800, 500);
-page(_($GLOBALS['help_context'] = "View or Print Transactions"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "View or Print Transactions"), false, false, "", $js);
 
 //----------------------------------------------------------------------------------------
 function view_link($trans)
@@ -39,9 +39,9 @@ function prt_link($row)
 		$row['type'] = $_POST['filterType'];
   	if ($row['type'] == ST_PURCHORDER || $row['type'] == ST_SALESORDER || $row['type'] == ST_SALESQUOTE || 
   		$row['type'] == ST_WORKORDER)
- 		return print_document_link($row['trans_no'], _("Print"), true, $row['type'], ICON_PRINT);
+ 		return print_document_link($row['trans_no'], __("Print"), true, $row['type'], ICON_PRINT);
  	else	
-		return print_document_link($row['trans_no']."-".$row['type'], _("Print"), true, $row['type'], ICON_PRINT);
+		return print_document_link($row['trans_no']."-".$row['type'], __("Print"), true, $row['type'], ICON_PRINT);
 }
 
 function gl_view($row)
@@ -63,23 +63,23 @@ function ref_view($row)
 
 function viewing_controls()
 {
-	display_note(_("Only documents can be printed."));
+	display_note(__("Only documents can be printed."));
 
     start_table(TABLESTYLE_NOBORDER);
 	start_row();
 
-	systypes_list_cells(_("Type:"), 'filterType', null, true, array(ST_CUSTOMER, ST_SUPPLIER));
+	systypes_list_cells(__("Type:"), 'filterType', null, true, array(ST_CUSTOMER, ST_SUPPLIER));
 
 	if (!isset($_POST['FromTransNo']))
 		$_POST['FromTransNo'] = "1";
 	if (!isset($_POST['ToTransNo']))
 		$_POST['ToTransNo'] = "999999";
 
-    ref_cells(_("from #:"), 'FromTransNo');
+    ref_cells(__("from #:"), 'FromTransNo');
 
-    ref_cells(_("to #:"), 'ToTransNo');
+    ref_cells(__("to #:"), 'ToTransNo');
 
-    submit_cells('ProcessSearch', _("Search"), '', '', 'default');
+    submit_cells('ProcessSearch', __("Search"), '', '', 'default');
 
 	end_row();
     end_table(1);
@@ -92,13 +92,13 @@ function check_valid_entries()
 {
 	if (!is_numeric($_POST['FromTransNo']) OR $_POST['FromTransNo'] <= 0)
 	{
-		display_error(_("The starting transaction number is expected to be numeric and greater than zero."));
+		display_error(__("The starting transaction number is expected to be numeric and greater than zero."));
 		return false;
 	}
 
 	if (!is_numeric($_POST['ToTransNo']) OR $_POST['ToTransNo'] <= 0)
 	{
-		display_error(_("The ending transaction number is expected to be numeric and greater than zero."));
+		display_error(__("The ending transaction number is expected to be numeric and greater than zero."));
 		return false;
 	}
 
@@ -122,11 +122,11 @@ function handle_search()
 			$print_type == ST_CUSTPAYMENT || $print_type == ST_SUPPAYMENT || $print_type == ST_WORKORDER);
 
 		$cols = array(
-			_("#") => array('insert'=>true, 'fun'=>'view_link'), 
-			_("Reference") => array('fun'=>'ref_view'), 
-			_("Date") => array('type'=>'date', 'fun'=>'date_view'),
-			_("Print") => array('insert'=>true, 'fun'=>'prt_link'), 
-			_("GL") => array('insert'=>true, 'fun'=>'gl_view')
+			__("#") => array('insert'=>true, 'fun'=>'view_link'), 
+			__("Reference") => array('fun'=>'ref_view'), 
+			__("Date") => array('type'=>'date', 'fun'=>'date_view'),
+			__("Print") => array('insert'=>true, 'fun'=>'prt_link'), 
+			__("GL") => array('insert'=>true, 'fun'=>'gl_view')
 		);
 		if(!$print_out) {
 			array_remove($cols, 3);

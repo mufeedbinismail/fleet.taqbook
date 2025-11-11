@@ -16,7 +16,7 @@ $js = "";
 if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 	$js .= get_js_open_window(900, 500);
 
-page(_($GLOBALS['help_context'] = "System and General GL Setup"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "System and General GL Setup"), false, false, "", $js);
 
 require_once __DIR__ . "/../includes/date_functions.inc";
 require_once __DIR__ . "/../includes/ui.inc";
@@ -33,56 +33,56 @@ function can_process()
 
     if (!check_num('past_due_days', 0, 100))
     {
-        display_error(_("The past due days interval allowance must be between 0 and 100."));
+        display_error(__("The past due days interval allowance must be between 0 and 100."));
         set_focus('past_due_days');
         return false;
     }
 
     if (!check_num('default_quote_valid_days', 0))
     {
-        display_error(_("Quote Valid Days is not valid number."));
+        display_error(__("Quote Valid Days is not valid number."));
         set_focus('default_quote_valid_days');
         return false;
     }
 
     if (!check_num('default_delivery_required', 0))
     {
-        display_error(_("Delivery Required By is not valid number."));
+        display_error(__("Delivery Required By is not valid number."));
         set_focus('default_delivery_required');
         return false;
     }
 
     if (!check_num('default_receival_required', 0))
     {
-        display_error(_("Receival Required By is not valid number."));
+        display_error(__("Receival Required By is not valid number."));
         set_focus('default_receival_required');
         return false;
     }
 
     if (!check_num('default_workorder_required', 0))
     {
-        display_error(_("Work Order Required By After is not valid number."));
+        display_error(__("Work Order Required By After is not valid number."));
         set_focus('default_workorder_required');
         return false;
     }	
 
     if (!check_num('po_over_receive', 0, 100))
 	{
-		display_error(_("The delivery over-receive allowance must be between 0 and 100."));
+		display_error(__("The delivery over-receive allowance must be between 0 and 100."));
 		set_focus('po_over_receive');
 		return false;
 	}
 
 	if (!check_num('po_over_charge', 0, 100))
 	{
-		display_error(_("The invoice over-charge allowance must be between 0 and 100."));
+		display_error(__("The invoice over-charge allowance must be between 0 and 100."));
 		set_focus('po_over_charge');
 		return false;
 	}
 
 	if (!check_num('past_due_days', 0, 100))
 	{
-		display_error(_("The past due days interval allowance must be between 0 and 100."));
+		display_error(__("The past due days interval allowance must be between 0 and 100."));
 		set_focus('past_due_days');
 		return false;
 	}
@@ -91,26 +91,26 @@ function can_process()
 	$post_grn_act = get_post('grn_clearing_act');
 	if (($post_grn_act != $grn_act) && db_num_rows(get_grn_items(0, '', true)))
 	{
-		display_error(_("Before GRN Clearing Account can be changed all GRNs have to be invoiced"));
+		display_error(__("Before GRN Clearing Account can be changed all GRNs have to be invoiced"));
 		$_POST['grn_clearing_act'] = $grn_act;
 		set_focus('grn_clearing_account');
 		return false;
 	}
 	if (!is_account_balancesheet(get_post('retained_earnings_act')) || is_account_balancesheet(get_post('profit_loss_year_act')))
 	{
-		display_error(_("The Retained Earnings Account should be a Balance Account or the Profit and Loss Year Account should be an Expense Account (preferred the last one in the Expense Class)"));
+		display_error(__("The Retained Earnings Account should be a Balance Account or the Profit and Loss Year Account should be an Expense Account (preferred the last one in the Expense Class)"));
 		return false;
 	}
 
     if ($user->check_module_access('mp_orders')) {
         if (!get_post('marketplace_commission_item')) {
-            display_error(_("Please select the marketplace commission account."));
+            display_error(__("Please select the marketplace commission account."));
             set_focus('marketplace_commission_item');
             return false;
         }
 
         if (!get_post('marketplace_shipping_item')) {
-            display_error(_("Please select the marketplace shipping account."));
+            display_error(__("Please select the marketplace shipping account."));
             set_focus('marketplace_shipping_item');
             return false;
         }
@@ -167,7 +167,7 @@ if (isset($_POST['submit']) && can_process())
         'marketplace_shipping_item',
     )));
 
-	display_notification(_("The general GL setup has been updated."));
+	display_notification(__("The general GL setup has been updated."));
 
 } /* end of if submit */
 
@@ -235,73 +235,73 @@ $_POST['marketplace_shipping_item'] = $myrow['marketplace_shipping_item'];
 //---------------
 
 
-table_section_title(_("General GL"));
+table_section_title(__("General GL"));
 
-text_row(_("Past Due Days Interval:"), 'past_due_days', $_POST['past_due_days'], 6, 6, '', "", _("days"));
+text_row(__("Past Due Days Interval:"), 'past_due_days', $_POST['past_due_days'], 6, 6, '', "", __("days"));
 
-accounts_type_list_row(_("Accounts Type:"), 'accounts_alpha', $_POST['accounts_alpha']); 
+accounts_type_list_row(__("Accounts Type:"), 'accounts_alpha', $_POST['accounts_alpha']); 
 
-gl_all_accounts_list_row(_("Retained Earnings:"), 'retained_earnings_act', $_POST['retained_earnings_act']);
+gl_all_accounts_list_row(__("Retained Earnings:"), 'retained_earnings_act', $_POST['retained_earnings_act']);
 
-gl_all_accounts_list_row(_("Profit/Loss Year:"), 'profit_loss_year_act', $_POST['profit_loss_year_act']);
+gl_all_accounts_list_row(__("Profit/Loss Year:"), 'profit_loss_year_act', $_POST['profit_loss_year_act']);
 
-gl_all_accounts_list_row(_("Exchange Variances Account:"), 'exchange_diff_act', $_POST['exchange_diff_act']);
+gl_all_accounts_list_row(__("Exchange Variances Account:"), 'exchange_diff_act', $_POST['exchange_diff_act']);
 
-gl_all_accounts_list_row(_("Bank Charges Account:"), 'bank_charge_act', $_POST['bank_charge_act']);
+gl_all_accounts_list_row(__("Bank Charges Account:"), 'bank_charge_act', $_POST['bank_charge_act']);
 
-tax_algorithm_list_row(_("Tax Algorithm:"), 'tax_algorithm', $_POST['tax_algorithm']);
+tax_algorithm_list_row(__("Tax Algorithm:"), 'tax_algorithm', $_POST['tax_algorithm']);
 
 //---------------
 
-table_section_title(_("Dimension Defaults"));
+table_section_title(__("Dimension Defaults"));
 
-text_row(_("Dimension Required By After:"), 'default_dim_required', $_POST['default_dim_required'], 6, 6, '', "", _("days"));
+text_row(__("Dimension Required By After:"), 'default_dim_required', $_POST['default_dim_required'], 6, 6, '', "", __("days"));
 
 //----------------
 
-table_section_title(_("Customers and Sales"));
+table_section_title(__("Customers and Sales"));
 
-amount_row(_("Default Credit Limit:"), 'default_credit_limit', $_POST['default_credit_limit']);
+amount_row(__("Default Credit Limit:"), 'default_credit_limit', $_POST['default_credit_limit']);
 
-yesno_list_row(_("Invoice Identification:"), 'print_invoice_no', $_POST['print_invoice_no'], $name_yes=_("Number"), $name_no=_("Reference"));
+yesno_list_row(__("Invoice Identification:"), 'print_invoice_no', $_POST['print_invoice_no'], $name_yes=__("Number"), $name_no=__("Reference"));
 
-check_row(_("Accumulate batch shipping:"), 'accumulate_shipping', null);
+check_row(__("Accumulate batch shipping:"), 'accumulate_shipping', null);
 
-check_row(_("Print Item Image on Quote:"), 'print_item_images_on_quote', null);
+check_row(__("Print Item Image on Quote:"), 'print_item_images_on_quote', null);
 
-textarea_row(_("Legal Text on Invoice:"), 'legal_text', $_POST['legal_text'], 32, 4);
+textarea_row(__("Legal Text on Invoice:"), 'legal_text', $_POST['legal_text'], 32, 4);
 
-gl_all_accounts_list_row(_("Shipping Charged Account:"), 'freight_act', $_POST['freight_act']);
+gl_all_accounts_list_row(__("Shipping Charged Account:"), 'freight_act', $_POST['freight_act']);
 
-gl_all_accounts_list_row(_("Deferred Income Account:"), 'deferred_income_act', $_POST['deferred_income_act'], true, false,
-	_("Not used"), false, false, false);
+gl_all_accounts_list_row(__("Deferred Income Account:"), 'deferred_income_act', $_POST['deferred_income_act'], true, false,
+	__("Not used"), false, false, false);
 
 //---------------
 
-table_section_title(_("Customers and Sales Defaults"));
+table_section_title(__("Customers and Sales Defaults"));
 // default for customer branch
-gl_all_accounts_list_row(_("Receivable Account:"), 'debtors_act');
+gl_all_accounts_list_row(__("Receivable Account:"), 'debtors_act');
 
-gl_all_accounts_list_row(_("Sales Account:"), 'default_sales_act', null,
+gl_all_accounts_list_row(__("Sales Account:"), 'default_sales_act', null,
 	false, false, true);
 
-gl_all_accounts_list_row(_("Sales Discount Account:"), 'default_sales_discount_act');
+gl_all_accounts_list_row(__("Sales Discount Account:"), 'default_sales_discount_act');
 
-gl_all_accounts_list_row(_("Prompt Payment Discount Account:"), 'default_prompt_payment_act');
+gl_all_accounts_list_row(__("Prompt Payment Discount Account:"), 'default_prompt_payment_act');
 
-text_row(_("Quote Valid Days:"), 'default_quote_valid_days', $_POST['default_quote_valid_days'], 6, 6, '', "", _("days"));
+text_row(__("Quote Valid Days:"), 'default_quote_valid_days', $_POST['default_quote_valid_days'], 6, 6, '', "", __("days"));
 
-text_row(_("Delivery Required By:"), 'default_delivery_required', $_POST['default_delivery_required'], 6, 6, '', "", _("days"));
+text_row(__("Delivery Required By:"), 'default_delivery_required', $_POST['default_delivery_required'], 6, 6, '', "", __("days"));
 
 //---------------
 
 table_section(2);
 
 if ($user->check_module_access('mp_orders')) {
-    table_section_title(_("Marketplace Sales Defaults"));
+    table_section_title(__("Marketplace Sales Defaults"));
 
     start_row();
-    label_cells(_("Commission Item:"), stock_items_list(
+    label_cells(__("Commission Item:"), stock_items_list(
         'marketplace_commission_item',
         null,
         '-- select --',
@@ -315,7 +315,7 @@ if ($user->check_module_access('mp_orders')) {
 
     start_row();
     label_cells(
-        _("Shipping Chrg Item:"),
+        __("Shipping Chrg Item:"),
         stock_items_list(
             'marketplace_shipping_item',
             null,
@@ -330,65 +330,65 @@ if ($user->check_module_access('mp_orders')) {
     end_row();
 }
 
-table_section_title(_("Suppliers and Purchasing"));
+table_section_title(__("Suppliers and Purchasing"));
 
-percent_row(_("Delivery Over-Receive Allowance:"), 'po_over_receive');
+percent_row(__("Delivery Over-Receive Allowance:"), 'po_over_receive');
 
-percent_row(_("Invoice Over-Charge Allowance:"), 'po_over_charge');
+percent_row(__("Invoice Over-Charge Allowance:"), 'po_over_charge');
 
-table_section_title(_("Suppliers and Purchasing Defaults"));
+table_section_title(__("Suppliers and Purchasing Defaults"));
 
-gl_all_accounts_list_row(_("Payable Account:"), 'creditors_act', $_POST['creditors_act']);
+gl_all_accounts_list_row(__("Payable Account:"), 'creditors_act', $_POST['creditors_act']);
 
-gl_all_accounts_list_row(_("Purchase Discount Account:"), 'pyt_discount_act', $_POST['pyt_discount_act']);
+gl_all_accounts_list_row(__("Purchase Discount Account:"), 'pyt_discount_act', $_POST['pyt_discount_act']);
 
-gl_all_accounts_list_row(_("GRN Clearing Account:"), 'grn_clearing_act', get_post('grn_clearing_act'), true, false, _("No postings on GRN"));
+gl_all_accounts_list_row(__("GRN Clearing Account:"), 'grn_clearing_act', get_post('grn_clearing_act'), true, false, __("No postings on GRN"));
 
-text_row(_("Receival Required By:"), 'default_receival_required', $_POST['default_receival_required'], 6, 6, '', "", _("days"));
+text_row(__("Receival Required By:"), 'default_receival_required', $_POST['default_receival_required'], 6, 6, '', "", __("days"));
 
-check_row(_("Show PO item codes:"), 'show_po_item_codes', null);
+check_row(__("Show PO item codes:"), 'show_po_item_codes', null);
 
-table_section_title(_("Inventory"));
+table_section_title(__("Inventory"));
 
-check_row(_("Allow Negative Inventory:"), 'allow_negative_stock', null);
-label_row(null, _("Warning:  This may cause a delay in GL postings"), "", "class='stockmankofg' colspan=2"); 
+check_row(__("Allow Negative Inventory:"), 'allow_negative_stock', null);
+label_row(null, __("Warning:  This may cause a delay in GL postings"), "", "class='stockmankofg' colspan=2"); 
 
-check_row(_("No zero-amounts (Service):"), 'no_zero_lines_amount', null);
+check_row(__("No zero-amounts (Service):"), 'no_zero_lines_amount', null);
 
-check_row(_("Location Notifications:"), 'loc_notification', null);
+check_row(__("Location Notifications:"), 'loc_notification', null);
 
-check_row(_("Allow Negative Prices:"), 'allow_negative_prices', null);
+check_row(__("Allow Negative Prices:"), 'allow_negative_prices', null);
 
-table_section_title(_("Items Defaults"));
-gl_all_accounts_list_row(_("Sales Account:"), 'default_inv_sales_act', $_POST['default_inv_sales_act']);
+table_section_title(__("Items Defaults"));
+gl_all_accounts_list_row(__("Sales Account:"), 'default_inv_sales_act', $_POST['default_inv_sales_act']);
 
-gl_all_accounts_list_row(_("Inventory Account:"), 'default_inventory_act', $_POST['default_inventory_act']);
+gl_all_accounts_list_row(__("Inventory Account:"), 'default_inventory_act', $_POST['default_inventory_act']);
 // this one is default for items and suppliers (purchase account)
-gl_all_accounts_list_row(_("C.O.G.S. Account:"), 'default_cogs_act', $_POST['default_cogs_act']);
+gl_all_accounts_list_row(__("C.O.G.S. Account:"), 'default_cogs_act', $_POST['default_cogs_act']);
 
-gl_all_accounts_list_row(_("Inventory Adjustments Account:"), 'default_adj_act', $_POST['default_adj_act']);
+gl_all_accounts_list_row(__("Inventory Adjustments Account:"), 'default_adj_act', $_POST['default_adj_act']);
 
-gl_all_accounts_list_row(_("WIP Account:"), 'default_wip_act', $_POST['default_wip_act']);
-
-//----------------
-
-table_section_title(_("Fixed Assets Defaults"));
-
-gl_all_accounts_list_row(_("Loss On Asset Disposal Account:"), 'default_loss_on_asset_disposal_act', $_POST['default_loss_on_asset_disposal_act']);
-
-array_selector_row (_("Depreciation Period:"), 'depreciation_period', $_POST['depreciation_period'], array(FA_MONTHLY => _("Monthly"), FA_YEARLY => _("Yearly")));
+gl_all_accounts_list_row(__("WIP Account:"), 'default_wip_act', $_POST['default_wip_act']);
 
 //----------------
 
-table_section_title(_("Manufacturing Defaults"));
+table_section_title(__("Fixed Assets Defaults"));
 
-text_row(_("Work Order Required By After:"), 'default_workorder_required', $_POST['default_workorder_required'], 6, 6, '', "", _("days"));
+gl_all_accounts_list_row(__("Loss On Asset Disposal Account:"), 'default_loss_on_asset_disposal_act', $_POST['default_loss_on_asset_disposal_act']);
+
+array_selector_row (__("Depreciation Period:"), 'depreciation_period', $_POST['depreciation_period'], array(FA_MONTHLY => __("Monthly"), FA_YEARLY => __("Yearly")));
+
+//----------------
+
+table_section_title(__("Manufacturing Defaults"));
+
+text_row(__("Work Order Required By After:"), 'default_workorder_required', $_POST['default_workorder_required'], 6, 6, '', "", __("days"));
 
 //----------------
 
 end_outer_table(1);
 
-submit_center('submit', _("Update"), true, '', 'default');
+submit_center('submit', __("Update"), true, '', 'default');
 
 end_form(2);
 

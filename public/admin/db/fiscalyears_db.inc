@@ -134,12 +134,12 @@ function close_year($year)
 	$co = get_company_prefs();
 	if (get_gl_account($co['retained_earnings_act']) == false || get_gl_account($co['profit_loss_year_act']) == false)
 	{
-		display_error(_("The Retained Earnings Account or the Profit and Loss Year Account has not been set in System and General GL Setup"));
+		display_error(__("The Retained Earnings Account or the Profit and Loss Year Account has not been set in System and General GL Setup"));
 		return false;
 	}
 	if (!is_account_balancesheet($co['retained_earnings_act']) || is_account_balancesheet($co['profit_loss_year_act']))
 	{
-		display_error(_("The Retained Earnings Account should be a Balance Account or the Profit and Loss Year Account should be an Expense Account (preferred the last one in the Expense Class)"));
+		display_error(__("The Retained Earnings Account should be a Balance Account or the Profit and Loss Year Account should be an Expense Account (preferred the last one in the Expense Class)"));
 		return false;
 	}
 
@@ -164,9 +164,9 @@ function close_year($year)
 		$cart->reference = $Refs->get_next(ST_JOURNAL, null, $to);
 		$cart->tran_date = $cart->doc_date = $cart->event_date = $to;
 
-		$cart->add_gl_item($co['retained_earnings_act'], 0, 0, -$balance, _("Closing Year"), '', 0);
-		$cart->add_gl_item($co['profit_loss_year_act'], 0, 0, $balance, _("Closing Year"), '', 0);
-		$cart->memo_ = _("Closing Year");
+		$cart->add_gl_item($co['retained_earnings_act'], 0, 0, -$balance, __("Closing Year"), '', 0);
+		$cart->add_gl_item($co['profit_loss_year_act'], 0, 0, $balance, __("Closing Year"), '', 0);
+		$cart->memo_ = __("Closing Year");
 		write_journal_entries($cart);
 	}
 	close_transactions($to);
@@ -217,7 +217,7 @@ function delete_this_fiscalyear($selected_id)
 	
 	db_backup($db_connections[user_company()], 'Security backup before Fiscal Year Removal');
 	begin_transaction();
-	$ref = _("Open Balance");
+	$ref = __("Open Balance");
 	$myrow = get_fiscalyear($selected_id);
 	$to = $myrow['end'];
 	$sql = "SELECT order_no, trans_type FROM ".TB_PREF."sales_orders WHERE ord_date <= '$to' AND type <> 1"; // don't take the templates

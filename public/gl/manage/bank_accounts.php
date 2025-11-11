@@ -17,7 +17,7 @@ $js = "";
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
-page(_($GLOBALS['help_context'] = "Bank Accounts"), isset($_GET['bank_id']), false, "", $js);
+page(__($GLOBALS['help_context'] = "Bank Accounts"), isset($_GET['bank_id']), false, "", $js);
 
 require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../includes/ui/attachment.inc";
@@ -45,13 +45,13 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 	if (strlen($_POST['bank_account_name']) == 0) 
 	{
 		$input_error = 1;
-		display_error(_("The bank account name cannot be empty."));
+		display_error(__("The bank account name cannot be empty."));
 		set_focus('bank_account_name');
 	} 
 	if ($Mode=='ADD_ITEM' && (gl_account_in_bank_accounts(get_post('account_code')) 
 			|| key_in_foreign_table(get_post('account_code'), 'gl_trans', 'account'))) {
 		$input_error = 1;
-		display_error(_("The GL account selected is already in use or has transactions. Select another empty GL account."));
+		display_error(__("The GL account selected is already in use or has transactions. Select another empty GL account."));
 		set_focus('account_code');
 	}
 	if ($input_error != 1)
@@ -65,7 +65,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
     			$_POST['bank_address'], $_POST['BankAccountCurrency'],
     			$_POST['dflt_curr_act'], $_POST['bank_charge_act']);
 			$Ajax->activate('bank_id'); // in case of status change
-			display_notification(_('Bank account has been updated'));
+			display_notification(__('Bank account has been updated'));
     	} 
     	else 
     	{
@@ -75,7 +75,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
     			$_POST['bank_account_number'], $_POST['bank_address'], 
 				$_POST['BankAccountCurrency'], $_POST['dflt_curr_act'], $_POST['bank_charge_act']);
 			$bank_id = $_POST['bank_id'] = db_insert_id();
-			display_notification(_('New bank account has been added'));
+			display_notification(__('New bank account has been added'));
   			$Ajax->activate('_page_body');
   		}
  		$Mode = 'RESET';
@@ -91,18 +91,18 @@ elseif( $Mode == 'Delete')
 	if (key_in_foreign_table($bank_id, 'bank_trans', 'bank_act') || key_in_foreign_table(get_post('account_code'), 'gl_trans', 'account'))
 	{
 		$cancel_delete = 1;
-		display_error(_("Cannot delete this bank account because transactions have been created using this account."));
+		display_error(__("Cannot delete this bank account because transactions have been created using this account."));
 	}
 
 	if (key_in_foreign_table($bank_id, 'sales_pos', 'pos_account'))
 	{
 		$cancel_delete = 1;
-		display_error(_("Cannot delete this bank account because POS definitions have been created using this account."));
+		display_error(__("Cannot delete this bank account because POS definitions have been created using this account."));
 	}
 	if (!$cancel_delete) 
 	{
 		delete_bank_account($bank_id);
-		display_notification(_('Selected bank account has been deleted'));
+		display_notification(__('Selected bank account has been deleted'));
 	} //end if Delete bank account
 	$Mode = 'RESET';
 } 
@@ -125,8 +125,8 @@ $result = get_bank_accounts(check_value('show_inactive'));
 start_form(true);
 start_table(TABLESTYLE, "width='80%'");
 
-$th = array(_("Account Name"), _("Type"), _("Currency"), _("GL Account"), 
-	_("Bank"), _("Number"), _("Bank Address"), _("Dflt"), '','');
+$th = array(__("Account Name"), __("Type"), __("Currency"), __("GL Account"), 
+	__("Bank"), __("Number"), __("Bank Address"), __("Dflt"), '','');
 inactive_control_column($th);
 table_header($th);	
 
@@ -144,13 +144,13 @@ while ($myrow = db_fetch($result))
     label_cell($myrow["bank_account_number"], "nowrap");
     label_cell($myrow["bank_address"]);
     if ($myrow["dflt_curr_act"])
-		label_cell(_("Yes"));
+		label_cell(__("Yes"));
 	else
-		label_cell(_("No"));
+		label_cell(__("No"));
 
 	inactive_control_cell($myrow["id"], $myrow["inactive"], 'bank_accounts', 'id');
- 	edit_button_cell("Edit".$myrow["id"], _("Edit"));
- 	delete_button_cell("Delete".$myrow["id"], _("Delete"));
+ 	edit_button_cell("Edit".$myrow["id"], __("Edit"));
+ 	delete_button_cell("Delete".$myrow["id"], __("Delete"));
     end_row(); 
 }
 
@@ -185,40 +185,40 @@ function bank_account_settings($bank_id)
 		set_focus('bank_account_name');
 	} 
 
-	text_row(_("Bank Account Name:"), 'bank_account_name', null, 50, 100);
+	text_row(__("Bank Account Name:"), 'bank_account_name', null, 50, 100);
 
 	if ($is_used) 
 	{
-		label_row(_("Account Type:"), $bank_account_types[$_POST['account_type']]);
+		label_row(__("Account Type:"), $bank_account_types[$_POST['account_type']]);
 		hidden('account_type');
 	} 
 	else 
 	{
-		bank_account_types_list_row(_("Account Type:"), 'account_type', null); 
+		bank_account_types_list_row(__("Account Type:"), 'account_type', null); 
 	}
 	if ($is_used) 
 	{
-		label_row(_("Bank Account Currency:"), $_POST['BankAccountCurrency']);
+		label_row(__("Bank Account Currency:"), $_POST['BankAccountCurrency']);
 		hidden('BankAccountCurrency', $_POST['BankAccountCurrency']);
 	} 
 	else 
 	{
-		currencies_list_row(_("Bank Account Currency:"), 'BankAccountCurrency', null);
+		currencies_list_row(__("Bank Account Currency:"), 'BankAccountCurrency', null);
 	}	
 
-	yesno_list_row(_("Default currency account:"), 'dflt_curr_act');
+	yesno_list_row(__("Default currency account:"), 'dflt_curr_act');
 
 	if($is_used)
 	{
-		label_row(_("Bank Account GL Code:"), $_POST['account_code']);
+		label_row(__("Bank Account GL Code:"), $_POST['account_code']);
 		hidden('account_code');
 	} else 
-		gl_all_accounts_list_row(_("Bank Account GL Code:"), 'account_code', null);
+		gl_all_accounts_list_row(__("Bank Account GL Code:"), 'account_code', null);
 
-	gl_all_accounts_list_row(_("Bank Charges Account:"), 'bank_charge_act', null, true);
-	text_row(_("Bank Name:"), 'bank_name', null, 50, 60);
-	text_row(_("Bank Account Number:"), 'bank_account_number', null, 30, 60);
-	textarea_row(_("Bank Address:"), 'bank_address', null, 40, 5);
+	gl_all_accounts_list_row(__("Bank Charges Account:"), 'bank_charge_act', null, true);
+	text_row(__("Bank Name:"), 'bank_name', null, 50, 60);
+	text_row(__("Bank Account Number:"), 'bank_account_number', null, 30, 60);
+	textarea_row(__("Bank Address:"), 'bank_address', null, 40, 5);
 
 	end_table(1);
 
@@ -240,9 +240,9 @@ if ($bank_id)
 	hidden('bank_id', $bank_id);
 
 tabbed_content_start('tabs', array(
-		'settings' => array(_('&General settings'), $bank_id),
-		'transactions' => array(_('&Transactions'), (user_check_access('SA_BANKTRANSVIEW') ? $bank_id : null)),
-		'attachments' => array(_('Attachments'), (user_check_access('SA_ATTACHDOCUMENT') ? $bank_id : null)),
+		'settings' => array(__('&General settings'), $bank_id),
+		'transactions' => array(__('&Transactions'), (user_check_access('SA_BANKTRANSVIEW') ? $bank_id : null)),
+		'attachments' => array(__('Attachments'), (user_check_access('SA_ATTACHDOCUMENT') ? $bank_id : null)),
 	));
 	
 	switch (get_post('_tabs_sel')) {

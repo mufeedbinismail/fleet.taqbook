@@ -44,7 +44,7 @@ function page($title, $no_menu=false, $is_index=false, $onload="", $js="", $scri
 //	error_box();
 	if($script_only) {
 		echo '<noscript>';
-		echo display_heading(_('This page is usable only with javascript enabled browsers.'));
+		echo display_heading(__('This page is usable only with javascript enabled browsers.'));
 		echo '</noscript>';
 		div_start('_page_body', null, true);
 	} else {

@@ -457,7 +457,7 @@ function credit_sales_invoice_allocate($invoice_no, $credit_no, $amount, $date)
 	if (floatcmp($free, $amount)<0) {
 		// this should never happen unless sparse credit notices were allocated to 
 		// the invoice, or summarized freight costs on credit notes is more than those on invoice.
-		display_error(_("Unsuspected overallocation happened due to sparse credit notes exists for this invoice.
+		display_error(__("Unsuspected overallocation happened due to sparse credit notes exists for this invoice.
  Check all credit notes allocated to this invoice for summarized freight charges."));
 		return false;
 	}

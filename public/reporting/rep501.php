@@ -82,14 +82,14 @@ function print_dimension_summary()
 	$orientation = ($orientation ? 'L' : 'P');
 	$cols = array(0, 50, 210, 250, 320, 395, 465,	515);
 
-	$headers = array(_('Reference'), _('Name'), _('Type'), _('Date'), _('Due Date'), _('Closed'), _('YTD'));
+	$headers = array(__('Reference'), __('Name'), __('Type'), __('Date'), __('Due Date'), __('Closed'), __('YTD'));
 
 	$aligns = array('left',	'left', 'left',	'left', 'left', 'left', 'right');
 
     $params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Dimension'), 'from' => get_dimension_string($fromdim), 'to' => get_dimension_string($todim)));
+    				    1 => array('text' => __('Dimension'), 'from' => get_dimension_string($fromdim), 'to' => get_dimension_string($todim)));
 
-    $rep = new FrontReport(_('Dimension Summary'), "DimensionSummary", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Dimension Summary'), "DimensionSummary", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -106,9 +106,9 @@ function print_dimension_summary()
 		$rep->DateCol(3, 4, $trans['date_'], true);
 		$rep->DateCol(4, 5, $trans['due_date'], true);
 		if ($trans['closed'])
-			$str = _('Yes');
+			$str = __('Yes');
 		else
-			$str = _('No');
+			$str = __('No');
 		$rep->TextCol(5, 6, $str);
 		if ($showbal)
 		{

@@ -287,30 +287,30 @@ class simple_crud_view extends user_view {
 		$this->views[''] = 'list_view';			// default view
 
 		if ($this->options['update'])
-			$this->_add_action('Edit', '_edit', _('Edit'), _('Edit document line'), ICON_EDIT, '',
+			$this->_add_action('Edit', '_edit', __('Edit'), __('Edit document line'), ICON_EDIT, '',
 				'editor_view');
 
 		if ($this->options['delete'])
-			$this->_add_action('Delete', '_delete', _('Delete'), _('Remove line from document'), ICON_DELETE, '',
+			$this->_add_action('Delete', '_delete', __('Delete'), __('Remove line from document'), ICON_DELETE, '',
 				'list_view');
 
 		if ($this->options['update'])
-			$this->_add_action('UPDATE', '_update', _('Update'), _('Submit changes'), ICON_UPDATE, 'default',
+			$this->_add_action('UPDATE', '_update', __('Update'), __('Submit changes'), ICON_UPDATE, 'default',
 				'editor_view');
 
-		$this->_add_action('RESET', '_cancel', _('Cancel'), _('Cancel changes'), ICON_ESCAPE, 'cancel',
+		$this->_add_action('RESET', '_cancel', __('Cancel'), __('Cancel changes'), ICON_ESCAPE, 'cancel',
 			'list_view');
 
 		if ($this->options['insert'])
-			$this->_add_action('ADD', '_add', _('Add'), _('Add new'), ICON_ADD, 'default',
+			$this->_add_action('ADD', '_add', __('Add'), __('Add new'), ICON_ADD, 'default',
 				'editor_view');
 
 		if ($this->options['insert'])
-			$this->_add_action('NEW', '_add', _('New'), _('Add new'), ICON_ADD, 'default',
+			$this->_add_action('NEW', '_add', __('New'), __('Add new'), ICON_ADD, 'default',
 				'editor_view');
 
 		if ($this->options['clone'])
-			$this->_add_action('CLONE', '_cloning', _('Clone'), _('Clone'), ICON_ADD, '',
+			$this->_add_action('CLONE', '_cloning', __('Clone'), __('Clone'), ICON_ADD, '',
 				'editor_view');
 
 		$this->data_set = $data_set;

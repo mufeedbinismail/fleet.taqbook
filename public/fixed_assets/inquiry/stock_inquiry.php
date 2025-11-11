@@ -22,7 +22,7 @@ if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($GLOBALS['help_context'] = "Fixed Assets Inquiry"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Fixed Assets Inquiry"), false, false, "", $js);
 
 if (isset($_GET['location'])) 
 {
@@ -35,9 +35,9 @@ start_form();
 
 start_table(TABLESTYLE_NOBORDER);
 start_row();
-//locations_list_cells(_("From Location:"), 'location', null, false, false, true);
-check_cells( _("Show inactive:"), 'show_inactive', null);
-submit_cells('RefreshInquiry', _("Search"),'',_('Refresh Inquiry'), 'default');
+//locations_list_cells(__("From Location:"), 'location', null, false, false, true);
+check_cells( __("Show inactive:"), 'show_inactive', null);
+submit_cells('RefreshInquiry', __("Search"),'',__('Refresh Inquiry'), 'default');
 end_row();
 
 end_table();
@@ -97,7 +97,7 @@ function depr_par($row) {
 	if ($row['depreciation_method'] == 'D')
 		return $row['depreciation_rate']*$row['depreciation_factor'].'%';
 	elseif ($row['depreciation_method'] == 'N')
-		return $row['depreciation_rate'].' '._('years'
+		return $row['depreciation_rate'].' '.__('years'
 		);
 	else
 		return $row['depreciation_rate'].'%';
@@ -106,11 +106,11 @@ function depr_par($row) {
 function status_title($row) {
 
    	if ($row['inactive'] || ($row['disposal_date'] !== NULL))
-		return _("Disposed"); // disposed or saled
+		return __("Disposed"); // disposed or saled
 	elseif ($row['purchase_date'] === NULL)
-		return _("Purchasable"); // not yet purchased
+		return __("Purchasable"); // not yet purchased
     else
-    	return _("Active");  // purchased
+    	return __("Active");  // purchased
 
 }
 
@@ -159,20 +159,20 @@ function balance_link($row)
 $sql = get_sql_for_fixed_assets(get_post('show_inactive'));
 
 $cols = array(
-			//_("Type") => array('fun'=>'systype_name', 'ord'=>''), 
-			//_("#") => array('fun'=>'trans_view', 'ord'=>''), 
-			_("#") => array('fun' => 'fa_link'), 
-			_("Class"), 
-			_("UOM") => array('align' => 'center'), 
-			_("Description"),
-			_("Rate or Lifecycle") => array('fun' => 'depr_par'), 
-			_("Method") => array('fun' => 'depr_method_title'), 
-			_("Status") => array('fun' => 'status_title'), 
-			_("Purchased") => array('fun' => 'purchase_link'),
-			_("Initial") => array('align'=>'right', 'fun' => 'amount_link'),
-			_("Depreciations") => array('align'=>'right', 'fun' => 'depr_link'),
-			_("Current") => array('align'=>'right', 'fun' => 'balance_link'),
-			_("Liquidation or Sale") => array('align' => 'center', 'fun' => 'disposal_link'), 
+			//__("Type") => array('fun'=>'systype_name', 'ord'=>''), 
+			//__("#") => array('fun'=>'trans_view', 'ord'=>''), 
+			__("#") => array('fun' => 'fa_link'), 
+			__("Class"), 
+			__("UOM") => array('align' => 'center'), 
+			__("Description"),
+			__("Rate or Lifecycle") => array('fun' => 'depr_par'), 
+			__("Method") => array('fun' => 'depr_method_title'), 
+			__("Status") => array('fun' => 'status_title'), 
+			__("Purchased") => array('fun' => 'purchase_link'),
+			__("Initial") => array('align'=>'right', 'fun' => 'amount_link'),
+			__("Depreciations") => array('align'=>'right', 'fun' => 'depr_link'),
+			__("Current") => array('align'=>'right', 'fun' => 'balance_link'),
+			__("Liquidation or Sale") => array('align' => 'center', 'fun' => 'disposal_link'), 
 			//array('insert'=>true, 'fun'=>'gl_view'),
 			//array('insert'=>true, 'fun'=>'rm_link'),
 			//array('insert'=>true, 'fun'=>'edit_link'),

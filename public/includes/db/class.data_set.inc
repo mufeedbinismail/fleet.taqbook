@@ -74,7 +74,7 @@ abstract class record_set {
 	{
 		$params = explode(':', $check);
 		if (count($params)<3)
-			display_error(_('Invalid validator string'));
+			display_error(__('Invalid validator string'));
 
 		$fieldname = array_shift($params);
 		$mode = array_shift($params);
@@ -110,7 +110,7 @@ abstract class record_set {
 
 				// precheck for existing 
 				if ($mode == 'i' && $fld && !isset($data[$fld])) {
-					$msg = sprintf(_("Input parameter '%s' have to be set."), $check['fld']);
+					$msg = sprintf(__("Input parameter '%s' have to be set."), $check['fld']);
 					return $this->error($msg, $check['fld']);
 				}
 
@@ -118,20 +118,20 @@ abstract class record_set {
 
 					case 'required':
 						if ($data[$fld]==='') {
-							if (!$msg) $msg = sprintf(_("Parameter '%s' cannot be empty.", $check['fld']));
+							if (!$msg) $msg = sprintf(__("Parameter '%s' cannot be empty.", $check['fld']));
 								return $this->error($msg, $check['fld']);
 						}
 						break;
 
 					case 'clean_file_name':
 						if (isset($data[$fld]) && ($data[$fld] != clean_file_name($data[$fld]))) {
-							if (!$msg) $msg = sprintf(_("Parameter '%s' contains invalid characters.", $check['fld']));
+							if (!$msg) $msg = sprintf(__("Parameter '%s' contains invalid characters.", $check['fld']));
 							return $this->error($msg, $check['fld']);
 						}
 						break;
 
 					case 'range':
-						if (!$msg) $msg = sprintf(_("Parameter '%s' has invalid value.", $check['fld']));
+						if (!$msg) $msg = sprintf(__("Parameter '%s' has invalid value.", $check['fld']));
 						// TODO: check at least one named parameter is passed
 						if (isset($opts['lt']) && !($data[$fld] < $opts['lt']) ||
 							(isset($opts['gt']) && !($data[$fld] > $opts['gt'])) ||
@@ -274,7 +274,7 @@ class data_set extends record_set {
 				if (isset($key[$fld]))
 					$where[$fld] = "`$fld`=".db_escape($key[$fld]);
 				else
-					return $this->error(sprintf(_("Invalid key passed reading '%s'"), $this->name));
+					return $this->error(sprintf(__("Invalid key passed reading '%s'"), $this->name));
 		} else {
 			$where = array($this->key => "`".$this->key."`=".db_escape($key));
 		}
@@ -326,7 +326,7 @@ class data_set extends record_set {
 				$updates[$fld] = "`$fld`=".db_escape($value);
 		}
 		if (count($updates) == 0)
-			return $this->error(_("Empty update data for table ").$this->name);
+			return $this->error(__("Empty update data for table ").$this->name);
 
 		$sql .= implode(',', $updates)." WHERE ";
 		$where = $this->subset ? (array)$this->subset : array();
@@ -336,7 +336,7 @@ class data_set extends record_set {
 				if (isset($key[$fld]))
 					$where[$fld] = "`$fld`=".db_escape($key[$fld]);
 				else
-					return $this->error(sprintf(_("Invalid key for update '%s'"), $this->name));
+					return $this->error(sprintf(__("Invalid key for update '%s'"), $this->name));
 		} else {
 			$where = array("`".$this->key."`=".db_escape($key));
 		}
@@ -365,7 +365,7 @@ class data_set extends record_set {
 				if (isset($key[$fld]))
 					$where[$fld] = "`$fld`=".db_escape($key[$fld]);
 				else
-					return $this->error(sprintf(_("Invalid key for update '%s'"), $this->name));
+					return $this->error(sprintf(__("Invalid key for update '%s'"), $this->name));
 		} else {
 			$where = array("`".$this->key."`=".db_escape($key));
 		}
@@ -373,7 +373,7 @@ class data_set extends record_set {
 		$sql .= " WHERE ".implode(' AND ', $where);
 		$result = db_query($sql);
 		if (!$result)
-			return $this->error(_("Cannot update record in ").$this->name);
+			return $this->error(__("Cannot update record in ").$this->name);
 
 		return $result;
 	}
@@ -392,13 +392,13 @@ class data_set extends record_set {
 				$fields["`$fld`"] = db_escape($value);
 		}
 		if (!count($fields))
-			return $this->error(_("Empty data set for insertion into ".$this->name));
+			return $this->error(__("Empty data set for insertion into ".$this->name));
 
 		$sql .= implode(',', array_keys($fields)) .') VALUES ('. implode(',', $fields).')';
 
 		$result = db_query($sql);
 		if (!$result)
-			return $this->error(_("Cannot insert record into ").$this->name);
+			return $this->error(__("Cannot insert record into ").$this->name);
 
 		return $result;
 	}
@@ -479,7 +479,7 @@ class array_set extends record_set {
 
 		$record = $this->_set_record($data, $this->array[$key]);
 		if (!$record)
-			return $this->error(_("Empty update data for array ").$this->name);
+			return $this->error(__("Empty update data for array ").$this->name);
 
 		$this->array[$key] = $record;
 
@@ -507,7 +507,7 @@ class array_set extends record_set {
 
 		$record = $this->_set_record($data);
 		if (!$record)
-			return $this->error(_("Empty data for array ").$this->name);
+			return $this->error(__("Empty data for array ").$this->name);
 
 		$this->array[] = $record;
 

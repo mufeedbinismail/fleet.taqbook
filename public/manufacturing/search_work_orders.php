@@ -24,12 +24,12 @@ if (isset($_GET['outstanding_only']) && ($_GET['outstanding_only'] == true))
 {
 // curently outstanding simply means not closed
 	$outstanding_only = 1;
-	page(_($GLOBALS['help_context'] = "Search Outstanding Work Orders"), false, false, "", $js);
+	page(__($GLOBALS['help_context'] = "Search Outstanding Work Orders"), false, false, "", $js);
 }
 else
 {
 	$outstanding_only = 0;
-	page(_($GLOBALS['help_context'] = "Search Work Orders"), false, false, "", $js);
+	page(__($GLOBALS['help_context'] = "Search Work Orders"), false, false, "", $js);
 }
 //-----------------------------------------------------------------------------------
 // Ajax updates
@@ -65,24 +65,24 @@ start_form(false, false, url()->current() ."?outstanding_only=$outstanding_only"
 
 start_table(TABLESTYLE_NOBORDER);
 start_row();
-ref_cells(_("#:"), 'OrderId', '',null, '', true);
-ref_cells(_("Reference:"), 'OrderNumber', '',null, '', true);
+ref_cells(__("#:"), 'OrderId', '',null, '', true);
+ref_cells(__("Reference:"), 'OrderNumber', '',null, '', true);
 
-locations_list_cells(_("at Location:"), 'StockLocation', null, true);
+locations_list_cells(__("at Location:"), 'StockLocation', null, true);
 
 end_row();
 end_table();
 start_table(TABLESTYLE_NOBORDER);
 start_row();
 
-check_cells( _("Only Overdue:"), 'OverdueOnly', null);
+check_cells( __("Only Overdue:"), 'OverdueOnly', null);
 
 if ($outstanding_only==0)
-	check_cells( _("Only Open:"), 'OpenOnly', null);
+	check_cells( __("Only Open:"), 'OpenOnly', null);
 
-stock_manufactured_items_list_cells(_("for item:"), 'SelectedStockItem', null, true);
+stock_manufactured_items_list_cells(__("for item:"), 'SelectedStockItem', null, true);
 
-submit_cells('SearchOrders', _("Search"),'',_('Select documents'),  'default');
+submit_cells('SearchOrders', __("Search"),'',__('Select documents'),  'default');
 end_row();
 end_table();
 
@@ -112,7 +112,7 @@ function wo_type_name($dummy, $type)
 
 function edit_link($row)
 {
-	return  $row['closed'] ? '<i>'._('Closed').'</i>' :
+	return  $row['closed'] ? '<i>'.__('Closed').'</i>' :
 		trans_editor_link(ST_WORKORDER, $row["id"]);
 }
 
@@ -120,24 +120,24 @@ function release_link($row)
 {
 	return $row["closed"] ? '' : 
 		($row["released"]==0 ?
-		pager_link(_('Release'),
+		pager_link(__('Release'),
 			"/manufacturing/work_order_release.php?trans_no=" . $row["id"])
 		: 
-		pager_link(_('Issue'),
+		pager_link(__('Issue'),
 			"/manufacturing/work_order_issue.php?trans_no=" .$row["id"]));
 }
 
 function produce_link($row)
 {
 	return $row["closed"] || !$row["released"] ? '' :
-		pager_link(_('Produce'),
+		pager_link(__('Produce'),
 			"/manufacturing/work_order_add_finished.php?trans_no=" .$row["id"]);
 }
 
 function costs_link($row)
 {
 	return $row["closed"] || !$row["released"] ? '' :
-		pager_link(_('Costs'),
+		pager_link(__('Costs'),
 			"/manufacturing/work_order_costs.php?trans_no=" .$row["id"]);
 }
 
@@ -148,7 +148,7 @@ function view_gl_link($row)
 
 function prt_link($row)
 {
-	return print_document_link($row['id'], _("Print"), true, ST_WORKORDER, ICON_PRINT);
+	return print_document_link($row['id'], __("Print"), true, ST_WORKORDER, ICON_PRINT);
 }
 
 function dec_amount($row, $amount)
@@ -160,15 +160,15 @@ $sql = get_sql_for_work_orders($outstanding_only, get_post('SelectedStockItem'),
 	get_post('OrderId'), get_post('OrderNumber'), check_value('OverdueOnly'));
 
 $cols = array(
-	_("#") => array('fun'=>'view_link', 'ord'=>''), 
-	_("Reference"), // viewlink 2 ?
-	_("Type") => array('fun'=>'wo_type_name'),
-	_("Location"), 
-	_("Item") => array('fun'=>'view_stock', 'ord'=>''),
-	_("Required") => array('fun'=>'dec_amount', 'align'=>'right'),
-	_("Manufactured") => array('fun'=>'dec_amount', 'align'=>'right'),
-	_("Date") => array('name'=>'date_', 'type'=>'date', 'ord'=>'desc'), 
-	_("Required By") => array('type'=>'date', 'ord'=>''),
+	__("#") => array('fun'=>'view_link', 'ord'=>''), 
+	__("Reference"), // viewlink 2 ?
+	__("Type") => array('fun'=>'wo_type_name'),
+	__("Location"), 
+	__("Item") => array('fun'=>'view_stock', 'ord'=>''),
+	__("Required") => array('fun'=>'dec_amount', 'align'=>'right'),
+	__("Manufactured") => array('fun'=>'dec_amount', 'align'=>'right'),
+	__("Date") => array('name'=>'date_', 'type'=>'date', 'ord'=>'desc'), 
+	__("Required By") => array('type'=>'date', 'ord'=>''),
 	array('insert'=>true, 'fun'=> 'view_gl_link'),
 	array('insert'=>true, 'fun'=> 'edit_link'),
 	array('insert'=>true, 'fun'=> 'release_link'),
@@ -178,7 +178,7 @@ $cols = array(
 );
 
 $table =& new_db_pager('orders_tbl', $sql, $cols);
-$table->set_marker('check_overdue', _("Marked orders are overdue."));
+$table->set_marker('check_overdue', __("Marked orders are overdue."));
 
 $table->width = "90%";
 

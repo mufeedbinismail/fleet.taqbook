@@ -18,7 +18,7 @@ require_once __DIR__ . "/../../purchasing/includes/purchasing_db.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
-page(_($GLOBALS['help_context'] = "View Payment to Supplier"), true, false, "", $js);
+page(__($GLOBALS['help_context'] = "View Payment to Supplier"), true, false, "", $js);
 
 if (isset($_GET["trans_no"]))
 {
@@ -46,45 +46,45 @@ if (!empty($SysPrefs->prefs['company_logo_on_views']))
 
 echo "<center>";
 
-display_heading(_("Payment to Supplier") . " #$trans_no");
+display_heading(__("Payment to Supplier") . " #$trans_no");
 
 echo "<br>";
 start_table(TABLESTYLE2, "width='80%'");
 
 start_row();
-label_cells(_("To Supplier"), $receipt['supplier_name'], "class='tableheader2'");
-label_cells(_("From Bank Account"), $receipt['bank_account_name'], "class='tableheader2'");
-label_cells(_("Date Paid"), sql2date($receipt['tran_date']), "class='tableheader2'");
+label_cells(__("To Supplier"), $receipt['supplier_name'], "class='tableheader2'");
+label_cells(__("From Bank Account"), $receipt['bank_account_name'], "class='tableheader2'");
+label_cells(__("Date Paid"), sql2date($receipt['tran_date']), "class='tableheader2'");
 end_row();
 start_row();
 if ($show_currencies)
-	label_cells(_("Payment Currency"), $receipt['bank_curr_code'], "class='tableheader2'");
-label_cells(_("Amount"), number_format2(-$receipt['bank_amount'], user_price_dec()), "class='tableheader2'");
+	label_cells(__("Payment Currency"), $receipt['bank_curr_code'], "class='tableheader2'");
+label_cells(__("Amount"), number_format2(-$receipt['bank_amount'], user_price_dec()), "class='tableheader2'");
 if ($receipt['ov_discount'] != 0)
-	label_cells(_("Discount"), number_format2(-$receipt['ov_discount']*$receipt['rate'], user_price_dec()), "class='tableheader2'");
+	label_cells(__("Discount"), number_format2(-$receipt['ov_discount']*$receipt['rate'], user_price_dec()), "class='tableheader2'");
 else
-	label_cells(_("Payment Type"), $bank_transfer_types[$receipt['BankTransType']], "class='tableheader2'");
+	label_cells(__("Payment Type"), $bank_transfer_types[$receipt['BankTransType']], "class='tableheader2'");
 end_row();
 start_row();
 if ($show_currencies) 
 {
-	label_cells(_("Supplier's Currency"), $receipt['curr_code'], "class='tableheader2'");
+	label_cells(__("Supplier's Currency"), $receipt['curr_code'], "class='tableheader2'");
 }
 if ($show_both_amounts)
-	label_cells(_("Amount"), number_format2(-$receipt['Total'], user_price_dec()), "class='tableheader2'");
-label_cells(_("Reference"), $receipt['ref'], "class='tableheader2'");
+	label_cells(__("Amount"), number_format2(-$receipt['Total'], user_price_dec()), "class='tableheader2'");
+label_cells(__("Reference"), $receipt['ref'], "class='tableheader2'");
 end_row();
 if ($receipt['ov_discount'] != 0)
 {
 	start_row();
-	label_cells(_("Payment Type"), $bank_transfer_types[$receipt['BankTransType']], "class='tableheader2'");
+	label_cells(__("Payment Type"), $bank_transfer_types[$receipt['BankTransType']], "class='tableheader2'");
 	end_row();
 }
 comments_display_row(ST_SUPPAYMENT, $trans_no);
 
 end_table(1);
 
-$voided = is_voided_display(ST_SUPPAYMENT, $trans_no, _("This payment has been voided."));
+$voided = is_voided_display(ST_SUPPAYMENT, $trans_no, __("This payment has been voided."));
 
 // now display the allocations for this payment
 if (!$voided) 

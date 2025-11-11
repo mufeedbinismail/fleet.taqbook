@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_SECROLES';
 require_once __DIR__ . "/../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "Access setup"));
+page(__($GLOBALS['help_context'] = "Access setup"));
 
 require_once __DIR__ . "/../includes/ui.inc";
 require_once __DIR__ . "/../includes/access_levels.inc";
@@ -57,20 +57,20 @@ if (get_post('addupdate'))
 	if ($_POST['description'] == '')
    	{
       	$input_error = 1;
-      	display_error( _("Role description cannot be empty."));
+      	display_error( __("Role description cannot be empty."));
 		set_focus('description');
    	}
    	elseif ($_POST['name'] == '')
    	{
       	$input_error = 1;
-      	display_error( _("Role name cannot be empty."));
+      	display_error( __("Role name cannot be empty."));
 		set_focus('name');
    	}
 		// prevent accidental editor lockup by removing SA_SECROLES
 	if (get_post('role') == $_SESSION['wa_current_user']->access) {
 		if (!isset($_POST['Area'.$security_areas['SA_SECROLES'][0]])
 			|| !isset($_POST['Section'.SS_SETUP])) {
-			display_error(_("Access level edition in Company setup section have to be enabled for your account."));
+			display_error(__("Access level edition in Company setup section have to be enabled for your account."));
 	      	$input_error = 1;
 	      	set_focus(!isset($_POST['Section'.SS_SETUP]) 
 	      		? 'Section'.SS_SETUP : 'Area'.$security_areas['SA_SECROLES'][0]);
@@ -99,7 +99,7 @@ if (get_post('addupdate'))
      	if ($new_role) 
        	{
 			add_security_role($_POST['name'], $_POST['description'], $sections, $areas); 
-			display_notification(_("New security role has been added."));
+			display_notification(__("New security role has been added."));
        	} else
        	{
 			update_security_role($_POST['role'], $_POST['name'], $_POST['description'], 
@@ -107,7 +107,7 @@ if (get_post('addupdate'))
 			update_record_status($_POST['role'], get_post('inactive'),
 				'security_roles', 'id');
 
-	  		display_notification(_("Security role has been updated."));
+	  		display_notification(__("Security role has been updated."));
        	}
 	$new_role = true;
 	clear_data();
@@ -120,10 +120,10 @@ if (get_post('addupdate'))
 if (get_post('delete'))
 {
 	if (check_role_used(get_post('role'))) {
-		display_error(_("This role is currently assigned to some users and cannot be deleted"));
+		display_error(__("This role is currently assigned to some users and cannot be deleted"));
  	} else {
 		delete_security_role(get_post('role'));
-		display_notification(_("Security role has been sucessfully deleted."));
+		display_notification(__("Security role has been sucessfully deleted."));
 		unset($_POST['role']);
 	}
 	$Ajax->activate('_page_body');
@@ -169,9 +169,9 @@ start_form();
 
 start_table(TABLESTYLE_NOBORDER);
 start_row();
-security_roles_list_cells(_("Role:"). "&nbsp;", 'role', null, true, true, check_value('show_inactive'));
+security_roles_list_cells(__("Role:"). "&nbsp;", 'role', null, true, true, check_value('show_inactive'));
 $new_role = get_post('role')=='';
-check_cells(_("Show inactive:"), 'show_inactive', null, true);
+check_cells(__("Show inactive:"), 'show_inactive', null, true);
 end_row();
 end_table();
 echo "<hr>";
@@ -186,9 +186,9 @@ if (find_submit('_Section')) {
 //-----------------------------------------------------------------------------------------------
 div_start('details');
 start_table(TABLESTYLE2);
-	text_row(_("Role name:"), 'name', null, 20, 22);
-	text_row(_("Role description:"), 'description', null, 50, 52);
-	record_status_list_row(_("Current status:"), 'inactive');
+	text_row(__("Role name:"), 'name', null, 20, 22);
+	text_row(__("Role description:"), 'description', null, 50, 52);
+	record_status_list_row(__("Current status:"), 'inactive');
 end_table(1);
 
 	start_table(TABLESTYLE, "width='40%'");
@@ -210,7 +210,7 @@ end_table(1);
 			$m = $parms[0] & ~0xff;
 			label_row($security_sections[$m].':', 
 				checkbox( null, 'Section'.$m, null, true, 
-					_("On/off set of features")),
+					__("On/off set of features")),
 			"class='tableheader2'", "class='tableheader'");
 		}
 		if (check_value('Section'.$m)) {
@@ -229,16 +229,16 @@ div_start('controls');
 
 if ($new_role) 
 {
-	submit_center_first('Update', _("Update view"), '', null);
-	submit_center_last('addupdate', _("Insert New Role"), '', 'default');
+	submit_center_first('Update', __("Update view"), '', null);
+	submit_center_last('addupdate', __("Insert New Role"), '', 'default');
 } 
 else 
 {
-	submit_center_first('addupdate', _("Save Role"), '', 'default');
-	submit('Update', _("Update view"), true, '', null);
-	submit('clone', _("Clone This Role"), true, '', true);
-	submit('delete', _("Delete This Role"), true, '', true);
-	submit_center_last('cancel', _("Cancel"), _("Cancel Edition"), 'cancel');
+	submit_center_first('addupdate', __("Save Role"), '', 'default');
+	submit('Update', __("Update view"), true, '', null);
+	submit('clone', __("Clone This Role"), true, '', true);
+	submit('delete', __("Delete This Role"), true, '', true);
+	submit_center_last('cancel', __("Cancel"), __("Cancel Edition"), 'cancel');
 }
 
 div_end();

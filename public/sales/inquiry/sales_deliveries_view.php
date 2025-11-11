@@ -33,12 +33,12 @@ if (user_use_date_picker())
 if (isset($_GET['OutstandingOnly']) && ($_GET['OutstandingOnly'] == true))
 {
 	$_POST['OutstandingOnly'] = true;
-	page(_($GLOBALS['help_context'] = "Search Not Invoiced Deliveries"), false, false, "", $js);
+	page(__($GLOBALS['help_context'] = "Search Not Invoiced Deliveries"), false, false, "", $js);
 }
 else
 {
 	$_POST['OutstandingOnly'] = false;
-	page(_($GLOBALS['help_context'] = "Search All Deliveries"), false, false, "", $js);
+	page(__($GLOBALS['help_context'] = "Search All Deliveries"), false, false, "", $js);
 }
 
 if (isset($_GET['selected_customer']))
@@ -74,7 +74,7 @@ if (isset($_POST['BatchInvoice']))
 		}
 	}
     if (!$del_count) {
-		display_error(_('For batch invoicing you should select at least one delivery.
+		display_error(__('For batch invoicing you should select at least one delivery.
             All items must be dispatched to the same customer branch'
             . (check_value('is_marketplace_trans') ? ' and marketplace' : '') . '.'
         ));
@@ -109,22 +109,22 @@ start_form(false, false, url()->current() ."?OutstandingOnly=".$_POST['Outstandi
 
 start_table(TABLESTYLE_NOBORDER);
 start_row();
-ref_cells(_("#:"), 'DeliveryNumber', '',null, '', true);
-date_cells(_("from:"), 'DeliveryAfterDate', '', null, -user_transaction_days());
-date_cells(_("to:"), 'DeliveryToDate', '', null, 1);
+ref_cells(__("#:"), 'DeliveryNumber', '',null, '', true);
+date_cells(__("from:"), 'DeliveryAfterDate', '', null, -user_transaction_days());
+date_cells(__("to:"), 'DeliveryToDate', '', null, 1);
 
-locations_list_cells(_("Location:"), 'StockLocation', null, true);
+locations_list_cells(__("Location:"), 'StockLocation', null, true);
 end_row();
 
 end_table();
 start_table(TABLESTYLE_NOBORDER);
 start_row();
 
-stock_items_list_cells(_("Item:"), 'SelectStockFromList', null, true);
+stock_items_list_cells(__("Item:"), 'SelectStockFromList', null, true);
 
-customer_list_cells(_("Select a customer: "), 'customer_id', null, true, true);
+customer_list_cells(__("Select a customer: "), 'customer_id', null, true, true);
 
-submit_cells('SearchOrders', _("Search"),'',_('Select documents'), 'default');
+submit_cells('SearchOrders', __("Search"),'',__('Select documents'), 'default');
 
 hidden('OutstandingOnly', $_POST['OutstandingOnly']);
 hidden('is_marketplace_trans', check_value('is_marketplace_trans'));
@@ -159,14 +159,14 @@ function edit_link($row)
 
 function prt_link($row)
 {
-	return print_document_link($row['trans_no'], _("Print"), true, ST_CUSTDELIVERY, ICON_PRINT);
+	return print_document_link($row['trans_no'], __("Print"), true, ST_CUSTDELIVERY, ICON_PRINT);
 }
 
 function invoice_link($row)
 {
     $marketplace_flg = check_value('is_marketplace_trans') ? '&Marketplace=Yes' : '';
 	return $row["Outstanding"]==0 ? '' :
-		pager_link(_('Invoice'), "/sales/customer_invoice.php?DeliveryNumber=" 
+		pager_link(__('Invoice'), "/sales/customer_invoice.php?DeliveryNumber=" 
 			.$row['trans_no'].$marketplace_flg, ICON_DOC);
 }
 
@@ -189,18 +189,18 @@ $sql = get_sql_for_sales_deliveries_view(
 );
 
 $cols = array(
-		_("Delivery #") => array('fun'=>'trans_view', 'align'=>'right'), 
-		_("Customer"), 
+		__("Delivery #") => array('fun'=>'trans_view', 'align'=>'right'), 
+		__("Customer"), 
 		'branch_code' => 'skip',
-		_("Branch") => array('ord'=>''), 
-		_("Contact"),
-		_("Reference"), 
-		_("Cust Ref"), 
-		_("Delivery Date") => array('type'=>'date', 'ord'=>''),
-		_("Due By") => 'date', 
-		_("Delivery Total") => array('type'=>'amount', 'ord'=>''),
-		_("Currency") => array('align'=>'center'),
-		submit('BatchInvoice',_("Batch"), false, _("Batch Invoicing")) 
+		__("Branch") => array('ord'=>''), 
+		__("Contact"),
+		__("Reference"), 
+		__("Cust Ref"), 
+		__("Delivery Date") => array('type'=>'date', 'ord'=>''),
+		__("Due By") => 'date', 
+		__("Delivery Total") => array('type'=>'amount', 'ord'=>''),
+		__("Currency") => array('align'=>'center'),
+		submit('BatchInvoice',__("Batch"), false, __("Batch Invoicing")) 
 			=> array('insert'=>true, 'fun'=>'batch_checkbox', 'align'=>'center'),
 		array('insert'=>true, 'fun'=>'edit_link'),
 		array('insert'=>true, 'fun'=>'invoice_link'),
@@ -214,7 +214,7 @@ if (isset($_SESSION['Batch']))
 }
 
 $table =& new_db_pager('deliveries_tbl', $sql, $cols);
-$table->set_marker('check_overdue', _("Marked items are overdue."));
+$table->set_marker('check_overdue', __("Marked items are overdue."));
 
 //$table->width = "92%";
 

@@ -25,7 +25,7 @@ if ($mode != 0)
 else
 	$js = get_js_select_combo_item();
 
-page(_($GLOBALS['help_context'] = "Items"), true, false, "", $js);
+page(__($GLOBALS['help_context'] = "Items"), true, false, "", $js);
 
 if(get_post("search")) {
   $Ajax->activate("item_tbl");
@@ -37,8 +37,8 @@ start_table(TABLESTYLE_NOBORDER);
 
 start_row();
 
-text_cells(_("Description"), "description");
-submit_cells("search", _("Search"), "", _("Search items"), "default");
+text_cells(__("Description"), "description");
+submit_cells("search", __("Search"), "", __("Search items"), "default");
 
 end_row();
 
@@ -49,7 +49,7 @@ end_form();
 div_start("item_tbl");
 start_table(TABLESTYLE);
 
-$th = array("", _("Item Code"), _("Description"), _("Category"));
+$th = array("", __("Item Code"), __("Description"), __("Category"));
 table_header($th);
 
 $k = 0;
@@ -62,10 +62,10 @@ while ($myrow = db_fetch_assoc($result))
 	$value = $myrow['item_code'];
 	if ($mode != 0) {
 		$text = $myrow['description'];
-  		ahref_cell(_("Select"), 'javascript:void(0)', '', 'setComboItem(window.opener.document, "'.$name.'",  "'.$value.'", "'.$text.'")');
+  		ahref_cell(__("Select"), 'javascript:void(0)', '', 'setComboItem(window.opener.document, "'.$name.'",  "'.$value.'", "'.$text.'")');
 	}
 	else {
-  		ahref_cell(_("Select"), 'javascript:void(0)', '', 'selectComboItem(window.opener.document, "'.$name.'", "'.$value.'")');
+  		ahref_cell(__("Select"), 'javascript:void(0)', '', 'selectComboItem(window.opener.document, "'.$name.'", "'.$value.'")');
 	}
   	label_cell($myrow["item_code"]);
 	label_cell($myrow["description"]);

@@ -115,7 +115,7 @@ function print_work_order_listing()
 	$orientation = ($orientation ? 'L' : 'P');
 
 	if ($item == '')
-		$items = _('All');
+		$items = __('All');
 	else
 	{
 		$row = get_item($item);
@@ -123,21 +123,21 @@ function print_work_order_listing()
 	}
 
 	if ($location == '')
-		$loc = _('All');
+		$loc = __('All');
 	else
 		$loc = get_location_name($location);
 
-	$open = $open_only == 1 ? _('Yes') : _('No');
-	$show = $show_gl == 1 ? _('Yes') : _('No');
+	$open = $open_only == 1 ? __('Yes') : __('No');
+	$show = $show_gl == 1 ? __('Yes') : __('No');
 	
 	$cols = array(0, 100, 120, 165, 210, 275, 315, 375, 385, 440, 495, 555);
 
-	$headers = array(_('Type'), '#', ('Reference'), _('Location'), _('Item'), _('Required'), _('Manufactured'), ' ', _('Date'), _('Required By'), _('Closed'));
+	$headers = array(__('Type'), '#', ('Reference'), __('Location'), __('Item'), __('Required'), __('Manufactured'), ' ', __('Date'), __('Required By'), __('Closed'));
 
 	if ($show_gl)
 	{
 		$cols2 = $cols;
-		$headers2 = array(_("Transaction"), ' ', _("Date"), _("Account Code"),' ' . _("Account Name"), _("Debit"), _("Credit"), ' ', _("Memo"));
+		$headers2 = array(__("Transaction"), ' ', __("Date"), __("Account Code"),' ' . __("Account Name"), __("Debit"), __("Credit"), ' ', __("Memo"));
 	}	
 	else
 	{
@@ -148,13 +148,13 @@ function print_work_order_listing()
 	$aligns = array('left',	'left',	'left', 'left', 'left', 'right', 'right', 'left', 'left', 'left', 'left');
 
     $params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Items'), 'from' => $items, 'to' => ''),
-    				    2 => array('text' => _('Location'), 'from' => $loc, 'to' => ''),
-    				    3 => array('text' => _('Open Only'), 'from' => $open, 'to' => ''),
-    				    4 => array('text' => _('Show GL Rows'), 'from' => $show, 'to' => ''),
+    				    1 => array('text' => __('Items'), 'from' => $items, 'to' => ''),
+    				    2 => array('text' => __('Location'), 'from' => $loc, 'to' => ''),
+    				    3 => array('text' => __('Open Only'), 'from' => $open, 'to' => ''),
+    				    4 => array('text' => __('Show GL Rows'), 'from' => $show, 'to' => ''),
     				    );
 
-    $rep = new FrontReport(_('Work Order Listing'), "WorkOrderListing", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Work Order Listing'), "WorkOrderListing", user_pagesize(), 9, $orientation);
    	if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -179,21 +179,21 @@ function print_work_order_listing()
 		$rep->TextCol(7, 8, '', -1);
 		$rep->TextCol(8, 9, sql2date($trans['date_']), -1);
 		$rep->TextCol(9, 10, sql2date($trans['required_by']), -1);
-		$rep->TextCol(10, 11, $trans['closed'] ? ' ' : _('No'), -1);
+		$rep->TextCol(10, 11, $trans['closed'] ? ' ' : __('No'), -1);
 		if ($show_gl)
 		{
 			$rep->NewLine();
 			$productions = get_gl_wo_productions($trans['id'], true);
-			print_gl_rows($rep, $productions, _("Finished Product Requirements"));
+			print_gl_rows($rep, $productions, __("Finished Product Requirements"));
 
 			$issues = get_gl_wo_issue_trans($trans['id'], -1, true);
-			print_gl_rows($rep, $issues, _("Additional Material Issues"));
+			print_gl_rows($rep, $issues, __("Additional Material Issues"));
 
 		    $costs = get_gl_wo_cost_trans($trans['id'], -1, true);
-			print_gl_rows($rep, $costs, _("Additional Costs"));
+			print_gl_rows($rep, $costs, __("Additional Costs"));
 
 			$wo = get_gl_trans(ST_WORKORDER, $trans['id']);
-			print_gl_rows($rep, $wo, _("Finished Product Receival"));
+			print_gl_rows($rep, $wo, __("Finished Product Receival"));
 			$rep->Line($rep->row - 2);
 			$rep->NewLine();
 		}

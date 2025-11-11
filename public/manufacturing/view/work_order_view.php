@@ -21,7 +21,7 @@ require_once __DIR__ . "/../../manufacturing/includes/manufacturing_ui.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(800, 500);
-page(_($GLOBALS['help_context'] = "View Work Order"), true, false, "", $js);
+page(__($GLOBALS['help_context'] = "View Work Order"), true, false, "", $js);
 
 //-------------------------------------------------------------------------------------------------
 $woid = 0;
@@ -46,30 +46,30 @@ echo "<center>";
 br(1);
 if ($myrow["released"] == false)
 {
-    display_heading2(_("BOM for item:") . " " . $myrow["StockItemName"]);
+    display_heading2(__("BOM for item:") . " " . $myrow["StockItemName"]);
     display_bom($myrow["stock_id"]);
 }
 else
 {
-	display_heading2(_("Work Order Requirements"));
+	display_heading2(__("Work Order Requirements"));
 	display_wo_requirements($woid, $myrow["units_reqd"]);
 	if ($myrow["type"] == WO_ADVANCED)
 	{
     	echo "<br><table cellspacing=7><tr valign=top><td>";
-    	display_heading2(_("Issues"));
+    	display_heading2(__("Issues"));
     	display_wo_issues($woid);
     	echo "</td><td>";
-    	display_heading2(_("Productions"));
+    	display_heading2(__("Productions"));
     	display_wo_productions($woid);
     	echo "</td><td>";
-    	display_heading2(_("Additional Costs"));
+    	display_heading2(__("Additional Costs"));
     	display_wo_payments($woid);
     	echo "</td></tr></table>";
 	}
 	else
 	{
     	echo "<br><table cellspacing=7><tr valign=top><td>";
-    	display_heading2(_("Additional Costs"));
+    	display_heading2(__("Additional Costs"));
     	display_wo_payments($woid);
     	echo "</td></tr></table>";
 	}
@@ -77,7 +77,7 @@ else
 
 echo "<br></center>";
 
-is_voided_display(ST_WORKORDER, $woid, _("This work order has been voided."));
+is_voided_display(ST_WORKORDER, $woid, __("This work order has been voided."));
 
 end_page(true, false, false, ST_WORKORDER, $woid);
 

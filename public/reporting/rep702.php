@@ -49,18 +49,18 @@ function print_list_of_journal_entries()
 
     $cols = array(0, 100, 240, 300, 400, 460, 520, 580);
 
-    $headers = array(_('Type/Account'), _('Reference').'/'._('Account Name'), _('Date/Dim.'),
-    	_('Person/Item/Memo'), _('Debit'), _('Credit'));
+    $headers = array(__('Type/Account'), __('Reference').'/'.__('Account Name'), __('Date/Dim.'),
+    	__('Person/Item/Memo'), __('Debit'), __('Credit'));
 
     $aligns = array('left', 'left', 'left', 'left', 'right', 'right');
 
     $params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'), 'from' => $from,'to' => $to),
-                    	2 => array('text' => _('Type'), 'from' => 
-						$systype == -1 ? _('All') : $systypes_array[$systype],
+    				    1 => array('text' => __('Period'), 'from' => $from,'to' => $to),
+                    	2 => array('text' => __('Type'), 'from' => 
+						$systype == -1 ? __('All') : $systypes_array[$systype],
                             'to' => ''));
 
-    $rep = new FrontReport(_('List of Journal Entries'), "JournalEntries", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('List of Journal Entries'), "JournalEntries", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -132,7 +132,7 @@ function print_list_of_journal_entries()
 		$totcre += $credit;
 		$rep->Line($rep->row -= 4);
 		$rep->NewLine();
-        $rep->TextCol(0, 4, _("Total"));
+        $rep->TextCol(0, 4, __("Total"));
 		$rep->AmountCol(4, 5, $totdeb, $dec);
 		$rep->AmountCol(5, 6, abs($totcre), $dec);
 		$rep->Line($rep->row -= 4);

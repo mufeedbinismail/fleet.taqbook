@@ -17,7 +17,7 @@ require_once __DIR__ . "/../includes/ui.inc";
 require_once __DIR__ . "/../fixed_assets/includes/fixed_assets_db.inc";
 require_once __DIR__ . "/../fixed_assets/includes/fa_classes_db.inc";
 
-page(_($GLOBALS['help_context'] = "Fixed asset classes"));
+page(__($GLOBALS['help_context'] = "Fixed asset classes"));
 
 simple_page_mode(true);
 
@@ -27,7 +27,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 	//initialise no input errors assumed initially before we test
 	$input_error = 0;
   if (input_num('depreciation_rate') > 100) {
-    display_error(_("The depreciation rate can't be greater than 100%"));
+    display_error(__("The depreciation rate can't be greater than 100%"));
     $input_error = 1;
   }
 	
@@ -40,12 +40,12 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
     	{
     		update_fixed_asset_class($selected_id, $_POST['parent_id'], $_POST['description'], $_POST['long_description'],
     			input_num('depreciation_rate'));
-			  display_notification(_('Selected fixed asset class has been updated'));
+			  display_notification(__('Selected fixed asset class has been updated'));
     	} 
     	else 
     	{
     		add_fixed_asset_class($_POST['fa_class_id'], $_POST['parent_id'], $_POST['description'], $_POST['long_description'], input_num('depreciation_rate'));
-			  display_notification(_('New fixed asset class has been added'));
+			  display_notification(__('New fixed asset class has been added'));
     	}
 
 		$Mode = 'RESET';
@@ -56,7 +56,7 @@ function can_delete($selected_id)
 {
 	if (key_in_foreign_table($selected_id, 'stock_master', 'fa_class_id'))
 	{
-		display_error(_("Cannot delete this class because it is used by some fixed asset items."));
+		display_error(__("Cannot delete this class because it is used by some fixed asset items."));
 		return false;
 	}
 	return true;
@@ -70,7 +70,7 @@ if ($Mode == 'Delete')
 	if (can_delete($selected_id)) 
 	{
 		delete_fixed_asset_class($selected_id);
-		display_notification(_('Selected fixed asset class has been deleted'));
+		display_notification(__('Selected fixed asset class has been deleted'));
 	} //end if Delete Location
 	$Mode = 'RESET';
 }
@@ -85,7 +85,7 @@ $result = get_fixed_asset_classes();
 
 start_form();
 start_table(TABLESTYLE);
-$th = array(_("Fixed asset class"), _("Description"), _("Basic Depreciation Rate"), "", "");
+$th = array(__("Fixed asset class"), __("Description"), __("Basic Depreciation Rate"), "", "");
 inactive_control_column($th);
 table_header($th);
 $k = 0; //row colour counter
@@ -97,8 +97,8 @@ while ($myrow = db_fetch($result))
 	label_cell($myrow["description"]);
 	label_cell($myrow["depreciation_rate"].'%');
 	inactive_control_cell($myrow["fa_class_id"], $myrow["inactive"], 'stock_fa_classes', 'fa_class_id');
- 	edit_button_cell("Edit".$myrow["fa_class_id"], _("Edit"));
- 	delete_button_cell("Delete".$myrow["fa_class_id"], _("Delete"));
+ 	edit_button_cell("Edit".$myrow["fa_class_id"], __("Edit"));
+ 	delete_button_cell("Delete".$myrow["fa_class_id"], __("Delete"));
 	end_row();
 }
 inactive_control_row($th);
@@ -124,19 +124,19 @@ if ($selected_id != -1)
 	hidden("selected_id", $selected_id);
 	hidden("fa_class_id");
   hidden('parent_id');
-  label_row(_("Parent class:"), $_POST['parent_id']);
-  label_row(_("Fixed asset class:"), $_POST['fa_class_id']);
+  label_row(__("Parent class:"), $_POST['parent_id']);
+  label_row(__("Fixed asset class:"), $_POST['fa_class_id']);
 } 
 else 
 {
-  text_row(_("Parent class:"), 'parent_id', null, 3, 3);
-  text_row(_("Fixed asset class:"), 'fa_class_id', null, 3, 3);
+  text_row(__("Parent class:"), 'parent_id', null, 3, 3);
+  text_row(__("Fixed asset class:"), 'fa_class_id', null, 3, 3);
 }
 
-text_row(_("Description:"), 'description', null, 42, 200);
-textarea_row(_('Long description:'), 'long_description', null, 42, 3);
-small_amount_row(_("Basic Depreciation Rate").':', 'depreciation_rate', null, null, '%', user_percent_dec());
-//text_row(_("Parent id:"), 'parent_id', null, 3, 3);
+text_row(__("Description:"), 'description', null, 42, 200);
+textarea_row(__('Long description:'), 'long_description', null, 42, 3);
+small_amount_row(__("Basic Depreciation Rate").':', 'depreciation_rate', null, null, '%', user_percent_dec());
+//text_row(__("Parent id:"), 'parent_id', null, 3, 3);
 
 end_table(1);
 div_end();

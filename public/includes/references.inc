@@ -104,7 +104,7 @@ class references
 			$out .= substr($template, 0, $start);
 			$stop = strpos($template, '}');
 			if ($stop === false) {
-				display_warning(_("Invalid refline template."));
+				display_warning(__("Invalid refline template."));
 				$out .= $template; // debug
 				break;
 			}
@@ -114,7 +114,7 @@ class references
 			if (isset($refline_placeholders[$ph])) {
 				if (!isset($context[$refline_placeholders[$ph]]))
 				{
-					display_warning(sprintf(_("Missing refline context data: '%s'"), $refline_placeholders[$ph]));
+					display_warning(sprintf(__("Missing refline context data: '%s'"), $refline_placeholders[$ph]));
 					$out .= $ph; // debug
 				} else {
 					switch ($ph)
@@ -162,7 +162,7 @@ class references
 
 		$out .= $template;	// add postfix
 		if (!preg_match('/^([^\{]*)?\{([^\}]*)\}(.*)/', $out, $match)) {	// parse index
-			display_error(_("Missing numeric placeholder in refline definition."));
+			display_error(__("Missing numeric placeholder in refline definition."));
 			return $out;
 		}
 

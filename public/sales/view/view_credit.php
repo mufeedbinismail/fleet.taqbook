@@ -20,7 +20,7 @@ require_once __DIR__ . "/../../sales/includes/sales_db.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
-page(_($GLOBALS['help_context'] = "View Credit Note"), true, false, "", $js);
+page(__($GLOBALS['help_context'] = "View Credit Note"), true, false, "", $js);
 
 if (isset($_GET["trans_no"]))
 {
@@ -35,7 +35,7 @@ $myrow = get_customer_trans($trans_id, ST_CUSTCREDIT);
 
 $branch = get_branch($myrow["branch_code"]);
 
-display_heading("<font color=red>" . sprintf(_("CREDIT NOTE #%d"), $trans_id). "</font>");
+display_heading("<font color=red>" . sprintf(__("CREDIT NOTE #%d"), $trans_id). "</font>");
 echo "<br>";
 
 start_table(TABLESTYLE2, "width='95%'");
@@ -43,7 +43,7 @@ echo "<tr valign=top><td>"; // outer table
 
 /*Now the customer charged to details in a sub table*/
 start_table(TABLESTYLE, "width='100%'");
-$th = array(_("Customer"));
+$th = array(__("Customer"));
 table_header($th);
 
 label_row(null, $myrow["DebtorName"] . "<br>" . nl2br($myrow["address"]), "nowrap");
@@ -54,7 +54,7 @@ end_table();
 echo "</td><td>"; // outer table
 
 start_table(TABLESTYLE, "width='100%'");
-$th = array(_("Branch"));
+$th = array(__("Branch"));
 table_header($th);
 
 label_row(null, $branch["br_name"] . "<br>" . nl2br($branch["br_address"]), "nowrap");
@@ -64,13 +64,13 @@ echo "</td><td>"; // outer table
 
 start_table(TABLESTYLE, "width='100%'");
 start_row();
-label_cells(_("Ref"), $myrow["reference"], "class='tableheader2'");
-label_cells(_("Date"), sql2date($myrow["tran_date"]), "class='tableheader2'");
-label_cells(_("Currency"), $myrow["curr_code"], "class='tableheader2'");
+label_cells(__("Ref"), $myrow["reference"], "class='tableheader2'");
+label_cells(__("Date"), sql2date($myrow["tran_date"]), "class='tableheader2'");
+label_cells(__("Currency"), $myrow["curr_code"], "class='tableheader2'");
 end_row();
 start_row();
-label_cells(_("Sales Type"), $myrow["sales_type"], "class='tableheader2'");
-label_cells(_("Shipping Company"), $myrow["shipper_name"], "class='tableheader2'");
+label_cells(__("Sales Type"), $myrow["sales_type"], "class='tableheader2'");
+label_cells(__("Shipping Company"), $myrow["shipper_name"], "class='tableheader2'");
 end_row();
 comments_display_row(ST_CUSTCREDIT, $trans_id);
 end_table();
@@ -86,8 +86,8 @@ start_table(TABLESTYLE, "width='95%'");
 
 if (db_num_rows($result) > 0)
 {
-	$th = array(_("Item Code"), _("Item Description"), _("Quantity"),
-		_("Unit"), _("Price"), _("Discount %"), _("Total"));
+	$th = array(__("Item Code"), __("Item Description"), __("Quantity"),
+		__("Unit"), __("Price"), __("Discount %"), __("Total"));
 	table_header($th);
 
 	$k = 0;	//row colour counter
@@ -122,7 +122,7 @@ if (db_num_rows($result) > 0)
 	} //end while there are line items to print out
 }
 else
-	display_note(_("There are no line items on this credit note."), 1, 2);
+	display_note(__("There are no line items on this credit note."), 1, 2);
 
 $display_sub_tot = price_format($sub_total);
 
@@ -131,22 +131,22 @@ $display_total = price_format($credit_total);
 
 /*Print out the invoice text entered */
 if ($sub_total != 0)
-	label_row(_("Sub Total"), $display_sub_tot, "colspan=6 align=right",
+	label_row(__("Sub Total"), $display_sub_tot, "colspan=6 align=right",
 		"nowrap align=right width='15%'");
 if ($myrow["ov_freight"] != 0.0)
 {
 	$display_freight = price_format($myrow["ov_freight"]);
-	label_row(_("Shipping"), $display_freight, "colspan=6 align=right", "nowrap align=right");
+	label_row(__("Shipping"), $display_freight, "colspan=6 align=right", "nowrap align=right");
 }
 
 $tax_items = get_trans_tax_details(ST_CUSTCREDIT, $trans_id);
 display_customer_trans_tax_details($tax_items, 6);
 
-label_row("<font color=red>" . _("TOTAL CREDIT") . "</font",
+label_row("<font color=red>" . __("TOTAL CREDIT") . "</font",
 	"<font color=red>$display_total</font>", "colspan=6 align=right", "nowrap align=right");
 end_table(1);
 
-$voided = is_voided_display(ST_CUSTCREDIT, $trans_id, _("This credit note has been voided."));
+$voided = is_voided_display(ST_CUSTCREDIT, $trans_id, __("This credit note has been voided."));
 
 if (!$voided)
 	display_allocations_from(PT_CUSTOMER,

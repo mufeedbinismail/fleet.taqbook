@@ -184,7 +184,7 @@ function check_image_file($filename)
 {
 	$test = new TCPDF();
 	if ( !$test->Image($filename, 0, 0) )
-		return _('Unsupported image file format.');
+		return __('Unsupported image file format.');
 	return '';
 }
 

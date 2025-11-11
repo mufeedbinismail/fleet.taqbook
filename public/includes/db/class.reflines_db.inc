@@ -19,10 +19,10 @@ include_once 'class.data_set.inc';
 class reflines_db extends data_set {
 	function __construct()
 	{
-		$this->set_validator('prefix:ui:_check_prefix', _("This prefix conflicts with another one already defined. Prefix have to be unambigous."));
-		$this->set_validator('prefix:ui:_check_template', _("Invalid template format."));
-		$this->set_validator('trans_type:ui:required', _("Transaction type cannot be empty."));
-		$this->set_validator('pattern:ui:required', _("Next reference cannot be empty."));
+		$this->set_validator('prefix:ui:_check_prefix', __("This prefix conflicts with another one already defined. Prefix have to be unambigous."));
+		$this->set_validator('prefix:ui:_check_template', __("Invalid template format."));
+		$this->set_validator('trans_type:ui:required', __("Transaction type cannot be empty."));
+		$this->set_validator('pattern:ui:required', __("Next reference cannot be empty."));
 		parent::__construct('reflines', 
 			array('trans_type', 'prefix', 'description', 'default', 'pattern', 'id', 'inactive'), 
 			'id');
@@ -47,10 +47,10 @@ class reflines_db extends data_set {
 		global $refline_options, $refline_placeholders;
 
 		if (strpbrk($data['prefix'], '{}') !== false)
-			return $this->error(_("You cannot use placeholders in refline prefix."));
+			return $this->error(__("You cannot use placeholders in refline prefix."));
 
 		if (substr_count($data['pattern'], '{') != substr_count($data['pattern'], '}'))
-			return $this->error(_("Curly brackets does not balance."));
+			return $this->error(__("Curly brackets does not balance."));
 
 		if (preg_match_all('/\{([^\}]*)\}/', $data['pattern'], $match)) // placeholders defind in template
 		{
@@ -64,13 +64,13 @@ class reflines_db extends data_set {
 						 if (in_array($dt, $refline_options[$data['trans_type']]))
 						 	$allowed[] = $id;
 
-					return $this->error(sprintf(_("Invalid placeholder '%s'. Placeholders allowed for this transaction type are: %s."),
+					return $this->error(sprintf(__("Invalid placeholder '%s'. Placeholders allowed for this transaction type are: %s."),
 						$ph, implode(',', $allowed)));
 				}
 			}
 
 			if ($numph !== 1)
-				return $this->error(_("Missing numeric placeholder. If you want to use template based references, you have to define numeric placeholder too."));
+				return $this->error(__("Missing numeric placeholder. If you want to use template based references, you have to define numeric placeholder too."));
 		}
 		return true;
 	}
@@ -96,10 +96,10 @@ class reflines_db extends data_set {
 	{
 		$rec = $this->get($ref_id);
 		if ($rec['default'])
-			return $this->error(_("Reference line which is default for any transaction type cannot be deleted."));
+			return $this->error(__("Reference line which is default for any transaction type cannot be deleted."));
 
 		if ($this->is_used($rec['prefix'], $rec['trans_type']))
-			return $this->error(_("Reference line cannot be deleted because it is already in use."));
+			return $this->error(__("Reference line cannot be deleted because it is already in use."));
 
 		return true;
 	}

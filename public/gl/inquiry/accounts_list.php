@@ -21,7 +21,7 @@ require_once __DIR__ . "/../../gl/includes/db/gl_db_accounts.inc";
 
 $js = get_js_select_combo_item();
 
-page(_($GLOBALS['help_context'] = "GL Accounts"), true, false, "", $js);
+page(__($GLOBALS['help_context'] = "GL Accounts"), true, false, "", $js);
 
 if(get_post("search")) {
   	$Ajax->activate("account_tbl");
@@ -35,8 +35,8 @@ start_table(TABLESTYLE_NOBORDER);
 
 start_row();
 
-text_cells(_("Description"), "description");
-submit_cells("search", _("Search"), "", _("Search GL accounts"), "default");
+text_cells(__("Description"), "description");
+submit_cells("search", __("Search"), "", __("Search GL accounts"), "default");
 
 end_row();
 
@@ -48,7 +48,7 @@ div_start("account_tbl");
 
 start_table(TABLESTYLE);
 
-$th = array("", _("Account Code"), _("Description"), _("Category"));
+$th = array("", __("Account Code"), __("Description"), __("Category"));
 
 table_header($th);
 
@@ -60,7 +60,7 @@ $result = get_chart_accounts_search(get_post("description"), $skip);
 while ($myrow = db_fetch_assoc($result)) {
 	alt_table_row_color($k);
 	$value = $myrow['account_code'];
-	ahref_cell(_("Select"), 'javascript:void(0)', '', 'selectComboItem(window.opener.document, "'.$name.'", "'.$value.'")');
+	ahref_cell(__("Select"), 'javascript:void(0)', '', 'selectComboItem(window.opener.document, "'.$name.'", "'.$value.'")');
   	label_cell($myrow["account_code"]);
 	label_cell($myrow["account_name"]);
   	label_cell($myrow["name"]);

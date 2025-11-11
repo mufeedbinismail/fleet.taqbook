@@ -109,11 +109,11 @@ function print_statements()
 		if (db_num_rows($TransResult) == 0)
 			continue;
         if ($email == 0 && !isset($rep))
-            $rep = new FrontReport(_('STATEMENT'), "StatementBulk", user_pagesize(), 9, $orientation);
+            $rep = new FrontReport(__('STATEMENT'), "StatementBulk", user_pagesize(), 9, $orientation);
 		if ($email == 1)
 		{
 			$rep = new FrontReport("", "", user_pagesize(), 9, $orientation);
-			$rep->title = _('STATEMENT');
+			$rep->title = __('STATEMENT');
 			$rep->filename = "Statement" . $myrow['debtor_no'] . ".pdf";
 			$rep->Info($params, $cols, null, $aligns);
 		}
@@ -130,7 +130,7 @@ function print_statements()
 		$rep->NewLine();
 		$doctype = ST_STATEMENT;
 		$rep->fontSize += 2;
-		$rep->TextCol(0, 8, _("Outstanding Transactions"));
+		$rep->TextCol(0, 8, __("Outstanding Transactions"));
 		$rep->fontSize -= 2;
 		$rep->NewLine(2);
 		while ($myrow2=db_fetch($TransResult))
@@ -155,11 +155,11 @@ function print_statements()
 			if ($rep->row < $rep->bottomMargin + (10 * $rep->lineHeight))
 				$rep->NewPage();
 		}
-		$nowdue = "1-" . $PastDueDays1 . " " . _("Days");
-		$pastdue1 = $PastDueDays1 + 1 . "-" . $PastDueDays2 . " " . _("Days");
-		$pastdue2 = _("Over") . " " . $PastDueDays2 . " " . _("Days");
+		$nowdue = "1-" . $PastDueDays1 . " " . __("Days");
+		$pastdue1 = $PastDueDays1 + 1 . "-" . $PastDueDays2 . " " . __("Days");
+		$pastdue2 = __("Over") . " " . $PastDueDays2 . " " . __("Days");
 		$CustomerRecord = get_customer_details($myrow['debtor_no'], null, $show_also_allocated);
-		$str = array(_("Current"), $nowdue, $pastdue1, $pastdue2, _("Total Balance"));
+		$str = array(__("Current"), $nowdue, $pastdue1, $pastdue2, __("Total Balance"));
 		$str2 = array(number_format2(($CustomerRecord["Balance"] - $CustomerRecord["Due"]),$dec),
 			number_format2(($CustomerRecord["Due"]-$CustomerRecord["Overdue1"]),$dec),
 			number_format2(($CustomerRecord["Overdue1"]-$CustomerRecord["Overdue2"]) ,$dec),
@@ -176,14 +176,14 @@ function print_statements()
 		if ($email == 1)
 		{
             if (($CustomerRecord["Balance"]) != ($CustomerRecord["Balance"] - $CustomerRecord["Due"]))
-                $rep->End($email, _("Statement") . " " . _("as of") . " " . sql2date($date) . " " . _("from") . " " . htmlspecialchars_decode(get_company_pref('coy_name')));
+                $rep->End($email, __("Statement") . " " . __("as of") . " " . sql2date($date) . " " . __("from") . " " . htmlspecialchars_decode(get_company_pref('coy_name')));
             else
-                display_notification(sprintf(_("Customer %s has no overdue debits. No e-mail is sent."), $myrow["DebtorName"]));       
+                display_notification(sprintf(__("Customer %s has no overdue debits. No e-mail is sent."), $myrow["DebtorName"]));       
         }
 	}
 
     if (!isset($rep))
-        display_notification(_("No customers with outstanding balances found"));
+        display_notification(__("No customers with outstanding balances found"));
 	else if ($email == 0)
 		$rep->End();
 }

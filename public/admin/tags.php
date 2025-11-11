@@ -29,7 +29,7 @@ if (!isset($_POST['type'])) {
 	elseif ($_GET['type'] == "dimension")
 		$_POST['type'] = TAG_DIMENSION;
 	else {
-		display_error(_("Unspecified tag type"));
+		display_error(__("Unspecified tag type"));
         throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }
 
@@ -39,11 +39,11 @@ if (!isset($_POST['type'])) {
 switch ($_POST['type']) {
 	case TAG_ACCOUNT:
 		// Account tags
-		$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Account Tags");
+		$_SESSION['page_title'] = __($GLOBALS['help_context'] = "Account Tags");
 		break;
 	case TAG_DIMENSION:
 		// Dimension tags
-		$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Dimension Tags");
+		$_SESSION['page_title'] = __($GLOBALS['help_context'] = "Dimension Tags");
 }
 
 page($_SESSION['page_title']);
@@ -56,7 +56,7 @@ function can_process()
 {
 	if (strlen($_POST['name']) == 0) 
 	{
-		display_error( _("The tag name cannot be empty."));
+		display_error( __("The tag name cannot be empty."));
 		set_focus('name');
 		return false;
 	}
@@ -72,12 +72,12 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
     	if ($selected_id != -1) 
     	{
     		if( $ret = update_tag($selected_id, $_POST['name'], $_POST['description']))
-				display_notification(_('Selected tag settings have been updated'));
+				display_notification(__('Selected tag settings have been updated'));
     	} 
     	else 
     	{
     		if( $ret = add_tag($_POST['type'], $_POST['name'], $_POST['description']))
-				display_notification(_('New tag has been added'));
+				display_notification(__('New tag has been added'));
     	}
 		if ($ret) $Mode = 'RESET';
 	}
@@ -93,7 +93,7 @@ function can_delete($selected_id)
 	
 	if (db_num_rows($result) > 0)	
 	{
-		display_error(_("Cannot delete this tag because records have been created referring to it."));
+		display_error(__("Cannot delete this tag because records have been created referring to it."));
 		return false;
 	}
 
@@ -108,7 +108,7 @@ if ($Mode == 'Delete')
 	if (can_delete($selected_id))
 	{
 		delete_tag($selected_id);
-		display_notification(_('Selected tag has been deleted'));
+		display_notification(__('Selected tag has been deleted'));
 	}
 	$Mode = 'RESET';
 }
@@ -127,7 +127,7 @@ $result = get_tags($_POST['type'], check_value('show_inactive'));
 
 start_form();
 start_table(TABLESTYLE);
-$th = array(_("Tag Name"), _("Tag Description"), "", "");
+$th = array(__("Tag Name"), __("Tag Description"), "", "");
 inactive_control_column($th);
 table_header($th);
 
@@ -139,8 +139,8 @@ while ($myrow = db_fetch($result))
 	label_cell($myrow['name']);
 	label_cell($myrow['description']);
 	inactive_control_cell($myrow["id"], $myrow["inactive"], 'tags', 'id');
-	edit_button_cell("Edit".$myrow["id"], _("Edit"));
-	delete_button_cell("Delete".$myrow["id"], _("Delete"));
+	edit_button_cell("Edit".$myrow["id"], __("Edit"));
+	delete_button_cell("Delete".$myrow["id"], __("Delete"));
 	end_row();
 }
 
@@ -164,8 +164,8 @@ if ($selected_id != -1) // We've selected a tag
 	hidden('selected_id', $selected_id);
 }
 	
-text_row_ex(_("Tag Name:"), 'name', 15, 30);
-text_row_ex(_("Tag Description:"), 'description', 40, 60);
+text_row_ex(__("Tag Name:"), 'name', 15, 30);
+text_row_ex(__("Tag Description:"), 'description', 40, 60);
 hidden('type');
 
 end_table(1);

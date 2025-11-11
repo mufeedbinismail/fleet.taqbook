@@ -91,37 +91,37 @@ function print_order_status_list()
 	if ($location == ALL_TEXT)
 		$location = null;
 	if ($category == 0)
-		$cat = _('All');
+		$cat = __('All');
 	else
 		$cat = get_category_name($category);
 	if ($location == null)
-		$loc = _('All');
+		$loc = __('All');
 	else
 		$loc = get_location_name($location);
 	if ($backorder == 0)
-		$back = _('All Orders');
+		$back = __('All Orders');
 	else
-		$back = _('Back Orders Only');
+		$back = __('Back Orders Only');
 
 	$cols = array(0, 60, 150, 260, 325,	385, 450, 515);
 
-	$headers2 = array(_('Order'), _('Customer'), _('Branch'), _('Customer Ref'),
-		_('Ord Date'),	_('Del Date'),	_('Loc'));
+	$headers2 = array(__('Order'), __('Customer'), __('Branch'), __('Customer Ref'),
+		__('Ord Date'),	__('Del Date'),	__('Loc'));
 
 	$aligns = array('left',	'left',	'right', 'right', 'right', 'right',	'right');
 
-	$headers = array(_('Code'),	_('Description'), _('Ordered'),	_('Delivered'),
-		_('Outstanding'), '', _('Total Amount'));
+	$headers = array(__('Code'),	__('Description'), __('Ordered'),	__('Delivered'),
+		__('Outstanding'), '', __('Total Amount'));
 
     $params =   array( 	0 => $comments,
-	    				1 => array(  'text' => _('Period'), 'from' => $from, 'to' => $to),
-	    				2 => array(  'text' => _('Category'), 'from' => $cat,'to' => ''),
-	    				3 => array(  'text' => _('Location'), 'from' => $loc, 'to' => ''),
-	    				4 => array(  'text' => _('Selection'),'from' => $back,'to' => ''));
+	    				1 => array(  'text' => __('Period'), 'from' => $from, 'to' => $to),
+	    				2 => array(  'text' => __('Category'), 'from' => $cat,'to' => ''),
+	    				3 => array(  'text' => __('Location'), 'from' => $loc, 'to' => ''),
+	    				4 => array(  'text' => __('Selection'),'from' => $back,'to' => ''));
 
 	$aligns2 = $aligns;
 
-	$rep = new FrontReport(_('Order Status Listing'), "OrderStatusListing", user_pagesize(), 9, $orientation);
+	$rep = new FrontReport(__('Order Status Listing'), "OrderStatusListing", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 	$cols2 = $cols;
@@ -165,14 +165,14 @@ function print_order_status_list()
 		if ($myrow['quantity'] - $myrow['qty_sent'] > 0)
 		{
 			$rep->Font('italic');
-			$rep->TextCol(5, 6,	_('Outstanding'));
+			$rep->TextCol(5, 6,	__('Outstanding'));
 			$rep->Font();
 		}
 		$rep->NewLine();
 	}
 	$rep->Line($rep->row);
 	$rep->NewLine();
-	$rep->TextCol(1, 6, _("Grand Total")); 
+	$rep->TextCol(1, 6, __("Grand Total")); 
 	$rep->AmountCol(6, 7, $grand_total);
 	$rep->Line($rep->row - 5);
 	$rep->End();

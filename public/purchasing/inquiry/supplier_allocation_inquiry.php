@@ -19,7 +19,7 @@ if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($GLOBALS['help_context'] = "Supplier Allocation Inquiry"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Supplier Allocation Inquiry"), false, false, "", $js);
 
 if (isset($_GET['supplier_id']))
 {
@@ -44,16 +44,16 @@ if (!isset($_POST['supplier_id']))
 start_table(TABLESTYLE_NOBORDER);
 start_row();
 
-supplier_list_cells(_("Select a supplier: "), 'supplier_id', $_POST['supplier_id'], true);
+supplier_list_cells(__("Select a supplier: "), 'supplier_id', $_POST['supplier_id'], true);
 
-date_cells(_("From:"), 'TransAfterDate', '', null, -user_transaction_days());
-date_cells(_("To:"), 'TransToDate', '', null, 1);
+date_cells(__("From:"), 'TransAfterDate', '', null, -user_transaction_days());
+date_cells(__("To:"), 'TransToDate', '', null, 1);
 
 supp_allocations_list_cell("filterType", null);
 
-check_cells(_("show settled:"), 'showSettled', null);
+check_cells(__("show settled:"), 'showSettled', null);
 
-submit_cells('RefreshInquiry', _("Search"),'',_('Refresh Inquiry'), 'default');
+submit_cells('RefreshInquiry', __("Search"),'',__('Refresh Inquiry'), 'default');
 
 set_global_supplier($_POST['supplier_id']);
 
@@ -95,7 +95,7 @@ function fmt_balance($row)
 function alloc_link($row)
 {
 	$link = 
-	pager_link(_("Allocations"),
+	pager_link(__("Allocations"),
 		"/purchasing/allocations/supplier_allocate.php?trans_no=" .
 			$row["trans_no"]. "&trans_type=" . $row["type"]. "&supplier_id=" . $row["supplier_id"], ICON_ALLOC );
 
@@ -104,7 +104,7 @@ function alloc_link($row)
 		return floatcmp(-$row["TotalAmount"], $row["Allocated"]) ? $link : '';
 
 	$link = 
-	pager_link(_("Payment"),
+	pager_link(__("Payment"),
 		"/purchasing/supplier_payment.php?supplier_id=".$row["supplier_id"]."&PInvoice=" 
 			. $row["trans_no"]."&trans_type=" . $row["type"], ICON_MONEY);
 
@@ -132,29 +132,29 @@ $sql = get_sql_for_supplier_allocation_inquiry(get_post('TransAfterDate'),get_po
 	get_post('filterType'), get_post('supplier_id'), check_value('showSettled'));
 
 $cols = array(
-	_("Type") => array('fun'=>'systype_name'),
-	_("#") => array('fun'=>'view_link', 'ord'=>'', 'align'=>'right'),
-	_("Reference"), 
-	_("Supplier") => array('ord'=>''), 
-	_("Supp Reference"),
-	_("Date") => array('name'=>'tran_date', 'type'=>'date', 'ord'=>'asc'),
-	_("Due Date") => array('type'=>'date', 'fun'=>'due_date'),
-	_("Currency") => array('align'=>'center'),
-	_("Debit") => array('align'=>'right', 'fun'=>'fmt_debit'), 
-	_("Credit") => array('align'=>'right', 'insert'=>true, 'fun'=>'fmt_credit'), 
-	_("Allocated") => 'amount', 
-	_("Balance") => array('type'=>'amount', 'insert'=>true, 'fun'=>'fmt_balance'),
+	__("Type") => array('fun'=>'systype_name'),
+	__("#") => array('fun'=>'view_link', 'ord'=>'', 'align'=>'right'),
+	__("Reference"), 
+	__("Supplier") => array('ord'=>''), 
+	__("Supp Reference"),
+	__("Date") => array('name'=>'tran_date', 'type'=>'date', 'ord'=>'asc'),
+	__("Due Date") => array('type'=>'date', 'fun'=>'due_date'),
+	__("Currency") => array('align'=>'center'),
+	__("Debit") => array('align'=>'right', 'fun'=>'fmt_debit'), 
+	__("Credit") => array('align'=>'right', 'insert'=>true, 'fun'=>'fmt_credit'), 
+	__("Allocated") => 'amount', 
+	__("Balance") => array('type'=>'amount', 'insert'=>true, 'fun'=>'fmt_balance'),
 	array('insert'=>true, 'fun'=>'alloc_link')
 	);
 
 if ($_POST['supplier_id'] != ALL_TEXT) {
-	$cols[_("Supplier")] = 'skip';
-	$cols[_("Currency")] = 'skip';
+	$cols[__("Supplier")] = 'skip';
+	$cols[__("Currency")] = 'skip';
 }
 //------------------------------------------------------------------------------------------------
 
 $table =& new_db_pager('doc_tbl', $sql, $cols);
-$table->set_marker('check_overdue', _("Marked items are overdue."));
+$table->set_marker('check_overdue', __("Marked items are overdue."));
 
 $table->width = "90%";
 

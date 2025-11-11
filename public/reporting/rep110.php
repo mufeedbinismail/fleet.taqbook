@@ -64,9 +64,9 @@ function print_deliveries()
 	if ($email == 0)
 	{
 		if ($packing_slip == 0)
-			$rep = new FrontReport(_('DELIVERY'), "DeliveryNoteBulk", user_pagesize(), 9, $orientation);
+			$rep = new FrontReport(__('DELIVERY'), "DeliveryNoteBulk", user_pagesize(), 9, $orientation);
 		else
-			$rep = new FrontReport(_('PACKING SLIP'), "PackingSlipBulk", user_pagesize(), 9, $orientation);
+			$rep = new FrontReport(__('PACKING SLIP'), "PackingSlipBulk", user_pagesize(), 9, $orientation);
 	}
     if ($orientation == 'L')
     	recalculate_cols($cols);
@@ -82,12 +82,12 @@ function print_deliveries()
 				$rep = new FrontReport("", "", user_pagesize(), 9, $orientation);
 				if ($packing_slip == 0)
 				{
-					$rep->title = _('DELIVERY NOTE');
+					$rep->title = __('DELIVERY NOTE');
 					$rep->filename = "Delivery" . $myrow['reference'] . ".pdf";
 				}
 				else
 				{
-					$rep->title = _('PACKING SLIP');
+					$rep->title = __('PACKING SLIP');
 					$rep->filename = "Packing_slip" . $myrow['reference'] . ".pdf";
 				}
 			}
@@ -152,13 +152,13 @@ function print_deliveries()
 			$doctype=ST_CUSTDELIVERY;
 			if ($packing_slip == 0)
 			{
-				$rep->TextCol(3, 6, _("Sub-total"), -2);
+				$rep->TextCol(3, 6, __("Sub-total"), -2);
 				$rep->TextCol(6, 7,	$DisplaySubTot, -2);
 				$rep->NewLine();
 				if ($myrow['ov_freight'] != 0.0)
 				{
 					$DisplayFreight = number_format2($myrow["ov_freight"],$dec);
-					$rep->TextCol(3, 6, _("Shipping"), -2);
+					$rep->TextCol(3, 6, __("Shipping"), -2);
 					$rep->TextCol(6, 7,	$DisplayFreight, -2);
 					$rep->NewLine();
 				}	
@@ -181,7 +181,7 @@ function print_deliveries()
     					{
     						if ($first)
     						{
-								$rep->TextCol(3, 6, _("Total Tax Excluded"), -2);
+								$rep->TextCol(3, 6, __("Total Tax Excluded"), -2);
 								$rep->TextCol(6, 7,	number_format2($tax_item['net_amount'], $dec), -2);
 								$rep->NewLine();
     						}
@@ -190,7 +190,7 @@ function print_deliveries()
 							$first = false;
     					}
     					else
-							$rep->TextCol(3, 7, _("Included") . " " . $tax_type_name . _("Amount") . ": " . $DisplayTax, -2);
+							$rep->TextCol(3, 7, __("Included") . " " . $tax_type_name . __("Amount") . ": " . $DisplayTax, -2);
 					}
     				else
     				{
@@ -203,7 +203,7 @@ function print_deliveries()
 				$DisplayTotal = number_format2($myrow["ov_freight"] +$myrow["ov_freight_tax"] + $myrow["ov_gst"] +
 					$myrow["ov_amount"],$dec);
 				$rep->Font('bold');
-				$rep->TextCol(3, 6, _("TOTAL DELIVERY INCL. VAT"), - 2);
+				$rep->TextCol(3, 6, __("TOTAL DELIVERY INCL. VAT"), - 2);
 				$rep->TextCol(6, 7,	$DisplayTotal, -2);
 				$words = price_in_words($myrow['Total'], ST_CUSTDELIVERY);
 				if ($words != "")

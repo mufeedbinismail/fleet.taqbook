@@ -19,7 +19,7 @@ require_once __DIR__ . "/../../sales/includes/sales_db.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 600);
-page(_($GLOBALS['help_context'] = "View Sales Dispatch"), true, false, "", $js);
+page(__($GLOBALS['help_context'] = "View Sales Dispatch"), true, false, "", $js);
 
 
 if (isset($_GET["trans_no"]))
@@ -39,7 +39,7 @@ $branch = get_branch($myrow["branch_code"]);
 
 $sales_order = get_sales_order_header($myrow["order_"], ST_SALESORDER);
 
-display_heading(sprintf(_("DISPATCH NOTE #%d"),$trans_id));
+display_heading(sprintf(__("DISPATCH NOTE #%d"),$trans_id));
 
 echo "<br>";
 start_table(TABLESTYLE2, "width='95%'");
@@ -47,7 +47,7 @@ echo "<tr valign=top><td>"; // outer table
 
 /*Now the customer charged to details in a sub table*/
 start_table(TABLESTYLE, "width='100%'");
-$th = array(_("Charge To"));
+$th = array(__("Charge To"));
 table_header($th);
 
 label_row(null, $myrow["DebtorName"] . "<br>" . nl2br($myrow["address"]), "nowrap");
@@ -61,7 +61,7 @@ echo "</td><td>"; // outer table
 /*end of the main table showing the company name and charge to details */
 
 start_table(TABLESTYLE, "width='100%'");
-$th = array(_("Charge Branch"));
+$th = array(__("Charge Branch"));
 table_header($th);
 
 label_row(null, $branch["br_name"] . "<br>" . nl2br($branch["br_address"]), "nowrap");
@@ -70,7 +70,7 @@ end_table();
 echo "</td><td>"; // outer table
 
 start_table(TABLESTYLE, "width='100%'");
-$th = array(_("Delivered To"));
+$th = array(__("Delivered To"));
 table_header($th);
 
 label_row(null, $sales_order["deliver_to"] . "<br>" . nl2br($sales_order["delivery_address"]),
@@ -81,20 +81,20 @@ echo "</td><td>"; // outer table
 
 start_table(TABLESTYLE, "width='100%'");
 start_row();
-label_cells(_("Reference"), $myrow["reference"], "class='tableheader2'");
-label_cells(_("Currency"), $sales_order["curr_code"], "class='tableheader2'");
-label_cells(_("Our Order No"),
+label_cells(__("Reference"), $myrow["reference"], "class='tableheader2'");
+label_cells(__("Currency"), $sales_order["curr_code"], "class='tableheader2'");
+label_cells(__("Our Order No"),
 	get_customer_trans_view_str(ST_SALESORDER,$sales_order["order_no"]), "class='tableheader2'");
 end_row();
 start_row();
-label_cells(_("Customer Order Ref."), $sales_order["customer_ref"], "class='tableheader2'");
-label_cells(_("Shipping Company"), $myrow["shipper_name"], "class='tableheader2'");
-label_cells(_("Sales Type"), $myrow["sales_type"], "class='tableheader2'");
+label_cells(__("Customer Order Ref."), $sales_order["customer_ref"], "class='tableheader2'");
+label_cells(__("Shipping Company"), $myrow["shipper_name"], "class='tableheader2'");
+label_cells(__("Sales Type"), $myrow["sales_type"], "class='tableheader2'");
 end_row();
 start_row();
-label_cells(_("Dispatch Date"), sql2date($myrow["tran_date"]), "class='tableheader2'", "nowrap");
-label_cells(_("Due Date"), sql2date($myrow["due_date"]), "class='tableheader2'", "nowrap");
-label_cells(_("Tracking No"), $myrow["tracking_no"], "class='tableheader2'", "nowrap");
+label_cells(__("Dispatch Date"), sql2date($myrow["tran_date"]), "class='tableheader2'", "nowrap");
+label_cells(__("Due Date"), sql2date($myrow["due_date"]), "class='tableheader2'", "nowrap");
+label_cells(__("Tracking No"), $myrow["tracking_no"], "class='tableheader2'", "nowrap");
 end_row();
 comments_display_row(ST_CUSTDELIVERY, $trans_id);
 end_table();
@@ -109,8 +109,8 @@ start_table(TABLESTYLE, "width='95%'");
 
 if (db_num_rows($result) > 0)
 {
-	$th = array(_("Item Code"), _("Item Description"), _("Quantity"),
-		_("Unit"), _("Price"), _("Discount %"), _("Total"));
+	$th = array(__("Item Code"), __("Item Description"), __("Quantity"),
+		__("Unit"), __("Price"), __("Discount %"), __("Total"));
 	table_header($th);
 
 	$k = 0;	//row colour counter
@@ -143,16 +143,16 @@ if (db_num_rows($result) > 0)
 	end_row();
 	} //end while there are line items to print out
 	$display_sub_tot = price_format($sub_total);
-	label_row(_("Sub-total"), $display_sub_tot, "colspan=6 align=right",
+	label_row(__("Sub-total"), $display_sub_tot, "colspan=6 align=right",
 		"nowrap align=right width='15%'");
 
 }
 else
-	display_note(_("There are no line items on this dispatch."), 1, 2);
+	display_note(__("There are no line items on this dispatch."), 1, 2);
 if ($myrow['ov_freight'] != 0.0)
 {
 	$display_freight = price_format($myrow["ov_freight"]);
-	label_row(_("Shipping"), $display_freight, "colspan=6 align=right", "nowrap align=right");
+	label_row(__("Shipping"), $display_freight, "colspan=6 align=right", "nowrap align=right");
 }
 
 $tax_items = get_trans_tax_details(ST_CUSTDELIVERY, $trans_id);
@@ -160,11 +160,11 @@ display_customer_trans_tax_details($tax_items, 6);
 
 $display_total = price_format($myrow["ov_freight"]+$myrow["ov_amount"]+$myrow["ov_freight_tax"]+$myrow["ov_gst"]);
 
-label_row(_("TOTAL VALUE"), $display_total, "colspan=6 align=right",
+label_row(__("TOTAL VALUE"), $display_total, "colspan=6 align=right",
 	"nowrap align=right");
 end_table(1);
 
-is_voided_display(ST_CUSTDELIVERY, $trans_id, _("This dispatch has been voided."));
+is_voided_display(ST_CUSTDELIVERY, $trans_id, __("This dispatch has been voided."));
 
 end_page(true, false, false, ST_CUSTDELIVERY, $trans_id);
 

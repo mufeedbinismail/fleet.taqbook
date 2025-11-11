@@ -10,7 +10,7 @@ if ($SysPrefs->use_popup_windows)
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
 	
-page(_($GLOBALS['help_context'] = "Marketplaces"), @$_REQUEST['popup'], false, "", $js); 
+page(__($GLOBALS['help_context'] = "Marketplaces"), @$_REQUEST['popup'], false, "", $js); 
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/banking.inc";
@@ -32,7 +32,7 @@ function can_process()
 
 	if (strlen($_POST['name']) == 0)
     {
-		display_error(_("The marketplace name cannot be empty."));
+		display_error(__("The marketplace name cannot be empty."));
 		set_focus('name');
 		return false;
 	}
@@ -42,14 +42,14 @@ function can_process()
         && (!$selected_id || $existing['id'] != $selected_id)
     )
     {
-        display_error(_("The marketplace name is already in use."));
+        display_error(__("The marketplace name is already in use."));
         set_focus('name');
         return false;
     }
 
 	if (strlen($_POST['code']) == 0)
     {
-		display_error(_("The marketplace code cannot be empty."));
+		display_error(__("The marketplace code cannot be empty."));
 		set_focus('code');
 		return false;
 	}
@@ -59,14 +59,14 @@ function can_process()
         && (!$selected_id || $existing['id'] != $selected_id)
     )
     {
-        display_error(_("The marketplace code is already in use."));
+        display_error(__("The marketplace code is already in use."));
         set_focus('code');
         return false;
     }
 	
 	if (strlen($_POST['payable_account']) == 0 || !key_in_foreign_table($_POST['payable_account'], 'chart_master', 'account_code'))
 	{
-		display_error(_("The payable account is not valid."));
+		display_error(__("The payable account is not valid."));
 		set_focus('payable_account');
 		return false;		
 	} 
@@ -94,7 +94,7 @@ function handle_submit(&$selected_id)
         );
 
 		$Ajax->activate('marketplace_id'); // in case of status change
-		display_notification(_("Marketplace has been updated."));
+		display_notification(__("Marketplace has been updated."));
 	} 
 	else 
 	{ 	//it is a new marketplace
@@ -110,7 +110,7 @@ function handle_submit(&$selected_id)
 
 		commit_transaction();
 
-		display_notification(_("A new marketplace has been added."));
+		display_notification(__("A new marketplace has been added."));
 
 		$Ajax->activate('_page_body');
 	}
@@ -122,16 +122,16 @@ function handle_delete()
     global $Ajax, $selected_id;
 	
 	if (key_in_foreign_table($selected_id, 'debtor_trans', 'marketplace_id')) {
-        display_error(_("This marketplace cannot be deleted because there are transactions that refer to it."));
+        display_error(__("This marketplace cannot be deleted because there are transactions that refer to it."));
         return;
 	} else if (key_in_foreign_table($selected_id, 'sales_orders', 'marketplace_id')) {
-        display_error(_("Cannot delete the marketplace record because orders have been created against it."));
+        display_error(__("Cannot delete the marketplace record because orders have been created against it."));
         return;
     }
 	
     delete_marketplace($selected_id);
 
-    display_notification(_("Selected marketplace has been deleted."));
+    display_notification(__("Selected marketplace has been deleted."));
     unset($_POST['marketplace_id']);
     $selected_id = '';
     $Ajax->activate('_page_body');
@@ -174,12 +174,12 @@ function marketplace_settings($selected_id)
 
 	start_outer_table(TABLESTYLE2);
 
-	text_row(_("Marketplace Code:"), 'code', null, 30, 30);
-	text_row(_("Marketplace Name:"), 'name', null, 40, 80);
-	gl_all_accounts_list_row(_("Payable Account:"), 'payable_account', null, true, false, _("-- select --"));
+	text_row(__("Marketplace Code:"), 'code', null, 30, 30);
+	text_row(__("Marketplace Name:"), 'name', null, 40, 80);
+	gl_all_accounts_list_row(__("Payable Account:"), 'payable_account', null, true, false, __("-- select --"));
 
 	if($selected_id)
-		record_status_list_row(_("Marketplace status:"), 'inactive');
+		record_status_list_row(__("Marketplace status:"), 'inactive');
 
 	end_outer_table(1);
 
@@ -187,15 +187,15 @@ function marketplace_settings($selected_id)
 	if (@$_REQUEST['popup']) hidden('popup', 1);
 	if (!$selected_id)
 	{
-		submit_center('submit', _("Add New Marketplace"), true, '', false);
+		submit_center('submit', __("Add New Marketplace"), true, '', false);
 	} 
 	else 
 	{
-		submit_center_first('submit', _("Update Marketplace"), 
-		  _('Update marketplace data'), $page_nested ? true : false);
-		submit_return('select', $selected_id, _("Select this marketplace and return to document entry."));
-		submit_center_last('delete', _("Delete Marketplace"), 
-		  _('Delete marketplace data if have been never used'), true);
+		submit_center_first('submit', __("Update Marketplace"), 
+		  __('Update marketplace data'), $page_nested ? true : false);
+		submit_return('select', $selected_id, __("Select this marketplace and return to document entry."));
+		submit_center_last('delete', __("Delete Marketplace"), 
+		  __('Delete marketplace data if have been never used'), true);
 	}
 	div_end();
 }
@@ -208,9 +208,9 @@ if (db_has_marketplaces())
 {
 	start_table(TABLESTYLE_NOBORDER);
 	start_row();
-	marketplace_list_cells(_("Select a marketplace: "), 'marketplace_id', null,
-		_('New marketplace'), true, check_value('show_inactive'));
-	check_cells(_("Show inactive:"), 'show_inactive', null, true);
+	marketplace_list_cells(__("Select a marketplace: "), 'marketplace_id', null,
+		__('New marketplace'), true, check_value('show_inactive'));
+	check_cells(__("Show inactive:"), 'show_inactive', null, true);
 	end_row();
 	end_table();
 
@@ -229,9 +229,9 @@ if (!$selected_id)
 	unset($_POST['_tabs_sel']); // force settings tab for new marketplace
 
 tabbed_content_start('tabs', array(
-    'settings' => array(_('&General settings'), $selected_id),
-    'transactions' => array(_('&Transactions'), (user_check_access('SA_MP_SALESTRANSVIEW') ? $selected_id : null)),
-    'orders' => array(_('Sales &Orders'), (user_check_access('SA_MP_SALESTRANSVIEW') ? $selected_id : null)),
+    'settings' => array(__('&General settings'), $selected_id),
+    'transactions' => array(__('&Transactions'), (user_check_access('SA_MP_SALESTRANSVIEW') ? $selected_id : null)),
+    'orders' => array(__('Sales &Orders'), (user_check_access('SA_MP_SALESTRANSVIEW') ? $selected_id : null)),
 ));
 	
 	switch (get_post('_tabs_sel')) {

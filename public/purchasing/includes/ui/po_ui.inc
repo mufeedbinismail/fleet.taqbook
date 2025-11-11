@@ -105,12 +105,12 @@ function display_po_header(&$order)
         if (!isset($_POST['supplier_id']) && (get_global_supplier() != ALL_TEXT))
         	$_POST['supplier_id'] = get_global_supplier();
 
-    	supplier_list_row(_("Supplier:"), 'supplier_id', null, false, true, false, true);
+    	supplier_list_row(__("Supplier:"), 'supplier_id', null, false, true, false, true);
 	}
 	else
 	{
 		hidden('supplier_id', $order->supplier_id);
-		label_row(_("Supplier:"), $order->supplier_name);
+		label_row(__("Supplier:"), $order->supplier_name);
     }
 
 	if ($order->supplier_id != get_post('supplier_id',-1)) {
@@ -132,8 +132,8 @@ function display_po_header(&$order)
 	}
 	set_global_supplier($_POST['supplier_id']);
 
-	date_row($order->trans_type==ST_PURCHORDER ? _("Order Date:") :
-		($order->trans_type==ST_SUPPRECEIVE ? _("Delivery Date:") : _("Invoice Date:")),
+	date_row($order->trans_type==ST_PURCHORDER ? __("Order Date:") :
+		($order->trans_type==ST_SUPPRECEIVE ? __("Delivery Date:") : __("Invoice Date:")),
 		'OrderDate', '', true, 0, 0, 0, null, true);
 
 	if (isset($_POST['_OrderDate_changed'])) {
@@ -146,33 +146,33 @@ function display_po_header(&$order)
 
 	if (!is_company_currency($order->curr_code))
 	{
-		label_row(_("Supplier Currency:"), $order->curr_code);
+		label_row(__("Supplier Currency:"), $order->curr_code);
 		exchange_rate_display(get_company_currency(), $order->curr_code,
 			$_POST['OrderDate']);
 	}
 
     if ($editable)
     {
-    	ref_row(_("Reference:"), 'ref', '', null, false, $order->trans_type, array('date'=> @$_POST['OrderDate']));
+    	ref_row(__("Reference:"), 'ref', '', null, false, $order->trans_type, array('date'=> @$_POST['OrderDate']));
     }
     else
     {
     	hidden('ref', $order->reference);
-    	label_row(_("Reference:"), $order->reference);
+    	label_row(__("Reference:"), $order->reference);
     }
 
 	table_section(2);
 
 	if ($order->trans_type==ST_SUPPINVOICE)
-		date_row(_("Due Date:"), 'due_date', '', false, 0, 0, 0, null, true);
+		date_row(__("Due Date:"), 'due_date', '', false, 0, 0, 0, null, true);
 
-  	text_row(_("Supplier's Reference:"), 'supp_ref', null, 20, 60);
+  	text_row(__("Supplier's Reference:"), 'supp_ref', null, 20, 60);
 
 	if (get_company_pref('use_dimension'))
-		dimensions_list_row(_('Dimension').':', 'dimension', null, true, _('Default'), false, 1);
+		dimensions_list_row(__('Dimension').':', 'dimension', null, true, __('Default'), false, 1);
 	if (get_company_pref('use_dimension') == 2)
-		dimensions_list_row(_('Dimension 2').':', 'dimension2', null, true, _('Default'), false, 2);
-	locations_list_row(_("Receive Into:"), 'StkLocation', null, false, true, $order->fixed_asset); 
+		dimensions_list_row(__('Dimension 2').':', 'dimension2', null, true, __('Default'), false, 2);
+	locations_list_row(__("Receive Into:"), 'StkLocation', null, false, true, $order->fixed_asset); 
 
 	table_section(3);
 
@@ -193,11 +193,11 @@ function display_po_header(&$order)
         }
         else
         { /*The default location of the user is crook */
-    	  	display_error(_("The default stock location set up for this user is not a currently defined stock location. Your system administrator needs to amend your user record."));
+    	  	display_error(__("The default stock location set up for this user is not a currently defined stock location. Your system administrator needs to amend your user record."));
         }
     }
 
-	textarea_row(_("Deliver to:"), 'delivery_address', $_POST['delivery_address'], 35, 4);
+	textarea_row(__("Deliver to:"), 'delivery_address', $_POST['delivery_address'], 35, 4);
 
 	end_outer_table(); // outer table
 }
@@ -206,15 +206,15 @@ function display_po_header(&$order)
 
 function display_po_items(&$order, $editable=true)
 {
-    display_heading(_("Order Items"));
+    display_heading(__("Order Items"));
 
     div_start('items_table');
     start_table(TABLESTYLE, "width='80%'");
 
 	$new = $order->order_no == 0;
 
-   	$th = array(_("Item Code"), _("Item Description"), _("Quantity"), _("Received"),
-   		_("Unit"), _("Required Delivery Date"), $order->tax_included ? _("Price after Tax") : _("Price before Tax"), _("Line Total"), "");
+   	$th = array(__("Item Code"), __("Item Description"), __("Quantity"), __("Received"),
+   		__("Unit"), __("Required Delivery Date"), $order->tax_included ? __("Price after Tax") : __("Price before Tax"), __("Line Total"), "");
 
 	if ($order->trans_type != ST_PURCHORDER)
 		array_remove($th, 5);
@@ -250,10 +250,10 @@ function display_po_items(&$order, $editable=true)
 
 			if ($editable)
 			{
-					edit_button_cell("Edit$line_no", _("Edit"),
-					  _('Edit document line'));
-					delete_button_cell("Delete$line_no", _("Delete"),
-						_('Remove line from document'));
+					edit_button_cell("Edit$line_no", __("Edit"),
+					  __('Edit document line'));
+					delete_button_cell("Delete$line_no", __("Delete"),
+						__('Remove line from document'));
 			}
 		end_row();
 		}
@@ -273,7 +273,7 @@ function display_po_items(&$order, $editable=true)
 
 	$display_sub_total = price_format($total);
 
-	label_row(_("Sub-total"), $display_sub_total, "colspan=$colspan align=right","align=right", 2);
+	label_row(__("Sub-total"), $display_sub_total, "colspan=$colspan align=right","align=right", 2);
 
 	$taxes = $order->get_taxes(input_num('freight_cost'));
 	
@@ -282,9 +282,9 @@ function display_po_items(&$order, $editable=true)
 	$display_total = price_format(($total + input_num('freight_cost') + $tax_total));
 
 	start_row();
-	label_cells(_("Amount Total"), $display_total, "colspan=$colspan align='right'","align='right'");
+	label_cells(__("Amount Total"), $display_total, "colspan=$colspan align='right'","align='right'");
 	$order->trans_type == ST_SUPPINVOICE
-	 ? submit_cells('update', _("Update"), "colspan=2 align='center'", _("Refresh"), true)
+	 ? submit_cells('update', __("Update"), "colspan=2 align='center'", __("Refresh"), true)
 		: label_cell('', "colspan=2");
 	end_row();
 
@@ -299,53 +299,53 @@ function display_po_summary(&$po, $is_self=false, $editable=false)
     start_table(TABLESTYLE, "width='90%'");
 
     start_row();
-    label_cells(_("Reference"), $po->reference, "class='tableheader2'");
+    label_cells(__("Reference"), $po->reference, "class='tableheader2'");
 
-    label_cells(_("Supplier"), $po->supplier_name, "class='tableheader2'");
+    label_cells(__("Supplier"), $po->supplier_name, "class='tableheader2'");
 
     if (!is_company_currency($po->curr_code))
-    	label_cells(_("Order Currency"), $po->curr_code, "class='tableheader2'");
+    	label_cells(__("Order Currency"), $po->curr_code, "class='tableheader2'");
 
     if (!$is_self)
     {
-    	label_cells(_("Purchase Order"), get_trans_view_str(ST_PURCHORDER, $po->order_no),
+    	label_cells(__("Purchase Order"), get_trans_view_str(ST_PURCHORDER, $po->order_no),
     		"class='tableheader2'");
     }
 	end_row();
 	start_row();
-    label_cells(_("Date"), $po->orig_order_date, "class='tableheader2'");
+    label_cells(__("Date"), $po->orig_order_date, "class='tableheader2'");
 
     if ($editable)
     {
         if (!isset($_POST['Location']))
         	$_POST['Location'] = $po->Location;
-        label_cell(_("Deliver Into Location"), "class='tableheader2'");
+        label_cell(__("Deliver Into Location"), "class='tableheader2'");
         locations_list_cells(null, 'Location', $_POST['Location']);
     }
     else
     {
-    	label_cells(_("Deliver Into Location"), get_location_name($po->Location),
+    	label_cells(__("Deliver Into Location"), get_location_name($po->Location),
     		"class='tableheader2'");
     }
 
     if ($po->supp_ref != "")
-    	label_cells(_("Supplier's Reference"), $po->supp_ref, "class='tableheader2'");
+    	label_cells(__("Supplier's Reference"), $po->supp_ref, "class='tableheader2'");
     end_row();
 
     if (!$editable)
-    	label_row(_("Delivery Address"), $po->delivery_address, "class='tableheader2'",
+    	label_row(__("Delivery Address"), $po->delivery_address, "class='tableheader2'",
     		"colspan=9");
 
 	if (!$editable && ($po->prep_amount > 0))
 	{
 		start_row();
-		label_cells(_("Required Pre-Payment"), price_format($po->prep_amount), "class='tableheader2'");
-		label_cells(_("Pre-Payments Allocated"), price_format($po->alloc), "class='tableheader2'");
+		label_cells(__("Required Pre-Payment"), price_format($po->prep_amount), "class='tableheader2'");
+		label_cells(__("Pre-Payments Allocated"), price_format($po->alloc), "class='tableheader2'");
 		end_row();
 	}
 
     if ($po->Comments != "")
-    	label_row(_("Order Comments"), $po->Comments, "class='tableheader2'",
+    	label_row(__("Order Comments"), $po->Comments, "class='tableheader2'",
     		"colspan=9");
     end_table(1);
 }
@@ -442,17 +442,17 @@ function po_item_controls(&$order, &$rowcounter, $line_no=-1)
 
 	if ($id!=-1)
 	{
-		button_cell('UpdateLine', _("Update"),
-				_('Confirm changes'), ICON_UPDATE);
-		button_cell('CancelUpdate', _("Cancel"),
-				_('Cancel changes'), ICON_CANCEL);
+		button_cell('UpdateLine', __("Update"),
+				__('Confirm changes'), ICON_UPDATE);
+		button_cell('CancelUpdate', __("Cancel"),
+				__('Cancel changes'), ICON_CANCEL);
 		hidden('line_no', $line_no);
 		set_focus('qty');
 	}
 	else
 	{
-		submit_cells('EnterLine', _("Add Item"), "colspan=2 align='center'",
-		    _('Add new item to document'), true);
+		submit_cells('EnterLine', __("Add Item"), "colspan=2 align='center'",
+		    __('Add new item to document'), true);
 	}
 
 	end_row();
@@ -467,11 +467,11 @@ function display_po_footer(&$trans)
 start_table(TABLESTYLE2);
 
 if ($trans->trans_type == ST_SUPPINVOICE) {
-	cash_accounts_list_row(_("Payment:"), 'cash_account', null, false, _('Delayed'));
+	cash_accounts_list_row(__("Payment:"), 'cash_account', null, false, __('Delayed'));
 } elseif ($trans->trans_type == ST_PURCHORDER)
-	amount_row(_("Pre-Payment Required:"), 'prep_amount');
+	amount_row(__("Pre-Payment Required:"), 'prep_amount');
 
-textarea_row(_("Memo:"), 'Comments', null, 70, 4);
+textarea_row(__("Memo:"), 'Comments', null, 70, 4);
 
 end_table();
 }

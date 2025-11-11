@@ -98,27 +98,27 @@ function inventory_movements()
 	if ($category == ALL_NUMERIC)
 		$category = 0;
 	if ($category == 0)
-		$cat = _('All');
+		$cat = __('All');
 	else
 		$cat = get_category_name($category);
 
 	if ($location == '')
-		$loc = _('All');
+		$loc = __('All');
 	else
 		$loc = get_location_name($location);
 
 	$cols = array(0, 60, 220, 240, 310, 380, 450, 520);
 
-	$headers = array(_('Category'), _('Description'),	_('UOM'),	_('Opening'), _('Quantity In'), _('Quantity Out'), _('Balance'));
+	$headers = array(__('Category'), __('Description'),	__('UOM'),	__('Opening'), __('Quantity In'), __('Quantity Out'), __('Balance'));
 
 	$aligns = array('left',	'left',	'left', 'right', 'right', 'right','right');
 
     $params =   array( 	0 => $comments,
-						1 => array('text' => _('Period'), 'from' => $from_date, 'to' => $to_date),
-    				    2 => array('text' => _('Category'), 'from' => $cat, 'to' => ''),
-						3 => array('text' => _('Location'), 'from' => $loc, 'to' => ''));
+						1 => array('text' => __('Period'), 'from' => $from_date, 'to' => $to_date),
+    				    2 => array('text' => __('Category'), 'from' => $cat, 'to' => ''),
+						3 => array('text' => __('Location'), 'from' => $loc, 'to' => ''));
 
-    $rep = new FrontReport(_('Inventory Movements'), "InventoryMovements", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Inventory Movements'), "InventoryMovements", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 

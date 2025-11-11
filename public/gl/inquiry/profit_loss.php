@@ -23,12 +23,12 @@ $js = "";
 if (user_use_date_picker())
 	$js = get_js_date_picker();
 
-page(_($GLOBALS['help_context'] = "Profit & Loss Drilldown"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Profit & Loss Drilldown"), false, false, "", $js);
 
 $compare_types = array(
-	_("Accumulated"),
-	_("Period Y-1"),
-	_("Budget")
+	__("Accumulated"),
+	__("Period Y-1"),
+	__("Budget")
 );
 //----------------------------------------------------------------------------------------------------
 // Ajax updates
@@ -119,7 +119,7 @@ function display_type ($type, $typename, $from, $to, $begin, $end, $compare, $co
 		if ($drilldown && $type == $_POST["AccGrp"])
 		{		
 			start_row("class='inquirybg' style='font-weight:bold'");
-			label_cell(_('Total') . " " . $typename);
+			label_cell(__('Total') . " " . $typename);
 			amount_cell(($code_per_balance + $per_balance_total) * $convert);
 			amount_cell(($code_acc_balance + $acc_balance_total) * $convert);
 			amount_cell(Achieve(($code_per_balance + $per_balance_total), ($code_acc_balance + $acc_balance_total)));
@@ -179,20 +179,20 @@ function inquiry_controls()
 		$_POST['TransToDate'] = end_month($date);
 	if (!isset($_POST['TransFromDate']))
 		$_POST['TransFromDate'] = add_days(end_month($date), -user_transaction_days());
-    date_cells(_("From:"), 'TransFromDate');
-	date_cells(_("To:"), 'TransToDate');
+    date_cells(__("From:"), 'TransFromDate');
+	date_cells(__("To:"), 'TransToDate');
 	
-	echo "<td>"._("Compare to").":</td>\n";
+	echo "<td>".__("Compare to").":</td>\n";
 	echo "<td>";
 	echo array_selector('Compare', null, $compare_types);
 	echo "</td>\n";	
 
 	if ($dim >= 1)
-		dimensions_list_cells(_("Dimension")." 1:", 'Dimension', null, true, " ", false, 1);
+		dimensions_list_cells(__("Dimension")." 1:", 'Dimension', null, true, " ", false, 1);
 	if ($dim > 1)
-		dimensions_list_cells(_("Dimension")." 2:", 'Dimension2', null, true, " ", false, 2);
+		dimensions_list_cells(__("Dimension")." 2:", 'Dimension2', null, true, " ", false, 2);
 	
-	submit_cells('Show',_("Show"),'','', 'default');
+	submit_cells('Show',__("Show"),'','', 'default');
     end_table();
 
 	hidden('AccGrp');
@@ -240,10 +240,10 @@ function display_profit_and_loss($compare)
 	start_table(TABLESTYLE, "width='50%'");
 
 	$tableheader =  "<tr>
-        <td class='tableheader'>" . _("Group/Account Name") . "</td>
-        <td class='tableheader'>" . _("Period") . "</td>
+        <td class='tableheader'>" . __("Group/Account Name") . "</td>
+        <td class='tableheader'>" . __("Period") . "</td>
 		<td class='tableheader'>" . $compare_types[$compare] . "</td>
-		<td class='tableheader'>" . _("Achieved %") . "</td>
+		<td class='tableheader'>" . __("Achieved %") . "</td>
         </tr>";	
 	
 	if (!$drilldown) //Root Level
@@ -296,7 +296,7 @@ function display_profit_and_loss($compare)
 			//Print Class Summary
 			
 			start_row("class='inquirybg' style='font-weight:bold'");
-			label_cell(_('Total') . " " . $class["class_name"]);
+			label_cell(__('Total') . " " . $class["class_name"]);
 			amount_cell($class_per_total * $convert);
 			amount_cell($class_acc_total * $convert);
 			amount_cell(Achieve($class_per_total, $class_acc_total));
@@ -307,7 +307,7 @@ function display_profit_and_loss($compare)
 		}
 		
 		start_row("class='inquirybg' style='font-weight:bold'");
-		label_cell(_('Calculated Return'));
+		label_cell(__('Calculated Return'));
 		amount_cell($salesper *-1);
 		amount_cell($salesacc * -1);
 		amount_cell(achieve($salesper, $salesacc));
@@ -336,7 +336,7 @@ function display_profit_and_loss($compare)
 		
 
 	end_table(); // outer table
-	hyperlink_params(url()->current(), _("Back"), "TransFromDate=". $from . "&TransToDate=" . $to . "&Dimension=" . $dimension . "&Dimension2=" . $dimension2);
+	hyperlink_params(url()->current(), __("Back"), "TransFromDate=". $from . "&TransToDate=" . $to . "&Dimension=" . $dimension . "&Dimension2=" . $dimension2);
 	div_end();
 }
 

@@ -89,7 +89,7 @@ function update_work_order($woid, $loc_code, $units_reqd, $stock_id,
 	db_query($sql, "could not update work order");
 
 	update_comments(ST_WORKORDER, $woid, null, $memo_);
-	add_audit_trail(ST_WORKORDER, $woid, $date_, _("Updated."));
+	add_audit_trail(ST_WORKORDER, $woid, $date_, __("Updated."));
 
 	commit_transaction();
 }
@@ -106,7 +106,7 @@ function delete_work_order($woid, $stock_id, $qty, $date)
 	db_query($sql,"The work order could not be deleted");
 
 	delete_comments(ST_WORKORDER, $woid);
-	add_audit_trail(ST_WORKORDER, $woid, $date, _("Canceled."));
+	add_audit_trail(ST_WORKORDER, $woid, $date, __("Canceled."));
 
 	commit_transaction();
 }
@@ -189,7 +189,7 @@ function release_work_order($woid, $releaseDate, $memo_)
 	create_wo_requirements($woid, $stock_id);
 
 	add_comments(ST_WORKORDER, $woid, $releaseDate, $memo_);
-	add_audit_trail(ST_WORKORDER, $woid, sql2date($myrow['date_']), _("Released."));
+	add_audit_trail(ST_WORKORDER, $woid, sql2date($myrow['date_']), __("Released."));
 
 	commit_transaction();
 }

@@ -17,7 +17,7 @@ require_once __DIR__ . "/../../includes/ui/items_cart.inc";
 function add_to_order(&$order, $new_item, $new_item_qty, $standard_cost)
 {
     if ($order->find_cart_item($new_item))
-         display_error(_("For Part :") . $new_item . " " . "This item is already on this document. You can change the quantity on the existing line if necessary.");
+         display_error(__("For Part :") . $new_item . " " . "This item is already on this document. You can change the quantity on the existing line if necessary.");
 	else
          $order->add_to_cart (count($order->line_items), $new_item, $new_item_qty, $standard_cost);
 }
@@ -31,12 +31,12 @@ function display_order_header(&$order)
 	start_outer_table(TABLESTYLE2, "width='70%'"); // outer table
 	table_section(1);
 
-	locations_list_row(_("Location:"), 'StockLocation', null, false, false, $order->fixed_asset);
-    date_row(_("Date:"), 'AdjDate', '', true);
+	locations_list_row(__("Location:"), 'StockLocation', null, false, false, $order->fixed_asset);
+    date_row(__("Date:"), 'AdjDate', '', true);
 
 	table_section(2, "50%");
 
-	ref_row(_("Reference:"), 'ref', '', $Refs->get_next(ST_INVADJUST, null, array('location'=>get_post('StockLocation'), 'date'=>get_post('AdjDate'))),
+	ref_row(__("Reference:"), 'ref', '', $Refs->get_next(ST_INVADJUST, null, array('location'=>get_post('StockLocation'), 'date'=>get_post('AdjDate'))),
 		 false, ST_INVADJUST);
 
 	end_outer_table(1); // outer table
@@ -51,11 +51,11 @@ function display_adjustment_items($title, &$order)
 	start_table(TABLESTYLE, "width='90%'");
 
 	if ($order->fixed_asset) {
-		$th = array(_("Item Code"), _("Item Description"), _("Quantity"),
-		_("Unit"), _("Unit Cost"), _("Initial Value"), "");
+		$th = array(__("Item Code"), __("Item Description"), __("Quantity"),
+		__("Unit"), __("Unit Cost"), __("Initial Value"), "");
 	} else {
-		$th = array(_("Item Code"), _("Item Description"), _("QOH"), _("Quantity"),
-		_("Unit"), _("Unit Cost"), _("Total"), "");
+		$th = array(__("Item Code"), __("Item Description"), __("QOH"), __("Quantity"),
+		__("Unit"), __("Unit Cost"), __("Total"), "");
 		if ( count($order->line_items)) $th[] = '';
 	}
 
@@ -101,12 +101,12 @@ function display_adjustment_items($title, &$order)
 
       		if (!$order->fixed_asset) {
       			if ($id == -1)
-	        		edit_button_cell("Edit$line_no", _("Edit"),	_('Edit document line'));
+	        		edit_button_cell("Edit$line_no", __("Edit"),	__('Edit document line'));
 	        	else
 	        		label_cell('');
       		}
     		if ($id == -1)
-				delete_button_cell("Delete$line_no", _("Delete"), _('Remove line from document'));
+				delete_button_cell("Delete$line_no", __("Delete"), __('Remove line from document'));
         	else
         		label_cell('');
 			
@@ -121,14 +121,14 @@ function display_adjustment_items($title, &$order)
 	if ($id == -1)
 		adjustment_edit_item_controls($order);
 	$row = !$order->fixed_asset ? 6 : 5;
-	label_row(_("Total"), number_format2($total,user_price_dec()), "align=right colspan=$row", "align=right", 2);
+	label_row(__("Total"), number_format2($total,user_price_dec()), "align=right colspan=$row", "align=right", 2);
 
     end_table();
 
 	if ($id != -1)
 	    hidden('selected_id', $id);
 	if ($low_stock)
-		display_note(_("Marked items have insufficient quantities in stock as on day of adjustment."), 0, 1, "class='stockmankofg'");
+		display_note(__("Marked items have insufficient quantities in stock as on day of adjustment."), 0, 1, "class='stockmankofg'");
 	div_end();
 }
 
@@ -207,17 +207,17 @@ function adjustment_edit_item_controls(&$order, $line_no=-1)
 
 	if ($line_no != -1)
 	{
-		button_cell('UpdateItem', _("Update"),
-				_('Confirm changes'), ICON_UPDATE);
-		button_cell('CancelItemChanges', _("Cancel"),
-				_('Cancel changes'), ICON_CANCEL);
+		button_cell('UpdateItem', __("Update"),
+				__('Confirm changes'), ICON_UPDATE);
+		button_cell('CancelItemChanges', __("Cancel"),
+				__('Cancel changes'), ICON_CANCEL);
 		hidden('LineNo', $line_no);
 		set_focus('qty');
 	}
 	else
 	{
-		submit_cells('AddItem', _("Add Item"), "colspan=2",
-		    _('Add new item to document'), true);
+		submit_cells('AddItem', __("Add Item"), "colspan=2",
+		    __('Add new item to document'), true);
 	}
 
 	end_row();
@@ -231,7 +231,7 @@ function adjustment_options_controls()
 	  echo "<br>";
 	  start_table();
 
-	  textarea_row(_("Memo"), 'memo_', null, 50, 3);
+	  textarea_row(__("Memo"), 'memo_', null, 50, 3);
 
 	  end_table(1);
 }

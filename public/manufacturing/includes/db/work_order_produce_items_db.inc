@@ -91,7 +91,7 @@ function work_order_produce($woid, $ref, $quantity, $date_, $memo, $close_wo)
 		add_comments(ST_MANURECEIVE, $id, $date_, $memo);
 
 	$Refs->save(ST_MANURECEIVE, $id, $ref);
-	add_audit_trail(ST_MANURECEIVE, $id, $date_, _("Production."));
+	add_audit_trail(ST_MANURECEIVE, $id, $date_, __("Production."));
 
 	$args->trans_no = $id;
 

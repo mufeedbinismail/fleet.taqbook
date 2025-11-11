@@ -24,7 +24,7 @@ if (!user_check_access($GLOBALS['page_security']) && user_check_access('SA_MP_SA
     
 $js = get_js_select_combo_item();
 
-page(_($GLOBALS['help_context'] = "Customer Branches"), true, false, "", $js);
+page(__($GLOBALS['help_context'] = "Customer Branches"), true, false, "", $js);
 
 if(get_post("search")) {
   $Ajax->activate("customer_branch_tbl");
@@ -36,8 +36,8 @@ start_table(TABLESTYLE_NOBORDER);
 
 start_row();
 
-text_cells(_("Branch"), "branch");
-submit_cells("search", _("Search"), "", _("Search branches"), "default");
+text_cells(__("Branch"), "branch");
+submit_cells("search", __("Search"), "", __("Search branches"), "default");
 
 end_row();
 
@@ -48,7 +48,7 @@ end_form();
 div_start("customer_branch_tbl");
 start_table(TABLESTYLE);
 
-$th = array("", _("Ref"), _("Branch"), _("Contact"), _("Phone"));
+$th = array("", __("Ref"), __("Branch"), __("Contact"), __("Phone"));
 
 table_header($th);
 
@@ -59,7 +59,7 @@ while ($myrow = db_fetch_assoc($result))
 {
   	alt_table_row_color($k);
 	$value = $myrow['branch_code'];
-	ahref_cell(_("Select"), 'javascript:void(0)', '', 'selectComboItem(window.opener.document, "'.$name.'", "'.$value.'")');
+	ahref_cell(__("Select"), 'javascript:void(0)', '', 'selectComboItem(window.opener.document, "'.$name.'", "'.$value.'")');
   	label_cell($myrow["branch_ref"]);
   	label_cell($myrow["br_name"]);
   	label_cell($myrow["contact_name"]);

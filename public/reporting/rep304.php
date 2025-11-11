@@ -104,38 +104,38 @@ function print_inventory_sales()
 	if ($category == ALL_NUMERIC)
 		$category = 0;
 	if ($category == 0)
-		$cat = _('All');
+		$cat = __('All');
 	else
 		$cat = get_category_name($category);
 
 	if ($location == '')
-		$loc = _('All');
+		$loc = __('All');
 	else
 		$loc = get_location_name($location);
 
 	if ($fromcust == '')
-		$fromc = _('All');
+		$fromc = __('All');
 	else
 		$fromc = get_customer_name($fromcust);
-	if ($show_service) $show_service_items = _('Yes');
-	else $show_service_items = _('No');
+	if ($show_service) $show_service_items = __('Yes');
+	else $show_service_items = __('No');
 
 	$cols = array(0, 75, 175, 250, 300, 375, 450,	515);
 
-	$headers = array(_('Category'), _('Description'), _('Customer'), _('Qty'), _('Sales'), _('Cost'), _('Contribution'));
+	$headers = array(__('Category'), __('Description'), __('Customer'), __('Qty'), __('Sales'), __('Cost'), __('Contribution'));
 	if ($fromcust != '')
 		$headers[2] = '';
 
 	$aligns = array('left',	'left',	'left', 'right', 'right', 'right', 'right');
 
     $params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'),'from' => $from, 'to' => $to),
-    				    2 => array('text' => _('Category'), 'from' => $cat, 'to' => ''),
-    				    3 => array('text' => _('Location'), 'from' => $loc, 'to' => ''),
-    				    4 => array('text' => _('Customer'), 'from' => $fromc, 'to' => ''),
-    				    5 => array('text' => _('Show Service Items'), 'from' => $show_service_items, 'to' => ''));
+    				    1 => array('text' => __('Period'),'from' => $from, 'to' => $to),
+    				    2 => array('text' => __('Category'), 'from' => $cat, 'to' => ''),
+    				    3 => array('text' => __('Location'), 'from' => $loc, 'to' => ''),
+    				    4 => array('text' => __('Customer'), 'from' => $fromc, 'to' => ''),
+    				    5 => array('text' => __('Show Service Items'), 'from' => $show_service_items, 'to' => ''));
 
-    $rep = new FrontReport(_('Inventory Sales Report'), "InventorySalesReport", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Inventory Sales Report'), "InventorySalesReport", user_pagesize(), 9, $orientation);
    	if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -155,7 +155,7 @@ function print_inventory_sales()
 			if ($catt != '')
 			{
 				$rep->NewLine(2, 3);
-				$rep->TextCol(0, 4, _('Total'));
+				$rep->TextCol(0, 4, __('Total'));
 				$rep->AmountCol(4, 5, $total, $dec);
 				$rep->AmountCol(5, 6, $total1, $dec);
 				$rep->AmountCol(6, 7, $total2, $dec);
@@ -179,11 +179,11 @@ function print_inventory_sales()
 		$rep->TextCol(0, 1, $trans['stock_id']);
 		if ($fromcust == ALL_TEXT)
 		{
-			$rep->TextCol(1, 2, $trans['description'].($trans['inactive']==1 ? " ("._("Inactive").")" : ""), -1);
+			$rep->TextCol(1, 2, $trans['description'].($trans['inactive']==1 ? " (".__("Inactive").")" : ""), -1);
 			$rep->TextCol(2, 3, $trans['debtor_name']);
 		}
 		else
-			$rep->TextCol(1, 3, $trans['description'].($trans['inactive']==1 ? " ("._("Inactive").")" : ""), -1);
+			$rep->TextCol(1, 3, $trans['description'].($trans['inactive']==1 ? " (".__("Inactive").")" : ""), -1);
 		$rep->AmountCol(3, 4, $trans['qty'], get_qty_dec($trans['stock_id']));
 		$rep->AmountCol(4, 5, $trans['amt'], $dec);
 		if (is_service($trans['mb_flag']))
@@ -200,14 +200,14 @@ function print_inventory_sales()
 		$grandtotal2 += $cb;
 	}
 	$rep->NewLine(2, 3);
-	$rep->TextCol(0, 4, _('Total'));
+	$rep->TextCol(0, 4, __('Total'));
 	$rep->AmountCol(4, 5, $total, $dec);
 	$rep->AmountCol(5, 6, $total1, $dec);
 	$rep->AmountCol(6, 7, $total2, $dec);
 	$rep->Line($rep->row - 2);
 	$rep->NewLine();
 	$rep->NewLine(2, 1);
-	$rep->TextCol(0, 4, _('Grand Total'));
+	$rep->TextCol(0, 4, __('Grand Total'));
 	$rep->AmountCol(4, 5, $grandtotal, $dec);
 	$rep->AmountCol(5, 6, $grandtotal1, $dec);
 	$rep->AmountCol(6, 7, $grandtotal2, $dec);

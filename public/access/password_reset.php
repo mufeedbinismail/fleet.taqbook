@@ -26,7 +26,7 @@ function defaultCompany()
 
 	$login_timeout = $_SESSION["wa_current_user"]->last_act;
 
-	$title = $SysPrefs->app_title." ".$version." - "._("Password reset");
+	$title = $SysPrefs->app_title." ".$version." - ".__("Password reset");
 	$encoding = isset($_SESSION['language']->encoding) ? $_SESSION['language']->encoding : "iso-8859-1";
 	$rtl = isset($_SESSION['language']->dir) ? $_SESSION['language']->dir : "ltr";
 	$onload = !$login_timeout ? "onload='defaultCompany()'" : "";
@@ -56,27 +56,27 @@ function defaultCompany()
 	end_row();
 
 	echo "<input type='hidden' id=ui_mode name='ui_mode' value='".fallback_mode()."' >\n";
-	table_section_title(_("Version")." $version   Build ".$SysPrefs->build_version." - "._("Password reset"));
+	table_section_title(__("Version")." $version   Build ".$SysPrefs->build_version." - ".__("Password reset"));
 
-	text_row(_("Email"), "email_entry_field", "", 20, 30);
+	text_row(__("Email"), "email_entry_field", "", 20, 30);
 
     $coy =  user_company();
     if (!isset($coy))
         $coy = $def_coy;
     if (!@$SysPrefs->text_company_selection) {
-        echo "<tr><td>"._("Company")."</td><td><select name='company_login_name'>\n";
+        echo "<tr><td>".__("Company")."</td><td><select name='company_login_name'>\n";
         for ($i = 0; $i < count($db_connections); $i++)
             echo "<option value=$i ".($i==$coy ? 'selected':'') .">" . $db_connections[$i]["name"] . "</option>";
         echo "</select>\n";
         echo "</td></tr>";
     } else {
-        text_row(_("Company"), "company_login_nickname", "", 20, 50);
+        text_row(__("Company"), "company_login_nickname", "", 20, 50);
     }
     start_row();
     label_cell("Please enter your e-mail", "colspan=2 align='center' id='log_msg'");
     end_row();
 	end_table(1);
-	echo "<center><input type='submit' value='&nbsp;&nbsp;"._("Send password -->")."&nbsp;&nbsp;' name='SubmitReset'
+	echo "<center><input type='submit' value='&nbsp;&nbsp;".__("Send password -->")."&nbsp;&nbsp;' name='SubmitReset'
 		 onclick='set_fullmode();'></center>\n";
 
 	end_form(1);
@@ -101,7 +101,7 @@ function defaultCompany()
 	echo "</tr></table>\n";
 	echo "<table class='footer'>\n";
 	echo "<tr>\n";
-	echo "<td><a target='_blank' href='".$SysPrefs->power_url."' tabindex='-1'>".$SysPrefs->app_title." $version - " . _("Theme:") . " " . $def_theme . "</a></td>\n";
+	echo "<td><a target='_blank' href='".$SysPrefs->power_url."' tabindex='-1'>".$SysPrefs->app_title." $version - " . __("Theme:") . " " . $def_theme . "</a></td>\n";
 	echo "</tr>\n";
 	echo "<tr>\n";
 	echo "<td><a target='_blank' href='".$SysPrefs->power_url."' tabindex='-1'>".$SysPrefs->power_by."</a></td>\n";

@@ -26,7 +26,7 @@ function display_credit_header(&$order)
     if (!isset($_POST['customer_id']) && (get_global_customer() != ALL_TEXT))
     	$_POST['customer_id'] = get_global_customer();
 
-	customer_list_row(_("Customer:"), 'customer_id', null, false, true, false, true);
+	customer_list_row(__("Customer:"), 'customer_id', null, false, true, false, true);
 
 	if ($order->customer_id != $_POST['customer_id'] /*|| $order->sales_type != $_POST['sales_type_id']*/)
 	{
@@ -34,7 +34,7 @@ function display_credit_header(&$order)
 		$Ajax->activate('branch_id');
 	}
 
-	customer_branches_list_row(_("Branch:"), $_POST['customer_id'], 
+	customer_branches_list_row(__("Branch:"), $_POST['customer_id'], 
 	  	'branch_id', null, false, true, true, true);
 
 	if (($order->customer_id != $_POST['customer_id']) ||
@@ -78,16 +78,16 @@ function display_credit_header(&$order)
 		$_POST['ref'] = $Refs->get_next(ST_CUSTCREDIT, null, array('customer' => get_post('customer_id'),
 			'branch' => get_post('branch_id'), 'date' => get_post('OrderDate')));
 	if ($order->trans_no==0)
-		ref_row(_("Reference").':', 'ref', _('Reference number unique for this document type'), null, '', $order->trans_type, array('date'=> @$_POST['OrderDate']));
+		ref_row(__("Reference").':', 'ref', __('Reference number unique for this document type'), null, '', $order->trans_type, array('date'=> @$_POST['OrderDate']));
 	else
-	    label_row(_("Reference").':', $order->reference);
+	    label_row(__("Reference").':', $order->reference);
 
 
 	if (!is_company_currency($order->customer_currency))
 	{
 		table_section(2);
 
-        label_row(_("Customer Currency:"), $order->customer_currency);
+        label_row(__("Customer Currency:"), $order->customer_currency);
         exchange_rate_display(get_company_currency(), $order->customer_currency,
             $_POST['OrderDate']);
 	}
@@ -95,7 +95,7 @@ function display_credit_header(&$order)
 
     if (!isset($_POST['sales_type_id']))
     	$_POST['sales_type_id'] = $order->sales_type;
-    sales_types_list_row(_("Sales Type"), 'sales_type_id', $_POST['sales_type_id'], true);
+    sales_types_list_row(__("Sales Type"), 'sales_type_id', $_POST['sales_type_id'], true);
 	
 	if ($order->sales_type != $_POST['sales_type_id']) {
 		$myrow = get_sales_type($_POST['sales_type_id']);
@@ -105,16 +105,16 @@ function display_credit_header(&$order)
 		$change_prices = 1;
 	}
 
-    shippers_list_row(_("Shipping Company:"), 'ShipperID', $order->ship_via);
+    shippers_list_row(__("Shipping Company:"), 'ShipperID', $order->ship_via);
 
-	label_row(_("Customer Discount:"), ($order->default_discount * 100) . "%");
+	label_row(__("Customer Discount:"), ($order->default_discount * 100) . "%");
 
 	table_section(4);
 
 	if (!isset($_POST['OrderDate']) || $_POST['OrderDate'] == "")
 		$_POST['OrderDate'] = $order->document_date;
 
-	date_row(_("Date:"), 'OrderDate', '', $order->trans_no==0, 0, 0, 0, null, true);
+	date_row(__("Date:"), 'OrderDate', '', $order->trans_no==0, 0, 0, 0, null, true);
 	if (isset($_POST['_OrderDate_changed'])) {
 		if (!is_company_currency($order->customer_currency) 
 			&& (get_base_sales_type()>0)) {
@@ -125,22 +125,22 @@ function display_credit_header(&$order)
 
     if ($order->is_marketplace_trans) {
         if ($order->trans_no==0) {
-            marketplace_list_row(_("Marketplace"), 'marketplace_id', null, '-- select --', false, false, true);
+            marketplace_list_row(__("Marketplace"), 'marketplace_id', null, '-- select --', false, false, true);
         }
         else {
             hidden('marketplace_id', $order->marketplace_id);
-            label_row(_("Marketplace"), get_marketplace_name($order->marketplace_id));
+            label_row(__("Marketplace"), get_marketplace_name($order->marketplace_id));
         }
     }
 	// added dimensions
 	$dim = get_company_pref('use_dimension');
 	if ($dim > 0)
-		dimensions_list_row(_("Dimension").":", 'dimension_id', 
+		dimensions_list_row(__("Dimension").":", 'dimension_id', 
 			null, true, ' ', false, 1, false);
 	else
 		hidden('dimension_id', 0);
 	if ($dim > 1)
-		dimensions_list_row(_("Dimension")." 2:", 'dimension2_id', 
+		dimensions_list_row(__("Dimension")." 2:", 'dimension2_id', 
 			null, true, ' ', false, 2, false);
 	else
 		hidden('dimension2_id', 0);
@@ -167,8 +167,8 @@ function display_credit_items($title, &$order)
     display_heading($title);
     div_start('items_table');
     start_table(TABLESTYLE, "width='90%'");
-    $th = array(_("Item Code"), _("Item Description"), _("Quantity"), _("Unit"),
-		_("Price"), _("Discount %"), _("Total"),'');
+    $th = array(__("Item Code"), __("Item Description"), __("Quantity"), __("Unit"),
+		__("Price"), __("Discount %"), __("Total"),'');
 
     if (count($order->line_items)) $th[]= '';
 
@@ -197,10 +197,10 @@ function display_credit_items($title, &$order)
 	    	percent_cell($line->discount_percent * 100);
     	    amount_cell($line_total);
 
-    	    edit_button_cell("Edit$line_no", _('Edit'),
-				_('Edit document line'));
-    	    delete_button_cell("Delete$line_no", _('Delete'),
-				_('Remove line from document'));
+    	    edit_button_cell("Edit$line_no", __('Edit'),
+				__('Edit document line'));
+    	    delete_button_cell("Delete$line_no", __('Delete'),
+				__('Remove line from document'));
 
     	    end_row();
         }
@@ -217,12 +217,12 @@ function display_credit_items($title, &$order)
 
 	$colspan = 6;
     $display_sub_total = price_format($subtotal);
-    label_row(_("Sub-total"), $display_sub_total, "colspan=$colspan align=right", "align=right", 2);
+    label_row(__("Sub-total"), $display_sub_total, "colspan=$colspan align=right", "align=right", 2);
 
     if (!isset($_POST['ChargeFreightCost']) OR ($_POST['ChargeFreightCost'] == ""))
 		$_POST['ChargeFreightCost'] = 0;
 	start_row();
-	label_cell(_("Shipping"), "colspan=$colspan align=right");
+	label_cell(__("Shipping"), "colspan=$colspan align=right");
 	small_amount_cells(null, 'ChargeFreightCost', price_format(get_post('ChargeFreightCost',0)));
     label_cell('', 'colspan=2');
 	end_row();
@@ -233,7 +233,7 @@ function display_credit_items($title, &$order)
 
     $display_total = price_format(($subtotal + $_POST['ChargeFreightCost'] + $tax_total));
 
-    label_row(_("Credit Note Total"), $display_total, "colspan=$colspan align=right","class='amount'", 2);
+    label_row(__("Credit Note Total"), $display_total, "colspan=$colspan align=right","class='amount'", 2);
 
     end_table();
     div_end();
@@ -293,17 +293,17 @@ function credit_edit_item_controls(&$order, $rowcounter, $line_no=-1)
 
 	if ($id!=-1)
 	{
-		button_cell('UpdateItem', _("Update"),
-				_('Confirm changes'), ICON_UPDATE);
-		button_cell('CancelItemChanges', _("Cancel"),
-				_('Cancel changes'), ICON_CANCEL);
+		button_cell('UpdateItem', __("Update"),
+				__('Confirm changes'), ICON_UPDATE);
+		button_cell('CancelItemChanges', __("Cancel"),
+				__('Cancel changes'), ICON_CANCEL);
 		hidden('line_no', $line_no);
 		set_focus('qty');
 	}
 	else
 	{
-		submit_cells('AddItem', _("Add Item"), "colspan=2",
-		    _('Add new item to document'), true);
+		submit_cells('AddItem', __("Add Item"), "colspan=2",
+		    __('Add new item to document'), true);
 	}
 
 	end_row();
@@ -323,7 +323,7 @@ function credit_options_controls($credit)
 	div_start('options');
 	start_table(TABLESTYLE2);
 
-	credit_type_list_row(_("Credit Note Type"), 'CreditType', null, true);
+	credit_type_list_row(__("Credit Note Type"), 'CreditType', null, true);
 
 	if ($_POST['CreditType'] == "Return")
 	{
@@ -331,15 +331,15 @@ function credit_options_controls($credit)
 		/*if the credit note is a return of goods then need to know which location to receive them into */
 		if (!isset($_POST['Location']))
 			$_POST['Location'] = $credit->Location;
-	   	locations_list_row(_("Items Returned to Location"), 'Location', $_POST['Location']);
+	   	locations_list_row(__("Items Returned to Location"), 'Location', $_POST['Location']);
 	}
 	else
 	{
 		/* the goods are to be written off to somewhere */
-		gl_all_accounts_list_row(_("Write off the cost of the items to"), 'WriteOffGLCode', null);
+		gl_all_accounts_list_row(__("Write off the cost of the items to"), 'WriteOffGLCode', null);
 	}
 
-	textarea_row(_("Memo"), "CreditText", null, 51, 3);
+	textarea_row(__("Memo"), "CreditText", null, 51, 3);
 	echo "</table>";
  div_end();
 }

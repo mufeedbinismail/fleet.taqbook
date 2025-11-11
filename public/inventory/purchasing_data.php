@@ -19,10 +19,10 @@ require_once __DIR__ . "/../includes/data_checks.inc";
 $js = "";
 if ($SysPrefs->use_popup_windows && $SysPrefs->use_popup_search)
 	$js .= get_js_open_window(900, 500);
-page(_($GLOBALS['help_context'] = "Supplier Purchasing Data"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Supplier Purchasing Data"), false, false, "", $js);
 
-check_db_has_purchasable_items(_("There are no purchasable inventory items defined in the system."));
-check_db_has_suppliers(_("There are no suppliers defined in the system."));
+check_db_has_purchasable_items(__("There are no purchasable inventory items defined in the system."));
+check_db_has_suppliers(__("There are no suppliers defined in the system."));
 
 //----------------------------------------------------------------------------------------
 simple_page_mode(true);
@@ -40,25 +40,25 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
    	if ($_POST['stock_id'] == "" || !isset($_POST['stock_id']))
    	{
       	$input_error = 1;
-      	display_error( _("There is no item selected."));
+      	display_error( __("There is no item selected."));
 		set_focus('stock_id');
    	}
    	elseif (!check_num('price', 0))
    	{
       	$input_error = 1;
-      	display_error( _("The price entered was not numeric."));
+      	display_error( __("The price entered was not numeric."));
 	set_focus('price');
    	}
    	elseif (!check_num('conversion_factor'))
    	{
       	$input_error = 1;
-      	display_error( _("The conversion factor entered was not numeric. The conversion factor is the number by which the price must be divided by to get the unit price in our unit of measure."));
+      	display_error( __("The conversion factor entered was not numeric. The conversion factor is the number by which the price must be divided by to get the unit price in our unit of measure."));
 		set_focus('conversion_factor');
    	}
    	elseif ($Mode == 'ADD_ITEM' && get_item_purchasing_data($_POST['supplier_id'], $_POST['stock_id']))
    	{
       	$input_error = 1;
-      	display_error( _("The purchasing data for this supplier has already been added."));
+      	display_error( __("The purchasing data for this supplier has already been added."));
 		set_focus('supplier_id');
 	}
 	if ($input_error == 0)
@@ -67,13 +67,13 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
        	{
 			add_item_purchasing_data($_POST['supplier_id'], $_POST['stock_id'], input_num('price',0),
 				$_POST['suppliers_uom'], input_num('conversion_factor'), $_POST['supplier_description']);
-    		display_notification(_("This supplier purchasing data has been added."));
+    		display_notification(__("This supplier purchasing data has been added."));
        	} 
        	else
        	{
        		update_item_purchasing_data($selected_id, $_POST['stock_id'], input_num('price',0),
        			$_POST['suppliers_uom'], input_num('conversion_factor'), $_POST['supplier_description']);
-    	  	display_notification(_("Supplier purchasing data has been updated."));
+    	  	display_notification(__("Supplier purchasing data has been updated."));
        	}
 		$Mode = 'RESET';
 	}
@@ -84,7 +84,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 if ($Mode == 'Delete')
 {
 	delete_item_purchasing_data($selected_id, $_POST['stock_id']);
-	display_notification(_("The purchasing data item has been sucessfully deleted."));
+	display_notification(__("The purchasing data item has been sucessfully deleted."));
 	$Mode = 'RESET';
 }
 
@@ -113,7 +113,7 @@ if (!isset($_POST['stock_id']))
 
 if (!$page_nested)
 {
-	echo "<center>" . _("Item:"). "&nbsp;";
+	echo "<center>" . __("Item:"). "&nbsp;";
 	// All items can be purchased
 	echo stock_items_list('stock_id', $_POST['stock_id'], false, true);
 	echo "<hr></center>";
@@ -127,7 +127,7 @@ $mb_flag = get_mb_flag($_POST['stock_id']);
 
 if ($mb_flag == -1)
 {
-	display_error(_("Entered item is not defined. Please re-enter."));
+	display_error(__("Entered item is not defined. Please re-enter."));
   	$Ajax->activate('price_table');
 	set_focus('stock_id');
 }
@@ -137,14 +137,14 @@ else
   	div_start('price_table');
     if (db_num_rows($result) == 0)
     {
-    	display_note(_("There is no purchasing data set up for the part selected"));
+    	display_note(__("There is no purchasing data set up for the part selected"));
     }
     else
     {
         start_table(TABLESTYLE, "width='65%'");
 
-		$th = array(_("Supplier"), _("Price"), _("Currency"),
-			_("Supplier's Unit"), _("Conversion Factor"), _("Supplier's Description"), "", "");
+		$th = array(__("Supplier"), __("Price"), __("Currency"),
+			__("Supplier's Unit"), __("Conversion Factor"), __("Supplier's Description"), "", "");
 
         table_header($th);
 
@@ -160,8 +160,8 @@ else
             label_cell($myrow["suppliers_uom"]);
             qty_cell($myrow['conversion_factor'], false, 'max');
             label_cell($myrow["supplier_description"]);
-		 	edit_button_cell("Edit".$myrow['supplier_id'], _("Edit"));
-		 	delete_button_cell("Delete".$myrow['supplier_id'], _("Delete"));
+		 	edit_button_cell("Edit".$myrow['supplier_id'], __("Edit"));
+		 	delete_button_cell("Delete".$myrow['supplier_id'], __("Delete"));
             end_row();
 
             $j++;
@@ -199,25 +199,25 @@ start_table(TABLESTYLE2);
 if ($Mode == 'Edit')
 {
 	hidden('supplier_id');
-	label_row(_("Supplier:"), $supp_name);
+	label_row(__("Supplier:"), $supp_name);
 }
 else
 {
-	supplier_list_row(_("Supplier:"), 'supplier_id', null, false, true);
+	supplier_list_row(__("Supplier:"), 'supplier_id', null, false, true);
 	$_POST['price'] = $_POST['suppliers_uom'] = $_POST['conversion_factor'] = $_POST['supplier_description'] = "";
 }
 echo "<tr>";
-unit_amount_cells(_("Price"), 'price', null, '', get_supplier_currency($selected_id));
+unit_amount_cells(__("Price"), 'price', null, '', get_supplier_currency($selected_id));
 echo "</tr>\n";
 
-text_row(_("Suppliers Unit of Measure:"), 'suppliers_uom', null, 50, 51);
+text_row(__("Suppliers Unit of Measure:"), 'suppliers_uom', null, 50, 51);
 
 if (!isset($_POST['conversion_factor']) || $_POST['conversion_factor'] == "")
 {
    	$_POST['conversion_factor'] = maxprec_format(1);
 }
-amount_row(_("Conversion Factor (to our UOM):"), 'conversion_factor', null, null, null, 'max');
-text_row(_("Supplier's Code or Description:"), 'supplier_description', null, 50, 50);
+amount_row(__("Conversion Factor (to our UOM):"), 'conversion_factor', null, null, null, 'max');
+text_row(__("Supplier's Code or Description:"), 'supplier_description', null, 50, 50);
 
 end_table(1);
 

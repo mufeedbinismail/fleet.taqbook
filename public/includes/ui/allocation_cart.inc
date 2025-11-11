@@ -342,27 +342,27 @@ function show_allocatable($show_totals) {
 
 	if (count($cart->allocs)) 
 	{
-		display_heading(sprintf(_("Allocated amounts in %s:"), $cart->person_curr));
+		display_heading(sprintf(__("Allocated amounts in %s:"), $cart->person_curr));
 		start_table(TABLESTYLE, "width='60%'");
    		$th = array(
-            _("Transaction Type"),
-            _("#"),
-            $supp_ref ? _("Supplier Ref"): _("Ref"),
-            _("Date"),
-            _("Due Date"),
-            _("Amount"),
-   			_("Other Allocations"),
-            _("Left to Allocate"),
-            _("This Allocation"),
+            __("Transaction Type"),
+            __("#"),
+            $supp_ref ? __("Supplier Ref"): __("Ref"),
+            __("Date"),
+            __("Due Date"),
+            __("Amount"),
+   			__("Other Allocations"),
+            __("Left to Allocate"),
+            __("This Allocation"),
             '',
             ''
         );
 
         if (!$supp_ref) {
-            array_splice($th, 3, 0, [_("Tracking No")]);
+            array_splice($th, 3, 0, [__("Tracking No")]);
         }
         if ($cart->is_marketplace_trans) {
-            array_splice($th, 7, 0, [_("Mkt Payable")]);
+            array_splice($th, 7, 0, [__("Mkt Payable")]);
         }
 
 	   	table_header($th);
@@ -397,7 +397,7 @@ function show_allocatable($show_totals) {
                         . 'href="javascript:void(0)" '
                         . "name=Alloc$id "
                         . 'onclick="allocate_all(this.name.substr(5));return true;">'
-					    . _("All")
+					    . __("All")
                     . "</a>"
                 );
 				label_cell(
@@ -405,7 +405,7 @@ function show_allocatable($show_totals) {
                         . 'href="javascript:void(0)" '
                         . "name=DeAll$id "
                         . 'onclick="allocate_none(this.name.substr(5)); return true;">'
-					    . _("None")
+					    . __("None")
                     . "</a>"
                     . hidden("un_allocated" . $id, price_format($un_allocated), false)
                     . hidden("marketplace_cost" . $id, price_format($marketplace_cost), false)
@@ -417,7 +417,7 @@ function show_allocatable($show_totals) {
 		}
 		if ($show_totals) {
             $colspan = 8 + ($supp_ref ? 0 : 1) + $cart->is_marketplace_trans;
-    	   	label_row(_("Total Allocated"), price_format($total_allocated),
+    	   	label_row(__("Total Allocated"), price_format($total_allocated),
 	    		"colspan=$colspan align=right", "align=right id='total_allocated'", 3);
 
 			$amount = abs($cart->amount);
@@ -430,7 +430,7 @@ function show_allocatable($show_totals) {
 	        else
         		$font1 = $font2 = "";
 			$left_to_allocate = price_format($amount - $total_allocated);
-	        label_row(_("Left to Allocate"), $font1 . $left_to_allocate . $font2, 
+	        label_row(__("Left to Allocate"), $font1 . $left_to_allocate . $font2, 
 				"colspan=$colspan align=right", "nowrap align=right id='left_to_allocate'",
 				 3);
 		}
@@ -451,7 +451,7 @@ function check_allocations()
 		if (!isset($_POST['amount'.$counter])) continue;
 		if (!check_num('amount' . $counter, 0))
 		{
-			display_error(_("The entry for one or more amounts is invalid or negative."));
+			display_error(__("The entry for one or more amounts is invalid or negative."));
 			set_focus('amount'.$counter);
 			return false;
 		 }
@@ -462,7 +462,7 @@ function check_allocations()
 		 $allocated = input_num('amount' . $counter);
 		 if ($allocated && ($allocated > input_num('un_allocated' . $counter)))
 		 {
-			display_error(_("At least one transaction is overallocated."));
+			display_error(__("At least one transaction is overallocated."));
 			set_focus('amount'.$counter);
 			return false;
 		 }
@@ -474,7 +474,7 @@ function check_allocations()
 				$trans = get_customer_trans($_SESSION['alloc']->allocs[$counter]->type_no, $_SESSION['alloc']->allocs[$counter]->type,$_SESSION['alloc']->person_id);
 
 			if ($trans['debtor_no'] != $_SESSION['alloc']->person_id) {
-				display_error(_("Allocated transaction allocated is not related to company selected."));
+				display_error(__("Allocated transaction allocated is not related to company selected."));
 				set_focus('amount'.$counter);
 				return false;
 			}
@@ -483,13 +483,13 @@ function check_allocations()
             // allocations & the marketplace is the same for all allocations
             if ($_SESSION['alloc']->is_marketplace_trans) {
                 if ($trans['marketplace_id'] != $_SESSION['alloc']->marketplace_id) {
-                    display_error(_("All allocated transactions must be from the same marketplace as the payment."));
+                    display_error(__("All allocated transactions must be from the same marketplace as the payment."));
                     set_focus('amount'.$counter);
                     return false;
                 }
 
                 if ($allocated > 0 && floatcmp($allocated, abs($_SESSION['alloc']->allocs[$counter]->amount)) != 0) {
-                    display_error(_("Marketplace transactions must be allocated in full."));
+                    display_error(__("Marketplace transactions must be allocated in full."));
                     set_focus('amount'.$counter);
                     return false;
                 }
@@ -500,7 +500,7 @@ function check_allocations()
             else
                 $trans = get_supp_trans($_SESSION['alloc']->allocs[$counter]->type_no, $_SESSION['alloc']->allocs[$counter]->type,  $_SESSION['alloc']->person_id);			
 			if ($trans['supplier_id'] != $_SESSION['alloc']->person_id) {
-				display_error(_("Allocated transaction allocated is not related to company selected."));
+				display_error(__("Allocated transaction allocated is not related to company selected."));
 				set_focus('amount'.$counter);
 				return false;
 			}
@@ -515,7 +515,7 @@ function check_allocations()
 
 	if ($total_allocated - ($amount + input_num('discount'))  > $SysPrefs->allocation_settled_allowance())
 	{
-		display_error(_("These allocations cannot be processed because the amount allocated is more than the total amount left to allocate."));
+		display_error(__("These allocations cannot be processed because the amount allocated is more than the total amount left to allocate."));
 		return false;
 	}
 

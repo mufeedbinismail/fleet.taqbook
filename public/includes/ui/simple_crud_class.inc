@@ -49,13 +49,13 @@ class simple_crud {
 			'CLONE' => 'editor_view'
 			);
 		$this->tool_buttons['Edit'] =
-			array(_('Edit'), _('Edit document line'), ICON_EDIT, '');
+			array(__('Edit'), __('Edit document line'), ICON_EDIT, '');
 		$this->tool_buttons['Delete'] =
-			array(_('Delete'), _('Remove line from document'), ICON_DELETE, '');
+			array(__('Delete'), __('Remove line from document'), ICON_DELETE, '');
 		$this->tool_buttons['UPDATE'] =
-			array(_('Update'), _('Confirm changes'), ICON_UPDATE, '');
+			array(__('Update'), __('Confirm changes'), ICON_UPDATE, '');
 		$this->tool_buttons['RESET'] =
-			array(_('Cancel'), _('Cancel changes'), ICON_CANCEL, '');
+			array(__('Cancel'), __('Cancel changes'), ICON_CANCEL, '');
 
 		$this->fields = $fields;
 		$this->selected_id = $this->_none;
@@ -216,17 +216,17 @@ class simple_crud {
 		echo "<center>";
 
 		if ($this->Mode == '' || $this->Mode == 'RESET')
-			submit("{$base}NEW", _("Add new"), true, $title, $async);
+			submit("{$base}NEW", __("Add new"), true, $title, $async);
 		else {
 			if ($this->Mode == 'NEW' || $this->selected_id==$this->_none)
 				
-				submit("{$base}ADD", _("Add"), true, $title, $async);
+				submit("{$base}ADD", __("Add"), true, $title, $async);
 			else {
-				submit("{$base}UPDATE[{$this->selected_id}]", _("Update"), true, _('Submit changes'), $async);
+				submit("{$base}UPDATE[{$this->selected_id}]", __("Update"), true, __('Submit changes'), $async);
 				if ($clone) 
-					submit("{$base}CLONE[{$this->selected_id}]", _("Clone"), true, _('Edit new record with current data'), $async);
+					submit("{$base}CLONE[{$this->selected_id}]", __("Clone"), true, __('Edit new record with current data'), $async);
 			}
-			submit("{$base}RESET", _("Cancel"), true, _('Cancel edition'), $cancel);
+			submit("{$base}RESET", __("Cancel"), true, __('Cancel edition'), $cancel);
 		}
 		echo "</center>";
 	}

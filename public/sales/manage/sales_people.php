@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_SALESMAN';
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "Sales Persons"));
+page(__($GLOBALS['help_context'] = "Sales Persons"));
 
 require_once __DIR__ . "/../../includes/ui.inc";
 
@@ -28,18 +28,18 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 	if (strlen($_POST['salesman_name']) == 0)
 	{
 		$input_error = 1;
-		display_error(_("The sales person name cannot be empty."));
+		display_error(__("The sales person name cannot be empty."));
 		set_focus('salesman_name');
 	}
 	$pr1 = check_num('provision', 0,100);
 	if (!$pr1 || !check_num('provision2', 0, 100)) {
 		$input_error = 1;
-		display_error( _("Salesman provision cannot be less than 0 or more than 100%."));
+		display_error( __("Salesman provision cannot be less than 0 or more than 100%."));
 		set_focus(!$pr1 ? 'provision' : 'provision2');
 	}
 	if (!check_num('break_pt', 0)) {
 		$input_error = 1;
-		display_error( _("Salesman provision breakpoint must be numeric and not less than 0."));
+		display_error( __("Salesman provision breakpoint must be numeric and not less than 0."));
 		set_focus('break_pt');
 	}
 	if ($input_error != 1)
@@ -58,9 +58,9 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
     	}
 
     	if ($selected_id != -1) 
-			display_notification(_('Selected sales person data have been updated'));
+			display_notification(__('Selected sales person data have been updated'));
 		else
-			display_notification(_('New sales person data have been added'));
+			display_notification(__('New sales person data have been added'));
 		$Mode = 'RESET';
 	}
 }
@@ -72,12 +72,12 @@ if ($Mode == 'Delete')
 
 	if (key_in_foreign_table($selected_id, 'cust_branch', 'salesman'))
 	{
-		display_error(_("Cannot delete this sales-person because branches are set up referring to this sales-person - first alter the branches concerned."));
+		display_error(__("Cannot delete this sales-person because branches are set up referring to this sales-person - first alter the branches concerned."));
 	}
 	else
 	{
 		delete_salesman($selected_id);
-		display_notification(_('Selected sales person data have been deleted'));
+		display_notification(__('Selected sales person data have been deleted'));
 	}
 	$Mode = 'RESET';
 }
@@ -95,7 +95,7 @@ $result = get_salesmen(check_value('show_inactive'));
 
 start_form();
 start_table(TABLESTYLE, "width='60%'");
-$th = array(_("Name"), _("Phone"), _("Fax"), _("Email"), _("Provision"), _("Break Pt."), _("Provision")." 2", "", "");
+$th = array(__("Name"), __("Phone"), __("Fax"), __("Email"), __("Provision"), __("Break Pt."), __("Provision")." 2", "", "");
 inactive_control_column($th);
 table_header($th);
 
@@ -115,8 +115,8 @@ while ($myrow = db_fetch($result))
 	label_cell(percent_format($myrow["provision2"])." %", "nowrap align=right");
 	inactive_control_cell($myrow["salesman_code"], $myrow["inactive"],
 		'salesman', 'salesman_code');
- 	edit_button_cell("Edit".$myrow["salesman_code"], _("Edit"));
- 	delete_button_cell("Delete".$myrow["salesman_code"], _("Delete"));
+ 	edit_button_cell("Edit".$myrow["salesman_code"], __("Edit"));
+ 	delete_button_cell("Delete".$myrow["salesman_code"], __("Delete"));
   	end_row();
 
 } //END WHILE LIST LOOP
@@ -151,13 +151,13 @@ if ($selected_id != -1)
 
 start_table(TABLESTYLE2);
 
-text_row_ex(_("Sales person name:"), 'salesman_name', 30);
-text_row_ex(_("Telephone number:"), 'salesman_phone', 20);
-text_row_ex(_("Fax number:"), 'salesman_fax', 20);
-email_row_ex(_("E-mail:"), 'salesman_email', 40);
-percent_row(_("Provision").':', 'provision');
-amount_row(_("Turnover Break Pt Level:"), 'break_pt');
-percent_row(_("Provision")." 2:", 'provision2');
+text_row_ex(__("Sales person name:"), 'salesman_name', 30);
+text_row_ex(__("Telephone number:"), 'salesman_phone', 20);
+text_row_ex(__("Fax number:"), 'salesman_fax', 20);
+email_row_ex(__("E-mail:"), 'salesman_email', 40);
+percent_row(__("Provision").':', 'provision');
+amount_row(__("Turnover Break Pt Level:"), 'break_pt');
+percent_row(__("Provision")." 2:", 'provision2');
 end_table(1);
 
 submit_add_or_update_center($selected_id == -1, '', 'both');

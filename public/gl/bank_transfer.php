@@ -26,14 +26,14 @@ if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
 if (isset($_GET['ModifyTransfer'])) {
-	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Modify Bank Account Transfer");
+	$_SESSION['page_title'] = __($GLOBALS['help_context'] = "Modify Bank Account Transfer");
 } else {
-	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Bank Account Transfer Entry");
+	$_SESSION['page_title'] = __($GLOBALS['help_context'] = "Bank Account Transfer Entry");
 }
 
 page($_SESSION['page_title'], false, false, "", $js);
 
-check_db_has_bank_accounts(_("There are no bank accounts defined in the system."));
+check_db_has_bank_accounts(__("There are no bank accounts defined in the system."));
 
 //----------------------------------------------------------------------------------------
 
@@ -42,11 +42,11 @@ if (isset($_GET['AddedID']))
 	$trans_no = $_GET['AddedID'];
 	$trans_type = ST_BANKTRANSFER;
 
-   	display_notification_centered( _("Transfer has been entered"));
+   	display_notification_centered( __("Transfer has been entered"));
 
-	display_note(get_gl_view_str($trans_type, $trans_no, _("&View the GL Journal Entries for this Transfer")));
+	display_note(get_gl_view_str($trans_type, $trans_no, __("&View the GL Journal Entries for this Transfer")));
 
-   	hyperlink_no_params(url()->current(), _("Enter &Another Transfer"));
+   	hyperlink_no_params(url()->current(), __("Enter &Another Transfer"));
 
 	display_footer_exit();
 }
@@ -104,24 +104,24 @@ function gl_payment_controls($trans_no)
 
 	table_section(1);
 
-	bank_accounts_list_row(_("From Account:"), 'FromBankAccount', null, true);
+	bank_accounts_list_row(__("From Account:"), 'FromBankAccount', null, true);
 
 	bank_balance_row($_POST['FromBankAccount']);
 
-    bank_accounts_list_row(_("To Account:"), 'ToBankAccount', null, true);
+    bank_accounts_list_row(__("To Account:"), 'ToBankAccount', null, true);
 
 	if (!isset($_POST['DatePaid'])) { // init page
 		$_POST['DatePaid'] = new_doc_date();
 		if (!is_date_in_fiscalyear($_POST['DatePaid']))
 			$_POST['DatePaid'] = end_fiscalyear();
 	}
-    date_row(_("Transfer Date:"), 'DatePaid', '', true, 0, 0, 0, null, true);
+    date_row(__("Transfer Date:"), 'DatePaid', '', true, 0, 0, 0, null, true);
 
-    ref_row(_("Reference:"), 'ref', '', $Refs->get_next(ST_BANKTRANSFER, null, get_post('DatePaid')), false, ST_BANKTRANSFER,
+    ref_row(__("Reference:"), 'ref', '', $Refs->get_next(ST_BANKTRANSFER, null, get_post('DatePaid')), false, ST_BANKTRANSFER,
     	array('date' => get_post('DatePaid')));
 	$dim = get_company_pref('use_dimension');
 	if ($dim > 0)
-		dimensions_list_row(_("Dimension").":", 'dimension_id', 
+		dimensions_list_row(__("Dimension").":", 'dimension_id', 
 			null, true, ' ', false, 1, false);
 	else
 		hidden('dimension_id', 0);
@@ -132,31 +132,31 @@ function gl_payment_controls($trans_no)
 	$to_currency = get_bank_account_currency($_POST['ToBankAccount']);
 	if ($from_currency != "" && $to_currency != "" && $from_currency != $to_currency) 
 	{
-		amount_row(_("Amount:"), 'amount', null, null, $from_currency);
-		amount_row(_("Bank Charge:"), 'charge', null, null, $from_currency);
+		amount_row(__("Amount:"), 'amount', null, null, $from_currency);
+		amount_row(__("Bank Charge:"), 'charge', null, null, $from_currency);
 
-		amount_row(_("Incoming Amount:"), 'target_amount', null, '', $to_currency, 2);
+		amount_row(__("Incoming Amount:"), 'target_amount', null, '', $to_currency, 2);
 	} 
 	else 
 	{
-		amount_row(_("Amount:"), 'amount');
-		amount_row(_("Bank Charge:"), 'charge');
+		amount_row(__("Amount:"), 'amount');
+		amount_row(__("Bank Charge:"), 'charge');
 	}
 	if ($dim > 1)
-		dimensions_list_row(_("Dimension")." 2:", 'dimension2_id', 
+		dimensions_list_row(__("Dimension")." 2:", 'dimension2_id', 
 			null, true, ' ', false, 2, false);
 	else
 		hidden('dimension2_id', 0);
 
-    textarea_row(_("Memo:"), 'memo_', null, 40,4);
+    textarea_row(__("Memo:"), 'memo_', null, 40,4);
 
 	end_outer_table(1); // outer table
 
 	if ($trans_no) {
 		hidden('_trans_no', $trans_no);
-		submit_center('submit', _("Modify Transfer"), true, '', 'default');
+		submit_center('submit', __("Modify Transfer"), true, '', 'default');
 	} else {
-		submit_center('submit', _("Enter Transfer"), true, '', 'default');
+		submit_center('submit', __("Enter Transfer"), true, '', 'default');
 	}
 
 	end_form();
@@ -170,25 +170,25 @@ function check_valid_entries($trans_no)
 	
 	if (!is_date($_POST['DatePaid'])) 
 	{
-		display_error(_("The entered date is invalid."));
+		display_error(__("The entered date is invalid."));
 		set_focus('DatePaid');
 		return false;
 	}
 	if (!is_date_in_fiscalyear($_POST['DatePaid']))
 	{
-		display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+		display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 		set_focus('DatePaid');
 		return false;
 	}
 
 	if (!check_num('amount', 0)) 
 	{
-		display_error(_("The entered amount is invalid or less than zero."));
+		display_error(__("The entered amount is invalid or less than zero."));
 		set_focus('amount');
 		return false;
 	}
 	if (input_num('amount') == 0) {
-		display_error(_("The total bank amount cannot be 0."));
+		display_error(__("The total bank amount cannot be 0."));
 		set_focus('amount');
 		return false;
 	}
@@ -205,12 +205,12 @@ function check_valid_entries($trans_no)
 	if ($problemTransaction != null	) {
 		if (!array_key_exists('trans_no', $problemTransaction)) {
 			display_error(sprintf(
-				_("This bank transfer change would result in exceeding authorized overdraft limit (%s) of the account '%s'"),
+				__("This bank transfer change would result in exceeding authorized overdraft limit (%s) of the account '%s'"),
 				price_format(-$problemTransaction['amount']), $problemTransaction['bank_account_name']
 			));
 		} else {
 			display_error(sprintf(
-				_("This bank transfer change would result in exceeding authorized overdraft limit on '%s' for transaction: %s #%s on %s."),
+				__("This bank transfer change would result in exceeding authorized overdraft limit on '%s' for transaction: %s #%s on %s."),
 				$problemTransaction['bank_account_name'], $systypes_array[$problemTransaction['type']],
 				$problemTransaction['trans_no'], sql2date($problemTransaction['trans_date'])
 			));
@@ -222,12 +222,12 @@ function check_valid_entries($trans_no)
 		if (null != ($problemTransaction = check_bank_account_history(-$amnt_tr, $_POST['FromBankAccount'], $_POST['DatePaid']))) {
 			if (!array_key_exists('trans_no', $problemTransaction)) {
 				display_error(sprintf(
-					_("This bank transfer would result in exceeding authorized overdraft limit of the account (%s)"),
+					__("This bank transfer would result in exceeding authorized overdraft limit of the account (%s)"),
 					price_format(-$problemTransaction['amount'])
 				));
 			} else {
 				display_error(sprintf(
-					_("This bank transfer would result in exceeding authorized overdraft limit for transaction: %s #%s on %s."),
+					__("This bank transfer would result in exceeding authorized overdraft limit for transaction: %s #%s on %s."),
 					$systypes_array[$problemTransaction['type']], $problemTransaction['trans_no'], sql2date($problemTransaction['trans_date'])
 				));
 			}
@@ -238,12 +238,12 @@ function check_valid_entries($trans_no)
 
 	if (isset($_POST['charge']) && !check_num('charge', 0)) 
 	{
-		display_error(_("The entered amount is invalid or less than zero."));
+		display_error(__("The entered amount is invalid or less than zero."));
 		set_focus('charge');
 		return false;
 	}
 	if (isset($_POST['charge']) && input_num('charge') > 0 && get_bank_charge_account($_POST['FromBankAccount']) == '') {
-		display_error(_("The Bank Charge Account has not been set in System and General GL Setup."));
+		display_error(__("The Bank Charge Account has not been set in System and General GL Setup."));
 		set_focus('charge');
 		return false;
 	}
@@ -255,19 +255,19 @@ function check_valid_entries($trans_no)
 
 	if ($_POST['FromBankAccount'] == $_POST['ToBankAccount']) 
 	{
-		display_error(_("The source and destination bank accouts cannot be the same."));
+		display_error(__("The source and destination bank accouts cannot be the same."));
 		set_focus('ToBankAccount');
 		return false;
 	}
 
 	if (isset($_POST['target_amount']) && !check_num('target_amount', 0)) 
 	{
-		display_error(_("The entered amount is invalid or less than zero."));
+		display_error(__("The entered amount is invalid or less than zero."));
 		set_focus('target_amount');
 		return false;
 	}
 	if (isset($_POST['target_amount']) && input_num('target_amount') == 0) {
-		display_error(_("The incomming bank amount cannot be 0."));
+		display_error(__("The incomming bank amount cannot be 0."));
 		set_focus('target_amount');
 		return false;
 	}

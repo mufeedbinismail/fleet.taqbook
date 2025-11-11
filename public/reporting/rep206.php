@@ -93,7 +93,7 @@ function print_supplier_balances()
 
     $orientation = ($orientation ? 'L' : 'P');
     if ($fromsupp == ALL_TEXT)
-        $supp = _('All');
+        $supp = __('All');
     else
         $supp = get_supplier_name($fromsupp);
     $dec = user_price_dec();
@@ -101,28 +101,28 @@ function print_supplier_balances()
     if ($currency == ALL_TEXT)
     {
         $convert = true;
-        $currency = _('Balances in Home currency');
+        $currency = __('Balances in Home currency');
     }
     else
         $convert = false;
 
-    if ($no_zeros) $nozeros = _('Yes');
-    else $nozeros = _('No');
+    if ($no_zeros) $nozeros = __('Yes');
+    else $nozeros = __('No');
 
     $cols = array(0, 100, 130, 190, 250, 320, 385, 450, 515);
 
-    $headers = array(_('Name'), '', '', _('Open Balance'), _('Debit'),
-        _('Credit'), '', _('Balance'));
+    $headers = array(__('Name'), '', '', __('Open Balance'), __('Debit'),
+        __('Credit'), '', __('Balance'));
 
     $aligns = array('left', 'left', 'left', 'right', 'right', 'right', 'right', 'right');
 
     $params =   array( 	0 => $comments,
-                		1 => array('text' => _('Period'), 'from' => $from, 'to' => $to),
-                		2 => array('text' => _('Supplier'), 'from' => $supp, 'to' => ''),
-                		3 => array(  'text' => _('Currency'),'from' => $currency, 'to' => ''),
-            			4 => array('text' => _('Suppress Zeros'), 'from' => $nozeros, 'to' => ''));
+                		1 => array('text' => __('Period'), 'from' => $from, 'to' => $to),
+                		2 => array('text' => __('Supplier'), 'from' => $supp, 'to' => ''),
+                		3 => array(  'text' => __('Currency'),'from' => $currency, 'to' => ''),
+            			4 => array('text' => __('Suppress Zeros'), 'from' => $nozeros, 'to' => ''));
 
-    $rep = new FrontReport(_('Supplier Trial Balance'), "SupplierTB", user_pagesize(), 9, $orientation);
+    $rep = new FrontReport(__('Supplier Trial Balance'), "SupplierTB", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
         recalculate_cols($cols);
 
@@ -166,7 +166,7 @@ function print_supplier_balances()
 
         if (db_num_rows($res) == 0 && !$no_zeros) 
         {
-            $rep->TextCol(0, 2, $myrow['name'].($myrow['inactive']==1 ? " ("._("Inactive").")" : ""));
+            $rep->TextCol(0, 2, $myrow['name'].($myrow['inactive']==1 ? " (".__("Inactive").")" : ""));
             $rep->AmountCol(3, 4, $init[3], $dec);
             $rep->AmountCol(7, 8, $init[3], $dec);
             //$rep->Line($rep->row  - 2);
@@ -208,7 +208,7 @@ function print_supplier_balances()
             $total[3] = $total[1] - $total[0];
         }
 		if ($no_zeros && $total[3] == 0.0 && $curr_db == 0.0 && $curr_cr == 0.0) continue;
-        $rep->TextCol(0, 2, $myrow['name'].($myrow['inactive']==1 ? " ("._("Inactive").")" : ""));
+        $rep->TextCol(0, 2, $myrow['name'].($myrow['inactive']==1 ? " (".__("Inactive").")" : ""));
         $rep->AmountCol(3, 4, $total[3] + $curr_cr - $curr_db, $dec);
         $rep->AmountCol(4, 5, $curr_db, $dec);
         $rep->AmountCol(5, 6, $curr_cr, $dec);
@@ -223,7 +223,7 @@ function print_supplier_balances()
     $rep->Line($rep->row + 4); // added line by Joe
     $rep->NewLine();
     $rep->fontSize += 2;
-    $rep->TextCol(0, 3,    _('Grand Total'));
+    $rep->TextCol(0, 3,    __('Grand Total'));
     $rep->fontSize -= 2;
 
     $grandtotal[3] = $grandtotal[1] - $grandtotal[0];

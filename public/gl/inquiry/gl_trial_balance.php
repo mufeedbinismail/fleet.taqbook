@@ -24,7 +24,7 @@ $js = "";
 if (user_use_date_picker())
 	$js = get_js_date_picker();
 
-page(_($GLOBALS['help_context'] = "Trial Balance"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Trial Balance"), false, false, "", $js);
 
 $k = 0;
 $pdeb = $pcre = $cdeb = $ccre = $tdeb = $tcre = $pbal = $cbal = $tbal = 0;
@@ -51,16 +51,16 @@ function gl_inquiry_controls()
 	if (!isset($_POST['TransFromDate']))
 		$_POST['TransFromDate'] = add_days(end_month($date), -user_transaction_days());
 	start_row();	
-    date_cells(_("From:"), 'TransFromDate');
-	date_cells(_("To:"), 'TransToDate');
+    date_cells(__("From:"), 'TransFromDate');
+	date_cells(__("To:"), 'TransToDate');
 	if ($dim >= 1)
-		dimensions_list_cells(_("Dimension")." 1:", 'Dimension', null, true, " ", false, 1);
+		dimensions_list_cells(__("Dimension")." 1:", 'Dimension', null, true, " ", false, 1);
 	if ($dim > 1)
-		dimensions_list_cells(_("Dimension")." 2:", 'Dimension2', null, true, " ", false, 2);
-	check_cells(_("No zero values"), 'NoZero', null);
-	check_cells(_("Only balances"), 'Balance', null);
-	check_cells(_("Group totals only"), 'GroupTotalOnly', null);
-	submit_cells('Show',_("Show"),'','', 'default');
+		dimensions_list_cells(__("Dimension")." 2:", 'Dimension2', null, true, " ", false, 2);
+	check_cells(__("No zero values"), 'NoZero', null);
+	check_cells(__("Only balances"), 'Balance', null);
+	check_cells(__("Group totals only"), 'GroupTotalOnly', null);
+	submit_cells('Show',__("Show"),'','', 'default');
 	end_row();
     end_table();
     end_form();
@@ -103,7 +103,7 @@ function display_trial_balance($type, $typename)
 			if (!check_value('GroupTotalOnly'))
 			{
 				start_row("class='inquirybg' style='font-weight:bold'");
-				label_cell(_("Group")." - ".$type ." - ".$typename, "colspan=8");
+				label_cell(__("Group")." - ".$type ." - ".$typename, "colspan=8");
 				end_row();
 			}
 			$printtitle = 1;
@@ -179,7 +179,7 @@ function display_trial_balance($type, $typename)
 		if (!$printtitle)
 		{
 			start_row("class='inquirybg' style='font-weight:bold'");
-			label_cell(_("Group")." - ".$type ." - ".$typename, "colspan=8");
+			label_cell(__("Group")." - ".$type ." - ".$typename, "colspan=8");
 			end_row();
 			$printtitle = 1;
 
@@ -189,7 +189,7 @@ function display_trial_balance($type, $typename)
 
 	start_row("class='inquirybg' style='font-weight:bold'");
 	if (!check_value('GroupTotalOnly'))
-		label_cell(_("Total") ." - ".$typename, "colspan=2");
+		label_cell(__("Total") ." - ".$typename, "colspan=2");
 	else
 		label_cell(" - ".$typename, "colspan=2");
 
@@ -221,7 +221,7 @@ if (isset($_POST['TransFromDate']))
 	$row = get_current_fiscalyear();
 	if (date1_greater_date2($_POST['TransFromDate'], sql2date($row['end'])))
 	{
-		display_error(_("The from date cannot be bigger than the fiscal year end."));
+		display_error(__("The from date cannot be bigger than the fiscal year end."));
 		set_focus('TransFromDate');
 		return;
 	}
@@ -233,18 +233,18 @@ if (!isset($_POST['Dimension2']))
 	$_POST['Dimension2'] = 0;
 start_table(TABLESTYLE);
 $tableheader =  "<tr>
-	<td rowspan=2 class='tableheader'>" . _("Account") . "</td>
-	<td rowspan=2 class='tableheader'>" . _("Account Name") . "</td>
-	<td colspan=2 class='tableheader'>" . _("Brought Forward") . "</td>
-	<td colspan=2 class='tableheader'>" . _("This Period") . "</td>
-	<td colspan=2 class='tableheader'>" . _("Balance") . "</td>
+	<td rowspan=2 class='tableheader'>" . __("Account") . "</td>
+	<td rowspan=2 class='tableheader'>" . __("Account Name") . "</td>
+	<td colspan=2 class='tableheader'>" . __("Brought Forward") . "</td>
+	<td colspan=2 class='tableheader'>" . __("This Period") . "</td>
+	<td colspan=2 class='tableheader'>" . __("Balance") . "</td>
 	</tr><tr>
-	<td class='tableheader'>" . _("Debit") . "</td>
-	<td class='tableheader'>" . _("Credit") . "</td>
-	<td class='tableheader'>" . _("Debit") . "</td>
-	<td class='tableheader'>" . _("Credit") . "</td>
-	<td class='tableheader'>" . _("Debit") . "</td>
-	<td class='tableheader'>" . _("Credit") . "</td>
+	<td class='tableheader'>" . __("Debit") . "</td>
+	<td class='tableheader'>" . __("Credit") . "</td>
+	<td class='tableheader'>" . __("Debit") . "</td>
+	<td class='tableheader'>" . __("Credit") . "</td>
+	<td class='tableheader'>" . __("Debit") . "</td>
+	<td class='tableheader'>" . __("Credit") . "</td>
 	</tr>";
 
 echo $tableheader;
@@ -255,7 +255,7 @@ $classresult = get_account_classes(false);
 while ($class = db_fetch($classresult))
 {
 	start_row("class='inquirybg' style='font-weight:bold'");
-	label_cell(_("Class")." - ".$class['cid'] ." - ".$class['class_name'], "colspan=8");
+	label_cell(__("Class")." - ".$class['cid'] ." - ".$class['class_name'], "colspan=8");
 	end_row();
 
 	//Get Account groups/types under this group/type with no parents
@@ -269,7 +269,7 @@ while ($class = db_fetch($classresult))
 if (!check_value('Balance'))
 {
 	start_row("class='inquirybg' style='font-weight:bold'");
-	label_cell(_("Total") ." - ".$_POST['TransToDate'], "colspan=2");
+	label_cell(__("Total") ." - ".$_POST['TransToDate'], "colspan=2");
 	amount_cell($pdeb);
 	amount_cell($pcre);
 	amount_cell($cdeb);
@@ -279,7 +279,7 @@ if (!check_value('Balance'))
 	end_row();
 }
 start_row("class='inquirybg' style='font-weight:bold'");
-label_cell(_("Ending Balance") ." - ".$_POST['TransToDate'], "colspan=2");
+label_cell(__("Ending Balance") ." - ".$_POST['TransToDate'], "colspan=2");
 display_debit_or_credit_cells($pbal);
 display_debit_or_credit_cells($cbal);
 display_debit_or_credit_cells($tbal);
@@ -287,7 +287,7 @@ end_row();
 
 end_table(1);
 if (($pbal = round2($pbal, user_price_dec())) != 0 && $_POST['Dimension'] == 0 && $_POST['Dimension2'] == 0)
-	display_warning(_("The Opening Balance is not in balance, probably due to a non closed Previous Fiscalyear."));
+	display_warning(__("The Opening Balance is not in balance, probably due to a non closed Previous Fiscalyear."));
 div_end();
 
 //----------------------------------------------------------------------------------------------------

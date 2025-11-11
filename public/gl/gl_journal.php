@@ -28,11 +28,11 @@ if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
 if (isset($_GET['ModifyGL'])) {
-	$_SESSION['page_title'] = sprintf(_("Modifying Journal Transaction # %d."), 
+	$_SESSION['page_title'] = sprintf(__("Modifying Journal Transaction # %d."), 
 		$_GET['trans_no']);
 	$GLOBALS['help_context'] = "Modifying Journal Entry";
 } else
-	$_SESSION['page_title'] = _($GLOBALS['help_context'] = "Journal Entry");
+	$_SESSION['page_title'] = __($GLOBALS['help_context'] = "Journal Entry");
 
 page($_SESSION['page_title'], false, false,'', $js);
 //--------------------------------------------------------------------------------------------------
@@ -53,14 +53,14 @@ if (isset($_GET['AddedID']))
 	$trans_no = $_GET['AddedID'];
 	$trans_type = ST_JOURNAL;
 
-   	display_notification_centered( _("Journal entry has been entered") . " #$trans_no");
+   	display_notification_centered( __("Journal entry has been entered") . " #$trans_no");
 
-    display_note(get_gl_view_str($trans_type, $trans_no, _("&View this Journal Entry")));
+    display_note(get_gl_view_str($trans_type, $trans_no, __("&View this Journal Entry")));
 
 	reset_focus();
-	hyperlink_params(url()->current(), _("Enter &New Journal Entry"), "NewJournal=Yes");
+	hyperlink_params(url()->current(), __("Enter &New Journal Entry"), "NewJournal=Yes");
 
-	hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), "filterType=$trans_type&trans_no=$trans_no");
+	hyperlink_params(url("/admin/attachments.php"), __("Add an Attachment"), "filterType=$trans_type&trans_no=$trans_no");
 
 	display_footer_exit();
 } elseif (isset($_GET['UpdatedID'])) 
@@ -68,11 +68,11 @@ if (isset($_GET['AddedID']))
 	$trans_no = $_GET['UpdatedID'];
 	$trans_type = ST_JOURNAL;
 
-   	display_notification_centered( _("Journal entry has been updated") . " #$trans_no");
+   	display_notification_centered( __("Journal entry has been updated") . " #$trans_no");
 
-    display_note(get_gl_view_str($trans_type, $trans_no, _("&View this Journal Entry")));
+    display_note(get_gl_view_str($trans_type, $trans_no, __("&View this Journal Entry")));
 
-   	hyperlink_no_params(url("/gl/inquiry/journal_inquiry.php"), _("Return to Journal &Inquiry"));
+   	hyperlink_no_params(url("/gl/inquiry/journal_inquiry.php"), __("Return to Journal &Inquiry"));
 
 	display_footer_exit();
 }
@@ -87,8 +87,8 @@ elseif (isset($_GET['ModifyGL']))
 	check_is_editable($_GET['trans_type'], $_GET['trans_no']);
 
 	if (!isset($_GET['trans_type']) || $_GET['trans_type']!= 0) {
-		display_error(_("You can edit directly only journal entries created via Journal Entry page."));
-		hyperlink_params(url("/gl/gl_journal.php"), _("Entry &New Journal Entry"), "NewJournal=Yes");
+		display_error(__("You can edit directly only journal entries created via Journal Entry page."));
+		hyperlink_params(url("/gl/gl_journal.php"), __("Entry &New Journal Entry"), "NewJournal=Yes");
 		display_footer_exit();
 	}
 	create_cart($_GET['trans_type'], $_GET['trans_no']);
@@ -199,38 +199,38 @@ if (isset($_POST['Process']))
 	$input_error = 0;
 
 	if ($_SESSION['journal_items']->count_gl_items() < 1) {
-		display_error(_("You must enter at least one journal line."));
+		display_error(__("You must enter at least one journal line."));
 		set_focus('code_id');
 		$input_error = 1;
 	}
 	if (abs($_SESSION['journal_items']->gl_items_total()) > 0.001)
 	{
-		display_error(_("The journal must balance (debits equal to credits) before it can be processed."));
+		display_error(__("The journal must balance (debits equal to credits) before it can be processed."));
 		set_focus('code_id');
 		$input_error = 1;
 	}
 
 	if (!is_date($_POST['date_'])) 
 	{
-		display_error(_("The entered date is invalid."));
+		display_error(__("The entered date is invalid."));
 		set_focus('date_');
 		$input_error = 1;
 	} 
 	elseif (!is_date_in_fiscalyear($_POST['date_'])) 
 	{
-		display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+		display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 		set_focus('date_');
 		$input_error = 1;
 	} 
 	if (!is_date($_POST['event_date'])) 
 	{
-		display_error(_("The entered date is invalid."));
+		display_error(__("The entered date is invalid."));
 		set_focus('event_date');
 		$input_error = 1;
 	}
 	if (!is_date($_POST['doc_date'])) 
 	{
-		display_error(_("The entered date is invalid."));
+		display_error(__("The entered date is invalid."));
 		set_focus('doc_date');
 		$input_error = 1;
 	}
@@ -242,7 +242,7 @@ if (isset($_POST['Process']))
 	if (get_post('currency') != get_company_pref('curr_default'))
 		if (isset($_POST['_ex_rate']) && !check_num('_ex_rate', 0.000001))
 		{
-			display_error(_("The exchange rate must be numeric and greater than zero."));
+			display_error(__("The exchange rate must be numeric and greater than zero."));
 			set_focus('_ex_rate');
     		$input_error = 1;
 		}
@@ -251,13 +251,13 @@ if (isset($_POST['Process']))
 	{
 		if (!is_date($_POST['tax_date']))
 		{
-			display_error(_("The entered date is invalid."));
+			display_error(__("The entered date is invalid."));
 			set_focus('tax_date');
 			$input_error = 1;
 		} 
 		elseif (!is_date_in_fiscalyear($_POST['tax_date']))
 		{
-			display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+			display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 			set_focus('tax_date');
 			$input_error = 1;
 		}
@@ -268,7 +268,7 @@ if (isset($_POST['Process']))
 	{
 	 	if (!tab_visible('tabs', 'tax'))
 	 	{
-			display_warning(_("Check tax register records before processing transaction or switch off 'Include in tax register' option."));
+			display_warning(__("Check tax register records before processing transaction or switch off 'Include in tax register' option."));
 			$_POST['tabs_tax'] = true; // force tax tab select
    			$input_error = 1;
 		} else {
@@ -282,7 +282,7 @@ if (isset($_POST['Process']))
 			// in case no tax account used we have to guss tax register on customer/supplier used.
 			if ($net_amount && !$_SESSION['journal_items']->has_taxes() && !$_SESSION['journal_items']->has_sub_accounts(true))
 			{
-				display_error(_("Cannot determine tax register to be used. You have to make at least one posting either to tax or customer/supplier account to use tax register."));
+				display_error(__("Cannot determine tax register to be used. You have to make at least one posting either to tax or customer/supplier account to use tax register."));
 				$_POST['tabs_gl'] = true; // force gl tab select
    				$input_error = 1;
 			}
@@ -351,13 +351,13 @@ function check_item_data()
 	global $Ajax;
 
 	if (!get_post('code_id')) {
-   		display_error(_("You must select GL account."));
+   		display_error(__("You must select GL account."));
 		set_focus('code_id');
    		return false;
 	}
 	if (is_subledger_account(get_post('code_id'))) {
 		if(!get_post('person_id')) {
-	   		display_error(_("You must select subledger account."));
+	   		display_error(__("You must select subledger account."));
    			$Ajax->activate('items_table');
 			set_focus('person_id');
 	   		return false;
@@ -365,46 +365,46 @@ function check_item_data()
 	}
 	if (isset($_POST['dimension_id']) && $_POST['dimension_id'] != 0 && dimension_is_closed($_POST['dimension_id'])) 
 	{
-		display_error(_("Dimension is closed."));
+		display_error(__("Dimension is closed."));
 		set_focus('dimension_id');
 		return false;
 	}
 
 	if (isset($_POST['dimension2_id']) && $_POST['dimension2_id'] != 0 && dimension_is_closed($_POST['dimension2_id'])) 
 	{
-		display_error(_("Dimension is closed."));
+		display_error(__("Dimension is closed."));
 		set_focus('dimension2_id');
 		return false;
 	}
 
 	if (!(input_num('AmountDebit')!=0 ^ input_num('AmountCredit')!=0) )
 	{
-		display_error(_("You must enter either a debit amount or a credit amount."));
+		display_error(__("You must enter either a debit amount or a credit amount."));
 		set_focus('AmountDebit');
     		return false;
   	}
 
 	if (strlen($_POST['AmountDebit']) && !check_num('AmountDebit', 0)) 
 	{
-    		display_error(_("The debit amount entered is not a valid number or is less than zero."));
+    		display_error(__("The debit amount entered is not a valid number or is less than zero."));
 		set_focus('AmountDebit');
     		return false;
   	} elseif (strlen($_POST['AmountCredit']) && !check_num('AmountCredit', 0))
 	{
-    		display_error(_("The credit amount entered is not a valid number or is less than zero."));
+    		display_error(__("The credit amount entered is not a valid number or is less than zero."));
 		set_focus('AmountCredit');
     		return false;
   	}
 	
 	if (!is_tax_gl_unique(get_post('code_id'))) {
-   		display_error(_("Cannot post to GL account used by more than one tax type."));
+   		display_error(__("Cannot post to GL account used by more than one tax type."));
 		set_focus('code_id');
    		return false;
 	}
 
 	if (!$_SESSION["wa_current_user"]->can_access('SA_BANKJOURNAL') && is_bank_account($_POST['code_id'])) 
 	{
-		display_error(_("You cannot make a journal entry for a bank account. Please use one of the banking functions for bank transactions."));
+		display_error(__("You cannot make a journal entry for a bank account. Please use one of the banking functions for bank transactions."));
 		set_focus('code_id');
 		return false;
 	}
@@ -524,8 +524,8 @@ start_form();
 display_order_header($_SESSION['journal_items']);
 
 tabbed_content_start('tabs', array(
-		'gl' => array(_('&GL postings'), true),
-		'tax' => array(_('&Tax register'), check_value('taxable_trans')),
+		'gl' => array(__('&GL postings'), true),
+		'tax' => array(__('&Tax register'), check_value('taxable_trans')),
 	));
 	
 	switch (get_post('_tabs_sel')) {
@@ -534,7 +534,7 @@ tabbed_content_start('tabs', array(
 			start_table(TABLESTYLE2, "width='90%'", 10);
 			start_row();
 			echo "<td>";
-			display_gl_items(_("Rows"), $_SESSION['journal_items']);
+			display_gl_items(__("Rows"), $_SESSION['journal_items']);
 			gl_options_controls();
 			echo "</td>";
 			end_row();
@@ -544,15 +544,15 @@ tabbed_content_start('tabs', array(
 		case 'tax':
 			update_tax_info();
 			br();
-			display_heading(_("Tax register record"));
+			display_heading(__("Tax register record"));
 			br();
 			start_table(TABLESTYLE2, "width=40%");
-			date_row(_("VAT date:"), 'tax_date', '', "colspan='3'");
-			//tax_groups_list_row(_("Tax group:"), 'tax_group');
+			date_row(__("VAT date:"), 'tax_date', '', "colspan='3'");
+			//tax_groups_list_row(__("Tax group:"), 'tax_group');
 			end_table(1);
 
 			start_table(TABLESTYLE2, "width=60%");
-			table_header(array(_('Name'), _('Input Tax'), _('Output Tax'), _('Net amount')));
+			table_header(array(__('Name'), __('Input Tax'), __('Output Tax'), __('Net amount')));
 			$taxes = get_all_tax_types();
 			while ($tax = db_fetch($taxes))
 			{
@@ -567,8 +567,8 @@ tabbed_content_start('tabs', array(
 			end_table(1);
 			break;
 	};
-	submit_center('Process', _("Process Journal Entry"), true , 
-		_('Process journal entry only if debits equal to credits'), 'default');
+	submit_center('Process', __("Process Journal Entry"), true , 
+		__('Process journal entry only if debits equal to credits'), 'default');
 br();
 tabbed_content_end();
 

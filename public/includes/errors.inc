@@ -103,7 +103,7 @@ function error_handler($errno, $errstr, $file, $line) {
 
 function exception_handler($exception)
 {
-	error_handler(E_ERROR, sprintf(_("Unhandled exception [%s]: %s."), $exception->getCode(), $exception->getMessage()),
+	error_handler(E_ERROR, sprintf(__("Unhandled exception [%s]: %s."), $exception->getCode(), $exception->getMessage()),
 		 $exception->getFile(), $exception->getLine());
 	end_page();
 }
@@ -141,7 +141,7 @@ function fmt_errors($center=false) {
 
 	    	$str = $msg[1];
 			if (!in_array($msg[0], array(E_USER_NOTICE, E_USER_ERROR, E_USER_WARNING)) && $msg[2] != null)
-		  		$str .= ' '._('in file').': '.$msg[2].' '._('at line ').$msg[3];
+		  		$str .= ' '.__('in file').': '.$msg[2].' '.__('at line ').$msg[3];
 
 			if ($SysPrefs->go_debug>1 && $type!=E_USER_NOTICE && $type!=E_USER_WARNING)
 		  		$str .= '<br>'.$msg[4];
@@ -193,9 +193,9 @@ function display_db_error($msg, $sql_statement=null, $exit=true)
 	$db_error = db_error_no();
 	
 	if($warning)
-		$str = "<b>" . _("Debug mode database warning:") . "</b><br>";
+		$str = "<b>" . __("Debug mode database warning:") . "</b><br>";
 	else
-		$str = "<b>" . _("DATABASE ERROR :") . "</b> $msg<br>";
+		$str = "<b>" . __("DATABASE ERROR :") . "</b> $msg<br>";
 	
 	if ($db_error != 0) 
 	{
@@ -227,7 +227,7 @@ function frindly_db_error($db_error)
 {
 	if ($db_error == DB_DUPLICATE_ERROR) 
 	{
-		display_error(_("The entered information is a duplicate. Please go back and enter different values."));
+		display_error(__("The entered information is a duplicate. Please go back and enter different values."));
 		return true;
 	}
 	

@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_PRINTERS';
 require __DIR__ . "/../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "Printer Locations"));
+page(__($GLOBALS['help_context'] = "Printer Locations"));
 
 require_once __DIR__ . "/../admin/db/printers_db.inc";
 require_once __DIR__ . "/../includes/ui.inc";
@@ -27,17 +27,17 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 	if (empty($_POST['name']))
 	{
 		$error = 1;
-		display_error( _("Printer name cannot be empty."));
+		display_error( __("Printer name cannot be empty."));
 		set_focus('name');
 	} 
 	elseif (empty($_POST['host'])) 
 	{
-		display_notification_centered( _("You have selected printing to server at user IP."));
+		display_notification_centered( __("You have selected printing to server at user IP."));
 	} 
 	elseif (!check_num('tout', 0, 60)) 
 	{
 		$error = 1;
-		display_error( _("Timeout cannot be less than zero nor longer than 60 (sec)."));
+		display_error( __("Timeout cannot be less than zero nor longer than 60 (sec)."));
 		set_focus('tout');
 	} 
 
@@ -48,8 +48,8 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 			input_num('tout',0));
 
 		display_notification_centered($selected_id==-1? 
-			_('New printer definition has been created') 
-			:_('Selected printer definition has been updated'));
+			__('New printer definition has been created') 
+			:__('Selected printer definition has been updated'));
  		$Mode = 'RESET';
 	}
 }
@@ -60,12 +60,12 @@ if ($Mode == 'Delete')
 
 	if (key_in_foreign_table($selected_id, 'print_profiles', 'printer'))
 	{
-		display_error(_("Cannot delete this printer definition, because print profile have been created using it."));
+		display_error(__("Cannot delete this printer definition, because print profile have been created using it."));
 	} 
 	else 
 	{
 		delete_printer($selected_id);
-		display_notification(_('Selected printer definition has been deleted'));
+		display_notification(__('Selected printer definition has been deleted'));
 	}
 	$Mode = 'RESET';
 }
@@ -80,7 +80,7 @@ if ($Mode == 'RESET')
 $result = get_all_printers();
 start_form();
 start_table(TABLESTYLE);
-$th = array(_("Name"), _("Description"), _("Host"), _("Printer Queue"),'','');
+$th = array(__("Name"), __("Description"), __("Host"), __("Printer Queue"),'','');
 table_header($th);
 
 $k = 0; //row colour counter
@@ -92,8 +92,8 @@ while ($myrow = db_fetch($result))
     label_cell($myrow['description']);
     label_cell($myrow['host']);
     label_cell($myrow['queue']);
- 	edit_button_cell("Edit".$myrow['id'], _("Edit"));
- 	delete_button_cell("Delete".$myrow['id'], _("Delete"));
+ 	edit_button_cell("Edit".$myrow['id'], __("Edit"));
+ 	delete_button_cell("Delete".$myrow['id'], __("Delete"));
     end_row();
 
 
@@ -128,12 +128,12 @@ if ($selected_id != -1)
 		$_POST['port'] = '515';
 }
 
-text_row(_("Printer Name").':', 'name', null, 20, 20);
-text_row(_("Printer Description").':', 'descr', null, 40, 60);
-text_row(_("Host name or IP").':', 'host', null, 30, 40);
-text_row(_("Port").':', 'port', null, 5, 5);
-text_row(_("Printer Queue").':', 'queue', null, 20, 20);
-text_row(_("Timeout").':', 'tout', null, 5, 5);
+text_row(__("Printer Name").':', 'name', null, 20, 20);
+text_row(__("Printer Description").':', 'descr', null, 40, 60);
+text_row(__("Host name or IP").':', 'host', null, 30, 40);
+text_row(__("Port").':', 'port', null, 5, 5);
+text_row(__("Printer Queue").':', 'queue', null, 20, 20);
+text_row(__("Timeout").':', 'tout', null, 5, 5);
 
 end_table(1);
 

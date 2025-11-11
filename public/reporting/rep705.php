@@ -151,7 +151,7 @@ function display_type ($type, $typename, $yr, $mo, $convert, &$dec, &$rep, $dime
 		$rep->row += 6;
 		$rep->Line($rep->row);
 		$rep->NewLine();
-		$rep->TextCol(0, 2,	_('Total') . " " . $typename);
+		$rep->TextCol(0, 2,	__('Total') . " " . $typename);
 		for ($i = 1; $i <= 13; $i++)
 			$rep->AmountCol($i + 1, $i + 2, ($total[$i] + $ctotal[$i]) * $convert, $dec);
 		$rep->NewLine();
@@ -211,7 +211,7 @@ function print_annual_expense_breakdown()
 	{
 		$dec = 1;
 		$thousands = 1000;
-		$amts_thousands = _("Amounts in thousands");
+		$amts_thousands = __("Amounts in thousands");
 		$fontSize = 9;
 	}
 	else
@@ -250,8 +250,8 @@ function print_annual_expense_breakdown()
 	$per02 = $tmonths[date('n',mktime(0,0,0,$mo-10,$da,$yr))];
 	$per01 = $tmonths[date('n',mktime(0,0,0,$mo-11,$da,$yr))];
 
-	$headers = array(_('Account'), _('Account Name'), $per01, $per02, $per03, $per04,
-		$per05, $per06, $per07, $per08, $per09, $per10, $per11, $per12, _('Total'));
+	$headers = array(__('Account'), __('Account Name'), $per01, $per02, $per03, $per04,
+		$per05, $per06, $per07, $per08, $per09, $per10, $per11, $per12, __('Total'));
 
 	$aligns = array('left',	'left',	'right', 'right', 'right',	'right', 'right', 'right',
 		'right', 'right', 'right',	'right', 'right', 'right', 'right');
@@ -259,35 +259,35 @@ function print_annual_expense_breakdown()
     if ($dim == 2)
     {
     	$params =   array( 	0 => $comments,
-                    	1 => array('text' => _("Year"),
+                    	1 => array('text' => __("Year"),
                     		'from' => $year, 'to' => ''),
-                    	2 => array('text' => _("Dimension")." 1",
+                    	2 => array('text' => __("Dimension")." 1",
                     		'from' => get_dimension_string($dimension), 'to' => ''),
-                    	3 => array('text' => _("Dimension")." 2",
+                    	3 => array('text' => __("Dimension")." 2",
                     		'from' => get_dimension_string($dimension2), 'to' => ''),
-                    	4 => array('text' => _('Tags'), 'from' => get_tag_names($tags), 'to' => ''),	
-                    	5 => array('text' => _('Info'), 'from' => $amts_thousands, 'to' => ''));
+                    	4 => array('text' => __('Tags'), 'from' => get_tag_names($tags), 'to' => ''),	
+                    	5 => array('text' => __('Info'), 'from' => $amts_thousands, 'to' => ''));
     }
     elseif ($dim == 1)
     {
     	$params =   array( 	0 => $comments,
-                    	1 => array('text' => _("Year"),
+                    	1 => array('text' => __("Year"),
                     		'from' => $year, 'to' => ''),
-                    	2 => array('text' => _('Dimension'),
+                    	2 => array('text' => __('Dimension'),
                     		'from' => get_dimension_string($dimension), 'to' => ''),
-                    	3 => array('text' => _('Tags'), 'from' => get_tag_names($tags), 'to' => ''),	
-                    	4 => array('text' => _('Info'), 'from' => $amts_thousands, 'to' => ''));
+                    	3 => array('text' => __('Tags'), 'from' => get_tag_names($tags), 'to' => ''),	
+                    	4 => array('text' => __('Info'), 'from' => $amts_thousands, 'to' => ''));
     }
     else
     {
     	$params =   array( 	0 => $comments,
-                    	1 => array('text' => _("Year"),
+                    	1 => array('text' => __("Year"),
                     		'from' => $year, 'to' => ''),
-                    	2 => array('text' => _('Tags'), 'from' => get_tag_names($tags), 'to' => ''),	
-                    	3 => array('text' => _('Info'), 'from' => $amts_thousands, 'to' => ''));
+                    	2 => array('text' => __('Tags'), 'from' => get_tag_names($tags), 'to' => ''),	
+                    	3 => array('text' => __('Info'), 'from' => $amts_thousands, 'to' => ''));
     }
 
-	$rep = new FrontReport(_('Annual Expense Breakdown'), "AnnualBreakDown", user_pagesize(), $fontSize,
+	$rep = new FrontReport(__('Annual Expense Breakdown'), "AnnualBreakDown", user_pagesize(), $fontSize,
 										$orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
@@ -331,7 +331,7 @@ function print_annual_expense_breakdown()
 		$rep->Line($rep->row);
 		$rep->NewLine();
 		$rep->Font('bold');
-		$rep->TextCol(0, 2,	_('Total') . " " . $class["class_name"]);
+		$rep->TextCol(0, 2,	__('Total') . " " . $class["class_name"]);
 		for ($i = 1; $i <= 13; $i++)
 		{
 			$rep->AmountCol($i + 1, $i + 2, $ctotal[$i] * $convert, $dec);
@@ -341,7 +341,7 @@ function print_annual_expense_breakdown()
 		$rep->NewLine(2);
 	}
 	$rep->Font('bold');	
-	$rep->TextCol(0, 2,	_("Calculated Return"));
+	$rep->TextCol(0, 2,	__("Calculated Return"));
 	for ($i = 1; $i <= 13; $i++)
 		$rep->AmountCol($i + 1, $i + 2, $sales[$i] * -1, $dec);
 	$rep->Font();

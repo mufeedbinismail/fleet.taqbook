@@ -49,11 +49,11 @@ function add_exchange_variation($trans_no, $date_, $acc_id, $account,
 
 		if ($person_type_id == null)
 			$person_type_id = PT_MISC;
-		add_gl_trans(ST_JOURNAL, $trans_no, $date_, $account, 0, 0, _("Exchange Variance"),
+		add_gl_trans(ST_JOURNAL, $trans_no, $date_, $account, 0, 0, __("Exchange Variance"),
     		-$diff, null, $person_type_id, $person_id);
 
     	add_gl_trans(ST_JOURNAL, $trans_no, $date_, get_company_pref('exchange_diff_act'), 0, 0, 
-    		_("Exchange Variance"), $diff, null, $person_type_id, $person_id);
+    		__("Exchange Variance"), $diff, null, $person_type_id, $person_id);
 
 		if ($memo)
 			add_comments(ST_JOURNAL, $trans_no, $date_, $memo);
@@ -81,10 +81,10 @@ function add_cust_supp_revaluation($ledger_act, $ex_act, $date, $amount, $person
 	$Refs->save(ST_JOURNAL, $trans_no, $ref);
 	add_audit_trail(ST_JOURNAL, $trans_no, $date);
 
-	add_gl_trans(ST_JOURNAL, $trans_no, $date, $ledger_act, 0, 0, _("Exchange Variance"),
+	add_gl_trans(ST_JOURNAL, $trans_no, $date, $ledger_act, 0, 0, __("Exchange Variance"),
 		$amount, null, $person_type_id, $person_id);
 	add_gl_trans(ST_JOURNAL, $trans_no, $date, $ex_act, 0, 0, 
-		_("Exchange Variance"),	-$amount, null, $person_type_id, $person_id);
+		__("Exchange Variance"),	-$amount, null, $person_type_id, $person_id);
 	add_comments(ST_JOURNAL, $trans_no, $date, $memo);
 	commit_transaction();
 }
@@ -226,7 +226,7 @@ function add_bank_transfer($from_account, $to_account, $date_,
 	
     $fromact = get_bank_account($from_account);
     $toact = get_bank_account($to_account);
-    $person_id = _("From")." ".$fromact['bank_account_name']." "._("To")." ".$toact['bank_account_name'];
+    $person_id = __("From")." ".$fromact['bank_account_name']." ".__("To")." ".$toact['bank_account_name'];
 
 	$from_gl_account = get_bank_gl_account($from_account);
 	$to_gl_account = get_bank_gl_account($to_account);
@@ -267,7 +267,7 @@ function add_bank_transfer($from_account, $to_account, $date_,
 		add_gl_balance($trans_type, $trans_no, $date_, -$total);
 	else	// in this case those are exchange variances between bank and home rates
 	   	add_gl_trans($trans_type, $trans_no, $date_, get_company_pref('exchange_diff_act'),
-	   		$dim1, $dim2, _("Exchange Variance"), -$total);
+	   		$dim1, $dim2, __("Exchange Variance"), -$total);
 	
 	add_bank_trans($trans_type, $trans_no, $to_account, $ref,
 		$date_, $to_amount, PT_MISC, $person_id,
@@ -349,7 +349,7 @@ function update_bank_transfer(
 {
 	begin_transaction();
 	delete_comments(ST_BANKTRANSFER, $trans_no);
-	void_transaction(ST_BANKTRANSFER, $trans_no, $date_, _("Document reentered."));
+	void_transaction(ST_BANKTRANSFER, $trans_no, $date_, __("Document reentered."));
 	void_gl_trans(ST_BANKTRANSFER, $trans_no, true);
 	$new_trans_no = add_bank_transfer(
 		$from_account, $to_account, $date_, $amount,
@@ -516,7 +516,7 @@ function write_bank_transaction($trans_type, $trans_no, $from_account, $items, $
 	//  otherwise the operation could fail for cash accounts due to temporary negative balance
 	if ($old_trans) 
 	{
-		$msg = void_transaction($trans_type, $old_trans, $date_, _("Document reentered."));
+		$msg = void_transaction($trans_type, $old_trans, $date_, __("Document reentered."));
 		if ($msg)
 		{
 			display_error($msg);

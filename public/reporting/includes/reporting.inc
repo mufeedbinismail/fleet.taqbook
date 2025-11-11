@@ -10,8 +10,8 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 // Link to printing single document with bulk report template file.
-// Ex. label_cell(print_document_link($myrow['order_no'], _("Print")), $type);
-// or display_note(print_document_link($order_no, _("Print this order")));
+// Ex. label_cell(print_document_link($myrow['order_no'], __("Print")), $type);
+// or display_note(print_document_link($order_no, __("Print this order")));
 // You only need full parameter list for invoices/credit notes
 
 function print_document_link($doc_no, $link_text, $link, $type_no, 

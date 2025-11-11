@@ -16,7 +16,7 @@ require_once __DIR__ . "/../../includes/session.inc";
 $js = "";
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($GLOBALS['help_context'] = "View Dimension"), true, false, "", $js);
+page(__($GLOBALS['help_context'] = "View Dimension"), true, false, "", $js);
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/data_checks.inc";
@@ -45,13 +45,13 @@ $myrow = get_dimension($id, true);
 
 if ($myrow == false)
 {
-	echo _("The dimension number sent is not valid.");
+	echo __("The dimension number sent is not valid.");
     throw new \App\Exceptions\Legacy\FlowTerminatedException;
 }
 
 start_table(TABLESTYLE);
 
-$th = array(_("#"), _("Reference"), _("Name"), _("Type"), _("Date"), _("Due Date"));
+$th = array(__("#"), __("Reference"), __("Name"), __("Type"), __("Date"), __("Due Date"));
 table_header($th);
 
 start_row();
@@ -69,7 +69,7 @@ end_table();
 
 if ($myrow["closed"] == true)
 {
-	display_note(_("This dimension is closed."));
+	display_note(__("This dimension is closed."));
 }
 
 start_form();
@@ -81,9 +81,9 @@ if (!isset($_POST['TransFromDate']))
 	$_POST['TransFromDate'] = begin_fiscalyear();
 if (!isset($_POST['TransToDate']))
 	$_POST['TransToDate'] = Today();
-date_cells(_("from:"), 'TransFromDate');
-date_cells(_("to:"), 'TransToDate');
-submit_cells('Show',_("Show"), '', false, 'default');
+date_cells(__("from:"), 'TransFromDate');
+date_cells(__("to:"), 'TransToDate');
+submit_cells('Show',__("Show"), '', false, 'default');
 
 end_row();
 

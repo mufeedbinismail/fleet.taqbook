@@ -13,7 +13,7 @@ $GLOBALS['page_security'] = 'SA_ITEMSTRANSVIEW';
 
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "View Inventory Adjustment"), true);
+page(__($GLOBALS['help_context'] = "View Inventory Adjustment"), true);
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/ui.inc";
@@ -38,9 +38,9 @@ while ($adjustment = db_fetch($adjustment_items))
 
 		start_table(TABLESTYLE2, "width='90%'");
 		start_row();
-		label_cells(_("At Location"), $adjustment['location_name'], "class='tableheader2'");
-    	label_cells(_("Reference"), $adjustment['reference'], "class='tableheader2'", "colspan=6");
-		label_cells(_("Date"), sql2date($adjustment['tran_date']), "class='tableheader2'");
+		label_cells(__("At Location"), $adjustment['location_name'], "class='tableheader2'");
+    	label_cells(__("Reference"), $adjustment['reference'], "class='tableheader2'", "colspan=6");
+		label_cells(__("Date"), sql2date($adjustment['tran_date']), "class='tableheader2'");
 		end_row();
 		comments_display_row(ST_INVADJUST, $trans_no);
 
@@ -50,8 +50,8 @@ while ($adjustment = db_fetch($adjustment_items))
 		echo "<br>";
 		start_table(TABLESTYLE, "width='90%'");
 
-    	$th = array(_("Item Code"), _("Description"), _("Quantity"),
-    		_("Units"), _("Unit Cost"));
+    	$th = array(__("Item Code"), __("Description"), __("Quantity"),
+    		__("Units"), __("Unit Cost"));
     	table_header($th);
 	}
 
@@ -67,6 +67,6 @@ while ($adjustment = db_fetch($adjustment_items))
 
 end_table(1);
 
-is_voided_display(ST_INVADJUST, $trans_no, _("This adjustment has been voided."));
+is_voided_display(ST_INVADJUST, $trans_no, __("This adjustment has been voided."));
 
 end_page(true, false, false, ST_INVADJUST, $trans_no);

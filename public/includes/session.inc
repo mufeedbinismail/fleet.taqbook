@@ -41,10 +41,10 @@ function kill_login()
 function login_fail()
 {
     
-	echo "<center><br><br><font size='5' color='red'><b>" . _("Incorrect Password") . "<b></font><br><br>";
-	echo "<b>" . _("The user and password combination is not valid for the system.") . "<b><br><br>";
-	echo _("If you are not an authorized user, please contact your system administrator to obtain an account to enable you to use the system.");
-	echo "<br><a href='".url("/index.php")."'>" . _("Try again") . "</a>";
+	echo "<center><br><br><font size='5' color='red'><b>" . __("Incorrect Password") . "<b></font><br><br>";
+	echo "<b>" . __("The user and password combination is not valid for the system.") . "<b><br><br>";
+	echo __("If you are not an authorized user, please contact your system administrator to obtain an account to enable you to use the system.");
+	echo "<br><a href='".url("/index.php")."'>" . __("Try again") . "</a>";
 	echo "</center>";
 	kill_login();
 	throw new \Illuminate\Validation\UnauthorizedException;
@@ -52,11 +52,11 @@ function login_fail()
 
 function password_reset_fail()
 {
-  	echo "<center><br><br><font size='5' color='red'><b>" . _("Incorrect Email") . "<b></font><br><br>";
-  	echo "<b>" . _("The email address does not exist in the system, or is used by more than one user.") . "<b><br><br>";
+  	echo "<center><br><br><font size='5' color='red'><b>" . __("Incorrect Email") . "<b></font><br><br>";
+  	echo "<b>" . __("The email address does not exist in the system, or is used by more than one user.") . "<b><br><br>";
 
-  	echo _("Plase try again or contact your system administrator to obtain new password.");
-  	echo "<br><a href='".url("/index.php", ['reset' => 1])."'>" . _("Try again") . "</a>";
+  	echo __("Plase try again or contact your system administrator to obtain new password.");
+  	echo "<br><a href='".url("/index.php", ['reset' => 1])."'>" . __("Try again") . "</a>";
   	echo "</center>";
 
 	kill_login();
@@ -65,10 +65,10 @@ function password_reset_fail()
 
 function password_reset_success()
 {
-  	echo "<center><br><br><font size='5' color='green'><b>" . _("New password sent") . "<b></font><br><br>";
-  	echo "<b>" . _("A new password has been sent to your mailbox.") . "<b><br><br>";
+  	echo "<center><br><br><font size='5' color='green'><b>" . __("New password sent") . "<b></font><br><br>";
+  	echo "<b>" . __("A new password has been sent to your mailbox.") . "<b><br><br>";
 
-  	echo "<br><a href='".url("/index.php")."'>" . _("Login here") . "</a>";
+  	echo "<br><a href='".url("/index.php")."'>" . __("Login here") . "</a>";
   	echo "</center>";
 	
 	kill_login();
@@ -119,7 +119,7 @@ function write_login_filelog($login, $result)
  			$login_faillog[$user][$ip]++;
  		} else {
  			$login_faillog[$user][$ip] = 0; // comment out to restart counter only after successfull login.
-	 		error_log(sprintf(_("Brute force attack on account '%s' detected. Access for non-logged users temporarily blocked."	), $login));
+	 		error_log(sprintf(__("Brute force attack on account '%s' detected. Access for non-logged users temporarily blocked."	), $login));
 	 	}
  		$login_faillog[$user]['last'] = time();
 	}
@@ -147,7 +147,7 @@ function check_page_security($page_security)
 	
 	if (!$_SESSION["wa_current_user"]->check_user_access())
 	{
-		display_error(_("Security settings have not been defined for your user account.") . "<br>" . _("Please contact your system administrator."));
+		display_error(__("Security settings have not been defined for your user account.") . "<br>" . __("Please contact your system administrator."));
 		end_page(@$_REQUEST['popup']);
 		kill_login();
 		throw new \App\Exceptions\Legacy\FlowTerminatedException;
@@ -157,7 +157,7 @@ function check_page_security($page_security)
 	{
 
 		echo "<center><br><br><br><b>";
-		echo _("The security settings on your account do not permit you to access this function");
+		echo __("The security settings on your account do not permit you to access this function");
 		echo "</b>";
 		echo "<br><br><br><br></center>";
 		end_page(@$_REQUEST['popup']);

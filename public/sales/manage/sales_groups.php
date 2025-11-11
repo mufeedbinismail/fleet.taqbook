@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_SALESGROUP';
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "Sales Groups"));
+page(__($GLOBALS['help_context'] = "Sales Groups"));
 
 require_once __DIR__ . "/../../includes/ui.inc";
 
@@ -26,7 +26,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 	if (strlen($_POST['description']) == 0) 
 	{
 		$input_error = 1;
-		display_error(_("The sales group description cannot be empty."));
+		display_error(__("The sales group description cannot be empty."));
 		set_focus('description');
 	}
 
@@ -35,12 +35,12 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
     	if ($selected_id != -1) 
     	{
     		update_sales_group($selected_id, $_POST['description']);
-			$note = _('Selected sales group has been updated');
+			$note = __('Selected sales group has been updated');
     	} 
     	else 
     	{
     		add_sales_group($_POST['description']);
-			$note = _('New sales group has been added');
+			$note = __('New sales group has been added');
     	}
     
 		display_notification($note);    	
@@ -58,12 +58,12 @@ if ($Mode == 'Delete')
 	if (key_in_foreign_table($selected_id, 'cust_branch', 'group_no'))
 	{
 		$cancel_delete = 1;
-		display_error(_("Cannot delete this group because customers have been created using this group."));
+		display_error(__("Cannot delete this group because customers have been created using this group."));
 	} 
 	if ($cancel_delete == 0) 
 	{
 		delete_sales_group($selected_id);
-		display_notification(_('Selected sales group has been deleted'));
+		display_notification(__('Selected sales group has been deleted'));
 	} //end if Delete group
 	$Mode = 'RESET';
 } 
@@ -81,7 +81,7 @@ $result = get_sales_groups(check_value('show_inactive'));
 
 start_form();
 start_table(TABLESTYLE, "width='30%'");
-$th = array(_("ID"), _("Group Name"), "", "");
+$th = array(__("ID"), __("Group Name"), "", "");
 inactive_control_column($th);
 
 table_header($th);
@@ -95,8 +95,8 @@ while ($myrow = db_fetch($result))
 	label_cell($myrow["id"], "nowrap align='right'");
 	label_cell($myrow["description"]);
 	inactive_control_cell($myrow["id"], $myrow["inactive"], 'groups', 'id');
- 	edit_button_cell("Edit".$myrow["id"], _("Edit"));
- 	delete_button_cell("Delete".$myrow["id"], _("Delete"));
+ 	edit_button_cell("Edit".$myrow["id"], __("Edit"));
+ 	delete_button_cell("Delete".$myrow["id"], __("Delete"));
 	end_row();
 }
 
@@ -116,10 +116,10 @@ if ($selected_id != -1)
 		$_POST['description']  = $myrow["description"];
 	}
 	hidden("selected_id", $selected_id);
-	label_row(_("ID"), $myrow["id"]);
+	label_row(__("ID"), $myrow["id"]);
 } 
 
-text_row_ex(_("Group Name:"), 'description', 30); 
+text_row_ex(__("Group Name:"), 'description', 30); 
 
 end_table(1);
 

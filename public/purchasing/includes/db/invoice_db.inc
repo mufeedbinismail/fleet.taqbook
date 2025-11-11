@@ -142,7 +142,7 @@ function add_supp_invoice(&$supp_trans)
     $taxes = $supp_trans->get_taxes($supp_trans->tax_group_id);
 	if ($trans_no) {
 		$allocs = get_payments_for($trans_no, $trans_type, $supp_trans->supplier_id); // save allocations
-		void_transaction($trans_type, $trans_no, $supp_trans->tran_date, _("Document reentered."));
+		void_transaction($trans_type, $trans_no, $supp_trans->tran_date, __("Document reentered."));
 		$Refs->restore_last($trans_type, $trans_no);
 	} else
 		$allocs = get_po_prepayments($supp_trans);
@@ -340,7 +340,7 @@ function add_supp_invoice(&$supp_trans)
 						$ref = $Refs->get_next(ST_JOURNAL, null, $date_);
 						add_journal(ST_JOURNAL, $id, $diff, $date_, get_company_currency(), $ref);
 						$stock_id = $entered_grn->item_code;
-						$memo = _("Supplier invoice adjustment for zero inventory of ").$stock_id." "._("Invoice")." ".$supp_trans->reference;
+						$memo = __("Supplier invoice adjustment for zero inventory of ").$stock_id." ".__("Invoice")." ".$supp_trans->reference;
 						//Reverse the inventory effect if $qoh <=0
 						add_gl_trans_std_cost(ST_JOURNAL, $id, $date_, 
 							$stock_gl_code["inventory_account"],
@@ -694,9 +694,9 @@ function remove_not_invoice_item($id)
             $date = sql2date($grn["delivery_date"]);
             $total += add_gl_trans_supplier(ST_SUPPRECEIVE, $myrow['grn_batch_id'], $date, $stock_gl_code["inventory_account"],
                 $stock_gl_code['dimension_id'], $stock_gl_code['dimension2_id'],
-                -$myrow['QtyOstdg'] * $price, $grn["supplier_id"], "", 0, _("GRN Removal"));
+                -$myrow['QtyOstdg'] * $price, $grn["supplier_id"], "", 0, __("GRN Removal"));
             $total += add_gl_trans_supplier(ST_SUPPRECEIVE, $myrow['grn_batch_id'], $date, $clearing_act,
-                0, 0, -$total, null, "", 0, _("GRN Removal"));
+                0, 0, -$total, null, "", 0, __("GRN Removal"));
         }
     }
 

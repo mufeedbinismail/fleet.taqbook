@@ -23,14 +23,14 @@ function display_order_header(&$Order)
 	start_outer_table(TABLESTYLE2, "width='90%'");
 	table_section(1);
 
-    date_row(_("Journal Date:"), 'date_', '', $new, 0,0,0,null, true);
+    date_row(__("Journal Date:"), 'date_', '', $new, 0,0,0,null, true);
     if (input_changed('date_'))
     {
     	unset($_POST['ref']);
     	$Ajax->activate('ref');
     }
 
-	currencies_list_row(_('Currency:'), 'currency', null, true);
+	currencies_list_row(__('Currency:'), 'currency', null, true);
  	if (list_updated('currency'))
 		unset($_POST['_ex_rate']);
 	exchange_rate_display(get_company_pref('curr_default'), get_post('currency'), get_post('date_'), true);
@@ -40,21 +40,21 @@ function display_order_header(&$Order)
 
 	table_section(2);
 
-    date_row(_("Document Date:"), 'doc_date', '', $new);
-    date_row(_("Event Date:"), 'event_date', '', $new);
-    text_row(_("Source ref:"), 'source_ref', null, 30, 60);
+    date_row(__("Document Date:"), 'doc_date', '', $new);
+    date_row(__("Event Date:"), 'event_date', '', $new);
+    text_row(__("Source ref:"), 'source_ref', null, 30, 60);
 
  	if ($new) {
 		table_section(3);
 	}
 
-	ref_row(_("Reference:"), 'ref', null, get_post('ref'), false, ST_JOURNAL, get_post('date_'));
+	ref_row(__("Reference:"), 'ref', null, get_post('ref'), false, ST_JOURNAL, get_post('date_'));
 	hidden('ref_original');
 
 	if ($qes !== false)
 	{
 		table_section(3);
-		quick_entries_list_row(_("Quick Entry").":", 'quick', null, QE_JOURNAL, true);
+		quick_entries_list_row(__("Quick Entry").":", 'quick', null, QE_JOURNAL, true);
 
 		start_row();
 		$qid = get_quick_entry(get_post('quick'));
@@ -66,26 +66,26 @@ function display_order_header(&$Order)
 		if ($qid['bal_type'] == 1)
 		{
 			$accname = get_gl_account_name($qid['base_desc']);
-			label_row(($qid['base_amount'] == 0 ? _("Yearly") : _("Monthly")) . " ". _("balance from account")." ".
-				$qid['base_desc']." ".$accname."&nbsp;&nbsp;".submit('go', _("Go"), false, false, true),'', "colspan=2");
+			label_row(($qid['base_amount'] == 0 ? __("Yearly") : __("Monthly")) . " ". __("balance from account")." ".
+				$qid['base_desc']." ".$accname."&nbsp;&nbsp;".submit('go', __("Go"), false, false, true),'', "colspan=2");
 		}
 		else
 		{
-			text_row(_('Additional info:'), 'aux_info', null, 35, 255);
+			text_row(__('Additional info:'), 'aux_info', null, 35, 255);
 			amount_row($qid['base_desc'].":", 'totamount', price_format($qid['base_amount']),
-		 		null, "&nbsp;&nbsp;".submit('go', _("Go"), false, false, true));
+		 		null, "&nbsp;&nbsp;".submit('go', __("Go"), false, false, true));
 		}
 
 	}
 
-	check_row(_('Include in tax register:'), 'taxable_trans', null, true);
+	check_row(__('Include in tax register:'), 'taxable_trans', null, true);
         // Query the user to retain the reconciled status
         if (!$new) {
             $result = get_bank_trans(ST_JOURNAL, $Order->order_id);
             $row = db_fetch($result);
             if ($row
                 && $row['reconciled']) {
-                check_row(_('Reconciled:'), 'reconciled', 1, true);
+                check_row(__('Reconciled:'), 'reconciled', 1, true);
                 hidden('reconciled_date', $row['reconciled']);
             }
         }
@@ -108,18 +108,18 @@ function display_gl_items($title, &$order)
     div_start('items_table');
 	start_table(TABLESTYLE, "width='95%'");
 	if ($dim == 2)
-		$th = array(_("Account Code"), _("Account Description"), _("Dimension")." 1",
-			_("Dimension")." 2", _("Debit"), _("Credit"), _("Memo"), "");
+		$th = array(__("Account Code"), __("Account Description"), __("Dimension")." 1",
+			__("Dimension")." 2", __("Debit"), __("Credit"), __("Memo"), "");
 	elseif ($dim == 1)
-		$th = array(_("Account Code"), _("Account Description"), _("Dimension"),
-			_("Debit"), _("Credit"), _("Memo"), "");
+		$th = array(__("Account Code"), __("Account Description"), __("Dimension"),
+			__("Debit"), __("Credit"), __("Memo"), "");
 	else
-		$th = array(_("Account Code"), _("Account Description"),
-			_("Debit"), _("Credit"), _("Memo"), "");
+		$th = array(__("Account Code"), __("Account Description"),
+			__("Debit"), __("Credit"), __("Memo"), "");
 
 	if (count($order->gl_items)) $th[] = '';
 	if ($sub_type || $has_subaccounts)
-		array_insert($th, 2, _("Counterparty"));
+		array_insert($th, 2, __("Counterparty"));
 
 	table_header($th);
 
@@ -156,10 +156,10 @@ function display_gl_items($title, &$order)
     		}	
 			label_cell($item->reference);
 
-			edit_button_cell("Edit$line", _("Edit"),
-				_('Edit journal line'));
-			delete_button_cell("Delete$line", _("Delete"),
-				_('Remove line from journal'));
+			edit_button_cell("Edit$line", __("Edit"),
+				__('Edit journal line'));
+			delete_button_cell("Delete$line", __("Delete"),
+				__('Remove line from journal'));
     		end_row();
 		} 
 		else 
@@ -175,7 +175,7 @@ function display_gl_items($title, &$order)
 	{
 		$colspan = ($dim == 2 ? "4" : ($dim == 1 ? "3" : "2")) + ($sub_type || $has_subaccounts ? 1 : 0);
 		start_row();
-		label_cell(_("Total"), "align=right colspan=" . $colspan);
+		label_cell(__("Total"), "align=right colspan=" . $colspan);
 		amount_cell($order->gl_items_total_debit());
 		amount_cell(abs($order->gl_items_total_credit()));
 		label_cell('', "colspan=3");
@@ -222,7 +222,7 @@ function gl_edit_item_controls(&$order, $dim, $sub_accounts, $Index=null)
 		}
 		hidden('Index', $id);
 		$skip_bank = !$_SESSION["wa_current_user"]->can_access('SA_BANKJOURNAL');
-		echo gl_all_accounts_list('code_id', null, $skip_bank, true, _('[Select account]'), true, false, false);
+		echo gl_all_accounts_list('code_id', null, $skip_bank, true, __('[Select account]'), true, false, false);
 
 		if (is_subledger_account(get_post('code_id')))
 		{	// for home currency postings show all customers
@@ -239,7 +239,7 @@ function gl_edit_item_controls(&$order, $dim, $sub_accounts, $Index=null)
 	else
 	{
 		$skip_bank = !$_SESSION["wa_current_user"]->can_access('SA_BANKJOURNAL');
-		echo gl_all_accounts_list('code_id', null, $skip_bank, true, _('[Select account]'), true, false, false);
+		echo gl_all_accounts_list('code_id', null, $skip_bank, true, __('[Select account]'), true, false, false);
 		if ($sub_accounts)
 		{
 			// for home currency postings show all customers
@@ -272,15 +272,15 @@ function gl_edit_item_controls(&$order, $dim, $sub_accounts, $Index=null)
 
 	if ($id != -1)
 	{
-		button_cell('UpdateItem', _("Update"),
-				_('Confirm changes'), ICON_UPDATE);
-		button_cell('CancelItemChanges', _("Cancel"),
-				_('Cancel changes'), ICON_CANCEL);
+		button_cell('UpdateItem', __("Update"),
+				__('Confirm changes'), ICON_UPDATE);
+		button_cell('CancelItemChanges', __("Cancel"),
+				__('Cancel changes'), ICON_CANCEL);
  		set_focus('amount');
 	} 
 	else 
-		submit_cells('AddItem', _("Add Item"), "colspan=2",
-		    _('Add new line to journal'), true);
+		submit_cells('AddItem', __("Add Item"), "colspan=2",
+		    __('Add new line to journal'), true);
 
 	end_row();
 }
@@ -291,7 +291,7 @@ function gl_options_controls()
 {
 	  echo "<br><table align='center'>";
 
-	  textarea_row(_("Memo"), 'memo_', null, 50, 3);
+	  textarea_row(__("Memo"), 'memo_', null, 50, 3);
 
 	  echo "</table>";
 }

@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_GLTRANSVIEW';
 require_once __DIR__ . "/../../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "General Ledger Transaction Details"), true);
+page(__($GLOBALS['help_context'] = "General Ledger Transaction Details"), true);
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/ui.inc";
@@ -22,7 +22,7 @@ require_once __DIR__ . "/../../gl/includes/gl_db.inc";
 if (!isset($_GET['type_id']) || !isset($_GET['trans_no'])) 
 { /*Script was not passed the correct parameters */
 
-	display_note(_("The script must be called with a valid transaction type and transaction number to review the general ledger postings for."));
+	display_note(__("The script must be called with a valid transaction type and transaction number to review the general ledger postings for."));
 	end_page();
 }
 
@@ -37,17 +37,17 @@ function display_gl_heading($myrow)
 	$journal = $_GET['type_id'] == ST_JOURNAL;
 
     start_table(TABLESTYLE, "width='95%'");
-    $th = array(_("General Ledger Transaction Details"), _("Reference"),
-    	_("Transaction Date"), _("GL #"));
+    $th = array(__("General Ledger Transaction Details"), __("Reference"),
+    	__("Transaction Date"), __("GL #"));
 
 	if ($_GET['type_id'] == ST_JOURNAL)
-		array_insert($th, 3, array(_("Document Date"), _("Event Date")));
+		array_insert($th, 3, array(__("Document Date"), __("Event Date")));
 	else
-		array_insert($th, 3, array(_("Counterparty")));
+		array_insert($th, 3, array(__("Counterparty")));
 	
 	if($myrow['supp_reference'])
 	{
-		array_insert($th, 2, array(_("Supplier Reference")));
+		array_insert($th, 2, array(__("Supplier Reference")));
 	}
     table_header($th);	
     start_row();	
@@ -69,13 +69,13 @@ function display_gl_heading($myrow)
 	end_row();
 
 	start_row();
-	label_cells(_('Entered By'), $myrow["real_name"], "class='tableheader2'", "colspan=" .
+	label_cells(__('Entered By'), $myrow["real_name"], "class='tableheader2'", "colspan=" .
 		 ($journal ? ($header['rate']==1 ? '3':'1'):'6'));
 	if ($journal)
 	{
 		if ($header['rate'] != 1)
-			label_cells(_('Exchange rate'), $header["rate"].' ', "class='tableheader2'");
-		label_cells(_('Source document'), $header["source_ref"], "class='tableheader2'");
+			label_cells(__('Exchange rate'), $header["rate"].' ', "class='tableheader2'");
+		label_cells(__('Source document'), $header["source_ref"], "class='tableheader2'");
 	}
 	end_row();
 	comments_display_row($_GET['type_id'], $_GET['trans_no']);
@@ -85,7 +85,7 @@ $result = get_gl_trans($_GET['type_id'], $_GET['trans_no']);
 
 if (db_num_rows($result) == 0)
 {
-    echo "<p><center>" . _("No general ledger transactions have been created for") . " " .$systypes_array[$_GET['type_id']]." " . _("number") . " " . $_GET['trans_no'] . "</center></p><br><br>";
+    echo "<p><center>" . __("No general ledger transactions have been created for") . " " .$systypes_array[$_GET['type_id']]." " . __("number") . " " . $_GET['trans_no'] . "</center></p><br><br>";
 	end_page(true);
 	throw new \App\Exceptions\Legacy\FlowCompletedException;
 }
@@ -94,14 +94,14 @@ if (db_num_rows($result) == 0)
 $dim = get_company_pref('use_dimension');
 
 if ($dim == 2)
-	$th = array(_("Journal Date"), _("Account Code"), _("Account Name"), _("Dimension")." 1", _("Dimension")." 2",
-		_("Debit"), _("Credit"), _("Memo"));
+	$th = array(__("Journal Date"), __("Account Code"), __("Account Name"), __("Dimension")." 1", __("Dimension")." 2",
+		__("Debit"), __("Credit"), __("Memo"));
 elseif ($dim == 1)
-	$th = array(_("Journal Date"), _("Account Code"), _("Account Name"), _("Dimension"),
-		_("Debit"), _("Credit"), _("Memo"));
+	$th = array(__("Journal Date"), __("Account Code"), __("Account Name"), __("Dimension"),
+		__("Debit"), __("Credit"), __("Memo"));
 else		
-	$th = array(_("Journal Date"), _("Account Code"), _("Account Name"),
-		_("Debit"), _("Credit"), _("Memo"));
+	$th = array(__("Journal Date"), __("Account Code"), __("Account Name"),
+		__("Debit"), __("Credit"), __("Memo"));
 
 $k = 0; //row colour counter
 $heading_shown = false;
@@ -143,7 +143,7 @@ while ($myrow = db_fetch($result))
 if ($heading_shown)
 {
     start_row("class='inquirybg' style='font-weight:bold'");
-    label_cell(_("Total"), "colspan=3");
+    label_cell(__("Total"), "colspan=3");
     if ($dim >= 1)
         label_cell('');
     if ($dim > 1)
@@ -157,6 +157,6 @@ if ($heading_shown)
 
 //end of while loop
 
-is_voided_display($_GET['type_id'], $_GET['trans_no'], _("This transaction has been voided."));
+is_voided_display($_GET['type_id'], $_GET['trans_no'], __("This transaction has been voided."));
 
 end_page(true, false, false, $_GET['type_id'], $_GET['trans_no']);

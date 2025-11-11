@@ -24,10 +24,10 @@ if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($GLOBALS['help_context'] = "Work Order Entry"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Work Order Entry"), false, false, "", $js);
 
 
-check_db_has_manufacturable_items(_("There are no manufacturable items defined in the system."));
+check_db_has_manufacturable_items(__("There are no manufacturable items defined in the system."));
 
 check_db_has_locations(("There are no inventory locations defined in the system."));
 
@@ -49,21 +49,21 @@ if (isset($_GET['AddedID']))
 	$id = $_GET['AddedID'];
 	$stype = ST_WORKORDER;
 
-	display_notification_centered(_("The work order been added."));
+	display_notification_centered(__("The work order been added."));
 
-    display_note(get_trans_view_str($stype, $id, _("View this Work Order")), 0, 1);
+    display_note(get_trans_view_str($stype, $id, __("View this Work Order")), 0, 1);
 
 	if ($_GET['type'] != WO_ADVANCED)
 	{
 		require_once __DIR__ . "/../reporting/includes/reporting.inc";
 
-		submenu_print(_("&Print This Work Order"), ST_WORKORDER, $id, 'prtopt');
-		submenu_print(_("&Email This Work Order"), ST_WORKORDER, $id, null, 1);
-    	display_note(get_gl_view_str($stype, $id, _("View the GL Journal Entries for this Work Order")), 1);
+		submenu_print(__("&Print This Work Order"), ST_WORKORDER, $id, 'prtopt');
+		submenu_print(__("&Email This Work Order"), ST_WORKORDER, $id, null, 1);
+    	display_note(get_gl_view_str($stype, $id, __("View the GL Journal Entries for this Work Order")), 1);
     	$ar = array('PARAM_0' => $_GET['date'], 'PARAM_1' => $_GET['date'], 'PARAM_2' => $stype, 'PARAM_3' => '',
     		'PARAM_4' => (user_def_print_orientation() == 1 ? 1 : 0)); 
-    	display_note(print_link(_("Print the GL Journal Entries for this Work Order"), 702, $ar), 1);
-		hyperlink_params(url("/admin/attachments.php"), _("Add an Attachment"), "filterType=$stype&trans_no=$id");
+    	display_note(print_link(__("Print the GL Journal Entries for this Work Order"), 702, $ar), 1);
+		hyperlink_params(url("/admin/attachments.php"), __("Add an Attachment"), "filterType=$stype&trans_no=$id");
 	}
 	
 	safe_exit();
@@ -75,7 +75,7 @@ if (isset($_GET['UpdatedID']))
 {
 	$id = $_GET['UpdatedID'];
 
-	display_notification_centered(_("The work order been updated."));
+	display_notification_centered(__("The work order been updated."));
 	safe_exit();
 }
 
@@ -85,7 +85,7 @@ if (isset($_GET['DeletedID']))
 {
 	$id = $_GET['DeletedID'];
 
-	display_notification_centered(_("Work order has been deleted."));
+	display_notification_centered(__("Work order has been deleted."));
 	safe_exit();
 }
 
@@ -95,7 +95,7 @@ if (isset($_GET['ClosedID']))
 {
 	$id = $_GET['ClosedID'];
 
-	display_notification_centered(_("This work order has been closed. There can be no more issues against it.") . " #$id");
+	display_notification_centered(__("This work order has been closed. There can be no more issues against it.") . " #$id");
 	safe_exit();
 }
 
@@ -103,8 +103,8 @@ if (isset($_GET['ClosedID']))
 
 function safe_exit()
 {
-	hyperlink_no_params("", _("Enter a new work order"));
-	hyperlink_no_params("search_work_orders.php", _("Select an existing work order"));
+	hyperlink_no_params("", __("Enter a new work order"));
+	hyperlink_no_params("search_work_orders.php", __("Select an existing work order"));
 	
 	display_footer_exit();
 }
@@ -132,20 +132,20 @@ function can_process()
 
 	if (!check_num('quantity', 1))
 	{
-		display_error( _("The quantity entered is invalid or less than zero."));
+		display_error( __("The quantity entered is invalid or less than zero."));
 		set_focus('quantity');
 		return false;
 	}
 
 	if (!is_date($_POST['date_']))
 	{
-		display_error( _("The date entered is in an invalid format."));
+		display_error( __("The date entered is in an invalid format."));
 		set_focus('date_');
 		return false;
 	}
 	elseif (!is_date_in_fiscalyear($_POST['date_']))
 	{
-		display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+		display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 		set_focus('date_');
 		return false;
 	}
@@ -154,7 +154,7 @@ function can_process()
 	{
         if (!has_bom($_POST['stock_id']))
         {
-        	display_error(_("The selected item to manufacture does not have a bom."));
+        	display_error(__("The selected item to manufacture does not have a bom."));
 			set_focus('stock_id');
         	return false;
         }
@@ -163,7 +163,7 @@ function can_process()
 			$_POST['Labour'] = price_format(0);
     	if (!check_num('Labour', 0))
     	{
-    		display_error( _("The labour cost entered is invalid or less than zero."));
+    		display_error( __("The labour cost entered is invalid or less than zero."));
 			set_focus('Labour');
     		return false;
     	}
@@ -171,7 +171,7 @@ function can_process()
 			$_POST['Costs'] = price_format(0);
     	if (!check_num('Costs', 0))
     	{
-    		display_error( _("The cost entered is invalid or less than zero."));
+    		display_error( __("The cost entered is invalid or less than zero."));
 			set_focus('Costs');
     		return false;
     	}
@@ -193,8 +193,8 @@ function can_process()
 
                         if (check_negative_stock($bom_item["component"], -$quantity, $bom_item["loc_code"], $_POST['date_']))
                 		{
-                			display_error(_("The work order cannot be processed because there is an insufficient quantity for component:") .
-                				" " . $bom_item["component"] . " - " .  $bom_item["description"] . ".  " . _("Location:") . " " . $bom_item["location_name"]);
+                			display_error(__("The work order cannot be processed because there is an insufficient quantity for component:") .
+                				" " . $bom_item["component"] . " - " .  $bom_item["description"] . ".  " . __("Location:") . " " . $bom_item["location_name"]);
 							set_focus('quantity');
         					return false;
                 		}
@@ -206,7 +206,7 @@ function can_process()
         		// if unassembling, check item to unassemble
                 if (check_negative_stock($_POST['stock_id'], -input_num('quantity'), $_POST['StockLocation'], $_POST['date_']))
         		{
-        			display_error(_("The selected item cannot be unassembled because there is insufficient stock."));
+        			display_error(__("The selected item cannot be unassembled because there is insufficient stock."));
 					return false;
         		}
         	}
@@ -217,7 +217,7 @@ function can_process()
     	if (!is_date($_POST['RequDate']))
     	{
 			set_focus('RequDate');
-    		display_error( _("The date entered is in an invalid format."));
+    		display_error( __("The date entered is in an invalid format."));
     		return false;
 		}
     	if (isset($selected_id))
@@ -225,7 +225,7 @@ function can_process()
     		if ($_POST['units_issued'] > input_num('quantity'))
     		{
 				set_focus('quantity');
-    			display_error(_("The quantity cannot be changed to be less than the quantity already manufactured for this order."));
+    			display_error(__("The quantity cannot be changed to be less than the quantity already manufactured for this order."));
         		return false;
     		}
     	}
@@ -274,7 +274,7 @@ if (isset($_POST['delete']))
 		work_order_has_issues($selected_id)	||
 		work_order_has_payments($selected_id))
 	{
-		display_error(_("This work order cannot be deleted because it has already been processed."));
+		display_error(__("This work order cannot be deleted because it has already been processed."));
 		$cancel_delete = true;
 	}
 
@@ -317,7 +317,7 @@ if (isset($selected_id))
 
 	if ($myrow === false)
 	{
-		echo _("The order number sent is not valid.");
+		echo __("The order number sent is not valid.");
 		safe_exit();
 	}
 
@@ -325,7 +325,7 @@ if (isset($selected_id))
 	if ($myrow["closed"] == 1)
 	{
 		echo "<center>";
-		display_error(_("This work order is closed and cannot be edited."));
+		display_error(__("This work order is closed and cannot be edited."));
 		safe_exit();
 	}
 
@@ -351,17 +351,17 @@ if (isset($selected_id))
 	hidden('released_date', $_POST['released_date']);
 	hidden('selected_id',  $selected_id);
 
-	label_row(_("Reference:"), $_POST['wo_ref']);
-	label_row(_("Type:"), $wo_types_array[$_POST['type']]);
+	label_row(__("Reference:"), $_POST['wo_ref']);
+	label_row(__("Type:"), $wo_types_array[$_POST['type']]);
 	hidden('type', $myrow["type"]);
 }
 else
 {
 	$_POST['units_issued'] = $_POST['released'] = 0;
 
-	ref_row(_("Reference:"), 'wo_ref', '', $Refs->get_next(ST_WORKORDER, null, get_post('date_')), false, ST_WORKORDER);
+	ref_row(__("Reference:"), 'wo_ref', '', $Refs->get_next(ST_WORKORDER, null, get_post('date_')), false, ST_WORKORDER);
 
-	wo_types_list_row(_("Type:"), 'type', null);
+	wo_types_list_row(__("Type:"), 'type', null);
 }
 
 if (get_post('released'))
@@ -370,16 +370,16 @@ if (get_post('released'))
 	hidden('StockLocation', $_POST['StockLocation']);
 	hidden('type', $_POST['type']);
 
-	label_row(_("Item:"), $myrow["StockItemName"]);
-	label_row(_("Destination Location:"), $myrow["location_name"]);
+	label_row(__("Item:"), $myrow["StockItemName"]);
+	label_row(__("Destination Location:"), $myrow["location_name"]);
 }
 else
 {
-	stock_manufactured_items_list_row(_("Item:"), 'stock_id', null, false, true);
+	stock_manufactured_items_list_row(__("Item:"), 'stock_id', null, false, true);
 	if (list_updated('stock_id'))
 		$Ajax->activate('quantity');
 
-	locations_list_row(_("Destination Location:"), 'StockLocation', null);
+	locations_list_row(__("Destination Location:"), 'StockLocation', null);
 }
 
 if (!isset($_POST['quantity']))
@@ -390,16 +390,16 @@ else
 
 if (get_post('type') == WO_ADVANCED)
 {
-    qty_row(_("Quantity Required:"), 'quantity', null, null, null, $dec);
+    qty_row(__("Quantity Required:"), 'quantity', null, null, null, $dec);
     if ($_POST['released'])
-    	label_row(_("Quantity Manufactured:"), number_format($_POST['units_issued'], get_qty_dec($_POST['stock_id'])));
-    date_row(_("Date") . ":", 'date_', '', true);
-	date_row(_("Date Required By") . ":", 'RequDate', '', null, $SysPrefs->default_wo_required_by());
+    	label_row(__("Quantity Manufactured:"), number_format($_POST['units_issued'], get_qty_dec($_POST['stock_id'])));
+    date_row(__("Date") . ":", 'date_', '', true);
+	date_row(__("Date Required By") . ":", 'RequDate', '', null, $SysPrefs->default_wo_required_by());
 }
 else
 {
-    qty_row(_("Quantity:"), 'quantity', null, null, null, $dec);
-    date_row(_("Date") . ":", 'date_', '', true);
+    qty_row(__("Quantity:"), 'quantity', null, null, null, $dec);
+    date_row(__("Date") . ":", 'date_', '', true);
 	hidden('RequDate', '');
 
 	if (!isset($_POST['Labour']) || list_updated('stock_id') || list_updated('type'))
@@ -414,16 +414,16 @@ else
 	}
 
 	amount_row($wo_cost_types[WO_LABOUR], 'Labour');
-	gl_all_accounts_list_row(_("Credit Labour Account"), 'cr_lab_acc', null);
+	gl_all_accounts_list_row(__("Credit Labour Account"), 'cr_lab_acc', null);
 	amount_row($wo_cost_types[WO_OVERHEAD], 'Costs');
-	gl_all_accounts_list_row(_("Credit Overhead Account"), 'cr_acc', null);
+	gl_all_accounts_list_row(__("Credit Overhead Account"), 'cr_acc', null);
 
 }
 
 if (get_post('released'))
-	label_row(_("Released On:"),$_POST['released_date']);
+	label_row(__("Released On:"),$_POST['released_date']);
 
-textarea_row(_("Memo:"), 'memo_', null, 40, 5);
+textarea_row(__("Memo:"), 'memo_', null, 40, 5);
 
 end_table(1);
 
@@ -431,18 +431,18 @@ if (isset($selected_id))
 {
 	echo "<table align=center><tr>";
 
-	submit_cells('UPDATE_ITEM', _("Update"), '', _('Save changes to work order'), 'default');
+	submit_cells('UPDATE_ITEM', __("Update"), '', __('Save changes to work order'), 'default');
 	if (get_post('released'))
 	{
-		submit_cells('close', _("Close This Work Order"),'','',true);
+		submit_cells('close', __("Close This Work Order"),'','',true);
 	}
-	submit_cells('delete', _("Delete This Work Order"),'','',true);
+	submit_cells('delete', __("Delete This Work Order"),'','',true);
 
 	echo "</tr></table>";
 }
 else
 {
-	submit_center('ADD_ITEM', _("Add Workorder"), true, '', 'default');
+	submit_center('ADD_ITEM', __("Add Workorder"), true, '', 'default');
 }
 
 end_form();

@@ -62,7 +62,7 @@ function add_work_order_issue($woid, $ref, $to_work_order, $items, $location, $w
 			$ivaccount = $stockitem["cogs_account"];
 
         $total_cost += add_gl_trans_std_cost(ST_MANUISSUE, $number, $date_, $ivaccount, 0, 0,
-                $date_.": "._("Issue of")." ".$stockitem["description"], -$issue_cost);
+                $date_.": ".__("Issue of")." ".$stockitem["description"], -$issue_cost);
 	}
 
     $stockitem = get_item($wo['stock_id']);
@@ -70,7 +70,7 @@ function add_work_order_issue($woid, $ref, $to_work_order, $items, $location, $w
    	$wip_account = $stockitem["wip_account"];
 
     add_gl_trans_std_cost(ST_MANUISSUE, $number, $date_, $wip_account,
-        0, 0, $date_.": "._("Issue to")." ".$stockitem["description"], -$total_cost);
+        0, 0, $date_.": ".__("Issue to")." ".$stockitem["description"], -$total_cost);
 
 	if ($memo_)
 		add_comments(ST_MANUISSUE, $number, $date_, $memo_);

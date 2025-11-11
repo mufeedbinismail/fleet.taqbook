@@ -63,7 +63,7 @@ function print_credits()
 	$cur = get_company_Pref('curr_default');
 
 	if ($email == 0)
-		$rep = new FrontReport(_('CREDIT NOTE'), "InvoiceBulk", user_pagesize(), 9, $orientation);
+		$rep = new FrontReport(__('CREDIT NOTE'), "InvoiceBulk", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
@@ -85,7 +85,7 @@ function print_credits()
 		if ($email == 1)
 		{
 			$rep = new FrontReport("", "", user_pagesize(), 9, $orientation);
-			$rep->title = _('CREDIT NOTE');
+			$rep->title = __('CREDIT NOTE');
 			$rep->filename = "CreditNote" . $myrow['reference'] . ".pdf";
 		}
 		$rep->currency = $cur;
@@ -141,13 +141,13 @@ function print_credits()
 		$rep->row = $rep->bottomMargin + (15 * $rep->lineHeight);
 		$doctype = ST_CUSTCREDIT;
 
-		$rep->TextCol(3, 6, _("Sub-total"), -2);
+		$rep->TextCol(3, 6, __("Sub-total"), -2);
 		$rep->TextCol(6, 7,	$DisplaySubTot, -2);
 		$rep->NewLine();
 		if ($myrow['ov_freight'] != 0.0)
 		{
 			$DisplayFreight = number_format2($sign*$myrow["ov_freight"],$dec);
-			$rep->TextCol(3, 6, _("Shipping"), -2);
+			$rep->TextCol(3, 6, __("Shipping"), -2);
 			$rep->TextCol(6, 7,	$DisplayFreight, -2);
 			$rep->NewLine();
 		}
@@ -170,7 +170,7 @@ function print_credits()
 				{
 					if ($first)
 					{
-						$rep->TextCol(3, 6, _("Total Tax Excluded"), -2);
+						$rep->TextCol(3, 6, __("Total Tax Excluded"), -2);
 						$rep->TextCol(6, 7,	number_format2($sign*$tax_item['net_amount'], $dec), -2);
 						$rep->NewLine();
 					}
@@ -179,7 +179,7 @@ function print_credits()
 					$first = false;
 				}
 				else
-					$rep->TextCol(3, 7, _("Included") . " " . $tax_type_name . _("Amount") . ": " . $DisplayTax, -2);
+					$rep->TextCol(3, 7, __("Included") . " " . $tax_type_name . __("Amount") . ": " . $DisplayTax, -2);
 			}
 			else
 			{
@@ -192,7 +192,7 @@ function print_credits()
 		$DisplayTotal = number_format2($sign*($myrow["ov_freight"] + $myrow["ov_gst"] +
 			$myrow["ov_amount"]+$myrow["ov_freight_tax"]),$dec);
 		$rep->Font('bold');
-		$rep->TextCol(3, 6, _("TOTAL CREDIT"), - 2);
+		$rep->TextCol(3, 6, __("TOTAL CREDIT"), - 2);
 		$rep->TextCol(6, 7, $DisplayTotal, -2);
 		$words = price_in_words($myrow['Total'], ST_CUSTCREDIT);
 		if ($words != "")

@@ -94,7 +94,7 @@ function update_material_cost($stock_id, $qty, $unit_cost, $date)
 
 		$cart->reference = $Refs->get_next(ST_COSTUPDATE, null, $cart->tran_date);
 
-		$cart->memo_ = sprintf(_("COGS changed from %s to %s for %d %s of '%s'"), $avg_cost, $unit_cost, $qty_delayed, $item['units'], $stock_id);
+		$cart->memo_ = sprintf(__("COGS changed from %s to %s for %d %s of '%s'"), $avg_cost, $unit_cost, $qty_delayed, $item['units'], $stock_id);
 
 		$cart->add_gl_item($item["cogs_account"], $item["dimension_id"], $item["dimension2_id"], -$diff);
 		$cart->add_gl_item($item["inventory_account"], 0, 0, $diff);
@@ -236,7 +236,7 @@ function void_wo_costing($wo_id)
 		$date = Today();
 		$type = $row['trans_type'];
 		$trans_no = $row['trans_no'];
-		$memo = sprintf(_("Voided WO #%s"), $wo_id);
+		$memo = sprintf(__("Voided WO #%s"), $wo_id);
 		void_gl_trans($type, $trans_no, true);
 		add_audit_trail($type, $trans_no, $date, $memo);
 		add_voided_entry($type, $trans_no, $date, $memo);

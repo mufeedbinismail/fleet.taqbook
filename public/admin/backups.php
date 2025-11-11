@@ -17,7 +17,7 @@ require_once __DIR__ . "/../admin/db/maintenance_db.inc";
 
 if (get_post('view')) {
 	if (!get_post('backups')) {
-		display_error(_('Select backup file first.'));
+		display_error(__('Select backup file first.'));
 	} else {
 		$filename = $SysPrefs->backup_dir() . clean_file_name(get_post('backups'));
 		if (in_ajax()) 
@@ -32,10 +32,10 @@ if (get_post('download')) {
 	if (get_post('backups')) {
 		download_file($SysPrefs->backup_dir().clean_file_name(get_post('backups')));
 	} else
-		display_error(_("Select backup file first."));
+		display_error(__("Select backup file first."));
 }
 
-page(_($GLOBALS['help_context'] = "Backup and Restore Database"), false, false, '', '');
+page(__($GLOBALS['help_context'] = "Backup and Restore Database"), false, false, '', '');
 
 check_paths();
 
@@ -44,9 +44,9 @@ function check_paths()
   global $SysPrefs;
 
 	if (!file_exists($SysPrefs->backup_dir())) {
-		display_error (_("Backup paths have not been set correctly.") 
-			._("Please contact System Administrator.")."<br>" 
-			. _("cannot find backup directory") . " - " . $SysPrefs->backup_dir() . "<br>");
+		display_error (__("Backup paths have not been set correctly.") 
+			.__("Please contact System Administrator.")."<br>" 
+			. __("cannot find backup directory") . " - " . $SysPrefs->backup_dir() . "<br>");
 		end_page();
 		throw new \App\Exceptions\Legacy\FlowTerminatedException;
 	}
@@ -58,10 +58,10 @@ function generate_backup($conn, $ext='no', $comm='')
 
 	$filename = db_backup($conn, $ext, $comm, $SysPrefs->backup_dir());
 	if ($filename)
-		display_notification(_("Backup successfully generated."). ' '
-			. _("Filename") . ": " . $filename);
+		display_notification(__("Backup successfully generated."). ' '
+			. __("Filename") . ": " . $filename);
 	else
-		display_error(_("Database backup failed."));
+		display_error(__("Database backup failed."));
 
 	return $filename;
 }
@@ -94,7 +94,7 @@ function get_backup_file_combo()
 
 function compress_list_row($label, $name, $value=null)
 {
-	$ar_comps = array('no'=>_("No"));
+	$ar_comps = array('no'=>__("No"));
 
     if (function_exists("gzcompress"))
     	$ar_comps['zip'] = "zip";
@@ -110,7 +110,7 @@ function download_file($filename)
 {
     if (empty($filename) || !file_exists($filename))
     {
-		display_error(_('Select backup file first.'));
+		display_error(__('Select backup file first.'));
         throw new \App\Exceptions\Legacy\FlowTerminatedException;
     }
     
@@ -134,23 +134,23 @@ if (get_post('creat')) {
 if (get_post('restore')) {
 	if ($backup_name) {
 		if (db_import($backup_path, $conn, true, false, check_value('protect')))
-			display_notification(_("Restore backup completed."));
+			display_notification(__("Restore backup completed."));
 		$SysPrefs->refresh(); // re-read system setup
 	} else
-		display_error(_("Select backup file first."));
+		display_error(__("Select backup file first."));
 }
 
 if (get_post('deldump')) {
 	if ($backup_name) {
 		if (unlink($backup_path)) {
-			display_notification(_("File successfully deleted.")." "
-					. _("Filename") . ": " . $backup_name);
+			display_notification(__("File successfully deleted.")." "
+					. __("Filename") . ": " . $backup_name);
 			$Ajax->activate('backups');
 		}
 		else
-			display_error(_("Can't delete backup file."));
+			display_error(__("Can't delete backup file."));
 	} else
-		display_error(_("Select backup file first."));
+		display_error(__("Select backup file first."));
 }
 
 if (get_post('upload'))
@@ -160,54 +160,54 @@ if (get_post('upload'))
 
 	if ($fname) {
 		if (!preg_match("/\.sql(\.zip|\.gz)?$/", $fname))
-			display_error(_("You can only upload *.sql backup files"));
+			display_error(__("You can only upload *.sql backup files"));
 		elseif ($fname != clean_file_name($fname))
-			display_error(_("Filename contains forbidden chars. Please rename file and try again."));
+			display_error(__("Filename contains forbidden chars. Please rename file and try again."));
 		elseif (is_uploaded_file($tmpname)) {
 			rename($tmpname, $SysPrefs->backup_dir() . $fname);
-			display_notification(_("File uploaded to backup directory"));
+			display_notification(__("File uploaded to backup directory"));
 			$Ajax->activate('backups');
 		} else
-			display_error(_("File was not uploaded into the system."));
+			display_error(__("File was not uploaded into the system."));
 	} else
-		display_error(_("Select backup file first."));
+		display_error(__("Select backup file first."));
 
 }
 //-------------------------------------------------------------------------------
 start_form(true, true);
 start_outer_table(TABLESTYLE2);
 table_section(1);
-table_section_title(_("Create backup"));
-	textarea_row(_("Comments:"), 'comments', null, 30, 8);
-	compress_list_row(_("Compression:"),'comp');
+table_section_title(__("Create backup"));
+	textarea_row(__("Comments:"), 'comments', null, 30, 8);
+	compress_list_row(__("Compression:"),'comp');
 	vertical_space("height='20px'");
-	submit_row('creat',_("Create Backup"), false, "colspan=2 align='center'", '', 'process');
+	submit_row('creat',__("Create Backup"), false, "colspan=2 align='center'", '', 'process');
 table_section(2);
-table_section_title(_("Backup scripts maintenance"));
+table_section_title(__("Backup scripts maintenance"));
 
 	start_row();
 	echo "<td style='padding-left:20px' align='left'>".get_backup_file_combo()."</td>";
 	echo "<td style='padding-left:20px' valign='top'>";
 	start_table();
-	submit_row('view',_("View Backup"), false, '', '', false);
-	submit_row('download',_("Download Backup"), false, '', '', 'download');
-	submit_row('restore',_("Restore Backup"), false, '','', 'process');
-	submit_js_confirm('restore',_("You are about to restore database from backup file.\nDo you want to continue?"));
+	submit_row('view',__("View Backup"), false, '', '', false);
+	submit_row('download',__("Download Backup"), false, '', '', 'download');
+	submit_row('restore',__("Restore Backup"), false, '','', 'process');
+	submit_js_confirm('restore',__("You are about to restore database from backup file.\nDo you want to continue?"));
 
-	submit_row('deldump', _("Delete Backup"), false, '','', true);
+	submit_row('deldump', __("Delete Backup"), false, '','', true);
 	// don't use 'delete' name or IE js errors appear
-	submit_js_confirm('deldump', sprintf(_("You are about to remove selected backup file.\nDo you want to continue ?")));
+	submit_js_confirm('deldump', sprintf(__("You are about to remove selected backup file.\nDo you want to continue ?")));
 	end_table();
 	echo "</td>";
 	end_row();
 start_row();
 	echo "<td style='padding-left:20px'  cspan=2>"
-	. radio(_('Update security settings'), 'protect', 0) . '<br>'
-	. radio(_('Protect security settings'), 'protect', 1, true) . "</td>";
+	. radio(__('Update security settings'), 'protect', 0) . '<br>'
+	. radio(__('Protect security settings'), 'protect', 1, true) . "</td>";
 end_row();
 start_row();
 	echo "<td style='padding-left:20px' align='left'><input name='uploadfile' type='file'></td>";
-	submit_cells('upload',_("Upload file"),"style='padding-left:20px'", '', true);
+	submit_cells('upload',__("Upload file"),"style='padding-left:20px'", '', true);
 end_row();
 end_outer_table();
 

@@ -25,9 +25,9 @@ if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(800, 500);
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($GLOBALS['help_context'] = "Bank Account Inquiry"), isset($_GET['bank_account']) && !isset($_GET['TransAfterDate']), false, "", $js, false, "", true);
+page(__($GLOBALS['help_context'] = "Bank Account Inquiry"), isset($_GET['bank_account']) && !isset($_GET['TransAfterDate']), false, "", $js, false, "", true);
 
-check_db_has_bank_accounts(_("There are no bank accounts defined in the system."));
+check_db_has_bank_accounts(__("There are no bank accounts defined in the system."));
 
 //-----------------------------------------------------------------------------------
 // Ajax updates
@@ -45,12 +45,12 @@ start_form();
 start_table(TABLESTYLE_NOBORDER);
 start_row();
 if (!$page_nested)
-	bank_accounts_list_cells(_("Account:"), 'bank_account', null);
+	bank_accounts_list_cells(__("Account:"), 'bank_account', null);
 
-date_cells(_("From:"), 'TransAfterDate', '', null, -user_transaction_days());
-date_cells(_("To:"), 'TransToDate');
+date_cells(__("From:"), 'TransAfterDate', '', null, -user_transaction_days());
+date_cells(__("To:"), 'TransToDate');
 
-submit_cells('Show',_("Show"),'', '', 'default');
+submit_cells('Show',__("Show"),'', '', 'default');
 end_row();
 end_table();
 end_form();
@@ -71,15 +71,15 @@ if (!$page_nested)
 
 start_table(TABLESTYLE);
 
-$th = array(_("Type"), _("#"), _("Reference"), _("Date"),
-	_("Debit"), _("Credit"), _("Balance"), _("Person/Item"), _("Memo"), "", "");
+$th = array(__("Type"), __("#"), __("Reference"), __("Date"),
+	__("Debit"), __("Credit"), __("Balance"), __("Person/Item"), __("Memo"), "", "");
 table_header($th);
 
 $bfw = get_balance_before_for_bank_account($_POST['bank_account'], $_POST['TransAfterDate']);
 
 $credit = $debit = 0;
 start_row("class='inquirybg' style='font-weight:bold'");
-label_cell(_("Opening Balance")." - ".$_POST['TransAfterDate'], "colspan=4");
+label_cell(__("Opening Balance")." - ".$_POST['TransAfterDate'], "colspan=4");
 display_debit_or_credit_cells($bfw);
 label_cell("");
 label_cell("", "colspan=4");
@@ -130,7 +130,7 @@ while ($myrow = db_fetch($result))
 //end of while loop
 
 start_row("class='inquirybg' style='font-weight:bold'");
-label_cell(_("Ending Balance")." - ". $_POST['TransToDate'], "colspan=4");
+label_cell(__("Ending Balance")." - ". $_POST['TransToDate'], "colspan=4");
 amount_cell($debit);
 amount_cell(-$credit);
 //display_debit_or_credit_cells($running_total);

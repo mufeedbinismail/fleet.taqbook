@@ -35,7 +35,7 @@ function help_url($context=null)
 	}
 
 	if (@$SysPrefs->old_style_help)
-		$help_page_url = _($help_page_url);
+		$help_page_url = __($help_page_url);
 
 	if ($clean)
 		$help_page_url = access_string($help_page_url, true);

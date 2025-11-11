@@ -12,15 +12,15 @@
 $GLOBALS['page_security'] = 'SA_BOM';
 require_once __DIR__ . "/../../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "Bill Of Materials"));
+page(__($GLOBALS['help_context'] = "Bill Of Materials"));
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
 require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../includes/data_checks.inc";
 
-check_db_has_bom_stock_items(_("There are no manufactured or kit items defined in the system."));
+check_db_has_bom_stock_items(__("There are no manufactured or kit items defined in the system."));
 
-check_db_has_workcentres(_("There are no work centres defined in the system. BOMs require at least one work centre be defined."));
+check_db_has_workcentres(__("There are no work centres defined in the system. BOMs require at least one work centre be defined."));
 
 simple_page_mode(true);
 $selected_component = $selected_id;
@@ -39,8 +39,8 @@ function display_bom_items($selected_parent)
 	$result = get_bom($selected_parent);
 	div_start('bom');
 	start_table(TABLESTYLE, "width='60%'");
-	$th = array(_("Code"), _("Description"), _("Location"),
-		_("Work Centre"), _("Quantity"), _("Units"),'','');
+	$th = array(__("Code"), __("Description"), __("Location"),
+		__("Work Centre"), __("Quantity"), __("Units"),'','');
 	table_header($th);
 
 	$k = 0;
@@ -56,8 +56,8 @@ function display_bom_items($selected_parent)
         label_cell($myrow["WorkCentreDescription"]);
         qty_cell($myrow["quantity"], false, get_qty_dec($myrow["component"]));
         label_cell($myrow["units"]);
- 		edit_button_cell("Edit".$myrow['id'], _("Edit"));
- 		delete_button_cell("Delete".$myrow['id'], _("Delete"));
+ 		edit_button_cell("Edit".$myrow['id'], __("Edit"));
+ 		delete_button_cell("Delete".$myrow['id'], __("Delete"));
         end_row();
 
 	} //END WHILE LIST LOOP
@@ -65,7 +65,7 @@ function display_bom_items($selected_parent)
 	
 	if ($found) {
 		start_table(TABLESTYLE, "width='60%'");
-		stock_manufactured_items_list_row(_("Copy BOM to another manufacturable item"), 'new_stock_id', $selected_parent, false, true);
+		stock_manufactured_items_list_row(__("Copy BOM to another manufacturable item"), 'new_stock_id', $selected_parent, false, true);
 		end_table();
 	}
 
@@ -91,7 +91,7 @@ function on_submit($selected_parent, $selected_component=-1)
 {
 	if (!check_num('quantity', 0))
 	{
-		display_error(_("The quantity entered must be numeric and greater than zero."));
+		display_error(__("The quantity entered must be numeric and greater than zero."));
 		set_focus('quantity');
 		return;
 	}
@@ -100,7 +100,7 @@ function on_submit($selected_parent, $selected_component=-1)
 	{
 		update_bom($selected_parent, $selected_component, $_POST['workcentre_added'], $_POST['loc_code'],
 			input_num('quantity'));
-		display_notification(_('Selected component has been updated'));
+		display_notification(__('Selected component has been updated'));
 		$Mode = 'RESET';
 	}
 	else
@@ -120,19 +120,19 @@ function on_submit($selected_parent, $selected_component=-1)
 			{
 				add_bom($selected_parent, $_POST['component'], $_POST['workcentre_added'],
 					$_POST['loc_code'], input_num('quantity'));
-				display_notification(_("A new component part has been added to the bill of material for this item."));
+				display_notification(__("A new component part has been added to the bill of material for this item."));
 				$Mode = 'RESET';
 			}
 			else
 			{
 				/*The component must already be on the bom */
-				display_error(_("The selected component is already on this bom. You can modify it's quantity but it cannot appear more than once on the same bom."));
+				display_error(__("The selected component is already on this bom. You can modify it's quantity but it cannot appear more than once on the same bom."));
 			}
 
 		} //end of if its not a recursive bom
 		else
 		{
-			display_error(_("The selected component is a parent of the current item. Recursive BOMs are not allowed."));
+			display_error(__("The selected component is a parent of the current item. Recursive BOMs are not allowed."));
 		}
 	}
 }
@@ -143,7 +143,7 @@ if ($Mode == 'Delete')
 {
 	delete_bom($selected_id);
 
-	display_notification(_("The component item has been deleted from this bom"));
+	display_notification(__("The component item has been deleted from this bom"));
 	$Mode = 'RESET';
 }
 
@@ -160,7 +160,7 @@ if (list_updated('new_stock_id')) {
 	$item = get_item($_POST['new_stock_id']);
 	$_POST['stock_id'] = $_POST['new_stock_id'];
 	$Ajax->activate('_page_body');
-	display_notification(_("BOM copied to ") . $item['description']);
+	display_notification(__("BOM copied to ") . $item['description']);
 }
 
 start_form();
@@ -168,7 +168,7 @@ start_form();
 start_form(false, true);
 start_table(TABLESTYLE_NOBORDER);
 start_row();
-stock_manufactured_items_list_cells(_("Select a manufacturable item:"), 'stock_id', null, false, true);
+stock_manufactured_items_list_cells(__("Select a manufacturable item:"), 'stock_id', null, false, true);
 end_row();
 if (list_updated('stock_id'))
 {
@@ -205,14 +205,14 @@ start_form();
 			$_POST['component'] = $myrow["component"]; // by Tom Moulton
 			$_POST['workcentre_added']  = $myrow["workcentre_added"];
 			$_POST['quantity'] = number_format2($myrow["quantity"], get_qty_dec($myrow["component"]));
-			label_row(_("Component:"), $myrow["component"] . " - " . $myrow["description"]);
+			label_row(__("Component:"), $myrow["component"] . " - " . $myrow["description"]);
 		}
 		hidden('selected_id', $selected_id);
 	}
 	else
 	{
 		start_row();
-		label_cell(_("Component:"), "class='label'");
+		label_cell(__("Component:"), "class='label'");
 
 		echo "<td>";
 		echo stock_component_items_list('component', $selected_parent, null, false, true);
@@ -225,11 +225,11 @@ start_form();
 	}
 //	hidden('stock_id', $selected_parent);
 
-	locations_list_row(_("Location to Draw From:"), 'loc_code', null);
-	workcenter_list_row(_("Work Centre Added:"), 'workcentre_added', null);
+	locations_list_row(__("Location to Draw From:"), 'loc_code', null);
+	workcenter_list_row(__("Work Centre Added:"), 'workcentre_added', null);
 	$dec = get_qty_dec(get_post('component'));
 	$_POST['quantity'] = number_format2(input_num('quantity',1), $dec);
-	qty_row(_("Quantity:"), 'quantity', null, null, null, $dec);
+	qty_row(__("Quantity:"), 'quantity', null, null, null, $dec);
 
 	end_table(1);
 	submit_add_or_update_center($selected_id == -1, '', 'both');

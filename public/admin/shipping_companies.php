@@ -11,7 +11,7 @@
 ***********************************************************************/
 $GLOBALS['page_security'] = 'SA_SHIPPING';
 require __DIR__ . "/../includes/session.inc";
-page(_($GLOBALS['help_context'] = "Shipping Company"));
+page(__($GLOBALS['help_context'] = "Shipping Company"));
 require_once __DIR__ . "/../includes/ui.inc";
 require_once __DIR__ . "/../admin/db/shipping_db.inc";
 
@@ -22,7 +22,7 @@ function can_process()
 {
 	if (strlen($_POST['shipper_name']) == 0) 
 	{
-		display_error(_("The shipping company name cannot be empty."));
+		display_error(__("The shipping company name cannot be empty."));
 		set_focus('shipper_name');
 		return false;
 	}
@@ -33,7 +33,7 @@ function can_process()
 if ($Mode=='ADD_ITEM' && can_process()) 
 {
 	add_shipper($_POST['shipper_name'], $_POST['contact'], $_POST['phone'], $_POST['phone2'], $_POST['address']);
-	display_notification(_('New shipping company has been added'));
+	display_notification(__('New shipping company has been added'));
 	$Mode = 'RESET';
 }
 
@@ -42,7 +42,7 @@ if ($Mode=='ADD_ITEM' && can_process())
 if ($Mode=='UPDATE_ITEM' && can_process()) 
 {
 	update_shipper($selected_id, $_POST['shipper_name'], $_POST['contact'], $_POST['phone'], $_POST['phone2'], $_POST['address']);
-	display_notification(_('Selected shipping company has been updated'));
+	display_notification(__('Selected shipping company has been updated'));
 	$Mode = 'RESET';
 }
 
@@ -55,7 +55,7 @@ if ($Mode == 'Delete')
 	if (key_in_foreign_table($selected_id, 'sales_orders', 'ship_via'))
 	{
 		$cancel_delete = 1;
-		display_error(_("Cannot delete this shipping company because sales orders have been created using this shipper."));
+		display_error(__("Cannot delete this shipping company because sales orders have been created using this shipper."));
 	} 
 	else 
 	{
@@ -63,12 +63,12 @@ if ($Mode == 'Delete')
 		if (key_in_foreign_table($selected_id, 'debtor_trans', 'ship_via'))
 		{
 			$cancel_delete = 1;
-			display_error(_("Cannot delete this shipping company because invoices have been created using this shipping company."));
+			display_error(__("Cannot delete this shipping company because invoices have been created using this shipping company."));
 		} 
 		else 
 		{
 			delete_shipper($selected_id);
-			display_notification(_('Selected shipping company has been deleted'));
+			display_notification(__('Selected shipping company has been deleted'));
 		}
 	}
 	$Mode = 'RESET';
@@ -87,7 +87,7 @@ $result = get_shippers(check_value('show_inactive'));
 
 start_form();
 start_table(TABLESTYLE);
-$th = array(_("Name"), _("Contact Person"), _("Phone Number"), _("Secondary Phone"), _("Address"), "", "");
+$th = array(__("Name"), __("Contact Person"), __("Phone Number"), __("Secondary Phone"), __("Address"), "", "");
 inactive_control_column($th);
 table_header($th);
 
@@ -102,8 +102,8 @@ while ($myrow = db_fetch($result))
 	label_cell($myrow["phone2"]);
 	label_cell($myrow["address"]);
 	inactive_control_cell($myrow["shipper_id"], $myrow["inactive"], 'shippers', 'shipper_id');
- 	edit_button_cell("Edit".$myrow["shipper_id"], _("Edit"));
- 	delete_button_cell("Delete".$myrow["shipper_id"], _("Delete"));
+ 	edit_button_cell("Edit".$myrow["shipper_id"], __("Edit"));
+ 	delete_button_cell("Delete".$myrow["shipper_id"], __("Delete"));
 	end_row();
 }
 
@@ -130,15 +130,15 @@ if ($selected_id != -1)
 	hidden('selected_id', $selected_id);
 }
 
-text_row_ex(_("Name:"), 'shipper_name', 40);
+text_row_ex(__("Name:"), 'shipper_name', 40);
 
-text_row_ex(_("Contact Person:"), 'contact', 30);
+text_row_ex(__("Contact Person:"), 'contact', 30);
 
-text_row_ex(_("Phone Number:"), 'phone', 32, 30);
+text_row_ex(__("Phone Number:"), 'phone', 32, 30);
 
-text_row_ex(_("Secondary Phone Number:"), 'phone2', 32, 30);
+text_row_ex(__("Secondary Phone Number:"), 'phone2', 32, 30);
 
-text_row_ex(_("Address:"), 'address', 50);
+text_row_ex(__("Address:"), 'address', 50);
 
 end_table(1);
 

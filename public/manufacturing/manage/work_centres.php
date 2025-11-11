@@ -12,7 +12,7 @@
 $GLOBALS['page_security'] = 'SA_WORKCENTRES';
 require __DIR__ . "/../../includes/session.inc";
 
-page(_($GLOBALS['help_context'] = "Work Centres"));
+page(__($GLOBALS['help_context'] = "Work Centres"));
 
 require_once __DIR__ . "/../../manufacturing/includes/manufacturing_db.inc";
 
@@ -30,7 +30,7 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
 	if (strlen($_POST['name']) == 0) 
 	{
 		$input_error = 1;
-		display_error(_("The work centre name cannot be empty."));
+		display_error(__("The work centre name cannot be empty."));
 		set_focus('name');
 	}
 
@@ -40,12 +40,12 @@ if ($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM')
     	if ($selected_id != -1) 
     	{
     		update_work_centre($selected_id, $_POST['name'], $_POST['description']);
-			display_notification(_('Selected work center has been updated'));
+			display_notification(__('Selected work center has been updated'));
     	} 
     	else 
     	{
     		add_work_centre($_POST['name'], $_POST['description']);
-			display_notification(_('New work center has been added'));
+			display_notification(__('New work center has been added'));
     	}
 		$Mode = 'RESET';
 	}
@@ -57,13 +57,13 @@ function can_delete($selected_id)
 {
 	if (key_in_foreign_table($selected_id, 'bom', 'workcentre_added'))
 	{
-		display_error(_("Cannot delete this work centre because BOMs have been created referring to it."));
+		display_error(__("Cannot delete this work centre because BOMs have been created referring to it."));
 		return false;
 	}
 
 	if (key_in_foreign_table($selected_id, 'wo_requirements', 'workcentre'))	
 	{
-		display_error(_("Cannot delete this work centre because work order requirements have been created referring to it."));
+		display_error(__("Cannot delete this work centre because work order requirements have been created referring to it."));
 		return false;
 	}		
 	
@@ -79,7 +79,7 @@ if ($Mode == 'Delete')
 	if (can_delete($selected_id))
 	{
 		delete_work_centre($selected_id);
-		display_notification(_('Selected work center has been deleted'));
+		display_notification(__('Selected work center has been deleted'));
 	}
 	$Mode = 'RESET';
 }
@@ -97,7 +97,7 @@ $result = get_all_work_centres(check_value('show_inactive'));
 
 start_form();
 start_table(TABLESTYLE, "width='50%'");
-$th = array(_("Name"), _("description"), "", "");
+$th = array(__("Name"), __("description"), "", "");
 inactive_control_column($th);
 table_header($th);
 
@@ -110,8 +110,8 @@ while ($myrow = db_fetch($result))
 	label_cell($myrow["name"]);
 	label_cell($myrow["description"]);
 	inactive_control_cell($myrow["id"], $myrow["inactive"], 'workcentres', 'id');
- 	edit_button_cell("Edit".$myrow['id'], _("Edit"));
- 	delete_button_cell("Delete".$myrow['id'], _("Delete"));
+ 	edit_button_cell("Edit".$myrow['id'], __("Edit"));
+ 	delete_button_cell("Delete".$myrow['id'], __("Delete"));
 	end_row();
 }
 
@@ -133,8 +133,8 @@ if ($selected_id != -1)
 	hidden('selected_id', $selected_id);
 } 
 
-text_row_ex(_("Name:"), 'name', 40);
-text_row_ex(_("Description:"), 'description', 50);
+text_row_ex(__("Name:"), 'name', 40);
+text_row_ex(__("Description:"), 'description', 50);
 
 end_table(1);
 

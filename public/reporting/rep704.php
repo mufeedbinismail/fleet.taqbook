@@ -67,7 +67,7 @@ function print_GL_transactions()
 		require_once __DIR__ . "/../reporting/includes/pdf_report.inc";
 	$orientation = ($orientation ? 'L' : 'P');
 
-	$rep = new FrontReport(_('GL Account Transactions'), "GLAccountTransactions", user_pagesize(), 9, $orientation);
+	$rep = new FrontReport(__('GL Account Transactions'), "GLAccountTransactions", user_pagesize(), 9, $orientation);
 	$dec = user_price_dec();
 
 	if ($dim == 2)
@@ -75,50 +75,50 @@ function print_GL_transactions()
 		$cols = array(0, 65, 105, 125, 175, 230, 290, 345, 405, 465, 525);
 		//------------0--1---2----3----4----5----6----7----8----9----10-------
 		//------------------------dim1-dim2-----------------------------------
-		$headers = array(_('Type'),	_('Ref'), _('#'),	_('Date'), _('Dimension')." 1", _('Dimension')." 2",
-			_('Person/Item'), _('Debit'),	_('Credit'), _('Balance'));
+		$headers = array(__('Type'),	__('Ref'), __('#'),	__('Date'), __('Dimension')." 1", __('Dimension')." 2",
+			__('Person/Item'), __('Debit'),	__('Credit'), __('Balance'));
 	}
 	elseif ($dim == 1)
 	{
 		$cols = array(0, 65, 105, 125, 175, 260, 260, 345, 405, 465, 525);
 		//------------0--1---2----3----4----5----6----7----8----9----10-------
 		//------------------------dim1----------------------------------------
-		$headers = array(_('Type'),	_('Ref'), _('#'),	_('Date'), _('Dimension'), "", _('Person/Item'),
-			_('Debit'),	_('Credit'), _('Balance'));
+		$headers = array(__('Type'),	__('Ref'), __('#'),	__('Date'), __('Dimension'), "", __('Person/Item'),
+			__('Debit'),	__('Credit'), __('Balance'));
 	}
 	else
 	{
 		$cols = array(0, 65, 105, 125, 175, 175, 175, 345, 405, 465, 525);
 		//------------0--1---2----3----4----5----6----7----8----9----10-------
 		//--------------------------------------------------------------------
-		$headers = array(_('Type'),	_('Ref'), _('#'),	_('Date'), "", "", _('Person/Item'),
-			_('Debit'),	_('Credit'), _('Balance'));
+		$headers = array(__('Type'),	__('Ref'), __('#'),	__('Date'), "", "", __('Person/Item'),
+			__('Debit'),	__('Credit'), __('Balance'));
 	}
 	$aligns = array('left', 'left', 'left',	'left',	'left',	'left',	'left',	'right', 'right', 'right');
 
 	if ($dim == 2)
 	{
     	$params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'), 'from' => $from, 'to' => $to),
-    				    2 => array('text' => _('Accounts'),'from' => $fromacc,'to' => $toacc),
-                    	3 => array('text' => _('Dimension')." 1", 'from' => get_dimension_string($dimension),
+    				    1 => array('text' => __('Period'), 'from' => $from, 'to' => $to),
+    				    2 => array('text' => __('Accounts'),'from' => $fromacc,'to' => $toacc),
+                    	3 => array('text' => __('Dimension')." 1", 'from' => get_dimension_string($dimension),
                             'to' => ''),
-                    	4 => array('text' => _('Dimension')." 2", 'from' => get_dimension_string($dimension2),
+                    	4 => array('text' => __('Dimension')." 2", 'from' => get_dimension_string($dimension2),
                             'to' => ''));
     }
     elseif ($dim == 1)
     {
     	$params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'), 'from' => $from, 'to' => $to),
-    				    2 => array('text' => _('Accounts'),'from' => $fromacc,'to' => $toacc),
-                    	3 => array('text' => _('Dimension'), 'from' => get_dimension_string($dimension),
+    				    1 => array('text' => __('Period'), 'from' => $from, 'to' => $to),
+    				    2 => array('text' => __('Accounts'),'from' => $fromacc,'to' => $toacc),
+                    	3 => array('text' => __('Dimension'), 'from' => get_dimension_string($dimension),
                             'to' => ''));
     }
     else
     {
     	$params =   array( 	0 => $comments,
-    				    1 => array('text' => _('Period'), 'from' => $from, 'to' => $to),
-    				    2 => array('text' => _('Accounts'),'from' => $fromacc,'to' => $toacc));
+    				    1 => array('text' => __('Period'), 'from' => $from, 'to' => $to),
+    				    2 => array('text' => __('Accounts'),'from' => $fromacc,'to' => $toacc));
     }
     if ($orientation == 'L')
     	recalculate_cols($cols);
@@ -148,7 +148,7 @@ function print_GL_transactions()
 			continue;
 		$rep->Font('bold');
 		$rep->TextCol(0, 4,	$account['account_code'] . " " . $account['account_name'], -2);
-		$rep->TextCol(4, 6, _('Opening Balance'));
+		$rep->TextCol(4, 6, __('Opening Balance'));
 		if ($prev_balance > 0.0)
 			$rep->AmountCol(7, 8, abs($prev_balance), $dec);
 		else
@@ -196,7 +196,7 @@ function print_GL_transactions()
 			$rep->NewLine();
 		}
 		$rep->Font('bold');
-		$rep->TextCol(4, 6,	_("Ending Balance"));
+		$rep->TextCol(4, 6,	__("Ending Balance"));
 		if ($total > 0.0)
 			$rep->AmountCol(7, 8, abs($total), $dec);
 		else

@@ -24,7 +24,7 @@ if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
 if (user_use_date_picker())
 	$js .= get_js_date_picker();
-page(_($GLOBALS['help_context'] = "Work Order Additional Costs"), false, false, "", $js);
+page(__($GLOBALS['help_context'] = "Work Order Additional Costs"), false, false, "", $js);
 
 if (isset($_GET['trans_no']) && $_GET['trans_no'] != "")
 {
@@ -38,15 +38,15 @@ if (isset($_GET['AddedID']))
 	$id = $_GET['AddedID'];
 	$stype = ST_WORKORDER;
 
-	display_notification(_("The additional cost has been entered."));
+	display_notification(__("The additional cost has been entered."));
 
-    display_note(get_trans_view_str($stype, $id, _("View this Work Order")));
+    display_note(get_trans_view_str($stype, $id, __("View this Work Order")));
 
-   	display_note(get_gl_view_str($stype, $id, _("View the GL Journal Entries for this Work Order")), 1);
+   	display_note(get_gl_view_str($stype, $id, __("View the GL Journal Entries for this Work Order")), 1);
 
-	hyperlink_params("work_order_costs.php", _("Enter another additional cost."), "trans_no=$id");
+	hyperlink_params("work_order_costs.php", __("Enter another additional cost."), "trans_no=$id");
  
- 	hyperlink_no_params("search_work_orders.php", _("Select another &Work Order to Process"));
+ 	hyperlink_no_params("search_work_orders.php", __("Select another &Work Order to Process"));
  	br();
 
 	end_page();
@@ -59,7 +59,7 @@ $wo_details = get_work_order($_POST['selected_id'], true);
 
 if ($wo_details === false)
 {
-	display_error(_("The order number sent is not valid."));
+	display_error(__("The order number sent is not valid."));
 	throw new \App\Exceptions\Legacy\FlowTerminatedException;
 }
 
@@ -69,26 +69,26 @@ function can_process($wo_details)
 {
 	if (input_num('costs')<=0)
 	{
-		display_error(_("The amount entered is not a valid number or less then zero."));
+		display_error(__("The amount entered is not a valid number or less then zero."));
 		set_focus('costs');
 		return false;
 	}
 
 	if (!is_date($_POST['date_']))
 	{
-		display_error(_("The entered date is invalid."));
+		display_error(__("The entered date is invalid."));
 		set_focus('date_');
 		return false;
 	}
 	elseif (!is_date_in_fiscalyear($_POST['date_']))
 	{
-		display_error(_("The entered date is out of fiscal year or is closed for further data entry."));
+		display_error(__("The entered date is out of fiscal year or is closed for further data entry."));
 		set_focus('date_');
 		return false;
 	}
 	if (date_diff2(sql2date($wo_details["released_date"]), $_POST['date_'], "d") > 0)
 	{
-		display_error(_("The additional cost date cannot be before the release date of the work order."));
+		display_error(__("The additional cost date cannot be before the release date of the work order."));
 		set_focus('date_');
 		return false;
 	}
@@ -129,10 +129,10 @@ start_table(TABLESTYLE2);
 br();
 
 
-date_row(_("Date:"), 'date_');
-ref_row(_("Reference:"), 'ref', '');
+date_row(__("Date:"), 'date_');
+ref_row(__("Reference:"), 'ref', '');
 
-yesno_list_row(_("Type:"), 'PaymentType', null,	$wo_cost_types[WO_OVERHEAD], $wo_cost_types[WO_LABOUR], true);
+yesno_list_row(__("Type:"), 'PaymentType', null,	$wo_cost_types[WO_OVERHEAD], $wo_cost_types[WO_LABOUR], true);
 if (list_updated('PaymentType'))
 	$Ajax->activate('costs');
 
@@ -141,14 +141,14 @@ $r = get_default_bank_account(get_company_pref('curr_default'));
 $_POST['cr_acc'] = $r['account_code'];
 $_POST['costs'] = price_format(get_post('PaymentType')==WO_OVERHEAD ? $item['overhead_cost'] : $item['labour_cost']);
 
-amount_row(_("Additional Costs:"), 'costs');
-gl_all_accounts_list_row(_("Credit Account"), 'cr_acc', null);
-textarea_row(_("Memo:"), 'memo', null, 40, 5);
+amount_row(__("Additional Costs:"), 'costs');
+gl_all_accounts_list_row(__("Credit Account"), 'cr_acc', null);
+textarea_row(__("Memo:"), 'memo', null, 40, 5);
 end_table(1);
 hidden('dim1', $item["dimension_id"]);
 hidden('dim2', $item["dimension2_id"]);
 
-submit_center('process', _("Process Additional Cost"), true, '', true);
+submit_center('process', __("Process Additional Cost"), true, '', true);
 
 end_form();
 
