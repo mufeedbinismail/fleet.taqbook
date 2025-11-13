@@ -44,6 +44,18 @@ function root_path(string $path = ''): string
     return $path ? PATH_TO_ROOT . '/' . ltrim($path, '/') : PATH_TO_ROOT;
 }
 
+/**
+ * Get the legacy language service instance
+ * 
+ * @return \App\Services\LegacyLanguageService
+ */
+function language()
+{
+    static $language;
+    return $language ??= new \App\Services\LegacyLanguageService;
+}
+
+
 function session_invalidate()
 {
     if ($_SESSION instanceof \App\Session\Store) {

@@ -185,4 +185,25 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Application Locales
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the locales that will be supported by the application.
+    |
+    */
+    'locales' => [
+        'en' => 'English',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application RTL Locales
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the RTL locales that will be supported by the application.
+    |
+    */
+    'rtl_locales' => ['ar', 'he', 'fa', 'ur'],
 ];
