@@ -67,7 +67,7 @@ function get_mysql_encoding_name($encoding)
 function get_mysql_collation($lang=null)
 {
 	if (!$lang)
-		$lang = 'utf8_'.substr($_SESSION['language']->code, 0, 2);
+		$lang = 'utf8_'.substr(language()->getLocale(), 0, 2);
 
 	$db_collation = array(
 		'utf8_is' => 'utf8_icelandic_ci',

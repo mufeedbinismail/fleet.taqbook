@@ -53,14 +53,12 @@ function defaultCompany()
 	$login_timeout = $_SESSION["wa_current_user"]->last_act;
 
 	$title = $login_timeout ? __('Authorization timeout') : $SysPrefs->app_title." ".$version." - ".__("Login");
-	$encoding = isset($_SESSION['language']->encoding) ? $_SESSION['language']->encoding : "iso-8859-1";
-	$rtl = isset($_SESSION['language']->dir) ? $_SESSION['language']->dir : "ltr";
 	$onload = !$login_timeout ? "onload='defaultCompany()'" : "";
 
 	echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n";
-	echo "<html dir='$rtl' >\n";
+	echo "<html dir='".language()->getDir()."' >\n";
 	echo "<head profile=\"http://www.w3.org/2005/10/profile\"><title>$title</title>\n";
-   	echo "<meta http-equiv='Content-type' content='text/html; charset=$encoding' >\n";
+   	echo "<meta http-equiv='Content-type' content='text/html; charset='".language()->getEncoding()."' >\n";
 	echo "<link href='".url("/themes/$def_theme/default.css")."' rel='stylesheet' type='text/css'> \n";
  	echo "<link href='".url('/themes/default/images/favicon.ico')."' rel='icon' type='image/x-icon'> \n";
 	send_scripts();

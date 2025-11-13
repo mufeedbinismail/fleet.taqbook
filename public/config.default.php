@@ -147,7 +147,7 @@
 	$graph_skin 	= 1;
 
 	/* UTF-8 font for Business Graphics. Copy it to /reporting/fonts/ folder. */
-	$UTF8_fontfile	= isset($_SESSION['language']) && $_SESSION['language']->dir == 'rtl' ? "zarnormal.ttf" : "FreeSans.ttf"; // for  Dashboard
+	$UTF8_fontfile	= language()->isRtl() ? "zarnormal.ttf" : "FreeSans.ttf"; // for  Dashboard
 
 /* 
 	Display a dropdown select box for choosing Company to login if false.

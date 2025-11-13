@@ -46,14 +46,14 @@ class user_prefs
 	{
 		if ($user == null) { 
 			// set default values, used before login
-			global $dflt_lang, $SysPrefs;
+			global $SysPrefs;
 
 			$this->date_sep = $SysPrefs->dflt_date_sep;
 			$this->date_format = $SysPrefs->dflt_date_fmt;
 			$this->tho_sep = 0;
 			$this->dec_sep = 0;
 			$this->price_dec = 2;
-			$this->language = $dflt_lang;
+			$this->language = language()->getLocale();
 			$this->theme = 'default';
 			$this->transaction_days = -30;
 			$this->save_report_selections = 0;
@@ -63,7 +63,6 @@ class user_prefs
 
 		} else {
 			$this->language = $user["language"];
-			$_SESSION['language']->set_language($this->language);
 
 			$this->qty_dec = $user["qty_dec"];
 			$this->price_dec = $user["prices_dec"];

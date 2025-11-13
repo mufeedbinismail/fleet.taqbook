@@ -27,8 +27,6 @@ print_workorders();
 
 function print_workorders()
 {
-	global $dflt_lang;
-
 	require_once __DIR__ . "/../reporting/includes/pdf_report.inc";
 
 	$from = $_POST['PARAM_0'];
@@ -74,8 +72,13 @@ function print_workorders()
 		$rep->Font();
 		$rep->Info($params, $cols, null, $aligns);
 
-		$contact = array('email' =>$myrow['email'],'lang' => $dflt_lang, // ???
-			'name' => $myrow['contact'], 'name2' => '', 'contact');
+		$contact = array(
+            'email' => $myrow['email'],
+            'lang' => language()->getLocale(),
+			'name' => $myrow['contact'],
+            'name2' => '',
+            'contact'
+        );
 
 		$rep->SetCommonData($myrow, null, null, '', 26, $contact);
 		$rep->SetHeaderType('Header2');

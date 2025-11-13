@@ -223,7 +223,7 @@ class FrontReport extends Cpdf
 		$this->scaleLogoWidth = false; // if Logo, scale on width (else height).
 		$this->SetHeaderType('Header'); // default
 
-		parent::__construct($size, $_SESSION['language']->code, $orientation);
+		parent::__construct($size, language()->getLocale(), $orientation);
 	}
 	
 	/*
@@ -436,15 +436,9 @@ class FrontReport extends Cpdf
 	*/
 	function Header2()
 	{
-		global $dflt_lang; // FIXME should be passed as params
-
-		$this->SetLang(@$this->formData['rep_lang'] ? $this->formData['rep_lang'] : $dflt_lang);
+		$this->SetLang(@$this->formData['rep_lang'] ?: language()->getLocale());
 		$doctype = $this->formData['doctype'];
 		$header2type = true;
-
-		$lang = user_language();
-		$this->SetLang(@$this->formData['rep_lang'] ? $this->formData['rep_lang']
- 			: ( $lang ? $lang : $dflt_lang));
 
  		 // leave layout files names without path to enable including
  		 // modified versions from company/x/reporting directory
@@ -998,7 +992,7 @@ class FrontReport extends Cpdf
 							continue;
 						$emailtype = true;
 						$this->SetLang($contact['lang']);
-						$coy_name = @html_entity_decode($this->company['coy_name'], ENT_QUOTES, $_SESSION['language']->encoding=='iso-8859-2' ? 'ISO-8859-1' : $_SESSION['language']->encoding);
+						$coy_name = @html_entity_decode($this->company['coy_name'], ENT_QUOTES, language()->getEncoding());
 
 						require_once __DIR__ . "/../../reporting/includes/class.mail.inc";
     					$mail = new email(str_replace(",", "", $coy_name),

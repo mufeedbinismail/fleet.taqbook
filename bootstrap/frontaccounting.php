@@ -10,7 +10,6 @@ require_once __DIR__.'/../public/includes/current_user.inc';
 require_once __DIR__.'/../public/includes/db_pager.inc';
 require_once __DIR__.'/../public/includes/prefs/sysprefs.inc';
 require_once __DIR__.'/../public/includes/prefs/userprefs.inc';
-require_once __DIR__.'/../public/includes/lang/language.inc';
 require_once __DIR__.'/../public/includes/ui/allocation_cart.inc';
 require_once __DIR__.'/../public/includes/ui/items_cart.inc';
 require_once __DIR__.'/../public/sales/includes/cart_class.inc';

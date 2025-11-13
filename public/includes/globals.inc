@@ -1,9 +1,6 @@
 <?php
 
 return [
-    // Language and interface globals
-    'installed_languages'  => [['code' => 'C', 'name' => 'English', 'encoding' => 'iso-8859-1']],
-    'dflt_lang'            => 'C',
     'lang'                 => null,
     
     // Database globals
@@ -88,7 +85,6 @@ return [
     'qoh_stock'            => null,
     'Ajax'                 => null,
     'systypes_array'       => [],
-    'GetText'              => null,
     'wo_types'             => [],
     'type_shortcuts'       => [],
     'page_security'        => null,

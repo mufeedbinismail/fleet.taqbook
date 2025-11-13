@@ -5,7 +5,7 @@
     Version:        1.0
     last modified:  2004-05-14
 
-    Autor:          Daniel Käfer
+    Autor:          Daniel Kï¿½fer
     Homepage:       http://www.danielkaefer.de
 
     Leave this header in this file!
@@ -54,7 +54,7 @@ class email
     function encode($txt)
     {
 
-        $opts = array('input-charset' => $_SESSION['language']->encoding,
+        $opts = array('input-charset' => language()->getEncoding(),
             'output-charest' => 'utf-8', // utf-8 works always nowadays
             'line-length'=>  72,
             'linebreak-chars'=>'\n',

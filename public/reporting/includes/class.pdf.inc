@@ -79,44 +79,39 @@ class Cpdf extends FPDI {
 	*/
 	function SetLang($code=null) 
 	{
-		global $installed_languages, $dflt_lang, $local_path_to_root, $GetText;
+		$lang = language();
 
-		if (!$code)
-			$code = $dflt_lang;
+        if (!$code) {
+            $code = $lang->getLocale();
+        }
 
-		$lang = array_search_value($code, $installed_languages, 'code');
-		$GetText->set_language($lang['code'], strtoupper($lang['encoding']));
+        if ($code != $lang->getLocale()) {
+            $lang->setLocale($code);
+        }
 
-		// $local_path_to_root is  set inside find_custom_file.
-		// Select extension domain if po file is provided
-		// otherwise use global translation.
-		if (file_exists($local_path_to_root.'/lang/'.$lang['code'].'/LC_MESSAGES/'.$lang['code'].'.po'))
-			$GetText->add_domain($lang['code'], $local_path_to_root . "/lang");
-		else
-			$GetText->add_domain($lang['code'], PATH_TO_ROOT . "/lang", @$lang['version']);
 		// re-read translated sys names.
 		require __DIR__ . '/../../includes/sysnames.inc';
 
-		$l = array('a_meta_charset' => strtoupper($lang['encoding']), 
-			'a_meta_dir' => @$lang['rtl'] ? 'rtl' : 'ltr',
-	 		'a_meta_language' => $code, 'w_page' => 'page');
-
-		if (!isset($l['a_meta_charset']))
-			$l = array('a_meta_charset' => 'ISO-8859-1', 'a_meta_dir' => 'ltr', 'a_meta_language' => 'en_GB', 'w_page' => 'page');
+		$l = array(
+            'a_meta_charset' => $lang->getEncoding(), 
+			'a_meta_dir' => $lang->getDir(),
+	 		'a_meta_language' => $lang->getLocale(),
+            'w_page' => 'page'
+        );
 		$enc = $l['a_meta_charset'];
 		$uni = ($enc == 'UTF-8' || $enc == 'GB2312' ? true : false);
-		if ($uni)
-			ini_set("memory_limit", "48M");
+		
+        if ($uni) ini_set("memory_limit", "48M");
 
 		$this->isunicode = $uni;
 		$this->setLanguageArray($l);
-		if ($uni)
-		{
-				global $unicode, $unicode_mirror, $unicode_arlet, $laa_array, $diacritics;
-				include_once(dirname(__FILE__)."/unicode_data2.php");
-		}
-		$this->encoding = strtoupper($lang['encoding']);
 
+		if ($uni) {
+            global $unicode, $unicode_mirror, $unicode_arlet, $laa_array, $diacritics;
+            include_once(dirname(__FILE__)."/unicode_data2.php");
+		}
+
+		$this->encoding = $enc;
 		$this->FontFamily = 'helvetica';
 		$this->FontStyle = '';
 		$this->FontSizePt = 12;

@@ -17,7 +17,6 @@ function help_url($context=null)
 
 	global $SysPrefs, $help_context;
 
-	$country = $_SESSION['language']->code;
 	$clean = 0;
 	
 	if ($context!=null)
@@ -43,7 +42,7 @@ function help_url($context=null)
 	return html_specials_encode(
 		$SysPrefs->help_base_url
 		.urlencode(strtr(ucwords($help_page_url), array(' '=>'', '/'=>'', '&'=>'And')))
-		.'&ctxhelp=1&lang='.$country);
+		.'&ctxhelp=1&lang='.language()->getLocale());
 }
 
 function send_css($css = '')
@@ -119,17 +118,12 @@ function page_header($title, $no_menu=false, $is_index=false, $onload="", $js=""
 		$_SESSION["App"]->selected_application = 
 			isset($_SESSION["App"]->applications[$sel_app]) ? $sel_app : 'orders';
 
-	$encoding = $_SESSION['language']->encoding;
-
-	if (!headers_sent()){
-		header("Content-type: text/html; charset=$encoding");
-	}
 	echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n";
-	echo "<html dir='" . $_SESSION['language']->dir . "' >\n";
+	echo "<html dir='" . language()->getDir() . "' >\n";
 	echo "<head profile=\"http://www.w3.org/2005/10/profile\"><title>$title</title>";
 	if (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0; rv:11.0') != -1) // IE 11 doesn't work with input file type in form.
 		echo "<meta http-equiv='X-UA-Compatible' content='IE=10'>\n";
-	echo "<meta http-equiv='Content-type' content='text/html; charset=$encoding'>";
+	echo "<meta http-equiv='Content-type' content='text/html; charset='".language()->getEncoding()."'>";
 	echo "<link href='".url("/themes/default/images/favicon.ico")."' rel='icon' type='image/x-icon'> \n";
 
     require_once __DIR__ . "/../../themes/$theme/renderer.php";

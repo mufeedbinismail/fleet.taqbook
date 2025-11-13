@@ -123,11 +123,11 @@ class Chart
 	function __construct($type = 1, $id = 'id', $width = 0, $height = 0)
 	{
 		global $SysPrefs;
-		$this->encoding = strtoupper($_SESSION['language']->encoding);
+		$this->encoding = strtoupper(language()->getEncoding());
 		//$this->encoding = "UTF-8"; // Use alternative if used in FA
-		$this->dir = $_SESSION['language']->dir;
+		$this->dir = language()->getDir();
 		//$this->dir = 'ltr';
-		$this->lang = $_SESSION['language']->code == 'C' ? 'en' : substr($_SESSION['language']->code, 0, 2);
+		$this->lang = language()->getLocale();
 		//$this->lang = 'en';
 		$this->path = dirname(__FILE__).'/../fonts/';
 		//$this->path = dirname(__FILE__).'/';
@@ -247,7 +247,7 @@ class Chart
 
 	function display($save="")
 	{
-		$this->encoding = strtoupper($_SESSION['language']->encoding);
+		$this->encoding = strtoupper(language()->getEncoding());
 		$this->title_height			= (!empty($this->title)) ? $this->tsize + 15 : 0;
 		$this->bar_width			= ($this->type == 1) ? 20 : 15;
 		$this->space_between_dots	= 40;

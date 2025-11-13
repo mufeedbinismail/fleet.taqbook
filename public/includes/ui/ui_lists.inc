@@ -1993,13 +1993,14 @@ function yesno_list_row($label, $name, $selected_id=null, $name_yes="", $name_no
 
 function languages_list($name, $selected_id=null, $all_option=false)
 {
-	global $installed_languages;
-
 	$items = array();
 	if ($all_option)
 		$items[''] = $all_option;
-	foreach ($installed_languages as $lang)
-			$items[$lang['code']] = $lang['name'];
+	
+	foreach (config('app.locales') as $code => $langName) {
+		$items[$code] = $langName;
+	}
+	
 	return array_selector($name, $selected_id, $items);
 }
 

@@ -85,8 +85,8 @@ class FrontReport extends Spreadsheet_Excel_Writer_Workbook
 		$this->y = 0;
 		$this->currency = '';
 		$this->excelColWidthFactor = $excelColWidthFactor;
-		$rtl = ($_SESSION['language']->dir == 'rtl');
-		$this->code = strtolower($_SESSION['language']->encoding);
+		$rtl = language()->isRtl();
+		$this->code = strtolower(language()->getEncoding());
 		$this->filename = $filename.".xls";
 		$this->unique_name = random_id().".xls";
 		$this->path = company_path(). '/pdf_files';
@@ -654,7 +654,7 @@ class FrontReport extends Spreadsheet_Excel_Writer_Workbook
 			$this->sheet = $this->addWorksheet();
 			if ($this->code != "iso-8859-1")
 				$this->sheet->setInputEncoding($this->code); // set sheet encoding
-			if ($_SESSION['language']->dir == 'rtl')
+			if (language()->isRtl())
 				$this->sheet->setRTL();
 			for ($i = 0; $i < $this->numcols; $i++)
 				$this->sheet->setColumn($i, $i, $this->px2units($this->cols[$i + 1] - $this->cols[$i]));

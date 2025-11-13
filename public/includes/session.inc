@@ -14,7 +14,7 @@ define('VARLOG_PATH', PATH_TO_ROOT.'/tmp');
 define('SECURE_ONLY', true); // if you really need also http (unsecure) access allowed, you can set this to NULL
 
 global $SysPrefs, $Ajax, $db_connections,
-    $installed_languages, $Validate, $Editors, $Pagehelp, $Refs,
+    $Validate, $Editors, $Pagehelp, $Refs,
     $lang, $db, $version, $cur_error_level;
 
 function output_html($text)
@@ -211,8 +211,7 @@ function strip_quotes($data)
 */
 function html_specials_encode($str)
 {
-	return htmlspecialchars($str, ENT_QUOTES, $_SESSION['language']->encoding=='iso-8859-2' ?
-		 'ISO-8859-1' : $_SESSION['language']->encoding);
+	return htmlspecialchars($str, ENT_QUOTES, language()->getEncoding());
 }
 
 function html_cleanup(&$parms)
@@ -251,7 +250,6 @@ set_error_handler('error_handler' /*, errtypes */);
 require_once __DIR__ . "/../includes/current_user.inc";
 require_once __DIR__ . "/../frontaccounting.php";
 require_once __DIR__ . "/../admin/db/security_db.inc";
-require_once __DIR__ . "/../includes/lang/language.inc";
 require_once __DIR__ . "/../config_db.php";
 require_once __DIR__ . "/../includes/ajax.inc";
 require_once __DIR__ . "/../includes/ui/ui_msgs.inc";
@@ -287,25 +285,10 @@ if ($SysPrefs->error_logfile != '') {
 // this is to fix the "back-do-you-want-to-refresh" issue - thanx PHPFreaks
 header("Cache-control: private");
 
-get_text_init();
-
 if ($SysPrefs->login_delay > 0 && file_exists(VARLIB_PATH."/faillog.php"))
 	include_once(VARLIB_PATH."/faillog.php");
 
 // Page Initialisation
-if (isset($dflt_lang) && isset($installed_languages))
-{
-	if (!isset($_SESSION['wa_current_user']) || !$_SESSION['wa_current_user']->logged_in()
-		|| !isset($_SESSION['language']) || !method_exists($_SESSION['language'], 'set_language'))
-	{
-		$l = array_search_value($dflt_lang, $installed_languages,  'code');
-		$_SESSION['language'] = new language($l['name'], $l['code'], $l['encoding'],
-	 	(isset($l['rtl']) && $l['rtl'] === true) ? 'rtl' : 'ltr');
-	}
-
-	$_SESSION['language']->set_language($_SESSION['language']->code);
-}
-
 require_once __DIR__ . "/../includes/access_levels.inc";
 require_once __DIR__ . "/../version.php";
 require_once __DIR__ . "/../includes/main.inc";
@@ -418,15 +401,13 @@ if (!defined('FA_LOGOUT_PHP_FILE')){
 			{
                 throw new \App\Exceptions\Legacy\FlowRedirectionException($_SESSION['timeout']['uri'], 307);
 			}
-			$lang = &$_SESSION['language'];
-			$lang->set_language($_SESSION['language']->code);
 		}
 	} else
 	{
 		set_global_connection();
 
 		if (db_fixed())
-			db_set_encoding($_SESSION['language']->encoding);
+			db_set_encoding(language()->getEncoding());
 
 		$SysPrefs->refresh();
 	}

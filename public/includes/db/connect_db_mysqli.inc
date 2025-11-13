@@ -136,7 +136,7 @@ function db_escape($value = "", $nullify = false)
 {
 	global $db;
 
-	$value = @html_entity_decode($value, ENT_QUOTES, $_SESSION['language']->encoding=='iso-8859-2' ? 'ISO-8859-1' : $_SESSION['language']->encoding);
+	$value = @html_entity_decode($value, ENT_QUOTES, language()->getEncoding());
 	$value = html_specials_encode($value);
 
   	//reset default if second parameter is skipped
@@ -274,12 +274,10 @@ function db_escape_function($string)
 */
 function db_set_encoding($ui_encoding=null)
 {
-	global $db, $dflt_lang, $installed_languages;
+	global $db;
 
-	if (!isset($ui_encoding))
-	{
-		$lang = array_search_value($dflt_lang, $installed_languages, 'code');
-		$ui_encoding = strtoupper($lang['encoding']);
+	if (empty($ui_encoding)) {
+		$ui_encoding = language()->getEncoding();
 	}
 
 	if ($mysql_enc = get_mysql_encoding_name($ui_encoding))

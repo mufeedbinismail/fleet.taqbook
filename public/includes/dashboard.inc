@@ -11,7 +11,7 @@
 ***********************************************************************/
 //$colors = array('#008cc9','#4db625','#ef5500','#eef100','#05c6e6', '#5ee66a'); // Current in Use 	 
 $colors = Chart::$palette;
-$align = $_SESSION['language']->dir == 'rtl' ? 'right' : 'left';
+$align = language()->isRtl() ? 'right' : 'left';
 $style = "<style>
 div.square {
 	display: inline-block;
@@ -389,13 +389,10 @@ function display_all()
 {
 	$today = calc_today();
 
-	table('100%', '33%');
+	table('100%', '50%');
 	echo "<div class='square square1'>".__('Users')."<p class='span1'>";
 	echo get_num_users()."</p></div>";
-	td('33%');
-	echo "<div class='square square1'>".__('Languages')."<p class='span1'>";
-	echo get_num_languages()."</p></div>";
-	td('33%');
+	td('50%');
 	echo "<div class='square square1'>".__('Database Size')."<p class='span1'>";
 	echo get_database_size()."</p></div>";
 	table_end();
@@ -1456,11 +1453,6 @@ function get_num_users()
 	return $row[0];
 }
 
-function get_num_languages()
-{
-	global $installed_languages;
-	return count($installed_languages);
-}
 
 function get_database_size()
 {

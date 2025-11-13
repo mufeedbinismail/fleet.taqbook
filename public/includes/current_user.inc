@@ -59,15 +59,13 @@ class current_user
 
 	function login($company, $loginname, $password)
 	{
-		global $security_areas, $dflt_lang, $SysPrefs;
+		global $security_areas, $SysPrefs;
 
 		$this->set_company($company);
 	    $this->logged = false;
 
 		set_global_connection($company);
-		$lang = &$_SESSION['language'];
-		$lang->set_language($_SESSION['language']->code);
-		db_set_encoding($_SESSION['language']->encoding);
+		db_set_encoding(language()->getEncoding());
 
 		$Auth_Result = get_user_auth($loginname, md5($password));
 
@@ -77,10 +75,10 @@ class current_user
 		if ($Auth_Result)
 		{
 			$myrow = get_user_by_login($loginname);
-			if ($myrow['language'] != $dflt_lang)
+			if ($myrow['language'] != language()->getLocale())
 			{	 // refresh language and user data
- 				$lang->set_language($myrow['language']);
-				db_set_encoding($_SESSION['language']->encoding);
+ 				language()->setLocale($myrow['language']);
+				db_set_encoding(language()->getEncoding());
 				$myrow = get_user_by_login($loginname);
 			}
 
@@ -397,7 +395,7 @@ function user_pos()
 
 function user_language()
 {
-	return $_SESSION["wa_current_user"]->prefs->language();
+	return language()->getLocale();
 }
 
 function user_qty_dec()
