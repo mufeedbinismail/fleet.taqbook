@@ -35,7 +35,7 @@ if (get_post('download')) {
 		display_error(__("Select backup file first."));
 }
 
-page(__($GLOBALS['help_context'] = "Backup and Restore Database"), false, false, '', '');
+page(__($GLOBALS['help_context'] = "Backup Database"), false, false, '', '');
 
 check_paths();
 
@@ -131,15 +131,6 @@ if (get_post('creat')) {
 	$SysPrefs->refresh(); // re-read system setup
 };
 
-if (get_post('restore')) {
-	if ($backup_name) {
-		if (db_import($backup_path, $conn, true, false, check_value('protect')))
-			display_notification(__("Restore backup completed."));
-		$SysPrefs->refresh(); // re-read system setup
-	} else
-		display_error(__("Select backup file first."));
-}
-
 if (get_post('deldump')) {
 	if ($backup_name) {
 		if (unlink($backup_path)) {
@@ -151,27 +142,6 @@ if (get_post('deldump')) {
 			display_error(__("Can't delete backup file."));
 	} else
 		display_error(__("Select backup file first."));
-}
-
-if (get_post('upload'))
-{
-	$tmpname = $_FILES['uploadfile']['tmp_name'];
-	$fname = trim(basename($_FILES['uploadfile']['name']));
-
-	if ($fname) {
-		if (!preg_match("/\.sql(\.zip|\.gz)?$/", $fname))
-			display_error(__("You can only upload *.sql backup files"));
-		elseif ($fname != clean_file_name($fname))
-			display_error(__("Filename contains forbidden chars. Please rename file and try again."));
-		elseif (is_uploaded_file($tmpname)) {
-			rename($tmpname, $SysPrefs->backup_dir() . $fname);
-			display_notification(__("File uploaded to backup directory"));
-			$Ajax->activate('backups');
-		} else
-			display_error(__("File was not uploaded into the system."));
-	} else
-		display_error(__("Select backup file first."));
-
 }
 //-------------------------------------------------------------------------------
 start_form(true, true);
@@ -191,24 +161,12 @@ table_section_title(__("Backup scripts maintenance"));
 	start_table();
 	submit_row('view',__("View Backup"), false, '', '', false);
 	submit_row('download',__("Download Backup"), false, '', '', 'download');
-	submit_row('restore',__("Restore Backup"), false, '','', 'process');
-	submit_js_confirm('restore',__("You are about to restore database from backup file.\nDo you want to continue?"));
-
 	submit_row('deldump', __("Delete Backup"), false, '','', true);
 	// don't use 'delete' name or IE js errors appear
 	submit_js_confirm('deldump', sprintf(__("You are about to remove selected backup file.\nDo you want to continue ?")));
 	end_table();
 	echo "</td>";
 	end_row();
-start_row();
-	echo "<td style='padding-left:20px'  cspan=2>"
-	. radio(__('Update security settings'), 'protect', 0) . '<br>'
-	. radio(__('Protect security settings'), 'protect', 1, true) . "</td>";
-end_row();
-start_row();
-	echo "<td style='padding-left:20px' align='left'><input name='uploadfile' type='file'></td>";
-	submit_cells('upload',__("Upload file"),"style='padding-left:20px'", '', true);
-end_row();
 end_outer_table();
 
 end_form();
