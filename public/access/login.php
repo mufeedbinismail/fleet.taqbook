@@ -9,167 +9,74 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-	require_once __DIR__ . "/../includes/ui.inc";
-	require_once __DIR__ . "/../includes/page/header.inc";
+require_once __DIR__ . "/../includes/ui.inc";
 
-	$js = "<script language='JavaScript' type='text/javascript'>
-function defaultCompany()
+add_js_file('login.js');
+
+// Display demo user name and password within login form if allow_demo_mode option is true
+if ($SysPrefs->allow_demo_mode == true)
 {
-	document.forms[0].company_login_name.options[".user_company()."].selected = true;
+    $demo_text = __("Login as user: demouser and password: password");
 }
-</script>";
-
-	add_js_file('login.js');
-	// Display demo user name and password within login form if allow_demo_mode option is true
-	if ($SysPrefs->allow_demo_mode == true)
-	{
-	    $demo_text = __("Login as user: demouser and password: password");
+else
+{
+	$demo_text = __("Please login here");
+	if (@$SysPrefs->allow_password_reset) {
+  		$demo_text .= " ".__("or")." <a href='".url('/index.php', ['reset' => 1])."'>".__("request new password")."</a>";
 	}
-	else
-	{
-		$demo_text = __("Please login here");
-    	if (@$SysPrefs->allow_password_reset) {
-      		$demo_text .= " ".__("or")." <a href='".url('/index.php', ['reset' => 1])."'>".__("request new password")."</a>";
-    	}
-	}
+}
 
-	if (check_faillog())
-	{
-		$blocked = true;
+$original_demo_text = $demo_text;
+$blocked = false;
 
-	    $js .= "<script>setTimeout(function() {
-	    	document.getElementsByName('SubmitUser')[0].disabled=0;
-	    	document.getElementById('log_msg').innerHTML='$demo_text'}, 1000*".$SysPrefs->login_delay.");</script>";
-	    $demo_text = '<span class="redfg">'.__('Too many failed login attempts.<br>Please wait a while or try later.').'</span>';
-	} elseif ($_SESSION["wa_current_user"]->login_attempt > 1) {
-		$demo_text = '<span class="redfg">'.__("Invalid password or username. Please, try again.").'</span>';
-	}
+if (check_faillog())
+{
+	$blocked = true;
+    $demo_text = '<span class="redfg">'.__('Too many failed login attempts.<br>Please wait a while or try later.').'</span>';
+} elseif ($_SESSION["wa_current_user"]->login_attempt > 1) {
+	$demo_text = '<span class="redfg">'.__("Invalid password or username. Please, try again.").'</span>';
+}
 
-	flush_dir(user_js_cache());
-	if (!isset($def_coy))
-		$def_coy = 0;
-	$def_theme = "default";
+flush_dir(user_js_cache());
+if (!isset($def_coy))
+	$def_coy = 0;
 
-	$login_timeout = $_SESSION["wa_current_user"]->last_act;
+$login_timeout = $_SESSION["wa_current_user"]->last_act;
 
-	$title = $login_timeout ? __('Authorization timeout') : $SysPrefs->app_title." ".$version." - ".__("Login");
-	$onload = !$login_timeout ? "onload='defaultCompany()'" : "";
+$username = $login_timeout ? $_SESSION['wa_current_user']->loginname : ($SysPrefs->allow_demo_mode ? "demouser":"");
 
-	echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n";
-	echo "<html dir='".language()->getDir()."' >\n";
-	echo "<head profile=\"http://www.w3.org/2005/10/profile\"><title>$title</title>\n";
-   	echo "<meta http-equiv='Content-type' content='text/html; charset='".language()->getEncoding()."' >\n";
-	echo "<link href='".url("/themes/$def_theme/default.css")."' rel='stylesheet' type='text/css'> \n";
- 	echo "<link href='".url('/themes/default/images/favicon.ico')."' rel='icon' type='image/x-icon'> \n";
-	send_scripts();
-	if (!$login_timeout)
-	{
-		echo $js;
-	}
+$allow = SECURE_ONLY !== true ? true : (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_NAME'] === "localhost";
 
-	echo "</head>\n";
+if (!$allow) {
+	$demo_text = '<span class="redfg">'.__("HTTP access is not allowed on this site. This is unsecure. If you really want to access this unsecure site then set the SECURE_ONLY to false in /includes/session.inc file.").'</span>';
+}
 
-	echo "<body id='loginscreen' $onload>\n";
+$password = $SysPrefs->allow_demo_mode ? "password":"";
 
-	echo "<table class='titletext'><tr><td>$title</td></tr></table>\n";
-	
-	div_start('_page_body');
-	br();br();
-	start_form(false, false, $_SESSION['timeout']['uri'], "loginform");
-	start_table(false, "class='login'");
+$coy = user_company();
+if (!isset($coy))
+	$coy = $def_coy;
 
-	start_row();
-	echo "<td align='center' colspan=2>";
-	if (!$login_timeout) { // FA logo
-    	echo "<a target='_blank' href='".$SysPrefs->power_url."'><img src='".url("/themes/$def_theme/images/logo_frontaccounting.png")."' alt='FrontAccounting' height='50' onload='fixPNG(this)' border='0' ></a>";
-	} else { 
-		echo "<font size=5>".__('Authorization timeout')."</font>";
-	} 
-	echo "</td>\n";
-	end_row();
-	if (!$login_timeout)
-		table_section_title(__("Version")." $version   Build ".$SysPrefs->build_version." - ".__("Login"));
+if (isset($_SESSION['wa_current_user'])) 
+	$date = Today() . " | " . Now();
+else	
+	$date = date("m/d/Y") . " | " . date("h.i am");
 
-	$value = $login_timeout ? $_SESSION['wa_current_user']->loginname : ($SysPrefs->allow_demo_mode ? "demouser":"");
+// Ensure db_connections is always set
+if (!isset($db_connections)) {
+	$db_connections = [];
+}
 
-	$allow = SECURE_ONLY !== true ? true : (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_NAME'] === "localhost";
-
-	if ($allow) {
-
-		text_row(__("User name"), "user_name_entry_field", $value, 20, 30);
-
-		$password = $SysPrefs->allow_demo_mode ? "password":"";
-
-		password_row(__("Password:"), 'password', $password);
-
-		if ($login_timeout) {
-			hidden('company_login_name', user_company());
-		} else {
-			$coy =  user_company();
-			if (!isset($coy))
-				$coy = $def_coy;
-			if (isset($db_connections)) {
-				if (!@$SysPrefs->text_company_selection) {
-					echo "<tr><td>".__("Company")."</td><td><select name='company_login_name'>\n";
-					for ($i = 0; $i < count($db_connections); $i++)
-						echo "<option value=$i ".($i==$coy ? 'selected':'') .">" . $db_connections[$i]["name"] . "</option>";
-					echo "</select>\n";
-					echo "</td></tr>";
-				} else {
-					text_row(__("Company"), "company_login_nickname", "", 20, 50);
-				}
-			}
-		}
-	}
- 	else {
-		$demo_text = '<span class="redfg">'.__("HTTP access is not allowed on this site. This is unsecure. If you really want to access this unsecure site then set the SECURE_ONLY to false in /includes/session.inc file.").'</span>';
-	}
-	start_row();
-	label_cell($demo_text, "colspan=2 align='center' id='log_msg'");
-	end_row();
-	end_table(1);
-	echo "<input type='hidden' id=ui_mode name='ui_mode' value='".!fallback_mode()."' >\n";
-	if ($allow) {
-		echo "<center><input type='submit' value='&nbsp;&nbsp;".__("Login -->")."&nbsp;&nbsp;' name='SubmitUser'"
-			." onclick='".(in_ajax() ? 'retry();': 'set_fullmode();')."'".(isset($blocked) ? " disabled" : '')." ></center>\n";
-	}		
-	foreach($_SESSION['timeout']['post'] as $p => $val) {
-		// add all request variables to be resend together with login data
-		if (!in_array($p, array('ui_mode', 'user_name_entry_field', 
-			'password', 'SubmitUser', 'company_login_name'))) 
-			if (!is_array($val))
-				echo "<input type='hidden' name='$p' value='$val'>";
-			else
-				foreach($val as $i => $v)
-					echo "<input type='hidden' name='{$p}[$i]' value='$v'>";
-	}
-	end_form(1);
-	$Ajax->addScript(true, "if (document.forms.length) document.forms[0].password.focus();");
-
-    echo "<script language='JavaScript' type='text/javascript'>
-    //<![CDATA[
-            <!--
-            document.forms[0].user_name_entry_field.select();
-            document.forms[0].user_name_entry_field.focus();
-            //-->
-    //]]>
-    </script>";
-    div_end();
-	echo "<table class='bottomBar'>\n";
-	echo "<tr>";
-	if (isset($_SESSION['wa_current_user'])) 
-		$date = Today() . " | " . Now();
-	else	
-		$date = date("m/d/Y") . " | " . date("h.i am");
-	echo "<td class='bottomBarCell'>$date</td>\n";
-	echo "</tr></table>\n";
-	echo "<table class='footer'>\n";
-	echo "<tr>\n";
-	echo "<td><a target='_blank' href='".$SysPrefs->power_url."' tabindex='-1'>".$SysPrefs->app_title." $version - " . __("Theme:") . " " . $def_theme . "</a></td>\n";
-	echo "</tr>\n";
-	echo "<tr>\n";
-	echo "<td><a target='_blank' href='".$SysPrefs->power_url."' tabindex='-1'>".$SysPrefs->power_by."</a></td>\n";
-	echo "</tr>\n";
-	echo "</table><br><br>\n";
-	echo "</body></html>\n";
-
+echo view('auth.login', compact(
+	'login_timeout',
+	'username', 
+	'allow',
+	'demo_text',
+	'original_demo_text',
+	'password',
+	'coy',
+	'db_connections',
+	'date',
+	'SysPrefs',
+	'blocked'
+))->render();
