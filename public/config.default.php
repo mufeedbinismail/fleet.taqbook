@@ -41,14 +41,14 @@
 	$select_trail 	= 0; // track also SELECT queries
 
 	// Main Title
-	$app_title = "FrontAccounting";
+	$app_title = "taqbook";
 
 	// Build for development purposes
 	$build_version 	= date("d.m.Y", filemtime(__DIR__."/CHANGELOG.txt"));
 
 	// Powered by
-	$power_by 		= "FrontAccounting";
-	$power_url 		= "http://frontaccounting.com";
+	$power_by 		= "taqbook";
+	$power_url 		= "#";
 
 	/* No check on edit conflicts. Maybe needed to be set to 1 in certains Windows Servers */
 	$no_check_edit_conflicts = 0;
@@ -80,7 +80,7 @@
 	// 	locally installed wiki module
 	// $help_base_url =  __DIR__.'/modules/wiki/index.php?n='.__('Help').'.';
 	// 	context help feed from frontaccounting.com
-	$help_base_url = 'http://frontaccounting.com/fawiki/index.php?n=Help.';
+	$help_base_url = '#?n=Help.';
 	// 	set to null if not used:
 	//	$help_base_url = null;
 

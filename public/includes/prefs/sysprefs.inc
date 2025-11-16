@@ -31,6 +31,11 @@ class sys_prefs extends stdClass
 		foreach(get_defined_vars() as $name => $value)
 			$this->$name = $value;
 
+        $this->app_title = config('app.name');
+        $this->power_by = config('app.name');
+        $this->power_url = '#';
+        $this->help_base_url = '#?n=Help';
+
 		if (!property_exists($this, 'time_zone') or !$this->time_zone)
 			$this->time_zone = ini_get('date.timezone');
 

@@ -16,7 +16,30 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => 'taqbook',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Version
+    |--------------------------------------------------------------------------
+    |
+    | This value is the version of your application. This value is used when the
+    | framework needs to place the application's version in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
+    'version' => '1.0.0',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Released At
+    |--------------------------------------------------------------------------
+    |
+    | This value is the date and time when the new version was released. 
+    | This value is used for tracking the application's release history.
+    | and potentially for tracking outdated versions.
+    */
+    'released_at' => '2025-11-16T21:37:50+04:00',
 
     /*
     |--------------------------------------------------------------------------
