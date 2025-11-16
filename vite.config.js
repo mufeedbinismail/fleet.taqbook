@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
-import postBuildPlugin from './vite-run-postbuild.js';
 
 export default defineConfig({
+    base: './',
     esbuild: {
         charset: 'ascii'
     },
@@ -16,6 +16,5 @@ export default defineConfig({
             ],
             refresh: true,
         }),
-        postBuildPlugin(),
     ],
 });

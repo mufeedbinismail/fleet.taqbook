@@ -11,7 +11,7 @@
 ***********************************************************************/
 function page_footer($no_menu=false, $is_index=false)
 {
-	global $js_lib, $Validate, $Editors, $Ajax, $sql_queries;
+	global $Validate, $Editors, $Ajax, $sql_queries;
 
 	require_once __DIR__ . "/../../themes/".user_theme()."/renderer.php";
 	$rend = new renderer();
@@ -27,17 +27,13 @@ function page_footer($no_menu=false, $is_index=false)
 	</script>";
 
    	add_user_js_data();
-	echo "\n<script type=\"text/javascript\"><!--\n";
-
-	foreach($js_lib as $text)
-	  	echo $text;
-	echo "\n--></script>\n";
 
 	if ($sql_queries) {
 		div_start('footer_debug');
 		 echo "<div class='note_msg'>$sql_queries</div>";
 		div_end();
 	}
-    echo "</body></html>\n";
+    
+    echo view('layout.partials.footer')->render();
 }
 

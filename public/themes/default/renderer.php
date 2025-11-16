@@ -9,213 +9,131 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-	class renderer
-	{
-		function get_icon($category)
-		{
-			global $SysPrefs;
+require_once __DIR__ . "/../../includes/date_functions.inc";
 
-			if ($SysPrefs->show_menu_category_icons)
-				$img = $category == '' ? 'right.gif' : $category.'.png';
-			else	
-				$img = 'right.gif';
-			return "<img src='".url("/themes/".user_theme()."/images/$img")."' style='vertical-align:middle;' border='0'>&nbsp;&nbsp;";
-		}
+class renderer
+{
+    function get_icon($category)
+    {
+        global $SysPrefs;
 
-		function wa_header()
-		{
-			page(__($GLOBALS['help_context'] = "Main Menu"), false, true);
-		}
+        if (!$SysPrefs->show_menu_category_icons) {
+            return '';
+        }
 
-		function wa_footer()
-		{
-			end_page(false, true);
-		}
+        $menuIconsMap = [
+            'menu_entry' => 'icon-data',
+            'menu_inquiry' => 'icon-view',
+            'menu_maintenance' => 'icon-setup-master',
+            'menu_report' => 'icon-reports',
+            'menu_settings' => 'icon-setup-master',
+            'menu_system' => 'icon-tools',
+            'menu_transaction' => 'icon-feature',
+            'menu_update' => 'icon-globe',
+            'money' => 'icon-banknote',
+        ];
 
-		function menu_header($title, $no_menu, $is_index)
-		{
-			global $SysPrefs, $db_connections;
-			echo "<table class='callout_main' border='0' cellpadding='0' cellspacing='0'>\n";
-			echo "<tr>\n";
-			echo "<td colspan='2' rowspan='2'>\n";
+        $icon = $menuIconsMap[$category] ?? 'icon-feature';
+        return "<span class='icon $icon'></span>&nbsp;&nbsp;";
+    }
 
-			echo "<table class='main_page' border='0' cellpadding='0' cellspacing='0'>\n";
-			echo "<tr>\n";
-			echo "<td>\n";
-			echo "<table width='100%' border='0' cellpadding='0' cellspacing='0'>\n";
-			echo "<tr>\n";
-			echo "<td class='quick_menu'>\n"; // tabs
+    function wa_header()
+    {
+        page(__($GLOBALS['help_context'] = "Main Menu"), false, true);
+    }
 
-			$indicator = url("/themes/".user_theme(). "/images/ajax-loader.gif");
-			if (!$no_menu)
-			{
-				$applications = $_SESSION['App']->applications;
-				$sel_app = $_SESSION['sel_app'];
-				echo "<table cellpadding='0' cellspacing='0' width='100%'><tr><td>";
-				echo "<div class='tabs'>";
-				foreach($applications as $app)
-				{
-                    if ($_SESSION["wa_current_user"]->check_application_access($app))
-                    {
-                        $acc = access_string($app->name);
-                        echo "<a class='".($sel_app == $app->id ? 'selected' : 'menu_tab')
-                            ."' href='".url("/index.php", ['application' => $app->id ])."' {$acc[1]}>{$acc[0]}</a>";
+    function wa_footer()
+    {
+        end_page(false, true);
+    }
+
+    function menu_header($title, $no_menu, $is_index)
+    {
+        echo view('layout.partials.app.header', [
+            'title' => $title,
+            'no_menu' => $no_menu,
+            'is_index' => $is_index
+        ])->render();
+    }
+
+    function menu_footer($no_menu, $is_index)
+    {
+        echo view('layout.partials.app.footer', [
+            'no_menu' => $no_menu,
+            'is_index' => $is_index
+        ])->render();
+    }
+
+    function display_applications(&$waapp)
+    {
+        $selected_app = $waapp->get_selected_application();
+        $user = $_SESSION["wa_current_user"];
+        if (!$user->check_application_access($selected_app)) {
+            return;
+        }
+
+        if (method_exists($selected_app, 'render_index')) {
+            $selected_app->render_index();
+            return;
+        }
+
+        echo "<div class='mx-auto p-4'>";
+        foreach ($selected_app->modules as $module) {
+            if (!$user->check_module_access($module)) {
+                continue;
+            }
+
+            echo "<div class='bg-white text-primary-txt shadow-md rounded-lg mb-4'>";
+            echo "<div class='bg-card-header-bg text-card-header-txt p-4 rounded-t-lg'>";
+            echo "<h2 class='text-lg font-semibold'>" . $module->name . "</h2>";
+            echo "</div>";
+            echo "<div class='p-4 grid grid-cols-1 md:grid-cols-2 gap-4'>";
+
+            echo "<div class='col-span-1'>";
+            echo "<div class='p-4 grid grid-cols-1'>";
+            foreach ($module->lappfunctions as $appfunction) {
+                $img = $this->get_icon($appfunction->category);
+                if ($appfunction->label == "") {
+                    echo "<div class='col-span-1'>&nbsp;<br></div>";
+                } elseif ($user->can_access_page($appfunction->access)) {
+                    $access = access_string($appfunction->label);
+                    echo "<div class='col-span-1 flex items-center'>";
+                    echo $img . "<a href='" . url($appfunction->link) . "' class='text-primary-txt hover:underline ml-2' {$access[1]}>{$access[0]}</a>";
+                    echo "</div>";
+                } elseif (!$user->hide_inaccessible_menu_items()) {
+                    echo "<div class='col-span-1 flex items-center'>";
+                    echo $img . "<span class='text-gray-500 ml-2'>" . access_string($appfunction->label, true) . "</span>";
+                    echo "</div>";
+                }
+            }
+            echo "</div>";
+            echo "</div>";
+
+            if (sizeof($module->rappfunctions) > 0) {
+                echo "<div class='col-span-1'>";
+                echo "<div class='p-4 grid grid-cols-1'>";
+                foreach ($module->rappfunctions as $appfunction) {
+                    $img = $this->get_icon($appfunction->category);
+                    if ($appfunction->label == "") {
+                        echo "<div class='col-span-1'>&nbsp;<br></div>";
+                    } elseif ($user->can_access_page($appfunction->access)) {
+                        $access = access_string($appfunction->label);
+                        echo "<div class='col-span-1 flex items-center'>";
+                        echo $img . "<a href='" . url($appfunction->link) . "' class='text-primary-txt hover:underline ml-2' {$access[1]}>{$access[0]}</a>";
+                        echo "</div>";
+                    } elseif (!$user->hide_inaccessible_menu_items()) {
+                        echo "<div class='col-span-1 flex items-center'>";
+                        echo $img . "<span class='text-gray-500 ml-2'>" . access_string($appfunction->label, true) . "</span>";
+                        echo "</div>";
                     }
-				}
-				echo "</div>";
-				echo "</td></tr></table>";
-				// top status bar
-				$rimg = "<img src='".url("/themes/".user_theme()."/images/report.png")."' style='width:14px;height:14px;border:0;vertical-align:middle;' alt='".__('Dashboard')."'>&nbsp;&nbsp;";
-				$pimg = "<img src='".url("/themes/".user_theme()."/images/preferences.gif")."' style='width:14px;height:14px; border:0;vertical-align:middle;' alt='".__('Preferences')."'>&nbsp;&nbsp;";
-				$limg = "<img src='".url("/themes/".user_theme()."/images/lock.gif")."' style='width:14px;height:14px;border:0;vertical-align:middle;' alt='".__('Change Password')."'>&nbsp;&nbsp;";
-				$img = "<img src='".url("/themes/".user_theme()."/images/login.gif")."' style='width:14px;height:14px;border:0;vertical-align:middle;' alt='".__('Logout')."'>&nbsp;&nbsp;";
-				$himg = "<img src='".url("/themes/".user_theme()."/images/help.gif")."' style='width:14px;height:14px;border:0;vertical-align:middle;'' alt='".__('Help')."'>&nbsp;&nbsp;";
-				echo "<table class='logoutBar'>";
-				echo "<tr><td class='headingtext3'>" . $db_connections[user_company()]["name"] . " | " . $_SERVER['SERVER_NAME'] . " | " . $_SESSION["wa_current_user"]->name . "</td>";
-				echo "<td class='logoutBarRight'><img id='ajaxmark' src='$indicator' align='center' style='visibility:hidden;' alt='ajaxmark'></td>";
-				echo "<td class='logoutBarRight'><a href='".url("/admin/dashboard.php", ['sel_app' => $sel_app])."'>$rimg" . __("Dashboard") . "</a>&nbsp;&nbsp;&nbsp;\n";
-				
-				echo "<a class='shortcut' href='".url("/admin/display_prefs.php")."'>$pimg" . __("Preferences") . "</a>&nbsp;&nbsp;&nbsp;\n";
-				echo "  <a class='shortcut' href='".url("/admin/change_current_user_password.php", ['selected_id' => $_SESSION["wa_current_user"]->username])."'>$limg" . __("Change password") . "</a>&nbsp;&nbsp;&nbsp;\n";
+                }
+                echo "</div>";
+                echo "</div>";
+            }
 
-				if ($SysPrefs->help_base_url != null)
-				{
-					echo "<a target = '_blank' onclick=" .'"'."javascript:openWindow(this.href,this.target); return false;".'" '. "href='". help_url()."'>$himg" . __("Help") . "</a>&nbsp;&nbsp;&nbsp;";
-				}
-				echo "<a class='shortcut' href='".url("/access/logout.php")."'>$img" . __("Logout") . "</a>&nbsp;&nbsp;&nbsp;";
-				echo "</td></tr><tr><td colspan=3>";
-				echo "</td></tr></table>";
-			}
-			echo "</td></tr></table>";
-
-			if ($no_menu)
-			{	// ajax indicator for installer and popups
-				echo "<center><table class='tablestyle_noborder'>"
-					."<tr><td><img id='ajaxmark' src='$indicator' align='center' style='visibility:hidden;' alt='ajaxmark'></td></tr>"
-					."</table></center>";
-			} elseif ($title && !$is_index)
-			{
-				echo "<center><table id='title'><tr><td width='100%' class='titletext'>$title</td>"
-				."<td align=right>"
-				.(user_hints() ? "<span id='hints'></span>" : '')
-				."</td>"
-				."</tr></table></center>";
-			}
-		}
-
-		function menu_footer($no_menu, $is_index)
-		{
-			global $version, $Pagehelp, $Ajax, $SysPrefs;
-
-			require_once __DIR__ . "/../../includes/date_functions.inc";
-
-			echo "</td></tr></table>\n"; // 'main_page'
-			if ($no_menu == false) // bottom status line
-			{
-				if ($is_index)
-					echo "<table class='bottomBar'>\n";
-				else
-					echo "<table class='bottomBar2'>\n";
-				echo "<tr>";
-				if (isset($_SESSION['wa_current_user'])) {
-					$phelp = implode('; ', $Pagehelp);
-					echo "<td class='bottomBarCell'>" . Today() . " | " . Now() . "</td>\n";
-					$Ajax->addUpdate(true, 'hotkeyshelp', $phelp);
-					echo "<td id='hotkeyshelp'>".$phelp."</td>";
-				}
-				echo "</tr></table>\n";
-			}
-			echo "</td></tr> </table>\n"; // 'callout_main'
-			if ($no_menu == false)
-			{
-				echo "<table align='center' id='footer'>\n";
-				echo "<tr>\n";
-				echo "<td align='center' class='footer'><a target='_blank' href='".$SysPrefs->power_url."' tabindex='-1'><font color='#ffffff'>".$SysPrefs->app_title
-					." $version - " . __("Theme:") . " " . user_theme() . " - ".show_users_online()."</font></a></td>\n";
-				echo "</tr>\n";
-				echo "<tr>\n";
-				echo "<td align='center' class='footer'><a target='_blank' href='".$SysPrefs->power_url
-					."' tabindex='-1'><font color='#ffff00'>".$SysPrefs->power_by."</font></a></td>\n";
-				echo "</tr>\n";
-				if ($SysPrefs->allow_demo_mode)
-				{
-					echo "<tr>\n";
-					//echo "<td><br><div align='center'><a href='http://sourceforge.net'><img src='http://sourceforge.net/sflogo.php?group_id=89967&amp;type=5' alt='SourceForge.net Logo' width='210' height='62' border='0' align='center' /></a></div></td>\n";
-					echo "</tr>\n";
-				}
-				echo "</table><br><br>\n";
-			}
-		}
-
-		function display_applications(&$waapp)
-		{
-
-			$selected_app = $waapp->get_selected_application();
-			if (!$_SESSION["wa_current_user"]->check_application_access($selected_app))
-				return;
-
-			if (method_exists($selected_app, 'render_index'))
-			{
-				$selected_app->render_index();
-				return;
-			}
-
-			echo "<table width='100%' cellpadding='0' cellspacing='0'>";
-			foreach ($selected_app->modules as $module)
-			{
-        		if (!$_SESSION["wa_current_user"]->check_module_access($module))
-        			continue;
-				// image
-				echo "<tr>";
-				// values
-				echo "<td valign='top' class='menu_group'>";
-				echo "<table border=0 width='100%'>";
-				echo "<tr><td class='menu_group'>";
-				echo $module->name;
-				echo "</td></tr><tr>";
-				echo "<td class='menu_group_items'>";
-
-				foreach ($module->lappfunctions as $appfunction)
-				{
-					$img = $this->get_icon($appfunction->category);
-					if ($appfunction->label == "")
-						echo "&nbsp;<br>";
-					elseif ($_SESSION["wa_current_user"]->can_access_page($appfunction->access)) 
-					{
-							echo $img.menu_link($appfunction->link, $appfunction->label)."<br>\n";
-					}
-					elseif (!$_SESSION["wa_current_user"]->hide_inaccessible_menu_items())
-					{
-							echo $img.'<span class="inactive">'
-								.access_string($appfunction->label, true)
-								."</span><br>\n";
-					}
-				}
-				echo "</td>";
-				if (sizeof($module->rappfunctions) > 0)
-				{
-					echo "<td width='50%' class='menu_group_items'>";
-					foreach ($module->rappfunctions as $appfunction)
-					{
-						$img = $this->get_icon($appfunction->category);
-						if ($appfunction->label == "")
-							echo "&nbsp;<br>";
-						elseif ($_SESSION["wa_current_user"]->can_access_page($appfunction->access)) 
-						{
-								echo $img.menu_link($appfunction->link, $appfunction->label)."<br>\n";
-						}
-						elseif (!$_SESSION["wa_current_user"]->hide_inaccessible_menu_items())
-						{
-								echo $img.'<span class="inactive">'
-									.access_string($appfunction->label, true)
-									."</span><br>\n";
-						}
-					}
-					echo "</td>";
-				}
-
-				echo "</tr></table></td></tr>";
-			}
-			echo "</table>";
-  		}
-	}
+            echo "</div>";
+            echo "</div>";
+        }
+        echo "</div>";
+    }
+}

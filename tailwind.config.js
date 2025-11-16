@@ -1,6 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-    content: [`${__dirname}/public/themes/cume/renderer.php`, `${__dirname}/resources/**/*.{js,css}`],
+    content: [
+        './public/themes/**/renderer.php',
+        `./resources/**/*.{js,css,php,blade.php}`,
+    ],
     theme: {
         fontFamily: {
             sans: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'Liberation Sans', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'],

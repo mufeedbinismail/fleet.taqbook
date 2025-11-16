@@ -45,45 +45,10 @@ function help_url($context=null)
 		.'&ctxhelp=1&lang='.language()->getLocale());
 }
 
-function send_css($css = '')
-{
-	global $css_files;
-
-	css_files_ensure_init();
-
-	foreach ($css_files as $css_file)
-	{
-		echo "<link href='$css_file' rel='stylesheet' type='text/css'> \n";
-	}
-	if ($css)
-	{
-		echo "<link href='$css' rel='stylesheet' type='text/css'> \n";
-	}
-}
-
-function send_scripts()
-{
-    global $js_static, $js_userlib;
-
-	$js ='';
-	foreach($js_static as $jsfile)
-	{
-	  	$js .= '<script language="javascript" type="text/javascript" src="'.
-            legacy_cached_js_url($jsfile) . '"></script>';
-	}
-	foreach($js_userlib as $jsfile)
-	{
-	  	$js .= '<script language="javascript" type="text/javascript" src="'.
-	    	url_from_path($jsfile) . '"></script>';
-	}
-
-    echo $js;
-}
-
 function page_header($title, $no_menu=false, $is_index=false, $onload="", $js="", $css='')
 {
 	// titles and screen header
-	global $SysPrefs, $db_connections;
+	global $SysPrefs, $db_connections, $js_static, $js_userlib, $css_files;
 
 	if (in_ajax() || isset($_POST['REP_ID']))
 		return; // just for speed up
@@ -118,26 +83,16 @@ function page_header($title, $no_menu=false, $is_index=false, $onload="", $js=""
 		$_SESSION["App"]->selected_application = 
 			isset($_SESSION["App"]->applications[$sel_app]) ? $sel_app : 'orders';
 
-	echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n";
-	echo "<html dir='" . language()->getDir() . "' >\n";
-	echo "<head profile=\"http://www.w3.org/2005/10/profile\"><title>$title</title>";
-	if (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0; rv:11.0') != -1) // IE 11 doesn't work with input file type in form.
-		echo "<meta http-equiv='X-UA-Compatible' content='IE=10'>\n";
-	echo "<meta http-equiv='Content-type' content='text/html; charset='".language()->getEncoding()."'>";
-	echo "<link href='".url("/themes/default/images/favicon.ico")."' rel='icon' type='image/x-icon'> \n";
+
+    echo view('layout.partials.header', [
+        'title'     => $title,
+        'onload'    => $onload,
+        'js_files'  => array_merge($js_static, $js_userlib),
+        'css_files' => array_merge(isset($css_files) ? $css_files : [], $css ? [$css] : []),
+    ])->render();
 
     require_once __DIR__ . "/../../themes/$theme/renderer.php";
     $rend = new renderer();
-
-	send_css($css);
-	send_scripts();
-
-	echo "</head> \n";
-	if ($onload == "")
-		echo "<body>";
-	else
-		echo "<body onload=\"$onload\">";
-
 	$rend->menu_header($title, $no_menu, $is_index);
 	error_box();
 }

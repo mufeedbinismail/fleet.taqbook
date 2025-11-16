@@ -71,9 +71,7 @@ function css_files_ensure_init() {
 
 	if (!isset($css_files))
 	{
-		$theme = user_theme();
 		$css_files = array();
-		$css_files[] = url("/themes/$theme/default.css");
 	}
 }
 
