@@ -13,36 +13,9 @@
 define("FA_LOGOUT_PHP_FILE","");
 
 $GLOBALS['page_security'] = 'SA_OPEN';
+
 require __DIR__ . "/../includes/session.inc";
-add_js_file('login.js');
 
-require_once __DIR__ . "/../includes/page/header.inc";
-page_header(__("Logout"), true, false, '');
+echo view('auth.logout')->render();
 
-echo "<table width='100%' border='0'>
-  <tr>
-	<td align='center'><img src='".url('/themes/default/images/logo_frontaccounting.png')."' alt='FrontAccounting' width='250' height='50' onload='fixPNG(this)' ></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td><div align='center'><font size=2>";
-echo __("Thank you for using") . " ";
-
-echo "<strong>".$SysPrefs->app_title." $version</strong>";
-
-echo "</font></div></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td><div align='center'>";
-echo "<a href='".url('/index.php')."'><b>" . __("Click here to Login Again.") . "</b></a>";
-echo "</div></td>
-  </tr>
-</table>
-<br>\n";
-end_page(false, true);
 session_invalidate();
