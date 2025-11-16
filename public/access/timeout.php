@@ -15,16 +15,13 @@
 $GLOBALS['page_security'] = 'SA_OPEN';
 require_once __DIR__ . "/../includes/session.inc";
 
-require __DIR__ . '/../access/login.php';
-
+// Check if user just submitted login and is now authenticated
 if (get_post('SubmitUser') && $_SESSION['wa_current_user']->logged_in()) {
-	// After successfull login repeat last ajax call.
-	// Login form consists all post variables from last ajax call.
-echo "<script>
-	var o = opener;
+    add_js_source("var o = opener;
 	if (o) {
 		o.JsHttpRequest.request(document.getElementsByName('SubmitUser')[0], o.document.forms[0]);
 		close();
-	}
-</script>";
+	}");
 }
+
+require __DIR__ . '/../access/login.php';
