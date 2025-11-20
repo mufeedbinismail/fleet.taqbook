@@ -235,7 +235,7 @@ function is_subledger_account($account, $taxable_only=false)
         CASE 
             WHEN EXISTS (SELECT 1 FROM ".TB_PREF."cust_branch WHERE receivables_account={$account} LIMIT 1) THEN ".SLT_AR."
             WHEN EXISTS (SELECT 1 FROM ".TB_PREF."suppliers WHERE payable_account={$account} LIMIT 1) THEN ".SLT_AP."
-            WHEN EXISTS (SELECT 1 FROM ".TB_PREF."marketplaces WHERE payable_account={$account} LIMIT 1) THEN ".SLT_MARKETPLACE."
+            WHEN EXISTS (SELECT 1 FROM ".TB_PREF."marketplaces WHERE provision_account={$account} LIMIT 1) THEN ".SLT_MARKETPLACE."
             ELSE NULL
         END as sl_type";
 

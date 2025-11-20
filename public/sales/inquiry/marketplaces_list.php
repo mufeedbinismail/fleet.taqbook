@@ -32,7 +32,7 @@ div_start("marketplace_tbl");
 
 start_table(TABLESTYLE);
 
-$th = array("", __("Marketplace"), __("Code"), __("Payable Account"));
+$th = array("", __("Marketplace"), __("Code"), __("Provision Account"));
 
 table_header($th);
 
@@ -45,7 +45,7 @@ while ($myrow = db_fetch_assoc($result)) {
     ahref_cell(__("Select"), 'javascript:void(0)', '', 'selectComboItem(window.opener.document, "'.$name.'", "'.$value.'")');
   	label_cell($myrow["name"]);
   	label_cell($myrow["code"]);
-  	label_cell($myrow["payable_account"] . " - " . $myrow["payable_account_name"]);
+  	label_cell($myrow["provision_account"] . " - " . $myrow["provision_account_name"]);
 	end_row();
 }
 

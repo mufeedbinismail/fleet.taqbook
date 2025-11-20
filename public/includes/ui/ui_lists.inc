@@ -636,7 +636,7 @@ function marketplace_list($name, $selected_id=null, $spec_option=false, $submit_
 {
 	global $SysPrefs;
 	
-    $sql = "SELECT id, code, `name`, payable_account, inactive FROM ".TB_PREF."marketplaces ";
+    $sql = "SELECT id, code, `name`, provision_account, inactive FROM ".TB_PREF."marketplaces ";
 
 	if ($editkey)
 		set_editor('marketplace', $name, $editkey);
@@ -657,7 +657,7 @@ function marketplace_list($name, $selected_id=null, $spec_option=false, $submit_
             'search_box' => false,
             'type' => 1,
             'size' => 20,
-            'search' => array("code","name","payable_account"),        
+            'search' => array("code","name","provision_account"),        
             'spec_option' => $spec_option === true ? __("All Marketplaces") : $spec_option,
             'spec_id' => ALL_TEXT,
             'select_submit'=> $submit_on_change,

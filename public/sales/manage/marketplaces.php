@@ -64,10 +64,10 @@ function can_process()
         return false;
     }
 	
-	if (strlen($_POST['payable_account']) == 0 || !key_in_foreign_table($_POST['payable_account'], 'chart_master', 'account_code'))
+	if (strlen($_POST['provision_account']) == 0 || !key_in_foreign_table($_POST['provision_account'], 'chart_master', 'account_code'))
 	{
-		display_error(__("The payable account is not valid."));
-		set_focus('payable_account');
+		display_error(__("The provision account is not valid."));
+		set_focus('provision_account');
 		return false;		
 	} 
 
@@ -88,7 +88,7 @@ function handle_submit(&$selected_id)
             $selected_id,
             $_POST['name'],
             $_POST['code'],
-            $_POST['payable_account'],
+            $_POST['provision_account'],
             $_SESSION['wa_current_user']->user,
             $_POST['inactive']
         );
@@ -104,7 +104,7 @@ function handle_submit(&$selected_id)
 		$selected_id = $_POST['marketplace_id'] = create_marketplace(
             $_POST['name'],
             $_POST['code'],
-            $_POST['payable_account'],
+            $_POST['provision_account'],
             $_SESSION['wa_current_user']->user
         );
 
@@ -158,7 +158,7 @@ function marketplace_settings($selected_id)
 	 	if (list_updated('marketplace_id') || !isset($_POST['name'])) {
 			$_POST['name'] = '';
             $_POST['code'] = '';
-            $_POST['payable_account'] = '';
+            $_POST['provision_account'] = '';
             $_POST['inactive'] = 0;
 		}
 	}
@@ -168,7 +168,7 @@ function marketplace_settings($selected_id)
 
 		$_POST['name'] = $myrow["name"];
 		$_POST['code'] = $myrow["code"];
-		$_POST['payable_account']  = $myrow["payable_account"];
+		$_POST['provision_account']  = $myrow["provision_account"];
 		$_POST['inactive']  = $myrow["inactive"];
 	}
 
@@ -176,7 +176,7 @@ function marketplace_settings($selected_id)
 
 	text_row(__("Marketplace Code:"), 'code', null, 30, 30);
 	text_row(__("Marketplace Name:"), 'name', null, 40, 80);
-	gl_all_accounts_list_row(__("Payable Account:"), 'payable_account', null, true, false, __("-- select --"));
+	gl_all_accounts_list_row(__("Provision Account:"), 'provision_account', null, true, false, __("-- select --"));
 
 	if($selected_id)
 		record_status_list_row(__("Marketplace status:"), 'inactive');

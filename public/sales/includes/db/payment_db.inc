@@ -134,7 +134,7 @@ function write_customer_payment(
 
     if ($marketplace_cost != 0)
     {
-        $marketplace_act = get_marketplace($marketplace_id)['payable_account'];
+        $marketplace_act = get_marketplace($marketplace_id)['provision_account'];
         $total += add_gl_trans(
             ST_CUSTPAYMENT,
             $payment_no,
