@@ -9,13 +9,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-define('MAX_DEADLOCK_RETRY', 3);
+define('MAX_DEADLOCK_RETRY', 0);
 
-if (!function_exists('mysqli_connect')) {
-	die('The mysqli PHP extension is required.');
-}
-
-require_once __DIR__ . "/connect_db_mysqli.inc";
+require_once __DIR__ . "/connect_db_pdo.inc";
 
 function db_get_version()
 {
