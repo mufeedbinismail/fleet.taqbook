@@ -71,6 +71,86 @@ function update_supplier($supplier_id, $supp_name, $supp_ref, $address, $supp_ad
 	db_query($sql,"The supplier could not be updated");
 }
 
+function add_or_update_supplier(array $data, $supplier_id = null)
+{
+    begin_transaction();
+
+	if ($supplier_id) {
+        // Update existing supplier
+        update_supplier(
+            $supplier_id,
+            $data['supp_name'],
+            $data['supp_ref'],
+            $data['address'],
+            $data['supp_address'],
+            $data['gst_no'],
+            $data['website'],
+            $data['supp_account_no'],
+            $data['bank_account'],
+            $data['credit_limit'],
+            $data['dimension_id'],
+            $data['dimension2_id'],
+            $data['curr_code'],
+            $data['payment_terms'],
+            $data['payable_account'],
+            $data['purchase_account'],
+            $data['payment_discount_account'],
+            $data['notes'],
+            $data['tax_group_id'],
+            $data['tax_included']
+        );
+    } else {
+        add_supplier(
+            $data['supp_name'],
+            $data['supp_ref'],
+            $data['address'],
+            $data['supp_address'],
+            $data['gst_no'],
+            $data['website'],
+            $data['supp_account_no'],
+            $data['bank_account'],
+            $data['credit_limit'],
+            $data['dimension_id'],
+            $data['dimension2_id'],
+            $data['curr_code'],
+            $data['payment_terms'],
+            $data['payable_account'],
+            $data['purchase_account'],
+            $data['payment_discount_account'],
+            $data['notes'],
+            $data['tax_group_id'],
+            $data['tax_included']
+        );
+        $supplier_id = db_insert_id();
+
+        add_crm_person(
+            $data['supp_ref'],
+            $data['contact'],
+            '',
+            $data['address'],
+            $data['phone'],
+            $data['phone2'],
+            $data['fax'],
+            $data['email'],
+            $data['rep_lang'],
+            ''
+        );
+
+		add_crm_contact('supplier', 'general', $supplier_id, db_insert_id());
+    }
+
+    update_record_status(
+        $supplier_id,
+        $data['inactive'],
+		'suppliers',
+        'supplier_id'
+    );
+
+    commit_transaction();
+
+    return $supplier_id;
+}
+
 function delete_supplier($supplier_id)
 {
 	begin_transaction();

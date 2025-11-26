@@ -17,6 +17,8 @@ require_once __DIR__ . "/../../includes/banking.inc";
 require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../includes/ui/contacts_view.inc";
 require_once __DIR__ . "/../../includes/ui/attachment.inc";
+require_once __DIR__ . "/../../purchasing/includes/db/suppliers_db.inc";
+require_once __DIR__ . "/../../purchasing/includes/helpers/manage_suppliers.inc";
 
 if (isset($_GET['marketplace_id']))
 {
@@ -30,37 +32,37 @@ function can_process()
 {
     global $selected_id;
 
-	if (strlen($_POST['name']) == 0)
+	if (strlen($_POST['supp_name']) == 0)
     {
 		display_error(__("The marketplace name cannot be empty."));
-		set_focus('name');
+		set_focus('supp_name');
 		return false;
 	}
 
     if (
-        ($existing = get_marketplace_by_name($_POST['name']))
+        ($existing = get_marketplace_by_name($_POST['supp_name']))
         && (!$selected_id || $existing['id'] != $selected_id)
     )
     {
         display_error(__("The marketplace name is already in use."));
-        set_focus('name');
+        set_focus('supp_name');
         return false;
     }
 
-	if (strlen($_POST['code']) == 0)
+	if (strlen($_POST['supp_ref']) == 0)
     {
 		display_error(__("The marketplace code cannot be empty."));
-		set_focus('code');
+		set_focus('supp_ref');
 		return false;
 	}
 
     if (
-        ($existing = get_marketplace_by_code($_POST['code']))
+        ($existing = get_marketplace_by_code($_POST['supp_ref']))
         && (!$selected_id || $existing['id'] != $selected_id)
     )
     {
         display_error(__("The marketplace code is already in use."));
-        set_focus('code');
+        set_focus('supp_ref');
         return false;
     }
 	
@@ -69,7 +71,15 @@ function can_process()
 		display_error(__("The provision account is not valid."));
 		set_focus('provision_account');
 		return false;		
-	} 
+	}
+
+    $validate_result = validate_supplier_data(read_supplier_data_from_post());
+
+    if (!$validate_result['is_valid']) {
+        display_error($validate_result['error']);
+        set_focus($validate_result['field']);
+        return false;
+    }
 
 	return true;
 }
@@ -84,13 +94,17 @@ function handle_submit(&$selected_id)
 		
 	if ($selected_id) 
 	{
+		$marketplace = get_marketplace($selected_id);
+		$supplier_id = add_or_update_supplier(read_supplier_data_from_post(), $marketplace['supplier_id']);
+		
 		update_marketplace(
             $selected_id,
-            $_POST['name'],
-            $_POST['code'],
+            $_POST['supp_name'],
+            $_POST['supp_ref'],
             $_POST['provision_account'],
             $_SESSION['wa_current_user']->user,
-            $_POST['inactive']
+            $_POST['inactive'],
+            $supplier_id
         );
 
 		$Ajax->activate('marketplace_id'); // in case of status change
@@ -98,14 +112,17 @@ function handle_submit(&$selected_id)
 	} 
 	else 
 	{ 	//it is a new marketplace
-
 		begin_transaction();
 
+		$supplier_id = add_or_update_supplier(read_supplier_data_from_post());
+
+		// Create marketplace with supplier link
 		$selected_id = $_POST['marketplace_id'] = create_marketplace(
-            $_POST['name'],
-            $_POST['code'],
+            $_POST['supp_name'],
+            $_POST['supp_ref'],
             $_POST['provision_account'],
-            $_SESSION['wa_current_user']->user
+            $_SESSION['wa_current_user']->user,
+            $supplier_id
         );
 
 		commit_transaction();
@@ -120,6 +137,10 @@ function handle_submit(&$selected_id)
 function handle_delete()
 {
     global $Ajax, $selected_id;
+
+    // Get the linked supplier before deleting marketplace
+	$marketplace = get_marketplace($selected_id);
+	$supplier_id = $marketplace['supplier_id'];
 	
 	if (key_in_foreign_table($selected_id, 'debtor_trans', 'marketplace_id')) {
         display_error(__("This marketplace cannot be deleted because there are transactions that refer to it."));
@@ -127,11 +148,25 @@ function handle_delete()
 	} else if (key_in_foreign_table($selected_id, 'sales_orders', 'marketplace_id')) {
         display_error(__("Cannot delete the marketplace record because orders have been created against it."));
         return;
+    } else if ($supplier_id && ($result = check_supplier_deletable($supplier_id)) && !$result['is_deletable']) {
+        display_error(__("Cannot delete the marketplace record because it has a linked supplier.") . " " . $result['error']);
+        return;
     }
 	
+	begin_transaction();
+	
     delete_marketplace($selected_id);
+    
+    // Delete the auto-managed supplier if it has no transactions
+    if ($supplier_id) {
+        delete_supplier($supplier_id);
+        display_notification(__("Selected marketplace and its auto-managed supplier have been deleted."));
+	} else {
+		display_notification(__("Selected marketplace has been deleted."));
+	}
+	
+	commit_transaction();
 
-    display_notification(__("Selected marketplace has been deleted."));
     unset($_POST['marketplace_id']);
     $selected_id = '';
     $Ajax->activate('_page_body');
@@ -155,30 +190,38 @@ function marketplace_settings($selected_id)
 	
 	if (!$selected_id) 
 	{
-	 	if (list_updated('marketplace_id') || !isset($_POST['name'])) {
-			$_POST['name'] = '';
-            $_POST['code'] = '';
+	 	if (list_updated('marketplace_id') || !isset($_POST['supp_name'])) {
+			$_POST['supp_name'] = '';
+            $_POST['supp_ref'] = '';
             $_POST['provision_account'] = '';
-            $_POST['inactive'] = 0;
+            hydrate_post_with_common_supplier_data();
 		}
+        $supplier_id = null;
 	}
 	else 
 	{
 		$myrow = get_marketplace($selected_id);
 
-		$_POST['name'] = $myrow["name"];
-		$_POST['code'] = $myrow["code"];
+        $supplier_id = $myrow['supplier_id'];
+		hydrate_post_with_common_supplier_data($myrow['supplier_id']);
+        $_POST['supp_name'] = $myrow["name"];
+		$_POST['supp_ref'] = $myrow["code"];
 		$_POST['provision_account']  = $myrow["provision_account"];
-		$_POST['inactive']  = $myrow["inactive"];
+        $_POST['inactive']  = $myrow["inactive"];
 	}
 
 	start_outer_table(TABLESTYLE2);
 
-	text_row(__("Marketplace Code:"), 'code', null, 30, 30);
-	text_row(__("Marketplace Name:"), 'name', null, 40, 80);
-	gl_all_accounts_list_row(__("Provision Account:"), 'provision_account', null, true, false, __("-- select --"));
+    table_section(1);
+    table_section_title(__("Basic Data"));
+	text_row(__("Marketplace Code:"), 'supp_ref', null, 30, 30);
+	text_row(__("Marketplace Name:"), 'supp_name', null, 40, 80);
 
-	if($selected_id)
+    common_supplier_settings_form($supplier_id, [
+        'show_provision_account' => true,
+    ]);
+
+	if ($selected_id)
 		record_status_list_row(__("Marketplace status:"), 'inactive');
 
 	end_outer_table(1);
