@@ -151,10 +151,6 @@ if (isset($_GET['InvoiceNumber']) && $_GET['InvoiceNumber'] > 0) {
     throw new \App\Exceptions\Legacy\FlowTerminatedException;
 } else check_item_data();
 
-$options = [
-    'show_marketplace_cols' => $_SESSION['Items']->is_marketplace_trans
-];
-
 function check_item_data()
 {
     if (!check_quantities()) {
@@ -265,7 +261,10 @@ if (isset($_POST['Location'])) {
 
 function display_credit_items()
 {
-    global $options;
+    $options = [
+        'show_marketplace_cols' => session('Items')->is_marketplace_trans
+    ];
+
     start_form();
 	hidden('cart_id');
 

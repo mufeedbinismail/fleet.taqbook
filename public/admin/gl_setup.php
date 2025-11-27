@@ -23,14 +23,10 @@ require_once __DIR__ . "/../includes/ui.inc";
 require_once __DIR__ . "/../includes/data_checks.inc";
 require_once __DIR__ . "/../admin/db/company_db.inc";
 
-$user = $_SESSION['wa_current_user'];
-
 //-------------------------------------------------------------------------------------------------
 
 function can_process()
 {
-    global $user;
-
     if (!check_num('past_due_days', 0, 100))
     {
         display_error(__("The past due days interval allowance must be between 0 and 100."));
@@ -102,7 +98,7 @@ function can_process()
 		return false;
 	}
 
-    if ($user->check_module_access('mp_orders')) {
+    if (session('wa_current_user')->check_module_access('mp_orders')) {
         if (!get_post('marketplace_commission_act')) {
             display_error(__("Please select the marketplace commission account."));
             set_focus('marketplace_commission_act');
@@ -297,7 +293,7 @@ text_row(__("Delivery Required By:"), 'default_delivery_required', $_POST['defau
 
 table_section(2);
 
-if ($user->check_module_access('mp_orders')) {
+if (session('wa_current_user')->check_module_access('mp_orders')) {
     table_section_title(__("Marketplace Sales Defaults"));
 
     gl_all_accounts_list_row(

@@ -26,6 +26,8 @@ if (user_use_date_picker())
 
 page(__($GLOBALS['help_context'] = "Trial Balance"), false, false, "", $js);
 
+global $k, $pdeb, $pcre, $cdeb, $ccre, $tdeb, $tcre, $pbal, $cbal, $tbal;
+
 $k = 0;
 $pdeb = $pcre = $cdeb = $ccre = $tdeb = $tcre = $pbal = $cbal = $tbal = 0;
 

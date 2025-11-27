@@ -43,6 +43,8 @@ set_page_security(
     ]
 );
 
+global $trans_type;
+
 if (get_post('type'))
 	$trans_type = $_POST['type'];
 elseif (isset($_GET['type']) && $_GET['type'] == ST_SALESQUOTE)

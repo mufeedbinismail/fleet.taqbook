@@ -24,6 +24,8 @@ require_once __DIR__ . "/../includes/date_functions.inc";
 require_once __DIR__ . "/../includes/data_checks.inc";
 require_once __DIR__ . "/../gl/includes/gl_db.inc";
 
+global $pdeb, $pcre, $cdeb, $ccre, $tdeb, $tcre, $pbal, $cbal, $tbal;
+
 $pdeb = $pcre = $cdeb = $ccre = $tdeb = $tcre = $pbal = $cbal = $tbal = 0;
 
 //----------------------------------------------------------------------------------------------------
