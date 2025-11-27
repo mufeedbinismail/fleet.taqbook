@@ -110,6 +110,12 @@ function can_process()
             set_focus('marketplace_shipping_act');
             return false;
         }
+
+        if (!get_post('marketplace_expense_items')) {
+            display_error(__("Please select the marketplace expense items."));
+            set_focus('marketplace_expense_items');
+            return false;
+        }
     }
 	return true;
 }
@@ -118,6 +124,7 @@ function can_process()
 
 if (isset($_POST['submit']) && can_process())
 {
+    $_POST['marketplace_expense_items'] = implode(',', $_POST['marketplace_expense_items'] ?? []);
 	update_company_prefs( get_post( array(
         'retained_earnings_act',
         'profit_loss_year_act',
@@ -161,6 +168,7 @@ if (isset($_POST['submit']) && can_process())
         'default_credit_limit'=>0.0,
         'marketplace_commission_act',
         'marketplace_shipping_act',
+        'marketplace_expense_items',
     )));
 
 	display_notification(__("The general GL setup has been updated."));
@@ -227,6 +235,7 @@ $_POST['depreciation_period'] = $myrow['depreciation_period'];
 
 $_POST['marketplace_commission_act'] = $myrow['marketplace_commission_act'];
 $_POST['marketplace_shipping_act'] = $myrow['marketplace_shipping_act'];
+$_POST['marketplace_expense_items'] = array_filter(explode(',', $myrow['marketplace_expense_items']));
 
 //---------------
 
@@ -296,8 +305,26 @@ table_section(2);
 if (session('wa_current_user')->check_module_access('mp_orders')) {
     table_section_title(__("Marketplace Sales Defaults"));
 
+    start_row();
+    label_cells(
+        __("Expense Items"),
+        stock_items_list(
+            'marketplace_expense_items',
+            null,
+            false,
+            false,
+            [
+                'search_box' => false,
+                'where' => ["mb_flag = 'D'"],
+                'multi' => true,
+            ]
+        ),
+        "class='label'"
+    );
+    end_row();
+
     gl_all_accounts_list_row(
-        __("Commission Account:"),
+        __("Commission Account"),
         'marketplace_commission_act',
         null,
         true,
@@ -310,7 +337,7 @@ if (session('wa_current_user')->check_module_access('mp_orders')) {
     );
 
     gl_all_accounts_list_row(
-        __("Shipping Chrg Account:"),
+        __("Shipping Chrg Account"),
         'marketplace_shipping_act',
         null,
         true,
