@@ -1,0 +1,68 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        DB::transaction(function () {
+            $commissionAct = DB::table('gl_trans')
+                ->where('memo_', 'Marketplace Commission')
+                ->where('account', '!=', '')
+                ->value('account');
+            $shippingAct = DB::table('gl_trans')
+                ->where('memo_', 'Marketplace Shipping Charge')
+                ->where('account', '!=', '')
+                ->value('account');
+            DB::table('sys_prefs')->whereIn('name', [
+                'marketplace_commission_item',
+                'marketplace_shipping_item',
+            ])->update([
+                'value' => DB::raw("(CASE 
+                    WHEN name = 'marketplace_commission_item' THEN '{$commissionAct}' 
+                    WHEN name = 'marketplace_shipping_item' THEN '{$shippingAct}' 
+                    ELSE '' END)"
+                ),
+                'name' => DB::raw("(CASE 
+                    WHEN name = 'marketplace_commission_item' THEN 'marketplace_commission_act' 
+                    WHEN name = 'marketplace_shipping_item' THEN 'marketplace_shipping_act' 
+                    ELSE name END)"
+                )
+            ]);
+            DB::table('gl_trans')
+                ->where('account', '=', '')
+                ->whereIn('memo_', [
+                    'Marketplace Commission',
+                    'Marketplace Shipping Charge',
+                ])->update([
+                    'account' => DB::raw("(CASE 
+                        WHEN memo_ = 'Marketplace Commission' THEN '{$commissionAct}' 
+                        WHEN memo_ = 'Marketplace Shipping Charge' THEN '{$shippingAct}' 
+                        ELSE account END)"
+                    )
+                ]);
+            });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        DB::table('sys_prefs')->whereIn('name', [
+            'marketplace_commission_act',
+            'marketplace_shipping_act',
+        ])->update([
+            'name' => DB::raw("CASE 
+                WHEN name = 'marketplace_commission_act' THEN 'marketplace_commission_item' 
+                WHEN name = 'marketplace_shipping_act' THEN 'marketplace_shipping_item' 
+                ELSE name END"),
+            'value' => '',
+        ]);
+    }
+};
