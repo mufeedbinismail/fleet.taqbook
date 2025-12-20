@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Legacy\Http\Controller;
 
+use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class LegacyRequestController extends Controller
+class Controller extends BaseController
 {
     static $path = '';
 
@@ -33,12 +34,12 @@ class LegacyRequestController extends Controller
         try  {
             self::$path = $filePath;
             $this->requireLegacyFile();
-        } catch (\App\Exceptions\Legacy\FlowControlException $e) {
-            if ($e instanceof \App\Exceptions\Legacy\FileDownloadException) {
+        } catch (\App\Legacy\Exception\FlowControlException $e) {
+            if ($e instanceof \App\Legacy\Exception\FileDownloadException) {
                 $response = response()->download($e->getFilePath(), $e->getFileName());
-            } elseif ($e instanceof \App\Exceptions\Legacy\FileStreamException) {
+            } elseif ($e instanceof \App\Legacy\Exception\FileStreamException) {
                 $response = response()->file($e->getFilePath());
-            } elseif ($e instanceof \App\Exceptions\Legacy\FlowRedirectionException) {
+            } elseif ($e instanceof \App\Legacy\Exception\FlowRedirectionException) {
                 $response = response()->redirectTo($e->getTargetUrl(), $e->getHttpCode());
             }
         }

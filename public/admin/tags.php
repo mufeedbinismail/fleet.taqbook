@@ -30,7 +30,7 @@ if (!isset($_POST['type'])) {
 		$_POST['type'] = TAG_DIMENSION;
 	else {
 		display_error(__("Unspecified tag type"));
-        throw new \App\Exceptions\Legacy\FlowTerminatedException;
+        throw new \App\Legacy\Exception\FlowTerminatedException;
     }
 
 }

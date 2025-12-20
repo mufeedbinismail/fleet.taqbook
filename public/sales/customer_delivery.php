@@ -146,7 +146,7 @@ if (isset($_GET['OrderNumber']) && $_GET['OrderNumber'] > 0) {
 	hyperlink_params(url("/sales/inquiry/sales_orders_view.php"), __("Select a Sales Order to Delivery"), "OutstandingOnly=1{$marketplace_flg}");
 
 	end_page();
-	throw new \App\Exceptions\Legacy\FlowTerminatedException;
+	throw new \App\Legacy\Exception\FlowTerminatedException;
 
 } else {
 	check_edit_conflicts(get_post('cart_id'));
@@ -428,7 +428,7 @@ if ($row['dissallow_invoices'] == 1)
 	display_error(__("The selected customer account is currently on hold. Please contact the credit control personnel to discuss."));
 	end_form();
 	end_page();
-	throw new \App\Exceptions\Legacy\FlowTerminatedException;
+	throw new \App\Legacy\Exception\FlowTerminatedException;
 }	
 display_heading(__("Delivery Items"));
 div_start('Items');

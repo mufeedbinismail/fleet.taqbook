@@ -74,7 +74,7 @@ class FrontReport extends Spreadsheet_Excel_Writer_Workbook
 		{
 			display_error(__("The security settings on your account do not permit you to print this report"));
 			end_page();
-			throw new \App\Exceptions\Legacy\FlowTerminatedException;
+			throw new \App\Legacy\Exception\FlowTerminatedException;
 		}
 		$this->size = $size;
 		$this->title = $title;
@@ -730,7 +730,7 @@ class FrontReport extends Spreadsheet_Excel_Writer_Workbook
 		}
 
 		meta_forward(url('/reporting/prn_redirect.php'), "xls=1&filename=$this->filename&unique=$this->unique_name");
-		throw new \App\Exceptions\Legacy\FlowCompletedException;
+		throw new \App\Legacy\Exception\FlowCompletedException;
 	}
 }
 

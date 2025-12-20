@@ -126,7 +126,7 @@ function display_bank_header(&$order)
 	{
 		end_form();
 		end_page();
-		throw new \App\Exceptions\Legacy\FlowTerminatedException;
+		throw new \App\Legacy\Exception\FlowTerminatedException;
 	}
 }
 //---------------------------------------------------------------------------------

@@ -87,7 +87,7 @@ if (db_num_rows($result) == 0)
 {
     echo "<p><center>" . __("No general ledger transactions have been created for") . " " .$systypes_array[$_GET['type_id']]." " . __("number") . " " . $_GET['trans_no'] . "</center></p><br><br>";
 	end_page(true);
-	throw new \App\Exceptions\Legacy\FlowCompletedException;
+	throw new \App\Legacy\Exception\FlowCompletedException;
 }
 
 /*show a table of the transactions returned by the sql */

@@ -278,7 +278,7 @@ function display_wo_details($woid, $suppress_view_link=false)
     if ($myrow == false)
     {
     	display_note(__("The work order number sent is not valid."));
-    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
+    	throw new \App\Legacy\Exception\FlowTerminatedException;
     }
 
    	start_table(TABLESTYLE, "width='80%'");
@@ -334,7 +334,7 @@ function display_wo_details_quick($woid, $suppress_view_link=false)
     if ($myrow === false)
     {
     	display_note(__("The work order number sent is not valid."));
-    	throw new \App\Exceptions\Legacy\FlowTerminatedException;
+    	throw new \App\Legacy\Exception\FlowTerminatedException;
     }
 
    	start_table(TABLESTYLE, "width='80%'");

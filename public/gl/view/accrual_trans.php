@@ -38,7 +38,7 @@ if (!isset($_GET['act']) || !isset($_GET['date']))
 { /*Script was not passed the correct parameters */
 
 	echo "<p>" . __("The script must be called with a valid transaction type and transaction number to review the general ledger postings for.") . "</p>";
-	throw new \App\Exceptions\Legacy\FlowTerminatedException;
+	throw new \App\Legacy\Exception\FlowTerminatedException;
 }
 
 display_heading($_SESSION['page_title']. " ".get_gl_account_name($_GET['act']));

@@ -220,7 +220,7 @@ function display_db_error($msg, $sql_statement=null, $exit=true)
 			fa_trigger_error($str, E_USER_WARNING);
 	}
 	if ($exit)
-		throw new \App\Exceptions\Legacy\FlowTerminatedException;
+		throw new \App\Legacy\Exception\FlowTerminatedException;
 }
 
 function frindly_db_error($db_error)
@@ -253,7 +253,7 @@ function check_db_error($msg, $sql_statement, $exit_if_error=true, $rollback_if_
 		
 		if ($exit_if_error) 
 		{
-			end_page(); throw new \App\Exceptions\Legacy\FlowTerminatedException;
+			end_page(); throw new \App\Legacy\Exception\FlowTerminatedException;
 		}
 	}
 	return $db_error;

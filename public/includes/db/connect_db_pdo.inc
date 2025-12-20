@@ -227,7 +227,7 @@ function db_escape($value = "", $nullify = false)
 			//value is not a string nor numeric
 			display_error("ERROR: incorrect data type send to sql query");
 			echo '<br><br>';
-			throw new \App\Exceptions\Legacy\FlowTerminatedException;
+			throw new \App\Legacy\Exception\FlowTerminatedException;
 		}
 	}
 	return $value;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exceptions\Legacy;
+namespace App\Legacy\Exception;
 
 class FlowControlException extends \Exception
 {

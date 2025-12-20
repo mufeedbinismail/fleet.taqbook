@@ -23,7 +23,7 @@ if (get_post('view')) {
 		if (in_ajax()) 
 			$Ajax->popup( $filename );
 		else {
-            throw new \App\Exceptions\Legacy\FileStreamException($filename);
+            throw new \App\Legacy\Exception\FileStreamException($filename);
 		}
 	}
 };
@@ -48,7 +48,7 @@ function check_paths()
 			.__("Please contact System Administrator.")."<br>" 
 			. __("cannot find backup directory") . " - " . $SysPrefs->backup_dir() . "<br>");
 		end_page();
-		throw new \App\Exceptions\Legacy\FlowTerminatedException;
+		throw new \App\Legacy\Exception\FlowTerminatedException;
 	}
 }
 
@@ -111,11 +111,11 @@ function download_file($filename)
     if (empty($filename) || !file_exists($filename))
     {
 		display_error(__('Select backup file first.'));
-        throw new \App\Exceptions\Legacy\FlowTerminatedException;
+        throw new \App\Legacy\Exception\FlowTerminatedException;
     }
     
     $saveasname = basename($filename);
-    throw new \App\Exceptions\Legacy\FileDownloadException(
+    throw new \App\Legacy\Exception\FileDownloadException(
         $filename,
         $saveasname
     );

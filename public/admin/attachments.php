@@ -33,7 +33,7 @@ if ($view_id != -1)
 		if(in_ajax()) {
 			$Ajax->popup(url()->current().'?vw='.$view_id);
 		} else {
-            throw new \App\Exceptions\Legacy\FileStreamException(company_path(). "/attachments/".$row['unique_name']);
+            throw new \App\Legacy\Exception\FileStreamException(company_path(). "/attachments/".$row['unique_name']);
 		}
 	}	
 }
@@ -50,7 +50,7 @@ if ($download_id != -1)
 		if(in_ajax()) {
 			$Ajax->redirect(url()->current().'?dl='.$download_id);
 		} else {
-            throw new \App\Exceptions\Legacy\FileDownloadException(
+            throw new \App\Legacy\Exception\FileDownloadException(
                 company_path(). "/attachments/".$row['unique_name'],
                 $row['filename']
             );
@@ -110,7 +110,7 @@ if ($Mode == 'ADD_ITEM' || $Mode == 'UPDATE_ITEM')
 		    $row = get_attachment($selected_id);
 		    if ($row['filename'] == "") {
         		display_error(__("Attachment file not found."));
-                throw new \App\Exceptions\Legacy\FlowTerminatedException;
+                throw new \App\Legacy\Exception\FlowTerminatedException;
             }
 			$unique_name = $row['unique_name'];
 			if ($filename && file_exists($dir."/".$unique_name))

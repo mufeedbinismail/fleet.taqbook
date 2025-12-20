@@ -11,9 +11,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(\App\Session\Store::class, function ($app) {
-            return new \App\Session\Store($app->make(\Illuminate\Session\SessionManager::class));
-        });
+        //
     }
 
     /**

@@ -259,7 +259,7 @@ if (isset($_POST['ProcessSuppPayment']))
     {
     	handle_add_payment();
     	end_page();
-     	throw new \App\Exceptions\Legacy\FlowCompletedException;
+     	throw new \App\Legacy\Exception\FlowCompletedException;
     }
 }
 

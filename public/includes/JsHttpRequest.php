@@ -116,7 +116,7 @@ class JsHttpRequest
                     . "this header cannot be set. See header() function documentation for more details",
                     E_USER_ERROR
                 );
-                throw new \App\Exceptions\Legacy\FlowTerminatedException;
+                throw new \App\Legacy\Exception\FlowTerminatedException;
             }
         } else {
             $this->ID = 0;

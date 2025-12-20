@@ -1772,7 +1772,7 @@ if (!class_exists('TCPDF')) {
 		function Error($msg) {
 			//Fatal error
 			display_error('<strong>TCPDF error: </strong>'.$msg);
-			throw new \App\Exceptions\Legacy\FlowTerminatedException;
+			throw new \App\Legacy\Exception\FlowTerminatedException;
 		}
 
 		/**

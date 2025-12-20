@@ -148,7 +148,7 @@ if (isset($_GET['InvoiceNumber']) && $_GET['InvoiceNumber'] > 0) {
 } elseif (!processing_active()) {
 	/* This page can only be called with an invoice number for crediting*/
 	display_error(__("This page can only be opened if an invoice has been selected for crediting."));
-    throw new \App\Exceptions\Legacy\FlowTerminatedException;
+    throw new \App\Legacy\Exception\FlowTerminatedException;
 } else check_item_data();
 
 function check_item_data()

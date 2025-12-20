@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Exceptions\Legacy;
+namespace App\Legacy\Exception;
 
-use App\Exceptions\Legacy\FlowControlException as Exception;
+use App\Legacy\Exception\FlowControlException as Exception;
 
 class FlowRedirectionException extends Exception
 {

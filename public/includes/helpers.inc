@@ -47,18 +47,18 @@ function root_path(string $path = ''): string
 /**
  * Get the legacy language service instance
  * 
- * @return \App\Services\LegacyLanguageService
+ * @return \App\Legacy\Service\LanguageService
  */
 function language()
 {
     static $language;
-    return $language ??= new \App\Services\LegacyLanguageService;
+    return $language ??= new \App\Legacy\Service\LanguageService;
 }
 
 
 function session_invalidate()
 {
-    if ($_SESSION instanceof \App\Session\Store) {
+    if ($_SESSION instanceof \App\Legacy\Session\Store) {
         $_SESSION->invalidate();
     } else {
         $_SESSION = [];
@@ -68,19 +68,19 @@ function session_invalidate()
 /**
  * Get the current session instance
  *
- * @return \App\Session\Store|\Illuminate\Session\SessionManager|\Illuminate\Session\Store
+ * @return \App\Legacy\Session\Store|\Illuminate\Session\SessionManager|\Illuminate\Session\Store
  */
 function session($key = null, $default = null)
 {
     if (is_null($key)) {
-        return app(\App\Session\Store::class);
+        return app(\App\Legacy\Session\Store::class);
     }
 
     if (is_array($key)) {
-        return app(\App\Session\Store::class)->put($key);
+        return app(\App\Legacy\Session\Store::class)->put($key);
     }
 
-    return app(\App\Session\Store::class)->get($key, $default);
+    return app(\App\Legacy\Session\Store::class)->get($key, $default);
 }
 
 /**

@@ -51,7 +51,7 @@ if (isset($_GET['AddedID']))
 	br();
 
 	end_page();
-	throw new \App\Exceptions\Legacy\FlowCompletedException;
+	throw new \App\Legacy\Exception\FlowCompletedException;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ $wo_details = get_work_order($_POST['selected_id'], true);
 if ($wo_details === false)
 {
 	display_error(__("The order number sent is not valid."));
-	throw new \App\Exceptions\Legacy\FlowTerminatedException;
+	throw new \App\Legacy\Exception\FlowTerminatedException;
 }
 
 //--------------------------------------------------------------------------------------------------

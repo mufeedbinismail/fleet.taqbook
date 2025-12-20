@@ -98,14 +98,14 @@ function get_supp_trans($trans_no, $trans_type=-1, $supplier_id=null)
     {
        // can't return nothing
        display_db_error("no supplier trans found for given params", $sql, true);
-       throw new \App\Exceptions\Legacy\FlowTerminatedException;
+       throw new \App\Legacy\Exception\FlowTerminatedException;
     }
 
     if (db_num_rows($result) > 1)
     {
        // can't return multiple
        display_db_error("duplicate supplier transactions found for given params", $sql, true);
-       throw new \App\Exceptions\Legacy\FlowTerminatedException;
+       throw new \App\Legacy\Exception\FlowTerminatedException;
     }
     return db_fetch($result);
 }

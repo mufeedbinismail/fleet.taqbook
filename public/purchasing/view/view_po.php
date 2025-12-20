@@ -24,7 +24,7 @@ page(__($GLOBALS['help_context'] = "View Purchase Order"), true, false, "", $js)
 if (!isset($_GET['trans_no']))
 {
 	display_error("<br>" . __("This page must be called with a purchase order number to review."));
-    throw new \App\Exceptions\Legacy\FlowTerminatedException;
+    throw new \App\Legacy\Exception\FlowTerminatedException;
 }
 
 if (!empty($SysPrefs->prefs['company_logo_on_views']))

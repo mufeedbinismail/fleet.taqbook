@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Session;
+namespace App\Legacy\Session;
 
 use IteratorAggregate;
 use ArrayAccess;

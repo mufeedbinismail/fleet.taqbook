@@ -24,7 +24,7 @@ require_once __DIR__ . "/../../purchasing/includes/purchasing_ui.inc";
 if (!isset($_GET['trans_no']))
 {
 	display_error("<BR>" . __("This page must be called with a Purchase Order Delivery number to review."));
-    throw new \App\Exceptions\Legacy\FlowTerminatedException;
+    throw new \App\Legacy\Exception\FlowTerminatedException;
 }
 
 $purchase_order = new purch_order;

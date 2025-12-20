@@ -29,7 +29,7 @@ if (isset($_GET['xls']) || isset($_GET['xml']))
 {
 	$filename = $_GET['filename'];
 	$unique_name = preg_replace('/[^0-9_a-z.\-]/i', '', $_GET['unique']);
-    throw new \App\Exceptions\Legacy\FileDownloadException(
+    throw new \App\Legacy\Exception\FileDownloadException(
         company_path().'/pdf_files/'.$unique_name,
         $filename
     );
@@ -54,4 +54,4 @@ if ($rep_file) {
 	display_error("Cannot find report file '$rep'");
 }
 
-throw new \App\Exceptions\Legacy\FlowTerminatedException;
+throw new \App\Legacy\Exception\FlowTerminatedException;

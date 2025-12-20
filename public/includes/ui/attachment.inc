@@ -42,7 +42,7 @@ class attachments extends simple_crud {
 				if(in_ajax()) {
 					$Ajax->redirect(url('/admin/attachments.php', ['dl' => $keys[0]]));
 				} else {
-                    throw new \App\Exceptions\Legacy\FileDownloadException(
+                    throw new \App\Legacy\Exception\FileDownloadException(
                         company_path()."/attachments/".$row['unique_name'],
                         $row['filename']
                     );

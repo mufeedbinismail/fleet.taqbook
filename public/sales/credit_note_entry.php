@@ -206,7 +206,7 @@ if (isset($_POST['ProcessCredit']) && can_process()) {
 		$_POST['WriteOffGLCode'] == '')) {
 		display_note(__("For credit notes created to write off the stock, a general ledger account is required to be selected."), 1, 0);
 		display_note(__("Please select an account to write the cost of the stock off to, then click on Process again."), 1, 0);
-		throw new \App\Exceptions\Legacy\FlowTerminatedException;
+		throw new \App\Legacy\Exception\FlowTerminatedException;
 	}
 	if (!isset($_POST['WriteOffGLCode'])) {
 		$_POST['WriteOffGLCode'] = 0;

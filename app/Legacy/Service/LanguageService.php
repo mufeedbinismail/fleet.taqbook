@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services;
+namespace App\Legacy\Service;
 
 /**
  * Legacy language service for FrontAccounting compatibility
  * Provides language object interface while using Laravel's translation system
  */
-class LegacyLanguageService
+class LanguageService
 {
     protected $locale;
     protected $dir;

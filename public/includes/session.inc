@@ -60,7 +60,7 @@ function password_reset_fail()
   	echo "</center>";
 
 	kill_login();
-	throw new \App\Exceptions\Legacy\FlowTerminatedException;
+	throw new \App\Legacy\Exception\FlowTerminatedException;
 }
 
 function password_reset_success()
@@ -72,7 +72,7 @@ function password_reset_success()
   	echo "</center>";
 	
 	kill_login();
-	throw new \App\Exceptions\Legacy\FlowCompletedException;
+	throw new \App\Legacy\Exception\FlowCompletedException;
 }
 
 function check_faillog()
@@ -150,7 +150,7 @@ function check_page_security($page_security)
 		display_error(__("Security settings have not been defined for your user account.") . "<br>" . __("Please contact your system administrator."));
 		end_page(@$_REQUEST['popup']);
 		kill_login();
-		throw new \App\Exceptions\Legacy\FlowTerminatedException;
+		throw new \App\Legacy\Exception\FlowTerminatedException;
 	}
 
 	if (!$_SESSION["wa_current_user"]->can_access_page($page_security))
@@ -161,7 +161,7 @@ function check_page_security($page_security)
 		echo "</b>";
 		echo "<br><br><br><br></center>";
 		end_page(@$_REQUEST['popup']);
-		throw new \App\Exceptions\Legacy\FlowTerminatedException;
+		throw new \App\Legacy\Exception\FlowTerminatedException;
 	}
 }
 /*
@@ -327,7 +327,7 @@ if (!defined('FA_LOGOUT_PHP_FILE')){
         && (isset($_GET['reset']) || isset($_POST['email_entry_field']))) {
 		  if (!isset($_POST["email_entry_field"])) {
         require __DIR__ . "/../access/password_reset.php";
-        throw new \App\Exceptions\Legacy\FlowCompletedException;
+        throw new \App\Legacy\Exception\FlowCompletedException;
       }
       else {
         if (isset($_POST["company_login_nickname"]) && !isset($_POST["company_login_name"])) {
@@ -371,7 +371,7 @@ if (!defined('FA_LOGOUT_PHP_FILE')){
 			$Ajax->popup(url("/access/timeout.php"));
 		else
 			require __DIR__ . "/../access/login.php";
-			throw new \App\Exceptions\Legacy\FlowTerminatedException;
+			throw new \App\Legacy\Exception\FlowTerminatedException;
 		} else {
 			if (isset($_POST["company_login_nickname"]) && !isset($_POST["company_login_name"])) {
 				for ($i = 0; $i < count($db_connections); $i++) {
@@ -392,13 +392,13 @@ if (!defined('FA_LOGOUT_PHP_FILE')){
 			// Incorrect password
 				if (isset($_SESSION['timeout'])) {
 					require __DIR__ . "/../access/login.php";
-					throw new \App\Exceptions\Legacy\FlowTerminatedException;
+					throw new \App\Legacy\Exception\FlowTerminatedException;
 				} else
 					login_fail();
 			}
 			elseif(isset($_SESSION['timeout']) && !$_SESSION['timeout']['post'])
 			{
-                throw new \App\Exceptions\Legacy\FlowRedirectionException($_SESSION['timeout']['uri'], 307);
+                throw new \App\Legacy\Exception\FlowRedirectionException($_SESSION['timeout']['uri'], 307);
 			}
 		}
 	} else

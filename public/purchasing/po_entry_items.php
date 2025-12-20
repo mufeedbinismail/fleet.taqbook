@@ -217,7 +217,7 @@ function handle_cancel_po()
 	echo "<br>";
 
 	end_page();
-	throw new \App\Exceptions\Legacy\FlowCompletedException;
+	throw new \App\Legacy\Exception\FlowCompletedException;
 }
 
 //---------------------------------------------------------------------------------------------------

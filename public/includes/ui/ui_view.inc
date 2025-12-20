@@ -531,7 +531,7 @@ function display_footer_exit($space=2)
 	if ($space)
 		br($space);
 	end_page(false, false, true);
-	throw new \App\Exceptions\Legacy\FlowTerminatedException;
+	throw new \App\Legacy\Exception\FlowTerminatedException;
 }
 
 //--------------------------------------------------------------------------------------
@@ -1492,7 +1492,7 @@ if (!function_exists('_vd'))
     	$str .= "</pre>\n";
 		display_notification('<table><tr><td>'.$str.'</td></tr></table>');
     	if ($exit)
-    		throw new \App\Exceptions\Legacy\FlowTerminatedException;
+    		throw new \App\Legacy\Exception\FlowTerminatedException;
   	}
 }
 
@@ -1500,7 +1500,7 @@ function _vl($mixed, $title = '', $exit = false)
 {
 	error_log((!empty($title) ? ($title .':') : '') . print_r($mixed, true));
 	if ($exit)
-		throw new \App\Exceptions\Legacy\FlowTerminatedException;
+		throw new \App\Legacy\Exception\FlowTerminatedException;
 }
 
 function display_backtrace($cond=true, $msg='') {

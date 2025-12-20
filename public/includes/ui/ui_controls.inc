@@ -188,7 +188,7 @@ function meta_forward($forward_to, $params="", $timeout=0, $return=false)
 	echo " " . __("If this does not happen") . " " . "<a href='$forward_to?$params'>" . __("click here") . "</a> " . __("to continue") . ".<br><br></center>\n";
 	if ($params !='') $params = '?'.$params;
 	$Ajax->redirect($forward_to.$params);
-	if (!$return) throw new \App\Exceptions\Legacy\FlowCompletedException;
+	if (!$return) throw new \App\Legacy\Exception\FlowCompletedException;
 }
 
 //-----------------------------------------------------------------------------------
