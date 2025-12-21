@@ -98,7 +98,7 @@ function can_process()
 		return false;
 	}
 
-    if (session('wa_current_user')->check_module_access('mp_orders')) {
+    if (session('wa_current_user')->check_application_access(session('App')->get_application('mp_orders'))) {
         if (!get_post('marketplace_commission_act')) {
             display_error(__("Please select the marketplace commission account."));
             set_focus('marketplace_commission_act');
@@ -302,7 +302,7 @@ text_row(__("Delivery Required By:"), 'default_delivery_required', $_POST['defau
 
 table_section(2);
 
-if (session('wa_current_user')->check_module_access('mp_orders')) {
+if (session('wa_current_user')->check_application_access(session('App')->get_application('mp_orders'))) {
     table_section_title(__("Marketplace Sales Defaults"));
 
     start_row();
