@@ -238,14 +238,6 @@ function check_quantities()
 				$_SESSION['Items']->line_items[$line_no]->item_description = $line_desc;
 			}
 		}
-
-        if (isset($_POST['Line'.$line_no.'MktShipping'])) {
-			$itm->marketplace_shipping = input_num('Line'.$line_no.'MktShipping');
-	  	}
-		
-        if (isset($_POST['Line'.$line_no.'MktCommission'])) {
-			$itm->marketplace_commission = input_num('Line'.$line_no.'MktCommission');
-	  	}
 	}
  return $ok;
 }
@@ -565,12 +557,6 @@ if ($prepaid) {
 $th[] = __("Price");
 $th[] = __("Tax Type");
 $th[] = __("Discount");
-
-if ($options['show_marketplace_cols']) {
-    $th[] = __("Mkt Commission");
-    $th[] = __("Mkt Shipping Chg");
-}
-
 $th[] = __("Total");
 
 if ($is_batch_invoice) {
@@ -622,23 +608,6 @@ foreach ($_SESSION['Items']->line_items as $line=>$ln_itm) {
 	amount_cell($ln_itm->price);
 	label_cell($ln_itm->tax_type_name);
 	label_cell($display_discount_percent, "nowrap align=right");
-    if ($options['show_marketplace_cols']) {
-        amount_cells(
-            null,
-            'Line'.$line.'MktCommission',
-            price_format($ln_itm->marketplace_commission),
-            null,
-            "",
-            $dec
-        );
-        amount_cells(null,
-            'Line'.$line.'MktShipping',
-            price_format($ln_itm->marketplace_shipping),
-            null,
-            "",
-            $dec
-        );
-    }
 	amount_cell($line_total);
 
 	if ($is_batch_invoice) {
@@ -675,7 +644,7 @@ $accumulate_shipping = get_company_pref('accumulate_shipping');
 if ($is_batch_invoice && $accumulate_shipping)
 	set_delivery_shipping_sum(array_keys($_SESSION['Items']->src_docs));
 
-$colspan = ($prepaid ? 7 : 9) + ($options['show_marketplace_cols'] ? 2 : 0);
+$colspan = ($prepaid ? 7 : 9);
 start_row();
 label_cell(__("Shipping Cost"), "colspan=$colspan align=right");
 if ($prepaid)
@@ -699,22 +668,6 @@ $tax_total = display_edit_tax_items($taxes, $colspan, $_SESSION['Items']->tax_in
 $inv_total = $inv_items_total + input_num('ChargeFreightCost') + $tax_total;
 
 label_row(__("Invoice Total"), price_format($inv_total), "colspan=$colspan align=right","align=right", $is_batch_invoice ? 2 : 0);
-
-if ($options['show_marketplace_cols']) {
-    $market_cost = $_SESSION['Items']->get_total_marketplace_cost();
-    label_row(
-        __("Total Marketplace Cost"),
-        price_format($market_cost),
-        "colspan=$colspan align=right",
-        "align=right"
-    );
-    label_row(
-        __("Net Receivable From Marketplace"),
-        price_format($inv_total - $market_cost),
-        "colspan=$colspan align=right",
-        "align=right"
-    );
-}
 
 end_table(1);
 div_end();

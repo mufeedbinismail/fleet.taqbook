@@ -123,9 +123,7 @@ function write_sales_invoice(&$invoice)
             $invoice_line->discount_percent,
 			$invoice_line->standard_cost,
             $invoice_line->src_id,
-			$trans_no ? $invoice_line->id : 0,
-            $invoice_line->marketplace_commission,
-            $invoice_line->marketplace_shipping
+			$trans_no ? $invoice_line->id : 0
         );
 
 		// Update delivery items for the quantity invoiced
@@ -163,66 +161,6 @@ function write_sales_invoice(&$invoice)
 						($line_taxfree_price * $invoice_line->discount_percent)*$prepaid_factor,
 						$invoice->customer_id, "The sales discount GL posting could not be inserted");
 				} /*end of if discount !=0 */
-
-                if (
-                    $invoice->is_marketplace_trans
-                    && ($invoice_line->marketplace_commission != 0 || $invoice_line->marketplace_shipping != 0)
-                ) {
-                    $marketplace_payable = 0;
-                    if (($comm = $invoice_line->marketplace_commission * $qty) != 0) {
-                        $marketplace_payable += $comm;
-
-                        add_gl_trans_customer(
-                            ST_SALESINVOICE,
-                            $invoice_no,
-                            $date_,
-                            get_company_pref('marketplace_commission_act'),
-                            $dim,
-                            $dim2,
-					        $comm * $prepaid_factor,
-					        $invoice->customer_id,
-                            "The sales price GL posting could not be inserted",
-                            0,
-                            "Marketplace Commission"
-                        );
-                    }
-
-                    if (($ship = $invoice_line->marketplace_shipping * $qty) != 0) {
-                        $marketplace_payable += $ship;
-
-                        add_gl_trans_customer(
-                            ST_SALESINVOICE,
-                            $invoice_no,
-                            $date_,
-                            get_company_pref('marketplace_shipping_act'),
-                            $dim,
-                            $dim2,
-					        $ship * $prepaid_factor,
-					        $invoice->customer_id,
-                            "The sales price GL posting could not be inserted",
-                            0,
-                            "Marketplace Shipping Charge"
-                        );
-                    }
-
-                    if ($marketplace_payable != 0) {
-                        add_gl_trans(
-                            ST_SALESINVOICE,
-                            $invoice_no,
-                            $date_,
-                            $marketplace_data["provision_account"],
-                            $dim,
-                            $dim2,
-                            "Marketplace Provision",
-                            -$marketplace_payable * $prepaid_factor,
-                            get_customer_currency($invoice->customer_id),
-                            PT_MARKETPLACE,
-                            $invoice->marketplace_id,
-                            "The sales price GL posting could not be inserted",
-                            0,
-                        );
-                    }
-                }
 			}
 		} /*quantity dispatched is more than 0 */
 	} /*end of delivery_line loop */

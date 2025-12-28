@@ -99,18 +99,6 @@ function can_process()
 	}
 
     if (session('wa_current_user')->check_application_access(session('App')->get_application('mp_orders'))) {
-        if (!get_post('marketplace_commission_act')) {
-            display_error(__("Please select the marketplace commission account."));
-            set_focus('marketplace_commission_act');
-            return false;
-        }
-
-        if (!get_post('marketplace_shipping_act')) {
-            display_error(__("Please select the marketplace shipping account."));
-            set_focus('marketplace_shipping_act');
-            return false;
-        }
-
         if (!get_post('marketplace_expense_items')) {
             display_error(__("Please select the marketplace expense items."));
             set_focus('marketplace_expense_items');
@@ -232,9 +220,6 @@ $_POST['allow_negative_prices'] = $myrow['allow_negative_prices'];
 $_POST['print_item_images_on_quote'] = $myrow['print_item_images_on_quote'];
 $_POST['default_loss_on_asset_disposal_act'] = $myrow['default_loss_on_asset_disposal_act'];
 $_POST['depreciation_period'] = $myrow['depreciation_period'];
-
-$_POST['marketplace_commission_act'] = $myrow['marketplace_commission_act'];
-$_POST['marketplace_shipping_act'] = $myrow['marketplace_shipping_act'];
 $_POST['marketplace_expense_items'] = array_filter(explode(',', $myrow['marketplace_expense_items']));
 
 //---------------
@@ -322,32 +307,6 @@ if (session('wa_current_user')->check_application_access(session('App')->get_app
         "class='label'"
     );
     end_row();
-
-    gl_all_accounts_list_row(
-        __("Commission Account"),
-        'marketplace_commission_act',
-        null,
-        true,
-        false,
-        '-- select --',
-        false,
-        false,
-        false,
-        [CL_COGS, CL_EXPENSE]
-    );
-
-    gl_all_accounts_list_row(
-        __("Shipping Chrg Account"),
-        'marketplace_shipping_act',
-        null,
-        true,
-        false,
-        '-- select --',
-        false,
-        false,
-        false,
-        [CL_COGS, CL_EXPENSE]
-    );
 }
 
 table_section_title(__("Suppliers and Purchasing"));

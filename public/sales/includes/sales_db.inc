@@ -308,9 +308,7 @@ function read_sales_trans($doc_type, $trans_no, &$cart)
 					$myrow["StockDescription"],
                     $myrow["id"],
                     $myrow["debtor_trans_no"],
-					@$myrow["src_id"],
-                    $myrow["marketplace_commission"],
-                    $myrow["marketplace_shipping"]
+					@$myrow["src_id"]
                 );
 			}
 		}

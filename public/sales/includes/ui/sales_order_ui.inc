@@ -18,9 +18,7 @@ function add_to_order(
     $new_item_qty,
     $price,
     $discount,
-    $description='',
-    $marketplace_commission=0,
-    $marketplace_shipping=0
+    $description=''
 )
 {
 	// calculate item price to sum of kit element prices factor for 
@@ -59,9 +57,7 @@ function add_to_order(
                 $new_item_qty*$item['quantity'],
 				$item_price,
                 $discount,
-                '',
-                $marketplace_commission,
-                $marketplace_shipping
+                ''
             );
 		}
 		else
@@ -88,9 +84,7 @@ function add_to_order(
                 $description,
                 0,
                 0,
-                0,
-                $marketplace_commission,
-                $marketplace_shipping
+                0
             );
 		}
 	}
@@ -184,10 +178,6 @@ function display_order_summary($title, &$order, $editable_items=false)
     $th[] = __("Unit");
     $th[] = $order->tax_included ? __("Price after Tax") : __("Price before Tax");
     $th[] = __("Discount %");
-    if ($options['show_marketplace_cols']) {
-        $th[] = __("Marketplace Commission");
-        $th[] = __("Marketplace Shipping");
-    }
     $th[] = __("Total");
     $th[] = "";
 
@@ -233,10 +223,6 @@ function display_order_summary($title, &$order, $editable_items=false)
 			amount_cell($stock_item->price);
 
 			percent_cell($stock_item->discount_percent * 100);
-            if ($options['show_marketplace_cols']) {
-                amount_cell($stock_item->marketplace_commission);
-                amount_cell($stock_item->marketplace_shipping);
-            }
 			amount_cell($line_total);
 
 			if ($editable_items)
@@ -259,7 +245,7 @@ function display_order_summary($title, &$order, $editable_items=false)
 	if ($id==-1 && $editable_items)
 		sales_order_item_controls($order, $k, -1, $options);
 
-	$colspan = 6 + ($options['show_marketplace_cols'] ? 2 : 0);
+	$colspan = 6;
 	if ($order->trans_no!=0)
 		++$colspan;
 	start_row();
@@ -276,14 +262,6 @@ function display_order_summary($title, &$order, $editable_items=false)
 
 	start_row();
 	label_cells(__("Amount Total"), price_format($inv_total), "colspan=$colspan align=right","align=right");
-    if ($options['show_marketplace_cols']) {
-        end_row();
-        $market_cost = $order->get_total_marketplace_cost();
-        label_row(__("Marketplace Cost"), price_format($market_cost), "colspan=$colspan align=right","align=right");
-
-        start_row();
-        label_cells(__("Net Receivable From Marketplace"), price_format($inv_total - $market_cost), "colspan=$colspan align=right","align=right");
-    }
         
 	submit_cells('update', __("Update"), "colspan=2 align='center'", __("Refresh"), true);
 	end_row();
@@ -551,8 +529,6 @@ function sales_order_item_controls(&$order, &$rowcounter, $line_no=-1, $options=
 		$dec = get_qty_dec($_POST['stock_id']);
 		$_POST['qty'] = number_format2($order->line_items[$id]->qty_dispatched, $dec);
 		$_POST['price'] = price_format($order->line_items[$id]->price);
-		$_POST['marketplace_commission'] = price_format($order->line_items[$id]->marketplace_commission);
-		$_POST['marketplace_shipping'] = price_format($order->line_items[$id]->marketplace_shipping);
 		$_POST['Disc'] = percent_format($order->line_items[$id]->discount_percent*100);
 		$units = $order->line_items[$id]->units;
 		$_POST['item_description'] = $order->line_items[$id]->item_description;
@@ -596,8 +572,6 @@ function sales_order_item_controls(&$order, &$rowcounter, $line_no=-1, $options=
 		$_POST['price'] = price_format($price);
 		// default to the customer's discount %
 		$_POST['Disc'] = percent_format($order->default_discount * 100);
-        $_POST['marketplace_commission'] = '0.00';
-        $_POST['marketplace_shipping'] = '0.00';
 	}
 
 	if ($order->fixed_asset) {
@@ -615,14 +589,6 @@ function sales_order_item_controls(&$order, &$rowcounter, $line_no=-1, $options=
 	amount_cells(null, 'price');
 
 	small_amount_cells(null, 'Disc', percent_format($_POST['Disc']), null, null, user_percent_dec());
-
-    if ($options['show_marketplace_cols'] ?? 0) {
-        small_amount_cells(null, 'marketplace_commission');
-        small_amount_cells(null, 'marketplace_shipping');
-    } else {
-        hidden('marketplace_commission', 0);
-        hidden('marketplace_shipping', 0);
-    }
 
 	$line_total = input_num('qty') * input_num('price') * (1 - input_num('Disc') / 100);
 

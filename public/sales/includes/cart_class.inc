@@ -359,11 +359,6 @@ class Cart
                     $orig_line = $line_items[$lineno];
                     $this->line_items[$lineno]->stock_id = @html_entity_decode($line->stock_id, ENT_QUOTES);
                     $this->line_items[$lineno]->item_description = @html_entity_decode($line->item_description, ENT_QUOTES);
-
-                    // These are not common for all documents
-                    // so we need to restore them, after every iteration
-                    $this->line_items[$lineno]->marketplace_commission = $orig_line->marketplace_commission;
-                    $this->line_items[$lineno]->marketplace_shipping = $orig_line->marketplace_shipping;
                 }
 
                 // These are not common for all documents
@@ -458,9 +453,7 @@ class Cart
         $description=null,
         $id=0,
         $src_no=0,
-		$src_id=0,
-        $marketplace_commission=0,
-        $marketplace_shipping=0
+		$src_id=0
     )
 	{
 		$line = new line_details(
@@ -473,9 +466,7 @@ class Cart
             $description,
             $id,
             $src_no,
-            $src_id,
-            $marketplace_commission,
-            $marketplace_shipping
+            $src_id
         );
 
 		if ($line->valid) {
@@ -491,9 +482,7 @@ class Cart
         $qty,
         $price,
         $disc,
-        $description="",
-        $marketplace_commission=0,
-        $marketplace_shipping=0
+        $description=""
     )
 	{
 		if ($description != "")
@@ -502,8 +491,6 @@ class Cart
 		$this->line_items[$line_no]->qty_dispatched = $qty;
 		$this->line_items[$line_no]->price = $price;
 		$this->line_items[$line_no]->discount_percent = $disc;
-        $this->line_items[$line_no]->marketplace_commission = $marketplace_commission;
-        $this->line_items[$line_no]->marketplace_shipping = $marketplace_shipping;
 	}
 
 	function update_add_cart_item_qty($line_no, $qty)
@@ -559,16 +546,7 @@ class Cart
 	}
 
     function get_total_marketplace_cost() {
-        $total = 0;
-
-        foreach ($this->line_items as $ln_itm) {
-            $total += round(
-                $ln_itm->qty_dispatched * ($ln_itm->marketplace_commission + $ln_itm->marketplace_shipping),
-                user_price_dec()
-            );
-        }
-        
-        return $total;
+        return 0;
     }
 
 	function has_items_dispatch()
@@ -763,8 +741,6 @@ class line_details
 	var $src_id;
 	var $price;
 	var $discount_percent;
-    var $marketplace_commission;
-    var $marketplace_shipping;
 	
 	var $standard_cost;
 	var $descr_editable;
@@ -807,9 +783,7 @@ class line_details
         $description,
         $id=0,
         $src_no=0,
-        $src_id=0,
-        $marketplace_commission=0,
-        $marketplace_shipping=0
+        $src_id=0
     )
 	{
 	/* Constructor function to add a new LineDetail object with passed params */
@@ -838,8 +812,6 @@ class line_details
 		$this->discount_percent = $disc_percent;
 		$this->qty_done = $qty_done;
 		$this->standard_cost = $standard_cost;
-        $this->marketplace_commission = $marketplace_commission;
-        $this->marketplace_shipping = $marketplace_shipping;
 		$this->valid = true;
 	}
 

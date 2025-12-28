@@ -131,9 +131,7 @@ function write_credit_note(&$credit_note, $write_off_acc)
             $credit_line->discount_percent,
 			$credit_line->standard_cost,
             $credit_line->src_id,
-            $trans_no==0 ? 0:  $credit_line->id,
-            $credit_line->marketplace_commission,
-            $credit_line->marketplace_shipping
+            $trans_no==0 ? 0 : $credit_line->id
         );
 
 		if ($credit_type == 'Return')
@@ -280,66 +278,6 @@ function add_gl_trans_credit_costs($order, $order_line, $credit_no, $date_,
 				"The credit note discount GL posting could not be inserted");
 
 		} /*end of if discount !=0 */
-
-        if (
-            $order->is_marketplace_trans
-            && ($order_line->marketplace_commission != 0 || $order_line->marketplace_shipping != 0)
-        ) {
-            $marketplace_payable = 0;
-            if (($comm = $order_line->marketplace_commission * $order_line->qty_dispatched) != 0) {
-                $marketplace_payable += $comm;
-
-                add_gl_trans_customer(
-                    ST_CUSTCREDIT,
-                    $credit_no,
-                    $date_,
-                    get_company_pref('marketplace_commission_act'),
-                    $dim,
-                    $dim2,
-                    -$comm,
-                    $order->customer_id,
-                    "The sales price GL posting could not be inserted",
-                    0,
-                    "Marketplace Commission"
-                );
-            }
-
-            if (($ship = $order_line->marketplace_shipping * $order_line->qty_dispatched) != 0) {
-                $marketplace_payable += $ship;
-
-                add_gl_trans_customer(
-                    ST_CUSTCREDIT,
-                    $credit_no,
-                    $date_,
-                    get_company_pref('marketplace_shipping_act'),
-                    $dim,
-                    $dim2,
-                    -$ship,
-                    $order->customer_id,
-                    "The sales price GL posting could not be inserted",
-                    0,
-                    "Marketplace Shipping Charge"
-                );
-            }
-
-            if ($marketplace_payable != 0) {
-                add_gl_trans(
-                    ST_CUSTCREDIT,
-                    $credit_no,
-                    $date_,
-                    $marketplace["provision_account"],
-                    $dim,
-                    $dim2,
-                    "Marketplace Provision",
-                    $marketplace_payable,
-                    get_customer_currency($order->customer_id),
-                    PT_MARKETPLACE,
-                    $order->marketplace_id,
-                    "The sales price GL posting could not be inserted",
-                    0,
-                );
-            }
-        }
 	} /*if line_price!=0 */
 	return $total;
 }

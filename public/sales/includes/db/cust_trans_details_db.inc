@@ -67,9 +67,7 @@ function write_customer_trans_detail_item(
     $discount_percent,
     $std_cost,
     $src_id,
-    $line_id=0,
-    $marketplace_commission=0,
-    $marketplace_shipping=0
+    $line_id=0
 )
 {
 	if ($line_id!=0)
@@ -80,8 +78,6 @@ function write_customer_trans_detail_item(
 			unit_price=$unit_price,
 			unit_tax=$unit_tax,
 			discount_percent=$discount_percent,
-			marketplace_commission=$marketplace_commission,
-			marketplace_shipping=$marketplace_shipping,
 			standard_cost=$std_cost,
 			src_id=".db_escape($src_id)."
 		WHERE
@@ -96,8 +92,6 @@ function write_customer_trans_detail_item(
             unit_price,
             unit_tax,
             discount_percent,
-            marketplace_commission,
-            marketplace_shipping,
             standard_cost,
             src_id
         ) VALUES (
@@ -109,8 +103,6 @@ function write_customer_trans_detail_item(
             $unit_price,
             $unit_tax,
             $discount_percent,
-            $marketplace_commission,
-            $marketplace_shipping,
             $std_cost,
             ".db_escape($src_id)."
         )";
