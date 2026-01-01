@@ -2,6 +2,7 @@
 
 namespace App\Foundation\Provider;
 
+use App\Foundation\Setting\SettingRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +12,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(SettingRepository::class);
+
+        // Alias registration
+        $this->app->alias(SettingRepository::class, 'settings');
     }
 
     /**

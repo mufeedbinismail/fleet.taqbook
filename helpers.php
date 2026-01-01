@@ -1,5 +1,7 @@
 <?php
 
+use App\Foundation\Support\Arr;
+
 /** 
  * Joins array elements into a string based on their truthy values.
  *
@@ -23,4 +25,26 @@ function conditional_join(array $elements, string $glue = ' '): string
     }
 
     return implode($glue, array_unique($elements));
+}
+
+/**
+ * Get / set the specified configuration value.
+ *
+ * If an array is passed as the key, we will assume you want to set an array of values.
+ *
+ * @param  array|string|null  $key
+ * @param  mixed  $default
+ * @return mixed|\App\Foundation\Setting\SettingRepository
+ */
+function settings($key = null, $default = Arr::NOT_SET)
+{
+    if (is_null($key)) {
+        return app('settings');
+    }
+
+    if (is_array($key)) {
+        return app('settings')->set($key);
+    }
+
+    return app('settings')->get($key, $default);
 }
