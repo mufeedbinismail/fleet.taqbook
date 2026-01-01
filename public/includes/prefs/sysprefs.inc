@@ -9,6 +9,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
+
+use App\Foundation\Setting\SettingRepository;
+
 require_once __DIR__ . "/../../admin/db/company_db.inc";
 
 /*
@@ -18,7 +21,7 @@ require_once __DIR__ . "/../../admin/db/company_db.inc";
 */
 class sys_prefs extends stdClass
 {
-	var $prefs;
+	public SettingRepository $prefs;
 
 	function __construct()
 	{
@@ -46,25 +49,16 @@ class sys_prefs extends stdClass
 			$this->use_popup_search = false;
 
    	    ini_set('date.timezone', $this->time_zone);
+
+        $this->prefs = settings();
 	}
 
 	/*
-		Re-initialize company preferrencies.
+		Re-initialize company preferences.
 	*/
 	function refresh()
 	{
-		global $db_version;
-
-		$sql = "SELECT name, value FROM ".TB_PREF."sys_prefs";
-		$result = @db_query($sql); // supress errors before 2.3 db structure upgrade
-
-		if(!$result)
-			return null;
-
-		while($pref = db_fetch_assoc($result)) {
-			$this->prefs[$pref['name']] = $pref['value'];
-		}
-
+		settings()->refresh();
 	}
 
 	function allow_negative_stock() 

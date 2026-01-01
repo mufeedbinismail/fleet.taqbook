@@ -32,20 +32,11 @@ function update_company_prefs($params)
 */
 function get_company_pref($prefs = null)
 {
-	global $SysPrefs, $db_version;
+    if (empty($prefs) || !is_string($prefs)) {
+        return settings()->all();
+    }
 
-	if (!isset($SysPrefs->prefs))	 // just after first login or reset
-		$SysPrefs->refresh();
-
-	$all = $SysPrefs->prefs;
-
-	if ($prefs && is_string($prefs))
-		return @$all[$prefs];
-
-	if (!is_array($all))
-		$all = array();
-
-	return $all;
+	return settings()->get($prefs);
 }
 
 function get_company_prefs()
