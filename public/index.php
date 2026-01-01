@@ -9,10 +9,6 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-	if (!file_exists(PATH_TO_ROOT.'/config_db.php')) {
-        throw new \App\Exceptions\Legacy\FlowRedirectionException("/install/index.php");
-    }
-
 	$GLOBALS['page_security'] = 'SA_OPEN';
 	ini_set('xdebug.auto_trace',1);
 	include_once("includes/session.inc");

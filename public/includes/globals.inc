@@ -5,7 +5,18 @@ return [
     
     // Database globals
     'db'                   => [],
-    'db_connections'       => [],
+    'db_connections'       => [
+        0 => [
+            'name' => config('app.name'),
+            'host' => config('database.connections.mysql.host'),
+            'port' => config('database.connections.mysql.port'),
+            'dbname' => config('database.connections.mysql.database'),
+            'collation' => config('database.connections.mysql.collation'),
+            'tbpref' => '',
+            'dbuser' => config('database.connections.mysql.username'),
+            'dbpassword' => config('database.connections.mysql.password'),
+        ],
+    ],
     'db_version'           => null,
     'db_last_inserted_id'  => 0,
     

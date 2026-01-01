@@ -250,7 +250,6 @@ set_error_handler('error_handler' /*, errtypes */);
 require_once __DIR__ . "/../includes/current_user.inc";
 require_once __DIR__ . "/../frontaccounting.php";
 require_once __DIR__ . "/../admin/db/security_db.inc";
-require_once __DIR__ . "/../config_db.php";
 require_once __DIR__ . "/../includes/ajax.inc";
 require_once __DIR__ . "/../includes/ui/ui_msgs.inc";
 require_once __DIR__ . "/../includes/prefs/sysprefs.inc";
