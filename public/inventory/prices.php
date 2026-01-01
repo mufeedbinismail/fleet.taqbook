@@ -11,9 +11,6 @@
 ***********************************************************************/
 $GLOBALS['page_security'] = 'SA_SALESPRICE';
 
-if (@$_GET['page_level'] == 1)
-else	
-
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../sales/includes/sales_db.inc";
 require_once __DIR__ . "/../sales/includes/db/sales_types_db.inc";
