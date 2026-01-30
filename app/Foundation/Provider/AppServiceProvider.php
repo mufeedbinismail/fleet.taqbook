@@ -4,6 +4,8 @@ namespace App\Foundation\Provider;
 
 use App\Foundation\Setting\SettingRepository;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +25,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Str::createUuidsUsing(fn () => Uuid::uuid7());
     }
 }
