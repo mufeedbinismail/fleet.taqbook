@@ -192,6 +192,7 @@ return [
         \App\Foundation\Provider\EventServiceProvider::class,
         \App\Foundation\Provider\RouteServiceProvider::class,
         \App\Legacy\Provider\LegacyServiceProvider::class,
+        \App\Finance\Provider\FinanceServiceProvider::class,
     ])->toArray(),
 
     /*

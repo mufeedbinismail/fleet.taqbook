@@ -17,15 +17,15 @@ final class MoneyFactory
      *
      * @throws UnexpectedValueException
      */
-    private static function defaultCurrency(): string
+    public static function defaultCurrency(): string
     {
-        if (! ($currency = settings()->homeCurrency()) ) {
+        if (! ($currency = \settings()->homeCurrency()) ) {
             throw new UnexpectedValueException('Home currency is not set. Configure curr_default in company settings.');
         }
         return $currency;
     }
 
-    private static function defaultRoundingMode(): RoundingMode
+    public static function defaultRoundingMode(): RoundingMode
     {
         return RoundingMode::HALF_UP;
     }
