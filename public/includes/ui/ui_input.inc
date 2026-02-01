@@ -508,20 +508,21 @@ function label_row($label, $value, $params="", $params2="", $leftfill=0, $id=nul
 	echo "</tr>\n";
 }
 
-function text_input($name, $value=null, $size='', $max='', $title='', $params='')
+function text_input($name, $value=null, $size='', $max='', $title='', $params='', $readonly=false)
 {
 	if ($value === null)
 		$value = get_post($name);
 
 	return "<input $params type=\"text\" name=\"$name\" size=\"$size\" maxlength=\"$max\" value=\"$value\""
 	    .($title ? " title='$title'" : '')
+        .($readonly ? " readonly" : '')
 	    .">";
 }
 
 //-----------------------------------------------------------------------------------
 
 function text_cells($label, $name, $value=null, $size="", $max="", $title=false, 
-	$labparams="", $post_label="", $inparams="")
+	$labparams="", $post_label="", $inparams="", $readonly=false)
 {
   	global $Ajax;
 
@@ -530,7 +531,7 @@ function text_cells($label, $name, $value=null, $size="", $max="", $title=false,
 		label_cell($label, $labparams);
 	echo "<td>";
 
-	echo text_input($name, $value, $size, $max, $title, $inparams);
+	echo text_input($name, $value, $size, $max, $title, $inparams, $readonly);
 
 	if ($post_label != "")
 		echo " " . $post_label;
@@ -540,7 +541,7 @@ function text_cells($label, $name, $value=null, $size="", $max="", $title=false,
 }
 
 function text_cells_ex($label, $name, $size, $max=null, $init=null, $title=null,
-	$labparams=null, $post_label=null, $submit_on_change=false)
+	$labparams=null, $post_label=null, $submit_on_change=false, $readonly=false)
 {
   	global $Ajax;
 
@@ -561,7 +562,9 @@ function text_cells_ex($label, $name, $size, $max=null, $init=null, $title=null,
 	echo "<td>";
 	$class = $submit_on_change ? 'class="searchbox"' : '';
 	echo "<input $class type=\"text\" name=\"$name\" size=\"$size\" maxlength=\"$max\" value=\"" . $_POST[$name]. "\""
-	 .($title ? " title='$title'": '')." >";
+	 .($title ? " title='$title'": '')
+     .($readonly ? " readonly" : '')
+     ." >";
 
 	if ($post_label)
 		echo " " . $post_label;
@@ -570,20 +573,20 @@ function text_cells_ex($label, $name, $size, $max=null, $init=null, $title=null,
 	$Ajax->addUpdate($name, $name, $_POST[$name]);
 }
 
-function text_row($label, $name, $value, $size, $max, $title=null, $params="", $post_label="")
+function text_row($label, $name, $value, $size, $max, $title=null, $params="", $post_label="", $readonly=false)
 {
 	echo "<tr><td class='label'>$label</td>";
-	text_cells(null, $name, $value, $size, $max, $title, $params, $post_label);
+	text_cells(null, $name, $value, $size, $max, $title, $params, $post_label, $readonly);
 
 	echo "</tr>\n";
 }
 
 //-----------------------------------------------------------------------------------
 
-function text_row_ex($label, $name, $size, $max=null, $title=null, $value=null, $params=null, $post_label=null)
+function text_row_ex($label, $name, $size, $max=null, $title=null, $value=null, $params=null, $post_label=null, $readonly=false)
 {
 	echo "<tr><td class='label'>$label</td>";
-	text_cells_ex(null, $name, $size, $max, $value, $title, $params, $post_label);
+	text_cells_ex(null, $name, $size, $max, $value, $title, $params, $post_label, $readonly);
 
 	echo "</tr>\n";
 }
@@ -727,7 +730,7 @@ function file_row($label, $name, $id = "")
  	'supplier' - supplier id
  	'branch' - branch_code
 */
-function ref_cells($label, $name, $title=null, $init=null, $params=null, $submit_on_change=false, $type=null, $context=null)
+function ref_cells($label, $name, $title=null, $init=null, $params=null, $submit_on_change=false, $type=null, $context=null, $readonly=false)
 {
 	global $Ajax, $Refs;
 
@@ -766,20 +769,21 @@ function ref_cells($label, $name, $title=null, $init=null, $params=null, $submit
 
 		label_cell($list."<input name='".$name."' "
 			.(check_edit_access($name) ? '' : 'disabled ')
+			.($readonly ? " readonly" : '')
 			."value='".@$_POST[$name]."' size=16 maxlength=35>");
 	}
 	else // just wildcard ref field (e.g. for global inquires)
 	{
-		text_cells_ex($label, $name, 16, 35, $init, $title, $params, null, $submit_on_change);
+		text_cells_ex($label, $name, 16, 35, $init, $title, $params, null, $submit_on_change, $readonly);
 	}
 }
 
 //-----------------------------------------------------------------------------------
 
-function ref_row($label, $name, $title=null, $init=null, $submit_on_change=false, $type=null, $context = null)
+function ref_row($label, $name, $title=null, $init=null, $submit_on_change=false, $type=null, $context = null, $readonly=false)
 {
 	echo "<tr><td class='label'>$label</td>";
-	ref_cells(null, $name, $title, $init, null, $submit_on_change, $type, $context);
+	ref_cells(null, $name, $title, $init, null, $submit_on_change, $type, $context, $readonly);
 	echo "</tr>\n";
 }
 
