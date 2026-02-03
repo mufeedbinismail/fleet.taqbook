@@ -83,17 +83,17 @@ dateformats_list_row(__("Date Format:"), "date_format", user_date_format());
 
 dateseps_list_row(__("Date Separator:"), "date_sep", user_date_sep());
 
-/* The array $dateseps is set up in config.php for modifications
+/* The array $dateseps is set up in config/legacy.php for modifications
 possible separators can be added by modifying the array definition by editing that file */
 
 thoseps_list_row(__("Thousand Separator:"), "tho_sep", user_tho_sep());
 
-/* The array $thoseps is set up in config.php for modifications
+/* The array $thoseps is set up in config/legacy.php for modifications
 possible separators can be added by modifying the array definition by editing that file */
 
 decseps_list_row(__("Decimal Separator:"), "dec_sep", user_dec_sep());
 
-/* The array $decseps is set up in config.php for modifications
+/* The array $decseps is set up in config/legacy.php for modifications
 possible separators can be added by modifying the array definition by editing that file */
 
 check_row(__("Use Date Picker"), 'use_date_picker', user_use_date_picker());
@@ -123,14 +123,14 @@ check_row(__("Show Item Codes:"), 'show_codes', user_show_codes());
 
 themes_list_row(__("Theme:"), "theme", user_theme());
 
-/* The array $themes is set up in config.php for modifications
+/* The array $themes is set up in config/legacy.php for modifications
 possible separators can be added by modifying the array definition by editing that file */
 
 pagesizes_list_row(__("Page Size:"), "page_size", user_pagesize());
 
 tab_list_row(__("Start-up Tab"), 'startup_tab', user_startup_tab());
 
-/* The array $pagesizes is set up in config.php for modifications
+/* The array $pagesizes is set up in config/legacy.php for modifications
 possible separators can be added by modifying the array definition by editing that file */
 
 if (!isset($_POST['print_profile']))

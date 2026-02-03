@@ -131,7 +131,7 @@ class Chart
 		//$this->lang = 'en';
 		$this->path = dirname(__FILE__).'/../fonts/';
 		//$this->path = dirname(__FILE__).'/';
-		// You can use another UTF-8 font and put it in config.php with the name in $UTF8_fontfile 
+		// You can use another UTF-8 font and put it in config/legacy.php with the name in $UTF8_fontfile 
 		if ($this->encoding == 'UTF-8' && !empty($SysPrefs->UTF8_fontfile))
 			$this->fontfile = $this->path.$SysPrefs->UTF8_fontfile;
 		elseif ($this->dir == 'rtl')

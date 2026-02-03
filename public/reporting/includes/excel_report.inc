@@ -12,7 +12,6 @@
 require_once __DIR__ . "/../../reporting/includes/Workbook.php";
 require_once __DIR__ . "/../../admin/db/company_db.inc";
 require_once __DIR__ . "/../../admin/db/fiscalyears_db.inc";
-require_once __DIR__ . "/../../config.php";
 define('MAX_ROW_SHEET', 65530);
 // xls version
 class FrontReport extends Spreadsheet_Excel_Writer_Workbook

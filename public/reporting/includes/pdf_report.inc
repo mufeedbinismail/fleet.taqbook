@@ -25,7 +25,6 @@ require_once __DIR__ . "/../../admin/db/company_db.inc";
 require_once __DIR__ . "/../../admin/db/fiscalyears_db.inc";
 require_once __DIR__ . "/../../admin/db/printers_db.inc";
 require_once __DIR__ . "/../../includes/ui/ui_globals.inc";
-require_once __DIR__ . "/../../config.php";
 
 class FrontReport extends Cpdf
 {

@@ -169,9 +169,7 @@ class attachments extends simple_crud {
 	}
 	
 	function db_insert() {
-		$dat = $this->data;		
-		if(!isset($max_image_size))
-		$max_image_size = 5000;
+		$dat = $this->data;
 		$upload_file = "";
 		if (isset($_FILES['file_attachment_name']) && $_FILES['file_attachment_name']['name'] <> '') {
 			
@@ -223,8 +221,6 @@ class attachments extends simple_crud {
 
 	function db_update() {
 		$dat = $this->data;
-		if(!isset($max_image_size))
-			$max_image_size = 5000;
 		$upload_file = "";
 		if (isset($_FILES['file_attachment_name']) && $_FILES['file_attachment_name']['name'] != '') {
 			$result = $_FILES['file_attachment_name']['error'];

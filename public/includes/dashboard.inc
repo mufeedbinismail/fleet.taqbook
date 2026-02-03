@@ -895,7 +895,7 @@ function supplier_balance($today)
 
 function cash_flow($today)
 {
-	global $date_system, $SysPrefs;
+	global $SysPrefs;
 	$months = 6;
 	$pg = new chart('spline', 'g5');
 	if (isset($_POST['select_g5']))
@@ -907,9 +907,9 @@ function cash_flow($today)
 	$today1 = begin_month($today);
 	$today1 = add_months($today, -$months+1);
 	list($da, $mo, $yr) = explode_date_to_dmy($today1);
-	if ($date_system == 1)
+	if ($SysPrefs->date_system == 1)
 		list($yr, $mo, $da) = jalali_to_gregorian($yr, $mo, $da);
-	elseif ($date_system == 2)
+	elseif ($SysPrefs->date_system == 2)
 		list($yr, $mo, $da) = islamic_to_gregorian($yr, $mo, $da);
 
 	$date = array();
