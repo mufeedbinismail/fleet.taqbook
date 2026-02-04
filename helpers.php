@@ -1,5 +1,6 @@
 <?php
 
+use App\Foundation\Contract\Enum\HasLabelContract;
 use App\Foundation\Support\Arr;
 
 /** 
@@ -47,4 +48,21 @@ function settings($key = null, $default = Arr::NOT_SET)
     }
 
     return app('settings')->get($key, $default);
+}
+
+/**
+ * Get the labels for an enum.
+ *
+ * @param class-string<UnitEnum> $enum The enum to get the labels for.
+ * @return array The labels for the enum.
+ */
+function get_labels_from_enum(string $enum): array
+{
+    if (is_subclass_of($enum, HasLabelContract::class)) {
+        return call_user_func([$enum, 'labels']);
+    } else if (is_subclass_of($enum, UnitEnum::class)) {
+        return array_column(call_user_func([$enum, 'cases']), 'name');
+    }
+    
+    throw new \InvalidArgumentException("Invalid enum class: $enum");
 }
