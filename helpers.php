@@ -51,6 +51,28 @@ function settings($key = null, $default = Arr::NOT_SET)
 }
 
 /**
+ * Get / set the specified configuration value.
+ *
+ * If an array is passed as the key, we will assume you want to set an array of values.
+ *
+ * @param  array|string|null  $key
+ * @param  mixed  $default
+ * @return mixed|\App\Foundation\Setting\UserSettingRepository
+ */
+function user_settings($key = null, $default = Arr::NOT_SET)
+{
+    if (is_null($key)) {
+        return app('user.settings');
+    }
+
+    if (is_array($key)) {
+        return app('user.settings')->set($key);
+    }
+
+    return app('user.settings')->get($key, $default);
+}
+
+/**
  * Get the labels for an enum.
  *
  * @param class-string<UnitEnum> $enum The enum to get the labels for.
