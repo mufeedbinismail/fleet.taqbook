@@ -1,4 +1,7 @@
 <?php
+
+use App\Foundation\Setting\UserSettingRepository;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -12,288 +15,201 @@
 
 class user_prefs
 {
+    protected UserSettingRepository $repo;
 
-	var $language;
-
-	var $qty_dec;
-	var $price_dec;
-	var	$exrate_dec;
-	var	$percent_dec;
-
-	var	$show_gl_info;
-	var	$show_codes;
-
-	var $date_format;
-	var $date_sep;
-	var $tho_sep;
-	var $dec_sep;
-	var $theme;
-	var $print_profile;
-	var $rep_popup;
-	var $pagesize; // for printing
-	var $show_hints;
-	var $query_size; // table pager page length
-	var $graphic_links; // use graphic links
-	var $sticky_date;	// save date on subsequent document entry
-	var $startup_tab;  // default start-up menu tab
-	var $transaction_days; // transaction days in inquiries
-	var $save_report_selections; // save report selections days 0...
-	var $use_date_picker; // use date picker for all date fields
-	var $def_print_destination; // default print destination. 0 = PDF/Printer, 1 = Excel
-	var $def_print_orientation; // default print orientation. 0 = Portrait. 1 = Landscape
-
-	function __construct($user=null)
+	function __construct($user = null)
 	{
-		if ($user == null) { 
-			// set default values, used before login
-			global $SysPrefs;
-
-			$this->date_sep = $SysPrefs->dflt_date_sep;
-			$this->date_format = $SysPrefs->dflt_date_fmt;
-			$this->tho_sep = 0;
-			$this->dec_sep = 0;
-			$this->price_dec = 2;
-			$this->language = language()->getLocale();
-			$this->theme = 'default';
-			$this->transaction_days = -30;
-			$this->save_report_selections = 0;
-			$this->use_date_picker = 1;
-			$this->def_print_destination = 0;
-			$this->def_print_orientation = 0;
-
-		} else {
-			$this->language = $user["language"];
-
-			$this->qty_dec = $user["qty_dec"];
-			$this->price_dec = $user["prices_dec"];
-			$this->exrate_dec = $user["rates_dec"];
-			$this->percent_dec = $user["percent_dec"];
-
-			$this->show_gl_info = $user["show_gl"];
-			$this->show_codes = $user["show_codes"];
-			$this->date_format = $user["date_format"];
-			$this->date_sep = $user["date_sep"];
-			$this->tho_sep = $user["tho_sep"];
-			$this->dec_sep = $user["dec_sep"];
-			$this->theme = $user["theme"];
-			$this->pagesize = $user["page_size"];
-			$this->show_hints = $user["show_hints"];
-			$this->print_profile = $user["print_profile"];
-			$this->rep_popup = $user["rep_popup"];
-			$this->query_size = $user["query_size"];
-			$this->graphic_links = $user["graphic_links"];
-			if (isset($user["sticky_doc_date"]))
-			{
-				$this->sticky_date = $user["sticky_doc_date"];
-				$this->startup_tab = $user['startup_tab'];
-			}
-			else
-			{
-				$this->sticky_date = 0;
-				$this->startup_tab = "orders";
-			}
-			$this->transaction_days = @$user['transaction_days'];
-			$this->save_report_selections = @$user['save_report_selections'];
-			$this->use_date_picker = @$user['use_date_picker'];
-			$this->def_print_destination = @$user['def_print_destination'];
-			$this->def_print_orientation = @$user['def_print_orientation'];
-
-			if (!file_exists(PATH_TO_ROOT."/themes/$this->theme"))
-				$this->theme = "default";
-		}
+		$this->repo = user_settings()->setUser($user);
 	}
+
+    public function repo(): UserSettingRepository
+    {
+        return $this->repo;
+    }
 	
 	function get_all()
 	{
-			return array(
-			'language' => $this->language,
-			'qty_dec' => $this->qty_dec,
-			'prices_dec' => $this->price_dec,
-			'rates_dec' => $this->exrate_dec,
-			'percent_dec' => $this->percent_dec,
-			'show_gl' => $this->show_gl_info,
-			'show_codes' => $this->show_codes,
-			'date_format' =>$this->date_format,
-			'date_sep' => $this->date_sep,
-			'tho_sep' => $this->tho_sep,
-			'dec_sep' => $this->dec_sep,
-			'theme' => $this->theme,
-			'page_size' => $this->pagesize,
-			'show_hints' => $this->show_hints,
-			'print_profile' => $this->print_profile,
-			'rep_popup' => $this->rep_popup,
-			'query_size' => $this->query_size,
-			'graphic_links' => $this->graphic_links,
-			'sticky_doc_date' => $this->sticky_date,
-			'startup_tab' => $this->startup_tab,
-			'save_report_selections' => $this->save_report_selections,
-			'use_date_picker' => $this->use_date_picker,
-			'def_print_destination' => $this->def_print_destination,
-			'def_print_orientation' => $this->def_print_orientation);
+		return $this->repo->all();
 	}
 	
 	function language() 
 	{
-		return $this->language;
+		return $this->repo->locale();
 	}
 
 	function qty_dec() 
 	{
-		return $this->qty_dec;
+		return $this->repo->quantityDecimals();
 	}
 
 	function price_dec() 
 	{
-		return $this->price_dec;
+		return $this->repo->priceDecimals();
 	}
 
 	function exrate_dec() 
 	{
-		return $this->exrate_dec;
+		return $this->repo->exchangeRateDecimals();
 	}
 
 	function percent_dec() 
 	{
-		return $this->percent_dec;
+		return $this->repo->percentDecimals();
 	}
 
 	function show_gl_info() 
 	{
-		return $this->show_gl_info;
+		return $this->repo->enableViewGlLinks();
 	}
 
 	function show_codes() 
 	{
-		return $this->show_codes;
+		return $this->repo->showItemCodesAlso();
 	}
 
 	function date_format() 
 	{
-		return $this->date_format;
+		return $this->repo->dateFormatIdx()->value;
 	}
 
 	function date_sep() 
 	{
-		return $this->date_sep;
+		return $this->repo->dateSepIdx()->value;
 	}
 
 	function date_display() 
 	{
-		global $SysPrefs;
-		$sep = $SysPrefs->dateseps[$this->date_sep];
-		if ($this->date_format == 0)
-			return "m".$sep."d".$sep."Y";
-		elseif ($this->date_format == 1)
-			return "d".$sep."m".$sep."Y";
-		elseif ($this->date_format == 2)
-			return "Y".$sep."m".$sep."d";
-		elseif ($this->date_format == 3)
-			return "M".$sep."j".$sep."Y";
-		elseif ($this->date_format == 4)
-			return "j".$sep."M".$sep."Y";
-		else
-			return "Y".$sep."M".$sep."j";
+		return $this->repo->dateFormat();
 	}
 
 	function tho_sep() 
 	{
-		return $this->tho_sep;
+		return $this->repo->thousandSepIdx()->value;
 	}
 
 	function dec_sep() 
 	{
-		return $this->dec_sep;
+		return $this->repo->decimalSepIdx()->value;
 	}
 
 	function get_theme() 
 	{
-		return $this->theme;
+		return $this->repo->theme();
 	}
 
 	function get_pagesize() 
 	{
-		return $this->pagesize;
+		return $this->repo->pageSizeIdx()->value;
 	}
 
 	function show_hints() 
 	{
-		return $this->show_hints;
+		return $this->repo->showHints();
 	}
 
 	function print_profile() 
 	{
-		return $this->print_profile;
+		return $this->repo->printProfileName();
 	}
 
 	function rep_popup() 
 	{
-		return $this->rep_popup;
+		return $this->repo->showReportAsPopup();
 	}
 
 	function query_size() 
 	{
-		return $this->query_size;
+		return $this->repo->rowsPerPage();
 	}
 
 	function graphic_links() 
 	{
-		return $this->graphic_links;
+		return $this->repo->useIconsInLinks();
 	}
 	
 	function sticky_date()
 	{
-		return $this->sticky_date;
+		return $this->repo->useStickyDocDate();
 	}
 	
 	function start_up_tab()
 	{
-		return $this->startup_tab;
+		return $this->repo->startupTab();
 	}
 
     function transaction_days() 
     {
-        return $this->transaction_days;
+        return $this->repo->transactionDays();
     }
 
     function save_report_selections() 
     {
-        return $this->save_report_selections;
+        return $this->repo->reportSelectionRetentionDays();
     }
 
     function use_date_picker() 
     {
-        return $this->use_date_picker;
+        return $this->repo->useDatePicker();
     }
 
     function def_print_destination() 
     {
-        return $this->def_print_destination;
+        return $this->repo->printDestinationIdx()->value;
     }
 
     function def_print_orientation() 
     {
-        return $this->def_print_orientation;
+        return $this->repo->printOrientationIdx()->value;
     }
 
 	function set_dec($price_dec, $qty_dec, $exrate_dec, $percent_dec, $showgl, $showcodes) 
 	{
-		$this->price_dec = $price_dec;
-		$this->qty_dec = $qty_dec;
-		$this->exrate_dec = $exrate_dec;
-		$this->percent_dec = $percent_dec;
-		$this->show_gl_info = $showgl;
-		$this->show_codes = $showcodes;
+        $this->repo->set([
+            'prices_dec' => $price_dec,
+            'qty_dec' => $qty_dec,
+            'rates_dec' => $exrate_dec,
+            'percent_dec' => $percent_dec,
+            'show_gl' => $showgl,
+            'show_codes' => $showcodes,
+        ]);
 	}
 
 	function set_format($date_format, $date_sep, $tho_sep, $dec_sep, $theme, $pagesize) 
 	{
-		$this->date_format = $date_format;
-		$this->date_sep = $date_sep;
-		$this->tho_sep = $tho_sep;
-		$this->dec_sep = $dec_sep;
-		$this->theme = $theme;
-		$this->pagesize = $pagesize;
+		$this->repo->set([
+            'date_format' => $date_format,
+            'date_sep' => $date_sep,
+            'tho_sep' => $tho_sep,
+            'dec_sep' => $dec_sep,
+            'theme' => $theme,
+            'page_size' => $pagesize,
+        ]);
 	}
 
+    public function __get($name)
+    {
+        return $this->repo->get($this->normalizeProperty($name), null);
+    }
+
+    public function __set($name, $value)
+    {
+        $this->repo->set($this->normalizeProperty($name), $value);
+    }
+
+    public function __isset($name)
+    {
+        return $this->repo->has($this->normalizeProperty($name));
+    }
+
+    public function normalizeProperty($name)
+    {
+        return [
+            'price_dec' => 'prices_dec',
+            'exrate_dec' => 'rates_dec',
+            'show_gl_info' => 'show_gl',
+            'pagesize' => 'page_size',
+            'sticky_date' => 'sticky_doc_date',
+        ][$name] ?? $name;
+    }
 }
 
