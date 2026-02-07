@@ -39,8 +39,8 @@ define('ST_MANURECEIVE', 29);
 //
 //	Depreciation period types
 //
-define('FA_MONTHLY', 0);
-define('FA_YEARLY', 1);
+define('FA_MONTHLY', \App\Legacy\Enum\DepreciationPeriodType::MONTHLY->value);
+define('FA_YEARLY', \App\Legacy\Enum\DepreciationPeriodType::YEARLY->value);
 
 define('ST_SALESORDER', 30);
 define('ST_SALESQUOTE', 32);
