@@ -9,6 +9,12 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
+
+use App\Finance\Support\MoneyFactory;
+use App\Finance\Tax\Repository\TaxRepository;
+use App\Finance\Tax\Service\TaxService;
+use App\Finance\Tax\ValueObject\TaxBreakdown;
+
 /* Definition of the cart class
 this class can hold all the information for:
 
@@ -627,31 +633,26 @@ class Cart
 
 	function get_tax_free_shipping()
 	{
-
-		if ($this->tax_included==0)
-			return $this->freight_cost;
-		else
-			return ($this->freight_cost - $this->get_shipping_tax());
+        return (string) $this->get_shipping_tax_breakdown()->net->getAmount();
 	}
 
 	function get_shipping_tax()
 	{
-
-		$tax_items = get_shipping_tax_as_array($this->tax_group_id);
-		$tax_rate = 0;
-		if ($tax_items != null) {
-			foreach ($tax_items as $item_tax) {
-				$index = $item_tax['tax_type_id'];
-				if (isset($this->tax_group_array[$index]['rate'])) {
-					$tax_rate += $item_tax['rate'];
-				}
-			}
-		}
-		if($this->tax_included)
-			return round($this->freight_cost*$tax_rate/($tax_rate+100),  user_price_dec());
-		else
-			return round($this->freight_cost*$tax_rate/100,  user_price_dec());
+        return (string) $this->get_shipping_tax_breakdown()->tax->getAmount();
 	}
+
+    function get_shipping_tax_breakdown(): TaxBreakdown
+    {
+        $repository = app(TaxRepository::class);
+        $service = app(TaxService::class);
+
+        $taxSetting = $repository->getTaxSetting($this->tax_group_id, $this->tax_included);
+        return $service->getTaxBreakdownForShipping(
+            MoneyFactory::of($this->freight_cost),
+            $taxSetting
+        );
+    }
+
 	/*
 		Returns transaction value including all taxes
 	*/

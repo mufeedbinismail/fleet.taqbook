@@ -1,4 +1,7 @@
 <?php
+
+use App\Finance\Tax\Query\TaxGroup\TaxGroupLinesQuery;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -89,24 +92,10 @@ function delete_tax_group_items($id)
 //
 function get_tax_group_rates($group_id=null, $tax_shipping=false)
 {
-	global $SysPrefs;
-
-	$sql = 
-	"SELECT t.id as tax_type_id,"
-		.($SysPrefs->suppress_tax_rates() == 1 ? "t.name as tax_type_name,"
-			: "CONCAT(t.name, ' (', t.rate, '%)') as tax_type_name,")
-		."t.sales_gl_code,
-		  t.purchasing_gl_code,
-		  IF(g.tax_type_id, t.rate, NULL) as rate,
-		  g.tax_shipping
-		FROM ".TB_PREF."tax_types t 
-		  LEFT JOIN ".TB_PREF."tax_group_items g ON t.id=g.tax_type_id
-	AND g.tax_group_id=". ($group_id ? db_escape($group_id) : "(SELECT MIN(id) FROM ".TB_PREF."tax_groups)")		  
-	. " WHERE !t.inactive";
-	if ($tax_shipping)
-		$sql .= " AND g.tax_shipping=1";
-
-	return db_query($sql, "cannot get tax types as array");
+	return db_query(
+        (new TaxGroupLinesQuery)->builder($group_id, $tax_shipping),
+        "cannot get tax types as array"
+    );
 }
 
 function get_tax_group_items_as_array($id)

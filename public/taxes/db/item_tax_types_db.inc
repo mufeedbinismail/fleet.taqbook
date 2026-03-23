@@ -1,4 +1,8 @@
 <?php
+
+use App\Finance\Tax\Query\ItemTaxType\ItemTaxTypeExemptionsQuery;
+use App\Finance\Tax\Query\ItemTaxType\ItemTaxTypeForItemQuery;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -62,13 +66,10 @@ function get_item_tax_type($id)
 
 function get_item_tax_type_for_item($stock_id)
 {
-	$sql = "SELECT item_tax_type.*
-		FROM ".TB_PREF."item_tax_types item_tax_type,"
-			.TB_PREF."stock_master item
-		WHERE item.stock_id=".db_escape($stock_id)."
-		AND item_tax_type.id=item.tax_type_id";
-	
-	$result = db_query($sql, "could not get item tax type");
+	$result = db_query(
+        (new ItemTaxTypeForItemQuery)->builder($stock_id),
+        "could not get item tax type"
+    );
 	
 	return db_fetch($result);	
 }
@@ -105,9 +106,10 @@ function delete_item_tax_type_exemptions($id)
 
 function get_item_tax_type_exemptions($id)
 {
-	$sql = "SELECT * FROM ".TB_PREF."item_tax_type_exemptions WHERE item_tax_type_id=".db_escape($id);
-	
-	return db_query($sql, "could not get item tax type exemptions");
+	return db_query(
+        (new ItemTaxTypeExemptionsQuery)->builder($id),
+        "could not get item tax type exemptions"
+    );
 }
 
 function item_type_inactive($id)
