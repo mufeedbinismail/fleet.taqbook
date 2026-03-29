@@ -17,10 +17,7 @@ $GLOBALS['before_box'] = '';      // temporary container for output html data be
 #
 function fa_trigger_error($msg, $error_level=E_USER_NOTICE)
 {
-    if ($error_level==E_USER_ERROR) {
-          error_handler(E_USER_ERROR, $msg, __FILE__, __LINE__); //  E_USER_ERROR is deprecated as trigger_error arg since php 8.4
-    } else
-        trigger_error($msg, $error_level);
+    error_handler($error_level, $msg, __FILE__, __LINE__);
 }
 
 function get_backtrace($html = false, $skip=0)
