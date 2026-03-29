@@ -41,7 +41,7 @@ JsHttpRequest.request= function(trigger, form, tout) {
 	JsHttpRequest._request(trigger, form, tout, 0);
 };
 
-JsHttpRequest._request = function(trigger, form, tout, retry) {
+JsHttpRequest._request = function(trigger, form) {
 		if (trigger.tagName=='A') {
 			var content = {};
 			var upload = 0;
@@ -68,23 +68,6 @@ JsHttpRequest._request = function(trigger, form, tout, retry) {
 		}
 			// this is to avoid caching problems
 		content['_random'] = Math.random()*1234567;
-
-		var tcheck = setTimeout(
-			function() {
-				for(var id in JsHttpRequest.PENDING)  {
-					var call = JsHttpRequest.PENDING[id];
-				 	if (call != false) {
-					if (call._ldObj.xr) // needed for gecko
-						call._ldObj.xr.onreadystatechange = function(){};
-					call.abort(); // why this doesn't kill request in firebug?
-//						call._ldObj.xr.abort();
-						delete JsHttpRequest.PENDING[id];
-					}
-				}
-				set_mark(retry ? 'ajax-loader2.gif':'warning.png' );
-				if(retry)
-					JsHttpRequest._request(trigger, form, tout, retry-1);
-			}, tout );
 
         JsHttpRequest.query(
             (upload ? "form." : "")+"POST "+url, // force form loader
@@ -129,8 +112,6 @@ JsHttpRequest._request = function(trigger, form, tout, retry) {
 				  errors = errors+'<br>Unknown ajax function: '+cmd;
 			}
 		  }
-		 if(tcheck)
-		   JsHttpRequest.clearTimeout(tcheck);
         // Write errors to the debug div.
 		  document.getElementById('msgbox').innerHTML = errors;
 		  set_mark();
