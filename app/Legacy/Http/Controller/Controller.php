@@ -42,6 +42,14 @@ class Controller extends BaseController
             } elseif ($e instanceof \App\Legacy\Exception\FlowRedirectionException) {
                 $response = response()->redirectTo($e->getTargetUrl(), $e->getHttpCode());
             }
+        } catch (\Exception $e) {
+            if (!(isset($GLOBALS['Ajax']) && $GLOBALS['Ajax'] instanceof \Ajax)) {
+                throw $e;
+            }
+
+            if (function_exists('exception_handler')) {
+                exception_handler($e);
+            }
         }
 
         if (isset($GLOBALS['Ajax']) && $GLOBALS['Ajax'] instanceof \Ajax) {

@@ -243,10 +243,6 @@ function login_timeout()
 //============================================================================
 
 require_once __DIR__ . "/../includes/errors.inc";
-
-// colect all error msgs
-set_error_handler('error_handler' /*, errtypes */);
-
 require_once __DIR__ . "/../includes/current_user.inc";
 require_once __DIR__ . "/../frontaccounting.php";
 require_once __DIR__ . "/../admin/db/security_db.inc";
