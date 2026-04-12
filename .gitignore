@@ -5,6 +5,7 @@
 /public/storage
 /storage/*.key
 /vendor
+.claude/*.local.md
 .env
 .env.backup
 .env.production
