@@ -11,6 +11,7 @@ final class TaxGroupLine
         public string $taxTypeName,
         public string $salesGlCode,
         public string $purchasingGlCode,
+        public ?string $purchasingProvisionGlCode,
         public BigDecimal $rate,
         public bool $taxShipping
     ) {}
@@ -22,6 +23,7 @@ final class TaxGroupLine
             $item->tax_type_name,
             $item->sales_gl_code,
             $item->purchasing_gl_code,
+            $item->purchasing_provision_gl_code ?? null,
             BigDecimal::of((string) $item->rate),
             (bool) $item->tax_shipping
         );

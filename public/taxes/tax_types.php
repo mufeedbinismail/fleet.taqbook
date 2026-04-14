@@ -51,7 +51,8 @@ if ($Mode=='ADD_ITEM' && can_process())
 {
 
 	add_tax_type($_POST['name'], $_POST['sales_gl_code'],
-		$_POST['purchasing_gl_code'], input_num('rate', 0));
+		$_POST['purchasing_gl_code'], input_num('rate', 0),
+		get_post('purchasing_provision_gl_code') ?: null);
 	display_notification(__('New tax type has been added'));
 	$Mode = 'RESET';
 }
@@ -62,7 +63,8 @@ if ($Mode=='UPDATE_ITEM' && can_process())
 {
 
 	update_tax_type($selected_id, $_POST['name'],
-    	$_POST['sales_gl_code'], $_POST['purchasing_gl_code'], input_num('rate'));
+    	$_POST['sales_gl_code'], $_POST['purchasing_gl_code'], input_num('rate'),
+		get_post('purchasing_provision_gl_code') ?: null);
 	display_notification(__('Selected tax type has been updated'));
 	$Mode = 'RESET';
 }
@@ -112,7 +114,7 @@ display_note(__("To avoid problems with manual journal entry all tax types shoul
 start_table(TABLESTYLE);
 
 $th = array(__("Description"), __("Default Rate (%)"),
-	__("Sales GL Account"), __("Purchasing GL Account"), "", "");
+	__("Sales GL Account"), __("Purchasing GL Account"), __("Purchasing Provision GL Account"), "", "");
 inactive_control_column($th);
 table_header($th);
 
@@ -126,6 +128,9 @@ while ($myrow = db_fetch($result))
 	label_cell(percent_format($myrow["rate"]), "align=right");
 	label_cell($myrow["sales_gl_code"] . "&nbsp;" . $myrow["SalesAccountName"]);
 	label_cell($myrow["purchasing_gl_code"] . "&nbsp;" . $myrow["PurchasingAccountName"]);
+	label_cell($myrow["purchasing_provision_gl_code"]
+		? $myrow["purchasing_provision_gl_code"] . "&nbsp;" . $myrow["PurchasingProvisionAccountName"]
+		: "");
 
 	inactive_control_cell($myrow["id"], $myrow["inactive"], 'tax_types', 'id');
  	edit_button_cell("Edit".$myrow["id"], __("Edit"));
@@ -151,6 +156,7 @@ if ($selected_id != -1)
 		$_POST['rate']  = percent_format($myrow["rate"]);
 		$_POST['sales_gl_code']  = $myrow["sales_gl_code"];
 		$_POST['purchasing_gl_code']  = $myrow["purchasing_gl_code"];
+		$_POST['purchasing_provision_gl_code']  = $myrow["purchasing_provision_gl_code"];
 	}
 	hidden('selected_id', $selected_id);
 }
@@ -159,6 +165,7 @@ small_amount_row(__("Default Rate:"), 'rate', '', "", "%", user_percent_dec());
 
 gl_all_accounts_list_row(__("Sales GL Account:"), 'sales_gl_code', null);
 gl_all_accounts_list_row(__("Purchasing GL Account:"), 'purchasing_gl_code', null);
+gl_all_accounts_list_row(__("Purchasing Provision GL Account:"), 'purchasing_provision_gl_code', null, false, false, true);
 
 end_table(1);
 

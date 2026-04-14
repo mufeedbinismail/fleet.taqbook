@@ -17,6 +17,7 @@ class TaxGroupLinesQuery
                     : DB::raw("CONCAT(t.name, ' (', TRIM(TRAILING '.' FROM TRIM(TRAILING '0' FROM CAST(t.rate AS VARCHAR(15)))), '%)') as tax_type_name"),
                 't.sales_gl_code',
                 't.purchasing_gl_code',
+                't.purchasing_provision_gl_code',
                 DB::raw('IF(g.tax_type_id, t.rate, NULL) as rate'),
                 'g.tax_shipping'
             )
