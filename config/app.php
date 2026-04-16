@@ -28,7 +28,7 @@ return [
     | any other location as required by the application or its packages.
     |
     */
-    'version' => '1.0.0',
+    'version' => '2.0.0',
 
     /*
     |--------------------------------------------------------------------------
@@ -39,7 +39,7 @@ return [
     | This value is used for tracking the application's release history.
     | and potentially for tracking outdated versions.
     */
-    'released_at' => '2025-11-16T21:37:50+04:00',
+    'released_at' => '2026-04-16T08:49:37+05:30',
 
     /*
     |--------------------------------------------------------------------------
