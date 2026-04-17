@@ -403,7 +403,12 @@ function display_order_header(&$order, $editable, $date_text)
             label_row(__("Marketplace:"), get_marketplace_name($order->marketplace_id));
             hidden('marketplace_id', $order->marketplace_id);
         } else {
-            marketplace_list_row(__("Marketplace:"), 'marketplace_id', null, '-- select --', false, false, true);
+            marketplace_list_row(__("Marketplace:"), 'marketplace_id', null, '-- select --', true, false, true);
+        }
+
+        if ($order->marketplace_id != get_post('marketplace_id')) {
+            $order->change_marketplace(get_post('marketplace_id'));
+            $Ajax->activate('items_table');
         }
     }
 

@@ -11,6 +11,7 @@
 ***********************************************************************/
 
 use App\Finance\Support\MoneyFactory;
+use App\Finance\Tax\Entity\TaxSetting;
 use App\Finance\Tax\Repository\TaxRepository;
 use App\Finance\Tax\Service\TaxService;
 use App\Finance\Tax\ValueObject\TaxBreakdown;
@@ -31,6 +32,8 @@ class Cart
 {
     var $is_marketplace_trans = false; // true if this transaction is created from marketplace order
     var $marketplace_id;
+    public readonly ?TaxSetting $marketplace_tax_setting;
+
 	var $trans_type; // invoice, order, quotation, delivery note ...
 	var $trans_no = array();// array (num1=>ver1,..) or 0 for new
 	var $so_type = 0;		// for sales order: simple=0 template=1
@@ -419,6 +422,28 @@ class Cart
 		$this->tax_group_array = get_tax_group_items_as_array($tax_group_id);
 	}
 
+    function set_marketplace($marketplace_id)
+    {
+        if (!$marketplace_id) {
+            $this->marketplace_id = null;
+            $this->marketplace_tax_setting = null;
+            return;
+        }
+
+        $marketplace = get_marketplace($marketplace_id);
+        $this->marketplace_id = $marketplace_id;
+        $this->marketplace_tax_setting = app(TaxRepository::class)->getTaxSetting(
+            $marketplace['tax_group_id'],
+            $marketplace['tax_included']
+        );
+    }
+
+    function change_marketplace($marketplace_id)
+    {
+        $this->set_marketplace($marketplace_id);
+        $this->calculate_total();
+    }
+
 	function set_sales_type($sales_type, $sales_name, $tax_included=0, $factor=0)
 	{
 	    $this->sales_type = $sales_type;
@@ -726,6 +751,16 @@ class Cart
 		} else	// this is final invoice
 			$this->prep_amount = $remainder;
 	}
+
+    function calculate_total()
+    {
+        $this->calculate_marketplace_taxes();
+    }
+
+    function calculate_marketplace_taxes()
+    {
+        //
+    }
 } /* end of class defintion */
 
 class line_details

@@ -52,7 +52,16 @@ function get_marketplaces($inactive = false)
 
 function get_marketplace($id)
 {
-    $sql = "SELECT * FROM ".TB_PREF."marketplaces WHERE id=".db_escape($id);
+    $sql = "SELECT
+        m.*,
+        a.account_name as provision_account_name,
+        s.supp_name as supplier_name,
+        s.tax_group_id,
+        s.tax_included
+    FROM ".TB_PREF."marketplaces m"
+        ." JOIN ".TB_PREF."chart_master a ON m.provision_account = a.account_code"
+        ." LEFT JOIN ".TB_PREF."suppliers s ON m.supplier_id = s.supplier_id"
+        ." WHERE m.id=".db_escape($id);
 
     $result = db_query($sql, "Could not get market place");
 

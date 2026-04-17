@@ -261,7 +261,7 @@ function read_sales_trans($doc_type, $trans_no, &$cart)
 		else
 			$cart->trans_no = array($trans_no[0]=>$myrow["version"]);
 
-        $cart->marketplace_id = $myrow["marketplace_id"];
+        $cart->set_marketplace($myrow["marketplace_id"]);
 		$cart->set_sales_type($myrow["tpe"], $myrow["sales_type"], $myrow["tax_included"],0);
 
         $cart->set_customer($debtor_no, $myrow["DebtorName"],

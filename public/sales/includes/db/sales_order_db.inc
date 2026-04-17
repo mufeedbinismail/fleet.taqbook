@@ -306,7 +306,7 @@ function read_sales_order($order_no, &$order, $trans_type)
 	$order->trans_type = $myrow['trans_type'];
 	$order->so_type =  $myrow["type"];
 	$order->trans_no = array($order_no=> $myrow["version"]);
-    $order->marketplace_id = $myrow["marketplace_id"];
+    $order->set_marketplace($myrow["marketplace_id"]);
 
 	$order->set_customer($myrow["debtor_no"], $myrow["name"],
 	  $myrow["curr_code"], $myrow["discount"], $myrow["payment_terms"]);
