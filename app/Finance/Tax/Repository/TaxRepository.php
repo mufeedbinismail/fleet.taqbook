@@ -11,6 +11,7 @@ use App\Finance\Tax\Enum\TaxAlgorithm;
 use App\Finance\Tax\Query\ItemTaxType\ItemTaxTypeExemptionsQuery;
 use App\Finance\Tax\Query\ItemTaxType\ItemTaxTypeForItemQuery;
 use App\Finance\Tax\Query\TaxGroup\TaxGroupLinesQuery;
+use Illuminate\Support\Facades\Cache;
 
 class TaxRepository
 {
@@ -25,19 +26,24 @@ class TaxRepository
 
     public function getItemTaxSetting($stockId): ItemTaxSetting
     {
-        $itemTaxType = (new ItemTaxTypeForItemQuery)
-            ->builder($stockId)
-            ->first();
+        return Cache::store('array')->rememberForever(
+            "itemTaxSetting.$stockId",
+            function () use ($stockId) {
+                $itemTaxType = (new ItemTaxTypeForItemQuery)
+                    ->builder($stockId)
+                    ->first();
 
-        $itemTaxTypeExemptions = (new ItemTaxTypeExemptionsQuery)
-            ->builder($itemTaxType->id)
-            ->pluck('tax_type_id')
-            ->all();
+                $itemTaxTypeExemptions = (new ItemTaxTypeExemptionsQuery)
+                    ->builder($itemTaxType->id)
+                    ->pluck('tax_type_id')
+                    ->all();
 
-        return new ItemTaxSetting(
-            $itemTaxType->id,
-            $itemTaxType->exempt,
-            $itemTaxTypeExemptions
+                return new ItemTaxSetting(
+                    $itemTaxType->id,
+                    $itemTaxType->exempt,
+                    $itemTaxTypeExemptions
+                );
+            }
         );
     }
 
