@@ -292,7 +292,7 @@ function get_subaccount_data($code_id, $person_id, $sl_type=null)
         case SLT_MARKETPLACE:
             $sql = "SELECT name, '' as id
                 FROM ".TB_PREF."marketplaces
-                WHERE payable_account=".db_escape($code_id)." 
+                WHERE provision_account=".db_escape($code_id)." 
                     AND id=".db_escape($person_id);
             break;
         default:
