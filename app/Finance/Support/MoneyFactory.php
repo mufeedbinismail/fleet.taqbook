@@ -73,4 +73,9 @@ final class MoneyFactory
         $roundingMode ??= self::defaultRoundingMode();
         return BrickMoney::create($amount, $currency, $context, $roundingMode);
     }
+
+    public static function value(BrickMoney $money): string
+    {
+        return (string) $money->getAmount();
+    }
 }
