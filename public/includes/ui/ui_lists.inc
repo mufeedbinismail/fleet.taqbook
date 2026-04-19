@@ -113,7 +113,7 @@ $opts = array(		// default options
 	$rel = '';
 	$limit = '';
 	if (isset($_POST['_'.$name.'_update'])) { // select list or search box change
-		if ($by_id) $txt = $_POST[$name];
+		if ($by_id) $txt = _post_get($name);
 
 		if (!$opts['async'])
 			$Ajax->activate('_page_body');
@@ -239,8 +239,8 @@ $opts = array(		// default options
 	if ($found===false) {
 		$selected_id = array($first_id);
 	}
-	
-	$_POST[$name] = $multi ? $selected_id : $selected_id[0];
+
+	_post_set($name, $multi ? $selected_id : $selected_id[0]);
 
 	if ($SysPrefs->use_popup_search)
 		$selector = "<select id='$name' autocomplete='off' ".($multi ? "multiple" : '')
@@ -255,7 +255,7 @@ $opts = array(		// default options
 	if ($by_id && ($search_box != false || $opts['editable']) ) {
 		// on first display show selector list
 		if (isset($_POST[$search_box]) && $opts['editable'] && $edit) {
-			$selector = "<input type='hidden' name='$name' value='".$_POST[$name]."'>"
+			$selector = "<input type='hidden' name='$name' value='"._post_get($name)."'>"
 			."<input type='text' $disabled name='{$name}_text' id='{$name}_text' size='".
 				$opts['editable']."' maxlength='".$opts['max']."' $rel value='$edit'>\n";
 				set_focus($name.'_text'); // prevent lost focus
@@ -460,7 +460,7 @@ $opts = array(		// default options
 	if ($found===false) {
 		$selected_id = array($first_id);
 	}
-	$_POST[$name] = $multi ? $selected_id : $selected_id[0];
+	_post_set($name, $multi ? $selected_id : $selected_id[0]);
 
 	$selector = "<select autocomplete='off' ".($multi  ? "multiple" : '')
 		. ($opts['height']!==false ? ' size="'.$opts['height'].'"' : '')

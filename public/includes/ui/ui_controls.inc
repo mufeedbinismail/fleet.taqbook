@@ -9,6 +9,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
+
+use App\Foundation\Support\Arr;
+
 /*
 	Retrieve value of POST variable(s).
 	For $name passed as array $dflt is not used, 
@@ -40,6 +43,18 @@ $GLOBALS['popup_editors'] = array(
 		116, __("Marketplace"), 900, 550),
 );
 
+function _post_get($name) { return Arr::bracketGet($_POST, $name); }
+function _post_set($name, $value): void { Arr::bracketSet($_POST, $name, $value); }
+
+function _post_init($name, $init=null) {
+	$val = _post_get($name);
+	if ($val === null || $val === '') {
+		$val = $init !== null ? $init : '';
+		_post_set($name, $val);
+	}
+	return $val;
+}
+
 function get_post($name, $dflt='')
 {
 	if (is_array($name)) {
@@ -51,9 +66,10 @@ function get_post($name, $dflt='')
 				$ret[$dflt] = get_post($dflt, null);
 			}
 		return $ret;
-	} else
-		return is_float($dflt) ? input_num($name, $dflt) :
-				((!isset($_POST[$name]) /*|| $_POST[$name] === ''*/) ? $dflt : $_POST[$name]);
+	} else {
+		$val = _post_get($name);
+		return is_float($dflt) ? input_num($name, $dflt) : ($val === null ? $dflt : $val);
+	}
 }
 //---------------------------------------------------------------------------------
 

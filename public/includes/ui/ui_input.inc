@@ -89,10 +89,11 @@ function simple_page_mode($numeric_id = true)
 //
 function input_num($postname=null, $dflt=0)
 {
-	if (!isset($_POST[$postname]) || $_POST[$postname] == "")
-	  	return $dflt;
+	$val = _post_get($postname);
+	if ($val === null || $val === '')
+		return $dflt;
 
-    return user_numeric($_POST[$postname]);
+	return user_numeric($val);
 }
 
 //---------------------------------------------------------------------------------
@@ -353,7 +354,7 @@ function check_value($name)
 			$ret[$key] = check_value($key);
 		return $ret;
 	} else
-		return (empty($_POST[$name]) ? 0 : 1);
+		return (empty(_post_get($name)) ? 0 : 1);
 }
 
 function checkbox($label, $name, $value=null, $submit_on_change=false, $title=false)
@@ -546,13 +547,7 @@ function text_cells_ex($label, $name, $size, $max=null, $init=null, $title=null,
   	global $Ajax;
 
 	default_focus($name);
-	if (!isset($_POST[$name]) || $_POST[$name] == "")
-	{
-		if ($init)
-			$_POST[$name] = $init;
-		else
-			$_POST[$name] = "";
-	}
+	$_post_val = _post_init($name, $init);
 	if ($label != null)
 		label_cell($label, $labparams);
 
@@ -561,7 +556,7 @@ function text_cells_ex($label, $name, $size, $max=null, $init=null, $title=null,
 
 	echo "<td>";
 	$class = $submit_on_change ? 'class="searchbox"' : '';
-	echo "<input $class type=\"text\" name=\"$name\" size=\"$size\" maxlength=\"$max\" value=\"" . $_POST[$name]. "\""
+	echo "<input $class type=\"text\" name=\"$name\" size=\"$size\" maxlength=\"$max\" value=\"" . $_post_val . "\""
 	 .($title ? " title='$title'": '')
      .($readonly ? " readonly" : '')
      ." >";
@@ -570,7 +565,7 @@ function text_cells_ex($label, $name, $size, $max=null, $init=null, $title=null,
 		echo " " . $post_label;
 
 	echo "</td>\n";
-	$Ajax->addUpdate($name, $name, $_POST[$name]);
+	$Ajax->addUpdate($name, $name, $_post_val);
 }
 
 function text_row($label, $name, $value, $size, $max, $title=null, $params="", $post_label="", $readonly=false)
@@ -594,15 +589,15 @@ function text_row_ex($label, $name, $size, $max=null, $title=null, $value=null, 
 //-----------------------------------------------------------------------------------
 function email_row($label, $name, $value, $size, $max, $title=null, $params="", $post_label="")
 {
-	if (get_post($name)) 
-		$label = "<a href='Mailto:".$_POST[$name]."'>$label</a>";
+	if (get_post($name))
+		$label = "<a href='Mailto:".get_post($name)."'>$label</a>";
 	text_row($label, $name, $value, $size, $max, $title, $params, $post_label);
 }
 
 function email_row_ex($label, $name, $size, $max=null, $title=null, $value=null, $params=null, $post_label=null)
 {
-	if (get_post($name)) 
-		$label = "<a href='Mailto:".$_POST[$name]."'>$label</a>";
+	if (get_post($name))
+		$label = "<a href='Mailto:".get_post($name)."'>$label</a>";
 	text_row_ex($label, $name, $size, $max, $title, $value, $params, $post_label);
 }
 
@@ -792,12 +787,7 @@ function ref_row($label, $name, $title=null, $init=null, $submit_on_change=false
 function percent_row($label, $name, $init=null)
 {
 
-	if (!isset($_POST[$name]) || $_POST[$name]=="")
-	{
-		$_POST[$name] = $init == null ? '' : $init;
-	}
-
-	small_amount_row($label, $name, $_POST[$name], null, "%", user_percent_dec());
+	small_amount_row($label, $name, _post_init($name, $init), null, "%", user_percent_dec());
 }
 
 function amount_cells_ex(
@@ -816,13 +806,7 @@ function amount_cells_ex(
 
 	if (!isset($dec))
 	  	$dec = user_price_dec();
-	if (!isset($_POST[$name]) || $_POST[$name] == "")
-	{
-		if ($init !== null)
-			$_POST[$name] = $init;
-		else
-			$_POST[$name] = '';
-	}
+	$_post_val = _post_init($name, $init);
 	if ($label != null)
 	{
 		if ($params == null)
@@ -839,14 +823,14 @@ function amount_cells_ex(
 
     $readonly = $readonly ? "readonly" : '';
 
-	echo "<input $readonly class='amount' type=\"text\" name=\"$name\" size=\"$size\" maxlength=\"$max\" dec=\"$dec\" value=\"" . $_POST[$name]. "\">";
+	echo "<input $readonly class='amount' type=\"text\" name=\"$name\" size=\"$size\" maxlength=\"$max\" dec=\"$dec\" value=\"" . $_post_val . "\">";
 
 	if ($post_label) {
 		echo "<span id='_{$name}_label'> $post_label</span>";
 		$Ajax->addUpdate($name, '_'.$name.'_label', $post_label);
 	}
 	echo "</td>\n";
-	$Ajax->addUpdate($name, $name, $_POST[$name]);
+	$Ajax->addUpdate($name, $name, $_post_val);
 	$Ajax->addAssign($name, $name, 'dec', $dec);
 }
 
@@ -937,7 +921,7 @@ function textarea_cells($label, $name, $value, $cols, $rows, $max=255, $title = 
 	if ($label != null)
 		echo "<td $params>$label</td>\n";
 	if ($value == null)
-		$value = (!isset($_POST[$name]) ? "" : $_POST[$name]);
+		$value = _post_init($name);
 	echo "<td><textarea name='$name' cols='$cols' rows='$rows'"
 	.($title ? " title='$title'" : '')
 	.($max ? " maxlength=$max" : '')
