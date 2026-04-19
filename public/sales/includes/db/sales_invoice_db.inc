@@ -1,4 +1,12 @@
 <?php
+
+use App\Finance\Tax\Entity\TaxableItem;
+use App\Finance\Tax\Service\TaxService;
+use App\Finance\Support\MoneyFactory;
+use App\Finance\Tax\Collection\TaxableItemCollection;
+use App\Inventory\Repository\ItemRepository;
+use App\Marketplace\Repository\ExpenseRepository;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -22,6 +30,10 @@ function write_sales_invoice(&$invoice)
 
 	$date_ = $invoice->document_date;
 	$charge_shipping =$invoice->freight_cost;
+
+    $taxService = app(TaxService::class);
+    $expenseRepo = app(ExpenseRepository::class);
+    $itemRepo = app(ItemRepository::class);
 
 	begin_transaction();
 	$company_data = get_company_prefs();
@@ -72,6 +84,7 @@ function write_sales_invoice(&$invoice)
 		delete_comments(ST_SALESINVOICE, $trans_no);
 		void_gl_trans(ST_SALESINVOICE, $trans_no, true);
 		void_trans_tax_details(ST_SALESINVOICE, $trans_no);
+        $expenseRepo->voidByTransaction(ST_SALESINVOICE, $trans_no);
 	} else
 		$allocs = get_payments_for($invoice->order_no, ST_SALESORDER, $invoice->customer_id);
 
@@ -124,6 +137,23 @@ function write_sales_invoice(&$invoice)
 			$invoice_line->standard_cost,
             $invoice_line->src_id,
 			$trans_no ? $invoice_line->id : 0
+        );
+
+        // Capture debtor_trans_details.id for linking marketplace expenses
+        $line_id = ($trans_no == 0 || $invoice_line->id == 0)
+            ? db_insert_id()
+            : $invoice_line->id;
+
+        process_marketplace_expenses(
+            ST_SALESINVOICE,
+            $invoice_no,
+            $line_id,
+            $invoice,
+            $invoice_line,
+            $marketplace_data,
+            $expenseRepo,
+            $taxService,
+            $itemRepo
         );
 
 		// Update delivery items for the quantity invoiced
@@ -227,6 +257,123 @@ function write_sales_invoice(&$invoice)
 	commit_transaction();
 
 	return $invoice_no;
+}
+
+//--------------------------------------------------------------------------------------------------
+/**
+ * Processes all the marketplace expenses against an invoice line
+ *
+ * @param string $trans_type
+ * @param string $trans_no
+ * @param string $line_id
+ * @param Cart $invoice
+ * @param line_details $invoice_line
+ * @param array{
+ *    id: string,
+ *    code: string,
+ *    name: string,
+ *    provision_account: string,
+ *    supplier_id: string,
+ *    provision_account_name: string,
+ *    supplier_name: string,
+ *    tax_group_id: int,
+ *    tax_included: 0|1
+ * } $marketplace_data
+ * @return void
+ */
+function process_marketplace_expenses(
+    int $trans_type,
+    int $trans_no,
+    int $line_id,
+    Cart $invoice,
+    line_details $invoice_line,
+    ?array $marketplace_data,
+    ExpenseRepository $expenseRepo,
+    TaxService $taxService,
+    ItemRepository $itemRepo,
+    int $sign = 1
+)
+{
+    // Post marketplace expense GL entries and persist to DB
+    if (
+        !$invoice->is_marketplace_trans || // Not a marketplace transaction
+        $invoice_line->qty_dispatched == 0 || // This item is not being invoiced
+        $invoice_line->marketplace_expenses->count() == 0 // There are no expenses for this item
+    ) {
+        // nothing to process here
+        return;
+    }
+        
+    foreach ($invoice_line->marketplace_expenses as $expense) {
+        // Use breakdown cached by calculate_marketplace_taxes(); recompute only as fallback
+        $breakdown = $expense->taxBreakdown;
+
+        $expenseRepo->save(
+            $trans_type,
+            $trans_no,
+            $invoice->marketplace_id,
+            $invoice->marketplace_tax_setting->taxIncluded,
+            $line_id,
+            $expense
+        );
+
+        // GL: DR cogs_account = net expense (negative for credit note reversal)
+        $item = $itemRepo->findCachedByStockId($invoice_line->stock_id);
+        add_gl_trans(
+            $trans_type,
+            $trans_no,
+            $invoice->document_date,
+            $item->cogs_account,
+            0,
+            0,
+            $expense->description,
+            $sign * MoneyFactory::value($breakdown->net),
+            null,
+            null,
+            null,
+            "Marketplace expense COGS GL posting failed"
+        );
+
+        // GL: DR provisional_purchasing_gl_code = tax (per applicable tax type)
+        $taxGroupLines = $taxService->calculateTaxes(
+            TaxableItemCollection::fromOne(new TaxableItem($expense->taxSetting, $expense->amount)),
+            $invoice->marketplace_tax_setting
+        );
+        foreach ($taxGroupLines as $taxLine) {
+            if (!$taxLine->tax->isZero()) {
+                add_gl_trans(
+                    $trans_type,
+                    $trans_no,
+                    $invoice->document_date,
+                    $taxLine->purchasingProvisionGlCode,
+                    0,
+                    0,
+                    $expense->description . ' (prov. tax)',
+                    $sign * MoneyFactory::value($taxLine->tax),
+                    null,
+                    null,
+                    null,
+                    "Marketplace provisional tax GL posting failed"
+                );
+            }
+        }
+
+        // GL: CR provision_account = full expense amount (DR for credit note reversal)
+        add_gl_trans(
+            $trans_type,
+            $trans_no,
+            $invoice->document_date,
+            $marketplace_data['provision_account'],
+            0,
+            0,
+            $expense->description,
+            $sign * MoneyFactory::value($breakdown->fullPrice()->negated()),
+            null,
+            PT_MARKETPLACE,
+            $invoice->marketplace_id,
+            "Marketplace provision account GL posting failed"
+        );
+    }
 }
 
 //--------------------------------------------------------------------------------------------------

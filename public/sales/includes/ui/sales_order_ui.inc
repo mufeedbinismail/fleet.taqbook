@@ -9,16 +9,24 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
+
+use App\Finance\Support\MoneyFactory;
+use App\Inventory\Repository\ItemRepository;
+use App\Marketplace\Collections\ExpenseCollection;
+use App\Marketplace\Entities\Expense;
+use Illuminate\Support\Str;
+
 require_once __DIR__ . "/../../../sales/includes/cart_class.inc";
 
 //--------------------------------------------------------------------------------
 function add_to_order(
-    &$order,
+    Cart &$order,
     $new_item,
     $new_item_qty,
     $price,
     $discount,
-    $description=''
+    $description='',
+    ?ExpenseCollection $marketplace_expenses = null
 )
 {
 	// calculate item price to sum of kit element prices factor for 
@@ -57,7 +65,8 @@ function add_to_order(
                 $new_item_qty*$item['quantity'],
 				$item_price,
                 $discount,
-                ''
+                '',
+                $marketplace_expenses
             );
 		}
 		else
@@ -84,7 +93,8 @@ function add_to_order(
                 $description,
                 0,
                 0,
-                0
+                0,
+                $marketplace_expenses
             );
 		}
 	}
@@ -169,6 +179,8 @@ function display_order_summary($title, &$order, $editable_items=false)
     $options = [
         'show_marketplace_cols' => $order->is_marketplace_trans && $order->trans_type == ST_SALESINVOICE
 	];
+    $is_new = $order->trans_no == 0;
+    $lines_added = count($order->line_items);
 
 	$th = [];
     $th[] = __("Item Code");
@@ -181,14 +193,34 @@ function display_order_summary($title, &$order, $editable_items=false)
     $th[] = __("Total");
     $th[] = "";
 
-	if ($order->trans_no == 0) {
+	if ($is_new) {
 	    unset( $th[3] );
 	}
 
-	if (count($order->line_items))
+	if ($lines_added)
 	     $th[]= '';
 
 	table_header($th);
+
+    if ($options['show_marketplace_cols']) {
+        $marketplace = $order->marketplace_id
+            ? get_marketplace($order->marketplace_id)
+            : [
+                'tax_included' => 0
+            ];
+        start_row('style="font-size: 0.85rem;"');
+        labelheader_cell("└───", "style='text-align: center;'");
+        labelheader_cell(__("Expense Description"), "style='text-align: center;'");
+        labelheader_cell('', "colspan='".(2+intval(!$is_new))."' ");
+        labelheader_cell(__("Expense") . " " . ($marketplace['tax_included'] ? __("after tax") : __("before tax")), "style='text-align: center;'");
+        labelheader_cell(__("Tax Provision") . ($marketplace['tax_included'] ? __(" (included)") : __(" (extra)")), "style='text-align: center;'");
+        labelheader_cell('');
+        labelheader_cell('');
+        if ($lines_added) {
+            labelheader_cell('');
+        }
+        end_row();
+    }
 
 	$total = 0;
 	$k = 0;  //row colour counter
@@ -233,6 +265,27 @@ function display_order_summary($title, &$order, $editable_items=false)
 				__('Remove line from document'));
 			}
 			end_row();
+
+            // View-mode marketplace expense sub-rows
+            if ($options['show_marketplace_cols']
+                && isset($stock_item->marketplace_expenses)
+                && $stock_item->marketplace_expenses->count() > 0)
+            {
+                foreach ($stock_item->marketplace_expenses as $expense) {
+                    start_row('style="font-size: 0.85rem;"');
+                    label_cell("└───", "style='text-align: center;'");
+                    label_cell($expense->description);
+                    label_cell('', "colspan='".(2 + intval(!$is_new))."'");
+                    amount_cell(MoneyFactory::value($expense->amount));
+                    amount_cell(MoneyFactory::value($expense->taxBreakdown->tax));
+                    label_cell('');
+                    label_cell('');
+                    if ($lines_added) {
+                        label_cell('');
+                    }
+                    end_row();
+                }
+            }
 		}
 		else
 		{
@@ -262,7 +315,16 @@ function display_order_summary($title, &$order, $editable_items=false)
 
 	start_row();
 	label_cells(__("Amount Total"), price_format($inv_total), "colspan=$colspan align=right","align=right");
-        
+    
+    if ($options['show_marketplace_cols']) {
+        end_row();
+        $market_cost = $order->get_total_marketplace_cost();
+        label_row(__("Marketplace Cost"), price_format($market_cost), "colspan=$colspan align=right","align=right");
+
+        start_row();
+        label_cells(__("Net Receivable From Marketplace"), price_format($inv_total - $market_cost), "colspan=$colspan align=right","align=right");
+    }
+
 	submit_cells('update', __("Update"), "colspan=2 align='center'", __("Refresh"), true);
 	end_row();
 
@@ -521,14 +583,22 @@ function display_order_header(&$order, $editable, $date_text)
 
 //--------------------------------------------------------------------------------
 
-function sales_order_item_controls(&$order, &$rowcounter, $line_no=-1, $options=[])
+function sales_order_item_controls(
+    Cart &$order,
+    &$rowcounter,
+    $line_no=-1,
+    $options=[]
+)
 {
     global $Ajax;
 
 	alt_table_row_color($rowcounter);
 
 	$id = find_submit('Edit');
-	if ($line_no!=-1 && $line_no == $id) // edit old line
+    $is_new = $order->trans_no == 0;
+    $is_editing_old_line = $line_no !=-1 && $line_no == $id;
+    $lines_added = count($order->line_items) > 0;
+	if ($is_editing_old_line)
 	{
 		$_POST['stock_id'] = $order->line_items[$id]->stock_id;
 		$dec = get_qty_dec($_POST['stock_id']);
@@ -585,7 +655,7 @@ function sales_order_item_controls(&$order, &$rowcounter, $line_no=-1, $options=
 	} else 
 		qty_cells(null, 'qty', $_POST['qty'], null, null, $dec);
 
-	if ($order->trans_no!=0) {
+	if (!$is_new) {
 		qty_cell($line_no==-1 ? 0 :$order->line_items[$line_no]->qty_done, false, $dec);
 	}
 
@@ -615,6 +685,39 @@ function sales_order_item_controls(&$order, &$rowcounter, $line_no=-1, $options=
 	}
 
 	end_row();
+
+    if ($options['show_marketplace_cols']) {
+        if ($is_editing_old_line) {
+            $expenses = $order->line_items[$line_no]->marketplace_expenses;
+        } else {
+            $expenses = new ExpenseCollection();
+            foreach (settings()->marketplaceExpenseItems() as $expense_item_id) {
+                $expense_item = app(ItemRepository::class)->findCachedByStockId($expense_item_id);
+                $expenses->add(Expense::draft(
+                    Str::uuid()->toString(),
+                    $expense_item_id,
+                    $expense_item->description,
+                    MoneyFactory::zero()
+                ));
+            }
+        }
+
+        foreach ($expenses as $expense) {
+            hidden("mkt_expense[{$expense->uuid}][stock_id]", $expense->stockId);
+            start_row('style="font-size: 0.85rem;"');
+            label_cell("└───", "style='text-align: center;'");
+            text_cells(null, "mkt_expense[{$expense->uuid}][description]", $expense->description, 45, 50, false, "", "", 'style="font-size: 0.85rem;"', true);
+            label_cell('', "colspan='".(2+intval(!$is_new))."' ");
+            amount_cells(null, "mkt_expense[{$expense->uuid}][amount]", price_format(MoneyFactory::value($expense->amount)));
+            label_cell('');
+            label_cell('');
+            label_cell('');
+            if ($lines_added) {
+                label_cell('');
+            }
+            end_row();
+        }
+    }
 }
 
 //--------------------------------------------------------------------------------

@@ -14,6 +14,11 @@
 //	Entry/Modify Credit Note for selected Sales Invoice
 //
 
+use App\Finance\Support\MoneyFactory;
+use App\Finance\Tax\ValueObject\TaxBreakdown;
+use App\Marketplace\Collections\ExpenseCollection;
+use App\Marketplace\Entities\Expense;
+
 $GLOBALS['page_security'] = 'SA_SALESCREDITINV';
 
 require_once __DIR__ . "/../sales/includes/cart_class.inc";
@@ -129,6 +134,16 @@ function can_process()
 if (isset($_GET['InvoiceNumber']) && $_GET['InvoiceNumber'] > 0) {
 
     $_SESSION['Items'] = new Cart(ST_SALESINVOICE, $_GET['InvoiceNumber'], true);
+
+    foreach ($_SESSION['Items']->line_items as $ln) {
+        $ln->additional_data['bk_expense_amounts'] = [];
+        foreach ($ln->marketplace_expenses as $expense) {
+            $ln->additional_data['bk_expense_amounts'][$expense->uuid] = [$expense->amount, $expense->taxBreakdown];
+            $expense->amount = MoneyFactory::zero();
+            $expense->taxBreakdown = new TaxBreakdown(MoneyFactory::zero(), MoneyFactory::zero());
+        }
+    }
+
 	copy_from_cart();
 
 } elseif ( isset($_GET['ModifyCredit']) && $_GET['ModifyCredit']>0) {
@@ -175,7 +190,22 @@ function check_quantities()
 				$_SESSION['Items']->line_items[$line_no]->item_description = $line_desc;
 			}
 	  	}
+
+        if (
+            $_SESSION['Items']->is_marketplace_trans
+            && !empty($_POST['mkt_expense'])
+            && $_SESSION['Items']->line_items[$line_no]->qty_dispatched > 0
+        ) {
+            $collection = new ExpenseCollection();
+            foreach (($_POST['mkt_expense'][$line_no] ?? []) as $uuid => $e) {
+                $collection->add(Expense::draft($uuid, $e['stock_id'], $e['description'], MoneyFactory::of(user_numeric($e['amount']))));
+            }
+            $_SESSION['Items']->line_items[$line_no]->marketplace_expenses = $collection;
+        }
 	}
+
+    $_SESSION['Items']->calculate_total();
+
 	return $ok;
 }
 //-----------------------------------------------------------------------------
@@ -235,6 +265,32 @@ if (isset($_POST['ProcessCredit']) && can_process()) {
 
 if (isset($_POST['Location'])) {
 	$_SESSION['Items']->Location = $_POST['Location'];
+}
+
+function display_marketplace_expense_rows(int $line_no, line_details $line): void
+{
+    $bk_amounts = $line->additional_data['bk_expense_amounts'] ?? [];
+    foreach ($line->marketplace_expenses as $expense) {
+        if (isset($bk_amounts[$expense->uuid])) {
+            [$bk_amount, $bk_tax_breakdown] = $bk_amounts[$expense->uuid];
+            $amount_hint = "<br><small>(" . __("Original:") . " " . price_format(MoneyFactory::value($bk_amount)) . ")</small>";
+            $tax_hint = "<br><small>(" . __("Original:") . " " . price_format(MoneyFactory::value($bk_tax_breakdown->tax)) . ")</small>";
+        } else {
+            $amount_hint = null;
+            $tax_hint = '';
+        }
+
+        hidden("mkt_expense[{$line_no}][{$expense->uuid}][stock_id]", $expense->stockId);
+        hidden("mkt_expense[{$line_no}][{$expense->uuid}][description]", $expense->description);
+        start_row('style="font-size: 0.85rem;"');
+        label_cell("└───", "style='text-align: center;'");
+        label_cell($expense->description);
+        label_cell('', "colspan=3");
+        amount_cells(null, "mkt_expense[{$line_no}][{$expense->uuid}][amount]", price_format(0), null, $amount_hint);
+        label_cell(price_format(MoneyFactory::value($expense->taxBreakdown->tax)) . $tax_hint, "align=right");
+        label_cell('');
+        end_row();
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -335,6 +391,10 @@ function display_credit_items()
     	percent_cell($ln_itm->discount_percent*100);
     	amount_cell($line_total);
     	end_row();
+
+        if ($options['show_marketplace_cols']) {
+            display_marketplace_expense_rows($line_no, $ln_itm);
+        }
     }
 
     if (!check_num('ChargeFreightCost')) {
@@ -358,6 +418,12 @@ function display_credit_items()
     $credit_total = ($inv_items_total + input_num('ChargeFreightCost') + $tax_total);
 
     label_row(__("Credit Note Total"), price_format($credit_total), "colspan=$colspan align=right", "align=right");
+
+    if ($options['show_marketplace_cols']) {
+        $market_cost = $_SESSION['Items']->get_total_marketplace_cost();
+        label_row(__("Marketplace Cost Reversal"), price_format($market_cost), "colspan=$colspan align=right", "align=right");
+        label_row(__("Net Payable to Marketplace"), price_format($credit_total - $market_cost), "colspan=$colspan align=right", "align=right");
+    }
 
     end_table();
 	div_end();

@@ -9,6 +9,11 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
+
+use App\Finance\Support\MoneyFactory;
+use App\Marketplace\Collections\ExpenseCollection;
+use App\Marketplace\Entities\Expense;
+
 //-----------------------------------------------------------------------------
 //
 //	Entry/Modify Sales Quotations
@@ -620,7 +625,8 @@ function handle_update_item()
 			input_num('qty'),
 			input_num('price'),
 			input_num('Disc') / 100,
-			$_POST['item_description']
+			$_POST['item_description'],
+            collect_marketplace_expenses()
 		);
 	}
 	page_modified();
@@ -647,18 +653,34 @@ function handle_new_item()
 	if (!check_item_data()) {
 			return;
 	}
+
 	add_to_order(
         $_SESSION['Items'],
         get_post('stock_id'),
         input_num('qty'),
 		input_num('price'),
         input_num('Disc') / 100,
-        get_post('stock_id_text')
+        get_post('stock_id_text'),
+        collect_marketplace_expenses()
 	);
 
 	unset($_POST['_stock_id_edit'], $_POST['stock_id']);
 	page_modified();
 	line_start_focus();
+}
+
+function collect_marketplace_expenses(): ExpenseCollection
+{
+    $marketplace_expenses = new ExpenseCollection();
+    foreach (($_POST['mkt_expense'] ?? []) as $uuid => $expense) {
+        $marketplace_expenses->add(Expense::draft(
+            $uuid,
+            $expense['stock_id'],
+            $expense['description'],
+            MoneyFactory::of(user_numeric($expense['amount']))
+        ));
+    }
+    return $marketplace_expenses;
 }
 
 //--------------------------------------------------------------------------------

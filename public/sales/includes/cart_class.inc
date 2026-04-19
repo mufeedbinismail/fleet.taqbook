@@ -11,10 +11,12 @@
 ***********************************************************************/
 
 use App\Finance\Support\MoneyFactory;
+use App\Finance\Tax\Entity\TaxableItem;
 use App\Finance\Tax\Entity\TaxSetting;
 use App\Finance\Tax\Repository\TaxRepository;
 use App\Finance\Tax\Service\TaxService;
 use App\Finance\Tax\ValueObject\TaxBreakdown;
+use App\Marketplace\Collections\ExpenseCollection;
 
 /* Definition of the cart class
 this class can hold all the information for:
@@ -32,7 +34,7 @@ class Cart
 {
     var $is_marketplace_trans = false; // true if this transaction is created from marketplace order
     var $marketplace_id;
-    public readonly ?TaxSetting $marketplace_tax_setting;
+    public ?TaxSetting $marketplace_tax_setting;
 
 	var $trans_type; // invoice, order, quotation, delivery note ...
 	var $trans_no = array();// array (num1=>ver1,..) or 0 for new
@@ -362,6 +364,10 @@ class Cart
                     $orig_line = $line_items[$lineno];
                     $this->line_items[$lineno]->stock_id = @html_entity_decode($line->stock_id, ENT_QUOTES);
                     $this->line_items[$lineno]->item_description = @html_entity_decode($line->item_description, ENT_QUOTES);
+
+                    // These are not common for all documents
+                    // so we need to restore them, after every iteration
+                    $this->line_items[$lineno]->marketplace_expenses = $orig_line->marketplace_expenses;
                 }
 
                 // These are not common for all documents
@@ -478,7 +484,8 @@ class Cart
         $description=null,
         $id=0,
         $src_no=0,
-		$src_id=0
+		$src_id=0,
+        ?ExpenseCollection $marketplace_expenses = null
     )
 	{
 		$line = new line_details(
@@ -491,11 +498,13 @@ class Cart
             $description,
             $id,
             $src_no,
-            $src_id
+            $src_id,
+            $marketplace_expenses
         );
 
 		if ($line->valid) {
 			$this->line_items[$line_no] = $line;
+            $this->calculate_total();
 			return 1;
 		} else
 			display_error(__("You have to enter valid stock code or nonempty description"));
@@ -507,7 +516,8 @@ class Cart
         $qty,
         $price,
         $disc,
-        $description=""
+        $description="",
+        ?ExpenseCollection $marketplace_expenses=null
     )
 	{
 		if ($description != "")
@@ -516,6 +526,9 @@ class Cart
 		$this->line_items[$line_no]->qty_dispatched = $qty;
 		$this->line_items[$line_no]->price = $price;
 		$this->line_items[$line_no]->discount_percent = $disc;
+		$this->line_items[$line_no]->marketplace_expenses = $marketplace_expenses ?: new ExpenseCollection();
+
+        $this->calculate_total();
 	}
 
 	function update_add_cart_item_qty($line_no, $qty)
@@ -571,7 +584,13 @@ class Cart
 	}
 
     function get_total_marketplace_cost() {
-        return 0;
+        $total = MoneyFactory::zero();
+        foreach ($this->line_items as $line) {
+            foreach ($line->marketplace_expenses as $expense) {
+                $total = $total->plus($expense->taxBreakdown->fullPrice());
+            }
+        }
+        return MoneyFactory::value($total);
     }
 
 	function has_items_dispatch()
@@ -759,7 +778,29 @@ class Cart
 
     function calculate_marketplace_taxes()
     {
-        //
+        if (!$this->marketplace_id) {
+            foreach ($this->line_items as $line) {
+                foreach ($line->marketplace_expenses as $expense) {
+                    $expense->taxBreakdown = new TaxBreakdown(MoneyFactory::zero(), clone $expense->amount);
+                }
+            }
+            return;
+        }
+
+        if (!isset($this->marketplace_tax_setting)) {
+            throw new \DomainException("Marketplace tax setting is not set for marketplace_id: {$this->marketplace_id}");
+        }
+
+        $service = app(TaxService::class);
+        foreach ($this->line_items as $line) {
+            foreach ($line->marketplace_expenses as $expense) {
+                $breakdown = $service->getTaxBreakdownForItem(
+                    new TaxableItem($expense->taxSetting, $expense->amount),
+                    $this->marketplace_tax_setting
+                );
+                $expense->taxBreakdown = $breakdown;
+            }
+        }
     }
 } /* end of class defintion */
 
@@ -807,6 +848,10 @@ class line_details
 	var $qty_dispatched;
 	var $qty_old = 0;
 
+    public array $additional_data = [];
+
+    /** @var \App\Marketplace\Collections\ExpenseCollection|\App\Marketplace\Entities\Expense[] */
+    public ExpenseCollection $marketplace_expenses;
 
 	function __construct(
         $stock_id,
@@ -818,7 +863,8 @@ class line_details
         $description,
         $id=0,
         $src_no=0,
-        $src_id=0
+        $src_id=0,
+        ?ExpenseCollection $marketplace_expenses = null
     )
 	{
 	/* Constructor function to add a new LineDetail object with passed params */
@@ -848,6 +894,8 @@ class line_details
 		$this->qty_done = $qty_done;
 		$this->standard_cost = $standard_cost;
 		$this->valid = true;
+
+        $this->marketplace_expenses = $marketplace_expenses ?: new ExpenseCollection();
 	}
 
 	// get unit price as stated on document

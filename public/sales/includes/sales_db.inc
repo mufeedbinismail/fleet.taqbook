@@ -9,6 +9,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
+
+use App\Marketplace\Collections\ExpenseCollection;
+
 require_once __DIR__ . "/../../includes/banking.inc";
 require_once __DIR__ . "/../../includes/inventory.inc";
 require_once __DIR__ . "/../../includes/db/allocations_db.inc";
@@ -296,8 +299,10 @@ function read_sales_trans($doc_type, $trans_no, &$cart)
 		}
 
 		$result = get_customer_trans_details($doc_type,$trans_no);
+        $line_id_index_map = [];
 		if (db_num_rows($result) > 0) {
 			for($line_no=0; $myrow = db_fetch($result); $line_no++)	{
+                $line_id_index_map[$myrow['id']] = $line_no;
 				$cart->line_items[$line_no] = new line_details(
 					$myrow["stock_id"],
                     $myrow["quantity"],
@@ -312,6 +317,17 @@ function read_sales_trans($doc_type, $trans_no, &$cart)
                 );
 			}
 		}
+
+        // Load marketplace expenses for each invoice line
+        if ($cart->marketplace_id) {
+            $expenseRepo = app(\App\Marketplace\Repository\ExpenseRepository::class);
+            $expenses = $expenseRepo->findByTransLines($doc_type, array_keys($line_id_index_map))->groupBy('line_id');
+            foreach ($expenses as $line_id => $line_expenses) {
+                $line_no = $line_id_index_map[$line_id];
+                $cart->line_items[$line_no]->marketplace_expenses = ExpenseCollection::fromDBRows($line_expenses);
+            }
+        }
+
         $cart->prepayments = get_payments_for($trans_no[0], $doc_type, $debtor_no);
 
 	} // !newdoc

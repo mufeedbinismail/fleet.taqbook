@@ -14,6 +14,12 @@
 //	Entry/Modify Sales Invoice against single delivery
 //	Entry/Modify Batch Sales Invoice against batch of deliveries
 //
+use App\Finance\Support\MoneyFactory;
+use App\Inventory\Repository\ItemRepository;
+use App\Marketplace\Collections\ExpenseCollection;
+use App\Marketplace\Entities\Expense;
+use Illuminate\Support\Str;
+
 $GLOBALS['page_security'] = 'SA_SALESINVOICE';
 require_once __DIR__ . "/../sales/includes/cart_class.inc";
 require_once __DIR__ . "/../includes/session.inc";
@@ -238,7 +244,27 @@ function check_quantities()
 				$_SESSION['Items']->line_items[$line_no]->item_description = $line_desc;
 			}
 		}
+
+        if (
+            $_SESSION['Items']->is_marketplace_trans
+            && !empty($_POST['mkt_expense'])
+            && $_SESSION['Items']->line_items[$line_no]->qty_dispatched > 0
+        ) {
+            $collection = new ExpenseCollection();
+            foreach ($_POST['mkt_expense'][$line_no] as $uuid => $e) {
+                $collection->add(Expense::draft(
+                    $uuid,
+                    $e['stock_id'],
+                    $e['description'],
+                    MoneyFactory::of(user_numeric($e['amount']))
+                ));
+            }
+            $_SESSION['Items']->line_items[$line_no]->marketplace_expenses = $collection;
+        }
 	}
+
+    $_SESSION['Items']->calculate_total();
+
  return $ok;
 }
 
@@ -434,7 +460,9 @@ $dspans[] = $spanlen;
 $is_batch_invoice = count($_SESSION['Items']->src_docs) > 1;
 $prepaid = $_SESSION['Items']->is_prepaid();
 $options = [
-    "show_marketplace_cols" => $_SESSION['Items']->is_marketplace_trans
+    "show_marketplace_cols" => $_SESSION['Items']->is_marketplace_trans,
+    "is_prepaid" => $prepaid,
+    "is_batch_invoice" => $is_batch_invoice,
 ];
 $is_edition = $_SESSION['Items']->trans_type == ST_SALESINVOICE && $_SESSION['Items']->trans_no != 0;
 start_form();
@@ -574,6 +602,7 @@ $has_marked = false;
 $show_qoh = true;
 
 $dn_line_cnt = 0;
+$itemRepo = app(ItemRepository::class);
 
 foreach ($_SESSION['Items']->line_items as $line=>$ln_itm) {
 	if (!$prepaid && ($ln_itm->quantity == $ln_itm->qty_done)) {
@@ -621,6 +650,43 @@ foreach ($_SESSION['Items']->line_items as $line=>$ln_itm) {
 		$dn_line_cnt--;
 	}
 	end_row();
+
+    if ($options['show_marketplace_cols']) {
+        display_marketplace_expenses($line, $_SESSION['Items']->line_items[$line], $itemRepo, $options);
+    }
+}
+
+function display_marketplace_expenses(
+    $lineIndex,
+    line_details $line,
+    ItemRepository $itemRepo,
+    array $options
+) {
+    foreach (settings()->marketplaceExpenseItems() as $sid) {
+        $expense = $line->marketplace_expenses->where('stockId', $sid);
+        if (!$expense->isEmpty()) {
+            $expense = $expense->first();
+        } else {
+            $expense = Expense::draft(
+                Str::uuid()->toString(),
+                $sid,
+                $itemRepo->findCachedByStockId($sid)->description,
+                MoneyFactory::zero()
+            );
+        }
+
+        hidden("mkt_expense[{$lineIndex}][{$expense->uuid}][stock_id]", $expense->stockId);
+        hidden("mkt_expense[{$lineIndex}][{$expense->uuid}][description]", $expense->description);
+        start_row('style="font-size: 0.85rem;"');
+        label_cell("└───", "style='text-align: center;'");
+        label_cell($expense->description);
+        label_cell('', "colspan=" . ($options['is_prepaid'] ? 2 : 4));
+        amount_cells(null, "mkt_expense[{$lineIndex}][{$expense->uuid}][amount]", price_format(MoneyFactory::value($expense->amount)));
+        label_cell(price_format(MoneyFactory::value($expense->taxBreakdown->tax)), "align=right");
+        label_cell('', "colspan=2");
+        if ($options['is_batch_invoice']) label_cell('', "colspan=2");
+        end_row();
+    }
 }
 
 /*Don't re-calculate freight if some of the order has already been delivered -
@@ -668,6 +734,12 @@ $tax_total = display_edit_tax_items($taxes, $colspan, $_SESSION['Items']->tax_in
 $inv_total = $inv_items_total + input_num('ChargeFreightCost') + $tax_total;
 
 label_row(__("Invoice Total"), price_format($inv_total), "colspan=$colspan align=right","align=right", $is_batch_invoice ? 2 : 0);
+
+if ($options['show_marketplace_cols']) {
+    $market_cost = $_SESSION['Items']->get_total_marketplace_cost();
+    label_row(__("Marketplace Cost"), price_format($market_cost), "colspan=$colspan align=right", "align=right", $is_batch_invoice ? 2 : 0);
+    label_row(__("Net Receivable From Marketplace"), price_format($inv_total - $market_cost), "colspan=$colspan align=right", "align=right", $is_batch_invoice ? 2 : 0);
+}
 
 end_table(1);
 div_end();

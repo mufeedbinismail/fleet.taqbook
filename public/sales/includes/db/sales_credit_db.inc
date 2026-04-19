@@ -1,4 +1,9 @@
 <?php
+
+use App\Finance\Tax\Service\TaxService;
+use App\Inventory\Repository\ItemRepository;
+use App\Marketplace\Repository\ExpenseRepository;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -41,6 +46,10 @@ function write_credit_note(&$credit_note, $write_off_acc)
     $customer_data = get_customer($credit_note->customer_id);
 	$branch_data = get_branch_accounts($credit_note->Branch);
     $marketplace_data = $credit_note->marketplace_id ? get_marketplace($credit_note->marketplace_id) : null;
+
+    $expenseRepo = app(ExpenseRepository::class);
+    $taxService   = app(TaxService::class);
+    $itemRepo     = app(ItemRepository::class);
 
 	add_new_exchange_rate(get_customer_currency($credit_note->customer_id), $credit_date, $credit_note->ex_rate);
 
@@ -93,6 +102,7 @@ function write_credit_note(&$credit_note, $write_off_acc)
 		void_gl_trans(ST_CUSTCREDIT, $credit_no, true);
 		void_stock_move(ST_CUSTCREDIT, $credit_no);
 		void_trans_tax_details(ST_CUSTCREDIT, $credit_no);
+        $expenseRepo->voidByTransaction(ST_CUSTCREDIT, $credit_no);
 	}
 	if ($credit_invoice) {
 		update_customer_trans_version(get_parent_type(ST_CUSTCREDIT), $credit_note->src_docs );
@@ -132,6 +142,23 @@ function write_credit_note(&$credit_note, $write_off_acc)
 			$credit_line->standard_cost,
             $credit_line->src_id,
             $trans_no==0 ? 0 : $credit_line->id
+        );
+
+        $line_id = ($trans_no == 0 || $credit_line->id == 0)
+            ? db_insert_id()
+            : $credit_line->id;
+
+        process_marketplace_expenses(
+            ST_CUSTCREDIT,
+            $credit_no,
+            $line_id,
+            $credit_note,
+            $credit_line,
+            $marketplace_data,
+            $expenseRepo,
+            $taxService,
+            $itemRepo,
+            -1
         );
 
 		if ($credit_type == 'Return')
