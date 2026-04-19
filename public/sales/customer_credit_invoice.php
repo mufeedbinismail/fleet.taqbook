@@ -37,7 +37,7 @@ if (isset($_GET['ModifyCredit'])) {
 	$GLOBALS['help_context'] = "Modifying Credit Invoice";
 	processing_start();
 } elseif (isset($_GET['InvoiceNumber'])) {
-    if (!isset($_GET['MarketPlace'])) {
+    if (!isset($_GET['Marketplace'])) {
         if (get_customer_trans($_GET['InvoiceNumber'], ST_SALESINVOICE, true)['marketplace_id'] ?? null) {
             $_GET['Marketplace'] = 'Yes';
         }
