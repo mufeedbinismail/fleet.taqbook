@@ -221,8 +221,8 @@ if (isset($_POST['ProcessCredit']) && can_process()) {
 		display_error(__("The entered reference is already in use."));
 		set_focus('ref');
 	} elseif($credit_no) {
-		processing_end();
         $marketplace_flg = $_SESSION['Items']->is_marketplace_trans ? "&Marketplace=Yes" : "";
+		processing_end();
 		if ($new_credit) {
 			meta_forward(url()->current(), "AddedID=$credit_no{$marketplace_flg}");
 		} else {
