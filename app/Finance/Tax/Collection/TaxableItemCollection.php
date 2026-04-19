@@ -14,4 +14,9 @@ final class TaxableItemCollection extends AbstractCollection
     {
         return TaxableItem::class;
     }
+
+    public static function fromOne(TaxableItem $item): self
+    {
+        return new self([$item]);
+    }
 }
