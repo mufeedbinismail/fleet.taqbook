@@ -636,12 +636,12 @@ class Cart
 
 	function get_tax_free_shipping()
 	{
-        return (string) $this->get_shipping_tax_breakdown()->net->getAmount();
+        return MoneyFactory::value($this->get_shipping_tax_breakdown()->net);
 	}
 
 	function get_shipping_tax()
 	{
-        return (string) $this->get_shipping_tax_breakdown()->tax->getAmount();
+        return MoneyFactory::value($this->get_shipping_tax_breakdown()->tax);
 	}
 
     function get_shipping_tax_breakdown(): TaxBreakdown

@@ -35,13 +35,13 @@ function get_tax_free_price_for_item(
     $tax_group_array = null
 ): string
 {
-	return (string) get_tax_breakdown_for_item(
+	return MoneyFactory::value(get_tax_breakdown_for_item(
         $stock_id,
         $price,
         $tax_group,
         $tax_included,
         $tax_group_array
-    )->net;
+    )->net);
 }
 
 /**
@@ -56,13 +56,13 @@ function get_full_price_for_item(
     $tax_group_array=null
 ): string
 {
-	return (string) get_tax_breakdown_for_item(
+	return MoneyFactory::value(get_tax_breakdown_for_item(
         $stock_id,
         $price,
         $tax_group,
         $tax_included,
         $tax_group_array
-    )->fullPrice();
+    )->fullPrice());
 }
 
 /**
@@ -77,13 +77,13 @@ function get_tax_for_item(
     $tax_group_array=null
 ): string
 {
-    return (string) get_tax_breakdown_for_item(
+    return MoneyFactory::value(get_tax_breakdown_for_item(
         $stock_id,
         $price,
         $tax_group,
         $tax_included,
         $tax_group_array
-    )->tax;
+    )->tax);
 }
 
 function get_tax_breakdown_for_item(
