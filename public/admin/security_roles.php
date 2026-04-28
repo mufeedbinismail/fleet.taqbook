@@ -48,7 +48,7 @@ if (list_updated('role')) {
 
 function clear_data()
 {
-	unset($_POST);
+	$_POST = [];
 }
 
 if (get_post('addupdate'))
