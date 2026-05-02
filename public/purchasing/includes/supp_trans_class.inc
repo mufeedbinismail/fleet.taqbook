@@ -9,6 +9,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
+
+use App\Shared\Enum\SupplierTransactionSource;
+
 /* Definition of the Supplier Transactions class to hold all the information for an accounts payable invoice or credit note
 */
 
@@ -16,6 +19,7 @@ require_once __DIR__ . "/../../taxes/tax_calc.inc";
 
 class supp_trans 
 {
+    public ?SupplierTransactionSource $source = null;
 
 	var $grn_items; /*array of objects of class grn_item using the id as the pointer */
 	var $gl_codes; /*array of objects of class gl_codes using a counter as the pointer */
@@ -49,9 +53,15 @@ class supp_trans
 	var $dimension,
 		$dimension2;
 
-	function __construct($trans_type, $trans_no=0)
+	function __construct(
+        $trans_type,
+        $trans_no=0,
+        SupplierTransactionSource $source = SupplierTransactionSource::Manual
+    )
 	{
 		$this->trans_type = $trans_type;
+        $this->source = $source;
+        
 		/*Constructor function initialises a new Supplier Transaction object */
 		$this->read($trans_type, $trans_no);
 	}

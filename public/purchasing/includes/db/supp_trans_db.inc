@@ -1,4 +1,7 @@
 <?php
+
+use App\Shared\Enum\SupplierTransactionSource;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -13,8 +16,22 @@
 //
 //	FIXME - this should be revised for transaction update case.
 //
-function write_supp_trans($type, $trans_no, $supplier_id, $date_, $due_date, $reference, $supp_reference,
-	$amount, $amount_tax, $discount, $err_msg="", $rate=0, $included=0)
+function write_supp_trans(
+    $type,
+    $trans_no,
+    $supplier_id,
+    $date_,
+    $due_date,
+    $reference,
+    $supp_reference,
+	$amount,
+    $amount_tax,
+    $discount,
+    $err_msg="",
+    $rate=0,
+    $included=0,
+    SupplierTransactionSource $source = SupplierTransactionSource::Manual
+)
 {
 	$new = $trans_no==0;
 	$date = date2sql($date_);
@@ -32,9 +49,9 @@ function write_supp_trans($type, $trans_no, $supplier_id, $date_, $due_date, $re
 		$rate = get_exchange_rate_from_home_currency($curr, $date_);
 
 
-	$sql = "INSERT INTO ".TB_PREF."supp_trans (trans_no, type, supplier_id, tran_date, due_date,
+	$sql = "INSERT INTO ".TB_PREF."supp_trans (source, trans_no, type, supplier_id, tran_date, due_date,
 		reference, supp_reference, ov_amount, ov_gst, rate, ov_discount, tax_included) ";
-	$sql .= "VALUES (".db_escape($trans_no).", ".db_escape($type)
+	$sql .= "VALUES (".db_escape($source->value).", ".db_escape($trans_no).", ".db_escape($type)
 	.", ".db_escape($supplier_id).", '$date', '$due_date',
 		".db_escape($reference).", ".db_escape($supp_reference).", ".db_escape($amount)
 		.", ".db_escape($amount_tax).", ".db_escape($rate).", ".db_escape($discount).", ".db_escape($included).")";
