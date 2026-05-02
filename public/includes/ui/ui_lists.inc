@@ -897,6 +897,12 @@ function stock_items_list($name, $selected_id=null, $all_option=false,
 	else
 		$sql .= " AND mb_flag!='F'";
 
+    if (isset($opts['filters']) && is_array($opts['filters'])) {
+        if (!empty($opts['filters']['marketplace_services_only'])) {
+            $sql .= " AND s.stock_id IN (".implode(',', array_map('db_escape', settings()->marketplaceExpenseItems() ?: ['-1'])).")";
+        }
+    }
+
 	if ($editkey)
 		set_editor('item', $name, $editkey);
 
