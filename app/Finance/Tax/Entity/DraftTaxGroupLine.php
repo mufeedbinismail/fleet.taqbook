@@ -66,8 +66,8 @@ final class DraftTaxGroupLine implements Arrayable
             'purchasing_provision_gl_code' => $this->purchasingProvisionGlCode,
             'rate' => (string) $this->rate,
             'tax_shipping' => (int) $this->taxShipping,
-            'Value' => (string) $this->tax->getAmount(),
-            'Net' => (string) $this->net->getAmount()
+            'Value' => MoneyFactory::value($this->tax),
+            'Net' => MoneyFactory::value($this->net)
         ];
     }
 }
