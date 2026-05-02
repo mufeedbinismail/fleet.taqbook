@@ -10,6 +10,7 @@ use App\Finance\Tax\Entity\ItemTaxSetting;
 use App\Finance\Tax\Entity\TaxGroupLine;
 use App\Finance\Tax\Entity\TaxSetting;
 use App\Finance\Tax\Entity\TaxableItem;
+use App\Finance\Tax\Entity\TaxableItemSource;
 use App\Finance\Tax\Enum\TaxAlgorithm;
 use App\Finance\Tax\ValueObject\TaxBreakdown;
 use Brick\Math\BigDecimal;
@@ -32,6 +33,14 @@ class TaxService
             $applicable,
             $taxSetting
         );
+    }
+
+    public function getTaxBreakdownForSource(
+        TaxableItemSource $source,
+        TaxSetting $taxSetting
+    ): TaxBreakdown
+    {
+        return $this->getTaxBreakdownForItem($source->toTaxableItem(), $taxSetting);
     }
 
     public function getTaxBreakdownForShipping(

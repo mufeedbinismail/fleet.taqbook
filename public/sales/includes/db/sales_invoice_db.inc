@@ -1,6 +1,5 @@
 <?php
 
-use App\Finance\Tax\Entity\TaxableItem;
 use App\Finance\Tax\Service\TaxService;
 use App\Finance\Support\MoneyFactory;
 use App\Finance\Tax\Collection\TaxableItemCollection;
@@ -336,7 +335,7 @@ function process_marketplace_expenses(
 
         // GL: DR provisional_purchasing_gl_code = tax (per applicable tax type)
         $taxGroupLines = $taxService->calculateTaxes(
-            TaxableItemCollection::fromOne(new TaxableItem($expense->taxSetting, $expense->amount)),
+            TaxableItemCollection::fromOne($expense->toTaxableItem()),
             $invoice->marketplace_tax_setting
         );
         foreach ($taxGroupLines as $taxLine) {

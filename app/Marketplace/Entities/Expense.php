@@ -4,20 +4,21 @@ namespace App\Marketplace\Entities;
 
 use App\Finance\Support\MoneyFactory;
 use App\Finance\Tax\Entity\ItemTaxSetting;
-use App\Finance\Tax\Entity\TaxSetting;
+use App\Finance\Tax\Entity\TaxableItem;
+use App\Finance\Tax\Entity\TaxableItemSource;
 use App\Finance\Tax\Repository\TaxRepository;
 use App\Finance\Tax\Service\TaxService;
 use App\Finance\Tax\ValueObject\TaxBreakdown;
 use Brick\Money\Money;
 
-class Expense
+class Expense implements TaxableItemSource
 {
     public string $uuid;
     public string $stockId;
     public string $description;
     public Money $amount;
     
-    public ItemTaxSetting $taxSetting;
+    public ItemTaxSetting $itemTaxSetting;
     public TaxBreakdown $taxBreakdown;
 
     /**
@@ -37,8 +38,13 @@ class Expense
         $this->stockId = $stockId;
         $this->description = $description;
         $this->amount = $amount;
-        $this->taxSetting = (new TaxRepository)->getItemTaxSetting($stockId);
+        $this->itemTaxSetting = (new TaxRepository)->getItemTaxSetting($stockId);
         $this->taxBreakdown = $taxBreakdown ?? new TaxBreakdown(MoneyFactory::zero(), $amount);
+    }
+
+    public function toTaxableItem(): TaxableItem
+    {
+        return new TaxableItem($this->itemTaxSetting, $this->amount);
     }
 
     /**

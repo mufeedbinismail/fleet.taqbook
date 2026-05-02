@@ -11,7 +11,6 @@
 ***********************************************************************/
 
 use App\Finance\Support\MoneyFactory;
-use App\Finance\Tax\Entity\TaxableItem;
 use App\Finance\Tax\Entity\TaxSetting;
 use App\Finance\Tax\Repository\TaxRepository;
 use App\Finance\Tax\Service\TaxService;
@@ -794,11 +793,7 @@ class Cart
         $service = app(TaxService::class);
         foreach ($this->line_items as $line) {
             foreach ($line->marketplace_expenses as $expense) {
-                $breakdown = $service->getTaxBreakdownForItem(
-                    new TaxableItem($expense->taxSetting, $expense->amount),
-                    $this->marketplace_tax_setting
-                );
-                $expense->taxBreakdown = $breakdown;
+                $expense->taxBreakdown = $service->getTaxBreakdownForSource($expense, $this->marketplace_tax_setting);
             }
         }
     }
