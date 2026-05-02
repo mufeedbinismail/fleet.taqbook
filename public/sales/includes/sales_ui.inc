@@ -44,12 +44,7 @@ function processing_active()
 */
 function check_edit_conflicts($cart_id, $cartname='Items')
 {
-	global $Ajax, $SysPrefs;
-
-    if ((!isset($SysPrefs->no_check_edit_conflicts) || $SysPrefs->no_check_edit_conflicts==0) && $cart_id && isset($_SESSION[$cartname]) && $cart_id != $_SESSION[$cartname]->cart_id) {
-		display_error(__('This edit session has been abandoned by opening sales document in another browser tab. You cannot edit more than one sales document at once.'));
-		$Ajax->activate('_page_body');
-		display_footer_exit();
-	}
+    if ($cart_id && isset($_SESSION[$cartname]))
+        check_cart_edit_conflict($cart_id, $_SESSION[$cartname]->cart_id);
 }
 

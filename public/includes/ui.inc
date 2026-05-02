@@ -15,5 +15,6 @@ require_once __DIR__ . "/../includes/ui/ui_input.inc";
 require_once __DIR__ . "/../includes/ui/ui_msgs.inc";
 require_once __DIR__ . "/../includes/ui/ui_globals.inc";
 require_once __DIR__ . "/../includes/ui/ui_view.inc";
+require_once __DIR__ . "/../includes/ui/ui_helpers.inc";
 require_once __DIR__ . "/../includes/data_checks.inc";
 
