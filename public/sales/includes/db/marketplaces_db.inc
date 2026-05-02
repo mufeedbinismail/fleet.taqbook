@@ -1,5 +1,7 @@
 <?php
 
+use App\Marketplace\Query\Marketplace\MarketplaceQuery;
+
 function create_marketplace($name, $code, $provision_account, $created_by, $supplier_id = null)
 {
     $sql = "INSERT INTO ".TB_PREF."marketplaces (name, code, provision_account, supplier_id, created_by, created_at)
@@ -52,18 +54,10 @@ function get_marketplaces($inactive = false)
 
 function get_marketplace($id)
 {
-    $sql = "SELECT
-        m.*,
-        a.account_name as provision_account_name,
-        s.supp_name as supplier_name,
-        s.tax_group_id,
-        s.tax_included
-    FROM ".TB_PREF."marketplaces m"
-        ." JOIN ".TB_PREF."chart_master a ON m.provision_account = a.account_code"
-        ." LEFT JOIN ".TB_PREF."suppliers s ON m.supplier_id = s.supplier_id"
-        ." WHERE m.id=".db_escape($id);
-
-    $result = db_query($sql, "Could not get market place");
+    $result = db_query(
+        (new MarketplaceQuery)->builder($id),
+        "Could not get market place"
+    );
 
     return db_fetch($result);
 }
