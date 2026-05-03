@@ -89,13 +89,17 @@ class TaxService
     }
 
     public function calculateTaxes(
-        TaxableItemCollection $taxableItems,
+        TaxableItemCollection|TaxableItem $taxableItems,
         TaxSetting $taxSetting,
         ?Money $shippingCharge = null
     ): DraftTaxGroupLineCollection {
         $shippingCharge ??= MoneyFactory::zero();
         $draft = DraftTaxGroupLineCollection::fromTaxGroupLineCollection($taxSetting->taxGroupLines);
         $isFullyExempt = $taxSetting->taxGroupLines->isFullyExempt();
+
+        if ($taxableItems instanceof TaxableItem) {
+            $taxableItems = TaxableItemCollection::fromOne($taxableItems);
+        }
 
         $exempt = $draft['exempt'];
         foreach ($taxableItems as $taxableItem) {

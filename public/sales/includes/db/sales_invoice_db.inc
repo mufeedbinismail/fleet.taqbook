@@ -334,10 +334,7 @@ function process_marketplace_expenses(
         );
 
         // GL: DR provisional_purchasing_gl_code = tax (per applicable tax type)
-        $taxGroupLines = $taxService->calculateTaxes(
-            TaxableItemCollection::fromOne($expense->toTaxableItem()),
-            $invoice->marketplace_tax_setting
-        );
+        $taxGroupLines = $taxService->calculateTaxes($expense->toTaxableItem(), $invoice->marketplace_tax_setting);
         foreach ($taxGroupLines as $taxLine) {
             if (!$taxLine->tax->isZero()) {
                 add_gl_trans(
