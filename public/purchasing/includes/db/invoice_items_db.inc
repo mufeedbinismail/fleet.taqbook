@@ -19,8 +19,8 @@ function add_supp_invoice_item($supp_trans_type, $supp_trans_no, $stock_id, $des
 	$sql .= "VALUES (".db_escape($supp_trans_type).", ".db_escape($supp_trans_no).", "
 		.db_escape($stock_id).
 	", ".db_escape($description).", ".db_escape($gl_code).", ".db_escape($unit_price)
-	.", ".db_escape($unit_tax).", ".db_escape($quantity).", ".db_escape($grn_item_id)
-	.", ".db_escape($po_detail_item_id).", ".db_escape($memo_)
+	.", ".db_escape($unit_tax).", ".db_escape($quantity).", ".db_escape($grn_item_id, true)
+	.", ".db_escape($po_detail_item_id, true).", ".db_escape($memo_)
 	.", ".db_escape($dim_id).", ".db_escape($dim2_id).")";
 
 	db_query($sql, "Cannot insert a supplier transaction detail record");
