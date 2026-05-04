@@ -26,7 +26,12 @@ class Ajax extends JsHttpRequest {
 	//
 	function activate($trigname) {
 	  if (in_ajax()) {
-		$this->triggers[$trigname] = true;
+        if (!is_array($trigname)) {
+            $trigname = func_get_args();
+        }
+        foreach ($trigname as $trn) {
+            $this->triggers[$trn] = true;
+        }
 	  }
 	}
 	//
