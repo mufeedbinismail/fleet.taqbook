@@ -12,6 +12,7 @@ class MarketplaceQuery
         return DB::table('marketplaces as m')
             ->join('chart_master as a', 'm.provision_account', '=', 'a.account_code')
             ->leftJoin('suppliers as s', 'm.supplier_id', '=', 's.supplier_id')
+            ->join('chart_master as payable', 's.payable_account', '=', 'payable.account_code')
             ->where('m.id', $id)
             ->select(
                 DB::raw('m.*'),
@@ -19,6 +20,8 @@ class MarketplaceQuery
                 's.supp_name as supplier_name',
                 's.tax_group_id',
                 's.tax_included',
+                's.payable_account',
+                'payable.account_name as payable_account_name'
             );
     }
 }
