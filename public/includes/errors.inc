@@ -20,14 +20,14 @@ function fa_trigger_error($msg, $error_level=E_USER_NOTICE)
     error_handler($error_level, $msg, __FILE__, __LINE__);
 }
 
-function get_backtrace($html = false, $skip=0)
+function get_backtrace($html = false, $skip=0, $trace=null)
 {
 	$str = '';
 	if ($html) $str .= '<table border=0>';
-	$trace = debug_backtrace();
+	$trace ??= debug_backtrace();
 
 	foreach($trace as $trn => $tr) {
-		if ($trn <= $skip) continue;
+		if ($trn < $skip) continue;
 		if ($html) $str .= '<tr><td>';
 		if (isset($tr['file']) && isset($tr['line']))
 			$str .= $tr['file'].':'.$tr['line'].': ';
@@ -64,7 +64,7 @@ function get_backtrace($html = false, $skip=0)
 //    Error handler - collects all php/user messages for
 //    display in message box.
 
-function error_handler($errno, $errstr, $file, $line) {
+function error_handler($errno, $errstr, $file, $line, $trace=null) {
     global $messages, $SysPrefs, $cur_error_level;
 
 	// skip well known warnings we don't care about.
@@ -80,7 +80,7 @@ function error_handler($errno, $errstr, $file, $line) {
 		}
 	}
 
-	$bt = isset($SysPrefs) && $SysPrefs->go_debug>1 ? get_backtrace(true, 1) : array();
+	$bt = isset($SysPrefs) && $SysPrefs->go_debug>1 ? get_backtrace(true, 0, $trace) : array();
 
 	// error_reporting!=cur_error_level when messages are set off with @ 
 	if ($cur_error_level == error_reporting()) {
@@ -101,7 +101,7 @@ function error_handler($errno, $errstr, $file, $line) {
 function exception_handler($exception)
 {
 	error_handler(E_ERROR, sprintf(__("Unhandled exception [%s]: %s."), $exception->getCode(), $exception->getMessage()),
-		 $exception->getFile(), $exception->getLine());
+		 $exception->getFile(), $exception->getLine(), $exception->getTrace());
 	end_page();
 }
 //------------------------------------------------------------------------------
