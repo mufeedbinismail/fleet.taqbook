@@ -178,6 +178,17 @@ class TaxService
         }
     }
 
+    public function taxBreakdownFromStored(
+        Money $unitPrice,
+        Money $unitTax,
+        BigDecimal $qty,
+        bool $taxIncluded
+    ): TaxBreakdown {
+        $tax = $unitTax->multipliedBy($qty, MoneyFactory::defaultRoundingMode());
+        $net = $unitPrice->multipliedBy($qty, MoneyFactory::defaultRoundingMode());
+        return new TaxBreakdown($tax, $taxIncluded ? $net->minus($tax) : $net);
+    }
+
     public function calculateTaxBreakdown(
         Money $price,
         BigDecimal $lineTaxRate,
