@@ -466,12 +466,13 @@ function display_supp_trans_tax_details($tax_items, $columns)
      	if (!$tax_item['amount'])
      		continue;
 
-    	$tax = number_format2(abs($tax_item['amount']),user_price_dec());
+    	$tax  = number_format2(abs($tax_item['amount']), user_price_dec());
+    	$rate = rtrim(rtrim((string) $tax_item['rate'], '0'), '.');
     	if ($tax_item['included_in_price'])
-        	label_row(__("Included") . " " . $tax_item['tax_type_name'] . " (" . $tax_item['rate'] . "%) "
+        	label_row(__("Included") . " " . $tax_item['tax_type_name'] . " ($rate%) "
         		. ": $tax", '', "colspan=$columns align=right", "align=right");
     	else
-        	label_row($tax_item['tax_type_name'] . " (" . $tax_item['rate'] . "%)",
+        	label_row($tax_item['tax_type_name'] . " ($rate%)",
         		$tax, "colspan=$columns align=right", "align=right");
     }
 }
