@@ -1,4 +1,7 @@
 <?php
+
+use App\Shared\Enum\SupplierTransactionSource;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -84,9 +87,10 @@ function write_cust_journal($trans_type, $trans_no, $branch_id, $date, $ref, $am
 //
 function write_supp_journal($trans_type, $trans_no, $supp_id, $date, $ref, $amount, $rate, $src_ref)
 {
-	$sql = "INSERT INTO ".TB_PREF."supp_trans (trans_no, type, supplier_id, tran_date, reference, ov_amount, rate, supp_reference)
+	$sql = "INSERT INTO ".TB_PREF."supp_trans (trans_no, type, supplier_id, tran_date, reference, ov_amount, rate, supp_reference, source)
 		VALUES (".db_escape($trans_no).", ".db_escape($trans_type).", ".db_escape($supp_id).", '".date2sql($date)."',"
-		.db_escape($ref).", ".db_escape($amount).",".db_escape($rate).",".db_escape($src_ref).")";
+		.db_escape($ref).", ".db_escape($amount).",".db_escape($rate).",".db_escape($src_ref).",
+		".SupplierTransactionSource::Manual->value.")";
 
 	return db_query($sql, 'cannot write supp_journal');
 }

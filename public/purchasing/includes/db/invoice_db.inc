@@ -180,9 +180,22 @@ function add_supp_invoice(&$supp_trans)
 	$ex_rate = get_exchange_rate_from_home_currency($supp_trans->currency, $date_);
 
     /*First insert the invoice into the supp_trans table*/
-	$invoice_id = write_supp_trans($trans_type, 0, $supp_trans->supplier_id, $date_, $supp_trans->due_date,
-		$supp_trans->reference, $supp_trans->supp_reference,
-		$invoice_items_total, $item_added_tax, $supp_trans->ov_discount, "", 0, $supp_trans->tax_included);
+	$invoice_id = write_supp_trans(
+        $trans_type,
+        0,
+        $supp_trans->supplier_id,
+        $date_,
+        $supp_trans->due_date,
+		$supp_trans->reference,
+        $supp_trans->supp_reference,
+		$invoice_items_total,
+        $item_added_tax,
+        $supp_trans->ov_discount,
+        "",
+        0,
+        $supp_trans->tax_included,
+        SupplierTransactionSource::Manual
+	);
 
 	if ($trans_no)
 		move_trans_attachments($trans_type, $trans_no, $invoice_id);
