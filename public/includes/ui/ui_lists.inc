@@ -481,6 +481,16 @@ $opts = array(		// default options
 	return $selector;
 }
 //----------------------------------------------------------------------------------------------
+function array_selector_cells($label, $name, $selected_id, $items, $options=null)
+{
+	if ($label != null)
+		echo "<td>$label</td>\n";
+	echo "<td>";
+	echo array_selector($name, $selected_id, $items, $options);
+	echo "</td>\n";
+}
+
+//----------------------------------------------------------------------------------------------
 function array_selector_row($label, $name, $selected_id, $items, $options=null)
 {
 	echo "<tr><td class='label'>$label</td>\n<td>";
