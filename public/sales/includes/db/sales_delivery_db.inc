@@ -1,4 +1,7 @@
 <?php
+
+use App\Shared\Enum\CustomerTransactionSource;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -40,17 +43,34 @@ function write_sales_delivery(&$delivery,$bo_policy)
 		$tax_total +=  $taxitem['Value'];
 	}
 	/* Insert/update the debtor_trans */
-	$delivery_no = write_customer_trans(ST_CUSTDELIVERY, $trans_no, $delivery->customer_id,
-		$delivery->Branch, $delivery->document_date, $delivery->reference,
-		$delivery_items_total, 0,
+	$delivery_no = write_customer_trans(
+        ST_CUSTDELIVERY,
+        $trans_no,
+        $delivery->customer_id,
+		$delivery->Branch,
+        $delivery->document_date,
+        $delivery->reference,
+		$delivery_items_total,
+        0,
 		$delivery->tax_included ? 0 : $tax_total-$freight_tax,
 		$delivery->freight_cost,
 		$delivery->tax_included ? 0 : $freight_tax,
-		$delivery->sales_type, $delivery->order_no,
-		$delivery->ship_via, $delivery->due_date, 0, 0, $delivery->dimension_id, 
-		$delivery->dimension2_id, $delivery->payment, $delivery->tax_included,
-        $delivery->prep_amount, $delivery->tracking_no,
-        $delivery->marketplace_id);
+		$delivery->sales_type,
+        $delivery->order_no,
+		$delivery->ship_via,
+        $delivery->due_date,
+        0,
+        0,
+        $delivery->dimension_id,
+		$delivery->dimension2_id,
+        $delivery->payment,
+        $delivery->tax_included,
+        $delivery->prep_amount,
+        $delivery->tracking_no,
+        $delivery->marketplace_id,
+        0,
+        CustomerTransactionSource::Manual
+    );
 
 	if ($trans_no == 0) {
 		$delivery->trans_no = array($delivery_no=>0);

@@ -1,4 +1,7 @@
 <?php
+
+use App\Shared\Enum\CustomerTransactionSource;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -53,12 +56,34 @@ function get_customer_trans_version($type, $trans_no) {
 //----------------------------------------------------------------------------------------
 // $Total, $Tax, $Freight, $discount all in customer's currency
 // date_ is display date (non-sql)
-function write_customer_trans($trans_type, $trans_no, $debtor_no, $BranchNo,
-	$date_, $reference, $Total, $discount=0, $Tax=0, $Freight=0, $FreightTax=0,
-	$sales_type=0, $order_no=0, $ship_via=0, $due_date="",
-	$AllocAmt=0, $rate=0, $dimension_id=0, $dimension2_id=0, $payment_terms=null,
-    $tax_included=0, $prep_amount=0, $tracking_no=null, $marketplace_id=null,
-    $marketplace_cost=0)
+function write_customer_trans(
+    $trans_type,
+    $trans_no,
+    $debtor_no,
+    $BranchNo,
+	$date_,
+    $reference,
+    $Total,
+    $discount=0,
+    $Tax=0,
+    $Freight=0,
+    $FreightTax=0,
+	$sales_type=0,
+    $order_no=0,
+    $ship_via=0,
+    $due_date="",
+	$AllocAmt=0,
+    $rate=0,
+    $dimension_id=0,
+    $dimension2_id=0,
+    $payment_terms=null,
+    $tax_included=0,
+    $prep_amount=0,
+    $tracking_no=null,
+    $marketplace_id=null,
+    $marketplace_cost=0,
+    CustomerTransactionSource $source=CustomerTransactionSource::Manual
+)
 {
 	$new = $trans_no==0;
 	$curr = get_customer_currency($debtor_no);
@@ -80,6 +105,7 @@ function write_customer_trans($trans_type, $trans_no, $debtor_no, $BranchNo,
         $trans_no = get_next_trans_no($trans_type);
 
         $sql = "INSERT INTO ".TB_PREF."debtor_trans (
+            source,
             trans_no,
             type,
             debtor_no,
@@ -106,6 +132,7 @@ function write_customer_trans($trans_type, $trans_no, $debtor_no, $BranchNo,
             tax_included,
             prep_amount
         ) VALUES (
+            ".db_escape($source->value).",
             ".db_escape($trans_no).",
             ".db_escape($trans_type).",
             ".db_escape($debtor_no).",
@@ -134,6 +161,7 @@ function write_customer_trans($trans_type, $trans_no, $debtor_no, $BranchNo,
         )";
 	} else {	// may be optional argument should stay unchanged ?
         $sql = "UPDATE ".TB_PREF."debtor_trans SET
+            source=".db_escape($source->value).",
             debtor_no=".db_escape($debtor_no).",
             branch_code=".db_escape($BranchNo).",
             marketplace_id=".db_escape($marketplace_id, true).",

@@ -1,4 +1,7 @@
 <?php
+
+use App\Shared\Enum\CustomerTransactionSource;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -109,7 +112,8 @@ function write_customer_payment(
         0,
         null,
         $marketplace_id,
-        $marketplace_cost
+        $marketplace_cost,
+        CustomerTransactionSource::Manual
     );
 
 	$bank_gl_account = get_bank_gl_account($bank_account);

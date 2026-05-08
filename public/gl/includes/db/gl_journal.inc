@@ -1,5 +1,6 @@
 <?php
 
+use App\Shared\Enum\CustomerTransactionSource;
 use App\Shared\Enum\SupplierTransactionSource;
 use App\Shared\Enum\TransactionEffect;
 
@@ -74,8 +75,8 @@ function get_journal($type, $trans_no)
 function write_cust_journal($trans_type, $trans_no, $branch_id, $date, $ref, $amount, $rate)
 {
 	// we have to select any branch_id for given AR_act - in fact w
-	$sql = "INSERT INTO ".TB_PREF."debtor_trans (trans_no, type, debtor_no, branch_code, tran_date, reference, ov_amount, rate)
-        VALUES (".db_escape($trans_no).", ".db_escape($trans_type).", 
+	$sql = "INSERT INTO ".TB_PREF."debtor_trans (source, trans_no, type, debtor_no, branch_code, tran_date, reference, ov_amount, rate)
+        VALUES (".db_escape(CustomerTransactionSource::Manual->value).", ".db_escape($trans_no).", ".db_escape($trans_type).",
 			(SELECT debtor_no FROM ".TB_PREF."cust_branch WHERE branch_code=".db_escape($branch_id). ") ,"
 			.db_escape($branch_id).",'".date2sql($date)."', ".db_escape($ref).","
 			.db_escape($amount).", ".db_escape($rate).")";

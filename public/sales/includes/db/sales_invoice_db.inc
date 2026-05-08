@@ -5,6 +5,7 @@ use App\Finance\Support\MoneyFactory;
 use App\Finance\Tax\Collection\TaxableItemCollection;
 use App\Inventory\Repository\ItemRepository;
 use App\Marketplace\Repository\ExpenseRepository;
+use App\Shared\Enum\CustomerTransactionSource;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
@@ -96,14 +97,34 @@ function write_sales_invoice(&$invoice)
 		$prepaid_factor = 1;
 	}
 	 // write_customer_trans have to be called after optional void_cust_allocations above
-	$invoice_no = write_customer_trans(ST_SALESINVOICE, $trans_no, $invoice->customer_id,
-		$invoice->Branch, $date_, $invoice->reference, $items_total, 0,
-		$items_added_tax, $invoice->freight_cost, $freight_added_tax,
-		$invoice->sales_type, $sales_order, $invoice->ship_via, 
-		$invoice->due_date, 0, 0, $invoice->dimension_id, 
-		$invoice->dimension2_id, $invoice->payment, $invoice->tax_included,
-        $invoice->prep_amount, $invoice->tracking_no, $invoice->marketplace_id,
-        $invoice->get_total_marketplace_cost());
+	$invoice_no = write_customer_trans(
+        ST_SALESINVOICE,
+        $trans_no,
+        $invoice->customer_id,
+		$invoice->Branch,
+        $date_,
+        $invoice->reference,
+        $items_total,
+        0,
+		$items_added_tax,
+        $invoice->freight_cost,
+        $freight_added_tax,
+		$invoice->sales_type,
+        $sales_order,
+        $invoice->ship_via,
+		$invoice->due_date,
+        0,
+        0,
+        $invoice->dimension_id,
+		$invoice->dimension2_id,
+        $invoice->payment,
+        $invoice->tax_included,
+        $invoice->prep_amount,
+        $invoice->tracking_no,
+        $invoice->marketplace_id,
+        $invoice->get_total_marketplace_cost(),
+        CustomerTransactionSource::Manual
+    );
 
 	if ($trans_no == 0) {
 		$invoice->trans_no = array($invoice_no=>0);

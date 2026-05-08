@@ -1,5 +1,6 @@
 <?php
 
+use App\Shared\Enum\CustomerTransactionSource;
 use App\Shared\Enum\TransactionEffect;
 
 /**********************************************************************
@@ -421,7 +422,7 @@ function write_bank_transaction($trans_type, $trans_no, $from_account, $items, $
 			$cust_amount = -$cust_amount;
 
 		$trans_no = write_customer_trans($trans_type, 0, $person_id, $person_detail_id, $date_,
-        	$ref, $cust_amount);
+        	$ref, $cust_amount, source: CustomerTransactionSource::Manual);
 		if ($old_trans)
 			move_trans_attachments($trans_type, $old_trans, $trans_no);
     }

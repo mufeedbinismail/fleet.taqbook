@@ -3,6 +3,7 @@
 use App\Finance\Tax\Service\TaxService;
 use App\Inventory\Repository\ItemRepository;
 use App\Marketplace\Repository\ExpenseRepository;
+use App\Shared\Enum\CustomerTransactionSource;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
@@ -83,15 +84,33 @@ function write_credit_note(&$credit_note, $write_off_acc)
 
 	/*Now insert the Credit Note into the debtor_trans table with the allocations as calculated above*/
 	// all amounts in debtor's currency
-	$credit_no = write_customer_trans(ST_CUSTCREDIT, $trans_no, $credit_note->customer_id,
-		$credit_note->Branch, $credit_date, $credit_note->reference,
-		$credit_note_total, 0, $items_added_tax,
-		$credit_note->freight_cost, $freight_added_tax,
-		$credit_note->sales_type, $credit_note->order_no, $credit_note->ship_via,
-		null, $alloc, 0, $credit_note->dimension_id, $credit_note->dimension2_id,
-		$credit_note->payment, $credit_note->tax_included,
-        0, $credit_note->tracking_no, $credit_note->marketplace_id,
-        $credit_note->get_total_marketplace_cost()
+	$credit_no = write_customer_trans(
+        ST_CUSTCREDIT,
+        $trans_no,
+        $credit_note->customer_id,
+		$credit_note->Branch,
+        $credit_date,
+        $credit_note->reference,
+		$credit_note_total,
+        0,
+        $items_added_tax,
+		$credit_note->freight_cost,
+        $freight_added_tax,
+		$credit_note->sales_type,
+        $credit_note->order_no,
+        $credit_note->ship_via,
+		null,
+        $alloc,
+        0,
+        $credit_note->dimension_id,
+        $credit_note->dimension2_id,
+		$credit_note->payment,
+        $credit_note->tax_included,
+        0,
+        $credit_note->tracking_no,
+        $credit_note->marketplace_id,
+        $credit_note->get_total_marketplace_cost(),
+        CustomerTransactionSource::Manual
     );
 
 	if ($trans_no==0) {
