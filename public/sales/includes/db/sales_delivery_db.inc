@@ -69,7 +69,8 @@ function write_sales_delivery(&$delivery,$bo_policy)
         $delivery->tracking_no,
         $delivery->marketplace_id,
         0,
-        CustomerTransactionSource::Manual
+        CustomerTransactionSource::Manual,
+        null
     );
 
 	if ($trans_no == 0) {

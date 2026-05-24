@@ -5,6 +5,7 @@ use App\Finance\Support\MoneyFactory;
 use App\Finance\Tax\Collection\TaxableItemCollection;
 use App\Inventory\Repository\ItemRepository;
 use App\Marketplace\Repository\ExpenseRepository;
+use App\Sales\Enum\PaymentMethod;
 use App\Shared\Enum\CustomerTransactionSource;
 
 /**********************************************************************
@@ -123,7 +124,8 @@ function write_sales_invoice(&$invoice)
         $invoice->tracking_no,
         $invoice->marketplace_id,
         $invoice->get_total_marketplace_cost(),
-        CustomerTransactionSource::Manual
+        CustomerTransactionSource::Manual,
+        $invoice->payment_method_id ? PaymentMethod::from($invoice->payment_method_id) : null
     );
 
 	if ($trans_no == 0) {

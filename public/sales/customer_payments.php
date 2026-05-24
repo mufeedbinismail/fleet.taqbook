@@ -1,4 +1,7 @@
 <?php
+
+use App\Sales\Enum\PaymentMethod;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -295,7 +298,8 @@ if (get_post('AddPaymentItem') && can_process()) {
         $_POST['dimension_id'],
         $_POST['dimension2_id'],
         get_post('marketplace_id'),
-        input_num('marketplace_cost')
+        input_num('marketplace_cost'),
+        PaymentMethod::from((int)$_POST['payment_method_id'])
     );
 
 	$_SESSION['alloc']->trans_no = $payment_no;
@@ -338,6 +342,7 @@ if (isset($_GET['trans_no']) && $_GET['trans_no'] > 0 )
 	$_POST['bank_account'] = $myrow["bank_act"];
     $_POST['marketplace_cost'] = price_format($myrow['ov_mkt_cost']);
 	$_POST['ref'] =  $myrow["reference"];
+	$_POST['payment_method_id'] = $myrow['payment_method_id'] ?? PaymentMethod::Default->value;
 	$charge = get_cust_bank_charge(ST_CUSTPAYMENT, $_POST['trans_no']);
 	$_POST['charge'] =  price_format($charge);
 	$_POST['DateBanked'] =  sql2date($myrow['tran_date']);
@@ -361,6 +366,7 @@ $new = !$_SESSION['alloc']->trans_no;
 start_form();
 
 hidden('trans_no');
+hidden('payment_method_id', $_POST['payment_method_id'] ?? PaymentMethod::Default->value);
 
 start_outer_table(TABLESTYLE2, "width='60%'", 5);
 

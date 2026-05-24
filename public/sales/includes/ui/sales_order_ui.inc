@@ -341,6 +341,8 @@ function display_order_header(&$order, $editable, $date_text)
 {
 	global $Ajax, $SysPrefs;
 
+	hidden('payment_method_id', $order->payment_method_id);
+
 	start_outer_table(TABLESTYLE2, "width='80%'");
 
 	table_section(1);

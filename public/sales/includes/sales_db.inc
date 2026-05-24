@@ -281,6 +281,7 @@ function read_sales_trans($doc_type, $trans_no, &$cart)
 		$cart->document_date = sql2date($myrow["tran_date"]);
 		$cart->dimension_id = $myrow['dimension_id']; // added 2.1 Joe Hunt 2008-11-12
 		$cart->dimension2_id = $myrow['dimension2_id'];
+		$cart->payment_method_id = isset($myrow['payment_method_id']) ? (int)$myrow['payment_method_id'] : null;
 		$cart->Comments = '';
 		foreach ( $trans_no as $trans ) {
 			$cart->Comments .= get_comments_string($doc_type,$trans);

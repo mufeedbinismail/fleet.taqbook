@@ -13,6 +13,7 @@
 use App\Finance\Support\MoneyFactory;
 use App\Marketplace\Collection\ExpenseCollection;
 use App\Marketplace\Entity\Expense;
+use App\Sales\Enum\PaymentMethod;
 
 //-----------------------------------------------------------------------------
 //
@@ -351,6 +352,7 @@ function copy_to_cart()
 		$cart->dimension2_id = $_POST['dimension2_id'];
 	}
 	$cart->ex_rate = input_num('_ex_rate', null);
+	$cart->payment_method_id = !empty($_POST['payment_method_id']) ? (int)$_POST['payment_method_id'] : null;
 }
 
 //-----------------------------------------------------------------------------
@@ -387,6 +389,7 @@ function copy_from_cart()
 	}
 	$_POST['cart_id'] = $cart->cart_id;
 	$_POST['_ex_rate'] = $cart->ex_rate;
+	$_POST['payment_method_id'] = $cart->payment_method_id;
 }
 //--------------------------------------------------------------------------------
 
@@ -760,6 +763,9 @@ function create_cart($type, $trans_no)
 		$_SESSION['Items'] = $doc;
 	} else
 		$_SESSION['Items'] = new Cart($type, array($trans_no), false, $is_marketplace_trans);
+	if ($_SESSION['Items']->trans_type == ST_SALESINVOICE) {
+		$_SESSION['Items']->payment_method_id = PaymentMethod::Default->value;
+	}
 	copy_from_cart();
 }
 

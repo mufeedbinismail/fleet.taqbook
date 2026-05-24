@@ -1,4 +1,7 @@
 <?php
+
+use App\Sales\Enum\PaymentMethod;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -114,6 +117,7 @@ function copy_to_cn()
 	$cart->dimension_id = $_POST['dimension_id'];
 	$cart->dimension2_id = $_POST['dimension2_id'];
     $cart->marketplace_id = get_post('marketplace_id');
+	$cart->payment_method_id = !empty($_POST['payment_method_id']) ? (int)$_POST['payment_method_id'] : null;
 }
 
 //-----------------------------------------------------------------------------
@@ -133,6 +137,7 @@ function copy_from_cn()
 	$_POST['dimension2_id'] = $cart->dimension2_id;
 	$_POST['cart_id'] = $cart->cart_id;
     $_POST['marketplace_id'] = $cart->marketplace_id;
+	$_POST['payment_method_id'] = $cart->payment_method_id;
 }
 
 //-----------------------------------------------------------------------------
@@ -141,6 +146,9 @@ function handle_new_credit($trans_no)
 {
 	processing_start();
 	$_SESSION['Items'] = new Cart(ST_CUSTCREDIT, $trans_no, false, isset($_GET['Marketplace']));
+	if ($trans_no == 0) {
+		$_SESSION['Items']->payment_method_id = PaymentMethod::Default->value;
+	}
 	copy_from_cn();
 }
 

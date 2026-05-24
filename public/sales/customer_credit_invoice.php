@@ -1,4 +1,7 @@
 <?php
+
+use App\Sales\Enum\PaymentMethod;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -134,6 +137,7 @@ function can_process()
 if (isset($_GET['InvoiceNumber']) && $_GET['InvoiceNumber'] > 0) {
 
     $_SESSION['Items'] = new Cart(ST_SALESINVOICE, $_GET['InvoiceNumber'], true);
+    $_SESSION['Items']->payment_method_id ??= PaymentMethod::Default->value;
 
     foreach ($_SESSION['Items']->line_items as $ln) {
         $ln->additional_data['bk_expense_amounts'] = [];
@@ -220,6 +224,7 @@ function copy_to_cart()
 	$cart->Comments = $_POST['CreditText'];
 	if ($_SESSION['Items']->trans_no == 0)
 		$cart->reference = $_POST['ref'];
+	$cart->payment_method_id = !empty($_POST['payment_method_id']) ? (int)$_POST['payment_method_id'] : null;
 }
 //-----------------------------------------------------------------------------
 
@@ -233,6 +238,7 @@ function copy_from_cart()
 	$_POST['CreditText']= $cart->Comments;
 	$_POST['cart_id'] = $cart->cart_id;
 	$_POST['ref'] = $cart->reference;
+	$_POST['payment_method_id'] = $cart->payment_method_id;
 }
 //-----------------------------------------------------------------------------
 
@@ -303,6 +309,7 @@ function display_credit_items()
 
     start_form();
 	hidden('cart_id');
+	hidden('payment_method_id', $_SESSION['Items']->payment_method_id);
 
 	start_table(TABLESTYLE2, "width='80%'", 5);
 	echo "<tr><td>"; // outer table

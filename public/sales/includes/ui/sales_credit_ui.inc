@@ -17,6 +17,8 @@ function display_credit_header(&$order)
 {
 	global $Ajax, $Refs;
 
+	hidden('payment_method_id', $order->payment_method_id);
+
 	start_outer_table(TABLESTYLE, "width='80%'");
 	table_section(1);
 

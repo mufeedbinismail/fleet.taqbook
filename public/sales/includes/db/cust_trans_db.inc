@@ -1,5 +1,6 @@
 <?php
 
+use App\Sales\Enum\PaymentMethod;
 use App\Shared\Enum\CustomerTransactionSource;
 
 /**********************************************************************
@@ -82,7 +83,8 @@ function write_customer_trans(
     $tracking_no=null,
     $marketplace_id=null,
     $marketplace_cost=0,
-    CustomerTransactionSource $source=CustomerTransactionSource::Manual
+    CustomerTransactionSource $source=CustomerTransactionSource::Manual,
+    ?PaymentMethod $payment_method=null
 )
 {
 	$new = $trans_no==0;
@@ -129,6 +131,7 @@ function write_customer_trans(
             dimension_id,
             dimension2_id,
             payment_terms,
+            payment_method_id,
             tax_included,
             prep_amount
         ) VALUES (
@@ -156,6 +159,7 @@ function write_customer_trans(
             ".db_escape($dimension_id).",
             ".db_escape($dimension2_id).",
             ".db_escape($payment_terms, true).",
+            ".db_escape($payment_method?->value, true).",
             ".db_escape($tax_included).",
             ".db_escape($prep_amount)."
         )";
@@ -182,6 +186,7 @@ function write_customer_trans(
             dimension_id=".db_escape($dimension_id).",
             dimension2_id=".db_escape($dimension2_id).",
             payment_terms=".db_escape($payment_terms, true).",
+            payment_method_id=".db_escape($payment_method?->value, true).",
             tax_included=".db_escape($tax_included).",
             prep_amount =".db_escape($prep_amount).",
             tracking_no=".db_escape($tracking_no, true)."

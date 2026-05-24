@@ -1,4 +1,7 @@
 <?php
+
+use App\Sales\Enum\PaymentMethod;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -149,6 +152,7 @@ if ( (isset($_GET['DeliveryNumber']) && ($_GET['DeliveryNumber'] > 0) )
         throw new \App\Legacy\Exception\FlowTerminatedException;
 	}
 
+	$dn->payment_method_id = PaymentMethod::Default->value;
 	$_SESSION['Items'] = $dn;
 	copy_from_cart();
 
@@ -189,6 +193,7 @@ if ( (isset($_GET['DeliveryNumber']) && ($_GET['DeliveryNumber'] > 0) )
 	$_SESSION['Items']->src_docs = array($order_no);
 	$_SESSION['Items']->trans_no = 0;
 	$_SESSION['Items']->trans_type = ST_SALESINVOICE;
+	$_SESSION['Items']->payment_method_id = PaymentMethod::Default->value;
 
 	$_SESSION['Items']->update_payments();
 
@@ -305,6 +310,7 @@ function copy_to_cart()
 
 	$cart->dimension_id =  $_POST['dimension_id'];
 	$cart->dimension2_id =  $_POST['dimension2_id'];
+	$cart->payment_method_id = !empty($_POST['payment_method_id']) ? (int)$_POST['payment_method_id'] : null;
 }
 //-----------------------------------------------------------------------------
 
@@ -324,6 +330,7 @@ function copy_from_cart()
 	}
 	$_POST['dimension_id'] = $cart->dimension_id;
 	$_POST['dimension2_id'] = $cart->dimension2_id;
+	$_POST['payment_method_id'] = $cart->payment_method_id;
 }
 
 //-----------------------------------------------------------------------------
@@ -468,6 +475,7 @@ $is_edition = $_SESSION['Items']->trans_type == ST_SALESINVOICE && $_SESSION['It
 start_form();
 hidden('cart_id');
 hidden('is_marketplace_trans', check_value('is_marketplace_trans'));
+hidden('payment_method_id', $_SESSION['Items']->payment_method_id);
 
 start_table(TABLESTYLE2, "width='80%'", 5);
 

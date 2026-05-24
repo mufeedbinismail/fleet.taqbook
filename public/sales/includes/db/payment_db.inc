@@ -1,5 +1,6 @@
 <?php
 
+use App\Sales\Enum\PaymentMethod;
 use App\Shared\Enum\CustomerTransactionSource;
 
 /**********************************************************************
@@ -39,7 +40,8 @@ function write_customer_payment(
     $dim1=0,
     $dim2=0,
     $marketplace_id=null,
-    $marketplace_cost=0
+    $marketplace_cost=0,
+    ?PaymentMethod $payment_method=PaymentMethod::Default
 )
 {
 	global $Refs;
@@ -113,7 +115,8 @@ function write_customer_payment(
         null,
         $marketplace_id,
         $marketplace_cost,
-        CustomerTransactionSource::Manual
+        CustomerTransactionSource::Manual,
+        $payment_method
     );
 
 	$bank_gl_account = get_bank_gl_account($bank_account);

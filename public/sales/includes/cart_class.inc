@@ -85,6 +85,7 @@ class Cart
 	var $dimension2_id;
 	var $payment;
 	var $payment_terms = array('cash_sale' => false, 'days_before_due' => 0); // cached payment terms
+	public ?int $payment_method_id = null;
 	var $credit;
 	// prepayment mode:
 	var $prepaid=false;	// true for documents issued in prepayment mode
@@ -335,6 +336,7 @@ class Cart
         $dimension_id = $this->dimension_id;
         $dimension2_id = $this->dimension2_id;
         $line_items = $this->line_items;
+        $payment_method_id = $this->payment_method_id;
 
         // For direct documents (no src_docs and not prepaid),
         // create missing parent documents iteratively
@@ -376,6 +378,7 @@ class Cart
                 $this->due_date = $due_date;
                 $this->dimension_id = $dimension_id;
                 $this->dimension2_id = $dimension2_id;
+                $this->payment_method_id = $payment_method_id;
 
                 if ($this->trans_type == $orig_type) break;
             }
