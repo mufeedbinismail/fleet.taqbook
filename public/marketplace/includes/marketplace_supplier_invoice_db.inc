@@ -92,7 +92,7 @@ function get_sql_for_marketplace_supplier_invoice_list(string $marketplaceId, st
             LEFT JOIN voided v ON v.`type` = st.`type` AND v.id = st.trans_no
             WHERE
                 v.row_id IS NULL
-                AND st.source = ".SupplierTransactionSource::MarketplaceClearing->value."
+                AND st.source = ".SupplierTransactionSource::MarketplaceManual->value."
                 AND st.`type` = ".SystemType::SupplierInvoice->value;
 
     if (!empty($marketplaceId)) {
@@ -132,7 +132,7 @@ function write_marketplace_supplier_invoice(SupplierInvoiceCart $cart): int
         'Could not write supplier invoice',
         $exRate,
         $cart->marketplaceTaxSetting->taxIncluded,
-        SupplierTransactionSource::MarketplaceClearing,
+        SupplierTransactionSource::MarketplaceManual,
         TransactionEffect::Increase
     );
 
