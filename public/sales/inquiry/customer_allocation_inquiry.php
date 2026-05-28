@@ -19,14 +19,6 @@ require_once __DIR__ . "/../../includes/session.inc";
 require_once __DIR__ . "/../../sales/includes/sales_ui.inc";
 require_once __DIR__ . "/../../sales/includes/sales_db.inc";
 
-if (isset($_GET['Marketplace'])) {
-    $_POST['is_marketplace_trans'] = 1;
-}
-
-if (check_value('is_marketplace_trans')) {
-    $GLOBALS['page_security'] = 'SA_MP_SALESALLOC';
-}
-
 $js = "";
 if ($SysPrefs->use_popup_windows)
 	$js .= get_js_open_window(900, 500);
@@ -49,10 +41,6 @@ start_form();
 start_table(TABLESTYLE_NOBORDER);
 start_row();
 
-hidden('is_marketplace_trans', check_value('is_marketplace_trans'));
-if (check_value('is_marketplace_trans')) {
-    marketplace_list_cells(__("Marketplace:"), 'marketplace_id', null, true);
-}
 customer_list_cells(__("Select a customer: "), 'customer_id', $_POST['customer_id'], true);
 
 end_row();
@@ -109,17 +97,15 @@ function fmt_balance($row)
 
 function alloc_link($row)
 {
-    $marketplace_flg = check_value('is_marketplace_trans') ? "&Marketplace=Yes" : "";
-
 	if ($row["effect"] == TransactionEffect::Decrease->value) {
 		/* a credit/receipt/negative journal which could have an allocation */
 		$link = pager_link(__("Allocation"),
 			"/sales/allocations/customer_allocate.php?trans_no=" . $row["trans_no"]
-			."&trans_type=" . $row["type"]."&debtor_no=" . $row["debtor_no"] . $marketplace_flg, ICON_ALLOC);
+			."&trans_type=" . $row["type"]."&debtor_no=" . $row["debtor_no"], ICON_ALLOC);
 	} elseif ($row["effect"] == TransactionEffect::Increase->value) {
 		/* an invoice/charge which could receive a payment */
 		$link = pager_link(__("Payment"),
-			"/sales/customer_payments.php?customer_id=".$row["debtor_no"]."&SInvoice=" . $row["trans_no"]."&Type=".$row["type"].$marketplace_flg, ICON_MONEY);
+			"/sales/customer_payments.php?customer_id=".$row["debtor_no"]."&SInvoice=" . $row["trans_no"]."&Type=".$row["type"], ICON_MONEY);
 	} else {
 		return '';
 	}
@@ -143,9 +129,7 @@ $sql = get_sql_for_customer_allocation_inquiry(
     get_post('TransToDate'),
     get_post('customer_id'),
     get_post('filterType'),
-    check_value('showSettled'),
-    check_value('is_marketplace_trans'),
-    get_post('marketplace_id')
+    check_value('showSettled')
 );
 
 //------------------------------------------------------------------------------------------------

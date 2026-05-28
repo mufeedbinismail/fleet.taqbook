@@ -90,7 +90,7 @@ if (isset($_GET['AddedID'])) {
 
 	if (!db_num_rows(get_allocatable_from_cust_transactions(null, $invoice_no, $trans_type)))
 		hyperlink_params(url("/sales/customer_payments.php"), __("Entry &customer payment for this invoice"),
-		"{$marketplace_flg}SInvoice=".$invoice_no);
+		"SInvoice=".$invoice_no);
 
 	hyperlink_params(url("/admin/attachments.php"), __("Add an Attachment"), "filterType=$trans_type&trans_no=$invoice_no");
 

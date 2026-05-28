@@ -17,10 +17,7 @@
 
 class allocation
 {
-    var $is_marketplace_trans;
-    var $marketplace_id;
-
-	var $trans_no; 
+	var $trans_no;
 	var $type;
 	var $person_id = '';
 	var $person_name = '';
@@ -33,21 +30,12 @@ class allocation
 
 	var $allocs; /*array of transactions allocated to */
 
-	function __construct(
-        $type,
-        $trans_no,
-        $person_id = null,
-        $person_type_id=null,
-        $is_marketplace_trans=0,
-        $marketplace_id=null
-    )
+	function __construct($type, $trans_no, $person_id = null, $person_type_id=null)
 	{
 		$this->allocs = array();
-		
+
 		$this->trans_no = $trans_no;
 		$this->type = $type;
-        $this->is_marketplace_trans = $is_marketplace_trans;
-        $this->marketplace_id = $marketplace_id;
 		if ($person_id)
 			$this->set_person($person_id, $person_type_id);
 
@@ -63,14 +51,14 @@ class allocation
 		return $this->person_curr;
 	}
 
-	function add_item($type, $type_no, $date_, $due_date, $amount, $amount_allocated, 
-		$current_allocated, $ref, $tracking_no=null, $marketplace_cost=0)
+	function add_item($type, $type_no, $date_, $due_date, $amount, $amount_allocated,
+		$current_allocated, $ref, $tracking_no=null)
 	{
 		if (floatcmp($amount, 0))
 		{
-			$this->allocs[count($this->allocs)] = new allocation_item($type, $type_no, 
+			$this->allocs[count($this->allocs)] = new allocation_item($type, $type_no,
 				$date_, $due_date, $amount, $amount_allocated, $current_allocated, $ref,
-                $tracking_no, $marketplace_cost
+                $tracking_no
             );
 			return true;
 		} 
@@ -146,8 +134,6 @@ class allocation
 				$this->currency = isset($trans['bank_curr_code']) ? $trans['bank_curr_code'] : $trans['curr_code'];
 				$this->bank_amount = isset($trans["bank_amount"]) ? $trans["bank_amount"] : $trans["Total"]; // not set for journal entry
 				$this->amount = $trans["Total"];
-                $this->is_marketplace_trans = ($trans["marketplace_id"] ?? 0) ? 1 : 0;
-                $this->marketplace_id = $trans["marketplace_id"] ?? null;
 			}
 		}
 		/* Now populate the array of possible (and previous actual) allocations 
@@ -160,13 +146,7 @@ class allocation
 			if ($this->person_type==PT_SUPPLIER)
 				$trans_items = get_allocatable_to_supp_transactions($this->person_id);
 			else
-		 		$trans_items = get_allocatable_to_cust_transactions(
-                    $this->person_id,
-                    null,
-                    null,
-                    $this->is_marketplace_trans,
-                    $this->marketplace_id
-                );
+		 		$trans_items = get_allocatable_to_cust_transactions($this->person_id);
 			while ($myrow = db_fetch($trans_items))
 			{
 				$this->add_item($myrow["type"], $myrow["trans_no"],
@@ -176,8 +156,7 @@ class allocation
 					$myrow["alloc"], // trans total allocated
 					0,
 					$myrow["reference"],
-                    $myrow["tracking_no"] ?? null,
-                    $myrow["marketplace_cost"] ?? 0
+                    $myrow["tracking_no"] ?? null
                 ); // this allocation
 			}
 		}
@@ -191,13 +170,8 @@ class allocation
 			$trans_items = get_allocatable_to_supp_transactions($this->person_id, 
 				$this->trans_no, $this->type);
 		else
-		 	$trans_items = get_allocatable_to_cust_transactions(
-                $this->person_id, 
-				$this->trans_no,
-                $this->type,
-                $this->is_marketplace_trans,
-                $this->marketplace_id
-            );
+		 	$trans_items = get_allocatable_to_cust_transactions($this->person_id,
+				$this->trans_no, $this->type);
 
 		$amount = $this->amount;
 		while ($myrow = db_fetch($trans_items))
@@ -301,16 +275,13 @@ class allocation_item
 	
 	var $amount_allocated;
 	var $amount;
-    var $marketplace_cost=0;
 	var $ref;
     var $tracking_no; // for sales orders, deliveries, invoices
-	
+
 	var $current_allocated;
-	
-	function __construct($type, $type_no, $date_, $due_date, $amount, 
-		$amount_allocated, $current_allocated, $ref, $tracking_no = null,
-        $marketplace_cost=0
-    )
+
+	function __construct($type, $type_no, $date_, $due_date, $amount,
+		$amount_allocated, $current_allocated, $ref, $tracking_no = null)
 	{
 
 		$this->type = $type;
@@ -321,11 +292,10 @@ class allocation_item
 
 		$this->date_ = $date_;
 		$this->due_date = $due_date;
-		
+
 		$this->amount = $amount;
 		$this->amount_allocated = $amount_allocated;
 		$this->current_allocated = $current_allocated;
-        $this->marketplace_cost = $marketplace_cost;
 	}
 }
 
@@ -361,9 +331,6 @@ function show_allocatable($show_totals) {
         if (!$supp_ref) {
             array_splice($th, 3, 0, [__("Tracking No")]);
         }
-        if ($cart->is_marketplace_trans) {
-            array_splice($th, 7, 0, [__("Mkt Payable")]);
-        }
 
 	   	table_header($th);
 
@@ -381,17 +348,13 @@ function show_allocatable($show_totals) {
     			label_cell($alloc_item->date_, "align=right");
     			label_cell($alloc_item->due_date, "align=right");
 	    		amount_cell(abs($alloc_item->amount));
-                if ($cart->is_marketplace_trans) {
-                    amount_cell($alloc_item->marketplace_cost);
-                }
 				amount_cell($alloc_item->amount_allocated);
 
 		    	$_POST['amount' . $id] = price_format($alloc_item->current_allocated);
 
 	    		$un_allocated = round((abs($alloc_item->amount) - $alloc_item->amount_allocated), 6);
-                $marketplace_cost = round($alloc_item->marketplace_cost, 6);
 	    		amount_cell($un_allocated, false,'', 'maxval'.$id);
-    			amount_cells(null, "amount" . $id, null, '', null, null, $cart->is_marketplace_trans);//, input_num('amount' . $id));
+    			amount_cells(null, "amount" . $id);//, input_num('amount' . $id));
 				label_cell(
                     "<a "
                         . 'href="javascript:void(0)" '
@@ -408,7 +371,6 @@ function show_allocatable($show_totals) {
 					    . __("None")
                     . "</a>"
                     . hidden("un_allocated" . $id, price_format($un_allocated), false)
-                    . hidden("marketplace_cost" . $id, price_format($marketplace_cost), false)
                 );
 				end_row();
 
@@ -416,7 +378,7 @@ function show_allocatable($show_totals) {
 		   	}
 		}
 		if ($show_totals) {
-            $colspan = 8 + ($supp_ref ? 0 : 1) + $cart->is_marketplace_trans;
+            $colspan = 8 + ($supp_ref ? 0 : 1);
     	   	label_row(__("Total Allocated"), price_format($total_allocated),
 	    		"colspan=$colspan align=right", "align=right id='total_allocated'", 3);
 
@@ -430,7 +392,7 @@ function show_allocatable($show_totals) {
 	        else
         		$font1 = $font2 = "";
 			$left_to_allocate = price_format($amount - $total_allocated);
-	        label_row(__("Left to Allocate"), $font1 . $left_to_allocate . $font2, 
+	        label_row(__("Left to Allocate"), $font1 . $left_to_allocate . $font2,
 				"colspan=$colspan align=right", "nowrap align=right id='left_to_allocate'",
 				 3);
 		}
@@ -478,22 +440,6 @@ function check_allocations()
 				set_focus('amount'.$counter);
 				return false;
 			}
-
-            // If marketplace transaction, ensure there are no partial
-            // allocations & the marketplace is the same for all allocations
-            if ($_SESSION['alloc']->is_marketplace_trans) {
-                if ($trans['marketplace_id'] != $_SESSION['alloc']->marketplace_id) {
-                    display_error(__("All allocated transactions must be from the same marketplace as the payment."));
-                    set_focus('amount'.$counter);
-                    return false;
-                }
-
-                if ($allocated > 0 && floatcmp($allocated, abs($_SESSION['alloc']->allocs[$counter]->amount)) != 0) {
-                    display_error(__("Marketplace transactions must be allocated in full."));
-                    set_focus('amount'.$counter);
-                    return false;
-                }
-            }
 		} elseif ($_SESSION['alloc']->person_type == PT_SUPPLIER) {
 			if ($_SESSION['alloc']->allocs[$counter]->type == ST_PURCHORDER)
                 $trans = get_po($_SESSION['alloc']->allocs[$counter]->type_no);

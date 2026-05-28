@@ -14,12 +14,8 @@ function focus_alloc(i) {
 }
 
 function blur_alloc(i) {
-    if (i.name == 'marketplace_cost') {
-        return;
-    }
-    
     var change = get_amount(i.name);
-    
+
     if (i.name != 'amount' && i.name != 'charge' && i.name != 'discount')
         change = Math.min(change, get_amount('maxval'+i.name.substr(6), 1))
 
@@ -50,13 +46,6 @@ function allocate_all(doc) {
 	}
 	price_format('amount'+doc, amount, user.pdec);
 	price_format('amount', total, user.pdec);
-
-    if (document.querySelector('[name="marketplace_cost"]')) {
-        var marketplace_cost = get_amount('marketplace_cost'+doc);
-        var total_mkt_cost = get_amount('marketplace_cost');
-        price_format('marketplace_cost', total_mkt_cost+marketplace_cost, user.pdec);
-        handleTotalsReceivable()
-    }
 }
 
 function allocate_none(doc) {
@@ -64,13 +53,6 @@ function allocate_none(doc) {
 	total = get_amount('amount');
 	price_format('amount'+doc, 0, user.pdec);
 	price_format('amount', total-amount, user.pdec);
-
-    if (document.querySelector('[name="marketplace_cost"]')) {
-        var marketplace_cost = get_amount('marketplace_cost'+doc);
-        var total_mkt_cost = get_amount('marketplace_cost');
-        price_format('marketplace_cost', total_mkt_cost-marketplace_cost, user.pdec);
-        handleTotalsReceivable()
-    }
 }
 
 function handleTotalsReceivable() {
@@ -78,7 +60,7 @@ function handleTotalsReceivable() {
         if (document.getElementById('TotalToBank')) {
             price_format(
                 "TotalToBank",
-                get_amount('amount') - get_amount('marketplace_cost') - get_amount('charge'),
+                get_amount('amount') - get_amount('charge'),
                 user.pdec,
                 true
             );
@@ -112,7 +94,7 @@ var allocations = {
 			};
 		}
 	},
-    '[name="discount"],[name="amount"],[name="charge"],[name="marketplace_cost"]': function(e) {
+    '[name="discount"],[name="amount"],[name="charge"]': function(e) {
         e.addEventListener('blur', handleTotalsReceivable);
     },
 }

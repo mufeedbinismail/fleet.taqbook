@@ -40,15 +40,13 @@ function write_customer_payment(
     $bank_amount=0,
     $dim1=0,
     $dim2=0,
-    $marketplace_id=null,
-    $marketplace_cost=0,
     ?PaymentMethod $payment_method=PaymentMethod::Default
 )
 {
 	global $Refs;
 
 	begin_transaction();
-	$args = func_get_args(); while (count($args) < 16) $args[] = 0;
+	$args = func_get_args(); while (count($args) < 14) $args[] = 0;
 	$args = (object)array_combine(
         array(
             'trans_no',
@@ -63,10 +61,8 @@ function write_customer_payment(
             'bank_amount',
             'dim1',
             'dim2',
-            'marketplace_id',
-            'marketplace_cost'
         ),
-        $args
+        array_slice($args, 0, 14)
     );
 
 	$company_record = get_company_prefs();
@@ -114,8 +110,8 @@ function write_customer_payment(
         0,
         0,
         null,
-        $marketplace_id,
-        $marketplace_cost,
+        null,
+        0,
         CustomerTransactionSource::Manual,
         $payment_method,
         TransactionEffect::Decrease
@@ -124,7 +120,6 @@ function write_customer_payment(
 	$bank_gl_account = get_bank_gl_account($bank_account);
 
 	$total = 0;
-    $bank_amount -= $marketplace_cost;
 
 	/* Bank account entry first */
 	$total += add_gl_trans(
@@ -140,24 +135,6 @@ function write_customer_payment(
         PT_CUSTOMER,
         $customer_id
     );
-
-    if ($marketplace_cost != 0)
-    {
-        $marketplace_act = get_marketplace($marketplace_id)['provision_account'];
-        $total += add_gl_trans(
-            ST_CUSTPAYMENT,
-            $payment_no,
-            $date_,
-            $marketplace_act,
-            $dim1,
-            $dim2,
-            '',
-            $marketplace_cost,
-            get_customer_currency($customer_id),
-            PT_MARKETPLACE,
-            $marketplace_id
-        );
-    }
 
 	if ($branch_id != ANY_NUMERIC) {
 

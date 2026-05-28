@@ -102,19 +102,14 @@ function clear_cust_alloctions($type, $type_no, $person_id=null, $date="")
 }
 //-------------------------------------------------------------------------------------------------------------
 
-function get_allocatable_from_cust_sql(
-    $customer_id,
-    $settled,
-    $is_marketplace_trans=0,
-    $marketplace_id=''
-)
+function get_allocatable_from_cust_sql($customer_id, $settled)
 {
 	$sql = "SELECT
 		trans.type,
 		trans.trans_no,
 		trans.reference,
 		trans.tran_date,
-		debtor.name AS DebtorName, 
+		debtor.name AS DebtorName,
 		debtor.curr_code,
 		abs(total) AS Total,
 		trans.alloc,
@@ -128,7 +123,8 @@ function get_allocatable_from_cust_sql(
 	 	.TB_PREF."debtor_trans as trans, "
 		.TB_PREF."debtors_master as debtor"
 	." WHERE trans.debtor_no=debtor.debtor_no
-		AND trans.effect = ".TransactionEffect::Decrease->value;
+		AND trans.effect = ".TransactionEffect::Decrease->value."
+        AND trans.marketplace_id IS NULL";
 
 	if (!$settled)
 		$sql .= " AND round(abs(total)-alloc,6) > 0";
@@ -136,26 +132,10 @@ function get_allocatable_from_cust_sql(
 	if ($customer_id != null)
 		$sql .= " AND trans.debtor_no = ".db_escape($customer_id);
 
-    if ($is_marketplace_trans) {
-        $sql .= " AND trans.marketplace_id IS NOT NULL";
-    } else {
-        $sql .= " AND trans.marketplace_id IS NULL";
-    }
-
-    if ($marketplace_id != '') {
-        $sql .= " AND trans.marketplace_id=".db_escape($marketplace_id);
-    }
-
 	return $sql;
 }
 
-function get_allocatable_sales_orders(
-    $customer_id = null,
-    $trans_no=null,
-    $type=null,
-    $is_marketplace_trans=0,
-    $marketplace_id=''
-)
+function get_allocatable_sales_orders($customer_id = null, $trans_no=null, $type=null)
 {
 	$sql = "SELECT
 		sorder.trans_type as type,
@@ -163,10 +143,9 @@ function get_allocatable_sales_orders(
 		sorder.reference,
         sorder.tracking_no,
 		sorder.ord_date,
-		debtor.name AS DebtorName, 
+		debtor.name AS DebtorName,
 		debtor.curr_code,
 		total-IFNULL(invoiced.amount,0) as Total,
-        0 as marketplace_cost,
 		sorder.alloc,
 		sorder.delivery_date as due_date,
 		debtor.address,
@@ -180,7 +159,8 @@ function get_allocatable_sales_orders(
 				ON sorder.order_no = alloc.trans_no_to AND sorder.trans_type = alloc.trans_type_to AND alloc.person_id=sorder.debtor_no
 			LEFT JOIN (SELECT order_, sum(prep_amount) amount FROM ".TB_PREF."debtor_trans dt
 			WHERE prep_amount>0 AND dt.type=".ST_SALESINVOICE." GROUP BY order_) as invoiced ON sorder.order_no = invoiced.order_
-		WHERE sorder.trans_type=".ST_SALESORDER;
+		WHERE sorder.trans_type=".ST_SALESORDER."
+			AND sorder.marketplace_id IS NULL";
 
 	if ($trans_no != null and $type != null)
 	{
@@ -193,15 +173,6 @@ function get_allocatable_sales_orders(
 	}
 	if ($customer_id)
 		$sql .= " AND sorder.debtor_no=".db_escape($customer_id);
-    
-    if ($marketplace_id != '') {
-        $sql .= " AND sorder.marketplace_id=".db_escape($marketplace_id);
-    } elseif ($is_marketplace_trans) {
-        // $sql .= " AND sorder.marketplace_id IS NOT NULL"; // all marketplace transactions
-        $sql .= " AND FALSE"; // don't show anything
-    } elseif (!$is_marketplace_trans) {
-        $sql .= " AND sorder.marketplace_id IS NULL";
-    }
 
 	$sql .= " GROUP BY sorder.order_no";
 
@@ -209,13 +180,7 @@ function get_allocatable_sales_orders(
 }
 //-------------------------------------------------------------------------------------------------------------
 
-function get_allocatable_to_cust_transactions(
-    $customer_id = null,
-    $trans_no=null,
-    $type=null,
-    $is_marketplace_trans=0,
-    $marketplace_id=''
-)
+function get_allocatable_to_cust_transactions($customer_id = null, $trans_no=null, $type=null)
 {
 	$sql = "SELECT
 		trans.type,
@@ -223,10 +188,9 @@ function get_allocatable_to_cust_transactions(
 		trans.reference,
         trans.tracking_no,
 		trans.tran_date,
-		debtor.name AS DebtorName, 
+		debtor.name AS DebtorName,
 		debtor.curr_code,
 		IF(prep_amount, prep_amount, abs(total)) AS Total,
-        trans.ov_mkt_cost AS marketplace_cost,
 		trans.alloc,
 		trans.due_date,
 		debtor.address,
@@ -239,18 +203,10 @@ function get_allocatable_to_cust_transactions(
 				ON trans.trans_no = alloc.trans_no_to AND trans.type = alloc.trans_type_to AND alloc.person_id=trans.debtor_no,"
 	 		.TB_PREF."debtors_master as debtor
 	 WHERE
-	 	 trans.debtor_no=debtor.debtor_no";
+	 	 trans.debtor_no=debtor.debtor_no
+		 AND trans.marketplace_id IS NULL";
 	if ($customer_id)
 		$sql .= " AND trans.debtor_no=".db_escape($customer_id);
-
-    if ($marketplace_id != '') {
-        $sql .= " AND trans.marketplace_id=".db_escape($marketplace_id);
-    } elseif ($is_marketplace_trans) {
-        // $sql .= " AND trans.marketplace_id IS NOT NULL"; // all marketplace transactions
-        $sql .= " AND FALSE"; // don't show anything
-    } elseif (!$is_marketplace_trans) {
-        $sql .= " AND trans.marketplace_id IS NULL";
-    }
 
 	if ($trans_no != null and $type != null)
 	{
@@ -264,13 +220,7 @@ function get_allocatable_to_cust_transactions(
 		$sql .= " GROUP BY type, trans_no";
 	}
 
-	$orders = get_allocatable_sales_orders(
-        $customer_id,
-        $trans_no,
-        $type,
-        $is_marketplace_trans,
-        $marketplace_id
-    );
+	$orders = get_allocatable_sales_orders($customer_id, $trans_no, $type);
 	$sql = "($sql ORDER BY trans_no) \nUNION \n($orders)";
 
 	return db_query($sql, "Cannot retreive alloc to transactions");
@@ -321,15 +271,7 @@ function get_allocatable_from_cust_transactions($customer_id, $trans_no=null, $t
 	return db_query($sql." ORDER BY trans_no", "Cannot retreive alloc to transactions");
 }
 
-function get_sql_for_customer_allocation_inquiry(
-    $from,
-    $to,
-    $customer,
-    $filterType,
-    $settled,
-    $is_marketplace_trans=0,
-    $marketplace_id=''
-)
+function get_sql_for_customer_allocation_inquiry($from, $to, $customer, $filterType, $settled)
 {
   	$data_after = date2sql($from);
   	$date_to = date2sql($to);
@@ -356,7 +298,8 @@ function get_sql_for_customer_allocation_inquiry(
     	WHERE debtor.debtor_no = trans.debtor_no
 			AND (trans.total != 0)
     		AND trans.tran_date >= '$data_after'
-    		AND trans.tran_date <= '$date_to'";
+    		AND trans.tran_date <= '$date_to'
+            AND trans.marketplace_id IS NULL";
 
    	if ($customer != ALL_TEXT)
    		$sql .= " AND trans.debtor_no = ".db_escape($customer);
@@ -391,16 +334,6 @@ function get_sql_for_customer_allocation_inquiry(
    	{
 	    $sql .= " AND trans.type <> ".ST_CUSTDELIVERY." ";
    	}
-
-    if ($is_marketplace_trans) {
-        $sql .= " AND trans.marketplace_id IS NOT NULL";
-    } else {
-        $sql .= " AND trans.marketplace_id IS NULL";
-    }
-
-    if ($marketplace_id != '') {
-        $sql .= " AND trans.marketplace_id = ".db_escape($marketplace_id);
-    }
 
    	if (!$settled)
    	{
