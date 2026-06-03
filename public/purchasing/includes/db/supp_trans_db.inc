@@ -1,6 +1,7 @@
 <?php
 
 use App\Shared\Enum\SupplierTransactionSource;
+use App\Shared\Enum\TransactionEffect;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
@@ -30,9 +31,14 @@ function write_supp_trans(
     $err_msg="",
     $rate=0,
     $included=0,
-    SupplierTransactionSource $source = SupplierTransactionSource::Manual
+    SupplierTransactionSource $source = SupplierTransactionSource::Manual,
+    TransactionEffect $effect = null
 )
 {
+    if (is_null($effect)) {
+        throw new \DomainException("[Error] supplier_trans is being written without a transaction effect");
+    }
+
 	$new = $trans_no==0;
 	$date = date2sql($date_);
 	if ($due_date == "")
@@ -44,14 +50,14 @@ function write_supp_trans(
 		$trans_no = get_next_trans_no($type);
 
 	$curr = get_supplier_currency($supplier_id);
-	
+
 	if ($rate == 0)
 		$rate = get_exchange_rate_from_home_currency($curr, $date_);
 
 
-	$sql = "INSERT INTO ".TB_PREF."supp_trans (source, trans_no, type, supplier_id, tran_date, due_date,
+	$sql = "INSERT INTO ".TB_PREF."supp_trans (source, effect, trans_no, type, supplier_id, tran_date, due_date,
 		reference, supp_reference, ov_amount, ov_gst, rate, ov_discount, tax_included) ";
-	$sql .= "VALUES (".db_escape($source->value).", ".db_escape($trans_no).", ".db_escape($type)
+	$sql .= "VALUES (".db_escape($source->value).", ".db_escape($effect->value).", ".db_escape($trans_no).", ".db_escape($type)
 	.", ".db_escape($supplier_id).", '$date', '$due_date',
 		".db_escape($reference).", ".db_escape($supp_reference).", ".db_escape($amount)
 		.", ".db_escape($amount_tax).", ".db_escape($rate).", ".db_escape($discount).", ".db_escape($included).")";

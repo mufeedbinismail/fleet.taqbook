@@ -8,6 +8,7 @@ use App\Marketplace\Cart\SupplierInvoiceCart;
 use App\Marketplace\Cart\SupplierInvoiceCartLine;
 use App\Shared\Enum\SupplierTransactionSource;
 use App\Shared\Enum\SystemType;
+use App\Shared\Enum\TransactionEffect;
 use Brick\Math\BigDecimal;
 use Illuminate\Support\Facades\DB;
 
@@ -131,7 +132,8 @@ function write_marketplace_supplier_invoice(SupplierInvoiceCart $cart): int
         'Could not write supplier invoice',
         $exRate,
         $cart->marketplaceTaxSetting->taxIncluded,
-        SupplierTransactionSource::MarketplaceClearing
+        SupplierTransactionSource::MarketplaceClearing,
+        TransactionEffect::Increase
     );
 
     foreach ($cart->line_items as $line) {

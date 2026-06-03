@@ -1,4 +1,7 @@
 <?php
+
+use App\Shared\Enum\TransactionEffect;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -42,8 +45,21 @@ function write_supp_payment($trans_no, $supplier_id, $bank_account,
 		$rate = 0;
 
 	/* Create a supp_trans entry for the supplier payment */
-	$payment_id = write_supp_trans(ST_SUPPAYMENT, 0, $supplier_id, $date_, $date_,
-		$ref, "", -$supp_amount, 0, -$supp_discount, "", $rate);
+	$payment_id = write_supp_trans(
+        ST_SUPPAYMENT,
+        0,
+        $supplier_id,
+        $date_,
+        $date_,
+		$ref,
+        "",
+        -$supp_amount,
+        0,
+        -$supp_discount,
+        "",
+        $rate,
+        effect: TransactionEffect::Decrease
+    );
 
 	// Now debit creditors account with payment + discount
 

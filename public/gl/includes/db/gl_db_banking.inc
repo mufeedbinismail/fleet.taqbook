@@ -1,4 +1,7 @@
 <?php
+
+use App\Shared\Enum\TransactionEffect;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -434,8 +437,9 @@ function write_bank_transaction($trans_type, $trans_no, $from_account, $items, $
 		if ($trans_type == ST_BANKPAYMENT)
 			$supp_amount = -$supp_amount;
 
+		$effect = ($trans_type === ST_BANKDEPOSIT) ? TransactionEffect::Increase : TransactionEffect::Decrease;
 		$trans_no = write_supp_trans($trans_type, 0, $person_id, $date_, '',
-			$ref, "", $supp_amount, 0, 0);
+			$ref, "", $supp_amount, 0, 0, effect: $effect);
 		if ($old_trans)
 			move_trans_attachments($trans_type, $old_trans, $trans_no);
     }
