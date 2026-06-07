@@ -2,6 +2,7 @@
 
 use App\Sales\Enum\PaymentMethod;
 use App\Shared\Enum\CustomerTransactionSource;
+use App\Shared\Enum\TransactionEffect;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
@@ -116,7 +117,8 @@ function write_customer_payment(
         $marketplace_id,
         $marketplace_cost,
         CustomerTransactionSource::Manual,
-        $payment_method
+        $payment_method,
+        TransactionEffect::Decrease
     );
 
 	$bank_gl_account = get_bank_gl_account($bank_account);

@@ -5,6 +5,7 @@ use App\Inventory\Repository\ItemRepository;
 use App\Marketplace\Repository\ExpenseRepository;
 use App\Sales\Enum\PaymentMethod;
 use App\Shared\Enum\CustomerTransactionSource;
+use App\Shared\Enum\TransactionEffect;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
@@ -112,7 +113,8 @@ function write_credit_note(&$credit_note, $write_off_acc)
         $credit_note->marketplace_id,
         $credit_note->get_total_marketplace_cost(),
         CustomerTransactionSource::Manual,
-        $credit_note->payment_method_id ? PaymentMethod::from($credit_note->payment_method_id) : null
+        $credit_note->payment_method_id ? PaymentMethod::from($credit_note->payment_method_id) : null,
+        TransactionEffect::Decrease
     );
 
 	if ($trans_no==0) {

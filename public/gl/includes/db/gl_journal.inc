@@ -75,7 +75,8 @@ function get_journal($type, $trans_no)
 function write_cust_journal($trans_type, $trans_no, $branch_id, $date, $ref, $amount, $rate)
 {
 	// we have to select any branch_id for given AR_act - in fact w
-	$sql = "INSERT INTO ".TB_PREF."debtor_trans (source, trans_no, type, debtor_no, branch_code, tran_date, reference, ov_amount, rate, payment_method_id)
+    $cust_effect = $amount >= 0 ? TransactionEffect::Increase : TransactionEffect::Decrease;
+    $sql = "INSERT INTO ".TB_PREF."debtor_trans (source, trans_no, type, debtor_no, branch_code, tran_date, reference, ov_amount, rate, effect, payment_method_id)
         VALUES (
             ".db_escape(CustomerTransactionSource::Manual->value).",
             ".db_escape($trans_no).",
@@ -86,6 +87,7 @@ function write_cust_journal($trans_type, $trans_no, $branch_id, $date, $ref, $am
             ".db_escape($ref).",
             ".db_escape($amount).",
             ".db_escape($rate).",
+            ".db_escape($cust_effect->value).",
             NULL"
         .")";
 	return db_query($sql, 'cannot write cust_journal');

@@ -1,6 +1,7 @@
 <?php
 
 use App\Shared\Enum\CustomerTransactionSource;
+use App\Shared\Enum\TransactionEffect;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
@@ -70,7 +71,8 @@ function write_sales_delivery(&$delivery,$bo_policy)
         $delivery->marketplace_id,
         0,
         CustomerTransactionSource::Manual,
-        null
+        null,
+        TransactionEffect::NoEffect
     );
 
 	if ($trans_no == 0) {

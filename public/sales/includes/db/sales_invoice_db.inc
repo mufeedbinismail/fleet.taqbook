@@ -7,6 +7,7 @@ use App\Inventory\Repository\ItemRepository;
 use App\Marketplace\Repository\ExpenseRepository;
 use App\Sales\Enum\PaymentMethod;
 use App\Shared\Enum\CustomerTransactionSource;
+use App\Shared\Enum\TransactionEffect;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
@@ -125,7 +126,8 @@ function write_sales_invoice(&$invoice)
         $invoice->marketplace_id,
         $invoice->get_total_marketplace_cost(),
         CustomerTransactionSource::Manual,
-        $invoice->payment_method_id ? PaymentMethod::from($invoice->payment_method_id) : null
+        $invoice->payment_method_id ? PaymentMethod::from($invoice->payment_method_id) : null,
+        TransactionEffect::Increase
     );
 
 	if ($trans_no == 0) {

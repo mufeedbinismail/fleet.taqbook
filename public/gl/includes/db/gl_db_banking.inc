@@ -421,8 +421,18 @@ function write_bank_transaction($trans_type, $trans_no, $from_account, $items, $
 		if ($trans_type == ST_BANKPAYMENT)
 			$cust_amount = -$cust_amount;
 
-		$trans_no = write_customer_trans($trans_type, 0, $person_id, $person_detail_id, $date_,
-        	$ref, $cust_amount, source: CustomerTransactionSource::Manual);
+		$cust_effect = ($trans_type === ST_BANKPAYMENT) ? TransactionEffect::Increase : TransactionEffect::Decrease;
+		$trans_no = write_customer_trans(
+            $trans_type,
+            0,
+            $person_id,
+            $person_detail_id,
+            $date_,
+        	$ref,
+            $cust_amount,
+            source: CustomerTransactionSource::Manual,
+            effect: $cust_effect
+        );
 		if ($old_trans)
 			move_trans_attachments($trans_type, $old_trans, $trans_no);
     }

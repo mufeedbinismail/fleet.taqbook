@@ -2,6 +2,7 @@
 
 use App\Sales\Enum\PaymentMethod;
 use App\Shared\Enum\CustomerTransactionSource;
+use App\Shared\Enum\TransactionEffect;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
@@ -84,9 +85,14 @@ function write_customer_trans(
     $marketplace_id=null,
     $marketplace_cost=0,
     CustomerTransactionSource $source=CustomerTransactionSource::Manual,
-    ?PaymentMethod $payment_method=null
+    ?PaymentMethod $payment_method=null,
+    TransactionEffect $effect=null
 )
 {
+    if (is_null($effect)) {
+        throw new \DomainException("[Error] debtor_trans is being written without a transaction effect");
+    }
+
 	$new = $trans_no==0;
 	$curr = get_customer_currency($debtor_no);
 	if ($rate == 0)
@@ -125,6 +131,7 @@ function write_customer_trans(
             ov_freight,
             ov_freight_tax,
             rate,
+            effect,
             ship_via,
             alloc,
             ov_mkt_cost,
@@ -153,6 +160,7 @@ function write_customer_trans(
             ".db_escape($Freight).",
             $FreightTax,
             $rate,
+            ".db_escape($effect->value).",
             ".db_escape($ship_via).",
             $AllocAmt,
             ".db_escape($marketplace_cost).",
@@ -181,6 +189,7 @@ function write_customer_trans(
             ov_freight=".db_escape($Freight).",
             ov_freight_tax=$FreightTax,
             rate=$rate,
+            effect=".db_escape($effect->value).",
             ship_via=".db_escape($ship_via).",
             alloc=$AllocAmt,
             dimension_id=".db_escape($dimension_id).",
