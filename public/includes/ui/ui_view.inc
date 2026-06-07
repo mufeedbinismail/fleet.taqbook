@@ -488,8 +488,7 @@ function display_edit_tax_items($taxes, $columns, $tax_included, $rightspan=0, $
 		$amount = isset($taxitem['Override']) ? $taxitem['Override'] : $taxitem['Value'];
 		if ($taxitem['Value'] != 0){
 			if ($editable) {
-				if (!isset($_POST['mantax['.$taxitem['tax_type_id'].']']))
-					$_POST['mantax['.$taxitem['tax_type_id'].']'] = price_format($amount);
+				$_POST['mantax'][$taxitem['tax_type_id']] = price_format($amount);
 				start_row();
 				if ($tax_included) {
 					$colspan = $columns-1;
