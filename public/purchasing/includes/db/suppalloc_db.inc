@@ -1,4 +1,7 @@
 <?php
+
+use App\Shared\Enum\TransactionEffect;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -110,20 +113,20 @@ function get_allocatable_from_supp_sql($supplier_id, $settled)
  		trans.tran_date,
 		supplier.supp_name, 
 		supplier.curr_code, 
-		ov_amount+ov_gst+ov_discount AS Total,
+		total AS Total,
 		trans.alloc,
 		trans.due_date,
 		trans.supplier_id,
 		supplier.address,
-		round(abs(ov_amount+ov_gst+ov_discount)-alloc,6) <= 0 AS settled
+		round(abs(total)-alloc,6) <= 0 AS settled
 	 FROM "
 	 	.TB_PREF."supp_trans as trans, "
 		.TB_PREF."suppliers as supplier"
 	." WHERE trans.supplier_id=supplier.supplier_id
-		AND type IN(".ST_SUPPAYMENT.",".ST_SUPPCREDIT.",".ST_BANKPAYMENT.",".ST_JOURNAL.") AND (trans.ov_amount < 0)";
+		AND trans.effect = ".TransactionEffect::Decrease->value;
 
 	if (!$settled)
-		$sql .= " AND (round(abs(ov_amount+ov_gst+ov_discount)-alloc,6) > 0)";
+		$sql .= " AND (round(abs(total)-alloc,6) > 0)";
 
 	if ($supplier_id != null)
 		$sql .= " AND supplier.supplier_id = ".db_escape($supplier_id);
@@ -185,7 +188,7 @@ function get_allocatable_to_supp_transactions($supplier_id=null, $trans_no=null,
  		trans.tran_date,
 		supplier.supp_name, 
 		supplier.curr_code, 
-		ov_amount+ov_gst+ov_discount AS Total,
+		total AS Total,
 		trans.alloc,
 		trans.due_date,
 		trans.supplier_id,
@@ -208,8 +211,8 @@ function get_allocatable_to_supp_transactions($supplier_id=null, $trans_no=null,
 	}
 	else
 	{
-		$sql .= " AND round(ov_amount+ov_gst+ov_discount-alloc,6) > 0
-			AND trans.type NOT IN (".implode(',',array(ST_SUPPAYMENT, ST_BANKPAYMENT)).")";
+		$sql .= " AND trans.effect = ".TransactionEffect::Increase->value;
+	    $sql .= " AND round(abs(total)-alloc,6) > 0";
 		$sql .= " GROUP BY type, trans_no";
 	}
 
@@ -230,7 +233,7 @@ function get_allocatable_from_supp_transactions($supplier_id, $trans_no=null, $t
  		trans.tran_date,
 		supplier.supp_name, 
 		supplier.curr_code, 
-		ov_amount+ov_gst+ov_discount AS Total,
+		total AS Total,
 		trans.alloc,
 		trans.due_date,
 		trans.supplier_id,
@@ -252,8 +255,8 @@ function get_allocatable_from_supp_transactions($supplier_id, $trans_no=null, $t
 	}
 	else
 	{
-		$sql .= " AND round(ABS(ov_amount+ov_gst+ov_discount)-alloc,6) > 0
-			AND trans.type NOT IN (".implode(',',array(ST_SUPPAYMENT,ST_BANKPAYMENT)).")";
+        $sql .= " AND round(abs(total)-alloc,6) > 0";
+		$sql .= " AND trans.effect = " . TransactionEffect::Decrease->value;
 		$sql .= " GROUP BY type, trans_no";
 	}
 	return db_query($sql." ORDER BY due_date", "Cannot retreive alloc to transactions");
@@ -273,9 +276,10 @@ function get_sql_for_supplier_allocation_inquiry()
     	trans.tran_date, 
 		trans.due_date,
 		supplier.curr_code, 
-    	(trans.ov_amount + trans.ov_gst  + trans.ov_discount) AS TotalAmount, 
+    	trans.total AS TotalAmount,
 		trans.alloc AS Allocated,
 		((trans.type = ".ST_SUPPINVOICE." OR trans.type = ".ST_SUPPCREDIT.") AND trans.due_date < '" . date2sql(Today()) . "') AS OverDue,
+		trans.effect AS effect,
 		trans.supplier_id
     	FROM "
 			.TB_PREF."supp_trans as trans
@@ -317,7 +321,7 @@ function get_sql_for_supplier_allocation_inquiry()
 
    	if (!check_value('showSettled'))
    	{
-   		$sql .= " AND (round(abs(ov_amount + ov_gst + ov_discount) - alloc,6) != 0) ";
+   		$sql .= " AND (round(abs(total) - alloc,6) != 0) ";
    	}
    	return $sql;
 }

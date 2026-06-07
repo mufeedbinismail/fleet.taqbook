@@ -32,17 +32,13 @@ function get_open_balance($supplier_id, $to)
     if($to)
         $to = date2sql($to);
 
-    $sql = "SELECT SUM(IF(t.type = ".ST_SUPPINVOICE." OR (t.type IN (".ST_JOURNAL." , ".ST_BANKDEPOSIT.") AND t.ov_amount>0),
-        -abs(t.ov_amount + t.ov_gst + t.ov_discount), 0)) AS charges,";
+    $sql = "SELECT SUM(IF(t.effect = 1, -abs(t.total), 0)) AS charges,";
 
- 	$sql .= "SUM(IF(t.type != ".ST_SUPPINVOICE." AND NOT(t.type IN (".ST_JOURNAL." , ".ST_BANKDEPOSIT.") AND t.ov_amount>0),
-        abs(t.ov_amount + t.ov_gst + t.ov_discount) * -1, 0)) AS credits,";
+    $sql .= "SUM(IF(t.effect = -1, -abs(t.total), 0)) AS credits,";
 
-    $sql .= "SUM(IF(t.type != ".ST_SUPPINVOICE." AND NOT(t.type IN (".ST_JOURNAL." , ".ST_BANKDEPOSIT.")), 
-    	t.alloc * -1, t.alloc)) AS Allocated,";
+    $sql .= "SUM(t.effect * t.alloc) AS Allocated,";
 
-    $sql .= "SUM(IF(t.type = ".ST_SUPPINVOICE.", 1, -1) *
-        (abs(t.ov_amount + t.ov_gst + t.ov_discount) - abs(t.alloc))) AS OutStanding
+    $sql .= "SUM(t.effect * (abs(t.total) - t.alloc)) AS OutStanding
         FROM ".TB_PREF."supp_trans t
         WHERE t.supplier_id = ".db_escape($supplier_id);
     if ($to)
@@ -59,7 +55,7 @@ function getTransactions($supplier_id, $from, $to)
     $to = date2sql($to);
 	//memo added by faisal
     $sql = "SELECT ".TB_PREF."supp_trans.*, comments.memo_,
-        (".TB_PREF."supp_trans.ov_amount + ".TB_PREF."supp_trans.ov_gst + ".TB_PREF."supp_trans.ov_discount)
+        ".TB_PREF."supp_trans.total
         AS TotalAmount, ".TB_PREF."supp_trans.alloc AS Allocated,
         ((".TB_PREF."supp_trans.type = ".ST_SUPPINVOICE.")
         AND ".TB_PREF."supp_trans.due_date < '$to') AS OverDue

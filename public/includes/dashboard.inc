@@ -845,9 +845,7 @@ function supplier_aging($today, $width="33")
 	$past1 = get_company_pref('past_due_days');
 	$past2 = 2 * $past1;
 	// removed - debtor_trans.alloc from all summations
-   	$value = "IF (trans.type=".ST_SUPPINVOICE." OR trans.type=".ST_BANKDEPOSIT.", 
-    	(trans.ov_amount + trans.ov_gst + trans.ov_discount - trans.alloc) * trans.rate,
-    	(trans.ov_amount + trans.ov_gst + trans.ov_discount + trans.alloc) * trans.rate)";
+   	$value = "(trans.effect * (ABS(trans.total) - trans.alloc)) * trans.rate";
 	$due = "IF (trans.type=".ST_SUPPINVOICE." OR trans.type=".ST_SUPPCREDIT.",trans.due_date,trans.tran_date)";
     $sql = "SELECT Sum($value) AS Balance,
 				Sum(IF ((TO_DAYS('$today1') - TO_DAYS($due)) > 0,$value,0)) AS Due,
@@ -855,8 +853,8 @@ function supplier_aging($today, $width="33")
 				Sum(IF ((TO_DAYS('$today1') - TO_DAYS($due)) > $past2,$value,0)) AS Overdue2
 			FROM ".TB_PREF."suppliers supp
 			 LEFT JOIN ".TB_PREF."supp_trans trans ON supp.supplier_id = trans.supplier_id AND trans.tran_date <= '$today1'
-			AND ABS(trans.ov_amount + trans.ov_gst + trans.ov_discount) > ".FLOAT_COMP_DELTA."
-			AND ABS(trans.ov_amount + trans.ov_gst + trans.ov_discount) - trans.alloc > ".FLOAT_COMP_DELTA;
+			AND ABS(trans.total) > ".FLOAT_COMP_DELTA."
+			AND ABS(trans.total) - trans.alloc > ".FLOAT_COMP_DELTA;
     $result = db_query($sql,"The supplier details could not be retrieved");
 
     $row = db_fetch($result);
@@ -879,15 +877,13 @@ function supplier_aging($today, $width="33")
 function supplier_balance($today)
 {
 	$today = date2sql($today); 
-   	$value = "IF (trans.type=".ST_SUPPINVOICE." OR trans.type=".ST_BANKDEPOSIT.", 
-    	(trans.ov_amount + trans.ov_gst + trans.ov_discount - trans.alloc) * trans.rate,
-    	(trans.ov_amount + trans.ov_gst + trans.ov_discount + trans.alloc) * trans.rate)";
+   	$value = "(trans.effect * (ABS(trans.total) - trans.alloc)) * trans.rate";
     $sql = "SELECT Sum($value) AS Balance
 			FROM ".TB_PREF."suppliers supplier, ".TB_PREF."supp_trans trans
 				WHERE supplier.supplier_id = trans.supplier_id
 			AND trans.tran_date <= '$today'
-			AND ABS(trans.ov_amount + trans.ov_gst + trans.ov_discount) > ".FLOAT_COMP_DELTA."
-			AND ABS(trans.ov_amount + trans.ov_gst + trans.ov_discount) - trans.alloc > ".FLOAT_COMP_DELTA;
+			AND ABS(trans.total) > ".FLOAT_COMP_DELTA."
+			AND ABS(trans.total) - trans.alloc > ".FLOAT_COMP_DELTA;
     $result = db_query($sql,"The supplier details could not be retrieved");
     $row = db_fetch($result);
 	return $row[0];
@@ -1076,13 +1072,12 @@ function supplier_trans($today)
 	$today = date2sql($today);
 	$sql = "SELECT trans.trans_no, trans.reference, trans.tran_date, trans.due_date, s.supplier_id, 
 		s.supp_name, s.curr_code,
-		(trans.ov_amount + trans.ov_gst + trans.ov_discount) AS total,  
-		(trans.ov_amount + trans.ov_gst + trans.ov_discount - trans.alloc) AS remainder,
-		DATEDIFF('$today', trans.due_date) AS days 	
-		FROM ".TB_PREF."supp_trans as trans, ".TB_PREF."suppliers as s 
+		trans.total AS total,
+		(trans.total - trans.alloc) AS remainder,
+		DATEDIFF('$today', trans.due_date) AS days
+		FROM ".TB_PREF."supp_trans as trans, ".TB_PREF."suppliers as s
 		WHERE s.supplier_id = trans.supplier_id
-			AND trans.type = ".ST_SUPPINVOICE." AND (ABS(trans.ov_amount + trans.ov_gst + 
-				trans.ov_discount) - trans.alloc) > ".FLOAT_COMP_DELTA." ORDER BY days DESC";
+			AND trans.type = ".ST_SUPPINVOICE." AND (ABS(trans.total) - trans.alloc) > ".FLOAT_COMP_DELTA." ORDER BY days DESC";
 	$result = db_query($sql);
 	$title = db_num_rows($result) . __(" unpaid Purchase Invoices");
 	display_title($title);
@@ -1239,7 +1234,7 @@ function get_new_purch_orders()
 
 function get_num_supp_invoices()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."supp_trans WHERE (ov_amount+ov_discount+ov_gst - alloc) <> 0";
+	$sql = "SELECT count(*) FROM ".TB_PREF."supp_trans WHERE (total - alloc) <> 0";
 	$result = db_query($sql, "Fail in count purch invoices");
     $row = db_fetch($result);
 	return $row[0];
@@ -1249,7 +1244,7 @@ function get_num_overdue_purch()
 {
 	$today = date2sql(calc_today());
 
-	$sql = "SELECT COUNT(*) FROM ".TB_PREF."supp_trans WHERE (ov_amount+ov_discount+ov_gst - alloc) > ".FLOAT_COMP_DELTA." AND DATEDIFF('$today', due_date) > 0";
+	$sql = "SELECT COUNT(*) FROM ".TB_PREF."supp_trans WHERE (total - alloc) > ".FLOAT_COMP_DELTA." AND DATEDIFF('$today', due_date) > 0";
 	$result = db_query($sql, "Fail in count purch invoices");
     $row = db_fetch($result);
 	return $row[0];

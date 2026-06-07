@@ -109,7 +109,7 @@ function fmt_amount($row)
 
 function prt_link($row)
 {
-  	if ($row['type'] == ST_SUPPAYMENT || $row['type'] == ST_BANKPAYMENT || $row['type'] == ST_SUPPCREDIT) 
+  	if ($row['effect'] == \App\Shared\Enum\TransactionEffect::Decrease->value)
  		return print_document_link($row['trans_no']."-".$row['type'], __("Print Remittance"), true, ST_SUPPAYMENT, ICON_PRINT);
 }
 

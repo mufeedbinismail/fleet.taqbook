@@ -23,7 +23,7 @@ function read_supplier_details_to_trans(&$supp_trans, $supplier_id)
 	$sql = "SELECT supp.supp_name, terms.terms, terms.days_before_due, supp.dimension_id, supp.dimension2_id,
 		terms.day_in_following_month, supp.tax_included,
 		supp.tax_group_id, tax_group.name AS tax_group_name,
-		supp.credit_limit - Sum((ov_amount + ov_gst + ov_discount)) as cur_credit, curr_code
+		supp.credit_limit - Sum(trans.effect * ABS(trans.total)) as cur_credit, curr_code
 		FROM ".TB_PREF."suppliers supp LEFT JOIN "
 			.TB_PREF."supp_trans trans ON supp.supplier_id = trans.supplier_id, "
 			.TB_PREF."payment_terms terms, "
@@ -428,7 +428,7 @@ function add_supp_invoice(&$supp_trans)
 
 function get_po_invoices_credits($po_number)
 {
-	$sql = "SELECT DISTINCT trans.trans_no, trans.type,	ov_amount+ov_discount+ov_gst AS Total,
+	$sql = "SELECT DISTINCT trans.trans_no, trans.type,	trans.total AS Total,
 				trans.tran_date
 			FROM ".TB_PREF."supp_trans trans,"
 				.TB_PREF."supp_invoice_items line,"

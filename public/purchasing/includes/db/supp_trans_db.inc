@@ -76,7 +76,7 @@ function write_supp_trans(
 
 function get_supp_trans($trans_no, $trans_type=-1, $supplier_id=null)
 {
-	$sql = "SELECT trans.*, (trans.ov_amount+trans.ov_gst+trans.ov_discount) AS Total,
+	$sql = "SELECT trans.*, trans.total AS Total,
 		supplier.supp_name AS supplier_name, supplier.curr_code AS curr_code ";
 
 	if ($trans_type == ST_SUPPAYMENT || $trans_type == ST_BANKPAYMENT)
@@ -247,15 +247,14 @@ function get_sql_for_supplier_inquiry($filter, $after_date, $to_date, $supplier_
 		trans.supp_reference,
     	trans.tran_date, 
 		trans.due_date,
-		supplier.curr_code, 
-    	(trans.ov_amount + trans.ov_gst  + trans.ov_discount) AS TotalAmount,
+		supplier.curr_code,
+    	trans.total AS TotalAmount,
 
-    	IF (trans.type=".ST_SUPPINVOICE." OR trans.type=".ST_BANKDEPOSIT."
-  	OR (trans.type=".ST_JOURNAL." AND (trans.ov_amount + trans.ov_gst + trans.ov_discount)>0), 1, -1)*
-    		(ABS(trans.ov_amount + trans.ov_gst + trans.ov_discount) - trans.alloc) Balance,
+    	trans.effect * (ABS(trans.total) - trans.alloc) Balance,
 		trans.alloc AS Allocated,
 		((trans.type = ".ST_SUPPINVOICE." OR trans.type = ".ST_SUPPCREDIT.") AND trans.due_date < '" . date2sql(Today()) . "') AS OverDue,
-    	(ABS(trans.ov_amount + trans.ov_gst  + trans.ov_discount) - trans.alloc <= ".FLOAT_COMP_DELTA.") AS Settled
+    	(ABS(trans.total) - trans.alloc <= ".FLOAT_COMP_DELTA.") AS Settled,
+    	trans.effect AS effect
     	FROM ".TB_PREF."supp_trans as trans, ".TB_PREF."suppliers as supplier
     	WHERE supplier.supplier_id = trans.supplier_id
 		AND trans.ov_amount != 0";	// exclude voided transactions
@@ -272,13 +271,14 @@ function get_sql_for_supplier_inquiry($filter, $after_date, $to_date, $supplier_
     	'' AS TotalAmount,
 		'' AS Allocated,
 		0 as OverDue,
-    	1 as Settled
+    	1 as Settled,
+    	1 as effect
     	FROM ".TB_PREF."grn_batch as trans, ".TB_PREF."suppliers as supplier, ".TB_PREF."purch_orders as po
     	WHERE supplier.supplier_id = trans.supplier_id
     	AND trans.purch_order_no = po.order_no";
 
 	if ($filter == '2')
-		$sql .= " AND ABS(trans.ov_amount + trans.ov_gst + trans.ov_discount) - trans.alloc>".FLOAT_COMP_DELTA;
+		$sql .= " AND ABS(trans.total) - trans.alloc>".FLOAT_COMP_DELTA;
 	else {
 		$sql .= " AND trans.tran_date >= '$date_after'
 			AND trans.tran_date <= '$date_to'";

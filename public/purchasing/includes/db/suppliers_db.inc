@@ -173,11 +173,9 @@ function get_supplier_details($supplier_id, $to=null, $all=true)
 	// removed - supp_trans.alloc from all summations
 
 	if ($all)
-    	$value = "(trans.ov_amount + trans.ov_gst + trans.ov_discount)";
-    else	
-    	$value = "IF (trans.type=".ST_SUPPINVOICE." OR trans.type=".ST_BANKDEPOSIT." OR (trans.type=".ST_JOURNAL." AND (trans.ov_amount + trans.ov_gst + trans.ov_discount)>0), 
-    		(trans.ov_amount + trans.ov_gst + trans.ov_discount - trans.alloc),
-    		(trans.ov_amount + trans.ov_gst + trans.ov_discount + trans.alloc))";
+    	$value = "(trans.effect * abs(trans.total))";
+    else
+    	$value = "(trans.effect * (abs(trans.total) - trans.alloc))";
 
 	$due = "IF (trans.type=".ST_SUPPINVOICE." OR trans.type=".ST_SUPPCREDIT.",trans.due_date,trans.tran_date)";
     $sql = "SELECT supp.supp_name, supp.curr_code, ".TB_PREF."payment_terms.terms,
@@ -187,8 +185,7 @@ function get_supplier_details($supplier_id, $to=null, $all=true)
 		Sum(IF ((TO_DAYS('$todate') - TO_DAYS($due)) > 0,$value,0)) AS Due,
 		Sum(IF ((TO_DAYS('$todate') - TO_DAYS($due)) > $past1,$value,0)) AS Overdue1,
 		Sum(IF ((TO_DAYS('$todate') - TO_DAYS($due)) > $past2,$value,0)) AS Overdue2,
-		supp.credit_limit - Sum(IFNULL(IF(trans.type=".ST_SUPPCREDIT.", -1, 1) 
-			* (ov_amount + ov_gst + ov_discount),0)) as cur_credit,
+		supp.credit_limit - Sum(IFNULL(trans.effect * ABS(trans.total),0)) as cur_credit,
 		supp.tax_group_id
 
 		FROM ".TB_PREF."suppliers supp

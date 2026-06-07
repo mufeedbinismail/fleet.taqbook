@@ -9,6 +9,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
+
+use App\Shared\Enum\TransactionEffect;
+
 $GLOBALS['page_security'] = 'SA_SUPPLIERALLOC';
 require_once __DIR__ . "/../../includes/db_pager.inc";
 require __DIR__ . "/../../includes/session.inc";
@@ -86,32 +89,25 @@ function due_date($row)
 
 function fmt_balance($row)
 {
-	$value = ($row["type"] == ST_BANKPAYMENT || $row["type"] == ST_SUPPCREDIT || $row["type"] == ST_SUPPAYMENT)	? -$row["TotalAmount"] - $row["Allocated"]
-		: ($row["type"] == ST_JOURNAL ? abs($row["TotalAmount"]) - $row["Allocated"] :
-			$row["TotalAmount"] - $row["Allocated"]);
+	$value = abs($row["TotalAmount"]) - $row["Allocated"];
 	return $value;
 }
 
 function alloc_link($row)
 {
-	$link = 
-	pager_link(__("Allocations"),
-		"/purchasing/allocations/supplier_allocate.php?trans_no=" .
-			$row["trans_no"]. "&trans_type=" . $row["type"]. "&supplier_id=" . $row["supplier_id"], ICON_ALLOC );
-
-	if ($row["type"] == ST_BANKPAYMENT || $row["type"] == ST_SUPPAYMENT ||
-		(($row["type"] == ST_SUPPCREDIT || $row["type"] == ST_JOURNAL) && $row["TotalAmount"] < 0))
-		return floatcmp(-$row["TotalAmount"], $row["Allocated"]) ? $link : '';
-
-	$link = 
-	pager_link(__("Payment"),
-		"/purchasing/supplier_payment.php?supplier_id=".$row["supplier_id"]."&PInvoice=" 
-			. $row["trans_no"]."&trans_type=" . $row["type"], ICON_MONEY);
-
-	if ($row["type"] == ST_SUPPINVOICE || (($row["type"] == ST_SUPPCREDIT || $row["type"] == ST_JOURNAL) && $row["TotalAmount"] > 0))
-		return floatcmp($row["TotalAmount"], $row["Allocated"]) ? $link : '';
-
-
+	if ($row["effect"] == TransactionEffect::Decrease->value) {
+        $link = pager_link(__("Allocations"),
+                "/purchasing/allocations/supplier_allocate.php?trans_no=" .
+                    $row["trans_no"]. "&trans_type=" . $row["type"]. "&supplier_id=" . $row["supplier_id"], ICON_ALLOC );
+    } else if ($row["effect"] == TransactionEffect::Increase->value) {
+        $link = pager_link(__("Payment"),
+                "/purchasing/supplier_payment.php?supplier_id=".$row["supplier_id"]."&PInvoice=" 
+                    . $row["trans_no"]."&trans_type=" . $row["type"], ICON_MONEY);
+    } else {
+        return '';
+    }
+	
+    return floatcmp(abs($row["TotalAmount"]), $row["Allocated"]) ? $link : '';
 }
 
 function fmt_debit($row)

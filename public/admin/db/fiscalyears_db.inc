@@ -290,7 +290,7 @@ function delete_this_fiscalyear($selected_id)
 		delete_attachments_and_comments($row['type'], $row['trans_no']);
 	}
 	$sql = "SELECT trans_no, type FROM ".TB_PREF."supp_trans WHERE tran_date <= '$to' AND 
-		ABS(ov_amount + ov_gst + ov_discount) = (SELECT ABS(SUM(amt)) FROM ".TB_PREF."supp_allocations WHERE date_alloc <= '$to' AND trans_no = trans_no_to AND type = trans_type_to)";
+		ABS(total) = (SELECT ABS(SUM(amt)) FROM ".TB_PREF."supp_allocations WHERE date_alloc <= '$to' AND trans_no = trans_no_to AND type = trans_type_to)";
 	$result = db_query($sql, "Could not retrieve supp trans");
 	while ($row = db_fetch($result))
 	{

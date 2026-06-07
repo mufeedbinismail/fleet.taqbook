@@ -31,12 +31,12 @@ function getTransactions($supplier, $date)
 	$date = date2sql($date);
 	$dec = user_price_dec();
 
-	$sql = "SELECT  supp_reference, tran_date, due_date, trans_no, type, rate,
-			(ABS( ov_amount) + ABS( ov_gst) -  alloc) AS Balance,
-			(ABS( ov_amount) + ABS( ov_gst) ) AS TranTotal
+	$sql = "SELECT  supp_reference, tran_date, due_date, trans_no, type, rate, effect,
+			(ABS(total) -  alloc) AS Balance,
+			ABS(total) AS TranTotal
 		FROM ".TB_PREF."supp_trans
 		WHERE  supplier_id = '$supplier'
-		AND ROUND(ABS( ov_amount),$dec) + ROUND(ABS( ov_gst),$dec) - 
+		AND ROUND(ABS(total),$dec) -
 		ROUND( alloc,$dec) != 0
 		AND  tran_date <='$date'
 		ORDER BY  type,
@@ -145,7 +145,7 @@ function print_payment_report()
 				$rep->DateCol(2, 3,	$trans['due_date'], true);
 			else	
 				$rep->DateCol(2, 3,	$trans['tran_date'], true);
-			if ($trans['type'] != ST_SUPPINVOICE)
+			if ($trans['effect'] == \App\Shared\Enum\TransactionEffect::Decrease->value)
 			{
 				$trans['TranTotal'] = -$trans['TranTotal'];
 				$trans['Balance'] = -$trans['Balance'];
