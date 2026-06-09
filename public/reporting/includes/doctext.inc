@@ -262,7 +262,7 @@
 
 	if (@$this->formData['payment_service'])	//payment link
 	{
-		$amt = number_format($this->formData["ov_freight"] + $this->formData["ov_gst"] + $this->formData["ov_amount"], user_price_dec());
+		$amt = number_format($this->formData["total"], user_price_dec());
 		$service = $this->formData['payment_service'];
 		$url = payment_link($service, array(
 			'company_email' => $this->company['email'],

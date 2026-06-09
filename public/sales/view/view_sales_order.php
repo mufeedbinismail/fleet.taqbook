@@ -124,7 +124,7 @@ if ($_GET['trans_type'] != ST_SALESQUOTE)
 
 			alt_table_row_color($k);
 			$dn_numbers[] = $del_row["trans_no"];
-			$this_total = $del_row["ov_freight"]+ $del_row["ov_amount"] + $del_row["ov_freight_tax"]  + $del_row["ov_gst"] ;
+			$this_total = $del_row["total"];
 			$delivery_total += $this_total;
 
 			label_cell(get_customer_trans_view_str($del_row["type"], $del_row["trans_no"]));
@@ -161,8 +161,8 @@ if ($_GET['trans_type'] != ST_SALESQUOTE)
 		{
 			alt_table_row_color($k);
 
-			$this_total = $_SESSION['View']->prepaid ? $inv_row["prep_amount"] : 
-				$inv_row["ov_freight"] + $inv_row["ov_freight_tax"]  + $inv_row["ov_gst"] + $inv_row["ov_amount"];
+			$this_total = $_SESSION['View']->prepaid ? $inv_row["prep_amount"] :
+				$inv_row["total"];
 			$invoices_total += $this_total;
 
 			$inv_numbers[] = $inv_row["trans_no"];
@@ -193,7 +193,7 @@ if ($_GET['trans_type'] != ST_SALESQUOTE)
 
 			alt_table_row_color($k);
 
-			$this_total = $credits_row["ov_freight"] + $credits_row["ov_freight_tax"]  + $credits_row["ov_gst"] + $credits_row["ov_amount"];
+			$this_total = $credits_row["total"];
 			$credits_total += $this_total;
 
 			label_cell(get_customer_trans_view_str($credits_row["type"], $credits_row["trans_no"]));

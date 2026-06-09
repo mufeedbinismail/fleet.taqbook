@@ -32,16 +32,13 @@ function get_open_balance($debtorno, $to)
 {
 	if($to)
 		$to = date2sql($to);
-	$sql = "SELECT SUM(IF(t.type = ".ST_SALESINVOICE." OR (t.type IN (".ST_JOURNAL." , ".ST_BANKPAYMENT.") AND t.ov_amount>0),
-             -abs(IF(t.prep_amount, t.prep_amount, t.ov_amount + t.ov_gst + t.ov_freight + t.ov_freight_tax + t.ov_discount)), 0)) AS charges,";
+	$sql = "SELECT SUM(IF(t.effect = 1, -abs(IF(t.prep_amount, t.prep_amount, t.total)), 0)) AS charges,";
 
-	$sql .= "SUM(IF(t.type != ".ST_SALESINVOICE." AND NOT(t.type IN (".ST_JOURNAL." , ".ST_BANKPAYMENT.") AND t.ov_amount>0),
-             abs(t.ov_amount + t.ov_gst + t.ov_freight + t.ov_freight_tax + t.ov_discount) * -1, 0)) AS credits,";		
+	$sql .= "SUM(IF(t.effect = -1, -abs(t.total), 0)) AS credits,";
 
-    $sql .= "SUM(IF(t.type != ".ST_SALESINVOICE." AND NOT(t.type IN (".ST_JOURNAL." , ".ST_BANKPAYMENT.")), t.alloc * -1, t.alloc)) AS Allocated,";
+    $sql .= "SUM(t.effect * t.alloc) AS Allocated,";
 
- 	$sql .=	"SUM(IF(t.type = ".ST_SALESINVOICE." OR (t.type IN (".ST_JOURNAL." , ".ST_BANKPAYMENT.") AND t.ov_amount>0), 1, -1) *
-			(IF(t.prep_amount, t.prep_amount, abs(t.ov_amount + t.ov_gst + t.ov_freight + t.ov_freight_tax + t.ov_discount)) - abs(t.alloc))) AS OutStanding
+ 	$sql .=	"SUM(t.effect * (IF(t.prep_amount, t.prep_amount, abs(t.total)) - abs(t.alloc))) AS OutStanding
 		FROM ".TB_PREF."debtor_trans t
     	WHERE t.debtor_no = ".db_escape($debtorno)
 		." AND t.type <> ".ST_CUSTDELIVERY;
@@ -72,7 +69,7 @@ function get_transactions($debtorno, $from, $to)
  				GROUP BY trans_type_to, trans_no_to) alloc_to";
 
      $sql = "SELECT trans.*,
-		IF(trans.prep_amount, trans.prep_amount, trans.ov_amount + trans.ov_gst + trans.ov_freight + trans.ov_freight_tax + trans.ov_discount)
+		trans.effect * IF(trans.prep_amount, trans.prep_amount, abs(trans.total))
 			AS TotalAmount,
  		IFNULL(alloc_from.amount, alloc_to.amount) AS Allocated,
  		((trans.type = ".ST_SALESINVOICE.")	AND trans.due_date < '$to') AS OverDue
@@ -223,8 +220,6 @@ function print_customer_balances()
 			if ($trans['type'] == ST_SALESINVOICE)
 				$rep->DateCol(3, 4,	$trans['due_date'], true);
 			$item[0] = $item[1] = 0.0;
-			if ($trans['type'] == ST_CUSTCREDIT || $trans['type'] == ST_CUSTPAYMENT || $trans['type'] == ST_BANKDEPOSIT)
-				$trans['TotalAmount'] *= -1;
 			if ($trans['TotalAmount'] > 0.0)
 			{
 				$item[0] = round2($trans['TotalAmount'] * $rate, $dec);
@@ -240,9 +235,9 @@ function print_customer_balances()
 				$item[2] = round2($trans['Allocated'] * $rate, $dec) * -1;
 			}
 			$rep->AmountCol(6, 7, $item[2], $dec);
-			if (($trans['type'] == ST_JOURNAL && $item[0]) || $trans['type'] == ST_SALESINVOICE || $trans['type'] == ST_BANKPAYMENT)
+			if ($trans['TotalAmount'] > 0.0)
 				$item[3] = $item[0] - $item[2];
-			else	
+			else
 				$item[3] = -$item[1] - $item[2];
 			if ($show_balance)	
 				$rep->AmountCol(7, 8, $accumulate, $dec);

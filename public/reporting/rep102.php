@@ -32,10 +32,10 @@ function get_invoices($customer_id, $to, $all=true)
 	$PastDueDays1 = get_company_pref('past_due_days');
 	$PastDueDays2 = 2 * $PastDueDays1;
 
-	$sign = "IF(`type` IN(".implode(',',  array(ST_CUSTCREDIT,ST_CUSTPAYMENT,ST_BANKDEPOSIT))."), -1, 1)";
+	$sign = "trans.effect";
 
 	$value = "$sign*(IF(trans.prep_amount, trans.prep_amount,
-		ABS(trans.ov_amount + trans.ov_gst + trans.ov_freight + trans.ov_freight_tax + trans.ov_discount)) ".($all ? '' : "- trans.alloc").")";
+		ABS(trans.total)) ".($all ? '' : "- trans.alloc").")";
 
 	$due = "IF (type=".ST_SALESINVOICE.", due_date, tran_date)";
 

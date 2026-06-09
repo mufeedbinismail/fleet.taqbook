@@ -428,7 +428,7 @@ function customer_top($today, $limit=10, $width='33', &$pg=null)
 {
 	$begin = date2sql(begin_fiscalyear());
 	$today = date2sql($today);
-	$sql = "SELECT SUM((ov_amount + ov_discount) * rate * IF(trans.type = ".ST_CUSTCREDIT.", -1, 1)) AS total,d.debtor_no, d.name FROM ".TB_PREF."debtor_trans AS trans, ".TB_PREF."debtors_master AS d WHERE trans.debtor_no=d.debtor_no
+	$sql = "SELECT SUM(trans.effect * ABS(trans.total - trans.ov_gst - trans.ov_freight_tax) * rate) AS total,d.debtor_no, d.name FROM ".TB_PREF."debtor_trans AS trans, ".TB_PREF."debtors_master AS d WHERE trans.debtor_no=d.debtor_no
 		AND (trans.type = ".ST_SALESINVOICE." OR trans.type = ".ST_CUSTCREDIT.")
 		AND tran_date >= '$begin' AND tran_date <= '$today' GROUP by d.debtor_no ORDER BY total DESC, d.debtor_no
 		LIMIT $limit";
@@ -783,10 +783,10 @@ function customer_aging($today, $width="33")
 	$past1 = get_company_pref('past_due_days');
 	$past2 = 2 * $past1;
 
-	$sign = "IF(`type` IN(".implode(',',  array(ST_CUSTCREDIT,ST_CUSTPAYMENT,ST_BANKDEPOSIT))."), -1, 1)";
+	$sign = "trans.effect";
 
 	$value = "$sign*(IF(trans.prep_amount, trans.prep_amount,
-		ABS(trans.ov_amount + trans.ov_gst + trans.ov_freight + trans.ov_freight_tax + trans.ov_discount)) - trans.alloc)*trans.rate";
+		ABS(trans.total)) - trans.alloc)*trans.rate";
 
 	$due = "IF (trans.type=".ST_SALESINVOICE.", trans.due_date, trans.tran_date)";
     $sql = "SELECT Sum($value) AS Balance,
@@ -800,7 +800,7 @@ function customer_aging($today, $width="33")
 			WHERE
 					debtor.payment_terms = terms.terms_indicator
 	 			AND debtor.credit_status = credit_status.id";
-		$sql .= " AND ABS(IF(trans.prep_amount, trans.prep_amount, ABS(trans.ov_amount) + trans.ov_gst + trans.ov_freight + trans.ov_freight_tax + trans.ov_discount) - trans.alloc) > ".FLOAT_COMP_DELTA;
+		$sql .= " AND ABS(IF(trans.prep_amount, trans.prep_amount, ABS(trans.total)) - trans.alloc) > ".FLOAT_COMP_DELTA;
     $result = db_query($sql,"The customer details could not be retrieved");
 
     $row = db_fetch($result);
@@ -823,14 +823,13 @@ function customer_aging($today, $width="33")
 function customer_balance($today)
 {
 	$today = date2sql($today);
-	$sign = "IF(`type` IN(".implode(',',  array(ST_CUSTCREDIT,ST_CUSTPAYMENT,ST_BANKDEPOSIT))."), -1, 1)";
-   	$value = "IFNULL($sign*((trans.ov_amount + trans.ov_gst + trans.ov_freight + trans.ov_freight_tax + trans.ov_discount -
-		trans.alloc)*trans.rate),0)";
+	$sign = "trans.effect";
+   	$value = "IFNULL($sign*((ABS(trans.total) - trans.alloc)*trans.rate),0)";
 	$due = "IF (trans.type=".ST_SALESINVOICE.", trans.due_date, trans.tran_date)";
     $sql = "SELECT Sum($value) AS Balance
 			FROM ".TB_PREF."debtors_master debtor
 				 LEFT JOIN ".TB_PREF."debtor_trans trans ON trans.tran_date <= '$today' AND debtor.debtor_no = trans.debtor_no AND trans.type <> ".ST_CUSTDELIVERY."
-			WHERE ABS(trans.ov_amount + trans.ov_gst + trans.ov_freight + trans.ov_freight_tax + trans.ov_discount) - trans.alloc > ".FLOAT_COMP_DELTA;
+			WHERE ABS(trans.total) - trans.alloc > ".FLOAT_COMP_DELTA;
     $result = db_query($sql,"The customer details could not be retrieved");
     $row = db_fetch($result);
 	return $row[0];
@@ -984,16 +983,13 @@ function customer_trans($today)
 
 	$sql = "SELECT trans.trans_no, trans.reference,	trans.tran_date, trans.due_date, debtor.debtor_no, 
 		debtor.name, branch.br_name, debtor.curr_code,
-		(trans.ov_amount + trans.ov_gst + trans.ov_freight 
-			+ trans.ov_freight_tax + trans.ov_discount)	AS total,  
-		(trans.ov_amount + trans.ov_gst + trans.ov_freight 
-			+ trans.ov_freight_tax + trans.ov_discount - trans.alloc) AS remainder,
-		DATEDIFF('$today', trans.due_date) AS days 	
-		FROM ".TB_PREF."debtor_trans as trans, ".TB_PREF."debtors_master as debtor, 
+		trans.total AS total,
+		(trans.total - trans.alloc) AS remainder,
+		DATEDIFF('$today', trans.due_date) AS days
+		FROM ".TB_PREF."debtor_trans as trans, ".TB_PREF."debtors_master as debtor,
 			".TB_PREF."cust_branch as branch
 		WHERE debtor.debtor_no = trans.debtor_no AND trans.branch_code = branch.branch_code
-			AND trans.type = ".ST_SALESINVOICE." AND (trans.ov_amount + trans.ov_gst + trans.ov_freight 
-			+ trans.ov_freight_tax + trans.ov_discount - trans.alloc) > ".FLOAT_COMP_DELTA." 
+			AND trans.type = ".ST_SALESINVOICE." AND (trans.total - trans.alloc) > ".FLOAT_COMP_DELTA."
 			AND DATEDIFF('$today', trans.due_date) > 0 ORDER BY days DESC";
 	$result = db_query($sql);
 	$title = db_num_rows($result) . __(" overdue Sales Invoices");
@@ -1207,8 +1203,7 @@ function get_num_overdue_sales()
 
 	$sql = "SELECT COUNT(trans.trans_no) 	
 		FROM ".TB_PREF."debtor_trans as trans
-		WHERE trans.type = ".ST_SALESINVOICE." AND (trans.ov_amount + trans.ov_gst + trans.ov_freight 
-			+ trans.ov_freight_tax + trans.ov_discount - trans.alloc) > ".FLOAT_COMP_DELTA." 
+		WHERE trans.type = ".ST_SALESINVOICE." AND (trans.total - trans.alloc) > ".FLOAT_COMP_DELTA."
 			AND DATEDIFF('$today', trans.due_date) > 0";
 	$result = db_query($sql);
     $row = db_fetch($result);

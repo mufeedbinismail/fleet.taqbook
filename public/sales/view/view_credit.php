@@ -126,7 +126,7 @@ else
 
 $display_sub_tot = price_format($sub_total);
 
-$credit_total = $myrow["ov_freight"]+$myrow["ov_gst"]+$myrow["ov_amount"]+$myrow["ov_freight_tax"];
+$credit_total = $myrow["Total"];
 $display_total = price_format($credit_total);
 
 /*Print out the invoice text entered */

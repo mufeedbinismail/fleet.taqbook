@@ -9,6 +9,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
+
+use App\Shared\Enum\TransactionEffect;
+
 $GLOBALS['page_security'] = 'SA_SALESALLOC';
 require_once __DIR__ . "/../../includes/db_pager.inc";
 require_once __DIR__ . "/../../includes/session.inc";
@@ -101,56 +104,37 @@ function due_date($row)
 
 function fmt_balance($row)
 {
-	return ($row["type"] == ST_JOURNAL && $row["TotalAmount"] < 0 ? -$row["TotalAmount"] : $row["TotalAmount"]) - $row["Allocated"];
+	return abs($row["TotalAmount"]) - $row["Allocated"];
 }
 
 function alloc_link($row)
 {
     $marketplace_flg = check_value('is_marketplace_trans') ? "&Marketplace=Yes" : "";
-	$link = 
-	pager_link(__("Allocation"),
-		"/sales/allocations/customer_allocate.php?trans_no=" . $row["trans_no"] 
-		."&trans_type=" . $row["type"]."&debtor_no=" . $row["debtor_no"] . $marketplace_flg, ICON_ALLOC);
 
-	if ($row["type"] == ST_CUSTCREDIT && $row['TotalAmount'] > 0)
-	{
-		/*its a credit note which could have an allocation */
-		return $link;
-	} elseif ($row["type"] == ST_JOURNAL && $row['TotalAmount'] < 0)
-	{
-		return $link;
-	} elseif (($row["type"] == ST_CUSTPAYMENT || $row["type"] == ST_BANKDEPOSIT) &&
-		(floatcmp($row['TotalAmount'], $row['Allocated']) >= 0))
-	{
-		/*its a receipt  which could have an allocation*/
-		return $link;
-	}
-	elseif ($row["type"] == ST_CUSTPAYMENT && $row['TotalAmount'] <= 0)
-	{
-		/*its a negative receipt */
-		return '';
-	} elseif (($row["type"] == ST_SALESINVOICE && ($row['TotalAmount'] - $row['Allocated']) > 0) || 
-		($row["type"] == ST_JOURNAL && (ABS($row['TotalAmount']) - $row['Allocated']) > 0) || $row["type"] == ST_BANKPAYMENT)
-		return pager_link(__("Payment"),
+	if ($row["effect"] == TransactionEffect::Decrease->value) {
+		/* a credit/receipt/negative journal which could have an allocation */
+		$link = pager_link(__("Allocation"),
+			"/sales/allocations/customer_allocate.php?trans_no=" . $row["trans_no"]
+			."&trans_type=" . $row["type"]."&debtor_no=" . $row["debtor_no"] . $marketplace_flg, ICON_ALLOC);
+	} elseif ($row["effect"] == TransactionEffect::Increase->value) {
+		/* an invoice/charge which could receive a payment */
+		$link = pager_link(__("Payment"),
 			"/sales/customer_payments.php?customer_id=".$row["debtor_no"]."&SInvoice=" . $row["trans_no"]."&Type=".$row["type"].$marketplace_flg, ICON_MONEY);
+	} else {
+		return '';
+	}
 
+	return floatcmp(abs($row['TotalAmount']), $row['Allocated']) ? $link : '';
 }
 
 function fmt_debit($row)
 {
-	$value =
-	    $row['type']==ST_CUSTCREDIT || $row['type']==ST_CUSTPAYMENT || $row['type']==ST_BANKDEPOSIT ?
-		-$row["TotalAmount"] : $row["TotalAmount"];
-	return $value>=0 ? price_format($value) : '';
-
+	return $row['effect'] == TransactionEffect::Increase->value ? price_format($row["TotalAmount"]) : '';
 }
 
 function fmt_credit($row)
 {
-	$value =
-	    !($row['type']==ST_CUSTCREDIT || $row['type']==ST_CUSTPAYMENT || $row['type']==ST_BANKDEPOSIT) ?
-		-$row["TotalAmount"] : $row["TotalAmount"];
-	return $value>0 ? price_format($value) : '';
+	return $row['effect'] == TransactionEffect::Decrease->value ? price_format($row["TotalAmount"]) : '';
 }
 //------------------------------------------------------------------------------------------------
 

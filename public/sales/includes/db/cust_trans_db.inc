@@ -217,7 +217,7 @@ function get_customer_trans($trans_id, $trans_type, $customer_id=null)
 	global $SysPrefs;
 
 	$sql = "SELECT trans.*,"
-		."ov_amount+ov_gst+ov_freight+ov_freight_tax+ov_discount AS Total,"
+		."total AS Total,"
 		."cust.name AS DebtorName, cust.address, "
 		."cust.debtor_ref, "
 		."cust.curr_code, "
@@ -418,8 +418,7 @@ function get_sql_for_customer_inquiry(
 		debtor.name, 
 		branch.br_name,
 		debtor.curr_code,
-		IF(prep_amount, prep_amount, trans.ov_amount + trans.ov_gst + trans.ov_freight 
-			+ trans.ov_freight_tax + trans.ov_discount)	AS TotalAmount,"
+		trans.effect * IF(prep_amount, prep_amount, abs(trans.total))	AS TotalAmount,"
 //   	if ($filter != ALL_TEXT)
 //  		$sql .= "@bal := @bal+IF(prep_amount, prep_amount, trans.ov_amount + trans.ov_gst + trans.ov_freight + trans.ov_freight_tax + trans.ov_discount), ";
 
@@ -427,9 +426,8 @@ function get_sql_for_customer_inquiry(
 //		$sql .= "IF(trans.type=".ST_CUSTDELIVERY.",'', IF(trans.type=".ST_SALESINVOICE." OR trans.type=".ST_BANKPAYMENT.",@bal := @bal+
 //			(trans.ov_amount + trans.ov_gst + trans.ov_freight + trans.ov_freight_tax + trans.ov_discount), @bal := @bal-
 //			(trans.ov_amount + trans.ov_gst + trans.ov_freight + trans.ov_freight_tax + trans.ov_discount))) , ";
-		. "IF(trans.type IN(".implode(',',  array(ST_CUSTCREDIT,ST_CUSTPAYMENT,ST_BANKDEPOSIT))."), -1, 1)
-				*(IF(prep_amount, prep_amount, trans.ov_amount + trans.ov_gst + trans.ov_freight 
-			+ trans.ov_freight_tax + trans.ov_discount)-trans.alloc) Balance, 
+		. "trans.effect
+				*(IF(prep_amount, prep_amount, abs(trans.total))-trans.alloc) Balance,
 		debtor.debtor_no,";
 
 		$sql .= "trans.alloc AS Allocated,
@@ -437,7 +435,8 @@ function get_sql_for_customer_inquiry(
 			AND trans.due_date < '" . date2sql(Today()) . "') AS OverDue ,
 		Sum(line.quantity-line.qty_done) AS Outstanding,
 		Sum(line.qty_done) AS HasChild,
-		prep_amount
+		prep_amount,
+		trans.effect AS effect
 		FROM "
 			.TB_PREF."debtor_trans as trans
 			LEFT JOIN ".TB_PREF."debtor_trans_details as line
@@ -450,12 +449,12 @@ function get_sql_for_customer_inquiry(
 			.TB_PREF."debtors_master as debtor
 		WHERE debtor.debtor_no = trans.debtor_no"; // exclude voided transactions and self-balancing (journal) transactions:
     if (!$show_voided) 	
-    	 	$sql .= " AND ISNULL(v.date_) AND (trans.ov_amount + trans.ov_gst + trans.ov_freight + trans.ov_freight_tax + trans.ov_discount) != 0";
+    	 	$sql .= " AND ISNULL(v.date_) AND trans.total != 0";
     if ($ref) {
     	$sql .= " AND trans.reference LIKE ". db_escape("%$ref%");
     }	 
 	if ($filter == '2')
-		$sql .= " AND ABS(IF(prep_amount, prep_amount, ABS(trans.ov_amount) + trans.ov_gst + trans.ov_freight + trans.ov_freight_tax + trans.ov_discount)-trans.alloc)>"
+		$sql .= " AND ABS(IF(prep_amount, prep_amount, ABS(trans.total))-trans.alloc)>"
 			.FLOAT_COMP_DELTA;
 	else {
 		$sql .= " AND trans.tran_date >= '$date_after'
@@ -497,8 +496,7 @@ function get_sql_for_customer_inquiry(
     	{
     		$today =  date2sql(Today());
     		$sql .= " AND trans.due_date < '$today'
-				AND (ABS(trans.ov_amount) + trans.ov_gst + trans.ov_freight_tax + 
-				trans.ov_freight + trans.ov_discount - trans.alloc > 0) ";
+				AND (ABS(trans.total) - trans.alloc > 0) ";
     	}
    	}
 
@@ -539,7 +537,7 @@ function get_sql_for_sales_deliveries_view(
 			sorder.customer_ref,
 			trans.tran_date,
 			trans.due_date,
-			(ov_amount+ov_gst+ov_freight+ov_freight_tax) AS DeliveryValue,
+			total AS DeliveryValue,
 			debtor.curr_code,
 			Sum(line.quantity-line.qty_done) AND sorder.prep_amount=0 AS Outstanding,
 			Sum(line.qty_done) AS Done,

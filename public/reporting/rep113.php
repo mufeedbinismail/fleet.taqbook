@@ -189,8 +189,7 @@ function print_credits()
 			$rep->NewLine();
 		}
 		$rep->NewLine();
-		$DisplayTotal = number_format2($sign*($myrow["ov_freight"] + $myrow["ov_gst"] +
-			$myrow["ov_amount"]+$myrow["ov_freight_tax"]),$dec);
+		$DisplayTotal = number_format2($sign*$myrow["Total"],$dec);
 		$rep->Font('bold');
 		$rep->TextCol(3, 6, __("TOTAL CREDIT"), - 2);
 		$rep->TextCol(6, 7, $DisplayTotal, -2);

@@ -79,9 +79,9 @@ function get_customer_details(
 	$past1 = get_company_pref('past_due_days');
 	$past2 = 2 * $past1;
 
-	$sign = "IF(trans.type IN(".implode(',',  array(ST_CUSTCREDIT,ST_CUSTPAYMENT,ST_BANKDEPOSIT))."), -1, 1)";
+	$sign = "trans.effect";
 	$value = "$sign*(IF(trans.prep_amount, trans.prep_amount,
-		ABS(trans.ov_amount + trans.ov_gst + trans.ov_freight + trans.ov_freight_tax + trans.ov_discount)) ".($all ? '' : "- trans.alloc").")";
+		ABS(trans.total)) ".($all ? '' : "- trans.alloc").")";
 
 	$due = "IF (trans.type=".ST_SALESINVOICE.", trans.due_date, trans.tran_date)";
 	$sql = "SELECT debtor.name, debtor.curr_code, terms.terms,
@@ -105,7 +105,7 @@ function get_customer_details(
 		$sql .= " AND debtor.debtor_no = ".db_escape($customer_id);
 
 	if (!$all)
-		$sql .= " AND ABS(IF(trans.prep_amount, trans.prep_amount, ABS(trans.ov_amount) + trans.ov_gst + trans.ov_freight + trans.ov_freight_tax + trans.ov_discount) - trans.alloc) > ".FLOAT_COMP_DELTA;
+		$sql .= " AND ABS(IF(trans.prep_amount, trans.prep_amount, ABS(trans.total)) - trans.alloc) > ".FLOAT_COMP_DELTA;
 
     if ($is_marketplace_trans) {
         $sql .= ' AND trans.marketplace_id IS NOT NULL';

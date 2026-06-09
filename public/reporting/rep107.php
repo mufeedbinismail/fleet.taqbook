@@ -300,8 +300,7 @@ function print_invoices()
     		}
 
     		$rep->NewLine();
-			$DisplayTotal = number_format2($sign*($myrow["ov_freight"] + $myrow["ov_gst"] +
-				$myrow["ov_amount"]+$myrow["ov_freight_tax"]),$dec);
+			$DisplayTotal = number_format2($sign*$myrow["Total"],$dec);
 			$rep->Font('bold');
 			if (!$myrow['prepaid']) $rep->Font('bold');
 				$rep->TextCol(3, 6, $rep->formData['prepaid'] ? __("TOTAL ORDER VAT INCL.") : __("TOTAL INVOICE"), - 2);

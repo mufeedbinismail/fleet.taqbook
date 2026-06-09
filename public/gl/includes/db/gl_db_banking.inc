@@ -97,9 +97,7 @@ function get_cust_account_curr_balances($date)
 {
 	$to = date2sql($date);
 
-    $sql = "SELECT SUM(IF(t.type IN(". implode(',', array(ST_CUSTCREDIT, ST_CUSTPAYMENT, ST_BANKDEPOSIT, ST_JOURNAL))."),
-			-(t.ov_amount + t.ov_gst + t.ov_freight + t.ov_freight_tax + t.ov_discount), 
-	    	(t.ov_amount + t.ov_gst + t.ov_freight + t.ov_freight_tax + t.ov_discount))) AS amount,
+    $sql = "SELECT SUM(t.effect * abs(t.total)) AS amount,
 	    	dt.debtor_no, dt.name, dt.curr_code, b.receivables_account
 		FROM ".TB_PREF."debtor_trans t 
 			LEFT JOIN ".TB_PREF."debtors_master dt ON t.debtor_no = dt.debtor_no

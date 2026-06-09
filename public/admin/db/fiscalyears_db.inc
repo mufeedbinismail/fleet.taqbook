@@ -262,8 +262,8 @@ function delete_this_fiscalyear($selected_id)
 		db_query($sql, "Could not delete grn batch");
 		delete_attachments_and_comments(25, $row['id']);
 	}
-	$sql = "SELECT trans_no, type FROM ".TB_PREF."debtor_trans WHERE tran_date <= '$to' AND 
-		(ov_amount + ov_gst + ov_freight + ov_freight_tax + ov_discount) = 
+	$sql = "SELECT trans_no, type FROM ".TB_PREF."debtor_trans WHERE tran_date <= '$to' AND
+		ABS(total) =
 		(SELECT SUM(amt) FROM ".TB_PREF."cust_allocations WHERE date_alloc <= '$to' AND trans_no = trans_no_to AND
 		type = trans_type_to)";
 	$result = db_query($sql, "Could not retrieve debtor trans");

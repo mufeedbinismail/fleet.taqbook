@@ -200,8 +200,7 @@ function print_deliveries()
 					$rep->NewLine();
     			}
     			$rep->NewLine();
-				$DisplayTotal = number_format2($myrow["ov_freight"] +$myrow["ov_freight_tax"] + $myrow["ov_gst"] +
-					$myrow["ov_amount"],$dec);
+				$DisplayTotal = number_format2($myrow["Total"],$dec);
 				$rep->Font('bold');
 				$rep->TextCol(3, 6, __("TOTAL DELIVERY INCL. VAT"), - 2);
 				$rep->TextCol(6, 7,	$DisplayTotal, -2);

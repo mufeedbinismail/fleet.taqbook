@@ -422,8 +422,7 @@ function get_customer_to_order($customer_id) {
 		  cust.discount,
 		  cust.payment_terms,
 		  cust.pymt_discount,
-		  cust.credit_limit - Sum(IFNULL(IF(trans.type IN(".implode(',', array(ST_CUSTCREDIT, ST_CUSTPAYMENT, ST_BANKDEPOSIT))."),
-			-1, 1) * (ov_amount + ov_gst + ov_freight + ov_freight_tax + ov_discount),0)) as cur_credit
+		  cust.credit_limit - Sum(IFNULL(trans.effect * ABS(trans.total),0)) as cur_credit
 		FROM ".TB_PREF."debtors_master cust
 		  LEFT JOIN ".TB_PREF."debtor_trans trans ON trans.type!=".ST_CUSTDELIVERY." AND trans.debtor_no = cust.debtor_no,"
 		  .TB_PREF."credit_status credit_status,"

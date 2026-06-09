@@ -86,7 +86,7 @@ function getTransactions($debtorno, $branchcode, $date)
 {
 	$date = date2sql($date);
 
-	$sql = "SELECT SUM((ov_amount+ov_freight+ov_discount)*rate) AS Turnover
+	$sql = "SELECT SUM(effect*ABS(total - ov_gst - ov_freight_tax)*rate) AS Turnover
 		FROM ".TB_PREF."debtor_trans
 		WHERE debtor_no=".db_escape($debtorno)."
 		AND branch_code=".db_escape($branchcode)."

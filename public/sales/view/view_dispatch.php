@@ -158,7 +158,7 @@ if ($myrow['ov_freight'] != 0.0)
 $tax_items = get_trans_tax_details(ST_CUSTDELIVERY, $trans_id);
 display_customer_trans_tax_details($tax_items, 6);
 
-$display_total = price_format($myrow["ov_freight"]+$myrow["ov_amount"]+$myrow["ov_freight_tax"]+$myrow["ov_gst"]);
+$display_total = price_format($myrow["Total"]);
 
 label_row(__("TOTAL VALUE"), $display_total, "colspan=6 align=right",
 	"nowrap align=right");

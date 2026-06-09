@@ -1,4 +1,7 @@
 <?php
+
+use App\Shared\Enum\TransactionEffect;
+
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
 	Released under the terms of the GNU General Public License, GPL, 
@@ -113,24 +116,22 @@ function get_allocatable_from_cust_sql(
 		trans.tran_date,
 		debtor.name AS DebtorName, 
 		debtor.curr_code,
-		ov_amount+ov_gst+ov_freight+ov_freight_tax+ov_discount AS Total,
+		abs(total) AS Total,
 		trans.alloc,
 		trans.due_date,
 		debtor.address,
 		trans.version,
-		round(abs(ov_amount)+ov_gst+ov_freight+ov_freight_tax+ov_discount-alloc,6) <= 0 AS settled,
+		round(abs(total)-alloc,6) <= 0 AS settled,
 		trans.debtor_no
 
 	 FROM "
 	 	.TB_PREF."debtor_trans as trans, "
 		.TB_PREF."debtors_master as debtor"
 	." WHERE trans.debtor_no=debtor.debtor_no
-		AND (((type=".ST_CUSTPAYMENT." OR type=".ST_BANKDEPOSIT.") AND (trans.ov_amount > 0))
-		 OR (type=".ST_CUSTCREDIT. " AND (ov_amount+ov_gst+ov_freight+ov_freight_tax+ov_discount)>0)
-		 OR (type=".ST_JOURNAL. " AND (trans.ov_amount < 0)))";
+		AND trans.effect = ".TransactionEffect::Decrease->value;
 
 	if (!$settled)
-		$sql .= " AND round(abs(ov_amount+ov_gst)+ov_freight+ov_freight_tax+ov_discount-alloc, 6) > 0";
+		$sql .= " AND round(abs(total)-alloc,6) > 0";
 
 	if ($customer_id != null)
 		$sql .= " AND trans.debtor_no = ".db_escape($customer_id);
@@ -224,7 +225,7 @@ function get_allocatable_to_cust_transactions(
 		trans.tran_date,
 		debtor.name AS DebtorName, 
 		debtor.curr_code,
-		IF(prep_amount, prep_amount, ov_amount+ov_gst+ov_freight+ov_freight_tax+ov_discount) AS Total,
+		IF(prep_amount, prep_amount, abs(total)) AS Total,
         trans.ov_mkt_cost AS marketplace_cost,
 		trans.alloc,
 		trans.due_date,
@@ -258,20 +259,8 @@ function get_allocatable_to_cust_transactions(
 	}
 	else
 	{
-		$sql .= "
-				 AND (
-					trans.type='".ST_SALESINVOICE."'
-					AND round(IF(prep_amount, prep_amount, ov_amount+ov_gst+ov_freight+ov_freight_tax+ov_discount)-alloc,6) > 0
-					OR
-					trans.type='". ST_CUSTCREDIT."'
-					AND round(-IF(prep_amount, prep_amount, ov_amount+ov_gst+ov_freight+ov_freight_tax+ov_discount)-alloc,6) > 0
-					OR
-				  	trans.type = '". ST_JOURNAL."'
-					AND ov_amount+ov_gst+ov_freight+ov_freight_tax+ov_discount>0
-					OR
-				  	trans.type = '". ST_BANKPAYMENT."'
-					AND ov_amount+ov_gst+ov_freight+ov_freight_tax+ov_discount>0
-				)";
+		$sql .= " AND trans.effect = ".TransactionEffect::Increase->value."
+				 AND round(IF(prep_amount, prep_amount, abs(total))-alloc,6) > 0";
 		$sql .= " GROUP BY type, trans_no";
 	}
 
@@ -299,7 +288,7 @@ function get_allocatable_from_cust_transactions($customer_id, $trans_no=null, $t
 		trans.tran_date,
 		debtor.name AS DebtorName, 
 		debtor.curr_code,
-		ov_amount+ov_gst+ov_freight+ov_freight_tax+ov_discount AS Total,
+		abs(total) AS Total,
 		trans.alloc,
 		trans.due_date,
 		debtor.address,
@@ -321,8 +310,8 @@ function get_allocatable_from_cust_transactions($customer_id, $trans_no=null, $t
 	}
 	else
 	{
-		$sql .= " AND round(abs(ov_amount)+ov_gst+ov_freight+ov_freight_tax+ov_discount-alloc,6) > 0
-			AND trans.type NOT IN (".implode(',',array(ST_CUSTPAYMENT,ST_BANKDEPOSIT,ST_CUSTCREDIT,ST_CUSTDELIVERY)).")";
+		$sql .= " AND round(abs(total)-alloc,6) > 0
+			AND trans.effect = ".TransactionEffect::Increase->value;
 		$sql .= " GROUP BY type, trans_no";
 	}
 
@@ -355,18 +344,17 @@ function get_sql_for_customer_allocation_inquiry(
 		trans.due_date,
 		debtor.name,
 		debtor.curr_code,
-    	(trans.ov_amount + trans.ov_gst + trans.ov_freight 
-			+ trans.ov_freight_tax + trans.ov_discount)	AS TotalAmount,
+    	abs(trans.total) AS TotalAmount,
 		trans.alloc AS Allocated,
 		((trans.type = ".ST_SALESINVOICE.")
 			AND trans.due_date < '" . date2sql(Today()) . "') AS OverDue,
+		trans.effect AS effect,
 		trans.debtor_no
     	FROM "
 			.TB_PREF."debtor_trans as trans, "
 			.TB_PREF."debtors_master as debtor
     	WHERE debtor.debtor_no = trans.debtor_no
-			AND (trans.ov_amount + trans.ov_gst + trans.ov_freight 
-				+ trans.ov_freight_tax + trans.ov_discount != 0)
+			AND (trans.total != 0)
     		AND trans.tran_date >= '$data_after'
     		AND trans.tran_date <= '$date_to'";
 
@@ -396,9 +384,7 @@ function get_sql_for_customer_allocation_inquiry(
     	{
     		$today =  date2sql(Today());
     		$sql .= " AND trans.due_date < '$today'
-				AND (round(abs(trans.ov_amount) + "
-				."trans.ov_gst + trans.ov_freight + "
-				."trans.ov_freight_tax + trans.ov_discount - trans.alloc,6) > 0) ";
+				AND (round(abs(trans.total) - trans.alloc,6) > 0) ";
     	}
    	}
    	else
@@ -418,9 +404,7 @@ function get_sql_for_customer_allocation_inquiry(
 
    	if (!$settled)
    	{
-   		$sql .= " AND (ROUND(IF(trans.prep_amount,trans.prep_amount, ABS(trans.ov_amount) + trans.ov_gst + "
-		."trans.ov_freight + trans.ov_freight_tax + "
-		."trans.ov_discount) - trans.alloc,6) != 0) ";
+   		$sql .= " AND (ROUND(IF(trans.prep_amount,trans.prep_amount, ABS(trans.total)) - trans.alloc,6) != 0) ";
    	}
    	return $sql;
 }
@@ -428,7 +412,7 @@ function get_sql_for_customer_allocation_inquiry(
 function credit_sales_invoice_allocate($invoice_no, $credit_no, $amount, $date)
 {
 
-	$sql = "SELECT ov_freight+ov_gst+ov_amount+ov_freight_tax as total, alloc, debtor_no FROM ".TB_PREF."debtor_trans
+	$sql = "SELECT total, alloc, debtor_no FROM ".TB_PREF."debtor_trans
 		WHERE (`type`=".ST_SALESINVOICE." AND trans_no=".db_escape($invoice_no).")";
 	$result = db_query($sql, "can't retrieve invoice totals");
 	$invoice = db_fetch($result);

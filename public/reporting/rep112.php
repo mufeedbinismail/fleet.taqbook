@@ -31,8 +31,8 @@ print_receipts();
 function get_receipt($type, $trans_no)
 {
     $sql = "SELECT trans.*,
-				(trans.ov_amount + trans.ov_gst + trans.ov_freight + trans.ov_freight_tax) AS Total,
-				trans.ov_discount, 
+				(trans.total - trans.ov_discount) AS Total,
+				trans.ov_discount,
 				debtor.name AS DebtorName,
 				debtor.debtor_ref,
    				debtor.curr_code,
