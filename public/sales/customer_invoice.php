@@ -16,8 +16,8 @@
 //
 use App\Finance\Support\MoneyFactory;
 use App\Inventory\Repository\ItemRepository;
-use App\Marketplace\Collections\ExpenseCollection;
-use App\Marketplace\Entities\Expense;
+use App\Marketplace\Collection\ExpenseCollection;
+use App\Marketplace\Entity\Expense;
 use Illuminate\Support\Str;
 
 $GLOBALS['page_security'] = 'SA_SALESINVOICE';

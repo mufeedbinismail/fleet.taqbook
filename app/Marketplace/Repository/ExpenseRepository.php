@@ -3,8 +3,8 @@
 namespace App\Marketplace\Repository;
 
 use App\Finance\Support\MoneyFactory;
-use App\Marketplace\Collections\ExpenseCollection;
-use App\Marketplace\Entities\Expense;
+use App\Marketplace\Collection\ExpenseCollection;
+use App\Marketplace\Entity\Expense;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 

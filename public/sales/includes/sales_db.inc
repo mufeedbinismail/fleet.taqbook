@@ -10,7 +10,7 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
-use App\Marketplace\Collections\ExpenseCollection;
+use App\Marketplace\Collection\ExpenseCollection;
 
 require_once __DIR__ . "/../../includes/banking.inc";
 require_once __DIR__ . "/../../includes/inventory.inc";

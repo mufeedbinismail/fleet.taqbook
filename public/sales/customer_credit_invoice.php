@@ -16,8 +16,8 @@
 
 use App\Finance\Support\MoneyFactory;
 use App\Finance\Tax\ValueObject\TaxBreakdown;
-use App\Marketplace\Collections\ExpenseCollection;
-use App\Marketplace\Entities\Expense;
+use App\Marketplace\Collection\ExpenseCollection;
+use App\Marketplace\Entity\Expense;
 
 $GLOBALS['page_security'] = 'SA_SALESCREDITINV';
 

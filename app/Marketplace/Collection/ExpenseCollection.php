@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Marketplace\Collections;
+namespace App\Marketplace\Collection;
 
-use App\Marketplace\Entities\Expense;
+use App\Marketplace\Entity\Expense;
 use Ramsey\Collection\AbstractCollection;
 
 class ExpenseCollection extends AbstractCollection
