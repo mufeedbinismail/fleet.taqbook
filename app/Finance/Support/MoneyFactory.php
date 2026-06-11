@@ -78,4 +78,17 @@ final class MoneyFactory
     {
         return (string) $money->getAmount();
     }
+
+    public static function sum(iterable $monies): BrickMoney
+    {
+        $sum = null;
+        foreach ($monies as $money) {
+            if (! $sum) {
+                $sum = $money;
+            } else {
+                $sum = $sum->plus($money);
+            }
+        }
+        return $sum ?? self::zero();
+    }
 }
