@@ -10,9 +10,9 @@ require_once __DIR__ . "/../purchasing/includes/purchasing_ui.inc";
 require_once __DIR__ . "/includes/marketplace_supplier_invoice_ui.inc";
 require_once __DIR__ . "/includes/marketplace_supplier_invoice_db.inc";
 
-use App\Marketplace\Cart\DraftSupplierInvoiceLine;
-use App\Marketplace\Cart\SupplierInvoiceCart;
-use App\Marketplace\Service\SupplierInvoiceCartService;
+use App\Trade\Marketplace\Cart\DraftSupplierInvoiceLine;
+use App\Trade\Marketplace\Cart\SupplierInvoiceCart;
+use App\Trade\Marketplace\Service\SupplierInvoiceCartService;
 use App\Shared\DTO\ValidationResult;
 
 $_SESSION['page_title'] = __("Marketplace Supplier Invoice");

@@ -1,7 +1,7 @@
 <?php
 
-use App\Sales\Enum\PaymentMethod;
-use App\Shared\Enum\CustomerTransactionSource;
+use App\Trade\Sale\Enum\PaymentMethod;
+use App\Trade\Shared\Enum\CustomerTransactionSource;
 use App\Shared\Enum\TransactionEffect;
 
 /**********************************************************************

@@ -2,9 +2,9 @@
 
 use App\Finance\Tax\Service\TaxService;
 use App\Inventory\Repository\ItemRepository;
-use App\Marketplace\Repository\ExpenseRepository;
-use App\Sales\Enum\PaymentMethod;
-use App\Shared\Enum\CustomerTransactionSource;
+use App\Trade\Marketplace\Repository\ExpenseRepository;
+use App\Trade\Sale\Enum\PaymentMethod;
+use App\Trade\Shared\Enum\CustomerTransactionSource;
 use App\Shared\Enum\TransactionEffect;
 
 /**********************************************************************

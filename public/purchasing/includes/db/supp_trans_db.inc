@@ -1,6 +1,6 @@
 <?php
 
-use App\Shared\Enum\SupplierTransactionSource;
+use App\Trade\Shared\Enum\SupplierTransactionSource;
 use App\Shared\Enum\TransactionEffect;
 
 /**********************************************************************

@@ -11,9 +11,9 @@
 ***********************************************************************/
 
 use App\Finance\Support\MoneyFactory;
-use App\Marketplace\Collection\ExpenseCollection;
-use App\Marketplace\Entity\Expense;
-use App\Sales\Enum\PaymentMethod;
+use App\Trade\Marketplace\Collection\ExpenseCollection;
+use App\Trade\Marketplace\Entity\Expense;
+use App\Trade\Sale\Enum\PaymentMethod;
 
 //-----------------------------------------------------------------------------
 //

@@ -1,6 +1,6 @@
 <?php
 
-use App\Sales\Enum\PaymentMethod;
+use App\Trade\Sale\Enum\PaymentMethod;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
@@ -19,8 +19,8 @@ use App\Sales\Enum\PaymentMethod;
 
 use App\Finance\Support\MoneyFactory;
 use App\Finance\Tax\ValueObject\TaxBreakdown;
-use App\Marketplace\Collection\ExpenseCollection;
-use App\Marketplace\Entity\Expense;
+use App\Trade\Marketplace\Collection\ExpenseCollection;
+use App\Trade\Marketplace\Entity\Expense;
 
 $GLOBALS['page_security'] = 'SA_SALESCREDITINV';
 

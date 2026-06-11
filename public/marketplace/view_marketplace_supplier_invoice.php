@@ -1,7 +1,7 @@
 <?php
 
 use App\Finance\Support\MoneyFactory;
-use App\Marketplace\Cart\SupplierInvoiceCart;
+use App\Trade\Marketplace\Cart\SupplierInvoiceCart;
 
 $GLOBALS['page_security'] = 'SA_MP_SUPPTRANSVIEW';
 

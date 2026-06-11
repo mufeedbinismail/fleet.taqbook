@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Marketplace\Repository;
+namespace App\Trade\Marketplace\Repository;
 
 use App\Finance\Support\MoneyFactory;
-use App\Marketplace\Collection\ExpenseCollection;
-use App\Marketplace\Entity\Expense;
+use App\Trade\Marketplace\Collection\ExpenseCollection;
+use App\Trade\Marketplace\Entity\Expense;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 

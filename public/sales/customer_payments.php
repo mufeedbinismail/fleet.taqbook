@@ -1,6 +1,6 @@
 <?php
 
-use App\Sales\Enum\PaymentMethod;
+use App\Trade\Sale\Enum\PaymentMethod;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.

@@ -10,7 +10,7 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
-use App\Shared\Enum\SupplierTransactionSource;
+use App\Trade\Shared\Enum\SupplierTransactionSource;
 use App\Shared\Enum\TransactionEffect;
 
 require_once __DIR__ . "/../../../purchasing/includes/db/invoice_items_db.inc";

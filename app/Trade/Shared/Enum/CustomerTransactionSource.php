@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shared\Enum;
+namespace App\Trade\Shared\Enum;
 
 enum CustomerTransactionSource: int
 {

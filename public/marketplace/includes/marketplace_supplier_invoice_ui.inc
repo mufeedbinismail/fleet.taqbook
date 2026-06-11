@@ -2,9 +2,9 @@
 
 use App\Finance\Support\MoneyFactory;
 use App\Inventory\Query\ItemInfoQuery;
-use App\Marketplace\Cart\DraftSupplierInvoiceLine;
-use App\Marketplace\Cart\SupplierInvoiceCart;
-use App\Marketplace\Service\SupplierInvoiceCartService;
+use App\Trade\Marketplace\Cart\DraftSupplierInvoiceLine;
+use App\Trade\Marketplace\Cart\SupplierInvoiceCart;
+use App\Trade\Marketplace\Service\SupplierInvoiceCartService;
 
 // ---------------------------------------------------------------------------
 

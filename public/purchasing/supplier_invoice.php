@@ -48,7 +48,7 @@ page($_SESSION['page_title'], false, false, "", $js);
 
 if (isset($_GET['ModifyInvoice'])) {
     if (isset($_SESSION['supp_trans'])
-        && $_SESSION['supp_trans']->source != \App\Shared\Enum\SupplierTransactionSource::Manual
+        && $_SESSION['supp_trans']->source != \App\Trade\Shared\Enum\SupplierTransactionSource::Manual
     ) {
         display_error(__("This supplier invoice is not generated here so, it cannot be modified here."));
         display_footer_exit();

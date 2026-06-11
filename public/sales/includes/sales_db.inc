@@ -10,7 +10,7 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
-use App\Marketplace\Collection\ExpenseCollection;
+use App\Trade\Marketplace\Collection\ExpenseCollection;
 
 require_once __DIR__ . "/../../includes/banking.inc";
 require_once __DIR__ . "/../../includes/inventory.inc";
@@ -321,7 +321,7 @@ function read_sales_trans($doc_type, $trans_no, &$cart)
 
         // Load marketplace expenses for each invoice line
         if ($cart->marketplace_id) {
-            $expenseRepo = app(\App\Marketplace\Repository\ExpenseRepository::class);
+            $expenseRepo = app(\App\Trade\Marketplace\Repository\ExpenseRepository::class);
             $expenses = $expenseRepo->findByTransLines($doc_type, array_keys($line_id_index_map))->groupBy('line_id');
             foreach ($expenses as $line_id => $line_expenses) {
                 $line_no = $line_id_index_map[$line_id];

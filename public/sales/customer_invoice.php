@@ -1,6 +1,6 @@
 <?php
 
-use App\Sales\Enum\PaymentMethod;
+use App\Trade\Sale\Enum\PaymentMethod;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
@@ -19,8 +19,8 @@ use App\Sales\Enum\PaymentMethod;
 //
 use App\Finance\Support\MoneyFactory;
 use App\Inventory\Repository\ItemRepository;
-use App\Marketplace\Collection\ExpenseCollection;
-use App\Marketplace\Entity\Expense;
+use App\Trade\Marketplace\Collection\ExpenseCollection;
+use App\Trade\Marketplace\Entity\Expense;
 use Illuminate\Support\Str;
 
 $GLOBALS['page_security'] = 'SA_SALESINVOICE';

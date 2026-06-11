@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Marketplace\Query\Marketplace;
+namespace App\Trade\Marketplace\Query\Marketplace;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;

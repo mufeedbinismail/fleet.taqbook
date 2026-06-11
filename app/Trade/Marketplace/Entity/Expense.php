@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Marketplace\Entity;
+namespace App\Trade\Marketplace\Entity;
 
 use App\Finance\Support\MoneyFactory;
 use App\Finance\Tax\Entity\ItemTaxSetting;

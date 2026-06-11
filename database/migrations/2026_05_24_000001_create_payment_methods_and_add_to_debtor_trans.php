@@ -1,6 +1,6 @@
 <?php
 
-use App\Sales\Enum\PaymentMethod;
+use App\Trade\Sale\Enum\PaymentMethod;
 use App\Shared\Enum\SystemType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

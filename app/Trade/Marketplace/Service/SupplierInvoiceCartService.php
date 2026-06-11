@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Marketplace\Service;
+namespace App\Trade\Marketplace\Service;
 
 use App\Finance\Support\MoneyFactory;
 use App\Finance\Tax\Repository\TaxRepository;
 use App\Finance\Tax\Service\TaxService;
 use App\Finance\Tax\ValueObject\TaxBreakdown;
-use App\Marketplace\Cart\DraftSupplierInvoiceLine;
-use App\Marketplace\Cart\SupplierInvoiceCart;
-use App\Marketplace\Cart\SupplierInvoiceCartLine;
-use App\Marketplace\Query\Marketplace\MarketplaceQuery;
+use App\Trade\Marketplace\Cart\DraftSupplierInvoiceLine;
+use App\Trade\Marketplace\Cart\SupplierInvoiceCart;
+use App\Trade\Marketplace\Cart\SupplierInvoiceCartLine;
+use App\Trade\Marketplace\Query\Marketplace\MarketplaceQuery;
 use Brick\Math\BigDecimal;
 
 class SupplierInvoiceCartService

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Sales\Enum;
+namespace App\Trade\Sale\Enum;
 
 enum PaymentMethod: int
 {

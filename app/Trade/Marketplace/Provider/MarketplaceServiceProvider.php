@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Marketplace\Provider;
+namespace App\Trade\Marketplace\Provider;
 
-use App\Marketplace\Repository\ExpenseRepository;
+use App\Trade\Marketplace\Repository\ExpenseRepository;
 use Illuminate\Support\ServiceProvider;
 
 class MarketplaceServiceProvider extends ServiceProvider

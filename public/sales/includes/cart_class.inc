@@ -15,7 +15,7 @@ use App\Finance\Tax\Entity\TaxSetting;
 use App\Finance\Tax\Repository\TaxRepository;
 use App\Finance\Tax\Service\TaxService;
 use App\Finance\Tax\ValueObject\TaxBreakdown;
-use App\Marketplace\Collection\ExpenseCollection;
+use App\Trade\Marketplace\Collection\ExpenseCollection;
 
 /* Definition of the cart class
 this class can hold all the information for:
@@ -848,7 +848,7 @@ class line_details
 
     public array $additional_data = [];
 
-    /** @var \App\Marketplace\Collection\ExpenseCollection|\App\Marketplace\Entity\Expense[] */
+    /** @var \App\Trade\Marketplace\Collection\ExpenseCollection|\App\Trade\Marketplace\Entity\Expense[] */
     public ExpenseCollection $marketplace_expenses;
 
 	function __construct(
