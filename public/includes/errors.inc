@@ -22,41 +22,61 @@ function fa_trigger_error($msg, $error_level=E_USER_NOTICE)
 
 function get_backtrace($html = false, $skip=0, $trace=null)
 {
-	$str = '';
-	if ($html) $str .= '<table border=0>';
 	$trace ??= debug_backtrace();
 
-	foreach($trace as $trn => $tr) {
-		if ($trn < $skip) continue;
-		if ($html) $str .= '<tr><td>';
-		if (isset($tr['file']) && isset($tr['line']))
-			$str .= $tr['file'].':'.$tr['line'].': ';
-		if ($html) $str .= '</td><td>';
-		if (isset($tr['type'])) {
-	 		if($tr['type'] == '::') {
-				$str .= $tr['class'].'::';
-			} else if($tr['type'] == '->') {
-				$str .= '('.$tr['class'].' Object)'.'->';
-			}
+	if (!$html) {
+		$lines = [];
+		foreach ($trace as $i => $frame) {
+			if ($i < $skip) continue;
+			$location = isset($frame['file']) ? "{$frame['file']}:{$frame['line']}" : '[internal]';
+			$call = isset($frame['class'])
+				? $frame['class'] . $frame['type'] . $frame['function']
+				: $frame['function'];
+			$lines[] = "#{$i} {$location} {$call}()";
 		}
-		$str .= $tr['function'].'(';
-		
-		if(isset($tr['args']) && is_array($tr['args'])) {
-			$args = array();
-			foreach($tr['args'] as $n=>$a) {
-				if (is_object($tr['args'][$n]))
-					$args[$n] = "(".get_class($tr['args'][$n])." Object)";
-				elseif (is_array($tr['args'][$n]))
-					$args[$n] = "(Array[".count($tr['args'][$n])."])";
-				else
-					$args[$n] = "'".$tr['args'][$n]."'";
-			}
-			$str .= implode(',',$args);
-		}
-		$str .= ')</td>';
+		return implode("\n", $lines);
 	}
 
-	if ($html) $str .= '</tr></table>';
+	$root = function_exists('base_path') ? base_path() . '/' : '';
+
+	$str = '<div style="text-align:left;font-family:ui-monospace,monospace;font-size:11px;line-height:1.5;margin-top:10px;border-top:1px solid rgba(204,51,0,.2);padding-top:8px;">';
+
+	foreach ($trace as $i => $frame) {
+		if ($i < $skip) continue;
+
+		$file    = $frame['file'] ?? null;
+		$line    = $frame['line'] ?? null;
+		$isVendor = $file && str_contains($file, '/vendor/');
+		$shortFile = $file ? ltrim(str_replace($root, '', $file), '/') : '[internal]';
+
+		$call = isset($frame['class'])
+			? $frame['class'] . $frame['type'] . $frame['function']
+			: $frame['function'];
+
+		$opacity     = $isVendor ? '0.4' : '1';
+		$borderColor = $isVendor ? 'transparent' : '#cc3300';
+		$bg          = $isVendor ? 'transparent' : 'rgba(204,51,0,0.05)';
+
+		$str .= "<div style=\"display:flex;gap:10px;padding:4px 8px;margin-bottom:1px;"
+		      . "border-left:2px solid {$borderColor};background:{$bg};opacity:{$opacity};\">";
+
+		$str .= "<span style=\"flex-shrink:0;width:26px;color:#aaa;font-size:10px;padding-top:1px;\">#{$i}</span>";
+
+		$str .= "<div style=\"flex:1;min-width:0;\">";
+
+		if ($file) {
+			$dir      = htmlspecialchars(dirname($shortFile));
+			$basename = htmlspecialchars(basename($shortFile));
+			$lineStr  = $line ? "<span style=\"color:#cc3300;font-weight:600;\">:{$line}</span>" : '';
+			$str .= "<div style=\"color:#777;\">{$dir}/<span style=\"color:#333;font-weight:500;\">{$basename}</span>{$lineStr}</div>";
+		}
+
+		$str .= "<div style=\"color:#222;\">" . htmlspecialchars($call) . "()</div>";
+
+		$str .= "</div></div>";
+	}
+
+	$str .= '</div>';
 	return $str;
 }
 
