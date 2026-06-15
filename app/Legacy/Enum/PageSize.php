@@ -2,8 +2,8 @@
 
 namespace App\Legacy\Enum;
 
-enum PageSize: int
+enum PageSize: string
 {
-    case Letter = 0;
-    case A4 = 1;
+    case Letter = 'Letter';
+    case A4 = 'A4';
 }

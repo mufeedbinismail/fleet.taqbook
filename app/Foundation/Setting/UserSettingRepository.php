@@ -158,7 +158,7 @@ class UserSettingRepository extends Repository
 
     public function pageSizeIdx(): PageSize
     {
-        return PageSize::from((int) $this->items['page_size']);
+        return PageSize::from($this->items['page_size']);
     }
 
     public function showHints(): bool
