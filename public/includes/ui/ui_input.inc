@@ -851,17 +851,17 @@ function unit_amount_cells($label, $name, $init=null, $params=null, $post_label=
 	amount_cells_ex($label, $name, 15, 15, $init, $params, $post_label, $dec+2);
 }
 
-function amount_row($label, $name, $init=null, $params=null, $post_label=null, $dec=null)
+function amount_row($label, $name, $init=null, $params=null, $post_label=null, $dec=null, $readonly=false)
 {
 	echo "<tr>";
-	amount_cells($label, $name, $init, $params, $post_label, $dec);
+	amount_cells($label, $name, $init, $params, $post_label, $dec, $readonly);
 	echo "</tr>\n";
 }
 
-function small_amount_row($label, $name, $init=null, $params=null, $post_label=null, $dec=null)
+function small_amount_row($label, $name, $init=null, $params=null, $post_label=null, $dec=null, $readonly=false)
 {
 	echo "<tr>";
-	small_amount_cells($label, $name, $init, $params, $post_label, $dec);
+	small_amount_cells($label, $name, $init, $params, $post_label, $dec, $readonly);
 	echo "</tr>\n";
 }
 
@@ -897,9 +897,9 @@ function small_qty_row($label, $name, $init=null, $params=null, $post_label=null
 
 //-----------------------------------------------------------------------------------
 
-function small_amount_cells($label, $name, $init=null, $params=null, $post_label=null, $dec=null)
+function small_amount_cells($label, $name, $init=null, $params=null, $post_label=null, $dec=null, $readonly=false)
 {
-	amount_cells_ex($label, $name, 7, 12, $init, $params, $post_label, $dec);
+	amount_cells_ex($label, $name, 7, 12, $init, $params, $post_label, $dec, $readonly);
 }
 
 //-----------------------------------------------------------------------------------
