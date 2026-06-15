@@ -26,8 +26,6 @@ function page_footer($no_menu=false, $is_index=false)
 		var $edits
 	</script>";
 
-   	add_user_js_data();
-
 	if ($sql_queries) {
 		div_start('footer_debug');
 		 echo "<div class='note_msg'>$sql_queries</div>";

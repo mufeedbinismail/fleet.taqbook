@@ -55,6 +55,8 @@ function page_header($title, $no_menu=false, $is_index=false, $onload="", $js=""
 
 	$theme = user_theme();
 
+	add_user_js_data();
+
 	if ($SysPrefs->help_base_url != null && $SysPrefs->use_popup_windows && $js == '')
 	{
 		if (!function_exists('get_js_open_window'))
