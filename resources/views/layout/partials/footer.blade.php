@@ -4,7 +4,7 @@
     );
 @endphp
         <script type="text/javascript">
-            @foreach($js_lib as $js) {{!! $js . "\n" !!}} @endforeach
+            @foreach($js_lib as $js){!! $js . "\n" !!}@endforeach
         </script>
         @yield('scripts')
     </body>
