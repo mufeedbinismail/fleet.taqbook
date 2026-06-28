@@ -44,6 +44,7 @@ function void_transaction($type, $type_no, $date_, $memo_)
 		case ST_CUSTPAYMENT : // it's a customer payment
 			if (!check_void_bank_trans($type, $type_no))
 				return __('This transaction cannot be voided because the operation would decrease account balance below allowed limit in some point of account history.');
+		case ST_MKTCUSTPAYMENT : // it's a marketplace customer payment (no bank leg)
 		case ST_SALESINVOICE : // it's a customer invoice
  			if ($type == ST_SALESINVOICE && is_cust_invoice_credited($type_no))
 				return __('This invoice cannot be voided because it was already credited.');

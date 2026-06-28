@@ -113,8 +113,10 @@ function copy_link($row)
 
 function prt_link($row)
 {
-  	if ($row['type'] == ST_CUSTPAYMENT || $row['type'] == ST_BANKDEPOSIT) 
+  	if ($row['type'] == ST_CUSTPAYMENT || $row['type'] == ST_BANKDEPOSIT)
 		return print_document_link($row['trans_no']."-".$row['type'], __("Print Receipt"), true, ST_CUSTPAYMENT, ICON_PRINT);
+  	elseif ($row['type'] == ST_MKTCUSTPAYMENT) // marketplace setoff: no print document defined
+		return '';
   	elseif ($row['type'] == ST_BANKPAYMENT) // bank payment printout not defined yet.
 		return '';
  	else

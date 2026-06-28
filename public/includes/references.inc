@@ -33,6 +33,7 @@ $GLOBALS['refline_options'] = array(
 	ST_BANKTRANSFER => array('date', 'user'),
 	ST_SUPPAYMENT => array('date', 'user'),
 	ST_CUSTPAYMENT => array('date', 'user'),
+	ST_MKTCUSTPAYMENT => array('date', 'user'),
 
 	ST_SALESORDER => array('date', 'customer', 'branch', 'user', 'pos'),
 	ST_SALESQUOTE => array('date', 'customer', 'branch', 'user', 'pos'),

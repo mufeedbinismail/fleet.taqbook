@@ -82,6 +82,7 @@ function get_counterparty_name($trans_type, $trans_no, $full=true)
 		case ST_SALESINVOICE :
 		case ST_CUSTCREDIT :
 		case ST_CUSTPAYMENT :
+		case ST_MKTCUSTPAYMENT :
 		case ST_CUSTDELIVERY :
 			$sql = "SELECT trans.debtor_no as person_id, debtor.name as name
 			FROM ".TB_PREF."debtor_trans trans, ".TB_PREF."debtors_master debtor
@@ -193,6 +194,7 @@ function get_systype_db_info($type)
         case     ST_SALESINVOICE : return array(TB_PREF."debtor_trans", "type", "trans_no", "reference", "tran_date");
         case     ST_CUSTCREDIT   : return array(TB_PREF."debtor_trans", "type", "trans_no", "reference", "tran_date");
         case     ST_CUSTPAYMENT  : return array(TB_PREF."debtor_trans", "type", "trans_no", "reference", "tran_date");
+        case     ST_MKTCUSTPAYMENT : return array(TB_PREF."debtor_trans", "type", "trans_no", "reference", "tran_date");
         case     ST_CUSTDELIVERY : return array(TB_PREF."debtor_trans", "type", "trans_no", "reference", "tran_date");
         case     ST_LOCTRANSFER  : return array(TB_PREF."stock_moves", "type", "trans_no", "reference", "tran_date");
         case     ST_INVADJUST    : return array(TB_PREF."stock_moves", "type", "trans_no", "reference", "tran_date");

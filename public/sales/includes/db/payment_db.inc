@@ -250,6 +250,23 @@ function void_customer_payment($type, $type_no)
 	commit_transaction();
 }
 
+//-------------------------------------------------------------------------------------------------
+
+function void_marketplace_customer_setoff($type, $type_no)
+{
+	begin_transaction();
+	void_gl_trans($type, $type_no, true);
+	void_cust_allocations($type, $type_no);
+	void_customer_trans($type, $type_no);
+
+	if (exists_supp_trans($type, $type_no)) {
+		void_supp_allocations($type, $type_no);
+		void_supp_trans($type, $type_no);
+	}
+
+	commit_transaction();
+}
+
 /*
 	Retrieve bank charge amount from GL postings for customer payment.
 	. Bank charge is not stored explicitly in database as of 2.3.xx

@@ -90,6 +90,8 @@ function get_customer_trans_view_str($type, $trans_no, $label="", $icon=false,
 		$viewer .= "view_credit.php";
 	elseif ($type == ST_CUSTPAYMENT)
 		$viewer .= "view_receipt.php";
+	elseif ($type == ST_MKTCUSTPAYMENT)
+		$viewer .= "view_marketplace_receipt.php";
 	elseif ($type == ST_CUSTDELIVERY)
 		$viewer .= "view_dispatch.php";
 	elseif ($type == ST_SALESORDER || $type == ST_SALESQUOTE)
