@@ -19,6 +19,8 @@ class marketplaces_app extends application
 		$this->add_lapp_function(0, __("&Invoice Against Sales Delivery"),
 			"sales/inquiry/sales_deliveries_view.php?Marketplace=Yes&OutstandingOnly=1", 'SA_MP_SALESINVOICE', MENU_TRANSACTION);
 
+        $this->add_rapp_function(0, __("Customer &Payments"),
+            "marketplace/marketplace_customer_settlement.php?New=1", 'SA_MP_SALESPAYMNT', MENU_TRANSACTION);
 		$this->add_rapp_function(0, __("Customer &Credit Notes"),
 			"sales/credit_note_entry.php?NewCredit=Yes&Marketplace=Yes", 'SA_MP_SALESCREDIT', MENU_TRANSACTION);
         $this->add_rapp_function(0, "","");
