@@ -9,6 +9,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
+
+use App\Shared\ValueObject\TypedId;
+use App\Trade\Shared\Enum\CustomerTransactionSource;
+
 $GLOBALS['page_security'] = 'SA_SALESTRANSVIEW';
 require_once __DIR__ . "/../../includes/db_pager.inc";
 require_once __DIR__ . "/../../includes/session.inc";
@@ -92,6 +96,18 @@ function edit_link($row)
 
 	if ($page_nested)
 		return '';
+
+	// Marketplace customer payments are edited on the marketplace screen rather than
+	// the standard customer payment screen.
+	if (
+        check_value('is_marketplace_trans')
+        && $row['type'] == ST_MKTCUSTPAYMENT
+        && $row['source'] == CustomerTransactionSource::MarketplaceManual->value
+    ) {
+		$id = TypedId::make($row['type'], $row['trans_no']);
+		return pager_link(__("Edit"),
+			"/marketplace/marketplace_customer_settlement.php?ModifyPayment=".$id->toString(), ICON_EDIT);
+	}
 
 	return $row['type'] == ST_CUSTCREDIT && $row['order_'] ? '' : 	// allow  only free hand credit notes edition
 			trans_editor_link($row['type'], $row['trans_no']);

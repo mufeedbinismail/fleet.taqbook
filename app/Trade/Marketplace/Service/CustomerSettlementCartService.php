@@ -6,16 +6,66 @@ use App\Trade\Marketplace\Cart\CustomerSettlementCart;
 use App\Trade\Shared\Collection\DraftAllocationLineCollection;
 use App\Trade\Marketplace\Query\Marketplace\MarketplaceQuery;
 use App\Trade\Sale\Repository\CustomerRepository;
+use App\Trade\Sale\Repository\CustomerTransRepository;
 use App\Shared\DTO\ValidationResult;
+use App\Shared\ValueObject\TypedId;
 use App\Trade\Marketplace\Repository\CustAllocRepository;
 
 class CustomerSettlementCartService
 {
     public function __construct(
-        private MarketplaceQuery       $marketplaceQuery,
-        private CustAllocRepository    $custAllocRepository,
-        private CustomerRepository     $customerRepository
+        private MarketplaceQuery        $marketplaceQuery,
+        private CustAllocRepository     $custAllocRepository,
+        private CustomerRepository      $customerRepository,
+        private CustomerTransRepository $customerTransRepository
     ) {}
+
+    public function loadForEdit(TypedId $id): CustomerSettlementCart
+    {
+        $old = $this->customerTransRepository->find($id);
+
+        if (!$old) {
+            throw new \RuntimeException("Marketplace settlement {$id->toString()} not found.");
+        }
+
+        $cart = CustomerSettlementCart::fromDocument($old);
+
+        $this->setBranch($cart, $old->branchId);
+        $this->resolveMarketplaceAccounts($cart);
+        $this->refreshLines($cart);
+
+        return $cart;
+    }
+
+    /**
+     * Confirm the settlement being edited has not been changed (or voided) by another
+     * session since it was loaded: same marketplace, same customer, same total and same
+     * allocated amount. Must run inside the write transaction so the locked read is held.
+     */
+    public function validateEditFreshness(CustomerSettlementCart $cart): ValidationResult
+    {
+        $fresh = $this->customerTransRepository->find($cart->transId, lock: true);
+
+        if (!$fresh) {
+            return ValidationResult::error(null, __('This settlement no longer exists. You cannot modify this settlement anymore.'));
+        }
+
+        // The settlement is unchanged when its marketplace, customer, total and
+        // allocated amount all still match what was loaded.
+        $old = $cart->old;
+        $unchanged = $fresh->customerId === $old->customerId
+            && $fresh->marketplaceId === $old->marketplaceId
+            && $fresh->total->isEqualTo($old->total)
+            && $fresh->allocated->isEqualTo($old->allocated);
+
+        if (!$unchanged) {
+            return ValidationResult::error(null, __(
+                'This settlement changed since the page was loaded. Reload the page and try again.'
+            ));
+        }
+
+        return ValidationResult::success();
+    }
 
     /**
      * Set the customer on the cart, resolve its receivable account (via its default
@@ -124,6 +174,11 @@ class CustomerSettlementCartService
             }
         }
 
-        return ValidationResult::success();
+        // On edit, confirm the settlement itself hasn't shifted (or been voided) under us.
+        if ($cart->isEdit()) {
+            return $this->validateEditFreshness($cart);
+        } else {
+            return ValidationResult::success();
+        }
     }
 }

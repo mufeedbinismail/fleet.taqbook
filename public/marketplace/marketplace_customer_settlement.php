@@ -19,7 +19,9 @@ use App\Shared\Enum\SystemType;
 use App\Shared\ValueObject\DomainDateTime;
 use App\Shared\ValueObject\TypedId;
 
-$_SESSION['page_title'] = __('Marketplace Customer Settlement');
+$_SESSION['page_title'] = isset($_GET['ModifyPayment'])
+    ? __('Edit Marketplace Customer Settlement')
+    : __('Marketplace Customer Settlement');
 
 mktpl_cs_render_page();
 
@@ -35,7 +37,7 @@ function mktpl_cs_render_page(): void
     echo '<br>';
     mktpl_cs_render_allocations($_SESSION['mktpl_cs']);
     echo '<br>';
-    mktpl_cs_render_footer();
+    mktpl_cs_render_footer($_SESSION['mktpl_cs']);
     end_form();
     mktpl_cs_render_reactive_js();
     end_page();
@@ -58,6 +60,8 @@ function mktpl_cs_handle_page_load(): void
     if (isset($_GET['New'])) {
         $_SESSION['mktpl_cs'] = CustomerSettlementCart::draft(SystemType::MarketplaceCustomerPayment);
         mktpl_cs_copy_from_cart($_SESSION['mktpl_cs']);
+    } elseif (isset($_GET['ModifyPayment'])) {
+        mktpl_cs_load_for_edit($_GET['ModifyPayment']);
     }
 
     if (!isset($_SESSION['mktpl_cs'])) {
@@ -68,6 +72,32 @@ function mktpl_cs_handle_page_load(): void
     check_cart_edit_conflict(get_post('cartId'), $_SESSION['mktpl_cs']->cartId);
 
     mktpl_cs_handle_post_back($_SESSION['mktpl_cs']);
+}
+
+// ---------------------------------------------------------------------------
+
+function mktpl_cs_load_for_edit(string $serializedId): void
+{
+    $id = TypedId::tryFromString($serializedId);
+    if (!$id) {
+        display_error(__('The settlement you are trying to edit could not be loaded. The ID provided is invalid.'));
+        display_footer_exit();
+    }
+
+    try {
+        $cart = app(CustomerSettlementCartService::class)->loadForEdit($id);
+    } catch (\Throwable $e) {
+        display_error(__('The settlement you are trying to edit could not be loaded.'));
+        display_footer_exit();
+    }
+
+    if ($cart->old->source != CustomerTransactionSource::MarketplaceManual) {
+        display_error("This settlement cannot be edited from here because it was created from elsewhere");
+        display_footer_exit();
+    }
+
+    $_SESSION['mktpl_cs'] = $cart;
+    mktpl_cs_copy_from_cart($cart);
 }
 
 // ---------------------------------------------------------------------------
@@ -200,7 +230,8 @@ function mktpl_cs_can_process(CustomerSettlementCart $cart): ValidationResult
     if (!is_date_in_fiscalyear($cart->transDate->toUserDateString())) {
         return ValidationResult::error('transDate', __('The entered date is out of fiscal year or is closed for further data entry.'));
     }
-    if (!check_reference($cart->reference, $cart->transId->type->value)) {
+    // The reference is fixed on edit, so only validate uniqueness for a new settlement.
+    if (!$cart->isEdit() && !check_reference($cart->reference, $cart->transId->type->value)) {
         return ValidationResult::error('reference', null);
     }
     if ($cart->amount->isNegativeOrZero()) {
@@ -238,7 +269,13 @@ function mktpl_cs_render_header(CustomerSettlementCart $cart): void
     date_row(__('Date:'), 'transDate', '', true, 0, 0, 0, null, true);
 
     table_section(2);
-    ref_row(__('Reference:'), 'reference', '', null, false, $cart->transId->type->value, ['date' => get_post('transDate')]);
+    if ($cart->isEdit()) {
+        // Reference is immutable on edit.
+        label_row(__('Reference:'), e($cart->reference));
+        hidden('reference', $cart->reference);
+    } else {
+        ref_row(__('Reference:'), 'reference', '', null, false, $cart->transId->type->value, ['date' => get_post('transDate')]);
+    }
     amount_row(__('Allocated to Invoices:'), 'alloc_total');
     amount_row(__('Payment Amount:'), 'amount', null, null, null, null, true);
 
@@ -303,14 +340,14 @@ function mktpl_cs_render_allocations(CustomerSettlementCart $cart): void
 
 // ---------------------------------------------------------------------------
 
-function mktpl_cs_render_footer(): void
+function mktpl_cs_render_footer(CustomerSettlementCart $cart): void
 {
     start_table(TABLESTYLE2, "width='60%'");
     textarea_row(__('Memo:'), 'memo', null, 50, 4);
     end_table(1);
 
     div_start('controls');
-    submit_center_first('Submit', __('Post Settlement'), '', 'default');
+    submit_center_first('Submit', $cart->isEdit() ? __('Update Settlement') : __('Post Settlement'), '', 'default');
     submit_center_last('Cancel', __('Cancel'));
     div_end();
 }

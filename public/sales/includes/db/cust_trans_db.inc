@@ -439,7 +439,8 @@ function get_sql_for_customer_inquiry(
 		Sum(line.quantity-line.qty_done) AS Outstanding,
 		Sum(line.qty_done) AS HasChild,
 		prep_amount,
-		trans.effect AS effect
+		trans.effect AS effect,
+        trans.source
 		FROM "
 			.TB_PREF."debtor_trans as trans
 			LEFT JOIN ".TB_PREF."debtor_trans_details as line

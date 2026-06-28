@@ -25,9 +25,25 @@ function write_marketplace_customer_setoff(
     $transType  = $cart->transId->type->value;
     $date       = $cart->transDate->toUserDateString();
     $amount     = MoneyFactory::value($cart->amount);
+    $isEdit     = $cart->isEdit();
     $transNo    = (int) $cart->transId->id;
 
     begin_transaction();
+
+    // On edit, unwind the prior postings before rewriting in place. The customer
+    // and supplier rows keep their (type, trans_no); GL, allocations and the paired
+    // supplier row are rebuilt from the cart's current state. The reference never
+    // changes on edit, so it is neither re-validated nor re-saved.
+    if ($isEdit) {
+        delete_comments($transType, $transNo);
+        void_gl_trans($transType, $transNo, true);
+        void_cust_allocations($transType, $transNo, $date);
+        if (exists_supp_trans($transType, $transNo)) {
+            void_supp_allocations($transType, $transNo, $date);
+            clear_supp_trans($transType, $transNo);
+        }
+    }
+
     // 1) Customer payment row (CR AR; effect Decrease marks it as an AR decrease).
     $transNo = write_customer_trans(
         trans_type:     $transType,
@@ -79,7 +95,9 @@ function write_marketplace_customer_setoff(
     update_debtor_trans_allocation($transType, $transNo, $cart->customerId);
 
     add_comments($transType, $transNo, $date, $cart->memo);
-    $Refs->save($transType, $transNo, $cart->reference);
+    if (!$isEdit) {
+        $Refs->save($transType, $transNo, $cart->reference);
+    }
     commit_transaction();
 
     return TypedId::make($transType, $transNo);
