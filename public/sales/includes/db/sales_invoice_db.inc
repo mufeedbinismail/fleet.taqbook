@@ -5,9 +5,16 @@ use App\Finance\Support\MoneyFactory;
 use App\Finance\Tax\Collection\TaxableItemCollection;
 use App\Inventory\Repository\ItemRepository;
 use App\Trade\Marketplace\Repository\ExpenseRepository;
+use App\Trade\Marketplace\Service\CustomerSettlementCartService;
 use App\Trade\Sale\Enum\PaymentMethod;
 use App\Trade\Shared\Enum\CustomerTransactionSource;
 use App\Shared\Enum\TransactionEffect;
+use App\Shared\ValueObject\DomainDateTime;
+use App\Shared\ValueObject\TypedId;
+use App\Trade\Marketplace\Cart\CustomerSettlementCart;
+
+require_once __DIR__ . '/../../../purchasing/includes/purchasing_db.inc';
+require_once __DIR__ . '/../../../marketplace/includes/marketplace_customer_settlement_db.inc';
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
@@ -274,13 +281,62 @@ function write_sales_invoice(&$invoice)
 				update_debtor_trans_allocation(ST_SALESINVOICE, $invoice_no, $invoice->customer_id);
 				update_debtor_trans_allocation(ST_CUSTPAYMENT, $pmtno, $invoice->customer_id);
 			}
-		}
+		} else if (
+            $invoice->payment_method_id == PaymentMethod::MarketplaceSetoff->value
+            && $invoice->marketplace_id
+            && $to_allocate != 0
+        ) {
+            write_invoice_marketplace_setoff($invoice, $invoice_no, $to_allocate, $date_, $branch_data, $marketplace_data);
+        }
 	}
 	reallocate_payments($invoice_no, ST_SALESINVOICE, $date_, $to_allocate, $allocs, $invoice->customer_id);
 
 	commit_transaction();
 
 	return $invoice_no;
+}
+
+//-----------------------------------------------------------------------------
+//	Marketplace auto-setoff at invoice save.
+//
+//	Mirrors the manual settlement screen, but driven by the MarketplaceSetoff
+//	payment method instead of user entry: posts a hidden ST_MKTCUSTPAYMENT fully
+//	allocated to the invoice (CR AR / DR marketplace AP) plus its paired supplier
+//	row, sourced MarketplaceSetoff so void_sales_invoice can later recognise and
+//	unwind it. Runs within the caller's open transaction.
+//
+function write_invoice_marketplace_setoff(
+    Cart   $invoice,
+    int    $invoice_no,
+    float  $amount,
+    string $date_,
+    array  $branch_data,
+    array  $marketplace_data
+)
+{
+	global $Refs;
+
+	write_marketplace_customer_setoff(
+        CustomerSettlementCart::forAutoOffset(
+            TypedId::make(ST_SALESINVOICE, $invoice_no),
+            $invoice->reference,
+            DomainDateTime::fromUserDateString($date_),
+            (int) $invoice->customer_id,
+            (int) $invoice->Branch,
+            $branch_data['receivables_account'],
+            (int) $invoice->marketplace_id,
+            (int) $marketplace_data['supplier_id'],
+            $marketplace_data['payable_account'],
+            MoneyFactory::of($amount, get_customer_currency($invoice->customer_id)),
+            TypedId::make(ST_MKTCUSTPAYMENT),
+            $Refs->get_next(ST_MKTCUSTPAYMENT, null, array(
+                'customer' => $invoice->customer_id,
+                'branch'   => $invoice->Branch,
+                'date'     => $date_,
+            )),
+        ),
+        CustomerTransactionSource::MarketplaceSetoff
+    );
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -399,9 +455,72 @@ function process_marketplace_expenses(
 
 //--------------------------------------------------------------------------------------------------
 
+/*
+	Locate the hidden marketplace auto-setoff payment that fully clears a given sales
+	invoice. Returns its trans_no, or null when no such payment exists. To qualify the
+	payment must be a MarketplaceSetoff-sourced marketplace customer payment that is
+	fully allocated and stands in a strict 1:1 allocation with the invoice (its only
+	allocation is to this invoice, and the invoice's only allocation is from it).
+	Anything looser — a manual settlement (different source), a partial or shared
+	allocation — is left for the user to handle and never auto-voided.
+*/
+function get_invoice_marketplace_setoff_payment($invoice_no)
+{
+	$sql = (
+        "SELECT
+            p.trans_no
+		FROM ".TB_PREF."cust_allocations a
+		JOIN ".TB_PREF."debtor_trans p
+			ON p.type = a.trans_type_from
+            AND p.trans_no = a.trans_no_from
+            AND p.debtor_no = a.person_id
+		WHERE a.trans_type_to = ".ST_SALESINVOICE."
+			AND a.trans_no_to = ".db_escape($invoice_no)."
+			AND a.trans_type_from = ".ST_MKTCUSTPAYMENT."
+			AND p.source = ".CustomerTransactionSource::MarketplaceSetoff->value."
+			AND p.alloc = p.ov_amount
+			AND (
+                SELECT
+                    COUNT(*)
+                FROM ".TB_PREF."cust_allocations f
+				WHERE
+                    f.trans_type_from = ".ST_MKTCUSTPAYMENT."
+                    AND f.trans_no_from = p.trans_no
+            ) = 1
+			AND (
+                SELECT
+                    COUNT(*)
+                FROM ".TB_PREF."cust_allocations t
+				WHERE
+                    t.trans_type_to = ".ST_SALESINVOICE."
+                    AND t.trans_no_to = ".db_escape($invoice_no)."
+            ) = 1"
+    );
+	$row = db_fetch(db_query($sql, "Could not look up marketplace setoff payment for invoice"));
+	return $row ? (int) $row['trans_no'] : null;
+}
+
 function void_sales_invoice($type, $type_no)
 {
 	begin_transaction();
+
+	// Marketplace auto-setoff cascade: an invoice saved with MarketplaceSetoff carries a
+	// hidden, fully-allocated marketplace customer payment (source MarketplaceSetoff)
+	// standing in a strict 1:1 allocation with this invoice. Void it first so its AR/AP/GL
+	// and paired supplier row unwind cleanly; the void removes the allocation link, so the
+	// invoice's own void_cust_allocations below then finds nothing left to clear.
+	if ($type == ST_SALESINVOICE) {
+		$setoff_no = get_invoice_marketplace_setoff_payment($type_no);
+		if ($setoff_no !== null) {
+			$errorMsg = void_transaction(ST_MKTCUSTPAYMENT, $setoff_no, Today(), sprintf('Cascaded against invoice #%d', $type_no));
+            if ($errorMsg) {
+                display_error($errorMsg);
+                cancel_transaction();
+                return false;
+            }
+		}
+	}
+
 	void_bank_trans($type, $type_no, true);
 	void_gl_trans($type, $type_no, true);
 

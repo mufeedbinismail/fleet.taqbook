@@ -6,4 +6,5 @@ enum CustomerTransactionSource: int
 {
     case Manual            = 1;
     case MarketplaceManual = 2;
+    case MarketplaceSetoff = 3;
 }

@@ -62,6 +62,48 @@ class CustomerSettlementCart
         return $cart;
     }
 
+    public static function forAutoOffset(
+        TypedId        $originDocId,
+        string         $originDocReference,
+        DomainDateTime $transDate,
+        int            $customerId,
+        int            $branchId,
+        string         $receivableAccount,
+        int            $marketplaceId,
+        int            $supplierId,
+        string         $payableAccount,
+        Money          $amount,
+        TypedId        $offsetDocId,
+        string         $offsetDocReference
+
+    ): static
+    {
+        $cart = new static(
+            $offsetDocId,
+            $transDate,
+            DraftAllocationLineCollection::fromOne(new DraftAllocationLine(
+                transId:        $originDocId,
+                reference:      $originDocReference,
+                transDate:      $transDate,
+                total:          $amount,
+                allocated:      $amount->multipliedBy(0),
+                outstanding:    $amount,
+                thisAllocation: $amount,
+            ))
+        );
+
+        $cart->reference         = $offsetDocReference;
+        $cart->amount            = $amount;
+        $cart->customerId        = $customerId;
+        $cart->branchId          = $branchId;
+        $cart->receivableAccount = $receivableAccount;
+        $cart->marketplaceId     = $marketplaceId;
+        $cart->supplierId        = $supplierId;
+        $cart->payableAccount    = $payableAccount;
+
+        return $cart;
+    }
+
     public function isEdit(): bool
     {
         return $this->transId->isExisting();

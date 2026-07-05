@@ -278,10 +278,15 @@ if (isset($_GET['AddedID'])) {
 	set_focus('prtopt');
 
 	$row = db_fetch(get_allocatable_from_cust_transactions(null, $invoice, ST_SALESINVOICE));
-	if ($row !== false)
+	if ($row !== false && $marketplace_flg == '')
 		submenu_print(__("Print &Receipt"), $row['type'], $row['trans_no']."-".$row['type'], 'prtopt');
 
 	display_note(get_gl_view_str(ST_SALESINVOICE, $invoice, __("View the GL &Journal Entries for this Invoice")),0, 1);
+
+	// Marketplace invoices auto-post a hidden setoff payment; expose its GL journal too.
+	if ($marketplace_flg != '' && $row !== false) {
+		display_note(get_gl_view_str($row['type'], $row['trans_no'], __("View GL Entries for the &Payment")), 0, 1);
+	}
 
 	if ((isset($_GET['Type']) && $_GET['Type'] == 1) && $marketplace_flg == '')
 		submenu_option(__("Enter a &New Template Invoice"), 
@@ -290,7 +295,7 @@ if (isset($_GET['AddedID'])) {
 		submenu_option(__("Enter a &New Direct Invoice"),
 			"/sales/sales_order_entry.php?{$marketplace_flg}NewInvoice=0");
 
-	if ($row === false)
+	if ($row === false && $marketplace_flg == '')
 		submenu_option(__("Entry &customer payment for this invoice"), "/sales/customer_payments.php?SInvoice=".$invoice);
 
 	submenu_option(__("Add an Attachment"), "/admin/attachments.php?filterType=".ST_SALESINVOICE."&trans_no=$invoice");
@@ -764,7 +769,9 @@ function create_cart($type, $trans_no)
 	} else
 		$_SESSION['Items'] = new Cart($type, array($trans_no), false, $is_marketplace_trans);
 	if ($_SESSION['Items']->trans_type == ST_SALESINVOICE) {
-		$_SESSION['Items']->payment_method_id = PaymentMethod::Default->value;
+		$_SESSION['Items']->payment_method_id = $is_marketplace_trans
+            ? PaymentMethod::MarketplaceSetoff->value
+            : PaymentMethod::Default->value;
 	}
 	copy_from_cart();
 }
