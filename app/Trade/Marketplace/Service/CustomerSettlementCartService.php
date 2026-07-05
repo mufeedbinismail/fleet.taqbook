@@ -138,10 +138,23 @@ class CustomerSettlementCartService
 
     public function getFreshLines(CustomerSettlementCart $cart, bool $lock = false): DraftAllocationLineCollection
     {
+        $ignoreSelf = $cart->transId->isExisting() ? $cart->transId : null;
+
+        // A refund draws from open credit notes (allocators); a settlement from open
+        // invoices (allocatees). The cart's type is the single switch between the two.
+        if ($cart->isRefund()) {
+            return $this->custAllocRepository->getCreditNoteAllocators(
+                $cart->customerId,
+                $cart->marketplaceId,
+                $ignoreSelf,
+                $lock
+            );
+        }
+
         return $this->custAllocRepository->getInvoiceAllocatees(
             $cart->customerId,
             $cart->marketplaceId,
-            $cart->transId->isExisting() ? $cart->transId : null,
+            $ignoreSelf,
             $lock
         );
     }
@@ -156,20 +169,23 @@ class CustomerSettlementCartService
     {
         $fresh = $this->getFreshLines($cart, lock: true);
 
+        // Lines are invoices on a settlement and credit notes on a refund.
+        $doc = $cart->isRefund() ? __('Credit note') : __('Invoice');
+
         foreach ($cart->selectedLines() as $line) {
             $current = $fresh[$line->transId->toString()] ?? null;
 
             if (!$current) {
                 return ValidationResult::error(null, __(
-                    'Invoice #:n is no longer open for allocation. Reload the page and try again.',
-                    ['n' => $line->transId->id]
+                    ':doc #:n is no longer open for allocation. Reload the page and try again.',
+                    ['doc' => $doc, 'n' => $line->transId->id]
                 ));
             }
 
             if (!$current->total->isEqualTo($line->total) || !$current->allocated->isEqualTo($line->allocated)) {
                 return ValidationResult::error(null, __(
-                    'Invoice #:n changed since the page was loaded. Reload the page and try again.',
-                    ['n' => $line->transId->id]
+                    ':doc #:n changed since the page was loaded. Reload the page and try again.',
+                    ['doc' => $doc, 'n' => $line->transId->id]
                 ));
             }
         }

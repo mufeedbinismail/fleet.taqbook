@@ -19,11 +19,33 @@ use App\Shared\Enum\SystemType;
 use App\Shared\ValueObject\DomainDateTime;
 use App\Shared\ValueObject\TypedId;
 
-$_SESSION['page_title'] = isset($_GET['ModifyPayment'])
-    ? __('Edit Marketplace Customer Settlement')
-    : __('Marketplace Customer Settlement');
+// One screen serves both the customer settlement (payment against invoices) and its
+// mirror, the customer refund (credit notes applied to a refund). The mode comes from
+// the ?Refund flag on new entry, from the document type on edit, or from the active
+// cart on post-back. The cart carries the SystemType, so everything downstream keys
+// off $cart->isRefund() rather than re-reading the request.
+$mktpl_cs_is_refund = mktpl_cs_is_refund_request();
+
+$_SESSION['page_title'] = $mktpl_cs_is_refund
+    ? (isset($_GET['ModifyPayment']) ? __('Edit Marketplace Customer Refund') : __('Marketplace Customer Refund'))
+    : (isset($_GET['ModifyPayment']) ? __('Edit Marketplace Customer Settlement') : __('Marketplace Customer Settlement'));
 
 mktpl_cs_render_page();
+
+// ---------------------------------------------------------------------------
+
+function mktpl_cs_is_refund_request(): bool
+{
+    if (isset($_GET['Refund'])) {
+        return true;
+    }
+    if (isset($_GET['ModifyPayment'])) {
+        $id = TypedId::tryFromString($_GET['ModifyPayment']);
+        return $id && $id->type === SystemType::MarketplaceCustomerRefund;
+    }
+    // Post-backs carry no GET flag; fall back to the cart established on the prior request.
+    return isset($_SESSION['mktpl_cs']) && $_SESSION['mktpl_cs']->isRefund();
+}
 
 function mktpl_cs_render_page(): void
 {
@@ -58,7 +80,8 @@ function mktpl_cs_handle_page_load(): void
     }
 
     if (isset($_GET['New'])) {
-        $_SESSION['mktpl_cs'] = CustomerSettlementCart::draft(SystemType::MarketplaceCustomerPayment);
+        $transType = isset($_GET['Refund']) ? SystemType::MarketplaceCustomerRefund : SystemType::MarketplaceCustomerPayment;
+        $_SESSION['mktpl_cs'] = CustomerSettlementCart::draft($transType);
         mktpl_cs_copy_from_cart($_SESSION['mktpl_cs']);
     } elseif (isset($_GET['ModifyPayment'])) {
         mktpl_cs_load_for_edit($_GET['ModifyPayment']);
@@ -251,9 +274,18 @@ function mktpl_cs_can_process(CustomerSettlementCart $cart): ValidationResult
 
 function mktpl_cs_display_confirmation_and_exit(TypedId $transId): void
 {
-    display_notification_centered(sprintf(__('Marketplace customer settlement #%d has been saved.'), $transId->id));
-    display_note(get_gl_view_str($transId->type->value, $transId->id, __('&View the GL Journal Entries for this Settlement')), 1);
-    hyperlink_params(url()->current(), __('Enter Another Settlement'), 'New=1');
+    $isRefund = $transId->type === SystemType::MarketplaceCustomerRefund;
+
+    if ($isRefund) {
+        display_notification_centered(sprintf(__('Marketplace customer refund #%d has been saved.'), $transId->id));
+        display_note(get_gl_view_str($transId->type->value, $transId->id, __('&View the GL Journal Entries for this Refund')), 1);
+        hyperlink_params(url()->current(), __('Enter Another Refund'), 'New=1&Refund=1');
+    } else {
+        display_notification_centered(sprintf(__('Marketplace customer settlement #%d has been saved.'), $transId->id));
+        display_note(get_gl_view_str($transId->type->value, $transId->id, __('&View the GL Journal Entries for this Settlement')), 1);
+        hyperlink_params(url()->current(), __('Enter Another Settlement'), 'New=1');
+    }
+
     display_footer_exit();
 }
 
@@ -276,8 +308,8 @@ function mktpl_cs_render_header(CustomerSettlementCart $cart): void
     } else {
         ref_row(__('Reference:'), 'reference', '', null, false, $cart->transId->type->value, ['date' => get_post('transDate')]);
     }
-    amount_row(__('Allocated to Invoices:'), 'alloc_total');
-    amount_row(__('Payment Amount:'), 'amount', null, null, null, null, true);
+    amount_row($cart->isRefund() ? __('Allocated to Credit Notes:') : __('Allocated to Invoices:'), 'alloc_total');
+    amount_row($cart->isRefund() ? __('Refund Amount:') : __('Payment Amount:'), 'amount', null, null, null, null, true);
 
     end_outer_table();
 }
@@ -286,17 +318,23 @@ function mktpl_cs_render_header(CustomerSettlementCart $cart): void
 
 function mktpl_cs_render_allocations(CustomerSettlementCart $cart): void
 {
+    $isRefund = $cart->isRefund();
+
     div_start('allocations_panel');
-    display_heading(__('Eligible Invoices'));
+    display_heading($isRefund ? __('Eligible Credit Notes') : __('Eligible Invoices'));
 
     if (!$cart->customerId || !$cart->marketplaceId) {
-        display_note(__('Select a customer and a marketplace to see eligible invoices.'));
+        display_note($isRefund
+            ? __('Select a customer and a marketplace to see eligible credit notes.')
+            : __('Select a customer and a marketplace to see eligible invoices.'));
         div_end();
         return;
     }
 
     if ($cart->lines->isEmpty()) {
-        display_note(__('No eligible open invoices for this customer + marketplace.'));
+        display_note($isRefund
+            ? __('No eligible open credit notes for this customer + marketplace.')
+            : __('No eligible open invoices for this customer + marketplace.'));
         div_end();
         return;
     }
@@ -304,7 +342,7 @@ function mktpl_cs_render_allocations(CustomerSettlementCart $cart): void
     start_table(TABLESTYLE, "width='60%'");
     table_header([
         __('Allocate'),
-        __('Invoice #'),
+        $isRefund ? __('Credit Note #') : __('Invoice #'),
         __('Reference'),
         __('Date'),
         __('Total'),
@@ -346,8 +384,10 @@ function mktpl_cs_render_footer(CustomerSettlementCart $cart): void
     textarea_row(__('Memo:'), 'memo', null, 50, 4);
     end_table(1);
 
+    $noun = $cart->isRefund() ? __('Refund') : __('Settlement');
+
     div_start('controls');
-    submit_center_first('Submit', $cart->isEdit() ? __('Update Settlement') : __('Post Settlement'), '', 'default');
+    submit_center_first('Submit', $cart->isEdit() ? __('Update') . ' ' . $noun : __('Post') . ' ' . $noun, '', 'default');
     submit_center_last('Cancel', __('Cancel'));
     div_end();
 }

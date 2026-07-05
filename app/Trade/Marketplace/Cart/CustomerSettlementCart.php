@@ -109,6 +109,17 @@ class CustomerSettlementCart
         return $this->transId->isExisting();
     }
 
+    /**
+     * A refund (ST_MKTCUSTREFUND) is the mirror of a settlement (ST_MKTCUSTPAYMENT): its
+     * lines are open credit notes rather than open invoices, and its GL/allocation
+     * directions are reversed. The cart carries the type so the page and service can
+     * dispatch on it without a separate cart class.
+     */
+    public function isRefund(): bool
+    {
+        return $this->transId->type === SystemType::MarketplaceCustomerRefund;
+    }
+
     public function totalAllocated(): Money
     {
         return MoneyFactory::sum($this->lines->column('thisAllocation'));

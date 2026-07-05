@@ -23,6 +23,8 @@ class marketplaces_app extends application
             "marketplace/marketplace_customer_settlement.php?New=1", 'SA_MP_SALESPAYMNT', MENU_TRANSACTION);
 		$this->add_rapp_function(0, __("Customer &Credit Notes"),
 			"sales/credit_note_entry.php?NewCredit=Yes&Marketplace=Yes", 'SA_MP_SALESCREDIT', MENU_TRANSACTION);
+        $this->add_rapp_function(0, __("Customer Re&funds"),
+            "marketplace/marketplace_customer_settlement.php?New=1&Refund=1", 'SA_MP_SALESPAYMNT', MENU_TRANSACTION);
         $this->add_rapp_function(0, "","");
 		$this->add_rapp_function(0, __("Supplier &Fee Invoice"),
 			"marketplace/marketplace_supplier_invoice.php?New=1", 'SA_MP_SUPPINVOICE', MENU_TRANSACTION);

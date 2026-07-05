@@ -97,11 +97,12 @@ function edit_link($row)
 	if ($page_nested)
 		return '';
 
-	// Marketplace customer payments are edited on the marketplace screen rather than
-	// the standard customer payment screen.
+	// Marketplace customer payments and refunds are edited on the marketplace screen
+	// rather than the standard customer payment screen. Both share the same screen, which
+	// self-detects payment vs refund from the loaded document's type.
 	if (
         check_value('is_marketplace_trans')
-        && $row['type'] == ST_MKTCUSTPAYMENT
+        && ($row['type'] == ST_MKTCUSTPAYMENT || $row['type'] == ST_MKTCUSTREFUND)
         && $row['source'] == CustomerTransactionSource::MarketplaceManual->value
     ) {
 		$id = TypedId::make($row['type'], $row['trans_no']);
