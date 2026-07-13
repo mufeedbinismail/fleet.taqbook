@@ -133,6 +133,8 @@ function prt_link($row)
 		return print_document_link($row['trans_no']."-".$row['type'], __("Print Receipt"), true, ST_CUSTPAYMENT, ICON_PRINT);
   	elseif ($row['type'] == ST_MKTCUSTPAYMENT) // marketplace setoff: no print document defined
 		return '';
+  	elseif ($row['type'] == ST_MKTCUSTREFUND) // marketplace refund: no print document defined
+		return '';
   	elseif ($row['type'] == ST_BANKPAYMENT) // bank payment printout not defined yet.
 		return '';
  	else

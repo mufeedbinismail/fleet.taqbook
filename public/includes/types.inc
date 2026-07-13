@@ -23,6 +23,7 @@ define('ST_CUSTCREDIT',   \App\Shared\Enum\SystemType::CustomerCredit->value);
 define('ST_CUSTPAYMENT',  \App\Shared\Enum\SystemType::CustomerPayment->value);
 define('ST_CUSTDELIVERY', \App\Shared\Enum\SystemType::CustomerDelivery->value);
 define('ST_MKTCUSTPAYMENT', \App\Shared\Enum\SystemType::MarketplaceCustomerPayment->value);
+define('ST_MKTCUSTREFUND', \App\Shared\Enum\SystemType::MarketplaceCustomerRefund->value);
 
 define('ST_LOCTRANSFER',  \App\Shared\Enum\SystemType::LocTransfer->value);
 define('ST_INVADJUST',    \App\Shared\Enum\SystemType::InvAdjust->value);

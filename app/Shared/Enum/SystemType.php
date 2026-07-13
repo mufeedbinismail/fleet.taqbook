@@ -49,6 +49,7 @@ enum SystemType: int implements HasLabelContract
     case Cheque           = 92;  // ST_CHEQUE
 
     case MarketplaceCustomerPayment = 101; // ST_MKTCUSTPAYMENT
+    case MarketplaceCustomerRefund  = 102; // ST_MKTCUSTREFUND
 
     public function abbr(): ?string
     {
@@ -69,6 +70,7 @@ enum SystemType: int implements HasLabelContract
             self::CustomerCredit->value             => __("Customer Credit Note"),
             self::CustomerPayment->value            => __("Customer Payment"),
             self::MarketplaceCustomerPayment->value => __("Marketplace Customer Payment"),
+            self::MarketplaceCustomerRefund->value  => __("Marketplace Customer Refund"),
             self::CustomerDelivery->value           => __("Delivery Note"),
             self::LocTransfer->value                => __("Location Transfer"),
             self::InvAdjust->value                  => __("Inventory Adjustment"),
@@ -106,6 +108,7 @@ enum SystemType: int implements HasLabelContract
             self::CustomerCredit->value             => __("CN"),
             self::CustomerPayment->value            => __("CP"),
             self::MarketplaceCustomerPayment->value => __("MCP"),
+            self::MarketplaceCustomerRefund->value  => __("MCR"),
             self::CustomerDelivery->value           => __("DN"),
             self::LocTransfer->value                => __("IT"), // inventory transfer
             self::InvAdjust->value                  => __("IA"),

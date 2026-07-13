@@ -54,6 +54,7 @@ function exist_transaction($type, $type_no)
 		case ST_CUSTCREDIT : // it's a customer credit note
 		case ST_CUSTPAYMENT : // it's a customer payment
 		case ST_MKTCUSTPAYMENT : // it's a marketplace customer payment
+		case ST_MKTCUSTREFUND : // it's a marketplace customer refund
 		case ST_CUSTDELIVERY : // it's a customer dispatch
 			if (!exists_customer_trans($type, $type_no))
 				return false;

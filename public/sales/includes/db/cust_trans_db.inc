@@ -390,6 +390,7 @@ function post_void_customer_trans($type, $type_no)
 			void_customer_payment($type, $type_no);
 			break;
 		case ST_MKTCUSTPAYMENT :
+        case ST_MKTCUSTREFUND :
 			void_marketplace_customer_setoff($type, $type_no);
 			break;
 	}
@@ -482,6 +483,7 @@ function get_sql_for_customer_inquiry(
    		{
 			$sql .= " AND (trans.type = " . ST_CUSTPAYMENT
 					." OR trans.type = ".ST_MKTCUSTPAYMENT
+					." OR trans.type = ".ST_MKTCUSTREFUND
 					." OR trans.type = ".ST_BANKDEPOSIT." OR trans.type = ".ST_BANKPAYMENT.") ";
    		}
    		elseif ($filter == '4')
