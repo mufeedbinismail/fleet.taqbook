@@ -1,5 +1,8 @@
 <?php
 
+use App\Finance\Support\MoneyFactory;
+use App\Trade\Marketplace\Collection\ExpenseCollection;
+use App\Trade\Marketplace\Entity\Expense;
 use App\Trade\Sale\Enum\PaymentMethod;
 
 /**********************************************************************
@@ -116,7 +119,7 @@ function copy_to_cn()
 	$cart->ship_via = $_POST['ShipperID'];
 	$cart->dimension_id = $_POST['dimension_id'];
 	$cart->dimension2_id = $_POST['dimension2_id'];
-    $cart->marketplace_id = get_post('marketplace_id');
+    $cart->set_marketplace(get_post('marketplace_id'));
 	$cart->payment_method_id = !empty($_POST['payment_method_id']) ? (int)$_POST['payment_method_id'] : null;
 }
 
@@ -263,9 +266,25 @@ function handle_update_item()
 {
 	if ($_POST['UpdateItem'] != "" && check_item_data()) {
 		$_SESSION['Items']->update_cart_item($_POST['line_no'], input_num('qty'),
-			input_num('price'), input_num('Disc') / 100);
+			input_num('price'), input_num('Disc') / 100, '', collect_marketplace_expenses());
 	}
     line_start_focus();
+}
+
+//-----------------------------------------------------------------------------
+
+function collect_marketplace_expenses(): ExpenseCollection
+{
+    $marketplace_expenses = new ExpenseCollection();
+    foreach (($_POST['mkt_expense'] ?? []) as $uuid => $expense) {
+        $marketplace_expenses->add(Expense::draft(
+            $uuid,
+            $expense['stock_id'],
+            $expense['description'],
+            MoneyFactory::of(user_numeric($expense['amount']))
+        ));
+    }
+    return $marketplace_expenses;
 }
 
 //-----------------------------------------------------------------------------
@@ -285,7 +304,7 @@ function handle_new_item()
 		return;
 
 	add_to_order($_SESSION['Items'], $_POST['stock_id'], input_num('qty'),
-		input_num('price'), input_num('Disc') / 100);
+		input_num('price'), input_num('Disc') / 100, '', collect_marketplace_expenses());
     line_start_focus();
 }
 //-----------------------------------------------------------------------------

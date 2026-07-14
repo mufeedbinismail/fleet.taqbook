@@ -11,6 +11,12 @@
 ***********************************************************************/
 require_once __DIR__ . "/../../../includes/ui.inc";
 
+use App\Finance\Support\MoneyFactory;
+use App\Inventory\Repository\ItemRepository;
+use App\Trade\Marketplace\Collection\ExpenseCollection;
+use App\Trade\Marketplace\Entity\Expense;
+use Illuminate\Support\Str;
+
 // ------------------------------------------------------------------------------
 
 function display_credit_header(&$order)
@@ -127,11 +133,16 @@ function display_credit_header(&$order)
 
     if ($order->is_marketplace_trans) {
         if ($order->trans_no==0) {
-            marketplace_list_row(__("Marketplace"), 'marketplace_id', null, '-- select --', false, false, true);
+            marketplace_list_row(__("Marketplace"), 'marketplace_id', null, '-- select --', true, false, true);
         }
         else {
             hidden('marketplace_id', $order->marketplace_id);
             label_row(__("Marketplace"), get_marketplace_name($order->marketplace_id));
+        }
+
+        if ($order->marketplace_id != get_post('marketplace_id')) {
+            $order->change_marketplace(get_post('marketplace_id'));
+            $Ajax->activate('items_table');
         }
     }
 	// added dimensions
@@ -176,6 +187,27 @@ function display_credit_items($title, &$order)
 
     table_header($th);
 
+    $options = ['show_marketplace_cols' => $order->is_marketplace_trans];
+    $lines_added = count($order->line_items) > 0;
+
+    if ($options['show_marketplace_cols']) {
+        $marketplace = $order->marketplace_id
+            ? get_marketplace($order->marketplace_id)
+            : ['tax_included' => 0];
+        start_row('style="font-size: 0.85rem;"');
+        labelheader_cell("└───", "style='text-align: center;'");
+        labelheader_cell(__("Expense Description"), "style='text-align: center;'");
+        labelheader_cell('', "colspan=2");
+        labelheader_cell(__("Expense") . " " . ($marketplace['tax_included'] ? __("after tax") : __("before tax")), "style='text-align: center;'");
+        labelheader_cell(__("Tax Provision") . ($marketplace['tax_included'] ? __(" (included)") : __(" (extra)")), "style='text-align: center;'");
+        labelheader_cell('');
+        labelheader_cell('');
+        if ($lines_added) {
+            labelheader_cell('');
+        }
+        end_row();
+    }
+
     $subtotal = 0;
     $k = 0;  //row colour counter
 
@@ -205,17 +237,36 @@ function display_credit_items($title, &$order)
 				__('Remove line from document'));
 
     	    end_row();
+
+            if ($options['show_marketplace_cols'] && isset($line->marketplace_expenses)
+                && $line->marketplace_expenses->count() > 0)
+            {
+                foreach ($line->marketplace_expenses as $expense) {
+                    start_row('style="font-size: 0.85rem;"');
+                    label_cell("└───", "style='text-align: center;'");
+                    label_cell($expense->description);
+                    label_cell('', "colspan=2");
+                    amount_cell(MoneyFactory::value($expense->amount));
+                    amount_cell(MoneyFactory::value($expense->taxBreakdown->tax));
+                    label_cell('');
+                    label_cell('');
+                    if ($lines_added) {
+                        label_cell('');
+                    }
+                    end_row();
+                }
+            }
         }
         else
         {
-	    credit_edit_item_controls($order, $k, $line_no);
+	    credit_edit_item_controls($order, $k, $line_no, $options);
 	}
 
 	$subtotal += $line_total;
     }
 
     if ($id==-1)
-        credit_edit_item_controls($order, $k);
+        credit_edit_item_controls($order, $k, -1, $options);
 
 	$colspan = 6;
     $display_sub_total = price_format($subtotal);
@@ -237,17 +288,25 @@ function display_credit_items($title, &$order)
 
     label_row(__("Credit Note Total"), $display_total, "colspan=$colspan align=right","class='amount'", 2);
 
+    if ($options['show_marketplace_cols']) {
+        $market_cost = $order->get_total_marketplace_cost();
+        label_row(__("Marketplace Cost Reversal"), price_format($market_cost), "colspan=$colspan align=right", "align=right", 2);
+        label_row(__("Net Payable to Marketplace"), price_format(($subtotal + $_POST['ChargeFreightCost'] + $tax_total) - $market_cost), "colspan=$colspan align=right", "align=right", 2);
+    }
+
     end_table();
     div_end();
 }
 
 //---------------------------------------------------------------------------------
 
-function credit_edit_item_controls(&$order, $rowcounter, $line_no=-1)
+function credit_edit_item_controls(&$order, $rowcounter, $line_no=-1, $options=[])
 {
 	global $Ajax;
 	alt_table_row_color($rowcounter);
 	$id = find_submit('Edit');
+	$is_editing_old_line = $line_no != -1 && $line_no == $id;
+	$lines_added = count($order->line_items) > 0;
 
 	if ($line_no!=-1 && $line_no == $id)
 	{
@@ -309,6 +368,39 @@ function credit_edit_item_controls(&$order, $rowcounter, $line_no=-1)
 	}
 
 	end_row();
+
+    if (!empty($options['show_marketplace_cols'])) {
+        if ($is_editing_old_line) {
+            $expenses = $order->line_items[$line_no]->marketplace_expenses;
+        } else {
+            $expenses = new ExpenseCollection();
+            foreach (settings()->marketplaceExpenseItems() as $expense_item_id) {
+                $expense_item = app(ItemRepository::class)->findCachedByStockId($expense_item_id);
+                $expenses->add(Expense::draft(
+                    Str::uuid()->toString(),
+                    $expense_item_id,
+                    $expense_item->description,
+                    MoneyFactory::zero()
+                ));
+            }
+        }
+
+        foreach ($expenses as $expense) {
+            hidden("mkt_expense[{$expense->uuid}][stock_id]", $expense->stockId);
+            start_row('style="font-size: 0.85rem;"');
+            label_cell("└───", "style='text-align: center;'");
+            text_cells(null, "mkt_expense[{$expense->uuid}][description]", $expense->description, 45, 50, false, "", "", 'style="font-size: 0.85rem;"', true);
+            label_cell('', "colspan=2");
+            amount_cells(null, "mkt_expense[{$expense->uuid}][amount]", price_format(MoneyFactory::value($expense->amount)));
+            label_cell('');
+            label_cell('');
+            label_cell('');
+            if ($lines_added) {
+                label_cell('');
+            }
+            end_row();
+        }
+    }
 }
 
 
