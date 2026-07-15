@@ -27,7 +27,7 @@ class marketplaces_app extends application
             "marketplace/marketplace_customer_settlement.php?New=1&Refund=1", 'SA_MP_SALESPAYMNT', MENU_TRANSACTION);
         $this->add_rapp_function(0, "","");
 		$this->add_rapp_function(0, __("Supplier &Fee Invoice"),
-			"marketplace/marketplace_supplier_invoice.php?New=1", 'SA_MP_SUPPINVOICE', MENU_TRANSACTION);
+			"marketplace/marketplace_supplier_trans.php?type=".ST_SUPPINVOICE."&New=1", 'SA_MP_SUPPINVOICE', MENU_TRANSACTION);
 
 		$this->add_module(__("Inquiries and Reports"));
 		$this->add_lapp_function(1, __("Sales Order &Inquiry"),
@@ -36,7 +36,7 @@ class marketplaces_app extends application
 			"sales/inquiry/customer_inquiry.php?Marketplace=Yes", 'SA_MP_SALESTRANSVIEW', MENU_INQUIRY);
 
 		$this->add_rapp_function(1, __("Supplier &Fee Invoice Inquiry"),
-			"marketplace/marketplace_supplier_invoice_list.php", 'SA_MP_SUPPTRANSVIEW', MENU_INQUIRY);
+			"marketplace/marketplace_supplier_trans_list.php", 'SA_MP_SUPPTRANSVIEW', MENU_INQUIRY);
 
 		$this->add_module(__("Maintenance"));
 		$this->add_lapp_function(2, __("Add and Manage &Marketplaces"),

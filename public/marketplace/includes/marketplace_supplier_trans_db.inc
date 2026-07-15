@@ -4,20 +4,22 @@ use App\Finance\Support\MoneyFactory;
 use App\Finance\Tax\Collection\TaxableItemCollection;
 use App\Finance\Tax\Repository\TaxRepository;
 use App\Finance\Tax\Service\TaxService;
-use App\Trade\Marketplace\Cart\SupplierInvoiceCart;
-use App\Trade\Marketplace\Cart\SupplierInvoiceCartLine;
+use App\Trade\Marketplace\Cart\SupplierTransCart;
+use App\Trade\Marketplace\Cart\SupplierTransCartLine;
 use App\Trade\Shared\Enum\SupplierTransactionSource;
 use App\Shared\Enum\SystemType;
 use App\Shared\Enum\TransactionEffect;
+use App\Shared\Exception\ResourceNotFoundException;
+use App\Shared\ValueObject\TypedId;
 use Brick\Math\BigDecimal;
 use Illuminate\Support\Facades\DB;
 
-function read_marketplace_supplier_trans(int $transType, int $transNo): SupplierInvoiceCart
+function read_marketplace_supplier_trans(TypedId $transId): SupplierTransCart
 {
     $trans = DB::table('supp_trans as st')
-        ->leftJoin('marketplaces as m', 'm.supplier_id', '=', 'st.supplier_id')
-        ->where('st.type', $transType)
-        ->where('st.trans_no', $transNo)
+        ->join('marketplaces as m', 'm.supplier_id', '=', 'st.supplier_id')
+        ->where('st.type', $transId->type->value)
+        ->where('st.trans_no', $transId->id)
         ->select(
             'st.supplier_id',
             'st.tran_date',
@@ -28,11 +30,15 @@ function read_marketplace_supplier_trans(int $transType, int $transNo): Supplier
         )
         ->first();
 
+    if (!$trans) {
+        throw ResourceNotFoundException::for($transId->type->label(), $transId->id);
+    }
+
     $supplierId  = (int) $trans->supplier_id;
     $taxIncluded = (bool) $trans->tax_included;
 
-    $cart = new SupplierInvoiceCart(SystemType::from($transType));
-    $cart->transNo       = $transNo;
+    $cart = new SupplierTransCart($transId->type);
+    $cart->transNo       = $transId->id;
     $cart->supplierId    = $supplierId;
     $cart->marketplaceId = $trans->marketplace_id ? (string) $trans->marketplace_id : null;
     $cart->date          = $trans->tran_date;
@@ -44,8 +50,8 @@ function read_marketplace_supplier_trans(int $transType, int $transNo): Supplier
 
     $items = DB::table('supp_invoice_items as inv')
         ->leftJoin('stock_master as stock', 'stock.stock_id', '=', 'inv.stock_id')
-        ->where('inv.supp_trans_type', $transType)
-        ->where('inv.supp_trans_no', $transNo)
+        ->where('inv.supp_trans_type', $transId->type->value)
+        ->where('inv.supp_trans_no', $transId->id)
         ->select(
             'inv.stock_id',
             'inv.description',
@@ -62,7 +68,7 @@ function read_marketplace_supplier_trans(int $transType, int $transNo): Supplier
         $unitPrice = MoneyFactory::of((string) $row->unit_price);
         $unitTax   = MoneyFactory::of((string) $row->unit_tax);
 
-        $cart->addLine(new SupplierInvoiceCartLine(
+        $cart->addLine(new SupplierTransCartLine(
             stockId:        $row->stock_id,
             description:    $row->description,
             unit:           $row->units,
@@ -76,7 +82,7 @@ function read_marketplace_supplier_trans(int $transType, int $transNo): Supplier
     return $cart;
 }
 
-function get_sql_for_marketplace_supplier_invoice_list(string $marketplaceId, string $fromDate, string $toDate): string
+function get_sql_for_marketplace_supplier_trans_list(string $marketplaceId, string $fromDate, string $toDate): string
 {
     $sql = "SELECT
                 st.`type`,
@@ -108,7 +114,7 @@ function get_sql_for_marketplace_supplier_invoice_list(string $marketplaceId, st
     return $sql;
 }
 
-function write_marketplace_supplier_invoice(SupplierInvoiceCart $cart): int
+function write_marketplace_supplier_trans(SupplierTransCart $cart): int
 {
     global $Refs;
 
@@ -123,13 +129,13 @@ function write_marketplace_supplier_invoice(SupplierInvoiceCart $cart): int
         $cart->transNo,
         $cart->supplierId,
         $cart->date,
-        $cart->date,   // due_date = invoice date (settled in advance)
+        $cart->date,   // due_date = document date (settled in advance)
         $cart->reference,
         $cart->supplierRef,
         MoneyFactory::value($cart->totalRaw()),
         $totalTaxAdded,
         $totalDiscount,
-        'Could not write supplier invoice',
+        'Could not write '.$cart->transType->label().' header',
         $exRate,
         $cart->marketplaceTaxSetting->taxIncluded,
         SupplierTransactionSource::MarketplaceManual,

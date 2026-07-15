@@ -6,13 +6,13 @@ use App\Finance\Support\MoneyFactory;
 use App\Finance\Tax\Repository\TaxRepository;
 use App\Finance\Tax\Service\TaxService;
 use App\Finance\Tax\ValueObject\TaxBreakdown;
-use App\Trade\Marketplace\Cart\DraftSupplierInvoiceLine;
-use App\Trade\Marketplace\Cart\SupplierInvoiceCart;
-use App\Trade\Marketplace\Cart\SupplierInvoiceCartLine;
+use App\Trade\Marketplace\Cart\DraftSupplierTransLine;
+use App\Trade\Marketplace\Cart\SupplierTransCart;
+use App\Trade\Marketplace\Cart\SupplierTransCartLine;
 use App\Trade\Marketplace\Query\Marketplace\MarketplaceQuery;
 use Brick\Math\BigDecimal;
 
-class SupplierInvoiceCartService
+class SupplierTransCartService
 {
     public function __construct(
         private MarketplaceQuery $marketplaceQuery,
@@ -20,7 +20,7 @@ class SupplierInvoiceCartService
         private TaxService       $taxService,
     ) {}
 
-    public function setMarketplace(SupplierInvoiceCart $cart, ?string $marketplaceId): void
+    public function setMarketplace(SupplierTransCart $cart, ?string $marketplaceId): void
     {
         if (!$marketplaceId) {
             $cart->marketplaceId        = null;
@@ -43,10 +43,10 @@ class SupplierInvoiceCartService
         $this->recalculateAllTaxes($cart);
     }
 
-    public function addLine(SupplierInvoiceCart $cart, DraftSupplierInvoiceLine $draft): void
+    public function addLine(SupplierTransCart $cart, DraftSupplierTransLine $draft): void
     {
         $itemTaxSetting = $this->taxRepository->getItemTaxSetting($draft->stockId);
-        $line = new SupplierInvoiceCartLine(
+        $line = new SupplierTransCartLine(
             $draft->stockId,
             $draft->description,
             $draft->unit,
@@ -60,7 +60,7 @@ class SupplierInvoiceCartService
         $cart->addLine($line);
     }
 
-    public function updateLine(SupplierInvoiceCart $cart, int $index, DraftSupplierInvoiceLine $draft): void
+    public function updateLine(SupplierTransCart $cart, int $index, DraftSupplierTransLine $draft): void
     {
         if (!isset($cart->line_items[$index])) return;
 
@@ -72,7 +72,7 @@ class SupplierInvoiceCartService
         }
     }
 
-    public function recalculateAllTaxes(SupplierInvoiceCart $cart): void
+    public function recalculateAllTaxes(SupplierTransCart $cart): void
     {
         if (!$cart->marketplaceTaxSetting) {
             foreach ($cart->line_items as $line) {

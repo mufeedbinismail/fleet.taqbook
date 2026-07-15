@@ -1,16 +1,18 @@
 <?php
 
+use App\Shared\ValueObject\TypedId;
+
 $GLOBALS['page_security'] = 'SA_MP_SUPPTRANSVIEW';
 
 require_once __DIR__ . "/../includes/db_pager.inc";
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../purchasing/includes/purchasing_ui.inc";
-require_once __DIR__ . "/includes/marketplace_supplier_invoice_db.inc";
+require_once __DIR__ . "/includes/marketplace_supplier_trans_db.inc";
 
 global $Ajax;
 
 $js = user_use_date_picker() ? get_js_date_picker() : "";
-page(__("Marketplace Supplier Fee Invoice Inquiry"), false, false, "", $js);
+page(__("Marketplace Supplier Fee Inquiry"), false, false, "", $js);
 
 //------------------------------------------------------------------------------------------------
 
@@ -22,10 +24,11 @@ function systype_name($dummy, $type)
 
 function trans_view_link($row, $value)
 {
+    $typedId = TypedId::make($row['type'], $row['trans_no']);
     if (is_int($value) && !empty($value)) {
         return get_trans_view_str($row['type'], $row['trans_no']);
     } else {
-        return pager_link(__("View"), "/marketplace/view_marketplace_supplier_invoice.php?trans_no=".$row['trans_no'], ICON_VIEW);
+        return pager_link(__("View"), "/marketplace/view_marketplace_supplier_trans.php?trans_id=" . $typedId->toString(), ICON_VIEW);
     }
 }
 
@@ -55,7 +58,7 @@ if (get_post('RefreshInquiry') || list_updated('marketplace_id')) {
 
 //------------------------------------------------------------------------------------------------
 
-$sql = get_sql_for_marketplace_supplier_invoice_list(
+$sql = get_sql_for_marketplace_supplier_trans_list(
     get_post('marketplace_id'),
     get_post('TransAfterDate'),
     get_post('TransToDate')
@@ -73,7 +76,7 @@ $cols = array(
     array('insert' => true, 'fun' => 'gl_view_link'),
 );
 
-$table =& new_db_pager('mktpl_si_list', $sql, $cols);
+$table =& new_db_pager('mktpl_st_list', $sql, $cols);
 $table->width = "80%";
 
 display_db_pager($table);

@@ -5,9 +5,10 @@ namespace App\Trade\Marketplace\Cart;
 use App\Finance\Support\MoneyFactory;
 use App\Finance\Tax\Entity\TaxSetting;
 use App\Shared\Enum\SystemType;
+use App\Shared\ValueObject\TypedId;
 use Brick\Money\Money;
 
-class SupplierInvoiceCart
+class SupplierTransCart
 {
     public readonly string  $cartId;
 
@@ -25,7 +26,7 @@ class SupplierInvoiceCart
     public string  $comments         = '';
     public ?TaxSetting $marketplaceTaxSetting = null;
 
-    /** @var SupplierInvoiceCartLine[] */
+    /** @var SupplierTransCartLine[] */
     public array $line_items = [];
 
     public function __construct(SystemType $transType = SystemType::SupplierInvoice)
@@ -34,7 +35,12 @@ class SupplierInvoiceCart
         $this->transType = $transType;
     }
 
-    public function addLine(SupplierInvoiceCartLine $line): void
+    public function transId(): TypedId
+    {
+        return new TypedId($this->transType, $this->transNo ?: null);
+    }
+
+    public function addLine(SupplierTransCartLine $line): void
     {
         $this->line_items[] = $line;
     }
@@ -53,7 +59,7 @@ class SupplierInvoiceCart
     {
         return array_reduce(
             $this->line_items,
-            fn (Money $carry, SupplierInvoiceCartLine $line) => $carry->plus($line->rawTotal()),
+            fn (Money $carry, SupplierTransCartLine $line) => $carry->plus($line->rawTotal()),
             MoneyFactory::zero()
         );
     }
@@ -62,7 +68,7 @@ class SupplierInvoiceCart
     {
         return array_reduce(
             $this->line_items,
-            fn (Money $carry, SupplierInvoiceCartLine $line) => $carry->plus($line->netTotal()),
+            fn (Money $carry, SupplierTransCartLine $line) => $carry->plus($line->netTotal()),
             MoneyFactory::zero()
         );
     }
@@ -71,7 +77,7 @@ class SupplierInvoiceCart
     {
         return array_reduce(
             $this->line_items,
-            fn (Money $carry, SupplierInvoiceCartLine $line) => $carry->plus($line->taxTotal()),
+            fn (Money $carry, SupplierTransCartLine $line) => $carry->plus($line->taxTotal()),
             MoneyFactory::zero()
         );
     }

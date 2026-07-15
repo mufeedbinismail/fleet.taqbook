@@ -10,7 +10,7 @@ use App\Finance\Tax\ValueObject\TaxBreakdown;
 use Brick\Math\BigDecimal;
 use Brick\Money\Money;
 
-class SupplierInvoiceCartLine implements TaxableItemSource
+class SupplierTransCartLine implements TaxableItemSource
 {
     public TaxBreakdown $taxBreakdown;
 

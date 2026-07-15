@@ -2,17 +2,17 @@
 
 use App\Finance\Support\MoneyFactory;
 use App\Inventory\Query\ItemInfoQuery;
-use App\Trade\Marketplace\Cart\DraftSupplierInvoiceLine;
-use App\Trade\Marketplace\Cart\SupplierInvoiceCart;
-use App\Trade\Marketplace\Service\SupplierInvoiceCartService;
+use App\Trade\Marketplace\Cart\DraftSupplierTransLine;
+use App\Trade\Marketplace\Cart\SupplierTransCart;
+use App\Trade\Marketplace\Service\SupplierTransCartService;
 
 // ---------------------------------------------------------------------------
 
-function mktpl_si_copy_from_cart(SupplierInvoiceCart $cart): void
+function mktpl_st_copy_from_cart(SupplierTransCart $cart): void
 {
     $_POST['cartId']          = $cart->cartId;
     $_POST['marketplaceId']   = $cart->marketplaceId;
-    $_POST['invoiceDate']     = $cart->date ?: Today();
+    $_POST['transDate']       = $cart->date ?: Today();
     $_POST['reference']       = $cart->reference;
     $_POST['suppReference']   = $cart->supplierRef;
     $_POST['receiveInto']     = $cart->receiveInto;
@@ -22,11 +22,11 @@ function mktpl_si_copy_from_cart(SupplierInvoiceCart $cart): void
 
 // ---------------------------------------------------------------------------
 
-function mktpl_si_copy_to_cart(SupplierInvoiceCart $cart): void
+function mktpl_st_copy_to_cart(SupplierTransCart $cart): void
 {
     global $Ajax;
 
-    $cart->date           = get_post('invoiceDate');
+    $cart->date           = get_post('transDate');
     $cart->reference      = get_post('reference');
     $cart->supplierRef    = get_post('suppReference');
     $cart->receiveInto    = get_post('receiveInto') ?? '';
@@ -35,14 +35,14 @@ function mktpl_si_copy_to_cart(SupplierInvoiceCart $cart): void
 
     $newMid = get_post('marketplaceId') ?: null;
     if ($cart->marketplaceId !== $newMid) {
-        app(SupplierInvoiceCartService::class)->setMarketplace($cart, $newMid);
+        app(SupplierTransCartService::class)->setMarketplace($cart, $newMid);
         $Ajax->activate('items_table');
     }
 }
 
 // ---------------------------------------------------------------------------
 
-function display_mktpl_si_header(SupplierInvoiceCart $cart): void
+function display_mktpl_st_header(SupplierTransCart $cart): void
 {
     global $Ajax;
 
@@ -55,17 +55,17 @@ function display_mktpl_si_header(SupplierInvoiceCart $cart): void
 
     // update the cart's marketplace if changed from marketplace selector
     if (get_post('marketplaceId') != $cart->marketplaceId) {
-        app(SupplierInvoiceCartService::class)->setMarketplace($cart, get_post('marketplaceId'));
+        app(SupplierTransCartService::class)->setMarketplace($cart, get_post('marketplaceId'));
     }
 
     supplier_credit_row($cart->supplierId, get_current_supp_credit($cart->supplierId));
 
-    date_row(__("Invoice Date:"), 'invoiceDate', '', true, 0, 0, 0, null, true);
+    date_row(__("Trans Date:"), 'transDate', '', true, 0, 0, 0, null, true);
 
     // Section 2 — Reference, Supplier Ref, Receive Into
     table_section(2);
 
-    ref_row(__("Reference:"), 'reference', '', null, false, ST_SUPPINVOICE, ['date' => get_post('invoiceDate')]);
+    ref_row(__("Reference:"), 'reference', '', null, false, $cart->transType->value, ['date' => get_post('transDate')]);
     text_row(__("Supplier's Reference:"), 'suppReference', null, 20, 60);
 
     // Section 3 — Receive Address
@@ -90,7 +90,7 @@ function display_mktpl_si_header(SupplierInvoiceCart $cart): void
 
 // ---------------------------------------------------------------------------
 
-function mktpl_si_line_controls(SupplierInvoiceCart $cart, int &$k, int $line_no = -1): void
+function mktpl_st_line_controls(SupplierTransCart $cart, int &$k, int $line_no = -1): void
 {
     global $Ajax;
 
@@ -136,7 +136,7 @@ function mktpl_si_line_controls(SupplierInvoiceCart $cart, int &$k, int $line_no
         text_cells_ex(null, 'unit', 8, 20, null, '', '', '', false, true);
         amount_cells(null, 'amount', null, '');
         label_cell('', 'colspan=3');  // Net + Tax + Line Total placeholder
-        submit_cells('AddLine', __('Add Line'), "colspan=2", __('Add line to invoice'), true);
+        submit_cells('AddLine', __('Add Line'), "colspan=2", __('Add line to the document'), true);
     } else {
         $line = $cart->line_items[$line_no];
         $itemInfo = (new ItemInfoQuery)->builder($line->stockId)->first();
@@ -166,7 +166,7 @@ function mktpl_si_line_controls(SupplierInvoiceCart $cart, int &$k, int $line_no
 
 // ---------------------------------------------------------------------------
 
-function display_mktpl_si_items(SupplierInvoiceCart $cart): void
+function display_mktpl_st_items(SupplierTransCart $cart): void
 {
     $taxIncluded = $cart->marketplaceTaxSetting?->taxIncluded ?? false;
     $priceLabel  = $taxIncluded ? __("Price after Tax") : __("Price before Tax");
@@ -185,7 +185,7 @@ function display_mktpl_si_items(SupplierInvoiceCart $cart): void
 
     if ($cart->hasLines()) $th[] = '';
 
-    display_heading(__("Invoice Lines"));
+    display_heading(__("Lines"));
     div_start('items_table');
     start_table(TABLESTYLE, "width='95%'");
     table_header($th);
@@ -195,7 +195,7 @@ function display_mktpl_si_items(SupplierInvoiceCart $cart): void
 
     foreach ($cart->line_items as $i => $line) {
         if ($edit_id == $i) {
-            mktpl_si_line_controls($cart, $k, $i);
+            mktpl_st_line_controls($cart, $k, $i);
         } else {
             alt_table_row_color($k);
             label_cell(e($line->stockId));
@@ -213,7 +213,7 @@ function display_mktpl_si_items(SupplierInvoiceCart $cart): void
     }
 
     if ($edit_id == -1)
-        mktpl_si_line_controls($cart, $k);
+        mktpl_st_line_controls($cart, $k);
 
     // Totals footer — 8 cols: label(5) + value(1) + buttons(2)
     $colspan = count($th) - 2;
@@ -231,9 +231,9 @@ function display_mktpl_si_items(SupplierInvoiceCart $cart): void
 
 // ---------------------------------------------------------------------------
 
-function mktpl_si_draft_from_post(): DraftSupplierInvoiceLine
+function mktpl_st_draft_from_post(): DraftSupplierTransLine
 {
-    return new DraftSupplierInvoiceLine(
+    return new DraftSupplierTransLine(
         stockId:     get_post('stockId') ?? '',
         description: get_post('description') ?? '',
         unit:        get_post('unit') ?? '',
@@ -244,14 +244,14 @@ function mktpl_si_draft_from_post(): DraftSupplierInvoiceLine
 
 // ---------------------------------------------------------------------------
 
-function display_mktpl_si_footer(): void
+function display_mktpl_st_footer(SupplierTransCart $cart): void
 {
     start_table(TABLESTYLE2);
     textarea_row(__("Memo:"), 'comments', get_post('comments'), 70, 4);
     end_table(1);
 
     div_start('controls');
-    submit_center_first('Submit', __('Post Invoice'), '', 'default');
+    submit_center_first('Submit', __('Post :doc', ["doc" => $cart->transType->label()]), '', 'default');
     submit_center_last('Cancel', __('Cancel'));
     div_end();
 }

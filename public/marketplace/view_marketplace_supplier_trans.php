@@ -1,33 +1,45 @@
 <?php
 
 use App\Finance\Support\MoneyFactory;
-use App\Trade\Marketplace\Cart\SupplierInvoiceCart;
+use App\Shared\Enum\SystemType;
+use App\Shared\ValueObject\TypedId;
+use App\Trade\Marketplace\Cart\SupplierTransCart;
 
 $GLOBALS['page_security'] = 'SA_MP_SUPPTRANSVIEW';
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../purchasing/includes/purchasing_db.inc";
 require_once __DIR__ . "/../purchasing/includes/purchasing_ui.inc";
-require_once __DIR__ . "/includes/marketplace_supplier_invoice_db.inc";
-require_once __DIR__ . "/includes/marketplace_supplier_invoice_ui.inc";
+require_once __DIR__ . "/includes/marketplace_supplier_trans_db.inc";
+require_once __DIR__ . "/includes/marketplace_supplier_trans_ui.inc";
 
 global $SysPrefs;
 
+if ($transId = ($_GET['trans_id'] ?? null)) {
+    $transId = TypedId::tryFromString($transId);
+}
+
+abort_unless(
+    $transId instanceof TypedId &&
+    $transId->isExisting() &&
+    $transId->type == SystemType::SupplierInvoice,
+    \Illuminate\Http\Response::HTTP_NOT_FOUND
+);
+
 $js = $SysPrefs->use_popup_windows ? get_js_open_window(900, 500) : "";
-page(__("View Marketplace Supplier Invoice"), true, false, "", $js);
+page(__("View :label", ['label' => $transId->type->label()]), true, false, "", $js);
 
-$trans_no = (int) ($_GET['trans_no'] ?? $_POST['trans_no'] ?? 0);
-$cart = read_marketplace_supplier_trans(ST_SUPPINVOICE, $trans_no);
+$cart = read_marketplace_supplier_trans($transId);
 
-display_heading(__("MARKETPLACE SUPPLIER INVOICE") . " # " . $trans_no);
+display_heading(strtoupper($transId->type->label()) . " # " . $transId->id);
 echo "<br>";
-display_mktpl_si_view($cart);
+display_mktpl_st_view($cart);
 
-end_page(true, false, false, ST_SUPPINVOICE, $trans_no);
+end_page(true, false, false, $cart->transType->value, $transId->id);
 
 // ---------------------------------------------------------------------------
 
-function display_mktpl_si_view(SupplierInvoiceCart $cart): void
+function display_mktpl_st_view(SupplierTransCart $cart): void
 {
     start_table(TABLESTYLE, "width='95%'");
     start_row();
@@ -36,12 +48,12 @@ function display_mktpl_si_view(SupplierInvoiceCart $cart): void
     label_cells(__("Supplier's Reference"), $cart->supplierRef, "class='tableheader2'");
     end_row();
     start_row();
-    label_cells(__("Invoice Date"), $cart->date, "class='tableheader2'");
+    label_cells(__("Trans Date"), $cart->date, "class='tableheader2'");
     end_row();
-    comments_display_row(ST_SUPPINVOICE, $cart->transNo);
+    comments_display_row($cart->transType->value, $cart->transNo);
     end_table(1);
 
-    display_heading(__("Invoice Lines"));
+    display_heading(__("Lines"));
     start_table(TABLESTYLE, "width='95%'");
     table_header([__("Item"), __("Description"), __("Qty"), __("Unit"), __("Price"), __("Net"), __("Tax"), __("Total")]);
 
@@ -62,13 +74,13 @@ function display_mktpl_si_view(SupplierInvoiceCart $cart): void
 
     start_table(TABLESTYLE, "width='95%'");
     label_row(__("Sub Total"), price_format(MoneyFactory::value($cart->totalRaw())), "align=right", "nowrap align=right width='15%'");
-    $tax_items = get_trans_tax_details(ST_SUPPINVOICE, $cart->transNo);
+    $tax_items = get_trans_tax_details($cart->transType->value, $cart->transNo);
     display_supp_trans_tax_details($tax_items, 1);
-    label_row(__("TOTAL INVOICE"), price_format(MoneyFactory::value($cart->totalGross())), "colspan=1 align=right", "nowrap align=right");
+    label_row(__("TOTAL"), price_format(MoneyFactory::value($cart->totalGross())), "colspan=1 align=right", "nowrap align=right");
     end_table(1);
 
-    $voided = is_voided_display(ST_SUPPINVOICE, $cart->transNo, __("This invoice has been voided."));
+    $voided = is_voided_display($cart->transType->value, $cart->transNo, __("This document has been voided."));
     if (!$voided) {
-        display_allocations_to(PT_SUPPLIER, $cart->supplierId, ST_SUPPINVOICE, $cart->transNo, MoneyFactory::value($cart->totalGross()));
+        display_allocations_to(PT_SUPPLIER, $cart->supplierId, $cart->transType->value, $cart->transNo, MoneyFactory::value($cart->totalGross()));
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Trade\Marketplace\Cart;
 
-class DraftSupplierInvoiceLine
+class DraftSupplierTransLine
 {
     public function __construct(
         public readonly string $stockId,
