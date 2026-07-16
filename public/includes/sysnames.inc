@@ -20,65 +20,14 @@ global $systypes_array, $bank_account_types, $bank_transfer_types,
     $bank_owner, $type_shortcuts, $tmonths, $pterm_types, $tax_algorithms,
     $supported_collations, $depreciation_methods, $fa_systypes_array;
 
-$systypes_array = array (
-	ST_JOURNAL => __("Journal Entry"),
-	ST_BANKPAYMENT => __("Bank Payment"),
-	ST_BANKDEPOSIT => __("Bank Deposit"),
-	ST_BANKTRANSFER => __("Funds Transfer"),
-	ST_SALESINVOICE => __("Sales Invoice"),
-	ST_CUSTCREDIT => __("Customer Credit Note"),
-	ST_CUSTPAYMENT => __("Customer Payment"),
-	ST_CUSTDELIVERY => __("Delivery Note"),
-	ST_LOCTRANSFER => __("Location Transfer"),
-	ST_INVADJUST => __("Inventory Adjustment"),
-	ST_PURCHORDER => __("Purchase Order"),
-	ST_SUPPINVOICE => __("Supplier Invoice"),
-	ST_SUPPCREDIT => __("Supplier Credit Note"),
-	ST_SUPPAYMENT => __("Supplier Payment"),
-	ST_SUPPRECEIVE => __("Purchase Order Delivery"),
-	ST_WORKORDER => __("Work Order"),
-	ST_MANUISSUE => __("Work Order Issue"),
-	ST_MANURECEIVE => __("Work Order Production"),
-	ST_SALESORDER => __("Sales Order"),
-	ST_SALESQUOTE => __("Sales Quotation"),
-	ST_COSTUPDATE => __("Cost Update"),
-	ST_DIMENSION => __("Dimension"),
-	ST_CUSTOMER => __("Customer"),
-	ST_SUPPLIER => __("Supplier"),
-	ST_ITEM => __("Item"),
-	ST_FIXEDASSET => __("Fixed Asset"),
-	ST_BANKACCOUNT => __("Bank Account"),
-	);
+$systypes_array = \App\Shared\Enum\SystemType::labels();
 
 $fa_systypes_array = array (
 	ST_INVADJUST => __("Fixed Assets Disposal"),
 	ST_COSTUPDATE => __("Fixed Assets Revaluation"),
 	);
 
-$type_shortcuts = array(
-	ST_JOURNAL => __("GJ"), // general journal
-	ST_BANKPAYMENT => __("BP"),
-	ST_BANKDEPOSIT => __("BD"),
-	ST_BANKTRANSFER => __("BT"),
-	ST_SALESINVOICE => __("SI"),
-	ST_CUSTCREDIT => __("CN"),
-	ST_CUSTPAYMENT => __("CP"),
-	ST_CUSTDELIVERY => __("DN"),
-	ST_LOCTRANSFER => __("IT"), // inventory transfer
-	ST_INVADJUST => __("IA"),
-	ST_PURCHORDER => __("PO"),
-	ST_SUPPINVOICE => __("PI"), // purchase invoice
-	ST_SUPPCREDIT => __("PC"),
-	ST_SUPPAYMENT => __("SP"),
-	ST_SUPPRECEIVE => __("GRN"),
-	ST_WORKORDER => __("WO"),
-	ST_MANUISSUE => __("WI"),
-	ST_MANURECEIVE => __("WP"),
-	ST_SALESORDER => __("SO"),
-	ST_SALESQUOTE => __("SQ"),
-	ST_COSTUPDATE => __("CU"),
-	ST_DIMENSION => __("Dim")
-);
+$type_shortcuts = \App\Shared\Enum\SystemType::abbreviations();
 
 
 //----------------------------------------------------------------------------------

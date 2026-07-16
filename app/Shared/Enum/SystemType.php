@@ -2,8 +2,13 @@
 
 namespace App\Shared\Enum;
 
-enum SystemType: int
+use App\Foundation\Concern\Enum\HasLabelConcern;
+use App\Foundation\Contract\Enum\HasLabelContract;
+
+enum SystemType: int implements HasLabelContract
 {
+    use HasLabelConcern;
+
     case Journal          = 0;   // ST_JOURNAL
 
     case BankPayment      = 1;   // ST_BANKPAYMENT
@@ -42,4 +47,76 @@ enum SystemType: int
 
     case Statement        = 91;  // ST_STATEMENT
     case Cheque           = 92;  // ST_CHEQUE
+
+    public function abbr(): ?string
+    {
+        return self::abbreviations()[$this->value] ?? null;
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public static function labels(): array
+    {
+        return [
+            self::Journal->value          => __("Journal Entry"),
+            self::BankPayment->value      => __("Bank Payment"),
+            self::BankDeposit->value      => __("Bank Deposit"),
+            self::BankTransfer->value     => __("Funds Transfer"),
+            self::SalesInvoice->value     => __("Sales Invoice"),
+            self::CustomerCredit->value   => __("Customer Credit Note"),
+            self::CustomerPayment->value  => __("Customer Payment"),
+            self::CustomerDelivery->value => __("Delivery Note"),
+            self::LocTransfer->value      => __("Location Transfer"),
+            self::InvAdjust->value        => __("Inventory Adjustment"),
+            self::PurchOrder->value       => __("Purchase Order"),
+            self::SupplierInvoice->value  => __("Supplier Invoice"),
+            self::SupplierCredit->value   => __("Supplier Credit Note"),
+            self::SupplierPayment->value  => __("Supplier Payment"),
+            self::SupplierReceive->value  => __("Purchase Order Delivery"),
+            self::WorkOrder->value        => __("Work Order"),
+            self::ManuIssue->value        => __("Work Order Issue"),
+            self::ManuReceive->value      => __("Work Order Production"),
+            self::SalesOrder->value       => __("Sales Order"),
+            self::SalesQuote->value       => __("Sales Quotation"),
+            self::CostUpdate->value       => __("Cost Update"),
+            self::Dimension->value        => __("Dimension"),
+            self::Customer->value         => __("Customer"),
+            self::Supplier->value         => __("Supplier"),
+            self::Item->value             => __("Item"),
+            self::FixedAsset->value       => __("Fixed Asset"),
+            self::BankAccount->value      => __("Bank Account"),
+        ];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public static function abbreviations(): array
+    {
+        return [
+            self::Journal->value          => __("GJ"), // general journal
+            self::BankPayment->value      => __("BP"),
+            self::BankDeposit->value      => __("BD"),
+            self::BankTransfer->value     => __("BT"),
+            self::SalesInvoice->value     => __("SI"),
+            self::CustomerCredit->value   => __("CN"),
+            self::CustomerPayment->value  => __("CP"),
+            self::CustomerDelivery->value => __("DN"),
+            self::LocTransfer->value      => __("IT"), // inventory transfer
+            self::InvAdjust->value        => __("IA"),
+            self::PurchOrder->value       => __("PO"),
+            self::SupplierInvoice->value  => __("PI"), // purchase invoice
+            self::SupplierCredit->value   => __("PC"),
+            self::SupplierPayment->value  => __("SP"),
+            self::SupplierReceive->value  => __("GRN"),
+            self::WorkOrder->value        => __("WO"),
+            self::ManuIssue->value        => __("WI"),
+            self::ManuReceive->value      => __("WP"),
+            self::SalesOrder->value       => __("SO"),
+            self::SalesQuote->value       => __("SQ"),
+            self::CostUpdate->value       => __("CU"),
+            self::Dimension->value        => __("Dim"),
+        ];
+    }
 }
