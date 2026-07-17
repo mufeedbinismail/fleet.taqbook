@@ -2,7 +2,9 @@
 
 namespace App\Foundation\Exception;
 
+use App\Shared\Exception\ResourceNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -25,6 +27,12 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        // Domain "not found" → HTTP 404. Only fires when rendering an HTTP
+        // response; under console/queue the exception propagates untouched.
+        $this->renderable(function (ResourceNotFoundException $e, $request) {
+            return $this->prepareResponse($request, new NotFoundHttpException($e->getMessage(), $e));
         });
     }
 }
