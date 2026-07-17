@@ -40,6 +40,12 @@ class marketplaces_app extends application
 		$this->add_rapp_function(1, __("Supplier &Fee Invoice Inquiry"),
 			"marketplace/marketplace_supplier_trans_list.php", 'SA_MP_SUPPTRANSVIEW', MENU_INQUIRY);
 
+        $this->add_rapp_function(1, "","");
+        $this->add_rapp_function(1, __("Customer and Sales &Reports"),
+			"reporting/reports_main.php?Class=0", 'SA_MP_SALESTRANSVIEW', MENU_REPORT);
+		$this->add_rapp_function(1, __("Supplier and Purchasing &Reports"),
+			"reporting/reports_main.php?Class=1", 'SA_MP_SUPPTRANSVIEW', MENU_REPORT);
+
 		$this->add_module(__("Maintenance"));
 		$this->add_lapp_function(2, __("Add and Manage &Marketplaces"),
 			"sales/manage/marketplaces.php", 'SA_MARKETPLACE', MENU_ENTRY);
