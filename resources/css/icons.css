@@ -1,13 +1,25 @@
+/* Font is rebuilt from resources/icons/*.svg via `npm run icons` (fantasticon). */
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?wost78');
-  src:  url('fonts/icomoon.eot?wost78#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?wost78') format('truetype'),
-    url('fonts/icomoon.woff?wost78') format('woff'),
-    url('fonts/icomoon.svg?wost78#icomoon') format('svg');
+  src:  url('fonts/icomoon.woff2?v2') format('woff2'),
+    url('fonts/icomoon.woff?v2') format('woff'),
+    url('fonts/icomoon.ttf?v2') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: block;
+}
+
+/* Canonical alignment for every icon — replaces per-use vertical-align nudges.
+   All glyphs share a uniform advance width, so this centers them consistently. */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: -0.125em;
+  line-height: 1;
+  /* Filled icons carry more "ink" than outline sets; a slight opacity softens
+     the dense ones so they don't dominate text. Tune 0.8–0.9 to taste. */
+  opacity: 0.85;
 }
 
 .icon-style:before,
