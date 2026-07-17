@@ -456,47 +456,85 @@ function process_marketplace_expenses(
 //--------------------------------------------------------------------------------------------------
 
 /*
-	Locate the hidden marketplace auto-setoff payment that fully clears a given sales
-	invoice. Returns its trans_no, or null when no such payment exists. To qualify the
-	payment must be a MarketplaceSetoff-sourced marketplace customer payment that is
-	fully allocated and stands in a strict 1:1 allocation with the invoice (its only
-	allocation is to this invoice, and the invoice's only allocation is from it).
-	Anything looser — a manual settlement (different source), a partial or shared
+	Normalize the allocation geometry of a marketplace auto-setoff by parent document type.
+	The two cases are exact mirrors: an invoice is the allocatee (the to-side of the
+	cust_allocations row) cleared by a marketplace payment on the from-side, while a credit
+	note is the allocator (the from-side) cleared by a marketplace refund on the to-side.
+	Returns the resolved column names, setoff system type and a human label — or null for a
+	document type that carries no marketplace setoff counterpart.
+*/
+function marketplace_setoff_alloc_shape($type)
+{
+	switch ($type) {
+		case ST_SALESINVOICE:
+			return array(
+				'parent_type_col' => 'trans_type_to',   'parent_no_col' => 'trans_no_to',
+				'setoff_type_col' => 'trans_type_from',  'setoff_no_col' => 'trans_no_from',
+				'setoff_type'     => ST_MKTCUSTPAYMENT,  'label'         => 'invoice',
+			);
+		case ST_CUSTCREDIT:
+			return array(
+				'parent_type_col' => 'trans_type_from',  'parent_no_col' => 'trans_no_from',
+				'setoff_type_col' => 'trans_type_to',    'setoff_no_col' => 'trans_no_to',
+				'setoff_type'     => ST_MKTCUSTREFUND,   'label'         => 'credit note',
+			);
+		default:
+			return null;
+	}
+}
+
+/*
+	Locate the hidden marketplace auto-setoff counterpart that fully clears a given invoice
+	or credit note. Returns its trans_no, or null when none exists. To qualify the
+	counterpart must be a MarketplaceSetoff-sourced marketplace payment (invoice) or refund
+	(credit note) that is fully allocated and stands in a strict 1:1 allocation with the
+	parent document (its only allocation is with this document, and the document's only
+	allocation is with it). Anything looser — a manual settlement, a partial or shared
 	allocation — is left for the user to handle and never auto-voided.
 */
-function get_invoice_marketplace_setoff_payment($invoice_no)
+function get_marketplace_setoff_counterpart($type, $type_no)
 {
+	$shape = marketplace_setoff_alloc_shape($type);
+	if ($shape === null)
+		return null;
+
+	$parentTypeCol = $shape['parent_type_col'];
+	$parentNoCol   = $shape['parent_no_col'];
+	$setoffTypeCol = $shape['setoff_type_col'];
+	$setoffNoCol   = $shape['setoff_no_col'];
+	$setoffType    = $shape['setoff_type'];
+
 	$sql = (
         "SELECT
-            p.trans_no
+            s.trans_no
 		FROM ".TB_PREF."cust_allocations a
-		JOIN ".TB_PREF."debtor_trans p
-			ON p.type = a.trans_type_from
-            AND p.trans_no = a.trans_no_from
-            AND p.debtor_no = a.person_id
-		WHERE a.trans_type_to = ".ST_SALESINVOICE."
-			AND a.trans_no_to = ".db_escape($invoice_no)."
-			AND a.trans_type_from = ".ST_MKTCUSTPAYMENT."
-			AND p.source = ".CustomerTransactionSource::MarketplaceSetoff->value."
-			AND p.alloc = p.ov_amount
+		JOIN ".TB_PREF."debtor_trans s
+			ON s.type = a.$setoffTypeCol
+            AND s.trans_no = a.$setoffNoCol
+            AND s.debtor_no = a.person_id
+		WHERE a.$parentTypeCol = ".db_escape($type)."
+			AND a.$parentNoCol = ".db_escape($type_no)."
+			AND a.$setoffTypeCol = ".db_escape($setoffType)."
+			AND s.source = ".CustomerTransactionSource::MarketplaceSetoff->value."
+			AND s.alloc = s.ov_amount
 			AND (
                 SELECT
                     COUNT(*)
                 FROM ".TB_PREF."cust_allocations f
 				WHERE
-                    f.trans_type_from = ".ST_MKTCUSTPAYMENT."
-                    AND f.trans_no_from = p.trans_no
+                    f.$setoffTypeCol = ".db_escape($setoffType)."
+                    AND f.$setoffNoCol = s.trans_no
             ) = 1
 			AND (
                 SELECT
                     COUNT(*)
                 FROM ".TB_PREF."cust_allocations t
 				WHERE
-                    t.trans_type_to = ".ST_SALESINVOICE."
-                    AND t.trans_no_to = ".db_escape($invoice_no)."
+                    t.$parentTypeCol = ".db_escape($type)."
+                    AND t.$parentNoCol = ".db_escape($type_no)."
             ) = 1"
     );
-	$row = db_fetch(db_query($sql, "Could not look up marketplace setoff payment for invoice"));
+	$row = db_fetch(db_query($sql, "Could not look up marketplace setoff counterpart"));
 	return $row ? (int) $row['trans_no'] : null;
 }
 
@@ -504,15 +542,18 @@ function void_sales_invoice($type, $type_no)
 {
 	begin_transaction();
 
-	// Marketplace auto-setoff cascade: an invoice saved with MarketplaceSetoff carries a
-	// hidden, fully-allocated marketplace customer payment (source MarketplaceSetoff)
-	// standing in a strict 1:1 allocation with this invoice. Void it first so its AR/AP/GL
-	// and paired supplier row unwind cleanly; the void removes the allocation link, so the
-	// invoice's own void_cust_allocations below then finds nothing left to clear.
-	if ($type == ST_SALESINVOICE) {
-		$setoff_no = get_invoice_marketplace_setoff_payment($type_no);
-		if ($setoff_no !== null) {
-			$errorMsg = void_transaction(ST_MKTCUSTPAYMENT, $setoff_no, Today(), sprintf('Cascaded against invoice #%d', $type_no));
+	// Marketplace auto-setoff cascade: an invoice or credit note saved with MarketplaceSetoff
+	// stands in a strict 1:1 allocation with a hidden, fully-allocated marketplace counterpart
+	// (a payment for an invoice, a refund for a credit note; both source MarketplaceSetoff).
+	// Void it first so its AR/AP/GL and paired supplier row unwind cleanly; the void removes
+	// the allocation link, so this document's own void_cust_allocations below finds nothing
+	// left to clear.
+	$shape = marketplace_setoff_alloc_shape($type);
+	if ($shape !== null) {
+		$counterpart_no = get_marketplace_setoff_counterpart($type, $type_no);
+		if ($counterpart_no !== null) {
+			$errorMsg = void_transaction($shape['setoff_type'], $counterpart_no, Today(),
+				sprintf('Cascaded against %s #%d', $shape['label'], $type_no));
             if ($errorMsg) {
                 display_error($errorMsg);
                 cancel_transaction();

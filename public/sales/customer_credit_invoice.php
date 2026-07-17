@@ -75,6 +75,12 @@ if (isset($_GET['AddedID'])) {
 
  	display_note(get_gl_view_str($trans_type, $credit_no, __("View the GL &Journal Entries for this Credit Note")),1);
 
+	// Marketplace credit notes auto-post a hidden setoff refund; expose its GL journal too.
+	$refund_no = get_marketplace_setoff_counterpart(ST_CUSTCREDIT, $credit_no);
+	if ($refund_no !== null) {
+		display_note(get_gl_view_str(ST_MKTCUSTREFUND, $refund_no, __("View GL Entries for the &Refund")),1);
+	}
+
 	hyperlink_params(url("/admin/attachments.php"), __("Add an Attachment"), "filterType=$trans_type&trans_no=$credit_no");
 
 	display_footer_exit();
@@ -137,7 +143,13 @@ function can_process()
 if (isset($_GET['InvoiceNumber']) && $_GET['InvoiceNumber'] > 0) {
 
     $_SESSION['Items'] = new Cart(ST_SALESINVOICE, $_GET['InvoiceNumber'], true);
-    $_SESSION['Items']->payment_method_id ??= PaymentMethod::Default->value;
+    // Mirror the invoice auto-setoff: a marketplace credit note settles by MarketplaceSetoff
+    // (offset by an auto-generated marketplace refund), never by the Default method.
+    if ($_SESSION['Items']->is_marketplace_trans) {
+        $_SESSION['Items']->payment_method_id = PaymentMethod::MarketplaceSetoff->value;
+    } else {
+        $_SESSION['Items']->payment_method_id ??= PaymentMethod::Default->value;
+    }
 
     foreach ($_SESSION['Items']->line_items as $ln) {
         $ln->additional_data['bk_expense_amounts'] = [];

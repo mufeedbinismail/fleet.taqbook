@@ -1,11 +1,17 @@
 <?php
 
+use App\Finance\Support\MoneyFactory;
 use App\Finance\Tax\Service\TaxService;
 use App\Inventory\Repository\ItemRepository;
+use App\Trade\Marketplace\Cart\CustomerSettlementCart;
 use App\Trade\Marketplace\Repository\ExpenseRepository;
 use App\Trade\Sale\Enum\PaymentMethod;
 use App\Trade\Shared\Enum\CustomerTransactionSource;
 use App\Shared\Enum\TransactionEffect;
+use App\Shared\ValueObject\DomainDateTime;
+use App\Shared\ValueObject\TypedId;
+
+require_once __DIR__ . '/../../../marketplace/includes/marketplace_customer_settlement_db.inc';
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
@@ -42,6 +48,12 @@ function write_credit_note(&$credit_note, $write_off_acc)
 	}
 
 	$credit_type = $write_off_acc == 0 ? 'Return' : 'WriteOff';
+
+	// A marketplace credit note settled by MarketplaceSetoff never allocates against its
+	// source invoice; instead it stays whole and is offset by an auto-generated marketplace
+	// customer refund (see write_credit_marketplace_setoff). Mirrors the invoice auto-setoff.
+	$is_marketplace_setoff = $credit_note->marketplace_id
+		&& $credit_note->payment_method_id == PaymentMethod::MarketplaceSetoff->value;
 
 	begin_transaction();
 
@@ -130,10 +142,14 @@ function write_credit_note(&$credit_note, $write_off_acc)
 	if ($credit_invoice) {
 		update_customer_trans_version(get_parent_type(ST_CUSTCREDIT), $credit_note->src_docs );
 
-		$total = $credit_note_total + $credit_note->freight_cost + $items_added_tax 
+		$total = $credit_note_total + $credit_note->freight_cost + $items_added_tax
 			+ $freight_added_tax;
 
-		if (!credit_sales_invoice_allocate($credit_invoice, $credit_no, $total, $credit_date))
+		// Marketplace setoff credit notes deliberately leave the invoice's allocations
+		// untouched — the credit note is offset by an auto-refund below, not by clawing
+		// back the invoice's marketplace setoff payment.
+		if (!$is_marketplace_setoff
+			&& !credit_sales_invoice_allocate($credit_invoice, $credit_no, $total, $credit_date))
 			return false;
 	}
 
@@ -232,9 +248,53 @@ function write_credit_note(&$credit_note, $write_off_acc)
 	if ($trans_no == 0) {
 		$Refs->save(ST_CUSTCREDIT, $credit_no, $credit_note->reference);
 	}
+
+	// Auto-generate the marketplace refund that offsets this credit note. Edit is out of
+	// scope for now, so only the create path runs it; a re-saved credit note is left as-is.
+	if ($is_marketplace_setoff && $trans_no == 0) {
+		$refund_amount = $credit_note_total + $credit_note->freight_cost
+			+ $items_added_tax + $freight_added_tax;
+		write_credit_marketplace_setoff($credit_note, $credit_no, $refund_amount,
+			$credit_date, $branch_data, $marketplace_data);
+	}
+
 	commit_transaction();
 
 	return $credit_no;
+}
+
+function write_credit_marketplace_setoff(
+	Cart   $credit_note,
+	int    $credit_no,
+	float  $amount,
+	string $date_,
+	array  $branch_data,
+	array  $marketplace_data
+)
+{
+	global $Refs;
+
+	write_marketplace_customer_setoff(
+		CustomerSettlementCart::forAutoOffset(
+			TypedId::make(ST_CUSTCREDIT, $credit_no),
+			$credit_note->reference,
+			DomainDateTime::fromUserDateString($date_),
+			(int) $credit_note->customer_id,
+			(int) $credit_note->Branch,
+			$branch_data['receivables_account'],
+			(int) $credit_note->marketplace_id,
+			(int) $marketplace_data['supplier_id'],
+			$marketplace_data['payable_account'],
+			MoneyFactory::of($amount, get_customer_currency($credit_note->customer_id)),
+			TypedId::make(ST_MKTCUSTREFUND),
+			$Refs->get_next(ST_MKTCUSTREFUND, null, array(
+				'customer' => $credit_note->customer_id,
+				'branch'   => $credit_note->Branch,
+				'date'     => $date_,
+			)),
+		),
+		CustomerTransactionSource::MarketplaceSetoff
+	);
 }
 
 //----------------------------------------------------------------------------------------

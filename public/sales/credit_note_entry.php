@@ -86,7 +86,13 @@ if (isset($_GET['AddedID'])) {
 	display_note(print_document_link($credit_no."-".$trans_type, __("&Print This Credit Invoice"), true, ST_CUSTCREDIT),0, 1);
 	display_note(print_document_link($credit_no."-".$trans_type, __("&Email This Credit Invoice"), true, ST_CUSTCREDIT, false, "printlink", "", 1),0, 1);
 
-	display_note(get_gl_view_str($trans_type, $credit_no, __("View the GL &Journal Entries for this Credit Note")));
+	display_note(get_gl_view_str($trans_type, $credit_no, __("View the GL &Journal Entries for this Credit Note")), 0, 1);
+
+	// Marketplace credit notes auto-post a hidden setoff refund; expose its GL journal too.
+	$refund_no = get_marketplace_setoff_counterpart(ST_CUSTCREDIT, $credit_no);
+	if ($refund_no !== null) {
+		display_note(get_gl_view_str(ST_MKTCUSTREFUND, $refund_no, __("View GL Entries for the &Refund")));
+	}
 
 	hyperlink_params(url()->current(), __("Enter Another &Credit Note"), "NewCredit=yes{$marketplace_flg}");
 
@@ -150,7 +156,11 @@ function handle_new_credit($trans_no)
 	processing_start();
 	$_SESSION['Items'] = new Cart(ST_CUSTCREDIT, $trans_no, false, isset($_GET['Marketplace']));
 	if ($trans_no == 0) {
-		$_SESSION['Items']->payment_method_id = PaymentMethod::Default->value;
+		// A marketplace credit note settles by MarketplaceSetoff (offset by an auto-generated
+		// marketplace refund), never by the Default method. Mirrors the invoice auto-setoff.
+		$_SESSION['Items']->payment_method_id = $_SESSION['Items']->is_marketplace_trans
+			? PaymentMethod::MarketplaceSetoff->value
+			: PaymentMethod::Default->value;
 	}
 	copy_from_cn();
 }
