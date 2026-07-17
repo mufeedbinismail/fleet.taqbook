@@ -662,12 +662,14 @@ function get_gl_account_info($acc)
 	return db_query($sql,"get account information");
 }
 
-function is_reference_already_there($supplier_id, $supp_reference, $trans_no=0)
+function is_reference_already_there($supplier_id, $supp_reference, $trans_no=0, $trans_type=null)
 {
 	$sql = "SELECT COUNT(*) FROM ".TB_PREF."supp_trans WHERE supplier_id="
-		.db_escape($supplier_id) . " AND supp_reference=" 
-		.db_escape($supp_reference) 
+		.db_escape($supplier_id) . " AND supp_reference="
+		.db_escape($supp_reference)
 		. " AND ov_amount!=0"; // ignore voided invoice references
+	if (!is_null($trans_type)) // scope uniqueness per document type (e.g. a credit note may reuse its invoice's supplier ref)
+		$sql .= " AND `type`=".db_escape($trans_type);
 	if ($trans_no)
 		$sql .= " AND trans_no!=$trans_no";
 	$result=db_query($sql,"The sql to check for the previous entry of the same invoice failed");
