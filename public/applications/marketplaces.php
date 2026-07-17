@@ -28,6 +28,8 @@ class marketplaces_app extends application
         $this->add_rapp_function(0, "","");
 		$this->add_rapp_function(0, __("Supplier &Fee Invoice"),
 			"marketplace/marketplace_supplier_trans.php?type=".ST_SUPPINVOICE."&New=1", 'SA_MP_SUPPINVOICE', MENU_TRANSACTION);
+		$this->add_rapp_function(0, __("Supplier Fee Credit &Note"),
+			"marketplace/marketplace_supplier_trans.php?type=".ST_SUPPCREDIT."&New=1", 'SA_MP_SUPPCREDIT', MENU_TRANSACTION);
 
 		$this->add_module(__("Inquiries and Reports"));
 		$this->add_lapp_function(1, __("Sales Order &Inquiry"),

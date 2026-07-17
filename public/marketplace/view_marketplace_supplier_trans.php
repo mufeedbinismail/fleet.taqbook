@@ -22,7 +22,7 @@ if ($transId = ($_GET['trans_id'] ?? null)) {
 abort_unless(
     $transId instanceof TypedId &&
     $transId->isExisting() &&
-    $transId->type == SystemType::SupplierInvoice,
+    in_array($transId->type, [SystemType::SupplierInvoice, SystemType::SupplierCredit], true),
     \Illuminate\Http\Response::HTTP_NOT_FOUND
 );
 

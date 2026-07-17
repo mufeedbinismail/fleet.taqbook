@@ -19,11 +19,11 @@ $transType = mktpl_st_get_trans_type_from_request();
 
 abort_unless(
     $transType instanceof SystemType &&
-    $transType == SystemType::SupplierInvoice,
+    in_array($transType, [SystemType::SupplierInvoice, SystemType::SupplierCredit], true),
     \Illuminate\Http\Response::HTTP_NOT_FOUND
 );
 
-$GLOBALS['page_security'] = 'SA_MP_SUPPINVOICE';
+$GLOBALS['page_security'] = $transType === SystemType::SupplierCredit ? 'SA_MP_SUPPCREDIT' : 'SA_MP_SUPPINVOICE';;
 $_SESSION['page_title'] = __("Marketplace :doc", ['doc' => $transType->label()]);
 
 page($_SESSION['page_title'], false, false, '', user_use_date_picker() ? get_js_date_picker() : '');

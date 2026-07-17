@@ -170,6 +170,7 @@ $GLOBALS['security_areas'] =array(
 	'SA_MP_SALESCREDITINV' => array(SS_MP_SALES|6, __("Market Place Sales credit notes against invoice")),
 	'SA_MP_SALESCREDIT' => array(SS_MP_SALES|7, __("Market Place Sales freehand credit notes")),
 	'SA_MP_SUPPINVOICE' => array(SS_MP_SALES|8, __("Marketplace Supplier Invoice entry")),
+	'SA_MP_SUPPCREDIT' => array(SS_MP_SALES|9, __("Marketplace Supplier freehand credit notes")),
 
     'SA_MP_SALESTRANSVIEW' => array(SS_MP_SALES_A|1,  __("Market Place Sales transactions view")),
     'SA_MP_SUPPTRANSVIEW' => array(SS_MP_SALES_A|2,  __("Marketplace Supplier transactions view")),

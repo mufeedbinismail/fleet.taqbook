@@ -12,6 +12,7 @@ use App\Shared\Enum\TransactionEffect;
 use App\Shared\Exception\ResourceNotFoundException;
 use App\Shared\ValueObject\TypedId;
 use Brick\Math\BigDecimal;
+use Brick\Money\Money;
 use Illuminate\Support\Facades\DB;
 
 function read_marketplace_supplier_trans(TypedId $transId): SupplierTransCart
@@ -99,7 +100,7 @@ function get_sql_for_marketplace_supplier_trans_list(string $marketplaceId, stri
             WHERE
                 v.row_id IS NULL
                 AND st.source = ".SupplierTransactionSource::MarketplaceManual->value."
-                AND st.`type` = ".SystemType::SupplierInvoice->value;
+                AND st.`type` IN (".SystemType::SupplierInvoice->value.", ".SystemType::SupplierCredit->value.")";
 
     if (!empty($marketplaceId)) {
         $sql .= " AND m.id = ".db_escape((int)$marketplaceId);
@@ -119,11 +120,17 @@ function write_marketplace_supplier_trans(SupplierTransCart $cart): int
     global $Refs;
 
     $transType = $cart->transType->value;
+    $isCredit  = $cart->transType === SystemType::SupplierCredit;
+    $effect    = $isCredit ? TransactionEffect::Decrease : TransactionEffect::Increase;
+
+    // Credit notes negate every signed amount; invoices keep the base sign.
+    $signed = fn (Money $amount): Money => $isCredit ? $amount->negated() : $amount;
+    $provisionVerb = $isCredit ? __('Reinstate') : __('Release');
 
     begin_transaction();
     $exRate = 1;
     $totalDiscount = 0;
-    $totalTaxAdded = $cart->marketplaceTaxSetting->taxIncluded ? 0 : MoneyFactory::value($cart->totalTax());
+    $totalTaxAdded = $cart->marketplaceTaxSetting->taxIncluded ? 0 : MoneyFactory::value($signed($cart->totalTax()));
     $cart->transNo = $transNo = write_supp_trans(
         $transType,
         $cart->transNo,
@@ -132,14 +139,14 @@ function write_marketplace_supplier_trans(SupplierTransCart $cart): int
         $cart->date,   // due_date = document date (settled in advance)
         $cart->reference,
         $cart->supplierRef,
-        MoneyFactory::value($cart->totalRaw()),
+        MoneyFactory::value($signed($cart->totalRaw())),
         $totalTaxAdded,
         $totalDiscount,
         'Could not write '.$cart->transType->label().' header',
         $exRate,
         $cart->marketplaceTaxSetting->taxIncluded,
         SupplierTransactionSource::MarketplaceManual,
-        TransactionEffect::Increase
+        $effect
     );
 
     foreach ($cart->line_items as $line) {
@@ -166,12 +173,12 @@ function write_marketplace_supplier_trans(SupplierTransCart $cart): int
         if (!$draftTaxGroupLine->net->isZero()) {
             add_trans_tax_details(
                 $transType,
-                $transNo, 
-				$draftTaxGroupLine->taxTypeId,
+                $transNo,
+                $draftTaxGroupLine->taxTypeId,
                 (string) $draftTaxGroupLine->rate,
                 $cart->marketplaceTaxSetting->taxIncluded,
-                MoneyFactory::value($draftTaxGroupLine->tax),
-				MoneyFactory::value($draftTaxGroupLine->net),
+                MoneyFactory::value($signed($draftTaxGroupLine->tax)),
+                MoneyFactory::value($signed($draftTaxGroupLine->net)),
                 $exRate,
                 $cart->date,
                 $cart->supplierRef,
@@ -183,12 +190,12 @@ function write_marketplace_supplier_trans(SupplierTransCart $cart): int
                     $transType,
                     $transNo,
                     $cart->date,
-					$draftTaxGroupLine->purchasingGlCode,
+                    $draftTaxGroupLine->purchasingGlCode,
                     0,
                     0,
-                    MoneyFactory::value($draftTaxGroupLine->tax),
-					$cart->supplierId,
-					"A general ledger transaction for the tax amount could not be added",
+                    MoneyFactory::value($signed($draftTaxGroupLine->tax)),
+                    $cart->supplierId,
+                    "A general ledger transaction for the tax amount could not be added",
                     $exRate,
                     "Tax Input"
                 );
@@ -200,8 +207,8 @@ function write_marketplace_supplier_trans(SupplierTransCart $cart): int
                     $draftTaxGroupLine->purchasingProvisionGlCode,
                     0,
                     0,
-                    'Release: Input Tax Provision',
-                    MoneyFactory::value($draftTaxGroupLine->tax->negated()),
+                    "$provisionVerb: Input Tax Provision",
+                    MoneyFactory::value($signed($draftTaxGroupLine->tax->negated())),
                     null,
                     PT_MARKETPLACE,
                     $cart->marketplaceId,
