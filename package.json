@@ -8,6 +8,9 @@
         "icons": "node resources/icons/gen-codepoints.mjs && fantasticon"
     },
     "devDependencies": {
+        "@alpinejs/focus": "^3.14.9",
+        "@alpinejs/ui": "^3.15.12",
+        "alpinejs": "^3.14.9",
         "autoprefixer": "^10.4.21",
         "axios": "^1.6.4",
         "fantasticon": "^2.0.0",
