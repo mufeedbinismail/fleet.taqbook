@@ -28,6 +28,7 @@ $lang = language();
             'resources/css/plugins.css',
             'resources/css/fa.css',
             'resources/js/plugins.js',
+            'resources/js/app.js',
             'resources/js/fa.js'
         ])
 

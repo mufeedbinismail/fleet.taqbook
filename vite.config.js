@@ -13,6 +13,7 @@ export default defineConfig({
                 'resources/js/fa.js',
                 'resources/css/plugins.css',
                 'resources/js/plugins.js',
+                'resources/js/app.js',
             ],
             refresh: true,
         }),
