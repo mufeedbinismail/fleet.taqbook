@@ -3,3 +3,9 @@
     background-color: theme('colors.footer-bg');
     color: theme('colors.footer-txt');
 }
+
+@media (max-width: calc(theme('screens.md') - 1px)) {
+    #hotkeyshelp {
+        display: none;
+    }
+}

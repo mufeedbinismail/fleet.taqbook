@@ -77,20 +77,20 @@ class renderer
             return;
         }
 
-        echo "<div class='mx-auto p-4'>";
+        echo "<div class='mx-auto p-2 md:p-4'>";
         foreach ($selected_app->modules as $module) {
             if (!$user->check_module_access($module)) {
                 continue;
             }
 
             echo "<div class='bg-white text-primary-txt shadow-md rounded-lg mb-4'>";
-            echo "<div class='bg-card-header-bg text-card-header-txt p-4 rounded-t-lg'>";
+            echo "<div class='bg-card-header-bg text-card-header-txt p-2 md:p-4 rounded-t-lg'>";
             echo "<h2 class='text-lg font-semibold'>" . $module->name . "</h2>";
             echo "</div>";
-            echo "<div class='p-4 grid grid-cols-1 md:grid-cols-2 gap-4'>";
+            echo "<div class='p-2 md:p-4 grid grid-cols-1 md:grid-cols-2 gap-4'>";
 
             echo "<div class='col-span-1'>";
-            echo "<div class='p-4 grid grid-cols-1'>";
+            echo "<div class='p-2 md:p-4 grid grid-cols-1'>";
             foreach ($module->lappfunctions as $appfunction) {
                 $img = $this->get_icon($appfunction->category);
                 if ($appfunction->label == "") {
@@ -111,7 +111,7 @@ class renderer
 
             if (sizeof($module->rappfunctions) > 0) {
                 echo "<div class='col-span-1'>";
-                echo "<div class='p-4 grid grid-cols-1'>";
+                echo "<div class='p-2 md:p-4 grid grid-cols-1'>";
                 foreach ($module->rappfunctions as $appfunction) {
                     $img = $this->get_icon($appfunction->category);
                     if ($appfunction->label == "") {

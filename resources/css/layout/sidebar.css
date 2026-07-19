@@ -1,8 +1,22 @@
 .main-sidebar {
     @apply border-e border-solid;
+    position: relative;
+    z-index: 100;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    flex: 0 0 theme('width.sidebar');
+    height: 100vh;
+    height: 100dvh;
+    background: inherit;
     background-color: theme('colors.sidebar-bg');
     color: theme('colors.primary-txt');
     border-color: theme('colors.soft-border');
+    transition: flex 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    .sidebar-inner {
+        width: theme('width.sidebar');
+    }
 
     .app-name, .main-nav-item {
         @apply mb-3 p-4;
@@ -23,5 +37,44 @@
     .main-nav-item.selected {
         background-color: theme('colors.sidebar-selected-bg');
         color: theme('colors.sidebar-selected-txt');
+    }
+}
+
+/* Desktop collapse: .main-sidebar is a flex item here, so "closed" means
+   reclaiming its layout space via flex-basis, with its fixed-width inner
+   content sliding away to match the shrinking box — necessarily different
+   mechanics from the mobile drawer (position:fixed + self-transform, see
+   fa/components/drawer.css), since a flex item and a fixed-position
+   element don't collapse the same way. Both driven by the same
+   .x-drawer-closed class, though, and explicitly scoped to desktop so the
+   two mechanisms never overlap (previously this relied on .x-drawer's
+   position:fixed incidentally nullifying flex-basis on mobile, which left
+   .sidebar-inner still picking up this block's transform there too — a
+   real double-transform bug during the mobile slide, since
+   .main-sidebar.x-drawer-closed .sidebar-inner's specificity always beat the
+   old mobile "neutralize" attempt regardless of media query). */
+@media (min-width: theme('screens.md')) {
+    /* x-cloak (plugins/alpine.css) hides the sidebar for the whole window
+       between first paint and Alpine hydrating — needed on mobile, since
+       pre-hydration the panel has none of x-drawer's positioning classes
+       yet and would otherwise render in normal flow, overlapping content.
+       Desktop's default state is simply "visible" though, so undo the
+       cloak there specifically rather than wait on JS for something CSS
+       already knows unconditionally — this is what was causing the brief
+       flash of a hidden sidebar on desktop load. */
+    .main-sidebar[x-cloak] {
+        display: block !important;
+    }
+
+    .main-sidebar .sidebar-inner {
+        transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .main-sidebar.x-drawer-closed {
+        flex: 0 0 0px;
+
+        .sidebar-inner {
+            transform: translateX(-100%);
+        }
     }
 }

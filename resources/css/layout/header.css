@@ -1,21 +1,25 @@
 .main-header {
-    @apply p-4 drop-shadow flex;
+    @apply px-4 py-2 drop-shadow flex items-center;
     background-color: theme('colors.header-bg');
     color: theme('colors.primary-txt');
 
+    /* Shrinks below its content width when the toolbar (icons, and whatever
+       gets added to it later) needs the room — `min-w-0` overrides the flex
+       default of never shrinking narrower than content. Overflow clips by
+       default; scrollable on hover/focus so the full text is still reachable
+       without ever pushing the header wider than the viewport. */
     .title {
-        @apply inline-block text-xl font-semibold whitespace-nowrap;
+        @apply text-xl font-semibold whitespace-nowrap min-w-0 overflow-hidden;
+        text-overflow: ellipsis;
+
+        &:hover,
+        &:focus-within {
+            overflow-x: auto;
+            text-overflow: clip;
+        }
     }
 
     .toolbar {
-        @apply flex-1 flex justify-end items-center overflow-x-auto w-[60%];
-
-        .toolbar-item {
-            @apply me-4;
-
-            img {
-                @apply h-[1.2rem] w-[1.2rem] inline-block align-text-bottom;
-            }
-        }
+        @apply flex-1 flex justify-end items-center;
     }
 }

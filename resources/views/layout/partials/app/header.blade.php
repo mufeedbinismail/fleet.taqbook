@@ -11,7 +11,6 @@ $user = session('wa_current_user') ?? null;
 
 // Calculate derived values
 $shouldShowFooter = !$no_menu && !$is_index && null !== session('wa_current_user');
-$sidebarCollapsed = ($_COOKIE['sidebar_collapsed'] ?? '0') === '1';
 
 // Define toolbox
 $toolbox = [
@@ -59,16 +58,24 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
 // Ajax indicator
 $indicator = url("themes/".user_theme()."/images/ajax-loader.gif");
 @endphp
-<section class="{{ conditional_join([
-    'main-container',
-    'has-header' => true,
-    'has-sidebar' => !$no_menu,
-    'has-footer' => $shouldShowFooter,
-    'sidebar-collapsed' => !$no_menu && $sidebarCollapsed
-]) }}">
+<section
+    class="{{ conditional_join([
+        'main-container',
+        'has-header' => true,
+        'has-sidebar' => !$no_menu,
+        'has-footer' => $shouldShowFooter,
+    ]) }}"
     @if (!$no_menu)
+        x-data
+        x-drawer
+    @endif
+>
+    @if (!$no_menu)
+    <!-- Mobile drawer backdrop -->
+    <div x-drawer:backdrop x-transition.opacity x-cloak></div>
+
     <!-- Sidebar -->
-    <aside class="main-sidebar">
+    <aside class="main-sidebar" x-drawer:panel.left x-cloak>
         <div class="sidebar-inner">
             <h2 class="app-name">
                 <img src="{{ url("/themes/default/images/logo.svg") }}" alt="Logo">
@@ -95,22 +102,35 @@ $indicator = url("themes/".user_theme()."/images/ajax-loader.gif");
         @if(!$no_menu)
         <header class="main-header">
             <!-- Sidebar Minimize Button -->
-            <button id="sidebar-toggle" class="sidebar-toggle-btn me-2 bg-transparent w-[25px] h-[25px] border-0 text-lg pb-0" aria-label="Toggle sidebar" type="button">
-                <span class="icon icon-bars"></span>
+            <button id="sidebar-toggle" class="me-2 bg-transparent border-0 cursor-pointer" aria-label="Toggle sidebar" x-drawer:trigger>
+                <span class="icon icon-bars text-[2rem]"></span>
             </button>
             @if ($title && !$is_index)
             <h1 class="title">{{ $title }}</h1>
             @endif
-            <ul class="toolbar">
-            @foreach($toolbox as $key => $item)
-                <li class="toolbar-item">
-                    <a href="{{ $item['link'] }}">
-                        <span class="icon {{ $item['icon'] }}"></span>
-                        <span>{{ $item['label'] }}</span>
-                    </a>
-                </li>
-            @endforeach
-            </ul>
+            <div class="toolbar" x-dropdown>
+                <button type="button" x-dropdown:trigger>
+                    <span class="icon icon-circle-user text-[2rem]"></span>
+                    <span class="hidden md:inline">{{ $user->name ?? '' }}</span>
+                </button>
+
+                <template x-teleport="body">
+                    <ul x-dropdown:panel x-transition x-cloak>
+                        <li class="x-dropdown-header">
+                            <span class="icon icon-circle-user"></span>
+                            <span class="x-dropdown-header-name">{{ $user->name ?? '' }}</span>
+                        </li>
+                        @foreach($toolbox as $key => $item)
+                            <li>
+                                <a href="{{ $item['link'] }}" class="x-dropdown-item">
+                                    <span class="icon {{ $item['icon'] }}"></span>
+                                    <span>{{ $item['label'] }}</span>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </template>
+            </div>
         </header>
         @endif
 

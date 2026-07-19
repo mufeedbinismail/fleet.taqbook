@@ -242,34 +242,9 @@ export default function initUI() {
         }
     }
 
-    // Sidebar toggle logic
-    function handleMinimizeSidebarButton() {
-        const btn = document.getElementById('sidebar-toggle');
-        if (!btn) {
-            return;
-        }
-
-        const container = document.querySelector('.main-container');
-        if (!container) {
-            return;
-        }
-
-        btn.addEventListener('click', function() {
-            const collapsed = container.classList.toggle('sidebar-collapsed');
-            // Set cookie for PHP
-            document.cookie = 'sidebar_collapsed=' + (collapsed ? '1' : '0') + '; path=/; SameSite=Lax';
-        });
-
-        // On load, ensure class matches cookie
-        if (document.cookie.match(/sidebar_collapsed=1/)) {
-            container.classList.add('sidebar-collapsed');
-        }
-    }
-
     document.addEventListener("DOMContentLoaded", function() {
         refreshUI();
         monkeyPatchFADatePicker();
         monkeyPatchFASetMark();
-        handleMinimizeSidebarButton();
     });
 }

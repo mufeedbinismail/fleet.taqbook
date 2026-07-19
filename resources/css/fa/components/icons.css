@@ -14,15 +14,26 @@ span.has-updatable-sibling > select span.has-img-sibling > select {
   max-width: calc(100% - 1.75rem);
 }
 
-/* Icons inside button */
+/* Icons inside button.
+   `img`/`svg` stay unscoped — those only ever come from legacy FA markup
+   (raw <img>, pre-conversion) which always wants this fixed sizing.
+   `span.icon` is scoped to `.has-img-icon`, the marker refreshUI() (fa/ui.js)
+   adds to a button exactly when it swaps that legacy <img> for this span —
+   so new components rendering their own <span class="icon"> (never routed
+   through that conversion) aren't forced into the legacy fixed size. */
 button > img,
 button > svg,
-button > span.icon {
+.has-img-icon > span.icon {
   @apply inline-block align-text-bottom;
   height: 1rem !important;
 }
 
-button:not(.is-icon) {
+/* Legacy icon-to-text spacing — same `.has-img-icon` scoping as above.
+   Legacy buttons have no flex `gap` between their icon and label, so this
+   margin is how they get separated; new components already handle that
+   spacing themselves (e.g. `.x-dropdown-trigger`'s `gap-2`), and would get
+   double-spaced if this margin applied to them too. */
+.has-img-icon:not(.is-icon) {
   & > img,
   & > svg,
   & > span.icon {
