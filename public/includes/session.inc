@@ -11,7 +11,7 @@
 ***********************************************************************/
 define('VARLIB_PATH', PATH_TO_ROOT.'/tmp');
 define('VARLOG_PATH', PATH_TO_ROOT.'/tmp');
-define('SECURE_ONLY', true); // if you really need also http (unsecure) access allowed, you can set this to NULL
+define('SECURE_ONLY', config('legacy.secure_only', true));
 
 global $SysPrefs, $Ajax, $db_connections,
     $Validate, $Editors, $Pagehelp, $Refs,

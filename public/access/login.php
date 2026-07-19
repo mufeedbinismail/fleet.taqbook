@@ -48,7 +48,7 @@ $username = $login_timeout ? $_SESSION['wa_current_user']->loginname : ($SysPref
 $allow = SECURE_ONLY !== true ? true : (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_NAME'] === "localhost";
 
 if (!$allow) {
-	$demo_text = '<span class="redfg">'.__("HTTP access is not allowed on this site. This is unsecure. If you really want to access this unsecure site then set the SECURE_ONLY to false in /includes/session.inc file.").'</span>';
+	$demo_text = '<span class="redfg">'.__("HTTP access is not allowed on this site. This is unsecure. If you really want to access this unsecure site then set LEGACY_ALLOW_HTTPS_ONLY to false.").'</span>';
 }
 
 $password = $SysPrefs->allow_demo_mode ? "password":"";

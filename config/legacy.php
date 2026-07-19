@@ -35,6 +35,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Allow only HTTPS mode
+    |--------------------------------------------------------------------------
+    |
+    | When true, accessing through HTTP will result in a blocked message
+    | 
+    | "HTTP access is not allowed on this site. This is unsecure. If you
+    | really want to access this unsecure site then set LEGACY_ALLOW_HTTPS_ONLY"
+    |
+    */
+    'secure_only' => env('LEGACY_ALLOW_HTTPS_ONLY', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | Show SQL in Footer
     |--------------------------------------------------------------------------
     |
