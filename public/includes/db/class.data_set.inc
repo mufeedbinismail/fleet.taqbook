@@ -266,7 +266,7 @@ class data_set extends record_set {
 		if ($key===null)
 			return parent::get();
 
-		$sql = "SELECT * FROM ".TB_PREF.$this->name." WHERE ";
+		$sql = "SELECT * FROM ".$this->name." WHERE ";
 		$where = $this->subset ? (array)$this->subset : array();
 
 		if (is_array($this->key)) {
@@ -294,7 +294,7 @@ class data_set extends record_set {
 		$fields = array();
 		foreach($this->fields as $fld)
 			$fields[] = '`'.$fld.'`';
-		$sql = "SELECT ".implode(',', $fields)." FROM ".TB_PREF.$this->name;
+		$sql = "SELECT ".implode(',', $fields)." FROM ".$this->name;
 
 		if ($where)
 			$sql .= " WHERE ".($this->subset ? '('.$this->subset . ') AND ' : ''). $where;
@@ -318,7 +318,7 @@ class data_set extends record_set {
 		if (!parent::update($key, $data))	// validate data
 			return false;
 
-		$sql = "UPDATE ".TB_PREF.$this->name." SET ";
+		$sql = "UPDATE ".$this->name." SET ";
 		$updates = array();
 
 		foreach($data as $fld => $value) {	// select only data relevant for this model
@@ -357,7 +357,7 @@ class data_set extends record_set {
 		if (!parent::delete_check($key))
 			return false;
 
-		$sql = "DELETE FROM ".TB_PREF.$this->name;
+		$sql = "DELETE FROM ".$this->name;
 		$where = $this->subset ? (array)$this->subset : array();
 
 		if(is_array($this->key)) {
@@ -385,7 +385,7 @@ class data_set extends record_set {
 		if (!parent::insert_check($data))
 			return false;
 
-		$sql = "INSERT INTO ".TB_PREF.$this->name. ' (';
+		$sql = "INSERT INTO ".$this->name. ' (';
 		$fields = array();
 		foreach($data as $fld => $value) {
 			if (in_array($fld, $this->fields) || (is_array($this->key) ? in_array($this->key) : $fld==$this->key))

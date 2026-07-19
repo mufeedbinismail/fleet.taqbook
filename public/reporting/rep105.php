@@ -47,12 +47,12 @@ function GetSalesOrders($from, $to, $category=0, $location=null, $backorder=0)
                 item.units,
                 line.quantity,
                 line.qty_sent
-            FROM ".TB_PREF."sales_orders sorder
-	           	INNER JOIN ".TB_PREF."sales_order_details line
+            FROM sales_orders sorder
+	           	INNER JOIN sales_order_details line
             	    ON sorder.order_no = line.order_no
             	    AND sorder.trans_type = line.trans_type
             	    AND sorder.trans_type = ".ST_SALESORDER."
-            	INNER JOIN ".TB_PREF."stock_master item
+            	INNER JOIN stock_master item
             	    ON line.stk_code = item.stock_id
             WHERE sorder.ord_date >='$fromdate'
                 AND sorder.ord_date <='$todate'";

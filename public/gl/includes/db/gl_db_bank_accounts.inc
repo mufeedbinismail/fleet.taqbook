@@ -11,7 +11,7 @@
 ***********************************************************************/
 //---------------------------------------------------------------------------------------------
 function clear_dflt_curr_account($curr_code) {
-	  $sql = "UPDATE ".TB_PREF."bank_accounts SET dflt_curr_act=0 WHERE bank_curr_code="
+	  $sql = "UPDATE bank_accounts SET dflt_curr_act=0 WHERE bank_curr_code="
 	  .db_escape($curr_code);
 	  db_query($sql, "could not update default currency account");
 }
@@ -23,7 +23,7 @@ function add_bank_account($account_code, $account_type, $bank_account_name,
 	if($dflt_curr_act) 	// only one default account for any currency
 	  clear_dflt_curr_account($bank_curr_code);
 
-	$sql = "INSERT INTO ".TB_PREF."bank_accounts (account_code, account_type, 
+	$sql = "INSERT INTO bank_accounts (account_code, account_type, 
 		bank_account_name, bank_name, bank_account_number, bank_address, 
 		bank_curr_code, dflt_curr_act, bank_charge_act)
 		VALUES (".db_escape($account_code).", ".db_escape($account_type).", "
@@ -42,7 +42,7 @@ function update_bank_account($id, $account_code, $account_type, $bank_account_na
 	if($dflt_curr_act) 	// only one default account for any currency
 	  clear_dflt_curr_account($bank_curr_code);
 
-	$sql = "UPDATE ".TB_PREF."bank_accounts	SET account_type = ".db_escape($account_type).",
+	$sql = "UPDATE bank_accounts	SET account_type = ".db_escape($account_type).",
 		account_code=".db_escape($account_code).",
 		bank_account_name=".db_escape($bank_account_name).", bank_name=".db_escape($bank_name).",
 		bank_account_number=".db_escape($bank_account_number).", bank_curr_code=".db_escape($bank_curr_code).",
@@ -57,7 +57,7 @@ function update_bank_account($id, $account_code, $account_type, $bank_account_na
 
 function delete_bank_account($id)
 {
-	$sql = "DELETE FROM ".TB_PREF."bank_accounts WHERE id=".db_escape($id);
+	$sql = "DELETE FROM bank_accounts WHERE id=".db_escape($id);
 
 	db_query($sql,"could not delete bank account for $id");
 }
@@ -67,7 +67,7 @@ function delete_bank_account($id)
 
 function get_bank_account($id)
 {
-	$sql = "SELECT * FROM ".TB_PREF."bank_accounts WHERE id=".db_escape($id);
+	$sql = "SELECT * FROM bank_accounts WHERE id=".db_escape($id);
 
 	$result = db_query($sql, "could not retreive bank account for $id");
 
@@ -79,7 +79,7 @@ function get_bank_account($id)
 function get_bank_accounts($show_inactive=false)
 {
 	$sql = "SELECT account.*, gl_account.account_name
-		FROM ".TB_PREF."bank_accounts account, ".TB_PREF."chart_master gl_account
+		FROM bank_accounts account, chart_master gl_account
 		WHERE account.account_code = gl_account.account_code";
 	if (!$show_inactive) $sql .= " AND !account.inactive";
 	$sql .= " ORDER BY account_code, bank_curr_code";
@@ -91,7 +91,7 @@ function get_bank_accounts($show_inactive=false)
 
 function get_bank_gl_account($id)
 {
-	$sql = "SELECT account_code FROM ".TB_PREF."bank_accounts WHERE id=".db_escape($id);
+	$sql = "SELECT account_code FROM bank_accounts WHERE id=".db_escape($id);
 
 	$result = db_query($sql, "could not retreive bank account for $id");
 
@@ -104,7 +104,7 @@ function get_bank_gl_account($id)
 
 function get_bank_charge_account($id)
 {
-	$sql = "SELECT bank_charge_act FROM ".TB_PREF."bank_accounts WHERE id=".db_escape($id);
+	$sql = "SELECT bank_charge_act FROM bank_accounts WHERE id=".db_escape($id);
 
 	$result = db_query($sql, "could not retreive bank account for $id");
 
@@ -117,7 +117,7 @@ function get_bank_charge_account($id)
 
 function add_quick_entry($description, $type, $base_amount, $base_desc, $bal_type, $usage)
 {
-	$sql = "INSERT INTO ".TB_PREF."quick_entries (description, type, base_amount, base_desc, bal_type, `usage`) 
+	$sql = "INSERT INTO quick_entries (description, type, base_amount, base_desc, bal_type, `usage`) 
 	VALUES (".db_escape($description).", ".db_escape($type).", "
 		.db_escape($base_amount).", ".db_escape($base_desc).", ".db_escape($bal_type).", ".db_escape($usage).")";
 
@@ -128,7 +128,7 @@ function add_quick_entry($description, $type, $base_amount, $base_desc, $bal_typ
 
 function update_quick_entry($selected_id, $description, $type, $base_amount, $base_desc, $bal_type, $usage)
 {
-	$sql = "UPDATE ".TB_PREF."quick_entries	SET description = ".db_escape($description).",
+	$sql = "UPDATE quick_entries	SET description = ".db_escape($description).",
 		type=".db_escape($type).", base_amount=".db_escape($base_amount)
 		.", base_desc=".db_escape($base_desc).", bal_type=".db_escape($bal_type).", `usage`=".db_escape($usage)."
 		WHERE id = ".db_escape($selected_id);
@@ -140,7 +140,7 @@ function update_quick_entry($selected_id, $description, $type, $base_amount, $ba
 
 function delete_quick_entry($selected_id)
 {
-	$sql = "DELETE FROM ".TB_PREF."quick_entries WHERE id=".db_escape($selected_id);
+	$sql = "DELETE FROM quick_entries WHERE id=".db_escape($selected_id);
 
 	db_query($sql,"could not delete quick entry $selected_id");
 }
@@ -149,7 +149,7 @@ function delete_quick_entry($selected_id)
 
 function add_quick_entry_line($qid, $action, $dest_id, $amount, $dim, $dim2, $memo)
 {
-	$sql = "INSERT INTO ".TB_PREF."quick_entry_lines 
+	$sql = "INSERT INTO quick_entry_lines 
 		(qid, action, dest_id, amount, dimension_id, dimension2_id, memo) 
 	VALUES 
 		(".db_escape($qid).", ".db_escape($action).",".db_escape($dest_id).",
@@ -162,7 +162,7 @@ function add_quick_entry_line($qid, $action, $dest_id, $amount, $dim, $dim2, $me
 
 function update_quick_entry_line($selected_id, $qid, $action, $dest_id, $amount, $dim, $dim2, $memo)
 {
-	$sql = "UPDATE ".TB_PREF."quick_entry_lines SET qid = ".db_escape($qid)
+	$sql = "UPDATE quick_entry_lines SET qid = ".db_escape($qid)
 		.", action=".db_escape($action).",
 		dest_id=".db_escape($dest_id).", amount=".db_escape($amount)
 		.", dimension_id=".db_escape($dim).", dimension2_id=".db_escape($dim2).", memo=".db_escape($memo)."
@@ -175,7 +175,7 @@ function update_quick_entry_line($selected_id, $qid, $action, $dest_id, $amount,
 
 function delete_quick_entry_line($selected_id)
 {
-	$sql = "DELETE FROM ".TB_PREF."quick_entry_lines WHERE id=".db_escape($selected_id);
+	$sql = "DELETE FROM quick_entry_lines WHERE id=".db_escape($selected_id);
 
 	db_query($sql,"could not delete quick entry line $selected_id");
 }
@@ -184,7 +184,7 @@ function delete_quick_entry_line($selected_id)
 
 function has_quick_entries($type=null)
 {
-	$sql = "SELECT id FROM ".TB_PREF."quick_entries";
+	$sql = "SELECT id FROM quick_entries";
 	if ($type != null)
 		$sql .= " WHERE type=".db_escape($type);
 
@@ -194,7 +194,7 @@ function has_quick_entries($type=null)
 
 function get_quick_entries($type = null)
 {
-	$sql = "SELECT * FROM ".TB_PREF."quick_entries";
+	$sql = "SELECT * FROM quick_entries";
 	if ($type != null)
 		$sql .= " WHERE type=".db_escape($type);
 	$sql .= " ORDER BY description";
@@ -204,7 +204,7 @@ function get_quick_entries($type = null)
 
 function get_quick_entry($selected_id)
 {
-	$sql = "SELECT * FROM ".TB_PREF."quick_entries WHERE id=".db_escape($selected_id);
+	$sql = "SELECT * FROM quick_entries WHERE id=".db_escape($selected_id);
 
 	$result = db_query($sql, "could not retreive quick entry $selected_id");
 
@@ -214,9 +214,9 @@ function get_quick_entry($selected_id)
 function get_quick_entry_lines($qid)
 {
 	$sql = "SELECT line.*, coa.account_name, taxtype.name as tax_name
-		FROM ".TB_PREF."quick_entry_lines line
-			LEFT JOIN ".TB_PREF."chart_master coa ON line.dest_id = coa.account_code
-			LEFT JOIN ".TB_PREF."tax_types taxtype ON line.dest_id = taxtype.id
+		FROM quick_entry_lines line
+			LEFT JOIN chart_master coa ON line.dest_id = coa.account_code
+			LEFT JOIN tax_types taxtype ON line.dest_id = taxtype.id
 		WHERE 
 			qid=".db_escape($qid)." ORDER by id";
 
@@ -225,7 +225,7 @@ function get_quick_entry_lines($qid)
 
 function has_quick_entry_lines($qid)
 {
-	$sql = "SELECT id FROM ".TB_PREF."quick_entry_lines WHERE qid=".db_escape($qid);
+	$sql = "SELECT id FROM quick_entry_lines WHERE qid=".db_escape($qid);
 
 	$result = db_query($sql, "could not retreive quick entries");
 	return db_num_rows($result) > 0;
@@ -235,7 +235,7 @@ function has_quick_entry_lines($qid)
 
 function get_quick_entry_line($selected_id)
 {
-	$sql = "SELECT * FROM ".TB_PREF."quick_entry_lines WHERE id=".db_escape($selected_id);
+	$sql = "SELECT * FROM quick_entry_lines WHERE id=".db_escape($selected_id);
 
 	$result = db_query($sql, "could not retreive quick entry for $selected_id");
 
@@ -254,7 +254,7 @@ function get_max_reconciled($date, $bank_account)
 			 SUM(IF(reconciled<='$date', amount, 0)) as end_balance,
 			 SUM(IF(reconciled<'$date', amount, 0)) as beg_balance,
 			 SUM(amount) as total
-		FROM ".TB_PREF."bank_trans trans
+		FROM bank_trans trans
 		WHERE bank_act=".db_escape($bank_account);
 	//	." AND trans.reconciled IS NOT NULL";
 
@@ -267,7 +267,7 @@ function get_max_reconciled($date, $bank_account)
 function get_ending_reconciled($bank_account, $bank_date)
 {
 	$sql = "SELECT ending_reconcile_balance
-		FROM ".TB_PREF."bank_accounts WHERE id=".db_escape($bank_account)
+		FROM bank_accounts WHERE id=".db_escape($bank_account)
 		. " AND last_reconciled_date=".db_escape($bank_date);
 	$result = db_query($sql,"Cannot retrieve last reconciliation");
 	return db_fetch($result);
@@ -279,8 +279,8 @@ function get_sql_for_bank_account_reconcile($bank_account, $date)
 {
 	$sql = "SELECT	bt.type, trans_no, ref, trans_date,
 				amount,	person_id, person_type_id, reconciled, bt.id, c.memo_
-		FROM ".TB_PREF."bank_trans bt
-		LEFT JOIN ".TB_PREF."comments c ON c.type = bt.type AND c.id = bt.trans_no
+		FROM bank_trans bt
+		LEFT JOIN comments c ON c.type = bt.type AND c.id = bt.trans_no
 		WHERE bank_act = ".db_escape($bank_account) . "
 			AND (reconciled IS NULL OR reconciled='". date2sql($date) ."')
 			AND amount != 0 AND trans_date <= '". date2sql($date) ."'
@@ -293,12 +293,12 @@ function get_sql_for_bank_account_reconcile($bank_account, $date)
 
 function update_reconciled_values($reconcile_id, $reconcile_value, $reconcile_date, $end_balance, $bank_account)
 {
-	$sql = "UPDATE ".TB_PREF."bank_trans SET reconciled=$reconcile_value"
+	$sql = "UPDATE bank_trans SET reconciled=$reconcile_value"
 		." WHERE id=".db_escape($reconcile_id);
 
   	db_query($sql, "Can't change reconciliation status");
 	// save last reconcilation status (date, end balance)
-    $sql2 = "UPDATE ".TB_PREF."bank_accounts SET last_reconciled_date='"
+    $sql2 = "UPDATE bank_accounts SET last_reconciled_date='"
 			.date2sql($reconcile_date)."',
     	    ending_reconcile_balance=$end_balance
 			WHERE id=".db_escape($bank_account);
@@ -319,8 +319,7 @@ function get_default_bank_account($curr=null)
 	if (!isset($curr))
 		$curr = $home_curr;
 
-	$sql = "SELECT b.*, b.bank_curr_code='$home_curr' as fall_back FROM "
-		.TB_PREF."bank_accounts b"
+	$sql = "SELECT b.*, b.bank_curr_code='$home_curr' as fall_back FROM bank_accounts b"
 		." WHERE b.bank_curr_code=".db_escape($curr)
 		." OR b.bank_curr_code='$home_curr'
 		ORDER BY fall_back, dflt_curr_act desc";
@@ -332,7 +331,7 @@ function get_default_bank_account($curr=null)
 
 function get_default_customer_bank_account($cust_id)
 {
-	$sql = "SELECT curr_code FROM ".TB_PREF."debtors_master WHERE debtor_no=".db_escape($cust_id);
+	$sql = "SELECT curr_code FROM debtors_master WHERE debtor_no=".db_escape($cust_id);
 	$result = db_query($sql, "could not retreive default customer currency code");
 	$row = db_fetch_row($result);
 	$ba = get_default_bank_account($row[0]);
@@ -341,7 +340,7 @@ function get_default_customer_bank_account($cust_id)
 
 function get_default_supplier_bank_account($supplier_id)
 {
-	$sql = "SELECT curr_code FROM ".TB_PREF."suppliers WHERE supplier_id=".db_escape($supplier_id);
+	$sql = "SELECT curr_code FROM suppliers WHERE supplier_id=".db_escape($supplier_id);
 	$result = db_query($sql, "could not retreive default supplier currency code");
 	$row = db_fetch_row($result);
 	$ba = get_default_bank_account($row[0]);
@@ -365,9 +364,9 @@ function get_bank_account_limit($account, $date, $user=null)
 function identify_bank_account($account_number)
 {
 	$number = db_escape($account_number);
-	$sql = "(SELECT id AS id, ".BO_COMPANY." AS type FROM ".TB_PREF."bank_accounts WHERE REPLACE(bank_account_number,' ', '')=$number)";
-	$sql .= " UNION (SELECT supplier_id AS id, ".BO_SUPPLIER." AS type FROM ".TB_PREF."suppliers WHERE REPLACE(bank_account,' ', '')=$number)";
-	$sql .= " UNION (SELECT branch_code AS id, ".BO_CUSTBRANCH." AS type FROM ".TB_PREF."cust_branch WHERE REPLACE(bank_account,' ', '')=$number)";
+	$sql = "(SELECT id AS id, ".BO_COMPANY." AS type FROM bank_accounts WHERE REPLACE(bank_account_number,' ', '')=$number)";
+	$sql .= " UNION (SELECT supplier_id AS id, ".BO_SUPPLIER." AS type FROM suppliers WHERE REPLACE(bank_account,' ', '')=$number)";
+	$sql .= " UNION (SELECT branch_code AS id, ".BO_CUSTBRANCH." AS type FROM cust_branch WHERE REPLACE(bank_account,' ', '')=$number)";
 
 	$result = db_query($sql, 'bank account identification failed');
 
@@ -381,7 +380,7 @@ function identify_bank_account($account_number)
 
 function get_bank_account_currency($id)
 {
-	$sql= "SELECT bank_curr_code FROM ".TB_PREF."bank_accounts WHERE id=".db_escape($id);
+	$sql= "SELECT bank_curr_code FROM bank_accounts WHERE id=".db_escape($id);
 	$result = db_query($sql, "retreive bank account currency");
 
 	$myrow = db_fetch_row($result);

@@ -34,8 +34,8 @@ function getTaxTransactions($from, $to, $tax_id)
 
 	$sql = "SELECT d.debtor_no, d.name AS cust_name, d.tax_id, dt.type, dt.trans_no,
 			dt.effect * ABS(dt.total - dt.ov_gst - dt.ov_freight_tax) * dt.rate AS total
-		FROM ".TB_PREF."debtor_trans dt
-			LEFT JOIN ".TB_PREF."debtors_master d ON d.debtor_no=dt.debtor_no
+		FROM debtor_trans dt
+			LEFT JOIN debtors_master d ON d.debtor_no=dt.debtor_no
 		WHERE (dt.type=".ST_SALESINVOICE." OR dt.type=".ST_CUSTCREDIT.") ";
 	if ($tax_id)
 		$sql .= "AND tax_id<>'' ";
@@ -47,7 +47,7 @@ function getTaxTransactions($from, $to, $tax_id)
 function getTaxes($type, $trans_no)
 {
 	$sql = "SELECT included_in_price, SUM(CASE WHEN trans_type=".ST_CUSTCREDIT." THEN -amount ELSE amount END * ex_rate) AS tax
-		FROM ".TB_PREF."trans_tax_details WHERE trans_type=$type AND trans_no=$trans_no GROUP BY included_in_price";
+		FROM trans_tax_details WHERE trans_type=$type AND trans_no=$trans_no GROUP BY included_in_price";
 
     $result = db_query($sql,"No transactions were returned");
     if ($result !== false)

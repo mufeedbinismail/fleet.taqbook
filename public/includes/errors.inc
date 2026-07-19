@@ -204,7 +204,7 @@ function end_flush() {
 
 function display_db_error($msg, $sql_statement=null, $exit=true)
 {
-	global $db, $SysPrefs, $db_connections;
+	global $db, $SysPrefs;
 
 	$warning = $msg==null;
 	$db_error = db_error_no();
@@ -220,11 +220,9 @@ function display_db_error($msg, $sql_statement=null, $exit=true)
 		$str .= "error message : " . db_error_msg($db) . "<br>";
 	}
 	
-	if ($SysPrefs->debug == 1) 
+	if ($SysPrefs->debug == 1)
 	{
-		$cur_prefix = $db_connections[$_SESSION["wa_current_user"]->cur_con]['tbpref'];
-
-		$str .= "sql that failed was : ".str_replace(TB_PREF, $cur_prefix, $sql_statement)."<br>";
+		$str .= "sql that failed was : ".$sql_statement."<br>";
 	}
 	
 	$str .= "<br><br>";

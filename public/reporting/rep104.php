@@ -35,8 +35,8 @@ function fetch_items($category=0)
 				item.material_cost AS Standardcost,
 				item.category_id,item.units,
 				category.description
-			FROM ".TB_PREF."stock_master item,
-				".TB_PREF."stock_category category
+			FROM stock_master item,
+				stock_category category
 			WHERE item.category_id=category.category_id AND NOT item.inactive";
 		if ($category != 0)
 			$sql .= " AND category.category_id = ".db_escape($category);
@@ -50,8 +50,8 @@ function get_kits($category=0)
 {
 	$sql = "SELECT i.item_code AS kit_code, i.description AS kit_name, c.category_id AS cat_id, c.description AS cat_name, count(*)>1 AS kit
 			FROM
-				".TB_PREF."item_codes i
-				LEFT JOIN ".TB_PREF."stock_category c ON i.category_id=c.category_id
+				item_codes i
+				LEFT JOIN stock_category c ON i.category_id=c.category_id
 			WHERE !i.is_foreign AND i.item_code!=i.stock_id";
 	if ($category != 0)
 		$sql .= " AND c.category_id = ".db_escape($category);

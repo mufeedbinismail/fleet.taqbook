@@ -22,7 +22,7 @@ function add_work_order_issue($woid, $ref, $to_work_order, $items, $location, $w
 		'workcentre', 'date_', 'memo_'), $args);
 	$args->trans_no = 0;
 
-	$sql = "INSERT INTO ".TB_PREF."wo_issues (workorder_id, reference, issue_date, loc_code, workcentre_id)
+	$sql = "INSERT INTO wo_issues (workorder_id, reference, issue_date, loc_code, workcentre_id)
 		VALUES (".db_escape($woid).", ".db_escape($ref).", '" .
 		date2sql($date_) . "', ".db_escape($location).", ".db_escape($workcentre).")";
 	db_query($sql,"The work order issue could not be added");
@@ -43,9 +43,9 @@ function add_work_order_issue($woid, $ref, $to_work_order, $items, $location, $w
 		add_stock_move(ST_MANUISSUE, $item->stock_id, $number,
 			$location, $date_, $memo_, -$item->quantity, $unit_cost);
 
-		$sql = "INSERT INTO ".TB_PREF."wo_issue_items (issue_id, stock_id, qty_issued, unit_cost)
+		$sql = "INSERT INTO wo_issue_items (issue_id, stock_id, qty_issued, unit_cost)
 			SELECT ".db_escape($number).",".db_escape($item->stock_id).",".db_escape($item->quantity).", material_cost
-			FROM ".TB_PREF."stock_master
+			FROM stock_master
 			WHERE stock_id=".db_escape($item->stock_id);
 
 		db_query($sql,"A work order issue item could not be added");
@@ -87,7 +87,7 @@ function add_work_order_issue($woid, $ref, $to_work_order, $items, $location, $w
 
 function get_work_order_issues($woid)
 {
-	$sql = "SELECT * FROM ".TB_PREF."wo_issues WHERE workorder_id=".db_escape($woid)
+	$sql = "SELECT * FROM wo_issues WHERE workorder_id=".db_escape($woid)
 	." ORDER BY issue_no";
     return db_query($sql, "The work order issues could not be retrieved");
 }
@@ -95,9 +95,9 @@ function get_work_order_issues($woid)
 function get_additional_issues($woid)
 {
 	$sql = "SELECT issue.*, item.*, stock.mb_flag
-		FROM ".TB_PREF."wo_issues issue, "
-			.TB_PREF."wo_issue_items item
-			LEFT JOIN ".TB_PREF."stock_master stock ON stock.stock_id=item.stock_id
+		FROM wo_issues issue, 
+			wo_issue_items item
+			LEFT JOIN stock_master stock ON stock.stock_id=item.stock_id
 		WHERE issue.issue_no=item.issue_id
 		AND issue.workorder_id=".db_escape($woid)
 		." ORDER BY item.id";
@@ -109,11 +109,11 @@ function get_work_order_issue($issue_no)
 {
 	$sql = "SELECT DISTINCT issue.*, wo.stock_id, wo.closed,
 		item.description, loc.location_name, center.name AS WorkCentreName
-		FROM ".TB_PREF."wo_issues issue,"
-			.TB_PREF."workorders wo,"
-			.TB_PREF."stock_master item,"
-			.TB_PREF."locations loc,"
-			.TB_PREF."workcentres center
+		FROM wo_issues issue,
+			workorders wo,
+			stock_master item,
+			locations loc,
+			workcentres center
 		WHERE issue_no=".db_escape($issue_no)."
 		AND wo.id = issue.workorder_id
 		AND loc.loc_code = issue.loc_code
@@ -129,8 +129,8 @@ function get_work_order_issue($issue_no)
 function get_work_order_issue_details($issue_no)
 {
 	$sql = "SELECT issue.*, item.description, item.units
-		FROM ".TB_PREF."wo_issue_items issue,"
-			.TB_PREF."stock_master item
+		FROM wo_issue_items issue,
+			stock_master item
 		WHERE issue_id=".db_escape($issue_no)."
 		AND item.stock_id=issue.stock_id
 		ORDER BY issue.id";
@@ -141,7 +141,7 @@ function get_work_order_issue_details($issue_no)
 
 function exists_work_order_issue($issue_no)
 {
-	$sql = "SELECT issue_no FROM ".TB_PREF."wo_issues WHERE issue_no=".db_escape($issue_no);
+	$sql = "SELECT issue_no FROM wo_issues WHERE issue_no=".db_escape($issue_no);
 	$result = db_query($sql, "Cannot retreive a wo issue");
 
     return (db_num_rows($result) > 0);
@@ -172,7 +172,7 @@ function void_work_order_issue($type_no)
 	// FIXME update issued material cost
 
 	// void the actual issue items and their quantities
-	$sql = "UPDATE ".TB_PREF."wo_issue_items SET qty_issued = 0
+	$sql = "UPDATE wo_issue_items SET qty_issued = 0
 		WHERE issue_id=".db_escape($type_no);
 
 	db_query($sql,"A work order issue item could not be voided");

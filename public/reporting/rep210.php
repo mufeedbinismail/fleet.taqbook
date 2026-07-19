@@ -37,9 +37,9 @@ function get_remittance($type, $trans_no)
    		supplier.supp_name,  supplier.supp_account_no, 
    		supplier.curr_code, supplier.payment_terms, supplier.gst_no AS tax_id, 
    		supplier.address
-		FROM "
-			.TB_PREF."supp_trans trans,"
-			.TB_PREF."suppliers supplier
+		FROM 
+			supp_trans trans,
+			suppliers supplier
 		WHERE trans.supplier_id = supplier.supplier_id
 		AND trans.type = ".db_escape($type)."
 		AND trans.trans_no = ".db_escape($trans_no);

@@ -94,7 +94,7 @@ function add_stock_adjustment_item($adj_id, $stock_id, $location, $date_, $refer
 	update_average_material_cost(null, $stock_id, $standard_cost, $quantity, $date_);
 
 	if (is_fixed_asset($mb_flag)) {
-		$sql = "UPDATE ".TB_PREF."stock_master SET inactive=1
+		$sql = "UPDATE stock_master SET inactive=1
 			WHERE stock_id=".db_escape($stock_id);
 		db_query($sql,"The inactive flag for the fixed asset could not be updated");
 	}

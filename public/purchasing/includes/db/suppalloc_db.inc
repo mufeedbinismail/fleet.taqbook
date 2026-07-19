@@ -18,7 +18,7 @@ function add_supp_allocation($amount, $trans_type_from, $trans_no_from,
 	$trans_type_to, $trans_no_to, $person_id, $date_)
 {
 	$date = date2sql($date_);
-	$sql = "INSERT INTO ".TB_PREF."supp_allocations (
+	$sql = "INSERT INTO supp_allocations (
 		amt, date_alloc,
 		trans_type_from, trans_no_from, trans_no_to, trans_type_to, person_id)
 		VALUES (".db_escape($amount).", '$date', "
@@ -33,7 +33,7 @@ function add_supp_allocation($amount, $trans_type_from, $trans_no_from,
 
 function delete_supp_allocation($trans_id)
 {
-	$sql = "DELETE FROM ".TB_PREF."supp_allocations WHERE id = ".db_escape($trans_id);
+	$sql = "DELETE FROM supp_allocations WHERE id = ".db_escape($trans_id);
 	db_query($sql, "The existing allocation $trans_id could not be deleted");
 }
 
@@ -42,7 +42,7 @@ function delete_supp_allocation($trans_id)
 function get_supp_trans_allocation_balance($trans_type, $trans_no)
 {
 	$sql = "SELECT (ov_amount+ov_gst-ov_discount-alloc) AS BalToAllocate
-		FROM ".TB_PREF."supp_trans WHERE trans_no="
+		FROM supp_trans WHERE trans_no="
 		.db_escape($trans_no)." AND type=".db_escape($trans_type);
 	$result = db_query($sql,"calculate the allocation");
 	$myrow = db_fetch_row($result);
@@ -56,8 +56,8 @@ function get_supp_trans_allocation_balance($trans_type, $trans_no)
 function update_supp_trans_allocation($trans_type, $trans_no, $person_id)
 {
 	$dec = user_price_dec();
-	$sql = "UPDATE `".TB_PREF.($trans_type==ST_PURCHORDER ? 'purch_orders' : 'supp_trans')."` trans,
-			(SELECT person_id, sum(amt) amt from ".TB_PREF."supp_allocations
+	$sql = "UPDATE `".($trans_type==ST_PURCHORDER ? 'purch_orders' : 'supp_trans')."` trans,
+			(SELECT person_id, sum(amt) amt from supp_allocations
 				WHERE person_id=".db_escape($person_id)." AND ((trans_type_to=".db_escape($trans_type)." AND trans_no_to=".db_escape($trans_no).")
 				OR (trans_type_from=".db_escape($trans_type)." AND trans_no_from=".db_escape($trans_no)."))) allocated
 		SET
@@ -80,10 +80,10 @@ function void_supp_allocations($type, $type_no, $date="")
 
 function clear_supp_alloctions($type, $type_no, $person_id=null, $date="")
 {
-	$sql = "UPDATE  ".TB_PREF."supp_allocations ca
-				LEFT JOIN ".TB_PREF."supp_trans paym ON ca.trans_type_from=paym.type AND ca.trans_no_from=paym.trans_no AND ca.person_id=paym.supplier_id
-				LEFT JOIN ".TB_PREF."supp_trans st ON ca.trans_type_to=st.type AND ca.trans_no_to=st.trans_no AND ca.person_id=st.supplier_id
-				LEFT JOIN ".TB_PREF."purch_orders po ON ca.trans_type_to=".ST_PURCHORDER." AND ca.trans_no_to=po.order_no AND ca.person_id=po.supplier_id
+	$sql = "UPDATE  supp_allocations ca
+				LEFT JOIN supp_trans paym ON ca.trans_type_from=paym.type AND ca.trans_no_from=paym.trans_no AND ca.person_id=paym.supplier_id
+				LEFT JOIN supp_trans st ON ca.trans_type_to=st.type AND ca.trans_no_to=st.trans_no AND ca.person_id=st.supplier_id
+				LEFT JOIN purch_orders po ON ca.trans_type_to=".ST_PURCHORDER." AND ca.trans_no_to=po.order_no AND ca.person_id=po.supplier_id
 	 		SET paym.alloc=paym.alloc - ca.amt,
 	 			st.alloc=st.alloc -  ca.amt,
 	 			po.alloc=po.alloc -  ca.amt
@@ -94,7 +94,7 @@ function clear_supp_alloctions($type, $type_no, $person_id=null, $date="")
 	db_query($sql, "could not clear allocation");
 
 	// remove any allocations for this transaction
-	$sql = "DELETE FROM ".TB_PREF."supp_allocations
+	$sql = "DELETE FROM supp_allocations
 			WHERE  ((trans_type_from=".db_escape($type)." AND trans_no_from=".db_escape($type_no).")
 				OR (trans_type_to=".db_escape($type)." AND trans_no_to=".db_escape($type_no)."))";
 	if ($person_id)
@@ -119,9 +119,9 @@ function get_allocatable_from_supp_sql($supplier_id, $settled)
 		trans.supplier_id,
 		supplier.address,
 		round(abs(total)-alloc,6) <= 0 AS settled
-	 FROM "
-	 	.TB_PREF."supp_trans as trans, "
-		.TB_PREF."suppliers as supplier"
+	 FROM 
+	 	supp_trans as trans, 
+		suppliers as supplier"
 	." WHERE trans.supplier_id=supplier.supplier_id
 		AND trans.effect = ".TransactionEffect::Decrease->value;
 
@@ -137,7 +137,7 @@ function get_allocatable_from_supp_sql($supplier_id, $settled)
 function get_allocatable_purch_orders($supplier_id = null, $trans_no=null, $type=null)
 {
 	$due_dates = "SELECT order_no, MIN(delivery_date) as date
-		FROM ".TB_PREF."purch_order_details det
+		FROM purch_order_details det
 		GROUP BY det.order_no";
 
 	$sql = "SELECT
@@ -153,11 +153,11 @@ function get_allocatable_purch_orders($supplier_id = null, $trans_no=null, $type
 		supplier.address,
 		amt,
 		requisition_no as supp_ref
-		FROM ".TB_PREF."purch_orders as porder
-			LEFT JOIN ".TB_PREF."suppliers as supplier ON porder.supplier_id = supplier.supplier_id
-			LEFT JOIN ".TB_PREF."supp_allocations as alloc
+		FROM purch_orders as porder
+			LEFT JOIN suppliers as supplier ON porder.supplier_id = supplier.supplier_id
+			LEFT JOIN supp_allocations as alloc
 				ON porder.order_no = alloc.trans_no_to AND alloc.trans_type_to=".ST_PURCHORDER." AND alloc.person_id=porder.supplier_id
-			LEFT JOIN ".TB_PREF."grn_batch as grn ON porder.order_no = grn.purch_order_no
+			LEFT JOIN grn_batch as grn ON porder.order_no = grn.purch_order_no
 			LEFT JOIN ($due_dates) due_dates ON due_dates.order_no=porder.order_no
 		WHERE total>0";
 
@@ -195,10 +195,10 @@ function get_allocatable_to_supp_transactions($supplier_id=null, $trans_no=null,
 		amt,
 		supp_reference
 
-	 FROM ".TB_PREF."supp_trans as trans
-			LEFT JOIN ".TB_PREF."supp_allocations as alloc
-				ON trans.trans_no = alloc.trans_no_to AND trans.type = alloc.trans_type_to AND alloc.person_id=trans.supplier_id,"
-	 		.TB_PREF."suppliers as supplier
+	 FROM supp_trans as trans
+			LEFT JOIN supp_allocations as alloc
+				ON trans.trans_no = alloc.trans_no_to AND trans.type = alloc.trans_type_to AND alloc.person_id=trans.supplier_id,
+	 		suppliers as supplier
 	 WHERE
 	 	 trans.supplier_id=supplier.supplier_id";
 	if ($supplier_id)
@@ -240,9 +240,9 @@ function get_allocatable_from_supp_transactions($supplier_id, $trans_no=null, $t
 		supplier.address,
 		amt,
 		supp_reference
-	 FROM  ".TB_PREF."supp_trans as trans,"
-			.TB_PREF."suppliers as supplier,"
-			.TB_PREF."supp_allocations as alloc
+	 FROM  supp_trans as trans,
+			suppliers as supplier,
+			supp_allocations as alloc
 	 WHERE trans.supplier_id=supplier.supplier_id
 			AND trans.trans_no = alloc.trans_no_from
 			AND trans.type = alloc.trans_type_from
@@ -281,11 +281,11 @@ function get_sql_for_supplier_allocation_inquiry()
 		((trans.type = ".ST_SUPPINVOICE." OR trans.type = ".ST_SUPPCREDIT.") AND trans.due_date < '" . date2sql(Today()) . "') AS OverDue,
 		trans.effect AS effect,
 		trans.supplier_id
-    	FROM "
-			.TB_PREF."supp_trans as trans
-			LEFT JOIN ".TB_PREF."voided as v
-				ON trans.trans_no=v.id AND trans.type=v.type,"
-			.TB_PREF."suppliers as supplier
+    	FROM 
+			supp_trans as trans
+			LEFT JOIN voided as v
+				ON trans.trans_no=v.id AND trans.type=v.type,
+			suppliers as supplier
     	WHERE supplier.supplier_id = trans.supplier_id
      	AND trans.tran_date >= '$date_after'
 	   	AND trans.tran_date <= '$date_to'

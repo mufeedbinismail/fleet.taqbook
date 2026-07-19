@@ -138,10 +138,10 @@ function getTransactions($category, $location, $item_like)
 			item.description, item.inactive,
 			IF(move.stock_id IS NULL, '', move.loc_code) AS loc_code,
 			SUM(IF(move.stock_id IS NULL,0,move.qty)) AS QtyOnHand
-		FROM ("
-			.TB_PREF."stock_master item,"
-			.TB_PREF."stock_category category)
-			LEFT JOIN ".TB_PREF."stock_moves move ON item.stock_id=move.stock_id
+		FROM (
+			stock_master item,
+			stock_category category)
+			LEFT JOIN stock_moves move ON item.stock_id=move.stock_id
 		WHERE item.category_id=category.category_id
 		AND (item.mb_flag='B' OR item.mb_flag='M')";
 	if ($category != 0)

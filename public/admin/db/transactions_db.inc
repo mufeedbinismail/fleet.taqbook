@@ -35,7 +35,7 @@ function get_sql_for_view_transactions($filtertype, $from, $to, &$trans_ref)
 		$sql .= ",t.$trans_date as trans_date";
  	if ($type_name)
 		$sql .= ", t.$type_name as type";
-	$sql .= " FROM $table_name t LEFT JOIN ".TB_PREF."voided v ON"
+	$sql .= " FROM $table_name t LEFT JOIN voided v ON"
 		." t.$trans_no_name=v.id AND v.type=".db_escape($filtertype);
 
 	$sql .= " WHERE ISNULL(v.`memo_`)";
@@ -51,7 +51,7 @@ function get_sql_for_view_transactions($filtertype, $from, $to, &$trans_ref)
 
 	// the ugly hack below is necessary to exclude old gl_trans records lasting after edition,
 	// otherwise old data transaction can be retrieved instead of current one.
-	if ($table_name==TB_PREF.'gl_trans')
+	if ($table_name == 'gl_trans')
 		$sql .= " AND t.`amount` <> 0";
 
 	$sql .= " GROUP BY ".($type_name ? "t.$type_name," : '')." t.$trans_no_name";
@@ -74,7 +74,7 @@ function get_counterparty_name($trans_type, $trans_no, $full=true)
 		case ST_SALESORDER:
 		case ST_SALESQUOTE:
 			$sql = "SELECT order.customer_id as person_id, debtor.name as name
-			FROM ".TB_PREF."sales_orders order, ".TB_PREF."debtors_master debtor
+			FROM sales_orders order, debtors_master debtor
 			WHERE order_no=".db_escape($trans_no)." AND trans_type=".db_escape($trans_type)
 			." AND order.debtor_no=debtor.debtor_no";
 			break;
@@ -86,14 +86,14 @@ function get_counterparty_name($trans_type, $trans_no, $full=true)
 		case ST_MKTCUSTREFUND :
 		case ST_CUSTDELIVERY :
 			$sql = "SELECT trans.debtor_no as person_id, debtor.name as name
-			FROM ".TB_PREF."debtor_trans trans, ".TB_PREF."debtors_master debtor
+			FROM debtor_trans trans, debtors_master debtor
 			WHERE trans_no=".db_escape($trans_no)." AND type=".db_escape($trans_type)
 			." AND trans.debtor_no=debtor.debtor_no";
 			break;
 
 		case ST_PURCHORDER :
 			$sql = "SELECT order.supplier_id as person_id, supp.supp_name as name
-			FROM ".TB_PREF."purch_orders order, ".TB_PREF."suppliers supp
+			FROM purch_orders order, suppliers supp
 			WHERE order_no=".db_escape($trans_no)
 			." AND order.supplier_id=supp.supplier_id";
 			break;
@@ -102,14 +102,14 @@ function get_counterparty_name($trans_type, $trans_no, $full=true)
 		case ST_SUPPCREDIT :
 		case ST_SUPPAYMENT :
 			$sql = "SELECT trans.supplier_id as person_id, supp.supp_name as name
-			FROM ".TB_PREF."supp_trans trans, ".TB_PREF."suppliers supp
+			FROM supp_trans trans, suppliers supp
 			WHERE trans_no=".db_escape($trans_no)." AND type=".db_escape($trans_type)
 			." AND trans.supplier_id=supp.supplier_id";
 			break;
 
 		case ST_SUPPRECEIVE :
 			$sql = "SELECT trans.supplier_id as person_id, supp.supp_name as name
-			FROM ".TB_PREF."grn_batch trans, ".TB_PREF."suppliers supp
+			FROM grn_batch trans, suppliers supp
 			WHERE id=".db_escape($trans_no)
 			." AND trans.supplier_id=supp.supplier_id";
 			break;
@@ -117,12 +117,12 @@ function get_counterparty_name($trans_type, $trans_no, $full=true)
 		case ST_BANKPAYMENT :
 		case ST_BANKDEPOSIT :
 			$sql = "SELECT trans.debtor_no as person_id, debtor.name as name
-			FROM ".TB_PREF."debtor_trans trans, ".TB_PREF."debtors_master debtor
+			FROM debtor_trans trans, debtors_master debtor
 			WHERE trans_no=".db_escape($trans_no)." AND type=".db_escape($trans_type)
 			." AND trans.debtor_no=debtor.debtor_no
 			UNION
 				SELECT trans.supplier_id as person_id, supp.supp_name as name
-			FROM ".TB_PREF."supp_trans trans, ".TB_PREF."suppliers supp
+			FROM supp_trans trans, suppliers supp
 			WHERE trans_no=".db_escape($trans_no)." AND type=".db_escape($trans_type)
 			." AND trans.supplier_id=supp.supplier_id";
 			break;
@@ -172,7 +172,7 @@ function get_next_trans_no ($trans_type){
 		 $sql1 .= " WHERE `$st[1]`=".db_escape($trans_type);
 
 	// check also in voided transactions (some transactions like location transfer are removed completely)
-	$sql2 = "SELECT MAX(`id`) as last_no FROM ".TB_PREF."voided WHERE `type`=".db_escape($trans_type);
+	$sql2 = "SELECT MAX(`id`) as last_no FROM voided WHERE `type`=".db_escape($trans_type);
 
 	$sql = "SELECT max(last_no) last_no FROM ($sql1 UNION $sql2) a";
     $result = db_query($sql,"The next transaction number for $trans_type could not be retrieved");
@@ -187,38 +187,38 @@ function get_systype_db_info($type)
 {
 	switch ($type)
 	{
-        case     ST_JOURNAL      : return array(TB_PREF."journal", "type", "trans_no", "reference", "tran_date");
-        case     ST_BANKPAYMENT  : return array(TB_PREF."bank_trans", "type", "trans_no", "ref", "trans_date");
-        case     ST_BANKDEPOSIT  : return array(TB_PREF."bank_trans", "type", "trans_no", "ref", "trans_date");
+        case     ST_JOURNAL      : return array("journal", "type", "trans_no", "reference", "tran_date");
+        case     ST_BANKPAYMENT  : return array("bank_trans", "type", "trans_no", "ref", "trans_date");
+        case     ST_BANKDEPOSIT  : return array("bank_trans", "type", "trans_no", "ref", "trans_date");
         case     3               : return null;
-        case     ST_BANKTRANSFER : return array(TB_PREF."bank_trans", "type", "trans_no", "ref", "trans_date");
-        case     ST_SALESINVOICE : return array(TB_PREF."debtor_trans", "type", "trans_no", "reference", "tran_date");
-        case     ST_CUSTCREDIT   : return array(TB_PREF."debtor_trans", "type", "trans_no", "reference", "tran_date");
-        case     ST_CUSTPAYMENT  : return array(TB_PREF."debtor_trans", "type", "trans_no", "reference", "tran_date");
-        case     ST_MKTCUSTPAYMENT : return array(TB_PREF."debtor_trans", "type", "trans_no", "reference", "tran_date");
-        case     ST_MKTCUSTREFUND : return array(TB_PREF."debtor_trans", "type", "trans_no", "reference", "tran_date");
-        case     ST_CUSTDELIVERY : return array(TB_PREF."debtor_trans", "type", "trans_no", "reference", "tran_date");
-        case     ST_LOCTRANSFER  : return array(TB_PREF."stock_moves", "type", "trans_no", "reference", "tran_date");
-        case     ST_INVADJUST    : return array(TB_PREF."stock_moves", "type", "trans_no", "reference", "tran_date");
-        case     ST_PURCHORDER   : return array(TB_PREF."purch_orders", null, "order_no", "reference", "ord_date");
-        case     ST_SUPPINVOICE  : return array(TB_PREF."supp_trans", "type", "trans_no", "reference", "tran_date");
-        case     ST_SUPPCREDIT   : return array(TB_PREF."supp_trans", "type", "trans_no", "reference", "tran_date");
-        case     ST_SUPPAYMENT   : return array(TB_PREF."supp_trans", "type", "trans_no", "reference", "tran_date");
-        case     ST_SUPPRECEIVE  : return array(TB_PREF."grn_batch", null, "id", "reference", "delivery_date");
-        case     ST_WORKORDER    : return array(TB_PREF."workorders", null, "id", "wo_ref", "released_date");
-        case     ST_MANUISSUE    : return array(TB_PREF."wo_issues", null, "issue_no", "reference", "issue_date");
-        case     ST_MANURECEIVE  : return array(TB_PREF."wo_manufacture", null, "id", "reference", "date_");
-        case     ST_SALESORDER   : return array(TB_PREF."sales_orders", "trans_type", "order_no", "reference", "ord_date");
-        case     31              : return array(TB_PREF."service_orders", null, "order_no", "cust_ref", "date");
-        case     ST_SALESQUOTE   : return array(TB_PREF."sales_orders", "trans_type", "order_no", "reference", "ord_date");
-        case	 ST_DIMENSION    : return array(TB_PREF."dimensions", null, "id", "reference", "date_");
-        case     ST_COSTUPDATE   : return array(TB_PREF."journal", "type", "trans_no", "reference", "tran_date");
+        case     ST_BANKTRANSFER : return array("bank_trans", "type", "trans_no", "ref", "trans_date");
+        case     ST_SALESINVOICE : return array("debtor_trans", "type", "trans_no", "reference", "tran_date");
+        case     ST_CUSTCREDIT   : return array("debtor_trans", "type", "trans_no", "reference", "tran_date");
+        case     ST_CUSTPAYMENT  : return array("debtor_trans", "type", "trans_no", "reference", "tran_date");
+        case     ST_MKTCUSTPAYMENT : return array("debtor_trans", "type", "trans_no", "reference", "tran_date");
+        case     ST_MKTCUSTREFUND : return array("debtor_trans", "type", "trans_no", "reference", "tran_date");
+        case     ST_CUSTDELIVERY : return array("debtor_trans", "type", "trans_no", "reference", "tran_date");
+        case     ST_LOCTRANSFER  : return array("stock_moves", "type", "trans_no", "reference", "tran_date");
+        case     ST_INVADJUST    : return array("stock_moves", "type", "trans_no", "reference", "tran_date");
+        case     ST_PURCHORDER   : return array("purch_orders", null, "order_no", "reference", "ord_date");
+        case     ST_SUPPINVOICE  : return array("supp_trans", "type", "trans_no", "reference", "tran_date");
+        case     ST_SUPPCREDIT   : return array("supp_trans", "type", "trans_no", "reference", "tran_date");
+        case     ST_SUPPAYMENT   : return array("supp_trans", "type", "trans_no", "reference", "tran_date");
+        case     ST_SUPPRECEIVE  : return array("grn_batch", null, "id", "reference", "delivery_date");
+        case     ST_WORKORDER    : return array("workorders", null, "id", "wo_ref", "released_date");
+        case     ST_MANUISSUE    : return array("wo_issues", null, "issue_no", "reference", "issue_date");
+        case     ST_MANURECEIVE  : return array("wo_manufacture", null, "id", "reference", "date_");
+        case     ST_SALESORDER   : return array("sales_orders", "trans_type", "order_no", "reference", "ord_date");
+        case     31              : return array("service_orders", null, "order_no", "cust_ref", "date");
+        case     ST_SALESQUOTE   : return array("sales_orders", "trans_type", "order_no", "reference", "ord_date");
+        case	 ST_DIMENSION    : return array("dimensions", null, "id", "reference", "date_");
+        case     ST_COSTUPDATE   : return array("journal", "type", "trans_no", "reference", "tran_date");
 
-        case     ST_CUSTOMER    : return array(TB_PREF."debtors_master", null, "debtor_no", "debtor_ref", null);
-        case     ST_SUPPLIER    : return array(TB_PREF."suppliers", null, "supplier_id", "supp_ref", null);
-        case     ST_ITEM        : return array(TB_PREF."item_codes", null, "id", "stock_id", null);
-        case     ST_FIXEDASSET  : return array(TB_PREF."item_codes", null, "id", "stock_id", null);
-        case     ST_BANKACCOUNT  : return array(TB_PREF."bank_accounts", null, "id", "bank_account_number", null);
+        case     ST_CUSTOMER    : return array("debtors_master", null, "debtor_no", "debtor_ref", null);
+        case     ST_SUPPLIER    : return array("suppliers", null, "supplier_id", "supp_ref", null);
+        case     ST_ITEM        : return array("item_codes", null, "id", "stock_id", null);
+        case     ST_FIXEDASSET  : return array("item_codes", null, "id", "stock_id", null);
+        case     ST_BANKACCOUNT  : return array("bank_accounts", null, "id", "bank_account_number", null);
 	}
 
 	display_db_error("invalid type ($type) sent to get_systype_db_info", "", true);

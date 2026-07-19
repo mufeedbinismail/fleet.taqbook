@@ -113,7 +113,7 @@ function get_price ($stock_id, $currency, $sales_type_id, $factor=null, $date=nu
     $home_curr = get_company_currency();
 	//	AND (sales_type_id = $sales_type_id	OR sales_type_id = $base_id)
 	$sql = "SELECT price, curr_abrev, sales_type_id
-		FROM ".TB_PREF."prices
+		FROM prices
 		WHERE stock_id = ".db_escape($stock_id)."
 			AND (curr_abrev = ".db_escape($currency)." OR curr_abrev = ".db_escape($home_curr).")";
 
@@ -207,14 +207,14 @@ function update_parent_line($doc_type, $line_id, $qty_dispatched, $auto=false)
 	else {
 		if ($doc_type==ST_SALESORDER || $doc_type==ST_SALESQUOTE)
 		{
-			$sql = "UPDATE ".TB_PREF."sales_order_details
+			$sql = "UPDATE sales_order_details
 				SET qty_sent = qty_sent + $qty_dispatched";
 			if ($auto)
 				$sql .= ", quantity = quantity + $qty_dispatched";
 			$sql .= " WHERE id=".db_escape($line_id);
 		}
 		else
-			$sql = "UPDATE ".TB_PREF."debtor_trans_details
+			$sql = "UPDATE debtor_trans_details
 				SET qty_done = qty_done + $qty_dispatched
 				WHERE id=".db_escape($line_id);
 	}
@@ -228,8 +228,8 @@ function update_parent_line($doc_type, $line_id, $qty_dispatched, $auto=false)
 function get_location(&$cart)
 {
 	$sql = "SELECT location.*
-		FROM ".TB_PREF."stock_moves move,"
-			.TB_PREF."locations location".
+		FROM stock_moves move,
+			locations location".
 		" WHERE type=".db_escape($cart->trans_type).
 		" AND trans_no=".key($cart->trans_no).
 		" AND qty!=0 ".
@@ -353,8 +353,8 @@ function get_sales_child_lines($trans_type, $trans_no, $lines=true)
 	}
 	$sql = "SELECT child.*
 			FROM
-				".TB_PREF."debtor_trans_details child
-			LEFT JOIN ".TB_PREF."$par_tbl trans 
+				debtor_trans_details child
+			LEFT JOIN $par_tbl trans 
 				ON child.src_id=trans.id AND child.debtor_trans_type=$ctype
 			WHERE $par_no IN(". implode(',', array_values($trans_no)).")";
 
@@ -387,8 +387,8 @@ function get_sales_parent_lines($trans_type, $trans_no, $lines=true)
 	$par_no = $partype == ST_SALESORDER ? "parent.order_no" : "parent.debtor_trans_no";
 	$sql = "SELECT parent.*
 			FROM
-				".TB_PREF."$par_tbl parent
-			LEFT JOIN ".TB_PREF."debtor_trans_details trans 
+				$par_tbl parent
+			LEFT JOIN debtor_trans_details trans 
 				ON trans.src_id=parent.id
 			WHERE
 				trans.debtor_trans_type=".db_escape($trans_type)
@@ -424,7 +424,7 @@ function get_sales_child_documents($trans_type, $trans_no)
 	if (!count_array($childs))
 		return false;
 		
-	$sql = "SELECT * FROM ".TB_PREF."debtor_trans
+	$sql = "SELECT * FROM debtor_trans
 		WHERE type=".get_child_type($trans_type)." AND trans_no IN(". implode(',', array_values($childs)).")";
 
 	return db_query($sql,"The related credit notes could not be retreived");

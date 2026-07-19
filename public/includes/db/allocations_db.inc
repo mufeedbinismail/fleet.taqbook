@@ -20,12 +20,12 @@ function get_payments_for($trans_no, $trans_type, $person_id)
 {
 	$allocations = array();
 
-	$sql = "(SELECT alloc.*, trans.tran_date FROM ".TB_PREF."cust_allocations alloc
-				LEFT JOIN ".TB_PREF."debtor_trans trans ON trans.type=alloc.trans_type_from AND trans.trans_no=alloc.trans_no_from
+	$sql = "(SELECT alloc.*, trans.tran_date FROM cust_allocations alloc
+				LEFT JOIN debtor_trans trans ON trans.type=alloc.trans_type_from AND trans.trans_no=alloc.trans_no_from
 			WHERE (trans_type_to=".db_escape($trans_type)." AND trans_no_to=".db_escape($trans_no)." AND person_id=".db_escape($person_id)."))
 		UNION
-			(SELECT alloc.*, trans.tran_date FROM ".TB_PREF."supp_allocations alloc
-				LEFT JOIN ".TB_PREF."supp_trans trans ON trans.type=alloc.trans_type_from AND trans.trans_no=alloc.trans_no_from
+			(SELECT alloc.*, trans.tran_date FROM supp_allocations alloc
+				LEFT JOIN supp_trans trans ON trans.type=alloc.trans_type_from AND trans.trans_no=alloc.trans_no_from
 			WHERE (trans_type_to=".db_escape($trans_type)." AND trans_no_to=".db_escape($trans_no)." AND person_id=".db_escape($person_id)."))";
 	$result = db_query($sql, "error reading current allocations");
 
@@ -48,13 +48,13 @@ function allocate_payment($type_from, $no_from, $type_to, $no_to, $person_id, $a
 	else
 		$allocations = 'supp_allocations';
 
-	$sql = "DELETE FROM ".TB_PREF.$allocations."
+	$sql = "DELETE FROM ".$allocations."
 		WHERE trans_type_from=".db_escape($type_from)." AND trans_no_from=".db_escape($no_from)
 	   	." AND trans_type_to=".db_escape($type_to)." AND trans_no_to=".db_escape($no_to)." AND person_id=".db_escape($person_id);
 	db_query($sql, "The existing allocations could not be updated");
 	if (floatcmp($amount, 0) != 0)
 	{
-		$sql = "INSERT INTO ".TB_PREF.$allocations." (amt, date_alloc, trans_type_from, trans_no_from, trans_type_to, trans_no_to, person_id)
+		$sql = "INSERT INTO ".$allocations." (amt, date_alloc, trans_type_from, trans_no_from, trans_type_to, trans_no_to, person_id)
 		VALUES (". db_escape($amount).",'$date',".db_escape($type_from).",".db_escape($no_from)
 		   	.",".db_escape($type_to).",".db_escape($no_to).",".db_escape($person_id).")";
 		db_query($sql, "The existing allocations could not be updated");

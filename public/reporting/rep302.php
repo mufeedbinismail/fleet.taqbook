@@ -36,9 +36,9 @@ function getTransactions($category, $location)
 			item.description, item.inactive,
 			IF(move.stock_id IS NULL, '', move.loc_code) AS loc_code,
 			SUM(IF(move.stock_id IS NULL, 0, move.qty)) AS qty_on_hand
-		FROM (".TB_PREF."stock_master item,"
-			.TB_PREF."stock_category category)
-			LEFT JOIN ".TB_PREF."stock_moves move ON item.stock_id=move.stock_id
+		FROM (stock_master item,
+			stock_category category)
+			LEFT JOIN stock_moves move ON item.stock_id=move.stock_id
 		WHERE item.category_id=category.category_id
 		AND (item.mb_flag='B' OR item.mb_flag='M')";
 	if ($category != 0)
@@ -70,7 +70,7 @@ function getPeriods($stockid, $location)
 				SUM(CASE WHEN tran_date >= '$date2' AND tran_date < '$date3' THEN -qty ELSE 0 END) AS prd2,
 				SUM(CASE WHEN tran_date >= '$date3' AND tran_date < '$date4' THEN -qty ELSE 0 END) AS prd3,
 				SUM(CASE WHEN tran_date >= '$date4' AND tran_date <= '$date5' THEN -qty ELSE 0 END) AS prd4
-			FROM ".TB_PREF."stock_moves
+			FROM stock_moves
 			WHERE stock_id='$stockid'
 			AND loc_code ='$location'
 			AND (type=13 OR type=11)";

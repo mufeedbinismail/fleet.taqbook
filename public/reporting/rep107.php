@@ -35,11 +35,11 @@ function get_invoice_range($from, $to, $currency=false)
 //  if($currency !== false)
 //		$sql .= ", cust.curr_code";
 
-	$sql .= " FROM ".TB_PREF."debtor_trans trans 
-			LEFT JOIN ".TB_PREF."voided voided ON trans.type=voided.type AND trans.trans_no=voided.id";
+	$sql .= " FROM debtor_trans trans 
+			LEFT JOIN voided voided ON trans.type=voided.type AND trans.trans_no=voided.id";
 
 	if ($currency !== false)
-		$sql .= " LEFT JOIN ".TB_PREF."debtors_master cust ON trans.debtor_no=cust.debtor_no";
+		$sql .= " LEFT JOIN debtors_master cust ON trans.debtor_no=cust.debtor_no";
 
 	$sql .= " WHERE trans.type=".ST_SALESINVOICE
 		." AND ISNULL(voided.id)"

@@ -43,12 +43,12 @@ function getTransactions($category, $location, $fromsupp, $item, $from, $to)
 			move.tran_date,
 			move.qty AS qty,
 			move.price
-		FROM ".TB_PREF."stock_moves move
-				LEFT JOIN ".TB_PREF."supp_trans credit ON credit.trans_no=move.trans_no AND credit.type=move.type
-				LEFT JOIN ".TB_PREF."grn_batch grn ON grn.id=move.trans_no AND 25=move.type
-				LEFT JOIN ".TB_PREF."suppliers supplier ON IFNULL(grn.supplier_id, credit.supplier_id)=supplier.supplier_id,
-			".TB_PREF."stock_master item,
-			".TB_PREF."stock_category category
+		FROM stock_moves move
+				LEFT JOIN supp_trans credit ON credit.trans_no=move.trans_no AND credit.type=move.type
+				LEFT JOIN grn_batch grn ON grn.id=move.trans_no AND 25=move.type
+				LEFT JOIN suppliers supplier ON IFNULL(grn.supplier_id, credit.supplier_id)=supplier.supplier_id,
+			stock_master item,
+			stock_category category
 		WHERE item.stock_id=move.stock_id
 		AND item.category_id=category.category_id
 		AND move.tran_date>='$from'
@@ -72,10 +72,10 @@ function getTransactions($category, $location, $fromsupp, $item, $from, $to)
 function get_supp_inv_reference($supplier_id, $stock_id, $date)
 {
 	$sql = "SELECT trans.supp_reference
-		FROM ".TB_PREF."supp_trans trans,
-			".TB_PREF."supp_invoice_items line,
-			".TB_PREF."grn_batch batch,
-			".TB_PREF."grn_items item
+		FROM supp_trans trans,
+			supp_invoice_items line,
+			grn_batch batch,
+			grn_items item
 		WHERE trans.type=line.supp_trans_type
 		AND trans.trans_no=line.supp_trans_no
 		AND item.grn_batch_id=batch.id

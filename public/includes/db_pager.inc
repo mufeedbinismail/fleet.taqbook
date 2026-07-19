@@ -62,7 +62,7 @@ class db_pager {
 	//  a. string in form 'SELECT field_list FROM table_joins [WHERE conditions [GROUP group_list [ORDER order_list]]]'
 	//		- if WHERE keyword is used in table_joins, WHERE conditions is obligatory
 	//  b. associative array using select, where, group and order keys ex :
-	//  	array('select' => 'SUM(quantity)', 'from' => TB_PREF."stock_moves", 'group' => 'location')
+	//  	array('select' => 'SUM(quantity)', 'from' => "stock_moves", 'group' => 'location')
 	//
 	//	$name is base name for pager controls
 	function __construct($sql, $name, $table = null, $page_len=0) 

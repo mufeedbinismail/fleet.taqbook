@@ -31,7 +31,7 @@ function get_supplier_details_for_report()
 {
 	$sql = "SELECT supplier_id,	supp_name, address, supp_address, supp_ref,
 				contact, curr_code,	dimension_id, dimension2_id, notes, gst_no
-			FROM ".TB_PREF."suppliers
+			FROM suppliers
 			WHERE inactive = 0
 	 		ORDER BY supp_name";
 
@@ -44,7 +44,7 @@ function getTransactions($supplier_id, $date)
 	$date = date2sql($date);
 
 	$sql = "SELECT SUM((ov_amount+ov_discount)*rate) AS Turnover
-		FROM ".TB_PREF."supp_trans
+		FROM supp_trans
 		WHERE supplier_id=".db_escape($supplier_id)."
 		AND (type=".ST_SUPPINVOICE." OR type=".ST_SUPPCREDIT.")
 		AND tran_date >='$date'";

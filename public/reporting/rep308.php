@@ -54,7 +54,7 @@ function fetch_items($category=0)
 		$sql = "SELECT stock_id, stock.description AS name,
 				stock.category_id,units,
 				cat.description
-			FROM ".TB_PREF."stock_master stock LEFT JOIN ".TB_PREF."stock_category cat ON stock.category_id=cat.category_id
+			FROM stock_master stock LEFT JOIN stock_category cat ON stock.category_id=cat.category_id
 				WHERE mb_flag <> 'D' AND mb_flag <> 'F'";
 		if ($category != 0)
 			$sql .= " AND cat.category_id = ".db_escape($category);
@@ -75,7 +75,7 @@ function trans_qty($stock_id, $location, $from_date, $to_date, $inward = true)
 
 	$to_date = date2sql($to_date);
 
-	$sql = "SELECT ".($inward ? '' : '-')."SUM(qty) FROM ".TB_PREF."stock_moves
+	$sql = "SELECT ".($inward ? '' : '-')."SUM(qty) FROM stock_moves
 		WHERE stock_id=".db_escape($stock_id)."
 		AND tran_date >= '$from_date' 
 		AND tran_date <= '$to_date' AND type <> ".ST_LOCTRANSFER;
@@ -104,12 +104,12 @@ function avg_unit_cost($stock_id, $location, $to_date)
 	$to_date = date2sql($to_date);
 
   	$sql = "SELECT move.*, supplier.supplier_id person_id, IF(ISNULL(grn.rate), credit.rate, grn.rate) ex_rate
-  		FROM ".TB_PREF."stock_moves move
-				LEFT JOIN ".TB_PREF."supp_trans credit ON credit.trans_no=move.trans_no AND credit.type=move.type
-				LEFT JOIN ".TB_PREF."grn_batch grn ON grn.id=move.trans_no AND 25=move.type
-				LEFT JOIN ".TB_PREF."suppliers supplier ON IFNULL(grn.supplier_id, credit.supplier_id)=supplier.supplier_id
-				LEFT JOIN ".TB_PREF."debtor_trans cust_trans ON cust_trans.trans_no=move.trans_no AND cust_trans.type=move.type
-				LEFT JOIN ".TB_PREF."debtors_master debtor ON cust_trans.debtor_no=debtor.debtor_no
+  		FROM stock_moves move
+				LEFT JOIN supp_trans credit ON credit.trans_no=move.trans_no AND credit.type=move.type
+				LEFT JOIN grn_batch grn ON grn.id=move.trans_no AND 25=move.type
+				LEFT JOIN suppliers supplier ON IFNULL(grn.supplier_id, credit.supplier_id)=supplier.supplier_id
+				LEFT JOIN debtor_trans cust_trans ON cust_trans.trans_no=move.trans_no AND cust_trans.type=move.type
+				LEFT JOIN debtors_master debtor ON cust_trans.debtor_no=debtor.debtor_no
 			WHERE stock_id=".db_escape($stock_id)."
 			AND move.tran_date < '$to_date' AND qty <> 0 AND move.type <> ".ST_LOCTRANSFER;
 
@@ -151,12 +151,12 @@ function trans_qty_unit_cost($stock_id, $location, $from_date, $to_date, $inward
 	$to_date = date2sql($to_date);
 
   	$sql = "SELECT move.*, supplier.supplier_id person_id, IF(ISNULL(grn.rate), credit.rate, grn.rate) ex_rate
-  		FROM ".TB_PREF."stock_moves move
-				LEFT JOIN ".TB_PREF."supp_trans credit ON credit.trans_no=move.trans_no AND credit.type=move.type
-				LEFT JOIN ".TB_PREF."grn_batch grn ON grn.id=move.trans_no AND 25=move.type
-				LEFT JOIN ".TB_PREF."suppliers supplier ON IFNULL(grn.supplier_id, credit.supplier_id)=supplier.supplier_id
-				LEFT JOIN ".TB_PREF."debtor_trans cust_trans ON cust_trans.trans_no=move.trans_no AND cust_trans.type=move.type
-				LEFT JOIN ".TB_PREF."debtors_master debtor ON cust_trans.debtor_no=debtor.debtor_no
+  		FROM stock_moves move
+				LEFT JOIN supp_trans credit ON credit.trans_no=move.trans_no AND credit.type=move.type
+				LEFT JOIN grn_batch grn ON grn.id=move.trans_no AND 25=move.type
+				LEFT JOIN suppliers supplier ON IFNULL(grn.supplier_id, credit.supplier_id)=supplier.supplier_id
+				LEFT JOIN debtor_trans cust_trans ON cust_trans.trans_no=move.trans_no AND cust_trans.type=move.type
+				LEFT JOIN debtors_master debtor ON cust_trans.debtor_no=debtor.debtor_no
 		WHERE stock_id=".db_escape($stock_id)."
 		AND move.tran_date >= '$from_date' AND move.tran_date <= '$to_date' AND qty <> 0 AND move.type <> ".ST_LOCTRANSFER;
 

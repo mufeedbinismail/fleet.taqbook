@@ -41,12 +41,12 @@ function get_stock_movements($stock_id, $StockLocation,	$BeforeDate, $AfterDate)
 	if(!$StockLocation) {
 		 $sql .= ", move.loc_code";
 	}
-  	$sql.=    " FROM ".TB_PREF."stock_moves move
-				LEFT JOIN ".TB_PREF."supp_trans credit ON credit.trans_no=move.trans_no AND credit.type=move.type
-				LEFT JOIN ".TB_PREF."grn_batch grn ON grn.id=move.trans_no AND move.type=".ST_SUPPRECEIVE."
-				LEFT JOIN ".TB_PREF."suppliers supplier ON IFNULL(grn.supplier_id, credit.supplier_id)=supplier.supplier_id
-				LEFT JOIN ".TB_PREF."debtor_trans cust_trans ON cust_trans.trans_no=move.trans_no AND cust_trans.type=move.type
-				LEFT JOIN ".TB_PREF."debtors_master debtor ON cust_trans.debtor_no=debtor.debtor_no
+  	$sql.=    " FROM stock_moves move
+				LEFT JOIN supp_trans credit ON credit.trans_no=move.trans_no AND credit.type=move.type
+				LEFT JOIN grn_batch grn ON grn.id=move.trans_no AND move.type=".ST_SUPPRECEIVE."
+				LEFT JOIN suppliers supplier ON IFNULL(grn.supplier_id, credit.supplier_id)=supplier.supplier_id
+				LEFT JOIN debtor_trans cust_trans ON cust_trans.trans_no=move.trans_no AND cust_trans.type=move.type
+				LEFT JOIN debtors_master debtor ON cust_trans.debtor_no=debtor.debtor_no
 		WHERE";
 
   	if ($StockLocation) {
@@ -63,8 +63,8 @@ function get_stock_movements($stock_id, $StockLocation,	$BeforeDate, $AfterDate)
 function calculate_reorder_level($location, $line, &$st_ids, &$st_names, &$st_num, &$st_reorder)
 {
 	$sql = "SELECT stock.*, loc.location_name, loc.email
-		FROM ".TB_PREF."loc_stock stock,"
-			.TB_PREF."locations loc
+		FROM loc_stock stock,
+			locations loc
 		WHERE stock.loc_code=loc.loc_code
 		AND stock.stock_id = '" . $line->stock_id . "'
 		AND stock.loc_code = '" . $location . "'";

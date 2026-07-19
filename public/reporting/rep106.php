@@ -41,11 +41,11 @@ function GetSalesmanTrans($from, $to)
 			branch.br_name,
 			sorder.customer_ref,
 			salesman.*
-		FROM ".TB_PREF."debtor_trans trans,
-			 ".TB_PREF."debtors_master cust,
-			 ".TB_PREF."sales_orders sorder,
-			 ".TB_PREF."cust_branch branch,
-			".TB_PREF."salesman salesman
+		FROM debtor_trans trans,
+			 debtors_master cust,
+			 sales_orders sorder,
+			 cust_branch branch,
+			salesman salesman
 		WHERE sorder.order_no=trans.order_
 		    AND sorder.branch_code=branch.branch_code
 		    AND sorder.trans_type = ".ST_SALESORDER."

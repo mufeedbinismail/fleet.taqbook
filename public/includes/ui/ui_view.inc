@@ -1537,7 +1537,7 @@ function payment_link($name, $options)
     if (substr($name, 0, 4) == 'XUMM')
     {
         // Get the account number for 'XRPL Account' from 'bank_accounts' table
-        $sql = "SELECT bank_account_number FROM ".TB_PREF."bank_accounts WHERE bank_name = '$name'";
+        $sql = "SELECT bank_account_number FROM bank_accounts WHERE bank_name = '$name'";
         $result = db_query($sql, "could not retrieve $name bank account number");
         $row = db_fetch($result);
         if ($row == false) {
@@ -1552,7 +1552,7 @@ function payment_link($name, $options)
         // Extract XRP exchange rate
         $curr_code = substr($name, -3);
         $date = date('Y-m-d'); // Get the current date in 'YYYY-MM-DD' format
-        $sql = "SELECT rate_buy FROM ".TB_PREF."exchange_rates WHERE curr_code = '$curr_code' AND date_ = '$date'";
+        $sql = "SELECT rate_buy FROM exchange_rates WHERE curr_code = '$curr_code' AND date_ = '$date'";
         $result = db_query($sql, "could not retrieve exchange rate for $curr_code - $date");
         $row = db_fetch($result);
         if ($row == false) {

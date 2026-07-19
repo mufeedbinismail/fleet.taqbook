@@ -507,8 +507,8 @@ function get_marketplace_setoff_counterpart($type, $type_no)
 	$sql = (
         "SELECT
             s.trans_no
-		FROM ".TB_PREF."cust_allocations a
-		JOIN ".TB_PREF."debtor_trans s
+		FROM cust_allocations a
+		JOIN debtor_trans s
 			ON s.type = a.$setoffTypeCol
             AND s.trans_no = a.$setoffNoCol
             AND s.debtor_no = a.person_id
@@ -520,7 +520,7 @@ function get_marketplace_setoff_counterpart($type, $type_no)
 			AND (
                 SELECT
                     COUNT(*)
-                FROM ".TB_PREF."cust_allocations f
+                FROM cust_allocations f
 				WHERE
                     f.$setoffTypeCol = ".db_escape($setoffType)."
                     AND f.$setoffNoCol = s.trans_no
@@ -528,7 +528,7 @@ function get_marketplace_setoff_counterpart($type, $type_no)
 			AND (
                 SELECT
                     COUNT(*)
-                FROM ".TB_PREF."cust_allocations t
+                FROM cust_allocations t
 				WHERE
                     t.$parentTypeCol = ".db_escape($type)."
                     AND t.$parentNoCol = ".db_escape($type_no)."
@@ -621,8 +621,8 @@ function is_cust_invoice_credited($trans_no)
 function get_cust_prepayment_invoice_factor($trans_no)
 {
 	$sql = "SELECT IF(dt.prep_amount>0, dt.prep_amount/so.total ,0) 
-		FROM ".TB_PREF."debtor_trans dt
-		LEFT JOIN ".TB_PREF."sales_orders so ON so.trans_type=".ST_SALESORDER." AND so.order_no=dt.order_
+		FROM debtor_trans dt
+		LEFT JOIN sales_orders so ON so.trans_type=".ST_SALESORDER." AND so.order_no=dt.order_
 		 WHERE dt.type=".ST_SALESINVOICE." AND trans_no=".db_escape($trans_no);
 	$row = db_fetch(db_query($sql, 'cannot retrieve prepaid invoice factor'));
 	return is_array($row) ? $row[0] : false;
@@ -633,10 +633,10 @@ function get_cust_prepayment_invoice_factor($trans_no)
 */
 function prepaid_invoice_remainder($order)
 {
-	$sql = "SELECT so.total - SUM(IFNULL(inv.prep_amount,0)) FROM "
-		.TB_PREF."sales_orders so
-			LEFT JOIN ".TB_PREF."payment_terms pt ON so.payment_terms=pt.terms_indicator AND pt.days_before_due = -1
-			LEFT JOIN ".TB_PREF."debtor_trans inv ON inv.type=".ST_SALESINVOICE ." AND inv.order_=so.order_no
+	$sql = "SELECT so.total - SUM(IFNULL(inv.prep_amount,0)) FROM 
+		sales_orders so
+			LEFT JOIN payment_terms pt ON so.payment_terms=pt.terms_indicator AND pt.days_before_due = -1
+			LEFT JOIN debtor_trans inv ON inv.type=".ST_SALESINVOICE ." AND inv.order_=so.order_no
 		WHERE  so.order_no=".db_escape($order)
 			." AND so.trans_type=".ST_SALESORDER
 			." AND so.payment_terms=pt.terms_indicator";
@@ -653,10 +653,10 @@ function get_oldest_delivery_date($invoice_no)
 {
 	$sql = "SELECT MIN(trans.tran_date)
 			FROM
-				".TB_PREF."debtor_trans_details del
-			LEFT JOIN ".TB_PREF."debtor_trans_details inv
+				debtor_trans_details del
+			LEFT JOIN debtor_trans_details inv
 				ON inv.src_id=del.id
-			LEFT JOIN ".TB_PREF."debtor_trans trans 
+			LEFT JOIN debtor_trans trans 
 				ON trans.type=".ST_CUSTDELIVERY." AND trans.trans_no = del.debtor_trans_no
 			WHERE
 				inv.debtor_trans_type=".ST_SALESINVOICE
@@ -673,8 +673,8 @@ function get_oldest_payment_date($invoice_no)
 {
 	$sql = "SELECT MIN(payment.tran_date)
 			FROM
-			".TB_PREF."cust_allocations alloc,
-			".TB_PREF."debtor_trans payment
+			cust_allocations alloc,
+			debtor_trans payment
 			WHERE
 				alloc.trans_type_to=".ST_SALESINVOICE." AND alloc.trans_no_to=".db_escape($invoice_no)
 			." AND alloc.trans_type_from=payment.type AND alloc.trans_no_from=payment.trans_no";

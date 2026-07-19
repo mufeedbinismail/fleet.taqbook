@@ -428,7 +428,7 @@ function customer_top($today, $limit=10, $width='33', &$pg=null)
 {
 	$begin = date2sql(begin_fiscalyear());
 	$today = date2sql($today);
-	$sql = "SELECT SUM(trans.effect * ABS(trans.total - trans.ov_gst - trans.ov_freight_tax) * rate) AS total,d.debtor_no, d.name FROM ".TB_PREF."debtor_trans AS trans, ".TB_PREF."debtors_master AS d WHERE trans.debtor_no=d.debtor_no
+	$sql = "SELECT SUM(trans.effect * ABS(trans.total - trans.ov_gst - trans.ov_freight_tax) * rate) AS total,d.debtor_no, d.name FROM debtor_trans AS trans, debtors_master AS d WHERE trans.debtor_no=d.debtor_no
 		AND (trans.type = ".ST_SALESINVOICE." OR trans.type = ".ST_CUSTCREDIT.")
 		AND tran_date >= '$begin' AND tran_date <= '$today' GROUP by d.debtor_no ORDER BY total DESC, d.debtor_no
 		LIMIT $limit";
@@ -470,7 +470,7 @@ function supplier_top($today, $limit=10, $width='33', &$pg=null)
 	$begin = date2sql(begin_fiscalyear());
 	$today = date2sql($today);
 	$sql = "SELECT SUM((trans.ov_amount + trans.ov_discount) * rate) AS total, s.supplier_id, s.supp_name FROM
-		".TB_PREF."supp_trans AS trans, ".TB_PREF."suppliers AS s WHERE trans.supplier_id=s.supplier_id
+		supp_trans AS trans, suppliers AS s WHERE trans.supplier_id=s.supplier_id
 		AND (trans.type = ".ST_SUPPINVOICE." OR trans.type = ".ST_SUPPCREDIT.")
 		AND tran_date >= '$begin' AND tran_date <= '$today' GROUP by s.supplier_id ORDER BY total DESC, s.supplier_id
 		LIMIT $limit";
@@ -521,14 +521,14 @@ function stock_top($today, $limit=10, $width='33', $type=0, &$pg=null)
 	{
 		$sql = "SELECT SUM((trans.unit_price * trans.quantity) * d.rate) AS total, s.stock_id, s.description, 
 			SUM(trans.quantity) AS qty, SUM((s.material_cost + s.overhead_cost + s.labour_cost) * trans.quantity) AS costs FROM
-			".TB_PREF."debtor_trans_details AS trans, ".TB_PREF."stock_master AS s, ".TB_PREF."debtor_trans AS d 
+			debtor_trans_details AS trans, stock_master AS s, debtor_trans AS d 
 			WHERE trans.stock_id=s.stock_id AND trans.debtor_trans_type=d.type AND trans.debtor_trans_no=d.trans_no
 			AND (d.type = ".ST_SALESINVOICE." OR d.type = ".ST_CUSTCREDIT.") ";
 	}
 	else
 	{
 		$sql = "SELECT SUM(m.qty * (s.material_cost + s.labour_cost + s.overhead_cost)) AS total, s.stock_id, s.description, 
-			SUM(qty) AS qty FROM ".TB_PREF."stock_master AS s, ".TB_PREF."stock_moves AS m 
+			SUM(qty) AS qty FROM stock_master AS s, stock_moves AS m 
 			WHERE s.stock_id=m.stock_id ";
 		if ($type == 1)
 			$sql .= "AND s.mb_flag='M' AND m.type <> ".ST_CUSTDELIVERY." AND m.type <> ".ST_CUSTCREDIT." ";
@@ -605,11 +605,11 @@ function dimension_top($today, $limit=10, $width='33', &$pg=null)
 	$begin = date2sql(begin_fiscalyear());
 	$today = date2sql($today);
 
-	$sql = "SELECT SUM(IF(c.ctype > 3, -amount, 0)) AS result, SUM(IF(c.ctype < 4, amount, 0)) AS balance, d.reference, d.name FROM ".TB_PREF."gl_trans g 
-		LEFT JOIN ".TB_PREF."chart_master AS a ON g.account = a.account_code
-		LEFT JOIN ".TB_PREF."chart_types AS t ON t.id = a.account_type
-		LEFT JOIN ".TB_PREF."dimensions AS d ON (g.dimension_id = d.id OR g.dimension2_id = d.id)
-		LEFT JOIN ".TB_PREF."chart_class AS c ON t.class_id = c.cid
+	$sql = "SELECT SUM(IF(c.ctype > 3, -amount, 0)) AS result, SUM(IF(c.ctype < 4, amount, 0)) AS balance, d.reference, d.name FROM gl_trans g 
+		LEFT JOIN chart_master AS a ON g.account = a.account_code
+		LEFT JOIN chart_types AS t ON t.id = a.account_type
+		LEFT JOIN dimensions AS d ON (g.dimension_id = d.id OR g.dimension2_id = d.id)
+		LEFT JOIN chart_class AS c ON t.class_id = c.cid
 		WHERE IF(c.ctype > 3, tran_date >= '$begin', tran_date >= '0000-00-00') 
 		AND tran_date <= '$today'  AND d.reference IS NOT NULL GROUP BY d.reference ORDER BY result DESC LIMIT $limit"; 	
 	$result = db_query($sql, "Transactions could not be calculated");
@@ -652,8 +652,8 @@ function gl_top($today, $width='33', &$pg=null)
 	$begin = date2sql(begin_fiscalyear());
 	$today = date2sql($today);
 	$sql = "SELECT SUM(IF(c.ctype > 3, -amount, amount)) AS total, c.class_name, c.ctype FROM
-		".TB_PREF."gl_trans,".TB_PREF."chart_master AS a, ".TB_PREF."chart_types AS t, 
-		".TB_PREF."chart_class AS c WHERE
+		gl_trans,chart_master AS a, chart_types AS t, 
+		chart_class AS c WHERE
 		account = a.account_code AND a.account_type = t.id AND t.class_id = c.cid
 		AND IF(c.ctype > 3, tran_date >= '$begin', tran_date >= '0000-00-00') 
 		AND tran_date <= '$today' GROUP BY c.cid ORDER BY c.cid"; 
@@ -711,8 +711,8 @@ function gl_week_performance($today, $width="33", $weeks=4)
 		FROM(SELECT DATE_FORMAT(tran_date, '%X{$sep}%V') AS week_name, 
 			SUM(IF(c.ctype = 4, amount * -1, 0)) AS sales, 
 			SUM(IF(c.ctype = 6, amount, 0)) AS costs FROM 
-			".TB_PREF."gl_trans, ".TB_PREF."chart_master AS a, ".TB_PREF."chart_types AS t, 
-			".TB_PREF."chart_class AS c WHERE(c.ctype = 4 OR c.ctype = 6) 
+			gl_trans, chart_master AS a, chart_types AS t, 
+			chart_class AS c WHERE(c.ctype = 4 OR c.ctype = 6) 
 			AND account = a.account_code AND a.account_type = t.id AND t.class_id = c.cid 
 			AND tran_date >= '$begin' AND tran_date <= '$today1' 
 			GROUP BY week_name ORDER BY week_name DESC LIMIT 0, $weeks) b 
@@ -750,8 +750,8 @@ function gl_month_performance($today, $width="33", $months=5)
 		FROM(SELECT DATE_FORMAT(tran_date, '%Y{$sep}%m') AS month_name, 
 			SUM(IF(c.ctype = 4, amount * -1, 0)) AS sales, 
 			SUM(IF(c.ctype = 6, amount, 0)) AS costs FROM 
-			".TB_PREF."gl_trans, ".TB_PREF."chart_master AS a, ".TB_PREF."chart_types AS t, 
-			".TB_PREF."chart_class AS c WHERE(c.ctype = 4 OR c.ctype = 6) 
+			gl_trans, chart_master AS a, chart_types AS t, 
+			chart_class AS c WHERE(c.ctype = 4 OR c.ctype = 6) 
 			AND account = a.account_code AND a.account_type = t.id AND t.class_id = c.cid 
 			AND tran_date >= '$begin' AND tran_date <= '$today1' 
 			GROUP BY month_name ORDER BY month_name DESC LIMIT 0, $months) b 
@@ -793,10 +793,10 @@ function customer_aging($today, $width="33")
 				Sum(IF ((TO_DAYS('$today1') - TO_DAYS($due)) > 0,$value,0)) AS Due,
 				Sum(IF ((TO_DAYS('$today1') - TO_DAYS($due)) > $past1,$value,0)) AS Overdue1,
 				Sum(IF ((TO_DAYS('$today1') - TO_DAYS($due)) > $past2,$value,0)) AS Overdue2
-			FROM ".TB_PREF."debtors_master debtor
-				 LEFT JOIN ".TB_PREF."debtor_trans trans ON trans.tran_date <= '$today1' AND debtor.debtor_no = trans.debtor_no AND trans.type <> ".ST_CUSTDELIVERY.","
-				 .TB_PREF."payment_terms terms,"
-				 .TB_PREF."credit_status credit_status
+			FROM debtors_master debtor
+				 LEFT JOIN debtor_trans trans ON trans.tran_date <= '$today1' AND debtor.debtor_no = trans.debtor_no AND trans.type <> ".ST_CUSTDELIVERY.",
+				 payment_terms terms,
+				 credit_status credit_status
 			WHERE
 					debtor.payment_terms = terms.terms_indicator
 	 			AND debtor.credit_status = credit_status.id";
@@ -827,8 +827,8 @@ function customer_balance($today)
    	$value = "IFNULL($sign*((ABS(trans.total) - trans.alloc)*trans.rate),0)";
 	$due = "IF (trans.type=".ST_SALESINVOICE.", trans.due_date, trans.tran_date)";
     $sql = "SELECT Sum($value) AS Balance
-			FROM ".TB_PREF."debtors_master debtor
-				 LEFT JOIN ".TB_PREF."debtor_trans trans ON trans.tran_date <= '$today' AND debtor.debtor_no = trans.debtor_no AND trans.type <> ".ST_CUSTDELIVERY."
+			FROM debtors_master debtor
+				 LEFT JOIN debtor_trans trans ON trans.tran_date <= '$today' AND debtor.debtor_no = trans.debtor_no AND trans.type <> ".ST_CUSTDELIVERY."
 			WHERE ABS(trans.total) - trans.alloc > ".FLOAT_COMP_DELTA;
     $result = db_query($sql,"The customer details could not be retrieved");
     $row = db_fetch($result);
@@ -850,8 +850,8 @@ function supplier_aging($today, $width="33")
 				Sum(IF ((TO_DAYS('$today1') - TO_DAYS($due)) > 0,$value,0)) AS Due,
 				Sum(IF ((TO_DAYS('$today1') - TO_DAYS($due)) > $past1,$value,0)) AS Overdue1,
 				Sum(IF ((TO_DAYS('$today1') - TO_DAYS($due)) > $past2,$value,0)) AS Overdue2
-			FROM ".TB_PREF."suppliers supp
-			 LEFT JOIN ".TB_PREF."supp_trans trans ON supp.supplier_id = trans.supplier_id AND trans.tran_date <= '$today1'
+			FROM suppliers supp
+			 LEFT JOIN supp_trans trans ON supp.supplier_id = trans.supplier_id AND trans.tran_date <= '$today1'
 			AND ABS(trans.total) > ".FLOAT_COMP_DELTA."
 			AND ABS(trans.total) - trans.alloc > ".FLOAT_COMP_DELTA;
     $result = db_query($sql,"The supplier details could not be retrieved");
@@ -878,7 +878,7 @@ function supplier_balance($today)
 	$today = date2sql($today); 
    	$value = "(trans.effect * (ABS(trans.total) - trans.alloc)) * trans.rate";
     $sql = "SELECT Sum($value) AS Balance
-			FROM ".TB_PREF."suppliers supplier, ".TB_PREF."supp_trans trans
+			FROM suppliers supplier, supp_trans trans
 				WHERE supplier.supplier_id = trans.supplier_id
 			AND trans.tran_date <= '$today'
 			AND ABS(trans.total) > ".FLOAT_COMP_DELTA."
@@ -921,7 +921,7 @@ function cash_flow($today)
 		for ($i = 0; $i < $months; $i++)
 			$sql .= " SUM(CASE WHEN trans_date < '$date[$i]' THEN amount ELSE 0 END) AS per0".($i+1).",";
 		$sql = substr($sql, 0, -1);
-		$sql .=	" FROM ".TB_PREF."bank_trans
+		$sql .=	" FROM bank_trans
 			WHERE bank_act=".$account['id'];
 		$res = db_query($sql, "Transactions for bank account could not be calculated");
 		$bal = db_fetch($res);
@@ -986,8 +986,8 @@ function customer_trans($today)
 		trans.total AS total,
 		(trans.total - trans.alloc) AS remainder,
 		DATEDIFF('$today', trans.due_date) AS days
-		FROM ".TB_PREF."debtor_trans as trans, ".TB_PREF."debtors_master as debtor,
-			".TB_PREF."cust_branch as branch
+		FROM debtor_trans as trans, debtors_master as debtor,
+			cust_branch as branch
 		WHERE debtor.debtor_no = trans.debtor_no AND trans.branch_code = branch.branch_code
 			AND trans.type = ".ST_SALESINVOICE." AND (trans.total - trans.alloc) > ".FLOAT_COMP_DELTA."
 			AND DATEDIFF('$today', trans.due_date) > 0 ORDER BY days DESC";
@@ -1071,7 +1071,7 @@ function supplier_trans($today)
 		trans.total AS total,
 		(trans.total - trans.alloc) AS remainder,
 		DATEDIFF('$today', trans.due_date) AS days
-		FROM ".TB_PREF."supp_trans as trans, ".TB_PREF."suppliers as s
+		FROM supp_trans as trans, suppliers as s
 		WHERE s.supplier_id = trans.supplier_id
 			AND trans.type = ".ST_SUPPINVOICE." AND (ABS(trans.total) - trans.alloc) > ".FLOAT_COMP_DELTA." ORDER BY days DESC";
 	$result = db_query($sql);
@@ -1116,12 +1116,12 @@ function stock_below_reorder($today, $type)
 	$today = date2sql($today);
 
     $sql = "SELECT st.loc_code, l.location_name, st.stock_id, sm.description, reorders.reorder_level AS r, SUM(st.qty) AS q
-		FROM ".TB_PREF."stock_moves st
-   		LEFT JOIN ".TB_PREF."voided v ON st.type=v.type AND st.trans_no=v.id
-		LEFT JOIN ".TB_PREF."stock_master sm ON sm.stock_id = st.stock_id 
-		LEFT JOIN ".TB_PREF."loc_stock reorders ON reorders.loc_code=st.loc_code AND
+		FROM stock_moves st
+   		LEFT JOIN voided v ON st.type=v.type AND st.trans_no=v.id
+		LEFT JOIN stock_master sm ON sm.stock_id = st.stock_id 
+		LEFT JOIN loc_stock reorders ON reorders.loc_code=st.loc_code AND
 			reorders.stock_id = st.stock_id
-		LEFT JOIN ".TB_PREF."locations l ON l.loc_code = st.loc_code 
+		LEFT JOIN locations l ON l.loc_code = st.loc_code 
           WHERE ISNULL(v.id) AND tran_date <= '$today' AND sm.mb_flag = 'B'
 			GROUP BY sm.stock_id HAVING q <= r";
 	$result = db_query($sql,"an item reorder could not be retreived");
@@ -1149,8 +1149,8 @@ function stock_below_reorder($today, $type)
 function bank_balance($today, $width)
 {
 	$today = date2sql($today);
-	$sql = "SELECT bank_act, bank_account_name, bank_curr_code, SUM(amount) balance FROM ".TB_PREF."bank_trans bt 
-	            INNER JOIN ".TB_PREF."bank_accounts ba ON bt.bank_act = ba.id
+	$sql = "SELECT bank_act, bank_account_name, bank_curr_code, SUM(amount) balance FROM bank_trans bt 
+	            INNER JOIN bank_accounts ba ON bt.bank_act = ba.id
 	            WHERE trans_date <= '$today'
 	            AND inactive <> 1
 	            GROUP BY bank_act, bank_account_name
@@ -1175,7 +1175,7 @@ function bank_balance($today, $width)
 
 function get_num_customers()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."debtors_master";
+	$sql = "SELECT count(*) FROM debtors_master";
 	$result = db_query($sql, "Fail in count customers");
     $row = db_fetch($result);
 	return $row[0];
@@ -1183,7 +1183,7 @@ function get_num_customers()
 
 function get_num_branches()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."cust_branch";
+	$sql = "SELECT count(*) FROM cust_branch";
 	$result = db_query($sql, "Fail in count branches");
     $row = db_fetch($result);
 	return $row[0];
@@ -1191,7 +1191,7 @@ function get_num_branches()
 
 function get_num_salesmen()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."salesman";
+	$sql = "SELECT count(*) FROM salesman";
 	$result = db_query($sql, "Fail in count salesmen");
     $row = db_fetch($result);
 	return $row[0];
@@ -1202,7 +1202,7 @@ function get_num_overdue_sales()
 	$today = date2sql(calc_today());
 
 	$sql = "SELECT COUNT(trans.trans_no) 	
-		FROM ".TB_PREF."debtor_trans as trans
+		FROM debtor_trans as trans
 		WHERE trans.type = ".ST_SALESINVOICE." AND (trans.total - trans.alloc) > ".FLOAT_COMP_DELTA."
 			AND DATEDIFF('$today', trans.due_date) > 0";
 	$result = db_query($sql);
@@ -1212,7 +1212,7 @@ function get_num_overdue_sales()
 
 function get_num_suppliers()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."suppliers";
+	$sql = "SELECT count(*) FROM suppliers";
 	$result = db_query($sql, "Fail in count suppliers");
     $row = db_fetch($result);
 	return $row[0];
@@ -1220,7 +1220,7 @@ function get_num_suppliers()
 
 function get_new_purch_orders()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."purch_orders po, ".TB_PREF."purch_order_details pd WHERE po.order_no = pd.order_no AND 
+	$sql = "SELECT count(*) FROM purch_orders po, purch_order_details pd WHERE po.order_no = pd.order_no AND 
 		quantity_received < quantity_ordered";
 	$result = db_query($sql, "Fail in count purch orders");
     $row = db_fetch($result);
@@ -1229,7 +1229,7 @@ function get_new_purch_orders()
 
 function get_num_supp_invoices()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."supp_trans WHERE (total - alloc) <> 0";
+	$sql = "SELECT count(*) FROM supp_trans WHERE (total - alloc) <> 0";
 	$result = db_query($sql, "Fail in count purch invoices");
     $row = db_fetch($result);
 	return $row[0];
@@ -1239,7 +1239,7 @@ function get_num_overdue_purch()
 {
 	$today = date2sql(calc_today());
 
-	$sql = "SELECT COUNT(*) FROM ".TB_PREF."supp_trans WHERE (total - alloc) > ".FLOAT_COMP_DELTA." AND DATEDIFF('$today', due_date) > 0";
+	$sql = "SELECT COUNT(*) FROM supp_trans WHERE (total - alloc) > ".FLOAT_COMP_DELTA." AND DATEDIFF('$today', due_date) > 0";
 	$result = db_query($sql, "Fail in count purch invoices");
     $row = db_fetch($result);
 	return $row[0];
@@ -1247,7 +1247,7 @@ function get_num_overdue_purch()
 
 function get_num_items()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."stock_master";
+	$sql = "SELECT count(*) FROM stock_master";
 	$result = db_query($sql, "Fail in count stock master");
     $row = db_fetch($result);
 	return $row[0];
@@ -1255,7 +1255,7 @@ function get_num_items()
 
 function get_num_locations()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."locations";
+	$sql = "SELECT count(*) FROM locations";
 	$result = db_query($sql, "Fail in count locations");
     $row = db_fetch($result);
 	return $row[0];
@@ -1263,7 +1263,7 @@ function get_num_locations()
 
 function get_num_kits()
 {
-	$sql="SELECT count(*) FROM ".TB_PREF."item_codes";
+	$sql="SELECT count(*) FROM item_codes";
 
 	$result = db_query($sql, "Fail in count kits");
     $row = db_fetch($result);
@@ -1276,10 +1276,10 @@ function get_num_reorder()
 	$today = date2sql(calc_today());
 
     $sql = "SELECT st.stock_id, reorders.reorder_level AS r, SUM(st.qty) AS q
-		FROM ".TB_PREF."stock_moves st
-   		LEFT JOIN ".TB_PREF."voided v ON st.type=v.type AND st.trans_no=v.id
-		LEFT JOIN ".TB_PREF."stock_master sm ON sm.stock_id = st.stock_id 
-		LEFT JOIN ".TB_PREF."loc_stock reorders ON reorders.loc_code=st.loc_code AND
+		FROM stock_moves st
+   		LEFT JOIN voided v ON st.type=v.type AND st.trans_no=v.id
+		LEFT JOIN stock_master sm ON sm.stock_id = st.stock_id 
+		LEFT JOIN loc_stock reorders ON reorders.loc_code=st.loc_code AND
 			reorders.stock_id = st.stock_id
           WHERE ISNULL(v.id) AND tran_date <= '$today' AND sm.mb_flag = 'B'
 			GROUP BY st.stock_id HAVING q <= r";
@@ -1291,7 +1291,7 @@ function get_num_assembled()
 {
 	$begin = date2sql(begin_fiscalyear());
 	$today = date2sql(calc_today());
-	$sql = "SELECT count(*) FROM ".TB_PREF."workorders WHERE closed = 1 AND type = ".WO_ASSEMBLY." AND released_date >= '$begin'
+	$sql = "SELECT count(*) FROM workorders WHERE closed = 1 AND type = ".WO_ASSEMBLY." AND released_date >= '$begin'
 		AND released_date <= '$today'";
 	$result = db_query($sql, "Fail in count workorders");
     $row = db_fetch($result);
@@ -1302,7 +1302,7 @@ function get_num_manufactured()
 {
 	$begin = date2sql(begin_fiscalyear());
 	$today = date2sql(calc_today());
-	$sql = "SELECT count(*) FROM ".TB_PREF."workorders WHERE closed = 1 AND type = ".WO_ADVANCED." AND released_date >= '$begin'
+	$sql = "SELECT count(*) FROM workorders WHERE closed = 1 AND type = ".WO_ADVANCED." AND released_date >= '$begin'
 		AND released_date <= '$today'";
 	$result = db_query($sql, "Fail in count workorders");
     $row = db_fetch($result);
@@ -1311,7 +1311,7 @@ function get_num_manufactured()
 	
 function get_num_workcentres()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."workcentres";
+	$sql = "SELECT count(*) FROM workcentres";
 	$result = db_query($sql, "Fail in count work centres");
     $row = db_fetch($result);
 	return $row[0];
@@ -1319,7 +1319,7 @@ function get_num_workcentres()
 	
 function get_open_workorders()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."workorders WHERE closed = 0";
+	$sql = "SELECT count(*) FROM workorders WHERE closed = 0";
 	$result = db_query($sql, "Fail in count workorders");
     $row = db_fetch($result);
 	return $row[0];
@@ -1327,7 +1327,7 @@ function get_open_workorders()
 
 function get_num_fixed_assets()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."stock_master WHERE mb_flag = 'F'";
+	$sql = "SELECT count(*) FROM stock_master WHERE mb_flag = 'F'";
 	$result = db_query($sql, "Fail in count fixed assets");
     $row = db_fetch($result);
 	return $row[0];
@@ -1335,7 +1335,7 @@ function get_num_fixed_assets()
 
 function get_num_fixed_locations()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."stock_master s LEFT JOIN ".TB_PREF."loc_stock l ON s.stock_id = l.stock_id 
+	$sql = "SELECT count(*) FROM stock_master s LEFT JOIN loc_stock l ON s.stock_id = l.stock_id 
 		WHERE mb_flag = 'F'";
 	$result = db_query($sql, "Fail in count locations");
     $row = db_fetch($result);
@@ -1344,7 +1344,7 @@ function get_num_fixed_locations()
 
 function get_num_fixed_categories()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."stock_category c LEFT JOIN ".TB_PREF."stock_master s ON c.category_id = s.category_id 
+	$sql = "SELECT count(*) FROM stock_category c LEFT JOIN stock_master s ON c.category_id = s.category_id 
 		WHERE mb_flag = 'F'";
 	$result = db_query($sql, "Fail in count categories");
     $row = db_fetch($result);
@@ -1353,7 +1353,7 @@ function get_num_fixed_categories()
 
 function get_num_fixed_classes()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."stock_fa_class";
+	$sql = "SELECT count(*) FROM stock_fa_class";
 	$result = db_query($sql, "Fail in count fa classes");
     $row = db_fetch($result);
 	return $row[0];
@@ -1361,7 +1361,7 @@ function get_num_fixed_classes()
 
 function get_num_dimensions()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."dimensions";
+	$sql = "SELECT count(*) FROM dimensions";
 	$result = db_query($sql, "Fail in count dimensions");
     $row = db_fetch($result);
 	return $row[0];
@@ -1369,7 +1369,7 @@ function get_num_dimensions()
 
 function get_dim_type2()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."dimensions WHERE type_ = 2";
+	$sql = "SELECT count(*) FROM dimensions WHERE type_ = 2";
 	$result = db_query($sql, "Fail in count simensions 2");
     $row = db_fetch($result);
 	return $row[0];
@@ -1377,7 +1377,7 @@ function get_dim_type2()
 
 function get_dim_closed()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."dimensions WHERE closed = 1";
+	$sql = "SELECT count(*) FROM dimensions WHERE closed = 1";
 	$result = db_query($sql, "Fail in count closed dimensions");
     $row = db_fetch($result);
 	return $row[0];
@@ -1388,11 +1388,11 @@ function get_dim_total()
 	$begin = date2sql(begin_fiscalyear());
 	$today = date2sql(calc_today());
 	
-	$sql = "SELECT SUM(IF(c.ctype > 3, -amount, 0)) AS result, SUM(IF(c.ctype < 4, amount, 0)) AS balance, d.reference, d.name FROM ".TB_PREF."gl_trans g 
-		LEFT JOIN ".TB_PREF."chart_master AS a ON g.account = a.account_code
-		LEFT JOIN ".TB_PREF."chart_types AS t ON t.id = a.account_type
-		LEFT JOIN ".TB_PREF."dimensions AS d ON (g.dimension_id = d.id OR g.dimension2_id = d.id)
-		LEFT JOIN ".TB_PREF."chart_class AS c ON t.class_id = c.cid
+	$sql = "SELECT SUM(IF(c.ctype > 3, -amount, 0)) AS result, SUM(IF(c.ctype < 4, amount, 0)) AS balance, d.reference, d.name FROM gl_trans g 
+		LEFT JOIN chart_master AS a ON g.account = a.account_code
+		LEFT JOIN chart_types AS t ON t.id = a.account_type
+		LEFT JOIN dimensions AS d ON (g.dimension_id = d.id OR g.dimension2_id = d.id)
+		LEFT JOIN chart_class AS c ON t.class_id = c.cid
 		WHERE IF(c.ctype > 3, tran_date >= '$begin', tran_date >= '0000-00-00') 
 		AND tran_date <= '$today'  AND d.reference IS NOT NULL GROUP BY d.reference"; 	
 	$bal = $res = 0.0;
@@ -1408,7 +1408,7 @@ function get_dim_total()
 function get_today_deposits($today)
 {
 	$today= date2sql($today);
-	$sql="SELECT SUM(gl.amount) FROM ".TB_PREF."gl_trans gl, ".TB_PREF."bank_accounts ba 
+	$sql="SELECT SUM(gl.amount) FROM gl_trans gl, bank_accounts ba 
 		WHERE gl.account = ba.account_code AND gl.tran_date = '$today' AND gl.amount > 0.0";
 	$result = db_query($sql, "could not retrieve today deposits");
 	if ($result == false)
@@ -1423,7 +1423,7 @@ function get_today_deposits($today)
 function get_today_payments($today)
 {
 	$today= date2sql($today);
-	$sql="SELECT SUM(gl.amount) FROM ".TB_PREF."gl_trans gl, ".TB_PREF."bank_accounts ba 
+	$sql="SELECT SUM(gl.amount) FROM gl_trans gl, bank_accounts ba 
 		WHERE gl.account = ba.account_code AND gl.tran_date = '$today' AND gl.amount < 0.0";
 	$result = db_query($sql, "could not retrieve today deposits");
 	if ($result == false)
@@ -1437,7 +1437,7 @@ function get_today_payments($today)
 
 function get_num_users()
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."users";
+	$sql = "SELECT count(*) FROM users";
 	$result = db_query($sql, "could not get num users");
     $row = db_fetch($result);
 	return $row[0];

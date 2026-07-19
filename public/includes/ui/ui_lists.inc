@@ -535,9 +535,9 @@ function supplier_list($name, $selected_id=null, $spec_option=false, $submit_on_
 {
 	global $SysPrefs;
 	if (!empty($SysPrefs->prefs['shortname_name_in_list']))
-		$sql = "SELECT supplier_id, supp_ref, supp_name, curr_code, inactive FROM ".TB_PREF."suppliers ";
+		$sql = "SELECT supplier_id, supp_ref, supp_name, curr_code, inactive FROM suppliers ";
 	else	
-		$sql = "SELECT supplier_id, supp_ref, curr_code, inactive FROM ".TB_PREF."suppliers ";
+		$sql = "SELECT supplier_id, supp_ref, curr_code, inactive FROM suppliers ";
 
 	$mode = get_company_pref('no_supplier_list');
 
@@ -589,9 +589,9 @@ function customer_list($name, $selected_id=null, $spec_option=false, $submit_on_
 {
 	global $SysPrefs;
 	if (!empty($SysPrefs->prefs['shortname_name_in_list']))
-		$sql = "SELECT debtor_no, debtor_ref, name, curr_code, inactive FROM ".TB_PREF."debtors_master ";
+		$sql = "SELECT debtor_no, debtor_ref, name, curr_code, inactive FROM debtors_master ";
 	else	
-		$sql = "SELECT debtor_no, debtor_ref, curr_code, inactive FROM ".TB_PREF."debtors_master ";
+		$sql = "SELECT debtor_no, debtor_ref, curr_code, inactive FROM debtors_master ";
 
 	$mode = get_company_pref('no_customer_list');
 
@@ -646,7 +646,7 @@ function marketplace_list($name, $selected_id=null, $spec_option=false, $submit_
 {
 	global $SysPrefs;
 	
-    $sql = "SELECT id, code, `name`, provision_account, inactive FROM ".TB_PREF."marketplaces ";
+    $sql = "SELECT id, code, `name`, provision_account, inactive FROM marketplaces ";
 
 	if ($editkey)
 		set_editor('marketplace', $name, $editkey);
@@ -707,7 +707,7 @@ function customer_branches_list($customer_id, $name, $selected_id=null,
 	$spec_option = true, $enabled=true, $submit_on_change=false, $editkey = false)
 {
 
-	$sql = "SELECT branch_code, branch_ref FROM ".TB_PREF."cust_branch
+	$sql = "SELECT branch_code, branch_ref FROM cust_branch
 		WHERE debtor_no=" . db_escape($customer_id)." ";
 
 	if ($editkey)
@@ -753,7 +753,7 @@ function customer_branches_list_row($label, $customer_id, $name, $selected_id=nu
 function locations_list($name, $selected_id=null, $all_option=false, $submit_on_change=false, $fixed_asset=false)
 {
 
-	$sql = "SELECT loc_code, location_name, inactive FROM ".TB_PREF."locations WHERE fixed_asset=".(int)$fixed_asset;
+	$sql = "SELECT loc_code, location_name, inactive FROM locations WHERE fixed_asset=".(int)$fixed_asset;
 
 	return combo_input($name, $selected_id, $sql, 'loc_code', 'location_name',
 		array(
@@ -783,7 +783,7 @@ function locations_list_row($label, $name, $selected_id=null, $all_option=false,
 
 function currencies_list($name, $selected_id=null, $submit_on_change=false, $exclude_home_curr=false)
 {
-	$sql = "SELECT curr_abrev, currency, inactive FROM ".TB_PREF."currencies";
+	$sql = "SELECT curr_abrev, currency, inactive FROM currencies";
 	if ($exclude_home_curr)
 		$sql .= " WHERE curr_abrev!='".get_company_currency()."'";
 
@@ -817,7 +817,7 @@ function currencies_list_row($label, $name, $selected_id=null, $submit_on_change
 function fiscalyears_list($name, $selected_id=null, $submit_on_change=false)
 {
 
-	$sql = "SELECT * FROM ".TB_PREF."fiscal_year";
+	$sql = "SELECT * FROM fiscal_year";
 
 	// default to the company current fiscal year
 
@@ -857,7 +857,7 @@ function fiscalyears_list_row($label, $name, $selected_id=null)
 function dimensions_list($name, $selected_id=null, $no_option=false, $showname=' ',
 	$submit_on_change=false, $showclosed=false, $showtype=1)
 {
-	$sql = "SELECT id, CONCAT(reference,'  ',name) as ref FROM ".TB_PREF."dimensions";
+	$sql = "SELECT id, CONCAT(reference,'  ',name) as ref FROM dimensions";
 
 	$options = array(
 		'order' => 'reference',
@@ -900,7 +900,7 @@ function stock_items_list($name, $selected_id=null, $all_option=false,
 	$submit_on_change=false, $opts=array(), $editkey = false, $type = "stock")
 {
 	$sql = "SELECT stock_id, s.description, c.description, s.inactive, s.editable
-			FROM ".TB_PREF."stock_master s,".TB_PREF."stock_category c WHERE s.category_id=c.category_id";
+			FROM stock_master s,stock_category c WHERE s.category_id=c.category_id";
 
 	if (isset($opts['fixed_asset']) && $opts['fixed_asset'])
 		$sql .= " AND mb_flag='F'";
@@ -983,10 +983,10 @@ function sales_items_list($name, $selected_id=null, $all_option=false,
 	$sql = "SELECT i.item_code, i.description, c.description, count(*)>1 as kit,
 			 i.inactive, if(count(*)>1, '0', s.editable) as editable
 			FROM
-			".TB_PREF."stock_master s,
-			".TB_PREF."item_codes i
+			stock_master s,
+			item_codes i
 			LEFT JOIN
-			".TB_PREF."stock_category c
+			stock_category c
 			ON i.category_id=c.category_id
 			WHERE i.stock_id=s.stock_id
       AND mb_flag != 'F'";
@@ -1172,7 +1172,7 @@ function stock_purchasable_fa_list_cells($label, $name, $selected_id=null, $all_
 {
 	// Check if a fixed asset has been bought.
 	$where_opts[] = "stock_id NOT IN
-    	( SELECT stock_id FROM ".TB_PREF."stock_moves WHERE type=".ST_SUPPRECEIVE." AND qty!=0 )";
+    	( SELECT stock_id FROM stock_moves WHERE type=".ST_SUPPRECEIVE." AND qty!=0 )";
 
 	// exclude items currently on the order.
   	foreach($exclude_items as $item) {
@@ -1189,10 +1189,10 @@ function stock_disposable_fa_list($name, $selected_id=null,
 {
 	// Check if a fixed asset has been bought....
 	$where_opts[] = "stock_id IN
-    	( SELECT stock_id FROM ".TB_PREF."stock_moves WHERE type=".ST_SUPPRECEIVE." AND qty!=0 )";
+    	( SELECT stock_id FROM stock_moves WHERE type=".ST_SUPPRECEIVE." AND qty!=0 )";
 	// ...but has not been disposed or sold already.
   	$where_opts[] = "stock_id NOT IN
-		( SELECT stock_id FROM ".TB_PREF."stock_moves WHERE (type=".ST_CUSTDELIVERY." OR type=".ST_INVADJUST.") AND qty!=0 )";
+		( SELECT stock_id FROM stock_moves WHERE (type=".ST_CUSTDELIVERY." OR type=".ST_INVADJUST.") AND qty!=0 )";
 
 	$where_opts[] = "mb_flag='F'";
 
@@ -1205,10 +1205,10 @@ function stock_disposable_fa_list_cells($label, $name, $selected_id=null,
 {
 	// Check if a fixed asset has been bought....
 	$where_opts[] = "stock_id IN
-    	( SELECT stock_id FROM ".TB_PREF."stock_moves WHERE type=".ST_SUPPRECEIVE." AND qty!=0 )";
+    	( SELECT stock_id FROM stock_moves WHERE type=".ST_SUPPRECEIVE." AND qty!=0 )";
 	// ...but has not been disposed or sold already.
 	$where_opts[] = "stock_id NOT IN
-    	( SELECT stock_id FROM ".TB_PREF."stock_moves WHERE (type=".ST_CUSTDELIVERY." OR type=".ST_INVADJUST.") AND qty!=0 )";
+    	( SELECT stock_id FROM stock_moves WHERE (type=".ST_CUSTDELIVERY." OR type=".ST_INVADJUST.") AND qty!=0 )";
 
 	$where_opts[] = "mb_flag='F'";
 
@@ -1228,10 +1228,10 @@ function stock_depreciable_fa_list_cells($label, $name, $selected_id=null,
 
 	// Check if a fixed asset has been bought....
 	$where_opts[] = "stock_id IN
-    	( SELECT stock_id FROM ".TB_PREF."stock_moves WHERE type=".ST_SUPPRECEIVE." AND qty!=0 )";
+    	( SELECT stock_id FROM stock_moves WHERE type=".ST_SUPPRECEIVE." AND qty!=0 )";
 	// ...but has not been disposed or sold already.
 	$where_opts[] = "stock_id NOT IN
-    	( SELECT stock_id FROM ".TB_PREF."stock_moves WHERE (type=".ST_CUSTDELIVERY." OR type=".ST_INVADJUST.") AND qty!=0 )";
+    	( SELECT stock_id FROM stock_moves WHERE (type=".ST_CUSTDELIVERY." OR type=".ST_INVADJUST.") AND qty!=0 )";
 
 	$year = get_current_fiscalyear();
 	$begin = date2sql(add_months(sql2date($year['begin']), -1));
@@ -1254,7 +1254,7 @@ function stock_depreciable_fa_list_cells($label, $name, $selected_id=null,
 
 function tax_types_list($name, $selected_id=null, $none_option=false, $submit_on_change=false)
 {
-	$sql = "SELECT id, CONCAT(name, ' (',rate,'%)') as name FROM ".TB_PREF."tax_types";
+	$sql = "SELECT id, CONCAT(name, ' (',rate,'%)') as name FROM tax_types";
 
 	return combo_input($name, $selected_id, $sql, 'id', 'name',
 		array(
@@ -1288,7 +1288,7 @@ function tax_types_list_row($label, $name, $selected_id=null, $none_option=false
 function tax_groups_list($name, $selected_id=null,
 	$none_option=false, $submit_on_change=false)
 {
-	$sql = "SELECT id, name, inactive FROM ".TB_PREF."tax_groups";
+	$sql = "SELECT id, name, inactive FROM tax_groups";
 
 	return combo_input($name, $selected_id, $sql, 'id', 'name',
 		array(
@@ -1320,7 +1320,7 @@ function tax_groups_list_row($label, $name, $selected_id=null, $none_option=fals
 
 function item_tax_types_list($name, $selected_id=null, $show_inactive = false)
 {
-	$sql ="SELECT id, name FROM ".TB_PREF."item_tax_types";
+	$sql ="SELECT id, name FROM item_tax_types";
 	if (!$show_inactive)
 		$sql .= " WHERE !inactive";
 
@@ -1347,7 +1347,7 @@ function item_tax_types_list_row($label, $name, $selected_id=null, $show_inactiv
 
 function shippers_list($name, $selected_id=null)
 {
-	$sql = "SELECT shipper_id, shipper_name, inactive FROM ".TB_PREF."shippers";
+	$sql = "SELECT shipper_id, shipper_name, inactive FROM shippers";
 	return combo_input($name, $selected_id, $sql, 'shipper_id', 'shipper_name', 
 		array('order'=>array('shipper_name')));
 }
@@ -1372,7 +1372,7 @@ function shippers_list_row($label, $name, $selected_id=null)
 
 function sales_persons_list($name, $selected_id=null, $spec_opt=false)
 {
-	$sql = "SELECT salesman_code, salesman_name, inactive FROM ".TB_PREF."salesman";
+	$sql = "SELECT salesman_code, salesman_name, inactive FROM salesman";
 	return combo_input($name, $selected_id, $sql, 'salesman_code', 'salesman_name', 
 		array('order'=>array('salesman_name'),
 			'spec_option' => $spec_opt,
@@ -1399,7 +1399,7 @@ function sales_persons_list_row($label, $name, $selected_id=null, $spec_opt=fals
 
 function sales_areas_list($name, $selected_id=null, $special_option=false)
 {
-	$sql = "SELECT area_code, description, inactive FROM ".TB_PREF."areas";
+	$sql = "SELECT area_code, description, inactive FROM areas";
 	return combo_input($name, $selected_id, $sql, 'area_code', 'description', 
 		array('spec_option' => $special_option===true ? ' ' : $special_option,
 		'order' => 'description', 'spec_id' => 0));
@@ -1425,7 +1425,7 @@ function sales_areas_list_row($label, $name, $selected_id=null, $special_option=
 
 function sales_groups_list($name, $selected_id=null, $special_option=false)
 {
-	$sql = "SELECT id, description, inactive FROM `".TB_PREF."groups`";
+	$sql = "SELECT id, description, inactive FROM `groups`";
 	return combo_input($name, $selected_id, $sql, 'id', 'description', array(
 		'spec_option' => $special_option===true ? ' ' : $special_option,
 		'order' => 'description', 'spec_id' => 0,
@@ -1458,7 +1458,7 @@ function _format_template_items($row)
 function templates_list($name, $selected_id=null, $special_option=false)
 {
 	$sql = "SELECT sorder.order_no,	Sum(line.unit_price*line.quantity*(1-line.discount_percent)) AS OrderValue
-		FROM ".TB_PREF."sales_orders as sorder, ".TB_PREF."sales_order_details as line
+		FROM sales_orders as sorder, sales_order_details as line
 		WHERE sorder.order_no = line.order_no AND sorder.type = 1 GROUP BY line.order_no";
 	return combo_input($name, $selected_id, $sql, 'order_no', 'OrderValue', array(
 		'format' => '_format_template_items',
@@ -1487,7 +1487,7 @@ function templates_list_row($label, $name, $selected_id=null, $special_option=fa
 
 function workorders_list($name, $selected_id=null)
 {
-	$sql = "SELECT id, wo_ref FROM ".TB_PREF."workorders WHERE closed=0";
+	$sql = "SELECT id, wo_ref FROM workorders WHERE closed=0";
 	return combo_input($name, $selected_id, $sql, 'id', 'wo_ref', array());
 }
 
@@ -1511,7 +1511,7 @@ function workorders_list_row($label, $name, $selected_id=null)
 
 function payment_terms_list($name, $selected_id=null)
 {
-	$sql = "SELECT terms_indicator, terms, inactive FROM ".TB_PREF."payment_terms";
+	$sql = "SELECT terms_indicator, terms, inactive FROM payment_terms";
 	return combo_input($name, $selected_id, $sql, 'terms_indicator', 'terms', array());
 }
 
@@ -1535,7 +1535,7 @@ function payment_terms_list_row($label, $name, $selected_id=null)
 
 function credit_status_list($name, $selected_id=null)
 {
-	$sql ="SELECT id, reason_description, inactive FROM ".TB_PREF."credit_status";
+	$sql ="SELECT id, reason_description, inactive FROM credit_status";
 	return combo_input($name, $selected_id, $sql, 'id', 'reason_description', array());
 }
 
@@ -1559,7 +1559,7 @@ function credit_status_list_row($label, $name, $selected_id=null)
 
 function sales_types_list($name, $selected_id=null, $submit_on_change=false, $special_option=false)
 {
-	$sql = "SELECT id, sales_type, inactive FROM ".TB_PREF."sales_types";
+	$sql = "SELECT id, sales_type, inactive FROM sales_types";
 
 	return combo_input($name, $selected_id, $sql, 'id', 'sales_type',
 	array(
@@ -1594,7 +1594,7 @@ function _format_date($row)
 
 function bank_reconciliation_list($account, $name, $selected_id=null, $submit_on_change=false, $special_option=false)
 {
-	$sql = "SELECT reconciled, reconciled FROM ".TB_PREF."bank_trans
+	$sql = "SELECT reconciled, reconciled FROM bank_trans
 		WHERE bank_act=".db_escape($account)." AND reconciled IS NOT NULL
 		GROUP BY reconciled";
 	return combo_input($name, $selected_id, $sql, 'id', 'reconciled',
@@ -1627,7 +1627,7 @@ function bank_reconciliation_list_row($label, $account, $name, $selected_id=null
 function workcenter_list($name, $selected_id=null, $all_option=false)
 {
 
-	$sql = "SELECT id, name, inactive FROM ".TB_PREF."workcentres";
+	$sql = "SELECT id, name, inactive FROM workcentres";
 
 	return combo_input($name, $selected_id, $sql, 'id', 'name',
 		array(
@@ -1658,7 +1658,7 @@ function workcenter_list_row($label, $name, $selected_id=null, $all_option=false
 function bank_accounts_list($name, $selected_id=null, $submit_on_change=false, $spec_option=false)
 {
 	$sql = "SELECT id, bank_account_name, bank_curr_code, inactive
-		FROM ".TB_PREF."bank_accounts";
+		FROM bank_accounts";
 
 	return combo_input($name, $selected_id, $sql, 'id', 'bank_account_name',
 		array(
@@ -1691,7 +1691,7 @@ function cash_accounts_list_row($label, $name, $selected_id=null, $submit_on_cha
 {
 
 	$sql = "SELECT id, bank_account_name, bank_curr_code, inactive
-		FROM ".TB_PREF."bank_accounts
+		FROM bank_accounts
 		WHERE account_type=".BT_CASH;
 
 	if ($label != null)
@@ -1711,7 +1711,7 @@ function cash_accounts_list_row($label, $name, $selected_id=null, $submit_on_cha
 
 function pos_list_row($label, $name, $selected_id=null, $spec_option=false, $submit_on_change=false)
 {
-	$sql = "SELECT id, pos_name, inactive FROM ".TB_PREF."sales_pos";
+	$sql = "SELECT id, pos_name, inactive FROM sales_pos";
 
 	default_focus($name);
 	echo '<tr>';
@@ -1735,7 +1735,7 @@ function pos_list_row($label, $name, $selected_id=null, $spec_option=false, $sub
 //
 function sale_payment_list($name, $category, $selected_id=null, $submit_on_change=true, $prepayments=true)
 {
-	$sql = "SELECT terms_indicator, terms, inactive FROM ".TB_PREF."payment_terms";
+	$sql = "SELECT terms_indicator, terms, inactive FROM payment_terms";
 
 	if ($category == PM_CASH) // only cash
 			$sql .= " WHERE days_before_due=0 AND day_in_following_month=0";
@@ -1766,7 +1766,7 @@ function sale_payment_list_cells($label, $name, $category, $selected_id=null, $s
 
 function class_list($name, $selected_id=null, $submit_on_change=false)
 {
-	$sql = "SELECT cid, class_name FROM ".TB_PREF."chart_class";
+	$sql = "SELECT cid, class_name FROM chart_class";
 
 	return combo_input($name, $selected_id, $sql, 'cid', 'class_name',
 		array(
@@ -1801,7 +1801,7 @@ function stock_categories_list($name, $selected_id=null, $spec_opt=false, $submi
 	else
 		$where_opts[0] = "dflt_mb_flag!='F'";
 
-	$sql = "SELECT category_id, description, inactive FROM ".TB_PREF."stock_category";
+	$sql = "SELECT category_id, description, inactive FROM stock_category";
 	return combo_input($name, $selected_id, $sql, 'category_id', 'description',
  		array('order'=>'category_id',
 			'spec_option' => $spec_opt,
@@ -1831,8 +1831,8 @@ function stock_categories_list_row($label, $name, $selected_id=null, $spec_opt=f
 //-----------------------------------------------------------------------------------------------
 function fixed_asset_classes_list($name, $selected_id=null, $spec_opt=false, $submit_on_change=false)
 {
-	$sql = "SELECT c.fa_class_id, CONCAT(c.fa_class_id,' - ',c.description) `desc`, CONCAT(p.fa_class_id,' - ',p.description) `class`, c.inactive FROM "
-		.TB_PREF."stock_fa_class c LEFT JOIN ".TB_PREF."stock_fa_class p ON c.parent_id=p.fa_class_id";
+	$sql = "SELECT c.fa_class_id, CONCAT(c.fa_class_id,' - ',c.description) `desc`, CONCAT(p.fa_class_id,' - ',p.description) `class`, c.inactive FROM 
+		stock_fa_class c LEFT JOIN stock_fa_class p ON c.parent_id=p.fa_class_id";
 
 	return combo_input($name, $selected_id, $sql, 'c.fa_class_id', 'desc',
 		array('order'=>'c.fa_class_id',
@@ -1863,7 +1863,7 @@ function fixed_asset_classes_list_row($label, $name, $selected_id=null, $spec_op
 function gl_account_types_list($name, $selected_id=null, $all_option=false, $all=true)
 {
 
-	$sql = "SELECT id, name FROM ".TB_PREF."chart_types";
+	$sql = "SELECT id, name FROM chart_types";
 
 	return combo_input($name, $selected_id, $sql, 'id', 'name',
 		array(
@@ -1903,10 +1903,10 @@ function gl_all_accounts_list($name, $selected_id=null, $skip_bank_accounts=fals
             type.name,
             chart.inactive,
             type.id
-        FROM ".TB_PREF."chart_master chart
-        INNER JOIN ".TB_PREF."chart_types type ON chart.account_type=type.id
-        INNER JOIN ".TB_PREF."chart_class as class ON type.class_id=class.cid
-        LEFT JOIN ".TB_PREF."bank_accounts acc ON chart.account_code=acc.account_code
+        FROM chart_master chart
+        INNER JOIN chart_types type ON chart.account_type=type.id
+        INNER JOIN chart_class as class ON type.class_id=class.cid
+        LEFT JOIN bank_accounts acc ON chart.account_code=acc.account_code
         WHERE acc.account_code  IS NULL";
 	else
 		$sql = "SELECT
@@ -1915,9 +1915,9 @@ function gl_all_accounts_list($name, $selected_id=null, $skip_bank_accounts=fals
             type.name,
             chart.inactive,
             type.id
-		FROM ".TB_PREF."chart_master chart
-        INNER JOIN ".TB_PREF."chart_types type ON chart.account_type=type.id
-        INNER JOIN ".TB_PREF."chart_class as class ON type.class_id=class.cid";
+		FROM chart_master chart
+        INNER JOIN chart_types type ON chart.account_type=type.id
+        INNER JOIN chart_class as class ON type.class_id=class.cid";
 
 	if ($type_id ) $sql .= " AND chart.account_type=".db_escape($type_id);
 
@@ -2359,7 +2359,7 @@ function number_list_row($label, $name, $selected, $from, $to, $no_option=false)
 function print_profiles_list_row($label, $name, $selected_id=null, $spec_opt=false,
 	$submit_on_change=true)
 {
-	$sql = "SELECT profile FROM ".TB_PREF."print_profiles"
+	$sql = "SELECT profile FROM print_profiles"
 		." GROUP BY profile";
 	$result = db_query($sql, 'cannot get all profile names');
 	$profiles = array();
@@ -2386,7 +2386,7 @@ function printers_list($name, $selected_id=null, $spec_opt=false, $submit_on_cha
 	static $printers; // query only once for page display
 
 	if (!$printers) {
-		$sql = "SELECT id, name, description FROM ".TB_PREF."printers";	
+		$sql = "SELECT id, name, description FROM printers";	
 		$result = db_query($sql, 'cannot get all printers');
 		$printers = array();
 		while($myrow=db_fetch($result)) {
@@ -2405,7 +2405,7 @@ function printers_list($name, $selected_id=null, $spec_opt=false, $submit_on_cha
 function quick_entries_list($name, $selected_id=null, $type=null, $submit_on_change=false)
 {
 	$where = false;
-	$sql = "SELECT id, description FROM ".TB_PREF."quick_entries";
+	$sql = "SELECT id, description FROM quick_entries";
 	if ($type != null)
 		$sql .= " WHERE type=$type";
 
@@ -2482,7 +2482,7 @@ function security_roles_list($name, $selected_id=null, $new_item=false, $submit_
 	$show_inactive = false)
 {
 
-	$sql = "SELECT id, role, inactive FROM ".TB_PREF."security_roles";
+	$sql = "SELECT id, role, inactive FROM security_roles";
 
 	return combo_input($name, $selected_id, $sql, 'id', 'description',
 		array(
@@ -2567,7 +2567,7 @@ function tag_list_row($label, $name, $height, $type, $mult=false, $all=false, $s
 function crm_category_types_list($name, $selected_id=null, $filter=array(), $submit_on_change=true)
 {
 
-	$sql = "SELECT id, name, type, inactive FROM ".TB_PREF."crm_categories";
+	$sql = "SELECT id, name, type, inactive FROM crm_categories";
 
 	$multi = false;
 	$groups = false;
@@ -2654,7 +2654,7 @@ function tax_algorithm_list_row($label, $name, $value=null, $submit_on_change=fa
 
 function refline_list($name, $type, $value=null, $spec_option=false)
 {
-	$sql = "SELECT id, prefix, inactive FROM ".TB_PREF."reflines";
+	$sql = "SELECT id, prefix, inactive FROM reflines";
 
 	$where = array();
 
@@ -2695,17 +2695,17 @@ function subledger_list($name, $account, $selected_id=null)
     switch ($type) {
         case SLT_AP:
             $sql = "SELECT supplier_id as id, concat_ws(' - ', supp_ref, supp_name) as name 
-                FROM "
-                .TB_PREF."suppliers s
+                FROM 
+                suppliers s
                 WHERE
                     NOT s.inactive
                     AND s.payable_account={$account}";
             break;
         case SLT_AR:
             $sql = "SELECT DISTINCT d.debtor_no as id, concat_ws(' - ', d.debtor_ref, c.br_name) as name
-                FROM "
-                .TB_PREF."debtors_master d,"
-                .TB_PREF."cust_branch c
+                FROM 
+                debtors_master d,
+                cust_branch c
                 WHERE
                     d.debtor_no=c.debtor_no
                     AND NOT d.inactive
@@ -2713,8 +2713,8 @@ function subledger_list($name, $account, $selected_id=null)
             break;
         case SLT_MARKETPLACE:
             $sql = "SELECT id, concat_ws(' - ', code, name) as name
-                FROM "
-                .TB_PREF."marketplaces
+                FROM 
+                marketplaces
                 WHERE
                     NOT inactive
                     AND payable_account={$account}";
@@ -2769,7 +2769,7 @@ function accounts_type_list_row($label, $name, $selected_id=null)
 function users_list_cells($label, $name, $selected_id=null, $submit_on_change=false, $spec_opt=true)
 {
     $where = false;
-	$sql = " SELECT user_id, IF(real_name = '', user_id, real_name) FROM ".TB_PREF."users";
+	$sql = " SELECT user_id, IF(real_name = '', user_id, real_name) FROM users";
 
     if ($label != null)
         echo "<td>$label</td>\n";

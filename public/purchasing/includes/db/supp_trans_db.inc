@@ -55,7 +55,7 @@ function write_supp_trans(
 		$rate = get_exchange_rate_from_home_currency($curr, $date_);
 
 
-	$sql = "INSERT INTO ".TB_PREF."supp_trans (source, effect, trans_no, type, supplier_id, tran_date, due_date,
+	$sql = "INSERT INTO supp_trans (source, effect, trans_no, type, supplier_id, tran_date, due_date,
 		reference, supp_reference, ov_amount, ov_gst, rate, ov_discount, tax_included) ";
 	$sql .= "VALUES (".db_escape($source->value).", ".db_escape($effect->value).", ".db_escape($trans_no).", ".db_escape($type)
 	.", ".db_escape($supplier_id).", '$date', '$due_date',
@@ -87,15 +87,15 @@ function get_supp_trans($trans_no, $trans_type=-1, $supplier_id=null)
 			bank_trans.ref ";
 	}
 
-	$sql .= " FROM ".TB_PREF."supp_trans trans,"
-			.TB_PREF."suppliers supplier";
+	$sql .= " FROM supp_trans trans,
+			suppliers supplier";
 
 	if ($trans_type == ST_SUPPAYMENT || $trans_type == ST_BANKPAYMENT)
 	{
 		// it's a payment so also get the bank account
-		$sql .= ", "
-			.TB_PREF."bank_trans bank_trans,"
-			.TB_PREF."bank_accounts account";
+		$sql .= ", 
+			bank_trans bank_trans,
+			bank_accounts account";
 	}
 
 	$sql .= " WHERE trans.trans_no=".db_escape($trans_no)."
@@ -138,31 +138,31 @@ function get_supp_trans($trans_no, $trans_type=-1, $supplier_id=null)
 
 function get_supp_payment_before($supplier_id, $date)
 {
-	$sql = "SELECT "
-	. TB_PREF . "supp_trans.trans_no,"
-	. TB_PREF . "supp_trans.type,"
-	. TB_PREF . "supp_trans.supplier_id,"
-	. TB_PREF . "supp_trans.tran_date,"
-	. TB_PREF . "supp_trans.ov_amount,"
-	. TB_PREF . "bank_trans.ref AS bank_ref,"
-	. TB_PREF . "bank_trans.amount AS bank_amount,"
-	. TB_PREF . "bank_accounts.id AS bank_id,"
-	. TB_PREF . "bank_accounts.bank_name,"
-	. TB_PREF . "bank_accounts.bank_account_name,"
-	. TB_PREF . "bank_accounts.bank_curr_code "
-	. "FROM "
-	. TB_PREF . "supp_trans,"
-	. TB_PREF . "bank_trans,"
-	. TB_PREF . "bank_accounts "
-	. "WHERE "
-	. TB_PREF . "supp_trans.supplier_id='" . $supplier_id . "' "
-	. "AND " . TB_PREF . "supp_trans.tran_date<'" . $date . "' "
-	. "AND " . TB_PREF . "supp_trans.type=" . ST_SUPPAYMENT . " "
-	. "AND " . TB_PREF . "supp_trans.trans_no=" . TB_PREF . "bank_trans.trans_no "
-	. "AND " . TB_PREF . "supp_trans.type=" . TB_PREF . "bank_trans.type "
-	. "AND " . TB_PREF . "bank_accounts.id=" . TB_PREF . "bank_trans.bank_act "
-	. "ORDER BY "
-	. TB_PREF . "supp_trans.tran_date DESC "
+	$sql = "SELECT 
+	supp_trans.trans_no,
+	supp_trans.type,
+	supp_trans.supplier_id,
+	supp_trans.tran_date,
+	supp_trans.ov_amount,
+	bank_trans.ref AS bank_ref,
+	bank_trans.amount AS bank_amount,
+	bank_accounts.id AS bank_id,
+	bank_accounts.bank_name,
+	bank_accounts.bank_account_name,
+	bank_accounts.bank_curr_code "
+	. "FROM 
+	supp_trans,
+	bank_trans,
+	bank_accounts "
+	. "WHERE 
+	supp_trans.supplier_id='" . $supplier_id . "' "
+	. "AND supp_trans.tran_date<'" . $date . "' "
+	. "AND supp_trans.type=" . ST_SUPPAYMENT . " "
+	. "AND supp_trans.trans_no=bank_trans.trans_no "
+	. "AND supp_trans.type=bank_trans.type "
+	. "AND bank_accounts.id=bank_trans.bank_act "
+	. "ORDER BY 
+	supp_trans.tran_date DESC "
 	. "LIMIT 1 "
 	;
 
@@ -183,7 +183,7 @@ function exists_supp_trans($type, $type_no)
 	if ($type == ST_SUPPRECEIVE)
 		return exists_grn($type_no);
 
-	$sql = "SELECT trans_no FROM ".TB_PREF."supp_trans WHERE type=".db_escape($type)."
+	$sql = "SELECT trans_no FROM supp_trans WHERE type=".db_escape($type)."
 		AND trans_no=".db_escape($type_no);
 	$result = db_query($sql, "Cannot retreive a supplier transaction");
 
@@ -194,7 +194,7 @@ function exists_supp_trans($type, $type_no)
 
 function void_supp_trans($type, $type_no)
 {
-	$sql = "UPDATE ".TB_PREF."supp_trans SET ov_amount=0, ov_discount=0, ov_gst=0,
+	$sql = "UPDATE supp_trans SET ov_amount=0, ov_discount=0, ov_gst=0,
 		alloc=0 WHERE type=".db_escape($type)." AND trans_no=".db_escape($type_no);
 
 	db_query($sql, "could not void supp transactions for type=$type and trans_no=$type_no");
@@ -204,7 +204,7 @@ function void_supp_trans($type, $type_no)
 
 function clear_supp_trans($type, $type_no)
 {
-	$sql = "DELETE FROM ".TB_PREF."supp_trans 
+	$sql = "DELETE FROM supp_trans 
 			WHERE type=".db_escape($type)." AND trans_no=".db_escape($type_no);
 
 	db_query($sql, "could not clear supp transactions for type=$type and trans_no=$type_no");
@@ -255,7 +255,7 @@ function get_sql_for_supplier_inquiry($filter, $after_date, $to_date, $supplier_
 		((trans.type = ".ST_SUPPINVOICE." OR trans.type = ".ST_SUPPCREDIT.") AND trans.due_date < '" . date2sql(Today()) . "') AS OverDue,
     	(ABS(trans.total) - trans.alloc <= ".FLOAT_COMP_DELTA.") AS Settled,
     	trans.effect AS effect
-    	FROM ".TB_PREF."supp_trans as trans, ".TB_PREF."suppliers as supplier
+    	FROM supp_trans as trans, suppliers as supplier
     	WHERE supplier.supplier_id = trans.supplier_id
 		AND trans.ov_amount != 0";	// exclude voided transactions
 
@@ -273,7 +273,7 @@ function get_sql_for_supplier_inquiry($filter, $after_date, $to_date, $supplier_
 		0 as OverDue,
     	1 as Settled,
     	1 as effect
-    	FROM ".TB_PREF."grn_batch as trans, ".TB_PREF."suppliers as supplier, ".TB_PREF."purch_orders as po
+    	FROM grn_batch as trans, suppliers as supplier, purch_orders as po
     	WHERE supplier.supplier_id = trans.supplier_id
     	AND trans.purch_order_no = po.order_no";
 

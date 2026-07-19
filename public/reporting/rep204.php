@@ -39,10 +39,10 @@ function getTransactions($fromsupp)
 			std_cost_unit,
 			act_price,
 			unit_price
-		FROM ".TB_PREF."grn_items item,
-			".TB_PREF."grn_batch grn,
-			".TB_PREF."purch_order_details poline,
-			".TB_PREF."suppliers supplier
+		FROM grn_items item,
+			grn_batch grn,
+			purch_order_details poline,
+			suppliers supplier
 		WHERE grn.supplier_id=supplier.supplier_id
 		AND grn.id = item.grn_batch_id
 		AND item.po_detail_item = poline.po_detail_item

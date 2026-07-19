@@ -55,12 +55,12 @@ function getAverageCost($stock_id, $location, $to_date)
 	$to_date = date2sql($to_date);
 
   	$sql = "SELECT move.*, supplier.supplier_id person_id, IF(ISNULL(grn.rate), credit.rate, grn.rate) ex_rate
-  		FROM ".TB_PREF."stock_moves move
-				LEFT JOIN ".TB_PREF."supp_trans credit ON credit.trans_no=move.trans_no AND credit.type=move.type
-				LEFT JOIN ".TB_PREF."grn_batch grn ON grn.id=move.trans_no AND 25=move.type
-				LEFT JOIN ".TB_PREF."suppliers supplier ON IFNULL(grn.supplier_id, credit.supplier_id)=supplier.supplier_id
-				LEFT JOIN ".TB_PREF."debtor_trans cust_trans ON cust_trans.trans_no=move.trans_no AND cust_trans.type=move.type
-				LEFT JOIN ".TB_PREF."debtors_master debtor ON cust_trans.debtor_no=debtor.debtor_no
+  		FROM stock_moves move
+				LEFT JOIN supp_trans credit ON credit.trans_no=move.trans_no AND credit.type=move.type
+				LEFT JOIN grn_batch grn ON grn.id=move.trans_no AND 25=move.type
+				LEFT JOIN suppliers supplier ON IFNULL(grn.supplier_id, credit.supplier_id)=supplier.supplier_id
+				LEFT JOIN debtor_trans cust_trans ON cust_trans.trans_no=move.trans_no AND cust_trans.type=move.type
+				LEFT JOIN debtors_master debtor ON cust_trans.debtor_no=debtor.debtor_no
 			WHERE stock_id=".db_escape($stock_id)."
 			AND move.tran_date <= '$to_date' AND standard_cost > 0.001 AND qty <> 0 AND move.type <> ".ST_LOCTRANSFER;
 
@@ -101,11 +101,11 @@ function getTransactions($category, $location, $date)
 			SUM(move.qty) AS QtyOnHand, 
 			item.material_cost AS UnitCost,
 			SUM(move.qty) * item.material_cost AS ItemTotal 
-			FROM "
-			.TB_PREF."stock_master item,"
-			.TB_PREF."stock_category category,"
-			.TB_PREF."stock_moves move,"
-			.TB_PREF."item_units units
+			FROM 
+			stock_master item,
+			stock_category category,
+			stock_moves move,
+			item_units units
 		WHERE item.stock_id=move.stock_id
 		AND item.category_id=category.category_id
 		AND item.mb_flag<>'D' AND mb_flag <> 'F' 

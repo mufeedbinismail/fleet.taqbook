@@ -17,8 +17,8 @@ $GLOBALS['qoh_stock'] = NULL;
 function get_demand_qty($stock_id, $location)
 {
 	$sql = "SELECT SUM(line.quantity - line.qty_sent) AS QtyDemand
-			FROM ".TB_PREF."sales_order_details line,
-				".TB_PREF."sales_orders sorder
+			FROM sales_order_details line,
+				sales_orders sorder
 				WHERE line.order_no=sorder.order_no AND sorder.trans_type=".ST_SALESORDER
 				." AND sorder.trans_type=line.trans_type"
 				." AND line.stk_code = ".db_escape($stock_id);
@@ -38,7 +38,7 @@ function load_stock_levels($location)
 
 	$qoh_stock = array();
 	$sql = "SELECT stock_id, SUM(qty)
-		FROM ".TB_PREF."stock_moves
+		FROM stock_moves
 		WHERE tran_date <= '$date'";
 	if ($location != '')
 		$sql .= " AND loc_code = ".db_escape($location);
@@ -74,8 +74,8 @@ function stock_demand_manufacture($stock_id, $qty, $demand_id, $location, $level
 		return $demand;
 	$bom = @$bom_list[$stock_id];
 	if ($bom == NULL) {
-		$sql = "SELECT parent, component, quantity FROM "
-			.TB_PREF."bom WHERE parent = ".db_escape($stock_id);
+		$sql = "SELECT parent, component, quantity FROM 
+			bom WHERE parent = ".db_escape($stock_id);
 		if ($location != "") $sql .= " AND loc_code = ".db_escape($location);
 		$result = db_query($sql, "Could not search bom");
 		$bom = array();
@@ -106,9 +106,9 @@ function get_demand_asm_qty($stock_id, $location)
 {
 	$demand_qty = 0.0;
 	$sql = "SELECT line.stk_code, SUM(line.quantity-line.qty_sent) AS Demmand
-		   FROM ".TB_PREF."sales_order_details line,
-				".TB_PREF."sales_orders sorder,
-				".TB_PREF."stock_master item
+		   FROM sales_order_details line,
+				sales_orders sorder,
+				stock_master item
 		   WHERE sorder.order_no = line.order_no
 		   		AND sorder.trans_type=".ST_SALESORDER
 		   	 ." AND sorder.trans_type=line.trans_type
@@ -128,8 +128,8 @@ function get_demand_asm_qty($stock_id, $location)
 function get_on_porder_qty($stock_id, $location)
 {
 	$sql = "SELECT SUM(line.quantity_ordered - line.quantity_received) AS qoo
-		FROM ".TB_PREF."purch_order_details line 
-			INNER JOIN ".TB_PREF."purch_orders po ON line.order_no=po.order_no
+		FROM purch_order_details line 
+			INNER JOIN purch_orders po ON line.order_no=po.order_no
 		WHERE line.item_code=".db_escape($stock_id);
 	if ($location != "")
 		$sql .= " AND po.into_stock_location=".db_escape($location);
@@ -155,7 +155,7 @@ function get_on_worder_qty($stock_id, $location)
 	if ($flag == 'M')
 	{
 		$sql = "SELECT SUM((units_reqd-units_issued)) AS qoo
-			FROM ".TB_PREF."workorders
+			FROM workorders
 			WHERE stock_id=".db_escape($stock_id)
 				." AND released AND NOT closed";
 
@@ -176,7 +176,7 @@ function get_on_worder_qty($stock_id, $location)
 
 function add_bom($selected_parent, $component, $workcentre_added, $loc_code, $quantity)
 {
-	$sql = "INSERT INTO ".TB_PREF."bom (parent, component, workcentre_added, loc_code, quantity)
+	$sql = "INSERT INTO bom (parent, component, workcentre_added, loc_code, quantity)
 		VALUES (".db_escape($selected_parent).", ".db_escape($component) . ","
 		.db_escape($workcentre_added) . ", ".db_escape($loc_code) . ", "
 		. $quantity . ")";
@@ -187,7 +187,7 @@ function add_bom($selected_parent, $component, $workcentre_added, $loc_code, $qu
 
 function update_bom($selected_parent, $selected_component, $workcentre_added, $loc_code, $quantity)
 {
-	$sql = "UPDATE ".TB_PREF."bom SET workcentre_added=".db_escape($workcentre_added)
+	$sql = "UPDATE bom SET workcentre_added=".db_escape($workcentre_added)
 	 . ",loc_code=".db_escape($loc_code) . ",
 		quantity= " . $quantity . "
 		WHERE parent=".db_escape($selected_parent) . "
@@ -199,7 +199,7 @@ function update_bom($selected_parent, $selected_component, $workcentre_added, $l
 	
 function delete_bom($selected_id)
 {
-	$sql = "DELETE FROM ".TB_PREF."bom WHERE id=".db_escape($selected_id);
+	$sql = "DELETE FROM bom WHERE id=".db_escape($selected_id);
 	db_query($sql,"Could not delete this bom components");
 }
 
@@ -210,10 +210,10 @@ function get_bom($item)
     	item.description, item.mb_flag AS ResourceType, 
     	item.material_cost AS ProductCost, units,
     	bom.quantity * item.material_cost AS ComponentCost 
-    	FROM ".TB_PREF."workcentres centre,
-    		".TB_PREF."locations loc,
-    		".TB_PREF."bom bom
-	    		INNER JOIN ".TB_PREF."stock_master item ON bom.component = item.stock_id 
+    	FROM workcentres centre,
+    		locations loc,
+    		bom bom
+	    		INNER JOIN stock_master item ON bom.component = item.stock_id 
     	WHERE bom.parent = ".db_escape($item)."
 		AND centre.id=bom.workcentre_added
 		AND bom.loc_code = loc.loc_code ORDER BY bom.id";
@@ -226,8 +226,8 @@ function get_bom($item)
 function get_component_from_bom($selected_id)
 {
 	$sql = "SELECT bom.*, item.description
-		FROM ".TB_PREF."bom bom,"
-			.TB_PREF."stock_master item
+		FROM bom bom,
+			stock_master item
 		WHERE id=".db_escape($selected_id)."
 		AND item.stock_id=bom.component";
 
@@ -248,7 +248,7 @@ function has_bom($item)
 function is_component_already_on_bom($component, $workcentre_added, $loc_code, $selected_parent)
 {
 	$sql = "SELECT component
-		FROM ".TB_PREF."bom
+		FROM bom
 		WHERE parent=".db_escape($selected_parent)."
 		AND component=".db_escape($component) . "
 		AND workcentre_added=".db_escape($workcentre_added) . "
@@ -266,7 +266,7 @@ function check_for_recursive_bom($ultimate_parent, $component_to_check)
 	/* returns true ie 1 if the bom contains the parent part as a component
 	ie the bom is recursive otherwise false ie 0 */
 
-	$sql = "SELECT component FROM ".TB_PREF."bom WHERE parent=".db_escape($component_to_check);
+	$sql = "SELECT component FROM bom WHERE parent=".db_escape($component_to_check);
 	$result = db_query($sql,"could not check recursive bom");
 
 	if ($result)

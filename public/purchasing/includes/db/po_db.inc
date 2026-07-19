@@ -16,9 +16,9 @@ function get_supplier_details_to_order(&$order, $supplier_id)
 	$sql = "SELECT curr_code, supp_name, tax_group_id, supp.tax_included, dimension_id, dimension2_id,
 			supp.credit_limit - Sum(trans.effect * ABS(trans.total)) as cur_credit,
 				terms.terms, terms.days_before_due, terms.day_in_following_month
-		FROM ".TB_PREF."suppliers supp
-			 LEFT JOIN ".TB_PREF."supp_trans trans ON supp.supplier_id = trans.supplier_id
-			 LEFT JOIN ".TB_PREF."payment_terms terms ON supp.payment_terms=terms.terms_indicator
+		FROM suppliers supp
+			 LEFT JOIN supp_trans trans ON supp.supplier_id = trans.supplier_id
+			 LEFT JOIN payment_terms terms ON supp.payment_terms=terms.terms_indicator
 		WHERE supp.supplier_id = ".db_escape($supplier_id)."
 		GROUP BY
 			  supp.supp_name";
@@ -49,10 +49,10 @@ function delete_po($po)
 	global $Refs;
 
 	begin_transaction();
-	$sql = "DELETE FROM ".TB_PREF."purch_orders WHERE order_no=".db_escape($po);
+	$sql = "DELETE FROM purch_orders WHERE order_no=".db_escape($po);
 	db_query($sql, "The order header could not be deleted");
 
-	$sql = "DELETE FROM ".TB_PREF."purch_order_details WHERE order_no =".db_escape($po);
+	$sql = "DELETE FROM purch_order_details WHERE order_no =".db_escape($po);
 	db_query($sql, "The order detail lines could not be deleted");
 
 	$Refs->restore_last(ST_PURCHORDER, $po);
@@ -68,7 +68,7 @@ function add_po(&$po_obj)
 	begin_transaction();
 
      /*Insert to purchase order header record */
-     $sql = "INSERT INTO ".TB_PREF."purch_orders (supplier_id, Comments, ord_date, reference, 
+     $sql = "INSERT INTO purch_orders (supplier_id, Comments, ord_date, reference, 
      	requisition_no, into_stock_location, delivery_address, total, tax_included, prep_amount) VALUES(";
      $sql .= db_escape($po_obj->supplier_id) . "," .
          db_escape($po_obj->Comments) . ",'" .
@@ -95,7 +95,7 @@ function add_po(&$po_obj)
 			if ($data !== false && $data['supplier_description'] != "")
 				$po_line->item_description = $data['supplier_description'];
       	}
-		$sql = "INSERT INTO ".TB_PREF."purch_order_details (order_no, item_code, description, delivery_date,	unit_price,	quantity_ordered) VALUES (";
+		$sql = "INSERT INTO purch_order_details (order_no, item_code, description, delivery_date,	unit_price,	quantity_ordered) VALUES (";
 		$sql .= $po_obj->order_no . ", " . db_escape($po_line->stock_id). "," .
 		db_escape($po_line->item_description). ",'" .
 		date2sql($po_line->req_del_date) . "'," .
@@ -120,7 +120,7 @@ function update_po(&$po_obj)
 	begin_transaction();
 
     /*Update the purchase order header with any changes */
-    $sql = "UPDATE ".TB_PREF."purch_orders SET Comments=" . db_escape($po_obj->Comments) . ",
+    $sql = "UPDATE purch_orders SET Comments=" . db_escape($po_obj->Comments) . ",
 		requisition_no= ". db_escape( $po_obj->supp_ref). ",
 		into_stock_location=" . db_escape($po_obj->Location). ",
 		ord_date='" . date2sql($po_obj->orig_order_date) . "',
@@ -131,7 +131,7 @@ function update_po(&$po_obj)
     $sql .= " WHERE order_no = " . $po_obj->order_no;
 	db_query($sql, "The purchase order could not be updated");
 
-	$sql = "DELETE FROM ".TB_PREF."purch_order_details WHERE order_no="
+	$sql = "DELETE FROM purch_order_details WHERE order_no="
 		.db_escape($po_obj->order_no);
 	db_query($sql, "could not delete old purch order details");
 
@@ -144,7 +144,7 @@ function update_po(&$po_obj)
 			if ($data !== false && $data['supplier_description'] != "")
 				$po_line->item_description = $data['supplier_description'];
       	}
-    	$sql = "INSERT INTO ".TB_PREF."purch_order_details (po_detail_item, order_no, item_code, 
+    	$sql = "INSERT INTO purch_order_details (po_detail_item, order_no, item_code, 
     		description, delivery_date, unit_price, quantity_ordered, quantity_received) VALUES ("
 			.db_escape($po_line->po_detail_rec ? $po_line->po_detail_rec : 0). ","
 			.$po_obj->order_no . ","
@@ -168,7 +168,7 @@ function update_po(&$po_obj)
 //----------------------------------------------------------------------------------------
 
 function get_po($order_no) {
-    $sql = "SELECT * FROM ".TB_PREF."purch_orders WHERE order_no = ".db_escape($order_no);
+    $sql = "SELECT * FROM purch_orders WHERE order_no = ".db_escape($order_no);
     $result = db_query($sql);
 
     return db_fetch($result);
@@ -179,9 +179,9 @@ function get_po($order_no) {
 function read_po_header($order_no, &$order)
 {
     	$sql = "SELECT po.*, supplier.*, loc.location_name 
-		FROM ".TB_PREF."purch_orders po,"
-			.TB_PREF."suppliers supplier,"
-			.TB_PREF."locations loc
+		FROM purch_orders po,
+			suppliers supplier,
+			locations loc
 		WHERE po.supplier_id = supplier.supplier_id
 		AND loc.loc_code = into_stock_location
 		AND po.order_no = ".db_escape($order_no);
@@ -225,8 +225,8 @@ function read_po_items($order_no, &$order, $open_items_only=false)
 	/*now populate the line po array with the purchase order details records */
 
 	$sql = "SELECT poline.*, units, editable
-		FROM ".TB_PREF."purch_order_details poline
-			LEFT JOIN ".TB_PREF."stock_master item	ON poline.item_code=item.stock_id
+		FROM purch_order_details poline
+			LEFT JOIN stock_master item	ON poline.item_code=item.stock_id
 		WHERE order_no =".db_escape($order_no);
 
     if ($open_items_only)
@@ -278,7 +278,7 @@ function read_po($order_no, &$order, $open_items_only=false)
 function get_po_items($order_no)
 {
 	$sql = "SELECT item_code, quantity_ordered, quantity_received, qty_invoiced
-		FROM ".TB_PREF."purch_order_details
+		FROM purch_order_details
 		WHERE order_no=".db_escape($order_no)
 		." ORDER BY po_detail_item";
 
@@ -291,7 +291,7 @@ function get_po_items($order_no)
 function get_short_info($stock_id)
 {
 	$sql = "SELECT description, units, mb_flag
-		FROM ".TB_PREF."stock_master WHERE stock_id = ".db_escape($stock_id);
+		FROM stock_master WHERE stock_id = ".db_escape($stock_id);
 
 	return db_query($sql,"The stock details for " . $stock_id . " could not be retrieved");
 }
@@ -312,15 +312,15 @@ function get_sql_for_po_search_completed($from, $to, $supplier_id=ALL_TEXT, $loc
 		AND (line.quantity_ordered > line.quantity_received)) As OverDue,
 		porder.into_stock_location,
 		chk.isopen
-		FROM ".TB_PREF."purch_orders as porder
+		FROM purch_orders as porder
 				LEFT JOIN (
 					SELECT order_no, SUM(quantity_ordered-quantity_received + quantity_ordered-qty_invoiced) isopen
-					FROM ".TB_PREF."purch_order_details
+					FROM purch_order_details
 					GROUP BY order_no
-				) chk ON chk.order_no=porder.order_no,"
-			.TB_PREF."purch_order_details as line, "
-			.TB_PREF."suppliers as supplier, "
-			.TB_PREF."locations as location
+				) chk ON chk.order_no=porder.order_no,
+			purch_order_details as line, 
+			suppliers as supplier, 
+			locations as location
 		WHERE porder.order_no = line.order_no
 		AND porder.supplier_id = supplier.supplier_id
 		AND location.loc_code = porder.into_stock_location ";
@@ -372,10 +372,10 @@ function get_sql_for_po_search($from, $to, $supplier_id=ALL_TEXT, $location=ALL_
 		Sum(line.unit_price*line.quantity_ordered) AS OrderValue,
 		Sum(line.delivery_date < '". date2sql(Today()) ."'
 		AND (line.quantity_ordered > line.quantity_received)) As OverDue
-		FROM ".TB_PREF."purch_orders as porder,"
-			.TB_PREF."purch_order_details as line, "
-			.TB_PREF."suppliers as supplier, "
-			.TB_PREF."locations as location
+		FROM purch_orders as porder,
+			purch_order_details as line, 
+			suppliers as supplier, 
+			locations as location
 		WHERE porder.order_no = line.order_no
 		AND porder.supplier_id = supplier.supplier_id
 		AND location.loc_code = porder.into_stock_location

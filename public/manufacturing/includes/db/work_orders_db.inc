@@ -29,7 +29,7 @@ function add_work_order($wo_ref, $loc_code, $units_reqd, $stock_id,
 
 	$date = date2sql($date_);
 	$required = date2sql($required_by);
-	$sql = "INSERT INTO ".TB_PREF."workorders (wo_ref, loc_code, units_reqd, stock_id,
+	$sql = "INSERT INTO workorders (wo_ref, loc_code, units_reqd, stock_id,
 		type, date_, required_by)
     	VALUES (".db_escape($wo_ref).", ".db_escape($loc_code).", "
     	.db_escape($units_reqd).", ".db_escape($stock_id).",
@@ -80,7 +80,7 @@ function update_work_order($woid, $loc_code, $units_reqd, $stock_id,
 	$date = date2sql($date_);
 	$required = date2sql($required_by);
 
-	$sql = "UPDATE ".TB_PREF."workorders SET loc_code=".db_escape($loc_code).",
+	$sql = "UPDATE workorders SET loc_code=".db_escape($loc_code).",
 		units_reqd=".db_escape($units_reqd).", stock_id=".db_escape($stock_id).",
 		required_by=".db_escape($required).",
 		date_='$date'
@@ -102,7 +102,7 @@ function delete_work_order($woid, $stock_id, $qty, $date)
 	delete_wo_requirements($woid);
 
 	// delete the actual work order
-	$sql = "DELETE FROM ".TB_PREF."workorders WHERE id=".db_escape($woid);
+	$sql = "DELETE FROM workorders WHERE id=".db_escape($woid);
 	db_query($sql,"The work order could not be deleted");
 
 	delete_comments(ST_WORKORDER, $woid);
@@ -117,10 +117,10 @@ function get_work_order($woid, $allow_null=false)
 {
     $sql = "SELECT wo.*,st.description As StockItemName,l.location_name,
     		l.delivery_address,l.email, l.contact, st.inventory_account, st.wip_account
-			FROM ".TB_PREF."workorders wo
-			LEFT JOIN ".TB_PREF."voided v ON v.id=wo.id and v.type=".ST_WORKORDER.","
-			.TB_PREF."stock_master st, "
-			.TB_PREF."locations l
+			FROM workorders wo
+			LEFT JOIN voided v ON v.id=wo.id and v.type=".ST_WORKORDER.",
+			stock_master st, 
+			locations l
 		WHERE ISNULL(v.id)
 		AND st.stock_id=wo.stock_id
 		AND	l.loc_code=wo.loc_code
@@ -142,7 +142,7 @@ function get_work_order($woid, $allow_null=false)
 
 function work_order_has_productions($woid)
 {
-	$sql = "SELECT COUNT(*) FROM ".TB_PREF."wo_manufacture WHERE workorder_id=".db_escape($woid);
+	$sql = "SELECT COUNT(*) FROM wo_manufacture WHERE workorder_id=".db_escape($woid);
 	$result = db_query($sql, "query work order for productions");
 
 	$myrow = db_fetch_row($result);
@@ -154,7 +154,7 @@ function work_order_has_productions($woid)
 
 function work_order_has_issues($woid)
 {
-	$sql = "SELECT COUNT(*) FROM ".TB_PREF."wo_issues WHERE workorder_id=".db_escape($woid);
+	$sql = "SELECT COUNT(*) FROM wo_issues WHERE workorder_id=".db_escape($woid);
 	$result = db_query($sql, "query work order for issues");
 
 	$myrow = db_fetch_row($result);
@@ -181,7 +181,7 @@ function release_work_order($woid, $releaseDate, $memo_)
 
 	$date = date2sql($releaseDate);
 
-	$sql = "UPDATE ".TB_PREF."workorders SET released_date='$date',
+	$sql = "UPDATE workorders SET released_date='$date',
 		released=1 WHERE id = ".db_escape($woid);
 	db_query($sql, "could not release work order");
 
@@ -198,7 +198,7 @@ function release_work_order($woid, $releaseDate, $memo_)
 
 function close_work_order($woid)
 {
-	$sql = "UPDATE ".TB_PREF."workorders SET closed=1 WHERE id = ".db_escape($woid);
+	$sql = "UPDATE workorders SET closed=1 WHERE id = ".db_escape($woid);
 	db_query($sql, "could not close work order");
 }
 
@@ -206,7 +206,7 @@ function close_work_order($woid)
 
 function work_order_is_closed($woid)
 {
-	$sql = "SELECT closed FROM ".TB_PREF."workorders WHERE id = ".db_escape($woid);
+	$sql = "SELECT closed FROM workorders WHERE id = ".db_escape($woid);
 	$result = db_query($sql, "could not query work order");
 	$row = db_fetch_row($result);
 	return ($row[0] > 0);
@@ -220,12 +220,12 @@ function work_order_is_closed($woid)
 function work_order_update_finished_quantity($woid, $quantity, $force_close=0)
 {
 
-	$sql = "UPDATE ".TB_PREF."workorders SET units_issued = units_issued + ".db_escape($quantity)."
+	$sql = "UPDATE workorders SET units_issued = units_issued + ".db_escape($quantity)."
 		WHERE id = ".db_escape($woid). " AND !closed";
 
 	db_query($sql, "The work order issued quantity couldn't be updated");
 
-	$sql = "UPDATE ".TB_PREF."workorders SET closed = ((units_issued >= units_reqd) OR ".db_escape($force_close).")
+	$sql = "UPDATE workorders SET closed = ((units_issued >= units_reqd) OR ".db_escape($force_close).")
 		WHERE id = ".db_escape($woid);
 
 	db_query($sql, "The work order couldn't be closed");
@@ -242,7 +242,7 @@ function reopen_work_order($woid)
 
 		void_stock_move(ST_WORKORDER, $woid);
 
-		$sql = "UPDATE ".TB_PREF."workorders SET closed=0 WHERE id = "
+		$sql = "UPDATE workorders SET closed=0 WHERE id = "
 			.db_escape($woid);
 
 		db_query($sql, "The work order couldn't be reopened");
@@ -284,7 +284,7 @@ function void_work_order($woid)
 
 	// close workorder
 	// FIXME: due to bug in 2.4 db scheme (conflicting wo_ref unique key) we have to fix wo_ref here:
-	$sql = "UPDATE ".TB_PREF."workorders SET closed=1,units_reqd=0,units_issued=0, wo_ref=CONCAT(wo_ref, ' ', '".uniqid()."') WHERE id = "
+	$sql = "UPDATE workorders SET closed=1,units_reqd=0,units_issued=0, wo_ref=CONCAT(wo_ref, ' ', '".uniqid()."') WHERE id = "
 		.db_escape($woid);
 	db_query($sql, "The work order couldn't be voided");
 
@@ -308,11 +308,11 @@ function get_sql_for_work_orders($outstanding_only, $stock_id, $location = ALL_T
 		workorder.released,
 		workorder.stock_id,
 		unit.decimals
-		FROM ".TB_PREF."workorders as workorder
-			LEFT JOIN ".TB_PREF."voided v ON v.id=workorder.id and v.type=".ST_WORKORDER.","
-			.TB_PREF."stock_master as item,"
-			.TB_PREF."item_units as unit,"
-			.TB_PREF."locations as location
+		FROM workorders as workorder
+			LEFT JOIN voided v ON v.id=workorder.id and v.type=".ST_WORKORDER.",
+			stock_master as item,
+			item_units as unit,
+			locations as location
 		WHERE ISNULL(v.id)
 			AND workorder.stock_id=item.stock_id 
 			AND workorder.loc_code=location.loc_code
@@ -361,10 +361,10 @@ function get_sql_for_where_used($stock_id)
 			location.location_name,
 			bom.quantity,
 			parent.description
-			FROM ".TB_PREF."bom as bom, "
-				.TB_PREF."stock_master as parent, "
-				.TB_PREF."workcentres as workcentre, "
-				.TB_PREF."locations as location
+			FROM bom as bom, 
+				stock_master as parent, 
+				workcentres as workcentre, 
+				locations as location
 			WHERE bom.parent = parent.stock_id 
 				AND bom.workcentre_added = workcentre.id
 				AND bom.loc_code = location.loc_code

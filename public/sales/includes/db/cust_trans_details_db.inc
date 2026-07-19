@@ -22,9 +22,9 @@ if (!is_array($debtor_trans_no))
 		line.description AS StockDescription,
 		item.long_description AS StockLongDescription,
 		item.units, item.mb_flag
-		FROM "
-			.TB_PREF."debtor_trans_details line,"
-			.TB_PREF."stock_master item
+		FROM 
+			debtor_trans_details line,
+			stock_master item
 		WHERE (";
 
 	$tr=array();
@@ -44,7 +44,7 @@ if (!is_array($debtor_trans_no))
 
 function void_customer_trans_details($type, $type_no)
 {
-	$sql = "UPDATE ".TB_PREF."debtor_trans_details SET quantity=0, unit_price=0,
+	$sql = "UPDATE debtor_trans_details SET quantity=0, unit_price=0,
 		unit_tax=0, discount_percent=0, standard_cost=0, src_id=0
 		WHERE debtor_trans_no=".db_escape($type_no)."
 		AND debtor_trans_type=".db_escape($type);
@@ -71,7 +71,7 @@ function write_customer_trans_detail_item(
 )
 {
 	if ($line_id!=0)
-		$sql = "UPDATE ".TB_PREF."debtor_trans_details SET
+		$sql = "UPDATE debtor_trans_details SET
 			stock_id=".db_escape($stock_id).",
 			description=".db_escape($description).",
 			quantity=$quantity,
@@ -83,7 +83,7 @@ function write_customer_trans_detail_item(
 		WHERE
 			id=".db_escape($line_id);
 	else
-        $sql = "INSERT INTO ".TB_PREF."debtor_trans_details (
+        $sql = "INSERT INTO debtor_trans_details (
             debtor_trans_no,
             debtor_trans_type,
             stock_id,

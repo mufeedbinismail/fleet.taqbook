@@ -14,7 +14,7 @@
 
 function add_shipper($shipper_name, $contact, $phone, $phone2, $address)
 {
-	$sql = "INSERT INTO ".TB_PREF."shippers (shipper_name, contact, phone, phone2, address)
+	$sql = "INSERT INTO shippers (shipper_name, contact, phone, phone2, address)
 		VALUES (" . db_escape($shipper_name) . ", " .
 		db_escape($contact). ", " .
 		db_escape($phone). ", " .
@@ -28,7 +28,7 @@ function add_shipper($shipper_name, $contact, $phone, $phone2, $address)
 
 function update_shipper($selected_id, $shipper_name, $contact, $phone, $phone2, $address)
 {
-	$sql = "UPDATE ".TB_PREF."shippers SET shipper_name=" . db_escape($shipper_name). " ,
+	$sql = "UPDATE shippers SET shipper_name=" . db_escape($shipper_name). " ,
 		contact =" . db_escape($contact). " ,
 		phone =" . db_escape($phone). " ,
 		phone2 =" . db_escape($phone2). " ,
@@ -42,7 +42,7 @@ function update_shipper($selected_id, $shipper_name, $contact, $phone, $phone2, 
 
 function delete_shipper($selected_id)
 {
-	$sql="DELETE FROM ".TB_PREF."shippers WHERE shipper_id=".db_escape($selected_id);
+	$sql="DELETE FROM shippers WHERE shipper_id=".db_escape($selected_id);
 	
 	db_query($sql,"could not delete shipper");
 }
@@ -51,7 +51,7 @@ function delete_shipper($selected_id)
 
 function get_shippers($show_inactive)
 {
-	$sql = "SELECT * FROM ".TB_PREF."shippers";
+	$sql = "SELECT * FROM shippers";
 	if (!$show_inactive) $sql .= " WHERE !inactive";
 	$sql .= " ORDER BY shipper_id";
 	
@@ -62,7 +62,7 @@ function get_shippers($show_inactive)
 
 function get_shipper($selected_id)
 {
-	$sql = "SELECT * FROM ".TB_PREF."shippers WHERE shipper_id=".db_escape($selected_id);
+	$sql = "SELECT * FROM shippers WHERE shipper_id=".db_escape($selected_id);
 
 	$result = db_query($sql, "could not get shipper");
 	return db_fetch($result);

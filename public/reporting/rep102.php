@@ -45,7 +45,7 @@ function get_invoices($customer_id, $to, $all=true)
 		IF ((TO_DAYS('$todate') - TO_DAYS($due)) >= $PastDueDays1,$value,0) AS Overdue1,
 		IF ((TO_DAYS('$todate') - TO_DAYS($due)) >= $PastDueDays2,$value,0) AS Overdue2
 
-		FROM ".TB_PREF."debtor_trans trans
+		FROM debtor_trans trans
 
 		WHERE type <> ".ST_CUSTDELIVERY."
 			AND debtor_no = $customer_id 
@@ -139,7 +139,7 @@ function print_aged_customer_analysis()
 
 	$total = array(0,0,0,0, 0);
 
-	$sql = "SELECT debtor_no, name, curr_code, inactive FROM ".TB_PREF."debtors_master";
+	$sql = "SELECT debtor_no, name, curr_code, inactive FROM debtors_master";
 	if ($fromcust != ALL_TEXT)
 		$sql .= " WHERE debtor_no=".db_escape($fromcust);
 	$sql .= " ORDER BY name";

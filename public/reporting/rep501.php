@@ -30,7 +30,7 @@ function getTransactions($from, $to)
 {
 	$sql = "SELECT *
 		FROM
-			".TB_PREF."dimensions
+			dimensions
 		WHERE id >= ".db_escape($from)."
 		AND id <= ".db_escape($to)."
 		ORDER BY
@@ -47,7 +47,7 @@ function getYTD($dim)
 	
 	$sql = "SELECT SUM(amount) AS Balance
 		FROM
-			".TB_PREF."gl_trans
+			gl_trans
 		WHERE (dimension_id = '$dim' OR dimension2_id = '$dim')
 		AND tran_date >= '$date'";
 

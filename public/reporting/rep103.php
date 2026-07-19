@@ -44,11 +44,11 @@ function get_customer_details_for_report($area=0, $salesid=0)
 			branch.salesman,
 			area.description,
 			salesman.salesman_name
-		FROM ".TB_PREF."debtors_master debtor
-		INNER JOIN ".TB_PREF."cust_branch branch ON debtor.debtor_no=branch.debtor_no
-		INNER JOIN ".TB_PREF."sales_types pricelist	ON debtor.sales_type=pricelist.id
-		INNER JOIN ".TB_PREF."areas area ON branch.area = area.area_code
-		INNER JOIN ".TB_PREF."salesman salesman	ON branch.salesman=salesman.salesman_code
+		FROM debtors_master debtor
+		INNER JOIN cust_branch branch ON debtor.debtor_no=branch.debtor_no
+		INNER JOIN sales_types pricelist	ON debtor.sales_type=pricelist.id
+		INNER JOIN areas area ON branch.area = area.area_code
+		INNER JOIN salesman salesman	ON branch.salesman=salesman.salesman_code
 		WHERE debtor.inactive = 0";
 	if ($area != 0)
 	{
@@ -71,8 +71,8 @@ function get_customer_details_for_report($area=0, $salesid=0)
 function get_contacts_for_branch($branch)
 {
 	$sql = "SELECT p.*, r.action, r.type, CONCAT(r.type,'.',r.action) as ext_type 
-		FROM ".TB_PREF."crm_persons p,"
-			.TB_PREF."crm_contacts r
+		FROM crm_persons p,
+			crm_contacts r
 		WHERE r.person_id=p.id AND r.type='cust_branch' 
 			AND r.entity_id=".db_escape($branch);
 	$res = db_query($sql, "can't retrieve branch contacts");
@@ -87,7 +87,7 @@ function getTransactions($debtorno, $branchcode, $date)
 	$date = date2sql($date);
 
 	$sql = "SELECT SUM(effect*ABS(total - ov_gst - ov_freight_tax)*rate) AS Turnover
-		FROM ".TB_PREF."debtor_trans
+		FROM debtor_trans
 		WHERE debtor_no=".db_escape($debtorno)."
 		AND branch_code=".db_escape($branchcode)."
 		AND (type=".ST_SALESINVOICE." OR type=".ST_CUSTCREDIT.")

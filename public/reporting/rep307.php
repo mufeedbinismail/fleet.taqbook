@@ -35,7 +35,7 @@ function fetch_items($category=0)
 				stock.category_id,
 				units,
 				cat.description
-			FROM ".TB_PREF."stock_master stock LEFT JOIN ".TB_PREF."stock_category cat ON stock.category_id=cat.category_id
+			FROM stock_master stock LEFT JOIN stock_category cat ON stock.category_id=cat.category_id
 				WHERE mb_flag <> 'D' AND mb_flag <>'F'";
 		if ($category != 0)
 			$sql .= " AND cat.category_id = ".db_escape($category);
@@ -56,7 +56,7 @@ function trans_qty($stock_id, $location, $from_date, $to_date, $inward = true)
 
 	$to_date = date2sql($to_date);
 
-	$sql = "SELECT ".($inward ? '' : '-')."SUM(qty) FROM ".TB_PREF."stock_moves
+	$sql = "SELECT ".($inward ? '' : '-')."SUM(qty) FROM stock_moves
 		WHERE stock_id=".db_escape($stock_id)."
 		AND tran_date >= '$from_date' 
 		AND tran_date <= '$to_date'";

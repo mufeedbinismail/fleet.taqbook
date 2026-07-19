@@ -691,7 +691,7 @@ function generateBarcode() {
 		$tmpBarcodeID = $random_1 . $random_2 . $random_3 . $random_4 . $random_5 . $random_6 . $random_7 . $random_8;
 
 		// LETS CHECK TO SEE IF THIS NUMBER HAS EVER BEEN USED
-		$query = "SELECT stock_id FROM ".TB_PREF."stock_master WHERE stock_id='" . $tmpBarcodeID . "'";
+		$query = "SELECT stock_id FROM stock_master WHERE stock_id='" . $tmpBarcodeID . "'";
 		$arr_stock = db_fetch(db_query($query));
   
 		if (  !$arr_stock || !$arr_stock['stock_id'] ) {

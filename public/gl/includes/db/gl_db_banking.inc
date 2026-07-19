@@ -25,7 +25,7 @@ function add_exchange_variation($trans_no, $date_, $acc_id, $account,
 	// We have to calculate all the currency accounts belonging to the GL account
 	// upto $date_ and calculate with the exchange rates. And then compare with the GL account balance.
 	$sql = "SELECT SUM(bt.amount) AS for_amount, ba.bank_curr_code 		
-		FROM ".TB_PREF."bank_trans bt, ".TB_PREF."bank_accounts ba
+		FROM bank_trans bt, bank_accounts ba
 		WHERE ba.id = bt.bank_act AND ba.account_code = ".db_escape($account)." AND bt.trans_date<='".date2sql($date_)."'
 		GROUP BY ba.bank_curr_code";	
 	$result = db_query($sql, "Transactions for bank account $acc_id could not be calculated");
@@ -99,10 +99,10 @@ function get_cust_account_curr_balances($date)
 
     $sql = "SELECT SUM(t.effect * abs(t.total)) AS amount,
 	    	dt.debtor_no, dt.name, dt.curr_code, b.receivables_account
-		FROM ".TB_PREF."debtor_trans t 
-			LEFT JOIN ".TB_PREF."debtors_master dt ON t.debtor_no = dt.debtor_no
-			LEFT JOIN ".TB_PREF."cust_branch b ON t.debtor_no = b.debtor_no
-			LEFT JOIN ".TB_PREF."voided as v ON v.type = t.type and v.id=t.trans_no
+		FROM debtor_trans t 
+			LEFT JOIN debtors_master dt ON t.debtor_no = dt.debtor_no
+			LEFT JOIN cust_branch b ON t.debtor_no = b.debtor_no
+			LEFT JOIN voided as v ON v.type = t.type and v.id=t.trans_no
     	WHERE ISNULL(v.date_) AND t.type <> ".ST_CUSTDELIVERY." AND t.tran_date <= '$to' 
     		AND t.branch_code=b.branch_code AND dt.curr_code<>'".get_company_pref('curr_default')."' 
     		GROUP BY t.debtor_no, b.receivables_account";
@@ -117,9 +117,9 @@ function get_supp_account_curr_balances($date)
 
     $sql = "SELECT SUM(-(t.ov_amount + t.ov_gst + t.ov_discount)) AS amount,
 	    	supp.supplier_id, supp.supp_name, supp.curr_code, supp.payable_account
-		FROM ".TB_PREF."supp_trans t 
-			LEFT JOIN ".TB_PREF."suppliers supp ON t.supplier_id = supp.supplier_id
-			LEFT JOIN ".TB_PREF."voided as v ON v.type = t.type and v.id=t.trans_no
+		FROM supp_trans t 
+			LEFT JOIN suppliers supp ON t.supplier_id = supp.supplier_id
+			LEFT JOIN voided as v ON v.type = t.type and v.id=t.trans_no
     	WHERE ISNULL(v.date_) AND t.tran_date <= '$to' 
     		AND supp.curr_code<>'".get_company_pref('curr_default')."' 
     		GROUP BY t.supplier_id";
@@ -132,7 +132,7 @@ function get_account_home_balance($person_id, $person_type, $rec_account, $to_da
 {
 	$to = date2sql($to_date);
 
-    $sql = "SELECT SUM(amount) FROM ".TB_PREF."gl_trans  
+    $sql = "SELECT SUM(amount) FROM gl_trans  
 			WHERE person_id=".db_escape($person_id)." AND account='$rec_account' 
 			AND person_type_id=$person_type AND tran_date <= '$to'";
 	$result = db_query($sql, "The AR/AP balance for customer $person_id could not be calculated");
@@ -150,7 +150,7 @@ function add_exchange_variation_all($date, $memo)
 	begin_transaction();
 	$exchanged = false;
 	$trans_no = get_next_trans_no(ST_JOURNAL);
-	$sql = "SELECT * FROM ".TB_PREF."bank_accounts";
+	$sql = "SELECT * FROM bank_accounts";
 	$result = db_query($sql, "could not retreive bank accounts");
 	$b_num = 0;
 	while ($myrow = db_fetch($result))

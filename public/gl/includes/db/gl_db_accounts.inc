@@ -11,7 +11,7 @@
 ***********************************************************************/
 function add_gl_account($account_code, $account_name, $account_type, $account_code2)
 {
-	$sql = "INSERT INTO ".TB_PREF."chart_master (account_code, account_code2, account_name, account_type)
+	$sql = "INSERT INTO chart_master (account_code, account_code2, account_name, account_type)
 		VALUES (".db_escape($account_code).", ".db_escape($account_code2).", "
 			.db_escape($account_name).", ".db_escape($account_type).")";
 
@@ -20,7 +20,7 @@ function add_gl_account($account_code, $account_name, $account_type, $account_co
 
 function update_gl_account($account_code, $account_name, $account_type, $account_code2)
 {
-    $sql = "UPDATE ".TB_PREF."chart_master SET account_name=".db_escape($account_name)
+    $sql = "UPDATE chart_master SET account_name=".db_escape($account_name)
     .",account_type=".db_escape($account_type).", account_code2=".db_escape($account_code2)
 		." WHERE account_code = ".db_escape($account_code);
 
@@ -29,7 +29,7 @@ function update_gl_account($account_code, $account_name, $account_type, $account
 
 function delete_gl_account($code)
 {
-	$sql = "DELETE FROM ".TB_PREF."chart_master WHERE account_code=".db_escape($code);
+	$sql = "DELETE FROM chart_master WHERE account_code=".db_escape($code);
 
 	db_query($sql, "could not delete gl account");
 }
@@ -37,9 +37,7 @@ function delete_gl_account($code)
 function get_gl_accounts($from=null, $to=null, $type=null)
 {
 	$sql = "SELECT coa.*, act_type.name AS AccountTypeName
-		FROM "
-			.TB_PREF."chart_master coa,"
-			.TB_PREF."chart_types act_type
+		FROM chart_master coa, chart_types act_type
 		WHERE coa.account_type=act_type.id";
 	if ($from != null)
 		$sql .= " AND coa.account_code >= ".db_escape($from);
@@ -54,7 +52,7 @@ function get_gl_accounts($from=null, $to=null, $type=null)
 
 function get_gl_account($code)
 {
-	$sql = "SELECT * FROM ".TB_PREF."chart_master WHERE account_code=".db_escape($code);
+	$sql = "SELECT * FROM chart_master WHERE account_code=".db_escape($code);
 
 	$result = db_query($sql, "could not get gl account");
 	return db_fetch($result);
@@ -63,10 +61,7 @@ function get_gl_account($code)
 function is_account_balancesheet($code)
 {
 	$sql = "SELECT act_class.ctype
-		FROM "
-			.TB_PREF."chart_class act_class, "
-			.TB_PREF."chart_types act_type, "
-			.TB_PREF."chart_master coa
+		FROM chart_class act_class, chart_types act_type, chart_master coa
 		WHERE coa.account_type=act_type.id
 			AND	act_type.class_id=act_class.cid
 			AND coa.account_code=".db_escape($code);
@@ -78,7 +73,7 @@ function is_account_balancesheet($code)
 
 function get_gl_account_name($code)
 {
-	$sql = "SELECT account_name from ".TB_PREF."chart_master WHERE account_code=".db_escape($code);
+	$sql = "SELECT account_name from chart_master WHERE account_code=".db_escape($code);
 
 	$result = db_query($sql,"could not retreive the account name for $code");
 
@@ -94,7 +89,7 @@ function get_gl_account_name($code)
 function gl_account_in_company_defaults($acc)
 {
 	$sql= "SELECT COUNT(*) 
-	FROM ".TB_PREF."sys_prefs
+	FROM sys_prefs
 	WHERE (name='debtors_act' 
 		OR name='pyt_discount_act'
 		OR name='creditors_act' 
@@ -124,7 +119,7 @@ function gl_account_in_stock_category($acc)
 	$acc = db_escape($acc);
 
 	$sql= "SELECT COUNT(*) 
-		FROM ".TB_PREF."stock_category
+		FROM stock_category
 		WHERE dflt_inventory_act=$acc 
 			OR dflt_cogs_act=$acc
 			OR dflt_adjustment_act=$acc 
@@ -140,7 +135,7 @@ function gl_account_in_stock_master($acc)
 	$acc = db_escape($acc);
 
 	$sql= "SELECT COUNT(*)
-		FROM ".TB_PREF."stock_master
+		FROM stock_master
 		WHERE inventory_account=$acc 
 			OR cogs_account=$acc
 			OR adjustment_account=$acc 
@@ -156,7 +151,7 @@ function gl_account_in_tax_types($acc)
 	$acc = db_escape($acc);
 
 	$sql= "SELECT COUNT(*)
-		FROM ".TB_PREF."tax_types
+		FROM tax_types
 		WHERE sales_gl_code=$acc 
 			OR purchasing_gl_code=$acc";
 	$result = db_query($sql,"Couldn't test for existing tax GL codes");
@@ -170,7 +165,7 @@ function gl_account_in_cust_branch($acc)
 	$acc = db_escape($acc);
 
 	$sql= "SELECT COUNT(*)
-		FROM ".TB_PREF."cust_branch
+		FROM cust_branch
 		WHERE sales_account=$acc 
 			OR sales_discount_account=$acc
 			OR receivables_account=$acc
@@ -186,7 +181,7 @@ function gl_account_in_suppliers($acc)
 	$acc = db_escape($acc);
 
 	$sql= "SELECT COUNT(*)
-		FROM ".TB_PREF."suppliers
+		FROM suppliers
 		WHERE purchase_account=$acc
 			OR payment_discount_account=$acc
 			OR payable_account=$acc";
@@ -202,7 +197,7 @@ function gl_account_in_quick_entry_lines($acc)
 
 	$sql=
 	"SELECT COUNT(*)
-		FROM ".TB_PREF."quick_entry_lines
+		FROM quick_entry_lines
 		WHERE dest_id=$acc AND UPPER(LEFT(action, 1)) <> 'T'";
 	$result = db_query($sql,"Couldn't test for existing Quick Entry Line GL codes");
 
@@ -215,7 +210,7 @@ function gl_account_in_marketplaces($acc)
 	$acc = db_escape($acc);
 
 	$sql= "SELECT COUNT(*)
-		FROM ".TB_PREF."marketplaces
+		FROM marketplaces
 		WHERE payable_account=$acc";
 	$result = db_query($sql,"Couldn't test for existing marketplaces GL codes");
 
@@ -233,9 +228,9 @@ function is_subledger_account($account, $taxable_only=false)
     
     $sql = "SELECT 
         CASE 
-            WHEN EXISTS (SELECT 1 FROM ".TB_PREF."cust_branch WHERE receivables_account={$account} LIMIT 1) THEN ".SLT_AR."
-            WHEN EXISTS (SELECT 1 FROM ".TB_PREF."suppliers WHERE payable_account={$account} LIMIT 1) THEN ".SLT_AP."
-            WHEN EXISTS (SELECT 1 FROM ".TB_PREF."marketplaces WHERE provision_account={$account} LIMIT 1) THEN ".SLT_MARKETPLACE."
+            WHEN EXISTS (SELECT 1 FROM cust_branch WHERE receivables_account={$account} LIMIT 1) THEN ".SLT_AR."
+            WHEN EXISTS (SELECT 1 FROM suppliers WHERE payable_account={$account} LIMIT 1) THEN ".SLT_AP."
+            WHEN EXISTS (SELECT 1 FROM marketplaces WHERE provision_account={$account} LIMIT 1) THEN ".SLT_MARKETPLACE."
             ELSE NULL
         END as sl_type";
 
@@ -278,20 +273,20 @@ function get_subaccount_data($code_id, $person_id, $sl_type=null)
     switch ($sl_type) {
         case SLT_AR:
             $sql = "SELECT debtor_ref as name, branch_code as id 
-                FROM ".TB_PREF."cust_branch branch 
-                    LEFT JOIN ".TB_PREF."debtors_master d ON branch.debtor_no = d.debtor_no
+                FROM cust_branch branch 
+                    LEFT JOIN debtors_master d ON branch.debtor_no = d.debtor_no
                 WHERE branch.receivables_account=".db_escape($code_id)
                     ." AND d.debtor_no=".db_escape($person_id);
             break;
         case SLT_AP:
             $sql = "SELECT supp_ref as name, '' as id 
-                FROM ".TB_PREF."suppliers supp
+                FROM suppliers supp
                 WHERE payable_account=".db_escape($code_id)." 
                     AND supplier_id=".db_escape($person_id);
             break;
         case SLT_MARKETPLACE:
             $sql = "SELECT name, '' as id
-                FROM ".TB_PREF."marketplaces
+                FROM marketplaces
                 WHERE provision_account=".db_escape($code_id)." 
                     AND id=".db_escape($person_id);
             break;
@@ -313,7 +308,7 @@ function get_subaccount_name($code_id, $person_id)
 
 function gl_account_in_bank_accounts($acc)
 {
-	$sql= "SELECT COUNT(*) FROM ".TB_PREF."bank_accounts WHERE 
+	$sql= "SELECT COUNT(*) FROM bank_accounts WHERE 
 		account_code=".db_escape($acc);
 	$result = db_query($sql,"Couldn't test bank account GL codes");
 
@@ -331,7 +326,7 @@ function gl_account_in_bank_accounts($acc)
 //
 function is_bank_account($account_code)
 {
-	$sql= "SELECT id FROM ".TB_PREF."bank_accounts WHERE account_code=".db_escape($account_code);
+	$sql= "SELECT id FROM bank_accounts WHERE account_code=".db_escape($account_code);
 	$result = db_query($sql, "checking account is bank account");
 	if (db_num_rows($result) > 0) {
 		$acct = db_fetch($result);
@@ -351,14 +346,14 @@ function get_chart_accounts_search($like, $skip=false)
 
 	if ($skip)
 		$sql = "SELECT chart.account_code, chart.account_name, type.name, chart.inactive, type.id
-			FROM (".TB_PREF."chart_master chart,".TB_PREF."chart_types type) "
-			."LEFT JOIN ".TB_PREF."bank_accounts acc "
+			FROM (chart_master chart,chart_types type) "
+			."LEFT JOIN bank_accounts acc "
 			."ON chart.account_code=acc.account_code
 				WHERE acc.account_code  IS NULL
 			AND chart.account_type=type.id ";
 	else		
 		$sql = "SELECT chart.account_code, chart.account_name, type.name, chart.inactive, type.id
-			FROM ".TB_PREF."chart_master chart,".TB_PREF."chart_types type WHERE chart.account_type=type.id ";
+			FROM chart_master chart,chart_types type WHERE chart.account_type=type.id ";
 	$sql .= "AND (
           	chart.account_name LIKE " . db_escape("%" . $like. "%") . " OR
           	chart.account_code LIKE " . db_escape("%" . $like. "%") . "

@@ -79,12 +79,12 @@ class reflines_db extends data_set {
 	{
 
 		$sql = "SELECT *
-			FROM (SELECT r.* FROM ".TB_PREF."refs r 
-				LEFT JOIN ".TB_PREF."voided as v
+			FROM (SELECT r.* FROM refs r 
+				LEFT JOIN voided as v
 					ON r.id=v.id AND r.type=v.type
 				WHERE r.type=".db_escape($trans_type)." AND ISNULL(v.id)
 				) ref
-			LEFT JOIN ".TB_PREF."reflines line ON ref.type=line.trans_type AND substr(ref.reference,1, LENGTH(line.prefix))= line.prefix AND line.prefix<>''
+			LEFT JOIN reflines line ON ref.type=line.trans_type AND substr(ref.reference,1, LENGTH(line.prefix))= line.prefix AND line.prefix<>''
 			WHERE ".($prefix == '' ? "ISNULL(prefix)" : "prefix=".db_escape($prefix));
 
 		$res = db_query($sql, "cannot check reference line");
@@ -106,7 +106,7 @@ class reflines_db extends data_set {
 
 	function _set_as_default($id, $type)
 	{
-		$sql  = "UPDATE ".TB_PREF."reflines SET `default`=(`id`=".db_escape($id).")
+		$sql  = "UPDATE reflines SET `default`=(`id`=".db_escape($id).")
 			 WHERE `trans_type`=".db_escape($type);
 		return db_query($sql, "cannot update default refline");
 	}
@@ -131,14 +131,14 @@ class reflines_db extends data_set {
 
 	function get_default($type)
 	{
-		$sql = "SELECT * FROM ".TB_PREF."reflines WHERE trans_type=".db_escape($type)." AND `default`";
+		$sql = "SELECT * FROM reflines WHERE trans_type=".db_escape($type)." AND `default`";
 		$result = db_query($sql, "cannot retreive default refline for trnasaction type $type");
 		return db_fetch($result);
 	}
 
 	function count($type, $all=false)
 	{
-		$sql = "SELECT count(*) FROM ".TB_PREF."reflines WHERE trans_type=".db_escape($type);
+		$sql = "SELECT count(*) FROM reflines WHERE trans_type=".db_escape($type);
 
 		if (!$all)
 			$sql .= " AND !inactive";
@@ -152,10 +152,10 @@ class reflines_db extends data_set {
 	*/
 	function find_refline_id($reference, $type, $fallback=true)
 	{
-		$sql = "SELECT * FROM ".TB_PREF."reflines WHERE trans_type=".db_escape($type)
+		$sql = "SELECT * FROM reflines WHERE trans_type=".db_escape($type)
 			." AND CHAR_LENGTH(`prefix`) AND LEFT(".db_escape($reference).", CHAR_LENGTH(`prefix`)) = `prefix`";
 		if ($fallback)	// if not found return refline with empty prefix
-			$sql .= " UNION SELECT * FROM ".TB_PREF."reflines WHERE trans_type=".db_escape($type)." AND `prefix`=''";
+			$sql .= " UNION SELECT * FROM reflines WHERE trans_type=".db_escape($type)." AND `prefix`=''";
 		$ret = db_query($sql, "cannot check reference line id");
 		$line = db_fetch($ret);
 
@@ -167,7 +167,7 @@ class reflines_db extends data_set {
 
 	function save_next($type, $reference, $line=null)
 	{
-	    $sql = "UPDATE ".TB_PREF."reflines SET pattern=SUBSTRING(" . db_escape(trim($reference)) .", LENGTH(`prefix`)+1)"
+	    $sql = "UPDATE reflines SET pattern=SUBSTRING(" . db_escape(trim($reference)) .", LENGTH(`prefix`)+1)"
 		. " WHERE trans_type = ".db_escape($type)." AND ";
 
 		if (isset($line))

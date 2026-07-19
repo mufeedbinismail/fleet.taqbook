@@ -96,7 +96,7 @@ function get_mysql_collation($lang=null)
 */
 function db_fixed()
 {
-	$result = db_query("SELECT value FROM ".TB_PREF."sys_prefs WHERE name='version_id'");
+	$result = db_query("SELECT value FROM sys_prefs WHERE name='version_id'");
 	$data = db_fetch($result);
 	return !db_num_rows($result) // new database is fixed by default 
 		|| ($data[0] > "2.3rc");

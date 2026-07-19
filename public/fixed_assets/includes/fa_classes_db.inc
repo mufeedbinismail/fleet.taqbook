@@ -12,7 +12,7 @@
 
 function get_fixed_asset_classes()
 {
-	$sql="SELECT * FROM ".TB_PREF."stock_fa_class";
+	$sql="SELECT * FROM stock_fa_class";
 
 	$result = db_query($sql,"fixed asset classes could not be retrieved");
 
@@ -21,7 +21,7 @@ function get_fixed_asset_classes()
 
 function get_fixed_asset_classname($class)
 {
-	$sql="SELECT description FROM ".TB_PREF."stock_fa_class WHERE fa_class_id = ".db_escape($class);
+	$sql="SELECT description FROM stock_fa_class WHERE fa_class_id = ".db_escape($class);
 
 	$result = db_query($sql,"fixed asset class name could not be retrieved");
 
@@ -32,7 +32,7 @@ function get_fixed_asset_classname($class)
 
 function update_fixed_asset_class($fa_class_id, $parent_id, $description, $long_description, $depreciation_rate)
 {
-	$sql = "UPDATE ".TB_PREF."stock_fa_class SET
+	$sql = "UPDATE stock_fa_class SET
 		parent_id=".db_escape($parent_id).",
 		description=".db_escape($description).",
 		long_description=".db_escape($long_description).",
@@ -44,7 +44,7 @@ function update_fixed_asset_class($fa_class_id, $parent_id, $description, $long_
 
 function add_fixed_asset_class($fa_class_id, $parent_id, $description, $long_description, $depreciation_rate)
 {
-  $sql = "INSERT INTO ".TB_PREF."stock_fa_class (fa_class_id, parent_id, description, long_description,
+  $sql = "INSERT INTO stock_fa_class (fa_class_id, parent_id, description, long_description,
      depreciation_rate) VALUES ("
     .db_escape($fa_class_id).", ".db_escape($parent_id).", "
 	.db_escape($description).", ".db_escape($long_description).", "
@@ -55,7 +55,7 @@ function add_fixed_asset_class($fa_class_id, $parent_id, $description, $long_des
 
 function delete_fixed_asset_class($fa_class_id)
 {
-  $sql = "DELETE FROM ".TB_PREF."stock_fa_class WHERE fa_class_id=".db_escape($fa_class_id);
+  $sql = "DELETE FROM stock_fa_class WHERE fa_class_id=".db_escape($fa_class_id);
 
 	db_query($sql, "The fixed asset class could not be deleted");
 }

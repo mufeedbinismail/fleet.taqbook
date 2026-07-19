@@ -126,7 +126,7 @@ function write_sales_delivery(&$delivery,$bo_policy)
 			$mb_flag = get_mb_flag($delivery_line->stock_id);
 
 			if (is_fixed_asset($mb_flag)) {
-				$sql = "UPDATE ".TB_PREF."stock_master SET inactive=1, material_cost=0
+				$sql = "UPDATE stock_master SET inactive=1, material_cost=0
 					WHERE stock_id=".db_escape($delivery_line->stock_id);
 				db_query($sql,"The cost details for the fixed asset could not be updated");
 			}
@@ -230,7 +230,7 @@ function write_sales_delivery(&$delivery,$bo_policy)
 //--------------------------------------------------------------------------------------------------
 function adjust_shipping_charge(&$delivery, $trans_no)
 {
-  	$sql = "SELECT sum(ov_freight) as freight FROM ".TB_PREF."debtor_trans WHERE order_ = $trans_no AND type = " . ST_CUSTDELIVERY . " AND debtor_no = " . $delivery->customer_id;
+  	$sql = "SELECT sum(ov_freight) as freight FROM debtor_trans WHERE order_ = $trans_no AND type = " . ST_CUSTDELIVERY . " AND debtor_no = " . $delivery->customer_id;
   	$result = db_query($sql, "Can not find delivery notes");
   	$row = db_fetch_row($result);
   	if (!is_array($row)) $freight = 0;

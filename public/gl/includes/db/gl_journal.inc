@@ -17,7 +17,7 @@ use App\Shared\Enum\TransactionEffect;
 function add_journal($type, $trans_no, $amount, $tran_date, $currency, $reference, $source_ref='', $rate=1,
 	 $event_date='', $doc_date='')
 {
-	$sql = "INSERT INTO ".TB_PREF."journal(
+	$sql = "INSERT INTO journal(
 	   `type`,`trans_no`, `amount`, `currency`, `rate`, `reference`, `source_ref`, `tran_date`,`event_date`,`doc_date`)
 	  VALUES("
 	  .db_escape($type).","
@@ -37,7 +37,7 @@ function add_journal($type, $trans_no, $amount, $tran_date, $currency, $referenc
 function update_journal($type, $trans_no, $amount, $tran_date, $currency, $reference, $source_ref='', $rate=1,
 	 $event_date='', $doc_date='')
 {
-	$sql = "UPDATE ".TB_PREF."journal SET "
+	$sql = "UPDATE journal SET "
 	  ."`amount`=".db_escape($amount).","
 	  ."`currency`=".db_escape($currency).","
 	  ."`rate`=".db_escape($rate).","
@@ -53,7 +53,7 @@ function update_journal($type, $trans_no, $amount, $tran_date, $currency, $refer
 
 function delete_journal($type, $trans_no)
 {
-	$sql = "DELETE FROM ".TB_PREF."journal 
+	$sql = "DELETE FROM journal 
 	   WHERE `type`=".db_escape($type)." AND " ."`trans_no`=".db_escape($trans_no);
 
 	return db_query($sql, 'cannot delete journal entry');
@@ -61,7 +61,7 @@ function delete_journal($type, $trans_no)
 
 function get_journal($type, $trans_no)
 {
-	$sql = "SELECT * FROM ".TB_PREF."journal 
+	$sql = "SELECT * FROM journal 
 	   WHERE `type`=".db_escape($type)." AND " ."`trans_no`=".db_escape($trans_no);
 
 	$myrow= db_query($sql, 'cannot retrieve journal entry');
@@ -76,12 +76,12 @@ function write_cust_journal($trans_type, $trans_no, $branch_id, $date, $ref, $am
 {
 	// we have to select any branch_id for given AR_act - in fact w
     $cust_effect = $amount >= 0 ? TransactionEffect::Increase : TransactionEffect::Decrease;
-    $sql = "INSERT INTO ".TB_PREF."debtor_trans (source, trans_no, type, debtor_no, branch_code, tran_date, reference, ov_amount, rate, effect, payment_method_id)
+    $sql = "INSERT INTO debtor_trans (source, trans_no, type, debtor_no, branch_code, tran_date, reference, ov_amount, rate, effect, payment_method_id)
         VALUES (
             ".db_escape(CustomerTransactionSource::Manual->value).",
             ".db_escape($trans_no).",
             ".db_escape($trans_type).",
-            (SELECT debtor_no FROM ".TB_PREF."cust_branch WHERE branch_code=".db_escape($branch_id). "),
+            (SELECT debtor_no FROM cust_branch WHERE branch_code=".db_escape($branch_id). "),
             ".db_escape($branch_id).",
             '".date2sql($date)."',
             ".db_escape($ref).",
@@ -100,7 +100,7 @@ function write_cust_journal($trans_type, $trans_no, $branch_id, $date, $ref, $am
 function write_supp_journal($trans_type, $trans_no, $supp_id, $date, $ref, $amount, $rate, $src_ref)
 {
 	$effect = $amount >= 0 ? TransactionEffect::Increase : TransactionEffect::Decrease;
-	$sql = "INSERT INTO ".TB_PREF."supp_trans (trans_no, type, supplier_id, tran_date, reference, ov_amount, rate, supp_reference, source, effect)
+	$sql = "INSERT INTO supp_trans (trans_no, type, supplier_id, tran_date, reference, ov_amount, rate, supp_reference, source, effect)
 		VALUES (".db_escape($trans_no).", ".db_escape($trans_type).", ".db_escape($supp_id).", '".date2sql($date)."',"
 		.db_escape($ref).", ".db_escape($amount).",".db_escape($rate).",".db_escape($src_ref).",
 		".SupplierTransactionSource::Manual->value.", ".db_escape($effect->value).")";
@@ -174,7 +174,7 @@ function void_journal_trans($type, $type_no, $use_transaction=true)
 	if ($use_transaction)
 		begin_transaction();
 
-	$sql = "UPDATE ".TB_PREF."journal SET amount=0
+	$sql = "UPDATE journal SET amount=0
 		WHERE type=".db_escape($type)." AND trans_no=".db_escape($type_no);
 
 	db_query($sql, "could not void journal transaction for type=$type and trans_no=$type_no");

@@ -14,7 +14,7 @@
 */
 function update_company_prefs($params)
 {
-	$sql = "UPDATE ".TB_PREF."sys_prefs SET value = ";
+	$sql = "UPDATE sys_prefs SET value = ";
 	foreach($params as $name => $value) {
 		if (!db_query($sql. db_escape($value). " WHERE name=".db_escape($name),
 			 "The company prefferences could not be updated "))
@@ -46,7 +46,7 @@ function get_company_prefs()
 
 function set_company_pref($pref, $category, $type, $length, $value)
 {
-	$sql = "REPLACE `".TB_PREF."sys_prefs` SET `name`=".db_escape($pref).", `category`=".db_escape($category)
+	$sql = "REPLACE `sys_prefs` SET `name`=".db_escape($pref).", `category`=".db_escape($category)
 		.", `type`=".db_escape($type).", `length`=".db_escape($length).", `value`=".db_escape($value);
 	return db_query($sql, "cannot set company pref");
 }
@@ -60,14 +60,14 @@ function add_payment_terms($daysOrFoll, $terms, $dayNumber)
 {
 	if ($daysOrFoll) 
 	{
-		$sql = "INSERT INTO ".TB_PREF."payment_terms (terms,
+		$sql = "INSERT INTO payment_terms (terms,
 			days_before_due, day_in_following_month)
 			VALUES (" .
 			db_escape($terms) . ", " . db_escape($dayNumber) . ", 0)";
 	} 
 	else 
 	{
-		$sql = "INSERT INTO ".TB_PREF."payment_terms (terms,
+		$sql = "INSERT INTO payment_terms (terms,
 			days_before_due, day_in_following_month)
 			VALUES (" . db_escape($terms) . ",
 			0, " . db_escape($dayNumber) . ")";
@@ -79,14 +79,14 @@ function update_payment_terms($selected_id, $daysOrFoll, $terms, $dayNumber)
 {
 	if ($daysOrFoll) 
 	{
-		$sql = "UPDATE ".TB_PREF."payment_terms SET terms=" . db_escape($terms) . ",
+		$sql = "UPDATE payment_terms SET terms=" . db_escape($terms) . ",
 			day_in_following_month=0,
 			days_before_due=" . db_escape($dayNumber) . "
 			WHERE terms_indicator = " .db_escape($selected_id);
 	} 
 	else 
 	{
-		$sql = "UPDATE ".TB_PREF."payment_terms SET terms=" . db_escape($terms) . ",
+		$sql = "UPDATE payment_terms SET terms=" . db_escape($terms) . ",
 			day_in_following_month=" . db_escape($dayNumber) . ",
 			days_before_due=0
 			WHERE terms_indicator = " .db_escape($selected_id);
@@ -96,14 +96,14 @@ function update_payment_terms($selected_id, $daysOrFoll, $terms, $dayNumber)
 
 function delete_payment_terms($selected_id)
 {
-	$sql="DELETE FROM ".TB_PREF."payment_terms WHERE terms_indicator=".db_escape($selected_id);
+	$sql="DELETE FROM payment_terms WHERE terms_indicator=".db_escape($selected_id);
 	db_query($sql,"could not delete a payment terms");
 }
 
 function get_payment_terms($selected_id)
 {
 	$sql = "SELECT *, (t.days_before_due=0) AND (t.day_in_following_month=0) as cash_sale
-	 FROM ".TB_PREF."payment_terms t WHERE terms_indicator=".db_escape($selected_id);
+	 FROM payment_terms t WHERE terms_indicator=".db_escape($selected_id);
 
 	$result = db_query($sql,"could not get payment term");
 
@@ -112,7 +112,7 @@ function get_payment_terms($selected_id)
 
 function get_payment_terms_all($show_inactive)
 {
-	$sql = "SELECT * FROM ".TB_PREF."payment_terms";
+	$sql = "SELECT * FROM payment_terms";
 	if (!$show_inactive) $sql .= " WHERE !inactive";
 	return db_query($sql,"could not get payment terms");
 }
@@ -135,7 +135,7 @@ function key_in_foreign_table($id, $tables, $stdkey)
 			$tbl = $key;
 			$key = $stdkey;
 		}
-		$sqls[] = "(SELECT COUNT(*) as cnt FROM `".TB_PREF."$tbl` WHERE `$key`=".db_escape($id).")\n";
+		$sqls[] = "(SELECT COUNT(*) as cnt FROM `$tbl` WHERE `$key`=".db_escape($id).")\n";
 	}
 
 	$sql = "SELECT sum(cnt) FROM (". implode(' UNION ', $sqls).") as counts";

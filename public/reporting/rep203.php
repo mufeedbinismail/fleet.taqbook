@@ -34,7 +34,7 @@ function getTransactions($supplier, $date)
 	$sql = "SELECT  supp_reference, tran_date, due_date, trans_no, type, rate, effect,
 			(ABS(total) -  alloc) AS Balance,
 			ABS(total) AS TranTotal
-		FROM ".TB_PREF."supp_trans
+		FROM supp_trans
 		WHERE  supplier_id = '$supplier'
 		AND ROUND(ABS(total),$dec) -
 		ROUND( alloc,$dec) != 0
@@ -106,7 +106,7 @@ function print_payment_report()
 	$total = array();
 	$grandtotal = array(0,0);
 
-	$sql = "SELECT supplier_id, supp_name AS name, curr_code, s.inactive, pt.terms FROM ".TB_PREF."suppliers s, ".TB_PREF."payment_terms pt
+	$sql = "SELECT supplier_id, supp_name AS name, curr_code, s.inactive, pt.terms FROM suppliers s, payment_terms pt
 		WHERE ";
 	if ($fromsupp != ALL_TEXT)
 		$sql .= "supplier_id=".db_escape($fromsupp)." AND ";

@@ -44,15 +44,10 @@ function set_global_connection($company=-1)
 
 function db_query($sql, $err_msg=null)
 {
-	global $db, $db_last_stmt, $SysPrefs, $sql_queries, $db_connections, $Ajax, $db_last_inserted_id;
+	global $db, $db_last_stmt, $SysPrefs, $sql_queries, $Ajax, $db_last_inserted_id;
 
-    // set current db prefix
     if ($sql instanceof \Illuminate\Database\Query\Builder) {
         $sql = $sql->toRawSql();
-    } else {
-        $comp = isset($_SESSION["wa_current_user"]->cur_con) ? $_SESSION["wa_current_user"]->cur_con : 0;
-        $cur_prefix = (string)@$db_connections[$comp]['tbpref'];
-        $sql = str_replace(TB_PREF, $cur_prefix, $sql);
     }
 
 	if ($SysPrefs->show_sql)

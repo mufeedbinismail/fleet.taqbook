@@ -35,9 +35,9 @@ function getTransactions($from, $to)
 			bom.quantity,
 			bom.loc_code,
 			bom.workcentre_added
-		FROM "
-			.TB_PREF."stock_master item,"
-			.TB_PREF."bom bom
+		FROM 
+			stock_master item,
+			bom bom
 		WHERE item.stock_id=bom.component
 		AND bom.parent >= ".db_escape($from)."
 		AND bom.parent <= ".db_escape($to)."

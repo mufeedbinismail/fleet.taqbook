@@ -12,7 +12,7 @@
 
 function add_wo_costing($workorder_id, $cost_type, $trans_type, $trans_no, $factor=1)
 {
-	$sql = "INSERT INTO ".TB_PREF."wo_costing (workorder_id, cost_type, trans_type, trans_no, factor)
+	$sql = "INSERT INTO wo_costing (workorder_id, cost_type, trans_type, trans_no, factor)
 		VALUES (".db_escape($workorder_id).","
 		.db_escape($cost_type).",".db_escape($trans_type).","
 		.db_escape($trans_no).",".db_escape($factor).")";
@@ -24,8 +24,8 @@ function add_wo_costing($workorder_id, $cost_type, $trans_type, $trans_no, $fact
 function get_wo_costing($workorder_id)
 {
 	$sql="SELECT * 
-		FROM ".TB_PREF."wo_costing cost,
-			".TB_PREF."journal gl
+		FROM wo_costing cost,
+			journal gl
 		WHERE
 			cost.trans_type=gl.type AND cost.trans_no=gl.trans_no
 			AND workorder_id=".db_escape($workorder_id);
@@ -35,7 +35,7 @@ function get_wo_costing($workorder_id)
 
 function delete_wo_costing($trans_type, $trans_no)
 {
-	$sql="DELETE FROM ".TB_PREF."wo_costing WHERE trans_type=".db_escape($trans_type)
+	$sql="DELETE FROM wo_costing WHERE trans_type=".db_escape($trans_type)
 		." AND trans_no=".db_escape($trans_no);
 
 	db_query($sql, "could not delete work order costing");
@@ -105,7 +105,7 @@ function update_material_cost($stock_id, $qty, $unit_cost, $date)
 	if ($qty > 0 && ($qoh != -$qty))
         $avg_cost = ($avg_cost*($qoh+$qty_delayed)+$unit_cost*$qty_new)/($qoh+$qty);
 
-	$sql = "UPDATE ".TB_PREF."stock_master SET material_cost=".db_escape($avg_cost)."
+	$sql = "UPDATE stock_master SET material_cost=".db_escape($avg_cost)."
 		    WHERE stock_id=".db_escape($stock_id);
 	db_query($sql,"The cost details for the inventory item could not be updated");
 }
@@ -210,7 +210,7 @@ function work_order_production_gl($woid, $stock_id, $quantity, $date_, $rcv_no)
 
 function check_wo_costing($type, $trans_no)
 {
-	$sql = "SELECT workorder_id FROM ".TB_PREF."wo_costing WHERE trans_type= ".db_escape($type)." AND trans_no=".db_escape($trans_no);
+	$sql = "SELECT workorder_id FROM wo_costing WHERE trans_type= ".db_escape($type)." AND trans_no=".db_escape($trans_no);
 	$costs = db_query($sql, 'cannot check WO costing');
 
 	if (!db_num_rows($costs))
@@ -243,6 +243,6 @@ function void_wo_costing($wo_id)
 		$Refs->restore_last($type, $trans_no);
 	}
 
-	$sql = "DELETE FROM ".TB_PREF."wo_costing WHERE workorder_id=".db_escape($wo_id);
+	$sql = "DELETE FROM wo_costing WHERE workorder_id=".db_escape($wo_id);
 	db_query($sql, "could not delete work order costing");
 }

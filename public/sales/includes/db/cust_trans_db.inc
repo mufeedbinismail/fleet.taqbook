@@ -19,7 +19,7 @@ use App\Shared\Enum\TransactionEffect;
 //
 function update_customer_trans_version($type, $versions) {
 
-	$sql= 'UPDATE '.TB_PREF. 'debtor_trans SET version=version+1
+	$sql= 'UPDATE debtor_trans SET version=version+1
 			WHERE type='.db_escape($type).' AND (';
 
 	foreach ($versions as $trans_no=>$version)
@@ -39,7 +39,7 @@ function get_customer_trans_version($type, $trans_no) {
 	if (!is_array($trans_no))
 		$trans_no = array( $trans_no );
 
-	$sql= 'SELECT trans_no, version FROM '.TB_PREF. 'debtor_trans
+	$sql= 'SELECT trans_no, version FROM debtor_trans
 			WHERE type='.db_escape($type).' AND (';
 
 	foreach ($trans_no as $key=>$trans)
@@ -112,7 +112,7 @@ function write_customer_trans(
         if ($new)
         $trans_no = get_next_trans_no($trans_type);
 
-        $sql = "INSERT INTO ".TB_PREF."debtor_trans (
+        $sql = "INSERT INTO debtor_trans (
             source,
             trans_no,
             type,
@@ -172,7 +172,7 @@ function write_customer_trans(
             ".db_escape($prep_amount)."
         )";
 	} else {	// may be optional argument should stay unchanged ?
-        $sql = "UPDATE ".TB_PREF."debtor_trans SET
+        $sql = "UPDATE debtor_trans SET
             source=".db_escape($source->value).",
             debtor_no=".db_escape($debtor_no).",
             branch_code=".db_escape($BranchNo).",
@@ -227,46 +227,46 @@ function get_customer_trans($trans_id, $trans_type, $customer_id=null)
 
 	if ($trans_type == ST_CUSTPAYMENT || $trans_type == ST_BANKDEPOSIT) {
 		// it's a payment so also get the bank account
-		$sql .= ",bank_act,".TB_PREF."bank_accounts.bank_name, ".TB_PREF."bank_accounts.bank_account_name,
-			".TB_PREF."bank_accounts.account_type AS BankTransType,
-			".TB_PREF."bank_accounts.bank_curr_code,
-			".TB_PREF."bank_trans.amount as bank_amount";
+		$sql .= ",bank_act,bank_accounts.bank_name, bank_accounts.bank_account_name,
+			bank_accounts.account_type AS BankTransType,
+			bank_accounts.bank_curr_code,
+			bank_trans.amount as bank_amount";
 	}
 
 	if ($trans_type == ST_SALESINVOICE || $trans_type == ST_CUSTCREDIT || $trans_type == ST_CUSTDELIVERY) {
 		// it's an invoice so also get the shipper and salestype
-		$sql .= ", ".TB_PREF."shippers.shipper_name, "
-		.TB_PREF."sales_types.sales_type, "
-		.TB_PREF."sales_types.tax_included, "
+		$sql .= ", shippers.shipper_name, 
+		sales_types.sales_type, 
+		sales_types.tax_included, "
 		."branch.*, "
-		."cust.discount, "
-		.TB_PREF."tax_groups.name AS tax_group_name, "
-		.TB_PREF."tax_groups.id AS tax_group_id ";
+		."cust.discount, 
+		tax_groups.name AS tax_group_name, 
+		tax_groups.id AS tax_group_id ";
 	}
 
 	if ($trans_type == ST_JOURNAL) {
 		$sql .= ", branch.*";
 	}
 
-	$sql .= " FROM ".TB_PREF."debtor_trans trans
-					LEFT JOIN ".TB_PREF."comments com ON trans.type=com.type AND trans.trans_no=com.id
-					LEFT JOIN ".TB_PREF."shippers ON ".TB_PREF."shippers.shipper_id=trans.ship_via, 
-					".TB_PREF."debtors_master cust";
+	$sql .= " FROM debtor_trans trans
+					LEFT JOIN comments com ON trans.type=com.type AND trans.trans_no=com.id
+					LEFT JOIN shippers ON shippers.shipper_id=trans.ship_via, 
+					debtors_master cust";
 
 	if ($trans_type == ST_CUSTPAYMENT || $trans_type == ST_BANKDEPOSIT) {
 		// it's a payment so also get the bank account
-		$sql .= ", ".TB_PREF."bank_trans, ".TB_PREF."bank_accounts";
+		$sql .= ", bank_trans, bank_accounts";
 	}
 
 	if ($trans_type == ST_SALESINVOICE || $trans_type == ST_CUSTCREDIT || $trans_type == ST_CUSTDELIVERY) {
 		// it's an invoice so also get the shipper, salestypes
-		$sql .= ", ".TB_PREF."sales_types, "
-		.TB_PREF."cust_branch branch, "
-		.TB_PREF."tax_groups ";
+		$sql .= ", sales_types, 
+		cust_branch branch, 
+		tax_groups ";
 	}
 
 	if ($trans_type == ST_JOURNAL) {
-		$sql .= ", ".TB_PREF."cust_branch branch ";
+		$sql .= ", cust_branch branch ";
 	}
 
 	$sql .= " WHERE trans.trans_no=".db_escape($trans_id)."
@@ -278,16 +278,16 @@ function get_customer_trans($trans_id, $trans_type, $customer_id=null)
 
 	if ($trans_type == ST_CUSTPAYMENT || $trans_type == ST_BANKDEPOSIT) {
 		// it's a payment so also get the bank account
-		$sql .= " AND ".TB_PREF."bank_trans.trans_no =".db_escape($trans_id)."
-			AND ".TB_PREF."bank_trans.type=$trans_type
-			AND ".TB_PREF."bank_trans.amount != 0
-			AND ".TB_PREF."bank_accounts.id=".TB_PREF."bank_trans.bank_act ";
+		$sql .= " AND bank_trans.trans_no =".db_escape($trans_id)."
+			AND bank_trans.type=$trans_type
+			AND bank_trans.amount != 0
+			AND bank_accounts.id=bank_trans.bank_act ";
 	}
 	if ($trans_type == ST_SALESINVOICE || $trans_type == ST_CUSTCREDIT || $trans_type == ST_CUSTDELIVERY) {
 		// it's an invoice so also get the shipper
-		$sql .= " AND ".TB_PREF."sales_types.id = trans.tpe
+		$sql .= " AND sales_types.id = trans.tpe
 			AND branch.branch_code = trans.branch_code
-			AND branch.tax_group_id = ".TB_PREF."tax_groups.id ";
+			AND branch.tax_group_id = tax_groups.id ";
 	}
 	if ($trans_type == ST_JOURNAL) {
 		$sql .= " AND branch.branch_code = trans.branch_code ";
@@ -314,7 +314,7 @@ function get_customer_trans($trans_id, $trans_type, $customer_id=null)
 
 function exists_customer_trans($type, $type_no)
 {
-	$sql = "SELECT trans_no FROM ".TB_PREF."debtor_trans WHERE type=".db_escape($type)."
+	$sql = "SELECT trans_no FROM debtor_trans WHERE type=".db_escape($type)."
 		AND trans_no=".db_escape($type_no);
 
 	$result = db_query($sql, "Cannot retreive a debtor transaction");
@@ -328,7 +328,7 @@ function exists_customer_trans($type, $type_no)
 
 function get_customer_trans_order($type, $type_no)
 {
-	$sql = "SELECT order_ FROM ".TB_PREF."debtor_trans WHERE type=".db_escape($type)." AND trans_no=".db_escape($type_no);
+	$sql = "SELECT order_ FROM debtor_trans WHERE type=".db_escape($type)." AND trans_no=".db_escape($type_no);
 
 	$result = db_query($sql, "The debtor transaction could not be queried");
 
@@ -342,10 +342,10 @@ function get_customer_trans_order($type, $type_no)
 function get_customer_details_from_trans($type, $type_no)
 {
 	$sql = "SELECT debtor.name, debtor.curr_code, branch.br_name
-		FROM "
-			.TB_PREF."debtors_master debtor,"
-			.TB_PREF."cust_branch branch,"
-			.TB_PREF."debtor_trans trans
+		FROM 
+			debtors_master debtor,
+			cust_branch branch,
+			debtor_trans trans
 		WHERE trans.type=".db_escape($type)." AND trans.trans_no=".db_escape($type_no)."
 		AND debtor.debtor_no = trans.debtor_no
 		AND	branch.branch_code = trans.branch_code";
@@ -359,7 +359,7 @@ function get_customer_details_from_trans($type, $type_no)
 function void_customer_trans($type, $type_no)
 {
 	// clear all values and mark as void
-	$sql = "UPDATE ".TB_PREF."debtor_trans SET ov_amount=0, ov_discount=0, ov_gst=0, ov_freight=0,
+	$sql = "UPDATE debtor_trans SET ov_amount=0, ov_discount=0, ov_gst=0, ov_freight=0,
 		ov_freight_tax=0, alloc=0, prep_amount=0, version=version+1 WHERE type=".db_escape($type)." AND trans_no=".db_escape($type_no);
 
 	db_query($sql, "could not void debtor transactions for type=$type and trans_no=$type_no");
@@ -370,7 +370,7 @@ function void_customer_trans($type, $type_no)
 function clear_customer_trans($type, $type_no)
 {
 	// Delete
-	$sql = "DELETE FROM ".TB_PREF."debtor_trans WHERE type=".db_escape($type)." AND trans_no=".db_escape($type_no);
+	$sql = "DELETE FROM debtor_trans WHERE type=".db_escape($type)." AND trans_no=".db_escape($type_no);
 
 	db_query($sql, "could not clear debtor transactions for type=$type and trans_no=$type_no");
 }
@@ -442,16 +442,16 @@ function get_sql_for_customer_inquiry(
 		prep_amount,
 		trans.effect AS effect,
         trans.source
-		FROM "
-			.TB_PREF."debtor_trans as trans
-			LEFT JOIN ".TB_PREF."debtor_trans_details as line
+		FROM 
+			debtor_trans as trans
+			LEFT JOIN debtor_trans_details as line
 				ON trans.trans_no=line.debtor_trans_no AND trans.type=line.debtor_trans_type
-			LEFT JOIN ".TB_PREF."voided as v
+			LEFT JOIN voided as v
 				ON trans.trans_no=v.id AND trans.type=v.type
-                        LEFT JOIN ".TB_PREF."audit_trail as audit ON (trans.type=audit.type AND trans.trans_no=audit.trans_no)
-                        LEFT JOIN ".TB_PREF."users as user ON (audit.user=user.id)
-			LEFT JOIN ".TB_PREF."cust_branch as branch ON trans.branch_code=branch.branch_code,"
-			.TB_PREF."debtors_master as debtor
+                        LEFT JOIN audit_trail as audit ON (trans.type=audit.type AND trans.trans_no=audit.trans_no)
+                        LEFT JOIN users as user ON (audit.user=user.id)
+			LEFT JOIN cust_branch as branch ON trans.branch_code=branch.branch_code,
+			debtors_master as debtor
 		WHERE debtor.debtor_no = trans.debtor_no"; // exclude voided transactions and self-balancing (journal) transactions:
     if (!$show_voided) 	
     	 	$sql .= " AND ISNULL(v.date_) AND trans.total != 0";
@@ -549,12 +549,12 @@ function get_sql_for_sales_deliveries_view(
 			Sum(line.quantity-line.qty_done) AND sorder.prep_amount=0 AS Outstanding,
 			Sum(line.qty_done) AS Done,
             trans.marketplace_id
-		FROM "
-		 .TB_PREF."sales_orders as sorder, "
-		 .TB_PREF."debtor_trans as trans, "
-		 .TB_PREF."debtor_trans_details as line, "
-		 .TB_PREF."debtors_master as debtor, "
-		 .TB_PREF."cust_branch as branch
+		FROM 
+		 sales_orders as sorder, 
+		 debtor_trans as trans, 
+		 debtor_trans_details as line, 
+		 debtors_master as debtor, 
+		 cust_branch as branch
 			WHERE
 			sorder.order_no = trans.order_ AND
 			trans.debtor_no = debtor.debtor_no

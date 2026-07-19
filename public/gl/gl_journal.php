@@ -329,7 +329,7 @@ if (isset($_POST['Process']))
         // retain the reconciled status if desired by user
         if (isset($_POST['reconciled'])
             && $_POST['reconciled'] == 1) {
-            $sql = "UPDATE ".TB_PREF."bank_trans SET reconciled=".db_escape($_POST['reconciled_date'])
+            $sql = "UPDATE bank_trans SET reconciled=".db_escape($_POST['reconciled_date'])
                 ." WHERE type=" . ST_JOURNAL . " AND trans_no=".db_escape($trans_no);
 
             db_query($sql, "Can't change reconciliation status");

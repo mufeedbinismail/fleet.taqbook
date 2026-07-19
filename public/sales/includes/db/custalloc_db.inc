@@ -18,7 +18,7 @@ function add_cust_allocation($amount, $trans_type_from, $trans_no_from,
 	$trans_type_to, $trans_no_to, $person_id, $date_)
 {
 	$date = date2sql($date_);
-	$sql = "INSERT INTO ".TB_PREF."cust_allocations (
+	$sql = "INSERT INTO cust_allocations (
 		amt, date_alloc,
 		trans_type_from, trans_no_from, trans_no_to, trans_type_to, person_id)
 		VALUES ($amount, '$date', ".db_escape($trans_type_from).", ".db_escape($trans_no_from).", ".db_escape($trans_no_to)
@@ -32,7 +32,7 @@ function add_cust_allocation($amount, $trans_type_from, $trans_no_from,
 
 function delete_cust_allocation($trans_id)
 {
-	$sql = "DELETE FROM ".TB_PREF."cust_allocations WHERE id = ".db_escape($trans_id);
+	$sql = "DELETE FROM cust_allocations WHERE id = ".db_escape($trans_id);
 	return db_query($sql, "The existing allocation $trans_id could not be deleted");
 }
 
@@ -40,7 +40,7 @@ function delete_cust_allocation($trans_id)
 
 function get_cust_allocation($trans_id)
 {
-	$sql = "SELECT * FROM ".TB_PREF."cust_allocations WHERE id = ".db_escape($trans_id);
+	$sql = "SELECT * FROM cust_allocations WHERE id = ".db_escape($trans_id);
 	return db_fetch(db_query($sql), "Cannot retrieve customer allocation $trans_id");
 }
 
@@ -51,8 +51,8 @@ function update_debtor_trans_allocation($trans_type, $trans_no, $person_id)
 {
 	$dec = user_price_dec();
 	$sql = 
-		"UPDATE `".TB_PREF.($trans_type==ST_SALESORDER ? 'sales_orders' : 'debtor_trans')."` trans,
-			(SELECT sum(amt) amt FROM ".TB_PREF."cust_allocations
+		"UPDATE `".($trans_type==ST_SALESORDER ? 'sales_orders' : 'debtor_trans')."` trans,
+			(SELECT sum(amt) amt FROM cust_allocations
 				WHERE person_id=".db_escape($person_id)." AND ((trans_type_to=".db_escape($trans_type)." AND trans_no_to=".db_escape($trans_no).")
 				OR (trans_type_from=".db_escape($trans_type)." AND trans_no_from=".db_escape($trans_no)."))) allocated
 		SET 
@@ -74,10 +74,10 @@ function void_cust_allocations($type, $type_no, $date="")
 //
 function clear_cust_alloctions($type, $type_no, $person_id=null, $date="")
 {
-	$sql = "UPDATE  ".TB_PREF."cust_allocations ca
-				LEFT JOIN ".TB_PREF."debtor_trans paym ON ca.trans_type_from=paym.type AND ca.trans_no_from=paym.trans_no AND ca.person_id=paym.debtor_no
-				LEFT JOIN ".TB_PREF."debtor_trans dt ON ca.trans_type_to=dt.type AND ca.trans_no_to=dt.trans_no AND ca.person_id=dt.debtor_no
-				LEFT JOIN ".TB_PREF."sales_orders so ON ca.trans_type_to=so.trans_type AND ca.trans_no_to=so.order_no AND ca.person_id=so.debtor_no
+	$sql = "UPDATE  cust_allocations ca
+				LEFT JOIN debtor_trans paym ON ca.trans_type_from=paym.type AND ca.trans_no_from=paym.trans_no AND ca.person_id=paym.debtor_no
+				LEFT JOIN debtor_trans dt ON ca.trans_type_to=dt.type AND ca.trans_no_to=dt.trans_no AND ca.person_id=dt.debtor_no
+				LEFT JOIN sales_orders so ON ca.trans_type_to=so.trans_type AND ca.trans_no_to=so.order_no AND ca.person_id=so.debtor_no
 	 		SET paym.alloc=paym.alloc - ca.amt,
 	 			dt.alloc=dt.alloc -  ca.amt,
 	 			so.alloc=so.alloc -  ca.amt
@@ -88,7 +88,7 @@ function clear_cust_alloctions($type, $type_no, $person_id=null, $date="")
 	db_query($sql, "could not clear allocation");
 
 	// remove any allocations for this transaction
-	$sql = "DELETE FROM ".TB_PREF."cust_allocations
+	$sql = "DELETE FROM cust_allocations
 			WHERE  ((trans_type_from=".db_escape($type)." AND trans_no_from=".db_escape($type_no).")
 				OR (trans_type_to=".db_escape($type)." AND trans_no_to=".db_escape($type_no)."))";
 	if ($person_id)
@@ -119,9 +119,9 @@ function get_allocatable_from_cust_sql($customer_id, $settled)
 		round(abs(total)-alloc,6) <= 0 AS settled,
 		trans.debtor_no
 
-	 FROM "
-	 	.TB_PREF."debtor_trans as trans, "
-		.TB_PREF."debtors_master as debtor"
+	 FROM 
+	 	debtor_trans as trans, 
+		debtors_master as debtor"
 	." WHERE trans.debtor_no=debtor.debtor_no
 		AND trans.effect = ".TransactionEffect::Decrease->value."
         AND trans.marketplace_id IS NULL";
@@ -153,11 +153,11 @@ function get_allocatable_sales_orders($customer_id = null, $trans_no=null, $type
 		amt,
 		sorder.debtor_no,
 		sorder.branch_code
-		FROM ".TB_PREF."sales_orders as sorder
-			LEFT JOIN ".TB_PREF."debtors_master as debtor ON sorder.debtor_no = debtor.debtor_no
-			LEFT JOIN ".TB_PREF."cust_allocations as alloc 
+		FROM sales_orders as sorder
+			LEFT JOIN debtors_master as debtor ON sorder.debtor_no = debtor.debtor_no
+			LEFT JOIN cust_allocations as alloc 
 				ON sorder.order_no = alloc.trans_no_to AND sorder.trans_type = alloc.trans_type_to AND alloc.person_id=sorder.debtor_no
-			LEFT JOIN (SELECT order_, sum(prep_amount) amount FROM ".TB_PREF."debtor_trans dt
+			LEFT JOIN (SELECT order_, sum(prep_amount) amount FROM debtor_trans dt
 			WHERE prep_amount>0 AND dt.type=".ST_SALESINVOICE." GROUP BY order_) as invoiced ON sorder.order_no = invoiced.order_
 		WHERE sorder.trans_type=".ST_SALESORDER."
 			AND sorder.marketplace_id IS NULL";
@@ -198,10 +198,10 @@ function get_allocatable_to_cust_transactions($customer_id = null, $trans_no=nul
 		amt,
 		trans.debtor_no,
 		trans.branch_code
-	 FROM ".TB_PREF."debtor_trans as trans
-			LEFT JOIN ".TB_PREF."cust_allocations as alloc
-				ON trans.trans_no = alloc.trans_no_to AND trans.type = alloc.trans_type_to AND alloc.person_id=trans.debtor_no,"
-	 		.TB_PREF."debtors_master as debtor
+	 FROM debtor_trans as trans
+			LEFT JOIN cust_allocations as alloc
+				ON trans.trans_no = alloc.trans_no_to AND trans.type = alloc.trans_type_to AND alloc.person_id=trans.debtor_no,
+	 		debtors_master as debtor
 	 WHERE
 	 	 trans.debtor_no=debtor.debtor_no
 		 AND trans.marketplace_id IS NULL";
@@ -245,9 +245,9 @@ function get_allocatable_from_cust_transactions($customer_id, $trans_no=null, $t
 		trans.version,
 		amt,
 		trans.debtor_no
-	 FROM  ".TB_PREF."debtor_trans as trans,"
-			.TB_PREF."debtors_master as debtor,"
-			.TB_PREF."cust_allocations as alloc
+	 FROM  debtor_trans as trans,
+			debtors_master as debtor,
+			cust_allocations as alloc
 	 WHERE trans.debtor_no=debtor.debtor_no
 			AND trans.trans_no = alloc.trans_no_from
 			AND trans.type = alloc.trans_type_from
@@ -292,9 +292,9 @@ function get_sql_for_customer_allocation_inquiry($from, $to, $customer, $filterT
 			AND trans.due_date < '" . date2sql(Today()) . "') AS OverDue,
 		trans.effect AS effect,
 		trans.debtor_no
-    	FROM "
-			.TB_PREF."debtor_trans as trans, "
-			.TB_PREF."debtors_master as debtor
+    	FROM 
+			debtor_trans as trans, 
+			debtors_master as debtor
     	WHERE debtor.debtor_no = trans.debtor_no
 			AND (trans.total != 0)
     		AND trans.tran_date >= '$data_after'
@@ -345,7 +345,7 @@ function get_sql_for_customer_allocation_inquiry($from, $to, $customer, $filterT
 function credit_sales_invoice_allocate($invoice_no, $credit_no, $amount, $date)
 {
 
-	$sql = "SELECT total, alloc, debtor_no FROM ".TB_PREF."debtor_trans
+	$sql = "SELECT total, alloc, debtor_no FROM debtor_trans
 		WHERE (`type`=".ST_SALESINVOICE." AND trans_no=".db_escape($invoice_no).")";
 	$result = db_query($sql, "can't retrieve invoice totals");
 	$invoice = db_fetch($result);
@@ -353,7 +353,7 @@ function credit_sales_invoice_allocate($invoice_no, $credit_no, $amount, $date)
 
 	if ($free < $amount) {
 	 // if there is not enough unallocated amount - remove some payment allocations
-		$sql = "SELECT * FROM ".TB_PREF."cust_allocations
+		$sql = "SELECT * FROM cust_allocations
 			WHERE (trans_type_to=".ST_SALESINVOICE." AND trans_no_to=".db_escape($invoice_no)." AND person_id=".db_escape($invoice['debtor_no']).")
 			AND trans_type_from <> ".ST_CUSTCREDIT;
 		$result = db_query($sql, "can't retrieve invoice allocations");

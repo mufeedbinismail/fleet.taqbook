@@ -16,7 +16,7 @@ function add_tax_group($name, $taxes, $tax_shippings)
 {
 	begin_transaction();
 
-	$sql = "INSERT INTO ".TB_PREF."tax_groups (name) VALUES (".db_escape($name).")";
+	$sql = "INSERT INTO tax_groups (name) VALUES (".db_escape($name).")";
 	db_query($sql, "could not add tax group");
 	
 	$id = db_insert_id();
@@ -30,7 +30,7 @@ function update_tax_group($id, $name, $taxes, $tax_shippings)
 {
 	begin_transaction();	
 
-    $sql = "UPDATE ".TB_PREF."tax_groups SET name=".db_escape($name)." WHERE id=".db_escape($id);
+    $sql = "UPDATE tax_groups SET name=".db_escape($name)." WHERE id=".db_escape($id);
 	db_query($sql, "could not update tax group");
 	
 	delete_tax_group_items($id);
@@ -41,7 +41,7 @@ function update_tax_group($id, $name, $taxes, $tax_shippings)
 
 function get_all_tax_groups($all=false)
 {
-	$sql = "SELECT * FROM ".TB_PREF."tax_groups";
+	$sql = "SELECT * FROM tax_groups";
 	if (!$all) $sql .= " WHERE !inactive";
 	
 	return db_query($sql, "could not get all tax group");
@@ -49,7 +49,7 @@ function get_all_tax_groups($all=false)
 
 function get_tax_group($type_id)
 {
-	$sql = "SELECT * FROM ".TB_PREF."tax_groups WHERE id=".db_escape($type_id);
+	$sql = "SELECT * FROM tax_groups WHERE id=".db_escape($type_id);
 	
 	$result = db_query($sql, "could not get tax group");
 	
@@ -60,7 +60,7 @@ function delete_tax_group($id)
 {
 	begin_transaction();
 		
-	$sql = "DELETE FROM ".TB_PREF."tax_groups WHERE id=".db_escape($id);
+	$sql = "DELETE FROM tax_groups WHERE id=".db_escape($id);
 		
 	db_query($sql, "could not delete tax group");
 	
@@ -73,7 +73,7 @@ function add_tax_group_items($id, $items, $tax_shippings)
 {
 	for ($i=0; $i < count($items); $i++) 
 	{
-		$sql = "INSERT INTO ".TB_PREF."tax_group_items (tax_group_id, tax_type_id, tax_shipping)
+		$sql = "INSERT INTO tax_group_items (tax_group_id, tax_type_id, tax_shipping)
 			VALUES (".db_escape($id).",  ".db_escape($items[$i]).", " . $tax_shippings[$i] .")";
 		db_query($sql, "could not add item tax group item");					
 	}		
@@ -81,7 +81,7 @@ function add_tax_group_items($id, $items, $tax_shippings)
 
 function delete_tax_group_items($id)
 {
-	$sql = "DELETE FROM ".TB_PREF."tax_group_items WHERE tax_group_id=".db_escape($id);
+	$sql = "DELETE FROM tax_group_items WHERE tax_group_id=".db_escape($id);
 	
 	db_query($sql, "could not delete item tax group items");					
 }

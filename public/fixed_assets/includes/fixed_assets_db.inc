@@ -51,7 +51,7 @@ function process_fixed_asset_depreciation($stock_id, $gl_rows, $refline, $memo_)
 
   $trans_no = write_journal_entries($cart);
 
-  $sql = "UPDATE ".TB_PREF."stock_master SET 
+  $sql = "UPDATE stock_master SET 
     depreciation_date='".date2sql($cart->tran_date)."',
     material_cost=".db_escape($new_cost)."
     WHERE stock_id=".db_escape($stock_id);
@@ -66,7 +66,7 @@ function process_fixed_asset_depreciation($stock_id, $gl_rows, $refline, $memo_)
 
 function get_fixed_asset_move($stock_id, $tran_type) {
 
-  $sql = "SELECT * FROM ".TB_PREF."stock_moves 
+  $sql = "SELECT * FROM stock_moves 
 	    WHERE stock_id=".db_escape($stock_id)."
 	    	AND type=".db_escape($tran_type);
 
@@ -81,7 +81,7 @@ function get_fixed_asset_move($stock_id, $tran_type) {
 
 function get_fixed_asset_disposal($stock_id) {
 
-  $sql = "SELECT * FROM ".TB_PREF."stock_moves 
+  $sql = "SELECT * FROM stock_moves 
     	WHERE stock_id=".db_escape($stock_id)."
     		AND (type=".ST_INVADJUST." OR type=".ST_CUSTDELIVERY.")
         ORDER BY tran_date DESC
@@ -99,9 +99,7 @@ function get_fixed_asset_disposal($stock_id) {
 function get_fixed_asset_purchase($stock_id) 
 {
   	$sql = "SELECT * 
-  		FROM ".TB_PREF."stock_master m, "
-  			.TB_PREF."supp_invoice_items i, "
-  			.TB_PREF."supp_trans t
+  		FROM stock_master m, supp_invoice_items i, supp_trans t
     	WHERE m.stock_id=".db_escape($stock_id)."
 		    AND i.supp_trans_no=t.trans_no
     		AND m.stock_id=i.stock_id
@@ -121,7 +119,7 @@ function get_fixed_asset_purchase($stock_id)
 
 function get_fixed_asset_class($id)
 {
-	$sql="SELECT * FROM ".TB_PREF."stock_fa_class WHERE fa_class_id=".db_escape($id);
+	$sql="SELECT * FROM stock_fa_class WHERE fa_class_id=".db_escape($id);
 
 	$result = db_query($sql,"a fixed asset class could not be retrieved");
 
@@ -135,8 +133,8 @@ function get_sql_for_fixed_assets($show_inactive = false)
   	$sql = "SELECT s.stock_id, c.description, s.units, s.description as name,
         s.depreciation_rate, s.depreciation_method, s.inactive, 
         s.material_cost, s.purchase_cost, s.depreciation_factor
-    FROM ".TB_PREF."stock_master s"
-    	." LEFT JOIN ".TB_PREF."stock_fa_class c ON s.fa_class_id=c.fa_class_id"
+    FROM stock_master s"
+    	." LEFT JOIN stock_fa_class c ON s.fa_class_id=c.fa_class_id"
     	." WHERE s.mb_flag='F'";
 
   	if (!$show_inactive)
@@ -162,19 +160,19 @@ function get_sql_for_fixed_assets($show_inactive = false)
 //		com.memo_,
 //		IF(ISNULL(u.user_id),'',u.user_id) as user_id";
 //
-//	$sql.= " FROM ".TB_PREF."gl_trans as gl
-//		 LEFT JOIN ".TB_PREF."audit_trail as a ON
+//	$sql.= " FROM gl_trans as gl
+//		 LEFT JOIN audit_trail as a ON
 //			(gl.type=a.type AND gl.type_no=a.trans_no)
-//		 LEFT JOIN ".TB_PREF."comments as com ON
+//		 LEFT JOIN comments as com ON
 //			(gl.type=com.type AND gl.type_no=com.id)
-//		 LEFT JOIN ".TB_PREF."refs as refs ON
+//		 LEFT JOIN refs as refs ON
 //			(gl.type=refs.type AND gl.type_no=refs.id)
-//		 LEFT JOIN ".TB_PREF."users as u ON
+//		 LEFT JOIN users as u ON
 //			a.user=u.id
-//	 	 LEFT JOIN ".TB_PREF."debtor_trans dt ON dt.type=gl.type AND gl.type_no=dt.trans_no
-//	 	 LEFT JOIN ".TB_PREF."debtors_master cust ON gl.person_type_id=2 AND gl.person_id=cust.debtor_no
-//	 	 LEFT JOIN ".TB_PREF."supp_trans st ON st.type=gl.type AND gl.type_no=st.trans_no
-//	 	 LEFT JOIN ".TB_PREF."suppliers supp ON gl.person_type_id=3 AND gl.person_id=supp.supplier_id
+//	 	 LEFT JOIN debtor_trans dt ON dt.type=gl.type AND gl.type_no=dt.trans_no
+//	 	 LEFT JOIN debtors_master cust ON gl.person_type_id=2 AND gl.person_id=cust.debtor_no
+//	 	 LEFT JOIN supp_trans st ON st.type=gl.type AND gl.type_no=st.trans_no
+//	 	 LEFT JOIN suppliers supp ON gl.person_type_id=3 AND gl.person_id=supp.supplier_id
 //		 WHERE gl.amount!=0
 //     AND NOT ISNULL(a.gl_seq)";
 //

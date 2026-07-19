@@ -38,7 +38,7 @@ function get_open_balance($supplier_id, $to)
     $sql .= "SUM(t.effect * t.alloc) AS Allocated,";
 
     $sql .= "SUM(t.effect * (abs(t.total) - t.alloc)) AS OutStanding
-        FROM ".TB_PREF."supp_trans t
+        FROM supp_trans t
         WHERE t.supplier_id = ".db_escape($supplier_id);
     if ($to)
         $sql .= " AND t.tran_date < '$to'";
@@ -57,7 +57,7 @@ function getTransactions($supplier_id, $from, $to)
 				total AS TotalAmount,
 				alloc AS Allocated,
 				((type = ".ST_SUPPINVOICE.") AND due_date < '$to') AS OverDue
-   			FROM ".TB_PREF."supp_trans
+   			FROM supp_trans
    			WHERE tran_date >= '$from' AND tran_date <= '$to' 
     			AND supplier_id = '$supplier_id' AND ov_amount!=0
     				ORDER BY tran_date";
@@ -131,7 +131,7 @@ function print_supplier_balances()
 	$total = array();
 	$grandtotal = array(0,0,0,0);
 
-	$sql = "SELECT supplier_id, supp_name AS name, curr_code, inactive FROM ".TB_PREF."suppliers";
+	$sql = "SELECT supplier_id, supp_name AS name, curr_code, inactive FROM suppliers";
 	if ($fromsupp != ALL_TEXT)
 		$sql .= " WHERE supplier_id=".db_escape($fromsupp);
 	$sql .= " ORDER BY supp_name";

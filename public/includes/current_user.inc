@@ -11,9 +11,6 @@
 ***********************************************************************/
 
 require_once __DIR__ . "/../includes/prefs/userprefs.inc";
-if (!defined('TB_PREF')) {
-	define('TB_PREF', '&TB_PREF&');
-}
 //--------------------------------------------------------------------------
 
 class current_user

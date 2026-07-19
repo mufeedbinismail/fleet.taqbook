@@ -14,7 +14,7 @@ function add_customer($CustName, $cust_ref, $address, $tax_id, $curr_code,
 	$dimension_id, $dimension2_id, $credit_status, $payment_terms, $discount, $pymt_discount, 
 	$credit_limit, $sales_type, $notes)
 {
-	$sql = "INSERT INTO ".TB_PREF."debtors_master (name, debtor_ref, address, tax_id,
+	$sql = "INSERT INTO debtors_master (name, debtor_ref, address, tax_id,
 		dimension_id, dimension2_id, curr_code, credit_status, payment_terms, discount, 
 		pymt_discount,credit_limit, sales_type, notes) VALUES ("
 		.db_escape($CustName) .", " .db_escape($cust_ref) .", "
@@ -31,7 +31,7 @@ function update_customer($customer_id, $CustName, $cust_ref, $address, $tax_id, 
 	$dimension_id, $dimension2_id, $credit_status, $payment_terms, $discount, $pymt_discount,
 	$credit_limit, $sales_type, $notes)
 {
-	$sql = "UPDATE ".TB_PREF."debtors_master SET name=" . db_escape($CustName) . ", 
+	$sql = "UPDATE debtors_master SET name=" . db_escape($CustName) . ", 
 		debtor_ref=" . db_escape($cust_ref) . ",
 		address=".db_escape($address) . ", 
 		tax_id=".db_escape($tax_id) . ", 
@@ -55,7 +55,7 @@ function delete_customer($customer_id)
 	begin_transaction();
 	delete_entity_contacts('customer', $customer_id);
 
-	$sql = "DELETE FROM ".TB_PREF."debtors_master WHERE debtor_no=".db_escape($customer_id);
+	$sql = "DELETE FROM debtors_master WHERE debtor_no=".db_escape($customer_id);
 	db_query($sql,"cannot delete customer");
 	commit_transaction();
 }
@@ -92,10 +92,10 @@ function get_customer_details(
 		Sum(IF ((TO_DAYS('$todate') - TO_DAYS($due)) >= $past1,$value,0)) AS Overdue1,
 		Sum(IF ((TO_DAYS('$todate') - TO_DAYS($due)) >= $past2,$value,0)) AS Overdue2
 
-		FROM ".TB_PREF."debtors_master debtor
-			LEFT JOIN ".TB_PREF."debtor_trans trans ON trans.tran_date <= '$todate' AND debtor.debtor_no = trans.debtor_no AND trans.type <> ". ST_CUSTDELIVERY.",
-			".TB_PREF."payment_terms terms,
-			".TB_PREF."credit_status credit_status
+		FROM debtors_master debtor
+			LEFT JOIN debtor_trans trans ON trans.tran_date <= '$todate' AND debtor.debtor_no = trans.debtor_no AND trans.type <> ". ST_CUSTDELIVERY.",
+			payment_terms terms,
+			credit_status credit_status
 
 		WHERE
 			 debtor.payment_terms = terms.terms_indicator
@@ -137,7 +137,7 @@ function get_customer_details(
 
 function get_customer($customer_id)
 {
-	$sql = "SELECT * FROM ".TB_PREF."debtors_master WHERE debtor_no=".db_escape($customer_id);
+	$sql = "SELECT * FROM debtors_master WHERE debtor_no=".db_escape($customer_id);
 
 	$result = db_query($sql, "could not get customer");
 
@@ -146,7 +146,7 @@ function get_customer($customer_id)
 
 function get_customer_name($customer_id)
 {
-	$sql = "SELECT name FROM ".TB_PREF."debtors_master WHERE debtor_no=".db_escape($customer_id);
+	$sql = "SELECT name FROM debtors_master WHERE debtor_no=".db_escape($customer_id);
 
 	$result = db_query($sql, "could not get customer");
 
@@ -158,8 +158,8 @@ function get_customer_name($customer_id)
 function get_customer_habit($customer_id)
 {
 	$sql = "SELECT debtor.pymt_discount, credit_status.dissallow_invoices
-			FROM ".TB_PREF."debtors_master debtor,"
-				.TB_PREF."credit_status credit_status
+			FROM debtors_master debtor,
+				credit_status credit_status
 			WHERE debtor.credit_status = credit_status.id
 			AND debtor.debtor_no = ".db_escape($customer_id);
 
@@ -200,7 +200,7 @@ function is_new_customer($id)
 
 function get_customer_by_ref($reference)
 {
-	$sql = "SELECT * FROM ".TB_PREF."debtors_master WHERE debtor_ref=".db_escape($reference);
+	$sql = "SELECT * FROM debtors_master WHERE debtor_ref=".db_escape($reference);
 
 	$result = db_query($sql, "could not get customer");
 
@@ -212,8 +212,8 @@ function get_customer_by_ref($reference)
 function get_customer_currency($customer_id=null, $branch_id=null)
 {
     $sql = "SELECT curr_code
-    	FROM ".TB_PREF."debtors_master cust
-    		LEFT JOIN ".TB_PREF."cust_branch branch ON branch.debtor_no=cust.debtor_no
+    	FROM debtors_master cust
+    		LEFT JOIN cust_branch branch ON branch.debtor_no=cust.debtor_no
     	WHERE " .(isset($branch_id) ? "branch_code = ".db_escape($branch_id) : "cust.debtor_no = ".db_escape($customer_id));
 
 	$result = db_query($sql, "Retreive currency of customer $customer_id");
@@ -231,7 +231,7 @@ function get_customers_search($customer)
 	else
 		$limit = 10;
 
-	$sql = "SELECT debtor_no, name, debtor_ref, address, tax_id FROM ".TB_PREF."debtors_master 
+	$sql = "SELECT debtor_no, name, debtor_ref, address, tax_id FROM debtors_master 
 	  WHERE (  name LIKE " . db_escape("%" . $customer. "%") . " OR 
     		 debtor_ref LIKE " . db_escape("%" . $customer. "%") . " OR 
 	        address LIKE " . db_escape("%" . $customer. "%") . " OR 

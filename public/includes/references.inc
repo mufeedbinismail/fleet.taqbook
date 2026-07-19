@@ -181,7 +181,7 @@ class references
 		// retrieve last ref number in the refline from original transaction table
 		$sql = "SELECT MAX(CAST(SUBSTR($ref_fld, ".(strlen($prefix)+1).",LENGTH($ref_fld)-".(strlen($postfix)+strlen($prefix)).") AS UNSIGNED))"
 				." FROM `$trans_table` tbl
-					LEFT JOIN ".TB_PREF."voided v ON tbl.`$tno_fld`=v.id AND v.type=$type"
+					LEFT JOIN voided v ON tbl.`$tno_fld`=v.id AND v.type=$type"
 				." WHERE ISNULL(v.id)"
 				.($type_fld ? " AND tbl.`$type_fld`=$type" : '')
 				." AND `$ref_fld` REGEXP ".db_escape('^'.preg_quote($prefix).'[0-9]*'.preg_quote($postfix).'$');
@@ -209,7 +209,7 @@ class references
 
 		$sql = "SELECT `$ref_fld` 
 				FROM `$trans_table` tbl
-					LEFT JOIN ".TB_PREF."voided v ON 
+					LEFT JOIN voided v ON 
 				tbl.`$tno_fld`=v.id AND v.type=$type"
 			." WHERE ISNULL(v.id)"
 			.($type_fld ? " AND tbl.`$type_fld`=$type" : '');
@@ -362,7 +362,7 @@ class references
 		if ($reference == 'auto')
 			return;
 
-	    $sql = "REPLACE ".TB_PREF."refs SET reference=".db_escape($reference)
+	    $sql = "REPLACE refs SET reference=".db_escape($reference)
 			.", type=".db_escape($type).", id=".db_escape($id);
     	db_query($sql, "could not update reference entry");
 
@@ -394,7 +394,7 @@ class references
 			if ($reference == $last)
 			{
 				// save last reference as next
-			    $sql = "UPDATE ".TB_PREF."reflines SET pattern=SUBSTRING(" . db_escape(trim($last)) .", LENGTH(`prefix`)+1)"
+			    $sql = "UPDATE reflines SET pattern=SUBSTRING(" . db_escape(trim($last)) .", LENGTH(`prefix`)+1)"
 					. " WHERE trans_type = ".db_escape($type) . " AND `id`=".db_escape($line);
 
 				db_query($sql, "The next transaction ref for $type could not be updated");

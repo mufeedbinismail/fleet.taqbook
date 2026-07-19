@@ -48,8 +48,8 @@ function get_invoices($supplier_id, $to, $all=true)
 		IF ((TO_DAYS('$todate') - TO_DAYS($due)) > $PastDueDays1,$value,0) AS Overdue1,
 		IF ((TO_DAYS('$todate') - TO_DAYS($due)) > $PastDueDays2,$value,0) AS Overdue2
 
-		FROM ".TB_PREF."suppliers supplier,
-			".TB_PREF."supp_trans trans
+		FROM suppliers supplier,
+			supp_trans trans
 
 	   	WHERE supplier.supplier_id = trans.supplier_id
 			AND trans.supplier_id = $supplier_id
@@ -155,7 +155,7 @@ function print_aged_supplier_analysis()
 	$pastdue1 = $PastDueDays1 + 1 . "-" . $PastDueDays2 . " " . __('Days');
 	$pastdue2 = __('Over') . " " . $PastDueDays2 . " " . __('Days');
 
-	$sql = "SELECT supplier_id, supp_name AS name, curr_code, inactive FROM ".TB_PREF."suppliers";
+	$sql = "SELECT supplier_id, supp_name AS name, curr_code, inactive FROM suppliers";
 	if ($fromsupp != ALL_TEXT)
 		$sql .= " WHERE supplier_id=".db_escape($fromsupp);
 	$sql .= " ORDER BY supp_name";

@@ -14,7 +14,7 @@
 function add_supp_invoice_item($supp_trans_type, $supp_trans_no, $stock_id, $description,
 	$gl_code, $unit_price, $unit_tax, $quantity, $grn_item_id, $po_detail_item_id, $memo_, $dim_id=0, $dim2_id=0)
 {
-	$sql = "INSERT INTO ".TB_PREF."supp_invoice_items (supp_trans_type, supp_trans_no, stock_id, description, gl_code, unit_price, unit_tax, quantity,
+	$sql = "INSERT INTO supp_invoice_items (supp_trans_type, supp_trans_no, stock_id, description, gl_code, unit_price, unit_tax, quantity,
 	  	grn_item_id, po_detail_item_id, memo_, dimension_id, dimension2_id) ";
 	$sql .= "VALUES (".db_escape($supp_trans_type).", ".db_escape($supp_trans_no).", "
 		.db_escape($stock_id).
@@ -43,10 +43,10 @@ function get_supp_invoice_items($supp_trans_type, $supp_trans_no)
 		stock.units,
 		tax_type.exempt,
 		tax_type.name as tax_type_name
-		FROM "
-			.TB_PREF."supp_invoice_items inv LEFT JOIN ".TB_PREF."grn_items grn ON grn.id =inv.grn_item_id
-				LEFT JOIN ".TB_PREF."stock_master stock ON stock.stock_id=inv.stock_id
-				LEFT JOIN ".TB_PREF."item_tax_types tax_type ON stock.tax_type_id=tax_type.id
+		FROM 
+			supp_invoice_items inv LEFT JOIN grn_items grn ON grn.id =inv.grn_item_id
+				LEFT JOIN stock_master stock ON stock.stock_id=inv.stock_id
+				LEFT JOIN item_tax_types tax_type ON stock.tax_type_id=tax_type.id
 		WHERE supp_trans_type = ".db_escape($supp_trans_type)."
 			AND supp_trans_no = ".db_escape($supp_trans_no)
 			." ORDER BY inv.id";
@@ -55,7 +55,7 @@ function get_supp_invoice_items($supp_trans_type, $supp_trans_no)
 
 function void_supp_invoice_items($type, $type_no)
 {
-	$sql = "UPDATE ".TB_PREF."supp_invoice_items SET quantity=0, unit_price=0
+	$sql = "UPDATE supp_invoice_items SET quantity=0, unit_price=0
 		WHERE supp_trans_type = ".db_escape($type)." AND supp_trans_no=".db_escape($type_no);
 	db_query($sql, "could not void supptrans details");
 }

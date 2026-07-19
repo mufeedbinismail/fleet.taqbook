@@ -36,9 +36,9 @@ function get_supp_po($order_no)
    		supplier.gst_no AS tax_id,
    		supplier.curr_code, supplier.payment_terms, loc.location_name,
    		supplier.address, supplier.contact, supplier.tax_group_id
-		FROM ".TB_PREF."purch_orders po,"
-			.TB_PREF."suppliers supplier,"
-			.TB_PREF."locations loc
+		FROM purch_orders po,
+			suppliers supplier,
+			locations loc
 		WHERE po.supplier_id = supplier.supplier_id
 		AND loc.loc_code = into_stock_location
 		AND po.order_no = ".db_escape($order_no);
@@ -49,8 +49,8 @@ function get_supp_po($order_no)
 function get_po_details($order_no)
 {
 	$sql = "SELECT poline.*, units, editable
-		FROM ".TB_PREF."purch_order_details poline
-			LEFT JOIN ".TB_PREF."stock_master item ON poline.item_code=item.stock_id
+		FROM purch_order_details poline
+			LEFT JOIN stock_master item ON poline.item_code=item.stock_id
 		WHERE order_no =".db_escape($order_no)." ";
 	$sql .= " ORDER BY po_detail_item";
 	return db_query($sql, "Retreive order Line Items");

@@ -82,13 +82,13 @@ function get_stock_transfer($trans_no)
 	$sql = "SELECT loc_from.*, loc_to.*
 		FROM
 			(SELECT trans_no, type, tran_date, reference, move.loc_code as from_loc, loc.location_name as from_name
-			FROM ".TB_PREF."stock_moves move
-				LEFT JOIN ".TB_PREF."locations loc ON loc.loc_code=move.loc_code
+			FROM stock_moves move
+				LEFT JOIN locations loc ON loc.loc_code=move.loc_code
 			WHERE type=".ST_LOCTRANSFER." AND trans_no=".db_escape($trans_no). " AND qty<0 LIMIT 1) loc_from,
 
 			(SELECT move.loc_code as to_loc, loc.location_name as to_name
-			FROM ".TB_PREF."stock_moves move
-				LEFT JOIN ".TB_PREF."locations loc ON loc.loc_code=move.loc_code
+			FROM stock_moves move
+				LEFT JOIN locations loc ON loc.loc_code=move.loc_code
 			WHERE type=".ST_LOCTRANSFER." AND trans_no=".db_escape($trans_no). " AND qty>0 LIMIT 1) loc_to";
 
 	$result = db_query($sql, "Could not get transfer common data");

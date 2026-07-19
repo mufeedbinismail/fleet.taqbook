@@ -24,10 +24,10 @@ function read_supplier_details_to_trans(&$supp_trans, $supplier_id)
 		terms.day_in_following_month, supp.tax_included,
 		supp.tax_group_id, tax_group.name AS tax_group_name,
 		supp.credit_limit - Sum(trans.effect * ABS(trans.total)) as cur_credit, curr_code
-		FROM ".TB_PREF."suppliers supp LEFT JOIN "
-			.TB_PREF."supp_trans trans ON supp.supplier_id = trans.supplier_id, "
-			.TB_PREF."payment_terms terms, "
-			.TB_PREF."tax_groups tax_group
+		FROM suppliers supp LEFT JOIN 
+			supp_trans trans ON supp.supplier_id = trans.supplier_id, 
+			payment_terms terms, 
+			tax_groups tax_group
 		WHERE supp.tax_group_id = tax_group.id
 		AND supp.payment_terms=terms.terms_indicator
 		AND supp.supplier_id = ".db_escape($supplier_id)." GROUP BY supp.supp_name";
@@ -75,7 +75,7 @@ function update_supp_received_items_for_invoice($id, $po_detail_item, $qty_invoi
 {
 	if ($chg_price != null)
 	{
-		$sql = "SELECT act_price, unit_price FROM ".TB_PREF."purch_order_details WHERE
+		$sql = "SELECT act_price, unit_price FROM purch_order_details WHERE
 			po_detail_item = ".db_escape($po_detail_item);
 		$result = db_query($sql, "The old actual price of the purchase order line could not be retrieved");
 		$row = db_fetch($result);
@@ -84,8 +84,8 @@ function update_supp_received_items_for_invoice($id, $po_detail_item, $qty_invoi
 		$unit_price = $row['unit_price']; //Added by Rasmus
 
 		$sql = "SELECT delivery_date 
-			FROM ".TB_PREF."grn_batch grn,"
-				.TB_PREF."grn_items line
+			FROM grn_batch grn,
+				grn_items line
 			WHERE
 				grn.id = line.grn_batch_id AND line.id=".db_escape($id);
 		$result = db_query($sql, "The old delivery date from the received record cout not be retrieved");
@@ -98,7 +98,7 @@ function update_supp_received_items_for_invoice($id, $po_detail_item, $qty_invoi
 		$date = "";
 		$unit_price = 0; // Added by Rasmus
 	}
-    $sql = "UPDATE ".TB_PREF."purch_order_details
+    $sql = "UPDATE purch_order_details
 		SET qty_invoiced = qty_invoiced + ".db_escape($qty_invoiced);
 
 	if ($chg_price != null)
@@ -107,7 +107,7 @@ function update_supp_received_items_for_invoice($id, $po_detail_item, $qty_invoi
 	$sql .= " WHERE po_detail_item = ".db_escape($po_detail_item);
     db_query($sql, "The quantity invoiced of the purchase order line could not be updated");
 
-    $sql = "UPDATE ".TB_PREF."grn_items
+    $sql = "UPDATE grn_items
         SET quantity_inv = quantity_inv + ".db_escape($qty_invoiced)."
         WHERE id = ".db_escape($id);
 	db_query($sql, "The quantity invoiced off the items received record could not be updated");
@@ -430,10 +430,10 @@ function get_po_invoices_credits($po_number)
 {
 	$sql = "SELECT DISTINCT trans.trans_no, trans.type,	trans.total AS Total,
 				trans.tran_date
-			FROM ".TB_PREF."supp_trans trans,"
-				.TB_PREF."supp_invoice_items line,"
-				.TB_PREF."purch_order_details poline,"
-				.TB_PREF."purch_orders po
+			FROM supp_trans trans,
+				supp_invoice_items line,
+				purch_order_details poline,
+				purch_orders po
 		WHERE line.supp_trans_no = trans.trans_no
 			AND line.supp_trans_type = trans.type
 			AND line.po_detail_item_id = poline.po_detail_item
@@ -452,7 +452,7 @@ function get_tax_overrides($trans_type, $trans_no)
 {
 	$tax_overrides = array();
 	$sql = "SELECT amount, tax_type_id as id, rate
-		FROM ".TB_PREF."trans_tax_details details
+		FROM trans_tax_details details
 		WHERE trans_type=".db_escape($trans_type)." AND trans_no=".db_escape($trans_no)
 		." AND amount>0"; // skip reposting of nondeductible VAT
 
@@ -469,8 +469,8 @@ function get_tax_overrides($trans_type, $trans_no)
 function read_supp_invoice($trans_no, $trans_type, &$supp_trans)
 {
 	$sql = "SELECT trans.*, supp_name, dimension_id, dimension2_id, curr_code
-		FROM ".TB_PREF."supp_trans trans,"
-			.TB_PREF."suppliers sup
+		FROM supp_trans trans,
+			suppliers sup
 		WHERE trans_no = ".db_escape($trans_no)." AND type = ".db_escape($trans_type)."
 		AND sup.supplier_id=trans.supplier_id";
 
@@ -541,8 +541,8 @@ function read_supp_invoice($trans_no, $trans_type, &$supp_trans)
 function get_matching_invoice_item($stock_id, $po_item_id)
 {
 	$sql = "SELECT *, tran_date
-		FROM ".TB_PREF."supp_invoice_items,"
-			.TB_PREF."supp_trans
+		FROM supp_invoice_items,
+			supp_trans
 		WHERE supp_trans_type = ".ST_SUPPINVOICE." AND stock_id = "
 		.db_escape($stock_id)." AND po_detail_item_id = ".db_escape($po_item_id)."
 		AND supp_trans_no = trans_no";
@@ -594,14 +594,14 @@ function void_supp_invoice($type, $type_no)
 						$mat_cost = update_average_material_cost($grn["supplier_id"], $details_row["stock_id"],  
 							$details_row["FullUnitPrice"], -$details_row["quantity"], $old_date, $old[1] !== $trans['tran_date']);*/
 
-					$sql = "UPDATE ".TB_PREF."purch_order_details
+					$sql = "UPDATE purch_order_details
         				SET quantity_ordered = quantity_ordered + ".-$details_row["quantity"].", ";
         			if ($match !== false)
         				$sql .= "act_price=".$match['unit_price'].", ";
     				$sql .= "quantity_received = quantity_received + ".-$details_row["quantity"]."
     				    WHERE po_detail_item = ".$details_row["po_detail_item_id"];
 					db_query($sql, "a purchase order details record could not be updated. This receipt of goods has not been processed ");
-					$sql = "UPDATE ".TB_PREF."grn_items SET qty_recd=qty_recd+".-$details_row["quantity"]."
+					$sql = "UPDATE grn_items SET qty_recd=qty_recd+".-$details_row["quantity"]."
 						WHERE id=".$details_row["grn_item_id"];
 					db_query($sql);
     			}
@@ -658,13 +658,13 @@ function void_supp_invoice($type, $type_no)
 //----------------------------------------------------------------------------------------
 function get_gl_account_info($acc)
 {
-	$sql = "SELECT account_code, account_name FROM ".TB_PREF."chart_master WHERE account_code=".db_escape($acc);
+	$sql = "SELECT account_code, account_name FROM chart_master WHERE account_code=".db_escape($acc);
 	return db_query($sql,"get account information");
 }
 
 function is_reference_already_there($supplier_id, $supp_reference, $trans_no=0, $trans_type=null)
 {
-	$sql = "SELECT COUNT(*) FROM ".TB_PREF."supp_trans WHERE supplier_id="
+	$sql = "SELECT COUNT(*) FROM supp_trans WHERE supplier_id="
 		.db_escape($supplier_id) . " AND supp_reference="
 		.db_escape($supp_reference)
 		. " AND ov_amount!=0"; // ignore voided invoice references
@@ -688,11 +688,11 @@ function remove_not_invoice_item($id)
 
     $supp = get_supplier($grn["supplier_id"]);
 
-	$sql = "UPDATE ".TB_PREF."purch_order_details
+	$sql = "UPDATE purch_order_details
 		SET quantity_received = qty_invoiced, quantity_ordered = qty_invoiced WHERE po_detail_item = ".$myrow["po_detail_item"];
 	db_query($sql, "The quantity invoiced of the purchase order line could not be updated");
 
-    $sql = "UPDATE ".TB_PREF."grn_items
+    $sql = "UPDATE grn_items
         SET qty_recd = quantity_inv WHERE id = ".$myrow["id"];
     db_query($sql, "The quantity invoiced off the items received record could not be updated");
 
@@ -732,8 +732,8 @@ function find_src_invoices($cart)
 
 	if (count($po_ids)) {
 		$sql = "SELECT DISTINCT trans.trans_no, trans.reference, trans.supp_reference
-			FROM ".TB_PREF."supp_invoice_items items
-			LEFT JOIN ".TB_PREF."supp_trans trans ON trans.trans_no=items.supp_trans_no AND trans.`type`=items.supp_trans_type
+			FROM supp_invoice_items items
+			LEFT JOIN supp_trans trans ON trans.trans_no=items.supp_trans_no AND trans.`type`=items.supp_trans_type
 			WHERE items.po_detail_item_id IN (" . implode(',', $po_ids). ")"." AND items.supp_trans_type=20";
 		$result = db_query($sql, "cannot find source invoice details");
 		while ($rec = db_fetch($result))

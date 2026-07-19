@@ -25,7 +25,7 @@ function work_order_produce($woid, $ref, $quantity, $date_, $memo, $close_wo)
 
     $date = date2sql($date_);
 
-    $sql = "INSERT INTO ".TB_PREF."wo_manufacture (workorder_id, reference, quantity, date_)
+    $sql = "INSERT INTO wo_manufacture (workorder_id, reference, quantity, date_)
 		VALUES (".db_escape($woid).", ".db_escape($ref).", ".db_escape($quantity)
 		.", '$date')";
 
@@ -103,9 +103,9 @@ function work_order_produce($woid, $ref, $quantity, $date_, $memo, $close_wo)
 function get_work_order_produce($id)
 {
 	$sql = "SELECT prod.*, wo.stock_id, item.description AS StockDescription, wo.closed
-			FROM ".TB_PREF."wo_manufacture prod,"
-				.TB_PREF."workorders wo,"
-				.TB_PREF."stock_master item
+			FROM wo_manufacture prod,
+				workorders wo,
+				stock_master item
 		WHERE prod.workorder_id=wo.id
 		AND item.stock_id=wo.stock_id
 		AND prod.id=".db_escape($id);
@@ -118,7 +118,7 @@ function get_work_order_produce($id)
 
 function get_work_order_productions($woid)
 {
-	$sql = "SELECT * FROM ".TB_PREF."wo_manufacture WHERE workorder_id="
+	$sql = "SELECT * FROM wo_manufacture WHERE workorder_id="
 		.db_escape($woid)." ORDER BY id";
     return db_query($sql, "The work order issues could not be retrieved");
 }
@@ -127,7 +127,7 @@ function get_work_order_productions($woid)
 
 function exists_work_order_produce($id)
 {
-	$sql = "SELECT id FROM ".TB_PREF."wo_manufacture WHERE id=".db_escape($id);
+	$sql = "SELECT id FROM wo_manufacture WHERE id=".db_escape($id);
 	$result = db_query($sql, "Cannot retreive a wo production");
 
     return (db_num_rows($result) > 0);
@@ -161,7 +161,7 @@ function void_work_order_produce($type_no)
 	work_order_update_finished_quantity($prod["workorder_id"], -$prod["quantity"]);
 
 	// clear the production record
-	$sql = "UPDATE ".TB_PREF."wo_manufacture SET quantity=0 WHERE id=".db_escape($type_no);
+	$sql = "UPDATE wo_manufacture SET quantity=0 WHERE id=".db_escape($type_no);
 	db_query($sql, "Cannot void a wo production");
 
 	void_gl_trans(ST_MANURECEIVE, $type_no);

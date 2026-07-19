@@ -58,7 +58,7 @@ function getPeriods($yr, $mo, $account, $dimension, $dimension2, $thousands)
 		   		SUM(CASE WHEN tran_date >= '$date11' AND tran_date < '$date12' THEN amount / $thousands ELSE 0 END) AS per11,
 		   		SUM(CASE WHEN tran_date >= '$date12' AND tran_date < '$date13' THEN amount / $thousands ELSE 0 END) AS per12,
 		   		SUM(CASE WHEN tran_date >= '$date01' AND tran_date < '$date13' THEN amount / $thousands ELSE 0 END) AS pertotal
-    			FROM ".TB_PREF."gl_trans
+    			FROM gl_trans
 				WHERE account='$account'";
 	if ($dimension != 0)
   		$sql .= " AND dimension_id = ".($dimension<0?0:db_escape($dimension));
@@ -225,7 +225,7 @@ function print_annual_expense_breakdown()
 	//------------0--1---2----3----4----5----6----7----8----10---11---12---13---14---15---16-
 
 	// from now
-	$sql = "SELECT begin, end, YEAR(end) AS yr, MONTH(end) AS mo FROM ".TB_PREF."fiscal_year WHERE id=".db_escape($year);
+	$sql = "SELECT begin, end, YEAR(end) AS yr, MONTH(end) AS mo FROM fiscal_year WHERE id=".db_escape($year);
 	$result = db_query($sql, "could not get fiscal year");
 	$row = db_fetch($result);
 	

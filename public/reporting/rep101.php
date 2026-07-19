@@ -39,7 +39,7 @@ function get_open_balance($debtorno, $to)
     $sql .= "SUM(t.effect * t.alloc) AS Allocated,";
 
  	$sql .=	"SUM(t.effect * (IF(t.prep_amount, t.prep_amount, abs(t.total)) - abs(t.alloc))) AS OutStanding
-		FROM ".TB_PREF."debtor_trans t
+		FROM debtor_trans t
     	WHERE t.debtor_no = ".db_escape($debtorno)
 		." AND t.type <> ".ST_CUSTDELIVERY;
     if ($to)
@@ -57,13 +57,13 @@ function get_transactions($debtorno, $from, $to)
 
  	$allocated_from = 
  			"(SELECT trans_type_from as trans_type, trans_no_from as trans_no, date_alloc, sum(amt) amount
- 			FROM ".TB_PREF."cust_allocations alloc
+ 			FROM cust_allocations alloc
  				WHERE person_id=".db_escape($debtorno)."
  					AND date_alloc <= '$to'
  				GROUP BY trans_type_from, trans_no_from) alloc_from";
  	$allocated_to = 
  			"(SELECT trans_type_to as trans_type, trans_no_to as trans_no, date_alloc, sum(amt) amount
- 			FROM ".TB_PREF."cust_allocations alloc
+ 			FROM cust_allocations alloc
  				WHERE person_id=".db_escape($debtorno)."
  					AND date_alloc <= '$to'
  				GROUP BY trans_type_to, trans_no_to) alloc_to";
@@ -73,8 +73,8 @@ function get_transactions($debtorno, $from, $to)
 			AS TotalAmount,
  		IFNULL(alloc_from.amount, alloc_to.amount) AS Allocated,
  		((trans.type = ".ST_SALESINVOICE.")	AND trans.due_date < '$to') AS OverDue
-     	FROM ".TB_PREF."debtor_trans trans
- 			LEFT JOIN ".TB_PREF."voided voided ON trans.type=voided.type AND trans.trans_no=voided.id
+     	FROM debtor_trans trans
+ 			LEFT JOIN voided voided ON trans.type=voided.type AND trans.trans_no=voided.id
  			LEFT JOIN $allocated_from ON alloc_from.trans_type = trans.type AND alloc_from.trans_no = trans.trans_no
  			LEFT JOIN $allocated_to ON alloc_to.trans_type = trans.type AND alloc_to.trans_no = trans.trans_no
 
@@ -153,7 +153,7 @@ function print_customer_balances()
 
 	$grandtotal = array(0,0,0,0);
 
-	$sql = "SELECT debtor_no, name, curr_code, inactive FROM ".TB_PREF."debtors_master ";
+	$sql = "SELECT debtor_no, name, curr_code, inactive FROM debtors_master ";
 	if ($fromcust != ALL_TEXT)
 		$sql .= "WHERE debtor_no=".db_escape($fromcust);
 	$sql .= " ORDER BY name";

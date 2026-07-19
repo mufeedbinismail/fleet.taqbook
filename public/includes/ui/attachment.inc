@@ -34,7 +34,7 @@ class attachments extends simple_crud {
 		br();
 		if(isset($_POST['attachmentDownload'])){
 			$keys =  array_keys($_POST['attachmentDownload']);
-			$sql = "SELECT * FROM ".TB_PREF."attachments WHERE id = ".db_escape($keys[0]);
+			$sql = "SELECT * FROM attachments WHERE id = ".db_escape($keys[0]);
 			$row = db_fetch(db_query($sql), "Cannot retrieve attachment $keys[0]");
 
 			
@@ -51,7 +51,7 @@ class attachments extends simple_crud {
 		}
 		if(isset($_POST['attachmentView'])){
 			$keys =  array_keys($_POST['attachmentView']);
-			$sql = "SELECT * FROM ".TB_PREF."attachments WHERE id = ".db_escape($keys[0]);
+			$sql = "SELECT * FROM attachments WHERE id = ".db_escape($keys[0]);
 			$row = db_fetch(db_query($sql), "Cannot retrieve attachment $keys[0]");
 			
 			if ($row['unique_name'] != ""){
@@ -63,8 +63,8 @@ class attachments extends simple_crud {
 		if($session_debtor_no || $session_supplier_id)
 			$filters['visible'] = 1;
 
-		$sql = "SELECT * FROM ".TB_PREF."attachments WHERE trans_no=".db_escape($this->entity)." AND type_no = ".db_escape(isset($_GET['type_no']) ? $_GET['type_no'] : ST_CUSTOMER);
-		$result = db_query($sql, "Could not get data from ".TB_PREF."attachments table");
+		$sql = "SELECT * FROM attachments WHERE trans_no=".db_escape($this->entity)." AND type_no = ".db_escape(isset($_GET['type_no']) ? $_GET['type_no'] : ST_CUSTOMER);
+		$result = db_query($sql, "Could not get data from attachments table");
 		$attachments = Array();
 		while($row = db_fetch_assoc($result))
 			$attachments[] = $row;
@@ -101,7 +101,7 @@ class attachments extends simple_crud {
 		table_section_title(__("Attachment Detail"));
 		
 		if($this->selected_id != null && $this->selected_id != "") {
-			$sql = "SELECT * FROM ".TB_PREF."attachments WHERE id = ".db_escape($this->selected_id);
+			$sql = "SELECT * FROM attachments WHERE id = ".db_escape($this->selected_id);
 			$row = db_fetch(db_query($sql), "Cannot retrieve attachment $this->selected_id");
 			hidden('unique_name', $row['unique_name']);
 			$_POST['tran_date'] = sql2date($row['tran_date']);
@@ -204,7 +204,7 @@ class attachments extends simple_crud {
 			if ($upload_file == 'Yes'){
 				$actual_file_nam = $_FILES['file_attachment_name']['name'];
 				$result  =  move_uploaded_file($_FILES['file_attachment_name']['tmp_name'], $filename);
-				$sql = "INSERT INTO ".TB_PREF."attachments (trans_no, type_no, `description`, `filename`, unique_name, tran_date, `filesize`, `filetype`) VALUES ("
+				$sql = "INSERT INTO attachments (trans_no, type_no, `description`, `filename`, unique_name, tran_date, `filesize`, `filetype`) VALUES ("
 					   . db_escape($this->entity) . ","
 					   . db_escape($dat['type_no']) . ","
 					   . db_escape($_POST['description']) . ","
@@ -255,7 +255,7 @@ class attachments extends simple_crud {
 				$result  =  move_uploaded_file($_FILES['file_attachment_name']['tmp_name'], $filename);
 			}
 		}
-			$sql = "UPDATE ".TB_PREF."attachments SET "
+			$sql = "UPDATE attachments SET "
 				      . "trans_no = " . db_escape($this->entity) . ","
 					   . "type_no = " . db_escape($dat['type_no']) . ","
 			     . "`description` = " . db_escape($_POST['description']) . ","
@@ -280,8 +280,8 @@ class attachments extends simple_crud {
 	}
 
 	function db_read() {
-		$sql = "SELECT * FROM ".TB_PREF."attachments WHERE id=".db_escape($this->selected_id);
-		$result = db_query($sql, "Could not get all data from ".TB_PREF."attachments table");
+		$sql = "SELECT * FROM attachments WHERE id=".db_escape($this->selected_id);
+		$result = db_query($sql, "Could not get all data from attachments table");
 		$attachments = Array();
 		return db_fetch_assoc($result);
 	}
@@ -293,14 +293,14 @@ class attachments extends simple_crud {
 	//	Delete all attachments for Customer / Supplier in current class/entity
 	//
 	function db_delete() {
-		$sql = "SELECT * FROM ".TB_PREF."attachments WHERE id = ".db_escape($this->selected_id);
+		$sql = "SELECT * FROM attachments WHERE id = ".db_escape($this->selected_id);
 		$row = db_fetch(db_query($sql), "Cannot retrieve attachment $this->selected_id");
 
 		$dir =  company_path()."/attachments";
 		if ($row['unique_name'] && file_exists($dir."/".$row['unique_name']))
 			unlink($dir."/".$row['unique_name']);
 
-		$sql = "DELETE FROM ".TB_PREF."attachments WHERE id = ".db_escape($this->selected_id);
+		$sql = "DELETE FROM attachments WHERE id = ".db_escape($this->selected_id);
 		if(db_query($sql, "Could not Delete Attachment $this->selected_id"))
 			display_notification(__("The Selected Attachment is Deleted Successfully"));
 		return false;

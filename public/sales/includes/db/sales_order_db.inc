@@ -19,7 +19,7 @@ function add_sales_order(&$order)
 	$del_date = date2sql($order->due_date);
 	$order_type = 0; // this is default on new order
 	$total = $order->get_trans_total();
-	$sql = "INSERT INTO ".TB_PREF."sales_orders (order_no, type, debtor_no, trans_type, branch_code, customer_ref,
+	$sql = "INSERT INTO sales_orders (order_no, type, debtor_no, trans_type, branch_code, customer_ref,
         reference, tracking_no, comments, ord_date, order_type, ship_via, deliver_to, delivery_address, contact_phone,
 		freight_cost, from_stk_loc, delivery_date, payment_terms, total, prep_amount, marketplace_id)
 		VALUES (" .db_escape($order_no) . "," .db_escape($order_type) . "," . db_escape($order->customer_id) .
@@ -59,7 +59,7 @@ function add_sales_order(&$order)
 		if ($SysPrefs->loc_notification() == 1 && is_inventory_item($line->stock_id))
 			$loc = calculate_reorder_level($order->Location, $line, $st_ids, $st_names, $st_num, $st_reorder); 
 
-		$sql = "INSERT INTO ".TB_PREF."sales_order_details (order_no, trans_type, stk_code, description, unit_price, quantity, discount_percent) VALUES (";
+		$sql = "INSERT INTO sales_order_details (order_no, trans_type, stk_code, description, unit_price, quantity, discount_percent) VALUES (";
 		$sql .= $order_no . ",".$order->trans_type .
 				",".db_escape($line->stock_id).", "
 				.db_escape($line->item_description).", $line->price,
@@ -90,12 +90,12 @@ function delete_sales_order($order_no, $trans_type)
 
 	$order = get_sales_order_header($order_no, $trans_type);
 	
-	$sql = "DELETE FROM ".TB_PREF."sales_orders WHERE order_no=" . db_escape($order_no) 
+	$sql = "DELETE FROM sales_orders WHERE order_no=" . db_escape($order_no) 
 		. " AND trans_type=".db_escape($trans_type);
 
 	db_query($sql, "order Header Delete");
 
-	$sql = "DELETE FROM ".TB_PREF."sales_order_details WHERE order_no =" 
+	$sql = "DELETE FROM sales_order_details WHERE order_no =" 
 		.db_escape($order_no) . " AND trans_type=".db_escape($trans_type);
 	db_query($sql, "order Detail Delete");
 
@@ -109,7 +109,7 @@ function delete_sales_order($order_no, $trans_type)
 function update_sales_order_version($order)
 {
   foreach ($order as $so_num => $so_ver) {
-  $sql= 'UPDATE '.TB_PREF.'sales_orders SET version=version+1 WHERE order_no='. db_escape($so_num).
+  $sql= 'UPDATE sales_orders SET version=version+1 WHERE order_no='. db_escape($so_num).
 	' AND version='.$so_ver . " AND trans_type=".ST_SALESORDER;
   db_query($sql, 'Concurrent editing conflict while sales order update');
   }
@@ -132,7 +132,7 @@ function update_sales_order($order)
 	if ($order->trans_type == ST_SALESORDER)
 		$allocs = get_payments_for($order_no, $order->trans_type, $order->customer_id);
 
-	$sql = "UPDATE ".TB_PREF."sales_orders SET type =".db_escape($order->so_type)." ,
+	$sql = "UPDATE sales_orders SET type =".db_escape($order->so_type)." ,
 		debtor_no = " . db_escape($order->customer_id) . ",
 		marketplace_id = " . db_escape($order->marketplace_id, true) . ",
 		branch_code = " . db_escape($order->Branch) . ",
@@ -163,7 +163,7 @@ function update_sales_order($order)
 	}
 	$id_list = implode(', ', $id_tokeep);
 	
-	$sql = "DELETE FROM ".TB_PREF."sales_order_details WHERE order_no =" . db_escape($order_no) . " AND trans_type=".$order->trans_type;
+	$sql = "DELETE FROM sales_order_details WHERE order_no =" . db_escape($order_no) . " AND trans_type=".$order->trans_type;
 	$sql .= " AND id NOT IN ($id_list)";
 
 	db_query($sql, "Old order Cannot be Deleted");
@@ -182,7 +182,7 @@ function update_sales_order($order)
 			$loc = calculate_reorder_level($order->Location, $line, $st_ids, $st_names, $st_num, $st_reorder); 
 
 		if (!$line->id) //new line
-			$sql = "INSERT INTO ".TB_PREF."sales_order_details
+			$sql = "INSERT INTO sales_order_details
 			 (order_no, trans_type, stk_code,  description, unit_price, quantity,
 			  discount_percent, qty_sent)
 			 VALUES (".$order_no . ",".$order->trans_type.","
@@ -193,7 +193,7 @@ function update_sales_order($order)
 				  .db_escape($line->discount_percent) . ", "
 				  .db_escape($line->qty_done) ." )";
 		else
-		$sql = "UPDATE ".TB_PREF."sales_order_details
+		$sql = "UPDATE sales_order_details
 			SET id=".db_escape($line->id).",
 				order_no=$order_no,
 				trans_type=".$order->trans_type.",
@@ -239,19 +239,19 @@ function get_sales_order_header($order_no, $trans_type)
 	  sorder.alloc,
 	  IFNULL(allocs.ord_allocs, 0)+IFNULL(inv.inv_allocs ,0) AS sum_paid,
 	  sorder.prep_amount>0 as prepaid
-	FROM ".TB_PREF."sales_orders sorder
-			LEFT JOIN (SELECT trans_no_to, sum(amt) ord_allocs FROM ".TB_PREF."cust_allocations
+	FROM sales_orders sorder
+			LEFT JOIN (SELECT trans_no_to, sum(amt) ord_allocs FROM cust_allocations
 				WHERE trans_type_to=".ST_SALESORDER." AND trans_no_to=".db_escape($order_no)." GROUP BY trans_no_to)
 				 allocs ON sorder.trans_type=".ST_SALESORDER." AND allocs.trans_no_to=sorder.order_no
-			LEFT JOIN (SELECT order_, sum(alloc) inv_allocs FROM ".TB_PREF."debtor_trans 
+			LEFT JOIN (SELECT order_, sum(alloc) inv_allocs FROM debtor_trans 
 				WHERE type=".ST_SALESINVOICE." AND order_=".db_escape($order_no)."  GROUP BY order_)
 				 inv ON sorder.trans_type=".ST_SALESORDER." AND inv.order_=sorder.order_no
-			LEFT JOIN ".TB_PREF."shippers ship ON  ship.shipper_id = sorder.ship_via,"
-	  .TB_PREF."debtors_master cust,"
-	  .TB_PREF."sales_types stype, "
-	  .TB_PREF."tax_groups tax_group, "
-	  .TB_PREF."cust_branch branch,"
-	  .TB_PREF."locations loc
+			LEFT JOIN shippers ship ON  ship.shipper_id = sorder.ship_via,
+	  debtors_master cust,
+	  sales_types stype, 
+	  tax_groups tax_group, 
+	  cust_branch branch,
+	  locations loc
 	WHERE sorder.order_type=stype.id
 		AND branch.branch_code = sorder.branch_code
 		AND branch.tax_group_id = tax_group.id
@@ -288,8 +288,8 @@ function get_sales_order_details($order_no, $trans_type) {
 				item.units,
 				item.mb_flag,
 				item.material_cost
-			FROM ".TB_PREF."sales_order_details line,"
-				.TB_PREF."stock_master item
+			FROM sales_order_details line,
+				stock_master item
 			WHERE line.stk_code = item.stock_id
 				AND order_no =".db_escape($order_no) 
 				." AND trans_type = ".db_escape($trans_type) . " ORDER BY id";
@@ -356,8 +356,7 @@ function read_sales_order($order_no, &$order, $trans_type)
 
 function sales_order_has_deliveries($order_no)
 {
-	$sql = "SELECT SUM(qty_sent) FROM ".TB_PREF.
-	"sales_order_details WHERE order_no=".db_escape($order_no)
+	$sql = "SELECT SUM(qty_sent) FROM sales_order_details WHERE order_no=".db_escape($order_no)
 	." AND trans_type=".ST_SALESORDER;
 
 	$result = db_query($sql, "could not query for sales order usage");
@@ -366,7 +365,7 @@ function sales_order_has_deliveries($order_no)
 
 	if ($row[0] > 0)
 		return true;  // 2010-04-21 added check for eventually voided deliveries, Joe Hunt
-	$sql = "SELECT order_ FROM ".TB_PREF."debtor_trans WHERE type=".ST_CUSTDELIVERY." AND order_=".db_escape($order_no);
+	$sql = "SELECT order_ FROM debtor_trans WHERE type=".ST_CUSTDELIVERY." AND order_=".db_escape($order_no);
 	$result = db_query($sql,"The related delivery notes could not be retreived");
 	return (db_num_rows($result) > 0);	
 }
@@ -376,7 +375,7 @@ function sales_order_has_deliveries($order_no)
 function close_sales_order($order_no)
 {
 	// set the quantity of each item to the already sent quantity. this will mark item as closed.
-	$sql = "UPDATE ".TB_PREF."sales_order_details
+	$sql = "UPDATE sales_order_details
 		SET quantity = qty_sent WHERE order_no = ".db_escape($order_no)
 		." AND trans_type=".ST_SALESORDER;
 
@@ -423,10 +422,10 @@ function get_customer_to_order($customer_id) {
 		  cust.payment_terms,
 		  cust.pymt_discount,
 		  cust.credit_limit - Sum(IFNULL(trans.effect * ABS(trans.total),0)) as cur_credit
-		FROM ".TB_PREF."debtors_master cust
-		  LEFT JOIN ".TB_PREF."debtor_trans trans ON trans.type!=".ST_CUSTDELIVERY." AND trans.debtor_no = cust.debtor_no,"
-		  .TB_PREF."credit_status credit_status,"
-		  .TB_PREF."sales_types stype
+		FROM debtors_master cust
+		  LEFT JOIN debtor_trans trans ON trans.type!=".ST_CUSTDELIVERY." AND trans.debtor_no = cust.debtor_no,
+		  credit_status credit_status,
+		  sales_types stype
 		WHERE cust.sales_type=stype.id
 			AND cust.credit_status=credit_status.id
 			AND cust.debtor_no=".db_escape($customer_id)
@@ -445,9 +444,9 @@ function get_branch_to_order($customer_id, $branch_id) {
 					default_location, location_name, default_ship_via,
 					tax_group.name AS tax_group_name,
 					tax_group.id AS tax_group_id
-				FROM ".TB_PREF."cust_branch branch,"
-			  		.TB_PREF."tax_groups tax_group,"
-			  		.TB_PREF."locations location
+				FROM cust_branch branch,
+			  		tax_groups tax_group,
+			  		locations location
 			WHERE branch.tax_group_id = tax_group.id
 				AND location.loc_code=default_location
 				AND branch.branch_code=".db_escape($branch_id)."
@@ -511,14 +510,14 @@ function get_sql_for_sales_orders_view(
 			sorder.total,
 			sorder.trans_type,
 			sorder.debtor_no
-		FROM ".TB_PREF."sales_orders as sorder
-		LEFT JOIN (SELECT trans_no_to, sum(amt) ord_payments FROM ".TB_PREF."cust_allocations WHERE trans_type_to=".ST_SALESORDER." GROUP BY trans_no_to)
+		FROM sales_orders as sorder
+		LEFT JOIN (SELECT trans_no_to, sum(amt) ord_payments FROM cust_allocations WHERE trans_type_to=".ST_SALESORDER." GROUP BY trans_no_to)
 			 allocs ON sorder.trans_type=".ST_SALESORDER." AND allocs.trans_no_to=sorder.order_no
-		LEFT JOIN (SELECT order_, sum(prep_amount) inv_payments	FROM ".TB_PREF."debtor_trans WHERE type=".ST_SALESINVOICE." GROUP BY order_)
-				 inv ON sorder.trans_type=".ST_SALESORDER." AND inv.order_=sorder.order_no,"
-			.TB_PREF."sales_order_details as line, "
-			.TB_PREF."debtors_master as debtor, "
-			.TB_PREF."cust_branch as branch
+		LEFT JOIN (SELECT order_, sum(prep_amount) inv_payments	FROM debtor_trans WHERE type=".ST_SALESINVOICE." GROUP BY order_)
+				 inv ON sorder.trans_type=".ST_SALESORDER." AND inv.order_=sorder.order_no,
+			sales_order_details as line, 
+			debtors_master as debtor, 
+			cust_branch as branch
 			WHERE sorder.order_no = line.order_no
 			AND sorder.trans_type = line.trans_type
 			AND sorder.trans_type = ".db_escape($trans_type)."
@@ -600,7 +599,7 @@ function get_sql_for_sales_orders_view(
 //--------------------------------------------------------------------------------------------------
 function update_prepaid_so_line($line_id, $qty_invoiced)
 {
-	$sql = "UPDATE ".TB_PREF."sales_order_details
+	$sql = "UPDATE sales_order_details
 		SET invoiced = invoiced + ".(float)$qty_invoiced."
 		WHERE id=".db_escape($line_id);
 
@@ -613,8 +612,8 @@ function update_prepaid_so_line($line_id, $qty_invoiced)
 function get_sales_order_invoices($order_no)
 {
 	$sql = "SELECT trans_no, dt.type as type, tran_date, reference, prep_amount
-	    FROM ".TB_PREF."debtor_trans dt
-		LEFT JOIN ".TB_PREF."voided v ON v.type=dt.type AND v.id=dt.trans_no
+	    FROM debtor_trans dt
+		LEFT JOIN voided v ON v.type=dt.type AND v.id=dt.trans_no
 		WHERE ISNULL(v.id) AND dt.type=".ST_SALESINVOICE." AND dt.order_=".db_escape($order_no)
 		." ORDER BY dt.tran_date, dt.reference, dt.trans_no";
 
@@ -623,7 +622,7 @@ function get_sales_order_invoices($order_no)
 
 function is_sales_order_started($order_no)
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."sales_order_details WHERE order_no=".db_escape($order_no)." AND trans_type=".ST_SALESORDER
+	$sql = "SELECT count(*) FROM sales_order_details WHERE order_no=".db_escape($order_no)." AND trans_type=".ST_SALESORDER
 		." AND (invoiced!=0 OR qty_sent!=0)";
 
 	$result = db_fetch(db_query($sql, "cannot retrieve sales invoices for sales order"));
@@ -636,7 +635,7 @@ function is_sales_order_started($order_no)
 //
 function sales_order_set_template($id, $status)
 {
-  	$sql = "UPDATE ".TB_PREF."sales_orders SET type = ".db_escape($status)." WHERE order_no=".db_escape($id);
+  	$sql = "UPDATE sales_orders SET type = ".db_escape($status)." WHERE order_no=".db_escape($id);
   	db_query($sql, "Can't change sales order type");
 }
 
@@ -647,11 +646,11 @@ function sales_order_set_template($id, $status)
 function is_prepaid_order_open($order_no)
 {
 	$sql = "SELECT count(*)
-		FROM ".TB_PREF."sales_orders o,
-		((SELECT trans_no_to FROM ".TB_PREF."cust_allocations
+		FROM sales_orders o,
+		((SELECT trans_no_to FROM cust_allocations
 				WHERE trans_type_to=".ST_SALESORDER." AND trans_no_to=".db_escape($order_no).")
 		UNION
-		  (SELECT order_ FROM ".TB_PREF."debtor_trans 
+		  (SELECT order_ FROM debtor_trans 
 			WHERE type=".ST_SALESINVOICE." AND order_=".db_escape($order_no).")) related
 	WHERE
 		o.prep_amount>0
@@ -666,8 +665,8 @@ function is_prepaid_order_open($order_no)
 function last_sales_order_detail($order, $field)
 {
         $sql = "SELECT $field
-            FROM ".TB_PREF."sales_order_details d
-            LEFT JOIN " .TB_PREF."sales_orders o on d.order_no=o.order_no
+            FROM sales_order_details d
+            LEFT JOIN sales_orders o on d.order_no=o.order_no
             WHERE debtor_no=" . db_escape($order->customer_id) . "
             ORDER BY d.id DESC LIMIT 1";
 

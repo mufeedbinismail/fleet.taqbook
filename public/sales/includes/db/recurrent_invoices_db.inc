@@ -13,7 +13,7 @@
 function add_recurrent_invoice($description, $order_no, $debtor_no, $group_no, $days, $monthly,
 	$begin, $end)
 {
-	$sql = "INSERT INTO ".TB_PREF."recurrent_invoices (description, order_no, debtor_no,
+	$sql = "INSERT INTO recurrent_invoices (description, order_no, debtor_no,
 		group_no, days, monthly, begin, end, last_sent) VALUES (".db_escape($description) . ", "
 		.db_escape($order_no).", ".db_escape($debtor_no).", "
 		.db_escape($group_no).", ".$days.", ".$monthly.", '"
@@ -24,7 +24,7 @@ function add_recurrent_invoice($description, $order_no, $debtor_no, $group_no, $
 function update_recurrent_invoice($selected_id, $description, $order_no, $debtor_no, $group_no, $days, $monthly,
 	$begin, $end)
 {
-	$sql = "UPDATE ".TB_PREF."recurrent_invoices SET 
+	$sql = "UPDATE recurrent_invoices SET 
 		description=".db_escape($description).", 
 		order_no=".db_escape($order_no).", 
 		debtor_no=".db_escape($debtor_no).", 
@@ -40,14 +40,14 @@ function update_recurrent_invoice($selected_id, $description, $order_no, $debtor
 function update_last_sent_recurrent_invoice($id, $date)
 {
 	$date = date2sql($date);
-	$sql = "UPDATE ".TB_PREF."recurrent_invoices SET last_sent='$date' WHERE id=".db_escape($id);
+	$sql = "UPDATE recurrent_invoices SET last_sent='$date' WHERE id=".db_escape($id);
 
    	db_query($sql,"The recurrent invoice could not be updated");
 }
 
 function delete_recurrent_invoice($selected_id)
 {
-	$sql="DELETE FROM ".TB_PREF."recurrent_invoices WHERE id=".db_escape($selected_id);
+	$sql="DELETE FROM recurrent_invoices WHERE id=".db_escape($selected_id);
 	db_query($sql,"could not delete recurrent invoice");
 }
 
@@ -63,14 +63,14 @@ function get_recurrent_invoices($date=null)
 	} else
 		$sql = "SELECT * ";
 
-	$sql .= " FROM ".TB_PREF."recurrent_invoices ORDER BY description, group_no, debtor_no";
+	$sql .= " FROM recurrent_invoices ORDER BY description, group_no, debtor_no";
 
 	return db_query($sql,"could not get recurrent invoices");
 }
 
 function get_recurrent_invoice($selected_id)
 {
-	$sql = "SELECT * FROM ".TB_PREF."recurrent_invoices WHERE id=".db_escape($selected_id);
+	$sql = "SELECT * FROM recurrent_invoices WHERE id=".db_escape($selected_id);
 
 	$result = db_query($sql,"could not get recurrent invoice");
 	return db_fetch($result);
@@ -78,7 +78,7 @@ function get_recurrent_invoice($selected_id)
 
 function check_recurrent_invoice_description($description, $id=null)
 {
-	$sql = "SELECT count(*) FROM ".TB_PREF."recurrent_invoices WHERE description=".db_escape($description);
+	$sql = "SELECT count(*) FROM recurrent_invoices WHERE description=".db_escape($description);
 
 	if (isset($id))
 		$sql .= " AND id<>".db_escape($id);
@@ -94,7 +94,7 @@ function recurrent_invoice_ready($selected_id, $date)
 
 	$sql = "SELECT DATE_ADD(DATE_ADD(IF(`last_sent`='0000-00-00', `begin`, `last_sent`), INTERVAL `monthly` MONTH), INTERVAL `days` DAY) <= '$date' 
 		AND last_sent < DATE_ADD(`end`, INTERVAL 1 DAY) as overdue
-		FROM ".TB_PREF."recurrent_invoices WHERE 
+		FROM recurrent_invoices WHERE 
 		id=".db_escape($selected_id);
 
 	$result = db_query($sql,"could not get recurrent invoice");
@@ -109,15 +109,15 @@ function recurrent_invoice_count($id)
 {
 
 	$sql1 = "SELECT branch.*
-		FROM ".TB_PREF."recurrent_invoices rec
-			LEFT JOIN ".TB_PREF."cust_branch branch ON rec.group_no = branch.group_no AND NOT branch.inactive
-			LEFT JOIN ".TB_PREF."debtors_master debtor ON debtor.debtor_no = branch.debtor_no AND NOT debtor.inactive
+		FROM recurrent_invoices rec
+			LEFT JOIN cust_branch branch ON rec.group_no = branch.group_no AND NOT branch.inactive
+			LEFT JOIN debtors_master debtor ON debtor.debtor_no = branch.debtor_no AND NOT debtor.inactive
 		WHERE rec.debtor_no=0 AND !ISNULL(debtor.debtor_no) AND rec.id=".db_escape($id);
 
 	$sql2 = "SELECT branch.*
-		FROM ".TB_PREF."recurrent_invoices rec 
-			LEFT JOIN ".TB_PREF."cust_branch branch ON rec.group_no = branch.branch_code AND NOT branch.inactive
-			LEFT JOIN ".TB_PREF."debtors_master debtor ON rec.debtor_no = debtor.debtor_no AND NOT debtor.inactive
+		FROM recurrent_invoices rec 
+			LEFT JOIN cust_branch branch ON rec.group_no = branch.branch_code AND NOT branch.inactive
+			LEFT JOIN debtors_master debtor ON rec.debtor_no = debtor.debtor_no AND NOT debtor.inactive
 		WHERE rec.debtor_no!=0 AND !ISNULL(debtor.debtor_no) AND rec.id=".db_escape($id);
 
 	$sql = "SELECT count(*) FROM ($sql1 UNION $sql2) a";
@@ -132,15 +132,15 @@ function check_recurrent_invoice_prices($id)
 	$inv = get_recurrent_invoice($id);
 
 	$sql1 = "SELECT debtor.curr_code
-		FROM ".TB_PREF."recurrent_invoices rec
-			LEFT JOIN ".TB_PREF."cust_branch branch ON rec.group_no = branch.group_no AND NOT branch.inactive
-			LEFT JOIN ".TB_PREF."debtors_master debtor ON debtor.debtor_no = branch.debtor_no AND NOT debtor.inactive
+		FROM recurrent_invoices rec
+			LEFT JOIN cust_branch branch ON rec.group_no = branch.group_no AND NOT branch.inactive
+			LEFT JOIN debtors_master debtor ON debtor.debtor_no = branch.debtor_no AND NOT debtor.inactive
 		WHERE rec.debtor_no=0 AND !ISNULL(debtor.debtor_no) AND rec.id=".db_escape($id);
 
 	$sql2 = "SELECT debtor.curr_code
-		FROM ".TB_PREF."recurrent_invoices rec 
-			LEFT JOIN ".TB_PREF."cust_branch branch ON rec.group_no = branch.branch_code AND NOT branch.inactive
-			LEFT JOIN ".TB_PREF."debtors_master debtor ON rec.debtor_no = debtor.debtor_no AND NOT debtor.inactive
+		FROM recurrent_invoices rec 
+			LEFT JOIN cust_branch branch ON rec.group_no = branch.branch_code AND NOT branch.inactive
+			LEFT JOIN debtors_master debtor ON rec.debtor_no = debtor.debtor_no AND NOT debtor.inactive
 		WHERE rec.debtor_no!=0 AND !ISNULL(debtor.debtor_no) AND rec.id=".db_escape($id);
 
 	$sql = "SELECT distinct * FROM ($sql1 UNION $sql2) a";

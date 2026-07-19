@@ -15,7 +15,7 @@ function add_supplier($supp_name, $supp_ref, $address, $supp_address, $gst_no,
 	$curr_code, $payment_terms, $payable_account, $purchase_account, $payment_discount_account, 
 	$notes, $tax_group_id, $tax_included)
 {
-	$sql = "INSERT INTO ".TB_PREF."suppliers (supp_name, supp_ref, address, supp_address, gst_no, website,
+	$sql = "INSERT INTO suppliers (supp_name, supp_ref, address, supp_address, gst_no, website,
 		supp_account_no, bank_account, credit_limit, dimension_id, dimension2_id, curr_code,
 		payment_terms, payable_account, purchase_account, payment_discount_account, notes, 
 		tax_group_id, tax_included)
@@ -47,7 +47,7 @@ function update_supplier($supplier_id, $supp_name, $supp_ref, $address, $supp_ad
 	$curr_code, $payment_terms, $payable_account, $purchase_account, $payment_discount_account, 
 	$notes, $tax_group_id, $tax_included)
 {
-	$sql = "UPDATE ".TB_PREF."suppliers SET supp_name=".db_escape($supp_name) . ",
+	$sql = "UPDATE suppliers SET supp_name=".db_escape($supp_name) . ",
 		supp_ref=".db_escape($supp_ref) . ",
 		address=".db_escape($address) . ",
 		supp_address=".db_escape($supp_address) . ",
@@ -155,7 +155,7 @@ function delete_supplier($supplier_id)
 {
 	begin_transaction();
 	delete_entity_contacts('supplier', $supplier_id);
-	$sql="DELETE FROM ".TB_PREF."suppliers WHERE supplier_id=".db_escape($supplier_id);
+	$sql="DELETE FROM suppliers WHERE supplier_id=".db_escape($supplier_id);
 
 	db_query($sql,"check failed");
 	commit_transaction();
@@ -178,7 +178,7 @@ function get_supplier_details($supplier_id, $to=null, $all=true)
     	$value = "(trans.effect * (abs(trans.total) - trans.alloc))";
 
 	$due = "IF (trans.type=".ST_SUPPINVOICE." OR trans.type=".ST_SUPPCREDIT.",trans.due_date,trans.tran_date)";
-    $sql = "SELECT supp.supp_name, supp.curr_code, ".TB_PREF."payment_terms.terms,
+    $sql = "SELECT supp.supp_name, supp.curr_code, payment_terms.terms,
 
 		Sum(IFNULL($value,0)) AS Balance,
 
@@ -188,20 +188,20 @@ function get_supplier_details($supplier_id, $to=null, $all=true)
 		supp.credit_limit - Sum(IFNULL(trans.effect * ABS(trans.total),0)) as cur_credit,
 		supp.tax_group_id
 
-		FROM ".TB_PREF."suppliers supp
-			 LEFT JOIN ".TB_PREF."supp_trans trans ON supp.supplier_id = trans.supplier_id AND trans.tran_date <= '$todate',
-			 ".TB_PREF."payment_terms
+		FROM suppliers supp
+			 LEFT JOIN supp_trans trans ON supp.supplier_id = trans.supplier_id AND trans.tran_date <= '$todate',
+			 payment_terms
 
 		WHERE
-			 supp.payment_terms = ".TB_PREF."payment_terms.terms_indicator
+			 supp.payment_terms = payment_terms.terms_indicator
 			 AND supp.supplier_id = $supplier_id ";
 	if (!$all)
 		$sql .= "AND $value <> 0 ";  
 	$sql .= "GROUP BY
 			  supp.supp_name,
-			  ".TB_PREF."payment_terms.terms,
-			  ".TB_PREF."payment_terms.days_before_due,
-			  ".TB_PREF."payment_terms.day_in_following_month";
+			  payment_terms.terms,
+			  payment_terms.days_before_due,
+			  payment_terms.day_in_following_month";
     $result = db_query($sql,"The customer details could not be retrieved");
     $supp = db_fetch($result);
 
@@ -210,7 +210,7 @@ function get_supplier_details($supplier_id, $to=null, $all=true)
 
 function get_supplier($supplier_id)
 {
-	$sql = "SELECT * FROM ".TB_PREF."suppliers WHERE supplier_id=".db_escape($supplier_id);
+	$sql = "SELECT * FROM suppliers WHERE supplier_id=".db_escape($supplier_id);
 
 	$result = db_query($sql, "could not get supplier");
 
@@ -219,7 +219,7 @@ function get_supplier($supplier_id)
 
 function get_supplier_name($supplier_id)
 {
-	$sql = "SELECT supp_name AS name FROM ".TB_PREF."suppliers WHERE supplier_id=".db_escape($supplier_id);
+	$sql = "SELECT supp_name AS name FROM suppliers WHERE supplier_id=".db_escape($supplier_id);
 
 	$result = db_query($sql, "could not get supplier");
 
@@ -230,7 +230,7 @@ function get_supplier_name($supplier_id)
 
 function get_supplier_accounts($supplier_id)
 {
-	$sql = "SELECT payable_account,purchase_account,payment_discount_account, dimension_id, dimension2_id FROM ".TB_PREF."suppliers WHERE supplier_id=".db_escape($supplier_id);
+	$sql = "SELECT payable_account,purchase_account,payment_discount_account, dimension_id, dimension2_id FROM suppliers WHERE supplier_id=".db_escape($supplier_id);
 
 	$result = db_query($sql, "could not get supplier");
 
@@ -263,7 +263,7 @@ function is_new_supplier($id)
 
 function get_supplier_currency($supplier_id)
 {
-    $sql = "SELECT curr_code FROM ".TB_PREF."suppliers WHERE supplier_id = ".db_escape($supplier_id);
+    $sql = "SELECT curr_code FROM suppliers WHERE supplier_id = ".db_escape($supplier_id);
 
 	$result = db_query($sql, "Retreive currency of supplier $supplier_id");
 
@@ -281,7 +281,7 @@ function get_suppliers_search($supplier)
 		$limit = 10;
 
 	$sql = "SELECT supplier_id, supp_name, supp_ref, address, gst_no
-		FROM ".TB_PREF."suppliers
+		FROM suppliers
 		WHERE (supp_name LIKE " . db_escape("%" . $supplier. "%") . " OR 
 			supp_ref LIKE " . db_escape("%" . $supplier. "%") . " OR 
 			address LIKE " . db_escape("%" . $supplier. "%") . " OR 

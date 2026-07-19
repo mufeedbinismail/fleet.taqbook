@@ -177,7 +177,7 @@ class BoxReports
 			switch ($type)
 			{
 				case 'CURRENCY':
-					$sql = "SELECT curr_abrev, concat(curr_abrev,' - ', currency) AS name FROM ".TB_PREF."currencies";
+					$sql = "SELECT curr_abrev, concat(curr_abrev,' - ', currency) AS name FROM currencies";
 					return combo_input($name, '', $sql, 'curr_abrev', 'name',array('spec_option'=>__("No Currency Filter"),'spec_id'=>ALL_TEXT,'order'=>false));
 
 				case 'DATE':
@@ -325,8 +325,8 @@ class BoxReports
 					$ref = ($SysPrefs->print_invoice_no() == 1 ? "trans_no" : "reference");
 					$sql = "SELECT concat(debtor_trans.trans_no, '-', debtor_trans.type) AS TNO,
 								concat('$IV ', debtor_trans.$ref,' ', debtor.name) as IName
-						FROM ".TB_PREF."debtors_master debtor,"
-							.TB_PREF."debtor_trans debtor_trans LEFT JOIN ".TB_PREF."voided AS vd ON debtor_trans.type=vd.type AND
+						FROM debtors_master debtor,
+							debtor_trans debtor_trans LEFT JOIN voided AS vd ON debtor_trans.type=vd.type AND
 							debtor_trans.trans_no=vd.id
 						WHERE debtor_trans.type=".ST_SALESINVOICE." AND debtor.debtor_no=debtor_trans.debtor_no AND ISNULL(vd.id)
 						AND debtor_trans.tran_date > SUBDATE(CURRENT_DATE, INTERVAL $day_range DAY)
@@ -338,8 +338,8 @@ class BoxReports
 					$ref = ($SysPrefs->print_invoice_no() == 1 ? "trans_no" : "reference");
 					$sql = "SELECT concat(debtor_trans.trans_no, '-', debtor_trans.type) AS TNO,
 								concat('$CN ', debtor_trans.$ref,' ', debtor.name) as IName
-						FROM ".TB_PREF."debtors_master debtor,"
-							.TB_PREF."debtor_trans debtor_trans LEFT JOIN ".TB_PREF."voided AS vd ON debtor_trans.type=vd.type AND
+						FROM debtors_master debtor,
+							debtor_trans debtor_trans LEFT JOIN voided AS vd ON debtor_trans.type=vd.type AND
 							debtor_trans.trans_no=vd.id
 						WHERE debtor_trans.type=".ST_CUSTCREDIT." AND debtor.debtor_no=debtor_trans.debtor_no AND ISNULL(vd.id)
 						AND debtor_trans.tran_date > SUBDATE(CURRENT_DATE, INTERVAL $day_range DAY)
@@ -350,8 +350,8 @@ class BoxReports
 					$DN = $type_shortcuts[ST_CUSTDELIVERY];
 					$sql = "SELECT concat(debtor_trans.trans_no, '-', debtor_trans.type) AS TNO,
 								concat(debtor_trans.trans_no, ' $DN ', debtor.name) as IName
-						FROM ".TB_PREF."debtors_master debtor,"
-							.TB_PREF."debtor_trans debtor_trans LEFT JOIN ".TB_PREF."voided AS vd ON debtor_trans.type=vd.type AND
+						FROM debtors_master debtor,
+							debtor_trans debtor_trans LEFT JOIN voided AS vd ON debtor_trans.type=vd.type AND
 							debtor_trans.trans_no=vd.id
 						WHERE debtor_trans.type=".ST_CUSTDELIVERY." AND debtor.debtor_no=debtor_trans.debtor_no AND ISNULL(vd.id)
 						AND debtor_trans.tran_date > SUBDATE(CURRENT_DATE, INTERVAL $day_range DAY)
@@ -361,8 +361,8 @@ class BoxReports
 				case 'ORDERS':
 					$ref = ($SysPrefs->print_invoice_no() == 1 ? "order_no" : "reference");
 					$sql = "SELECT sorder.order_no, concat(sorder.$ref, '-', debtor.name) as IName
-						FROM ".TB_PREF."debtors_master debtor,"
-							.TB_PREF."sales_orders sorder
+						FROM debtors_master debtor,
+							sales_orders sorder
 						WHERE debtor.debtor_no=sorder.debtor_no	AND sorder.trans_type=".ST_SALESORDER." 
 						AND sorder.ord_date > SUBDATE(CURRENT_DATE, INTERVAL $day_range DAY)
 						ORDER BY sorder.order_no DESC";
@@ -371,8 +371,8 @@ class BoxReports
 				case 'QUOTATIONS':
 					$ref = ($SysPrefs->print_invoice_no() == 1 ? "order_no" : "reference");
 					$sql = "SELECT sorder.order_no, concat(sorder.$ref, '-', debtor.name) as IName
-						FROM ".TB_PREF."debtors_master debtor,"
-							.TB_PREF."sales_orders sorder
+						FROM debtors_master debtor,
+							sales_orders sorder
 						WHERE debtor.debtor_no=sorder.debtor_no	AND sorder.trans_type=".ST_SALESQUOTE." 
 						AND sorder.ord_date > SUBDATE(CURRENT_DATE, INTERVAL $day_range DAY)
 						ORDER BY sorder.order_no DESC";
@@ -381,8 +381,8 @@ class BoxReports
 				case 'PO':
 					$ref = ($SysPrefs->print_invoice_no() == 1 ? "order_no" : "reference");
 					$sql = "SELECT po.order_no, concat(po.$ref, '-', supplier.supp_name) as IName
-						FROM ".TB_PREF."suppliers supplier,"
-							.TB_PREF."purch_orders po
+						FROM suppliers supplier,
+							purch_orders po
 						WHERE supplier.supplier_id=po.supplier_id
 						AND po.ord_date > SUBDATE(CURRENT_DATE, INTERVAL $day_range DAY)
 						ORDER BY po.order_no DESC";
@@ -397,8 +397,8 @@ class BoxReports
 								concat(trans.$ref, IF(trans.type=".ST_BANKPAYMENT.", ' $BP ', IF(trans.type=".ST_SUPPAYMENT.", ' $SP ', 
 								' $CN ')),
 								supplier.supp_name) as IName
-						FROM ".TB_PREF."suppliers supplier, "
-							.TB_PREF."supp_trans trans  LEFT JOIN ".TB_PREF."voided AS vd ON trans.type=vd.type AND trans.trans_no=vd.id
+						FROM suppliers supplier, 
+							supp_trans trans  LEFT JOIN voided AS vd ON trans.type=vd.type AND trans.trans_no=vd.id
 						WHERE trans.type IN(".ST_BANKPAYMENT.",".ST_SUPPAYMENT.",".ST_SUPPCREDIT.") AND
 							supplier.supplier_id=trans.supplier_id AND ISNULL(vd.id)
 						AND trans.tran_date > SUBDATE(CURRENT_DATE, INTERVAL $day_range DAY)
@@ -411,8 +411,8 @@ class BoxReports
 					$ref = ($SysPrefs->print_invoice_no() == 1 ? "trans_no" : "reference");
 					$sql = "SELECT concat(trans.trans_no, '-', trans.type) AS TNO,
 								concat(trans.$ref, IF(trans.type=".ST_BANKDEPOSIT.", ' $BD ', ' $CP '), debtor.name) as IName
-						FROM ".TB_PREF."debtors_master debtor,"
-							.TB_PREF."debtor_trans trans LEFT JOIN ".TB_PREF."voided AS vd ON trans.type=vd.type AND trans.trans_no=vd.id
+						FROM debtors_master debtor,
+							debtor_trans trans LEFT JOIN voided AS vd ON trans.type=vd.type AND trans.trans_no=vd.id
 						WHERE trans.type IN(".ST_BANKDEPOSIT.",".ST_CUSTPAYMENT.",".ST_CUSTCREDIT.") AND
 							debtor.debtor_no=trans.debtor_no AND ISNULL(vd.id)
 						AND trans.tran_date > SUBDATE(CURRENT_DATE, INTERVAL $day_range DAY)
@@ -430,9 +430,9 @@ class BoxReports
 				
 				case 'WORKORDER':
 					$sql = "SELECT wo.id, concat(wo.id, '-', item.description) as IName
-						FROM ".TB_PREF."stock_master item,"
-							.TB_PREF."workorders wo 
-							LEFT JOIN ".TB_PREF."voided v ON wo.id=v.id and v.type=".ST_WORKORDER."
+						FROM stock_master item,
+							workorders wo 
+							LEFT JOIN voided v ON wo.id=v.id and v.type=".ST_WORKORDER."
 						WHERE ISNULL(v.id)
 						AND item.stock_id=wo.stock_id
 						ORDER BY wo.id DESC";
@@ -462,7 +462,7 @@ class BoxReports
 					return fiscalyears_list($name);
 
 				case 'USERS':
-					$sql = "SELECT id, user_id FROM ".TB_PREF."users";
+					$sql = "SELECT id, user_id FROM users";
 					return combo_input($name, '', $sql, 'id', 'user_id',array('spec_option'=>__("No Users Filter"),'spec_id'=>ALL_NUMERIC));
 
 				case 'ACCOUNTTAGS':

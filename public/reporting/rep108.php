@@ -40,8 +40,8 @@ function getTransactions($debtorno, $date, $show_also_allocated)
         trans.effect * IF(prep_amount, prep_amount, abs(total)) AS TotalAmount,
         alloc AS Allocated,
 		((trans.type = ".ST_SALESINVOICE.") AND due_date < '$date') AS OverDue
-		FROM ".TB_PREF."debtor_trans trans
-		LEFT JOIN ".TB_PREF."voided as v
+		FROM debtor_trans trans
+		LEFT JOIN voided as v
             ON trans.trans_no=v.id AND trans.type=v.type
         WHERE tran_date <= '$date' AND debtor_no = ".db_escape($debtorno)."
 			AND trans.type <> ".ST_CUSTDELIVERY." AND ISNULL(v.date_)
@@ -87,7 +87,7 @@ function print_statements()
     if ($orientation == 'L')
     	recalculate_cols($cols);
 
-	$sql = "SELECT debtor_no, name AS DebtorName, address, tax_id, curr_code, curdate() AS tran_date FROM ".TB_PREF."debtors_master";
+	$sql = "SELECT debtor_no, name AS DebtorName, address, tax_id, curr_code, curdate() AS tran_date FROM debtors_master";
 	if ($customer != ALL_TEXT)
 		$sql .= " WHERE debtor_no = ".db_escape($customer);
 	else

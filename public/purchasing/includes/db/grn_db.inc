@@ -40,7 +40,7 @@ function update_average_material_cost($supplier, $stock_id, $price, $qty, $date,
     if (is_inventory_item($stock_id) && !$adj_only) 
         handle_negative_inventory($stock_id, $qty, $price_in_home_currency, $date);
 	
-	$sql = "SELECT mb_flag, material_cost FROM ".TB_PREF."stock_master WHERE stock_id=".db_escape($stock_id);
+	$sql = "SELECT mb_flag, material_cost FROM stock_master WHERE stock_id=".db_escape($stock_id);
 	$result = db_query($sql);
 	$myrow = db_fetch($result);
 	$material_cost = $myrow['material_cost'];
@@ -68,7 +68,7 @@ function update_average_material_cost($supplier, $stock_id, $price, $qty, $date,
 
 	if ($cost_adjust) // Material_cost replaced with price
 		adjust_deliveries($stock_id, $price_in_home_currency_, $date);
-	$sql = "UPDATE ".TB_PREF."stock_master SET material_cost=".db_escape($material_cost)."
+	$sql = "UPDATE stock_master SET material_cost=".db_escape($material_cost)."
 		WHERE stock_id=".db_escape($stock_id);
 
 	db_query($sql,"The cost details for the inventory item could not be updated");
@@ -165,7 +165,7 @@ function add_grn_batch($po_number, $supplier_id, $reference, $location, $date_, 
 {
 	$date = date2sql($date_);
 
-	$sql = "INSERT INTO ".TB_PREF."grn_batch (purch_order_no, delivery_date, supplier_id, reference, loc_code, rate)
+	$sql = "INSERT INTO grn_batch (purch_order_no, delivery_date, supplier_id, reference, loc_code, rate)
 			VALUES (".db_escape($po_number).", ".db_escape($date).", "
 			.db_escape($supplier_id).", ".db_escape($reference).", ".db_escape($location).", ".db_escape($rate).")";
 
@@ -179,7 +179,7 @@ function add_grn_batch($po_number, $supplier_id, $reference, $location, $date_, 
 function add_grn_detail_item($grn_batch_id, $po_detail_item, $item_code, $description, $standard_unit_cost,
 	$quantity_received, $price, $quantity)
 {
-	$sql = "UPDATE ".TB_PREF."purch_order_details
+	$sql = "UPDATE purch_order_details
         SET quantity_received = quantity_received + ".db_escape($quantity_received).",
         std_cost_unit=".db_escape($standard_unit_cost).",
         quantity_ordered=".db_escape($quantity).",
@@ -187,7 +187,7 @@ function add_grn_detail_item($grn_batch_id, $po_detail_item, $item_code, $descri
         WHERE po_detail_item = ".db_escape($po_detail_item);
 	db_query($sql, "a purchase order details record could not be updated. This receipt of goods has not been processed ");
 
-	$sql = "INSERT INTO ".TB_PREF."grn_items (grn_batch_id, po_detail_item, item_code, description, qty_recd)
+	$sql = "INSERT INTO grn_items (grn_batch_id, po_detail_item, item_code, description, qty_recd)
 		VALUES (".db_escape($grn_batch_id).", "
 		.db_escape($po_detail_item).", ".db_escape($item_code).", ".db_escape($description)
 		.", ".db_escape($quantity_received).")";
@@ -200,7 +200,7 @@ function add_grn_detail_item($grn_batch_id, $po_detail_item, $item_code, $descri
 //----------------------------------------------------------------------------------------
 function get_grn_batch_from_item($item)
 {
-	$sql = "SELECT grn_batch_id FROM ".TB_PREF."grn_items WHERE id=".db_escape($item);
+	$sql = "SELECT grn_batch_id FROM grn_items WHERE id=".db_escape($item);
 	$result = db_query($sql, "Could not retreive GRN batch id");
 	$row = db_fetch_row($result);
 	return $row[0];
@@ -208,7 +208,7 @@ function get_grn_batch_from_item($item)
 
 function get_grn_batch($grn)
 {
-	$sql = "SELECT * FROM ".TB_PREF."grn_batch WHERE id=".db_escape($grn);
+	$sql = "SELECT * FROM grn_batch WHERE id=".db_escape($grn);
 	$result = db_query($sql, "Could not retreive GRN batch id");
 	return db_fetch($result);
 }
@@ -219,8 +219,8 @@ function set_grn_item_credited(&$entered_grn, $supplier, $transno, $date, $taxfr
 		$taxfree_line, $entered_grn->this_quantity_inv, $date);
 
  	$sql = "SELECT grn.*, item.*
-    	FROM ".TB_PREF."grn_batch grn,"
-    		.TB_PREF."grn_items item
+    	FROM grn_batch grn,
+    		grn_items item
     	WHERE item.grn_batch_id=grn.id
 		AND item.id=".db_escape($entered_grn->id)."
     	AND item.item_code=".db_escape($entered_grn->item_code);
@@ -228,7 +228,7 @@ function set_grn_item_credited(&$entered_grn, $supplier, $transno, $date, $taxfr
 	$result = db_query($sql, "Could not retreive GRNS");
 	$myrow = db_fetch($result);
 
-	$sql = "UPDATE ".TB_PREF."purch_order_details
+	$sql = "UPDATE purch_order_details
         SET quantity_received = quantity_received + "
         	.db_escape($entered_grn->this_quantity_inv).",
         quantity_ordered = quantity_ordered + "
@@ -239,8 +239,8 @@ function set_grn_item_credited(&$entered_grn, $supplier, $transno, $date, $taxfr
         WHERE po_detail_item = ".$myrow["po_detail_item"];
 	db_query($sql, "a purchase order details record could not be updated. This receipt of goods has not been processed ");
 
-	//$sql = "UPDATE ".TB_PREF."grn_items SET qty_recd=0, quantity_inv=0 WHERE id=$entered_grn->id";
-	$sql = "UPDATE ".TB_PREF."grn_items SET qty_recd=qty_recd+".db_escape($entered_grn->this_quantity_inv)
+	//$sql = "UPDATE grn_items SET qty_recd=0, quantity_inv=0 WHERE id=$entered_grn->id";
+	$sql = "UPDATE grn_items SET qty_recd=qty_recd+".db_escape($entered_grn->this_quantity_inv)
 	.",quantity_inv=quantity_inv+".db_escape($entered_grn->this_quantity_inv)
 	." WHERE id=".db_escape($entered_grn->id);
 	db_query($sql);
@@ -258,13 +258,13 @@ function get_grn_items($grn_batch_id=0, $supplier_id="", $outstanding_only=false
     	po_item.act_price,
     	po_item.quantity_ordered,
     	po_item.std_cost_unit, units
-    	FROM	".TB_PREF."grn_batch grn, "
-    			.TB_PREF."purch_order_details po_item, "
-    			.TB_PREF."stock_master stock_item,"
-	   			.TB_PREF."grn_items grn_item ";
+    	FROM	grn_batch grn, 
+    			purch_order_details po_item, 
+    			stock_master stock_item,
+	   			grn_items grn_item ";
  
     if ($invoice_no != 0) {
-    	$sql .= " LEFT JOIN ".TB_PREF."supp_invoice_items invoice_item ON ";
+    	$sql .= " LEFT JOIN supp_invoice_items invoice_item ON ";
 
 		$inv_cond = "invoice_item.supp_trans_type=".ST_SUPPINVOICE." AND invoice_item.supp_trans_no ";
 		if (is_array($invoice_no))
@@ -308,9 +308,9 @@ function get_grn_item_detail($grn_item_no)
 {
 	$sql = "SELECT grn.*, po.unit_price, grn.qty_recd - grn.quantity_inv AS QtyOstdg,
     		po.std_cost_unit
-		FROM ".TB_PREF."grn_items grn,"
-			.TB_PREF."purch_order_details po,"
-			.TB_PREF."stock_master item
+		FROM grn_items grn,
+			purch_order_details po,
+			stock_master item
 		WHERE grn.po_detail_item=po.po_detail_item
  			AND item.stock_id=grn.item_code
 			AND grn.id=".db_escape($grn_item_no);
@@ -357,7 +357,7 @@ function read_grn_items_to_order($grn_batch, &$order)
 
 function read_grn($grn_batch, &$order)
 {
-	$sql= "SELECT *	FROM ".TB_PREF."grn_batch WHERE id=".db_escape($grn_batch);
+	$sql= "SELECT *	FROM grn_batch WHERE id=".db_escape($grn_batch);
 
 	$result = db_query($sql, "The grn sent is not valid");
 
@@ -385,7 +385,7 @@ function read_grn($grn_batch, &$order)
 
 function get_po_grns($po_number)
 {
-    $sql = "SELECT * FROM ".TB_PREF."grn_batch WHERE purch_order_no=".db_escape($po_number);
+    $sql = "SELECT * FROM grn_batch WHERE purch_order_no=".db_escape($po_number);
 
 	return db_query($sql, "The grns for the po $po_number could not be retreived");
 }
@@ -394,7 +394,7 @@ function get_po_grns($po_number)
 
 function exists_grn($grn_batch)
 {
-	$sql = "SELECT id FROM ".TB_PREF."grn_batch WHERE id=".db_escape($grn_batch);
+	$sql = "SELECT id FROM grn_batch WHERE id=".db_escape($grn_batch);
 	$result = db_query($sql, "Cannot retreive a grn");
 
     return (db_num_rows($result) > 0);
@@ -405,8 +405,8 @@ function exists_grn($grn_batch)
 function exists_grn_on_invoices($grn_batch)
 {
 	$sql = "SELECT inv.id
-		FROM ".TB_PREF."supp_invoice_items inv,"
-			.TB_PREF."grn_items grn
+		FROM supp_invoice_items inv,
+			grn_items grn
 		WHERE inv.grn_item_id=grn.id
 		AND quantity != 0
 		AND grn_batch_id=".db_escape($grn_batch);
@@ -438,7 +438,7 @@ function void_grn($grn_batch)
     	while ($myrow = db_fetch($result))
         {
 
-        	$sql = "UPDATE ".TB_PREF."purch_order_details
+        	$sql = "UPDATE purch_order_details
                 SET quantity_received = quantity_received - " . $myrow["qty_recd"] . "
                 WHERE po_detail_item = " . $myrow["po_detail_item"];
 
@@ -447,7 +447,7 @@ function void_grn($grn_batch)
     }
 
 	// clear the quantities in the grn items
-	$sql = "UPDATE ".TB_PREF."grn_items SET qty_recd=0, quantity_inv=0
+	$sql = "UPDATE grn_items SET qty_recd=0, quantity_inv=0
 		WHERE grn_batch_id=".db_escape($grn_batch);
 
 	db_query($sql, "A grn detail item could not be voided.");

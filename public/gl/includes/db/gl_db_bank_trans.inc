@@ -34,7 +34,7 @@ function add_bank_trans($type, $trans_no, $bank_act, $ref, $date_,
 		$amount_bank = $amount;
 	$amount_bank = round2($amount_bank, user_price_dec());	
 
-	$sql = "INSERT INTO ".TB_PREF."bank_trans (type, trans_no, bank_act, ref,
+	$sql = "INSERT INTO bank_trans (type, trans_no, bank_act, ref,
 		trans_date, amount, person_type_id, person_id) ";
 
 	$sql .= "VALUES ($type, $trans_no, '$bank_act', ".db_escape($ref).", '$sqlDate',
@@ -52,7 +52,7 @@ function add_bank_trans($type, $trans_no, $bank_act, $ref, $date_,
 function exists_bank_trans($type, $type_no)
 {
 	$sql = "SELECT trans_no
-		FROM ".TB_PREF."bank_trans
+		FROM bank_trans
 		WHERE type=".db_escape($type)
 		." AND trans_no=".db_escape($type_no);
 	$result = db_query($sql, "Cannot retreive a bank transaction");
@@ -69,12 +69,12 @@ function get_bank_trans($type, $trans_no=null, $person_type_id=null, $person_id=
 		IFNULL(abs(dt.ov_amount/bt.amount), IFNULL(ABS(st.ov_amount/bt.amount), 1)) settle_rate,
 		IFNULL(debtor.curr_code, IFNULL(supplier.curr_code, act.bank_curr_code)) settle_curr
 
-		FROM ".TB_PREF."bank_trans bt
-				 LEFT JOIN ".TB_PREF."debtor_trans dt ON dt.type=bt.type AND dt.trans_no=bt.trans_no
-				 LEFT JOIN ".TB_PREF."debtors_master debtor ON debtor.debtor_no = dt.debtor_no
-				 LEFT JOIN ".TB_PREF."supp_trans st ON st.type=bt.type AND st.trans_no=bt.trans_no
-				 LEFT JOIN ".TB_PREF."suppliers supplier ON supplier.supplier_id = st.supplier_id,
-			 ".TB_PREF."bank_accounts act
+		FROM bank_trans bt
+				 LEFT JOIN debtor_trans dt ON dt.type=bt.type AND dt.trans_no=bt.trans_no
+				 LEFT JOIN debtors_master debtor ON debtor.debtor_no = dt.debtor_no
+				 LEFT JOIN supp_trans st ON st.type=bt.type AND st.trans_no=bt.trans_no
+				 LEFT JOIN suppliers supplier ON supplier.supplier_id = st.supplier_id,
+			 bank_accounts act
 		WHERE act.id=bt.bank_act ";
 	if (isset($type))
 		$sql .= " AND bt.type=".db_escape($type);
@@ -96,8 +96,8 @@ function get_bank_trans_for_bank_account($bank_account, $from, $to)
 	$from = date2sql($from);
 	$to = date2sql($to);
 	$sql = "SELECT t.* 
-		FROM ".TB_PREF."bank_trans t 
-			LEFT JOIN ".TB_PREF."voided v ON t.type=v.type AND t.trans_no=v.id
+		FROM bank_trans t 
+			LEFT JOIN voided v ON t.type=v.type AND t.trans_no=v.id
 		WHERE t.bank_act = ".db_escape($bank_account) . "
 			AND ISNULL(v.date_)
 			AND trans_date >= '$from'
@@ -114,7 +114,7 @@ function get_balance_before_for_bank_account($bank_account, $from)
 {
 	$from = date2sql($from);
 	$sql = "SELECT SUM(amount)
-		FROM ".TB_PREF."bank_trans
+		FROM bank_trans
 		WHERE bank_act=".db_escape($bank_account) . "
 			AND trans_date < '$from'";
 	$before_qty = db_query($sql, "The starting balance on hand could not be calculated");
@@ -126,7 +126,7 @@ function get_balance_before_for_bank_account($bank_account, $from)
 function get_gl_trans_value($account, $type, $trans_no)
 {
 	$sql = "SELECT SUM(amount)
-		FROM ".TB_PREF."gl_trans
+		FROM gl_trans
 		WHERE account=".db_escape($account)
 			." AND type=".db_escape($type)
 			." AND type_no=".db_escape($trans_no);
@@ -145,7 +145,7 @@ function void_bank_trans($type, $type_no, $nested=false)
 	if (!$nested)
 		begin_transaction();
 
-	$sql = "UPDATE ".TB_PREF."bank_trans 
+	$sql = "UPDATE bank_trans 
 			SET amount=0
 			WHERE type=".db_escape($type)." AND trans_no=".db_escape($type_no);
 
@@ -189,7 +189,7 @@ function check_bank_account_history($delta_amount, $bank_account, $date=null, $u
 	$balance += $delta_amount;
 
 	$sql = "SELECT sum(amount) as amount, trans_date, trans_no, type
-			FROM ".TB_PREF."bank_trans
+			FROM bank_trans
 			WHERE bank_act=".db_escape($bank_account);
 	if ($date)
 	{

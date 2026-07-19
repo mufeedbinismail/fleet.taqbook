@@ -39,7 +39,7 @@ function get_open_balance($supplier_id, $to)
     $sql .= "SUM(t.effect * t.alloc) AS Allocated,";
 
     $sql .= "SUM(t.effect * (abs(t.total) - t.alloc)) AS OutStanding
-        FROM ".TB_PREF."supp_trans t
+        FROM supp_trans t
         WHERE t.supplier_id = ".db_escape($supplier_id);
     if ($to)
         $sql .= " AND t.tran_date < '$to'";
@@ -54,16 +54,16 @@ function getTransactions($supplier_id, $from, $to)
     $from = date2sql($from);
     $to = date2sql($to);
 	//memo added by faisal
-    $sql = "SELECT ".TB_PREF."supp_trans.*, comments.memo_,
-        ".TB_PREF."supp_trans.total
-        AS TotalAmount, ".TB_PREF."supp_trans.alloc AS Allocated,
-        ((".TB_PREF."supp_trans.type = ".ST_SUPPINVOICE.")
-        AND ".TB_PREF."supp_trans.due_date < '$to') AS OverDue
-        FROM ".TB_PREF."supp_trans
-        LEFT JOIN ".TB_PREF."comments comments ON ".TB_PREF."supp_trans.type=comments.type AND ".TB_PREF."supp_trans.trans_no=comments.id
-        WHERE ".TB_PREF."supp_trans.tran_date >= '$from' AND ".TB_PREF."supp_trans.tran_date <= '$to'
-        AND ".TB_PREF."supp_trans.supplier_id = '$supplier_id' AND ".TB_PREF."supp_trans.ov_amount!=0
-        ORDER BY ".TB_PREF."supp_trans.tran_date";
+    $sql = "SELECT supp_trans.*, comments.memo_,
+        supp_trans.total
+        AS TotalAmount, supp_trans.alloc AS Allocated,
+        ((supp_trans.type = ".ST_SUPPINVOICE.")
+        AND supp_trans.due_date < '$to') AS OverDue
+        FROM supp_trans
+        LEFT JOIN comments comments ON supp_trans.type=comments.type AND supp_trans.trans_no=comments.id
+        WHERE supp_trans.tran_date >= '$from' AND supp_trans.tran_date <= '$to'
+        AND supp_trans.supplier_id = '$supplier_id' AND supp_trans.ov_amount!=0
+        ORDER BY supp_trans.tran_date";
 
     return db_query($sql,"No transactions were returned");
 }
@@ -129,7 +129,7 @@ function print_supplier_balances()
     $total = array();
     $grandtotal = array(0,0,0,0);
 
-    $sql = "SELECT supplier_id, supp_name AS name, curr_code, inactive FROM ".TB_PREF."suppliers";
+    $sql = "SELECT supplier_id, supp_name AS name, curr_code, inactive FROM suppliers";
     if ($fromsupp != ALL_TEXT)
         $sql .= " WHERE supplier_id=".db_escape($fromsupp);
     $sql .= " ORDER BY supp_name";

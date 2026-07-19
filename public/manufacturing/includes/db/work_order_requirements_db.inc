@@ -16,10 +16,10 @@ function get_wo_requirements($woid)
 			item.material_cost as ComponentCost,
 			item.inventory_account,
 			item.cogs_account
-		FROM (".TB_PREF."wo_requirements req,"
-			.TB_PREF."locations loc,"
-			.TB_PREF."workcentres center)
-			INNER JOIN ".TB_PREF."stock_master item ON req.stock_id=item.stock_id 
+		FROM (wo_requirements req,
+			locations loc,
+			workcentres center)
+			INNER JOIN stock_master item ON req.stock_id=item.stock_id 
 		WHERE workorder_id=".db_escape($woid)."
 		AND loc.loc_code = req.loc_code
 		AND center.id=workcentre";
@@ -30,7 +30,7 @@ function get_wo_requirements($woid)
 function get_requirements_costs($woid)
 {
 	$sql = "SELECT SUM(units_req*unit_cost) cost
-		FROM ".TB_PREF."wo_requirements
+		FROM wo_requirements
 		WHERE workorder_id=".db_escape($woid);
 
 	$result = db_query($sql, "The work order requirements costs could not be retrieved");
@@ -43,9 +43,9 @@ function get_requirements_costs($woid)
 
 function create_wo_requirements($woid, $stock_id)
 {
-	$sql = "INSERT INTO ".TB_PREF."wo_requirements (workorder_id, stock_id, workcentre, units_req, loc_code)
+	$sql = "INSERT INTO wo_requirements (workorder_id, stock_id, workcentre, units_req, loc_code)
 		SELECT ".db_escape($woid).", component, workcentre_added, quantity, loc_code
-		FROM ".TB_PREF."bom WHERE parent=".db_escape($stock_id);
+		FROM bom WHERE parent=".db_escape($stock_id);
 
     db_query($sql, "The work order requirements could not be added");
 }
@@ -54,7 +54,7 @@ function create_wo_requirements($woid, $stock_id)
 
 function delete_wo_requirements($woid)
 {
-	$sql="DELETE FROM ".TB_PREF."wo_requirements WHERE workorder_id=".db_escape($woid);
+	$sql="DELETE FROM wo_requirements WHERE workorder_id=".db_escape($woid);
 	db_query($sql,"The work order requirements could not be deleted");	
 }
 
@@ -65,7 +65,7 @@ function delete_wo_requirements($woid)
 */
 function update_wo_requirement_issued($id, $quantity, $cost)
 {
-	$sql = "UPDATE ".TB_PREF."wo_requirements SET 
+	$sql = "UPDATE wo_requirements SET 
 				unit_cost = (units_issued*unit_cost+".$quantity*$cost.")/(units_issued+".$quantity."),
 				units_issued = units_issued + ".db_escape($quantity)."
 			WHERE id = ".db_escape($id);
@@ -77,7 +77,7 @@ function update_wo_requirement_issued($id, $quantity, $cost)
 
 function void_wo_requirements($woid)
 {
-	$sql = "UPDATE ".TB_PREF."wo_requirements SET units_issued = 0
+	$sql = "UPDATE wo_requirements SET units_issued = 0
 		WHERE workorder_id = ".db_escape($woid);
 
 	db_query($sql, "The work requirements issued quantity couldn't be voided");	

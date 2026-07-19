@@ -16,7 +16,7 @@ function update_item($stock_id, $description, $long_description, $category_id,
 	$depreciation_method = 'D', $depreciation_rate=100, $depreciation_factor=1,
 	$depreciation_start=null, $fa_class_id=null)
 {
-	$sql = "UPDATE ".TB_PREF."stock_master SET long_description=".db_escape($long_description).",
+	$sql = "UPDATE stock_master SET long_description=".db_escape($long_description).",
 		description=".db_escape($description).",
 		category_id=".db_escape($category_id).",
 		sales_account=".db_escape($sales_account).",
@@ -60,7 +60,7 @@ function add_item($stock_id, $description, $long_description, $category_id,
 	$depreciation_method='D', $depreciation_rate=100,  $depreciation_factor=1, $depreciation_start=null,
 	$fa_class_id=null)
 {
-	$sql = "INSERT INTO ".TB_PREF."stock_master (stock_id, description, long_description, category_id,
+	$sql = "INSERT INTO stock_master (stock_id, description, long_description, category_id,
 		tax_type_id, units, mb_flag, sales_account, inventory_account, cogs_account,
 		adjustment_account, wip_account, dimension_id, dimension2_id, no_sale, no_purchase, editable,
 		depreciation_method, depreciation_rate, depreciation_factor"
@@ -81,9 +81,9 @@ function add_item($stock_id, $description, $long_description, $category_id,
 
 	db_query($sql, "The item could not be added");
 
-	$sql = "INSERT INTO ".TB_PREF."loc_stock (loc_code, stock_id)
+	$sql = "INSERT INTO loc_stock (loc_code, stock_id)
 		SELECT loc_code, ".db_escape($stock_id)
-		." FROM ".TB_PREF."locations";
+		." FROM locations";
 
 	db_query($sql, "The item locstock could not be added");
 
@@ -92,23 +92,23 @@ function add_item($stock_id, $description, $long_description, $category_id,
 
 function delete_item($stock_id)
 {
-	$sql="DELETE FROM ".TB_PREF."stock_master WHERE stock_id=".db_escape($stock_id);
+	$sql="DELETE FROM stock_master WHERE stock_id=".db_escape($stock_id);
 	db_query($sql, "could not delete stock item");
 
 	/*and cascade deletes in loc_stock */
-	$sql ="DELETE FROM ".TB_PREF."loc_stock WHERE stock_id=".db_escape($stock_id);
+	$sql ="DELETE FROM loc_stock WHERE stock_id=".db_escape($stock_id);
 	db_query($sql, "could not delete stock item loc stock");
 
 	/*and cascade deletes in purch_data */
-	$sql ="DELETE FROM ".TB_PREF."purch_data WHERE stock_id=".db_escape($stock_id);
+	$sql ="DELETE FROM purch_data WHERE stock_id=".db_escape($stock_id);
 	db_query($sql, "could not delete stock item purch data");
 
 	/*and cascade deletes in prices */
-	$sql ="DELETE FROM ".TB_PREF."prices WHERE stock_id=".db_escape($stock_id);
+	$sql ="DELETE FROM prices WHERE stock_id=".db_escape($stock_id);
 	db_query($sql, "could not delete stock item prices");
 
 	/*and cascade delete the bill of material if any */
-	$sql = "DELETE FROM ".TB_PREF."bom WHERE parent=".db_escape($stock_id);
+	$sql = "DELETE FROM bom WHERE parent=".db_escape($stock_id);
 	db_query($sql, "could not delete stock item bom");
 
 	delete_item_kit($stock_id);
@@ -117,8 +117,8 @@ function delete_item($stock_id)
 function get_item($stock_id)
 {
 	$sql = "SELECT item.*, taxtype.name AS tax_type_name
-		FROM ".TB_PREF."stock_master item,"
-			.TB_PREF."item_tax_types taxtype
+		FROM stock_master item,
+			item_tax_types taxtype
 		WHERE taxtype.id=item.tax_type_id
 		AND stock_id=".db_escape($stock_id);
 	$result = db_query($sql,"an item could not be retreived");
@@ -128,24 +128,24 @@ function get_item($stock_id)
 
 function get_items($fixed_asset = 0)
 {
-	$sql = "SELECT * FROM ".TB_PREF."stock_master WHERE fixed_asset=".db_escape($fixed_asset);
+	$sql = "SELECT * FROM stock_master WHERE fixed_asset=".db_escape($fixed_asset);
 	return db_query($sql,"items could not be retreived");
 }
 
 function item_in_foreign_codes($stock_id)
 {
 	$sqls=  array(
-	"SELECT COUNT(*) FROM "
-		.TB_PREF."stock_moves WHERE stock_id=".db_escape($stock_id) =>
+	"SELECT COUNT(*) FROM 
+		stock_moves WHERE stock_id=".db_escape($stock_id) =>
 	 __('Cannot delete this item because there are stock movements that refer to this item.'),
-	"SELECT COUNT(*) FROM "
-		.TB_PREF."bom WHERE component=".db_escape($stock_id)=>
+	"SELECT COUNT(*) FROM 
+		bom WHERE component=".db_escape($stock_id)=>
 	 __('Cannot delete this item record because there are bills of material that require this part as a component.'),
-	"SELECT COUNT(*) FROM "
-		.TB_PREF."sales_order_details WHERE stk_code=".db_escape($stock_id) =>
+	"SELECT COUNT(*) FROM 
+		sales_order_details WHERE stk_code=".db_escape($stock_id) =>
 	 __('Cannot delete this item because there are existing sales order items for it.'),
-	"SELECT COUNT(*) FROM "
-		.TB_PREF."purch_order_details WHERE item_code=".db_escape($stock_id)=>
+	"SELECT COUNT(*) FROM 
+		purch_order_details WHERE item_code=".db_escape($stock_id)=>
 	 __('Cannot delete this item because there are existing purchase order items for it.')
 	);
 
@@ -185,8 +185,8 @@ function get_items_search($description, $type)
 	global $SysPrefs;
 
 	$sql = "SELECT COUNT(i.item_code) AS kit, i.item_code, i.description, c.description category
-		FROM ".TB_PREF."stock_master s, ".TB_PREF."item_codes i
-			LEFT JOIN ".TB_PREF."stock_category c ON i.category_id=c.category_id
+		FROM stock_master s, item_codes i
+			LEFT JOIN stock_category c ON i.category_id=c.category_id
 		WHERE i.stock_id=s.stock_id
 			AND !i.inactive AND !s.inactive
 			AND (  i.item_code LIKE " . db_escape("%" . $description. "%") . " OR 
@@ -231,7 +231,7 @@ function get_items_search($description, $type)
 function get_item_code_id($stock_id)
 {
 	$sql = "SELECT ic.id
-		FROM ".TB_PREF."item_codes ic, ".TB_PREF."stock_master sm
+		FROM item_codes ic, stock_master sm
 		WHERE ic.item_code = ".db_escape($stock_id)." AND ic.item_code = ic.stock_id AND
     	ic.stock_id = sm.stock_id";
 

@@ -40,11 +40,11 @@ function getTransactions($from, $to)
 			grn_line.qty_recd,
 			grn_line.quantity_inv,
 			grn_line.id grn_item_id
-        FROM "
-        	.TB_PREF."stock_master item,"
-        	.TB_PREF."purch_order_details poline,"
-        	.TB_PREF."grn_batch grn,"
-        	.TB_PREF."grn_items grn_line
+        FROM 
+        	stock_master item,
+        	purch_order_details poline,
+        	grn_batch grn,
+        	grn_items grn_line
         WHERE item.stock_id=poline.item_code
         AND grn.purch_order_no=poline.order_no
 		AND grn.id = grn_line.grn_batch_id 
@@ -66,10 +66,10 @@ function getSuppInvDetails($grn_item_id)
 			inv_line.quantity inv_qty,
 			inv.rate,
 			IF (inv.tax_included = 1, inv_line.unit_price - inv_line.unit_tax, inv_line.unit_price) inv_price
-			FROM "
-				.TB_PREF."grn_items grn_line,"
-				.TB_PREF."supp_trans inv,"
-				.TB_PREF."supp_invoice_items inv_line
+			FROM 
+				grn_items grn_line,
+				supp_trans inv,
+				supp_invoice_items inv_line
 			WHERE grn_line.id = inv_line.grn_item_id
 			AND grn_line.po_detail_item = inv_line.po_detail_item_id
 			AND grn_line.item_code = inv_line.stock_id

@@ -4,7 +4,7 @@ use App\Trade\Marketplace\Query\Marketplace\MarketplaceQuery;
 
 function create_marketplace($name, $code, $provision_account, $created_by, $supplier_id = null)
 {
-    $sql = "INSERT INTO ".TB_PREF."marketplaces (name, code, provision_account, supplier_id, created_by, created_at)
+    $sql = "INSERT INTO marketplaces (name, code, provision_account, supplier_id, created_by, created_at)
         VALUES ("
         .db_escape($name).", "
         .db_escape($code).", "
@@ -20,7 +20,7 @@ function create_marketplace($name, $code, $provision_account, $created_by, $supp
 
 function update_marketplace($id, $name, $code, $provision_account, $updated_by, $inactive, $supplier_id = null)
 {
-    $sql = "UPDATE ".TB_PREF."marketplaces SET "
+    $sql = "UPDATE marketplaces SET "
         ." name = ".db_escape($name).", "
         ." code = ".db_escape($code).", "
         ." provision_account = ".db_escape($provision_account).", "
@@ -35,15 +35,15 @@ function update_marketplace($id, $name, $code, $provision_account, $updated_by, 
 
 function delete_marketplace($id)
 {
-    $sql = "DELETE FROM ".TB_PREF."marketplaces WHERE id=".db_escape($id);
+    $sql = "DELETE FROM marketplaces WHERE id=".db_escape($id);
     db_query($sql, "The market place could not be deleted");
 }
 
 function get_marketplaces($inactive = false)
 {
-    $sql = "SELECT m.*, a.account_name as provision_account_name, s.supp_name as supplier_name FROM ".TB_PREF."marketplaces m"
-        ." JOIN ".TB_PREF."chart_master a ON m.provision_account = a.account_code"
-        ." LEFT JOIN ".TB_PREF."suppliers s ON m.supplier_id = s.supplier_id";
+    $sql = "SELECT m.*, a.account_name as provision_account_name, s.supp_name as supplier_name FROM marketplaces m"
+        ." JOIN chart_master a ON m.provision_account = a.account_code"
+        ." LEFT JOIN suppliers s ON m.supplier_id = s.supplier_id";
     if (!$inactive) {
         $sql .= " WHERE m.inactive=0";
     }
@@ -64,7 +64,7 @@ function get_marketplace($id)
 
 function get_marketplace_by_code($code)
 {
-    $sql = "SELECT * FROM ".TB_PREF."marketplaces WHERE code=".db_escape($code);
+    $sql = "SELECT * FROM marketplaces WHERE code=".db_escape($code);
 
     $result = db_query($sql, "Could not get market place");
 
@@ -73,7 +73,7 @@ function get_marketplace_by_code($code)
 
 function get_marketplace_by_name($name)
 {
-    $sql = "SELECT * FROM ".TB_PREF."marketplaces WHERE name=".db_escape($name);
+    $sql = "SELECT * FROM marketplaces WHERE name=".db_escape($name);
 
     $result = db_query($sql, "Could not get market place");
 
@@ -88,7 +88,7 @@ function get_marketplace_name($id)
 
 function db_has_marketplaces()
 {
-    return check_empty_result("SELECT COUNT(*) FROM ".TB_PREF."marketplaces");
+    return check_empty_result("SELECT COUNT(*) FROM marketplaces");
 }
 
 function get_marketplaces_search($marketplace)
@@ -101,9 +101,9 @@ function get_marketplaces_search($marketplace)
 		$limit = 10;
 
 	$sql = "SELECT mp.id, mp.`name`, mp.code, mp.provision_account, cm.account_name as provision_account_name, s.supp_name as supplier_name
-        FROM ".TB_PREF."marketplaces mp
-        LEFT JOIN ".TB_PREF."chart_master cm ON cm.account_code = mp.provision_account
-        LEFT JOIN ".TB_PREF."suppliers s ON mp.supplier_id = s.supplier_id
+        FROM marketplaces mp
+        LEFT JOIN chart_master cm ON cm.account_code = mp.provision_account
+        LEFT JOIN suppliers s ON mp.supplier_id = s.supplier_id
 	    WHERE ( 
             mp.name LIKE " . db_escape("%" . $marketplace. "%") . " OR
             mp.code LIKE " . db_escape("%" . $marketplace. "%") . " OR

@@ -39,8 +39,8 @@ function get_receipt($type, $trans_no)
    				debtor.payment_terms,
    				debtor.tax_id AS tax_id,
    				debtor.address
-    			FROM ".TB_PREF."debtor_trans trans,"
-    				.TB_PREF."debtors_master debtor
+    			FROM debtor_trans trans,
+    				debtors_master debtor
 				WHERE trans.debtor_no = debtor.debtor_no
 				AND trans.type = ".db_escape($type)."
 				AND trans.trans_no = ".db_escape($trans_no);
