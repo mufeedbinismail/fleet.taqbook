@@ -10,6 +10,7 @@
     "devDependencies": {
         "@alpinejs/focus": "^3.14.9",
         "@alpinejs/ui": "^3.15.12",
+        "@floating-ui/dom": "^1.6.13",
         "alpinejs": "^3.14.9",
         "autoprefixer": "^10.4.21",
         "axios": "^1.6.4",
