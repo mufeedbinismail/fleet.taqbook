@@ -1,0 +1,63 @@
+@layer components {
+    .x-dropdown-trigger {
+        @apply inline-flex items-center gap-2 bg-transparent border-0 cursor-pointer;
+    }
+
+    .x-dropdown-panel {
+        @apply absolute min-w-[200px] py-1 rounded border border-solid shadow-lg z-[200];
+        background-color: theme('colors.main-bg');
+        border-color: theme('colors.soft-border');
+        color: theme('colors.primary-txt');
+    }
+
+    .x-dropdown-item {
+        @apply flex items-center gap-2 px-4 py-2 transition-colors;
+
+        &:hover {
+            background-color: theme('colors.label-bg');
+        }
+    }
+
+    .x-dropdown-header {
+        @apply flex items-center gap-2 px-4 py-3 mb-1 border-0 border-b border-solid;
+        border-color: theme('colors.soft-border');
+
+        .icon {
+            font-size: 2.5rem;
+        }
+    }
+
+    .x-dropdown-header-name {
+        @apply font-semibold truncate;
+    }
+
+    /* Which way the menu opens is read on the button before it's clicked, not on the panel after —
+       so the indicator lives here, not as a tail on the panel. A border-triangle sized in em so it
+       scales with the trigger's own font, and coloured via currentColor so it always matches the
+       trigger's text without a separate rule to keep in step. data-side names the side the panel
+       actually landed on (flip can change it), and the caret points that way. */
+    .x-dropdown-caret {
+        @apply inline-block w-0 h-0 ml-1;
+        border: 0.3em solid transparent;
+    }
+
+    .x-dropdown-caret[data-side="bottom"] {
+        border-bottom-width: 0;
+        border-top-color: currentColor;
+    }
+
+    .x-dropdown-caret[data-side="top"] {
+        border-top-width: 0;
+        border-bottom-color: currentColor;
+    }
+
+    .x-dropdown-caret[data-side="right"] {
+        border-right-width: 0;
+        border-left-color: currentColor;
+    }
+
+    .x-dropdown-caret[data-side="left"] {
+        border-left-width: 0;
+        border-right-color: currentColor;
+    }
+}
