@@ -1,0 +1,8 @@
+/* Tailwind v3 doesn't expose theme values as CSS custom properties on its own
+   (unlike v4's @theme). A few components read breakpoints directly via var(),
+   so polyfill the ones actually referenced. Values are pulled from
+   tailwind.config.js via theme() rather than duplicated here. */
+:root {
+    --breakpoint-md: theme('screens.md');
+    --breakpoint-3xl: theme('screens.3xl');
+}
