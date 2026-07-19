@@ -544,7 +544,7 @@ function get_sql_for_sales_deliveries_view(
 			sorder.customer_ref,
 			trans.tran_date,
 			trans.due_date,
-			total AS DeliveryValue,
+			sorder.total AS DeliveryValue,
 			debtor.curr_code,
 			Sum(line.quantity-line.qty_done) AND sorder.prep_amount=0 AS Outstanding,
 			Sum(line.qty_done) AS Done,
