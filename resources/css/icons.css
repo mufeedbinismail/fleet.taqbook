@@ -1,9 +1,9 @@
 /* Font is rebuilt from resources/icons/*.svg via `npm run icons` (fantasticon). */
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.woff2?v2') format('woff2'),
-    url('fonts/icomoon.woff?v2') format('woff'),
-    url('fonts/icomoon.ttf?v2') format('truetype');
+  src:  url('fonts/icomoon.woff2?v5') format('woff2'),
+    url('fonts/icomoon.woff?v5') format('woff'),
+    url('fonts/icomoon.ttf?v5') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -211,4 +211,7 @@
 }
 .icon-bars:before {
   content: "\f0c9";
+}
+.icon-circle-user:before {
+  content: "\f2bd";
 }
