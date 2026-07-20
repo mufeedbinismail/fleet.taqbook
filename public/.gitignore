@@ -7,14 +7,6 @@
 !/themes/canvas/**/*
 !/themes/dropdown/
 !/themes/dropdown/**/*
-/company/**/attachments
-/company/**/backup/*.sql
-/company/**/backup/*.sql.gz
-/company/**/pdf_files/*.pdf
-/company/**/js_cache/*.js
-/company/**/js_cache/**/*.js
-/company/**/reporting
-/company/**/images
 /lang/*
 !/lang/en_US
 !/lang/new_language_template
