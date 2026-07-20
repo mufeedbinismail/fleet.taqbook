@@ -5,24 +5,10 @@ return [
     
     // Database globals
     'db'                   => [],
-    'db_connections'       => [
-        0 => [
-            'name' => config('app.name'),
-            'host' => config('database.connections.mysql.host'),
-            'port' => config('database.connections.mysql.port'),
-            'dbname' => config('database.connections.mysql.database'),
-            'collation' => config('database.connections.mysql.collation'),
-            'tbpref' => '',
-            'dbuser' => config('database.connections.mysql.username'),
-            'dbpassword' => config('database.connections.mysql.password'),
-        ],
-    ],
     'db_version'           => null,
     'db_last_inserted_id'  => 0,
-    
+
     // Company and preferences
-    'def_coy'              => 0,
-    'tb_pref_counter'      => 0,
     'SysPrefs'             => null,
     
     // Page and navigation globals

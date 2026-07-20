@@ -42,8 +42,7 @@ require_once __DIR__ . "/../../includes/ui/attachment.inc";
 require_once __DIR__ . "/../../inventory/includes/inventory_db.inc";
 require_once __DIR__ . "/../../fixed_assets/includes/fixed_assets_db.inc";
 
-$user_comp = user_company();
-$new_item = get_post('stock_id')=='' || get_post('cancel') || get_post('clone'); 
+$new_item = get_post('stock_id')=='' || get_post('cancel') || get_post('clone');
 //------------------------------------------------------------------------------------
 function set_edit($stock_id)
 {

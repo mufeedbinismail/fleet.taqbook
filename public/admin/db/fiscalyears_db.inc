@@ -213,9 +213,7 @@ function delete_attachments_and_comments($type_no, $trans_no)
 //---------------------------------------------------------------------------------------------
 function delete_this_fiscalyear($selected_id)
 {
-	global $db_connections;
-	
-	db_backup($db_connections[user_company()], 'Security backup before Fiscal Year Removal');
+	db_backup('Security backup before Fiscal Year Removal');
 	begin_transaction();
 	$ref = __("Open Balance");
 	$myrow = get_fiscalyear($selected_id);

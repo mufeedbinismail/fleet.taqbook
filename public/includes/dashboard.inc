@@ -1446,14 +1446,7 @@ function get_num_users()
 
 function get_database_size()
 {
-	global $db_connections;
-	$c = user_company();
-	$dbase = $db_connections[$c]['dbname'];
-	$tb_pref = $db_connections[$c]['tbpref'];
-	$sql = "SHOW TABLE STATUS FROM $dbase";
-	if (!empty($tb_pref))
-		$sql .= " LIKE '{$tb_pref}%'";
-	$result = db_query($sql, "could not get database size");
+	$result = db_query("SHOW TABLE STATUS", "could not get database size");
     $size = 0;
     while ($row = db_fetch($result)) {
 		$size += $row['Data_length'];

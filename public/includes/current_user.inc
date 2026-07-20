@@ -31,14 +31,11 @@ class current_user
 	var $login_attempt=0;
 	
 	var $prefs;
-	var $cur_con; // current db connection (can be different from $company for superuser)
 
 	function __construct()
 	{
-		global $def_coy;
-		
 		$this->loginname = $this->username = $this->name = "";
-		$this->company = isset($def_coy)? $def_coy : 0;
+		$this->company = 0;
 		$this->logged = false;
 
 		$this->prefs = new user_prefs();
@@ -49,19 +46,13 @@ class current_user
 		return $this->logged;
 	}
 
-	function set_company($company)
-	{
-		$this->company = (int)$company;
-	}
-
-	function login($company, $loginname, $password)
+	function login($loginname, $password)
 	{
 		global $security_areas, $SysPrefs;
 
-		$this->set_company($company);
 	    $this->logged = false;
 
-		set_global_connection($company);
+		set_global_connection();
 		db_set_encoding(language()->getEncoding());
 
 		$Auth_Result = get_user_auth($loginname, md5($password));
@@ -109,10 +100,9 @@ class current_user
 		return $this->logged;
 	}
 
-	function reset_password($company, $email) {
+	function reset_password($email) {
 		global $SysPrefs;
 
-		$this->set_company($company);
 		$this->logged = false;
 
 		set_global_connection();
@@ -155,9 +145,7 @@ class current_user
 
 		$code = $security_areas[$sec_area][0];
 
-		// only first registered company has site admin privileges
-		return $code && in_array($code, $this->role_set)
-			&& ($this->company == 0 || (($code&~0xff) != SS_SADMIN));
+		return $code && in_array($code, $this->role_set);
 	}
 
 	function can_access_page($page_level)
@@ -231,11 +219,6 @@ class current_user
 		{
 			return true;
 		}
-	}
-
-	function set_db_connection($id = -1)
-	{
-		return set_global_connection($id);
 	}
 
 	function update_prefs($prefs)
@@ -380,9 +363,7 @@ function user_numeric($input) {
 
 function user_company()
 {
-	global $def_coy;
-	
-	return isset($_SESSION["wa_current_user"]) ? $_SESSION["wa_current_user"]->company : $def_coy;
+	return isset($_SESSION["wa_current_user"]) ? $_SESSION["wa_current_user"]->company : 0;
 }
 
 function user_pos()
@@ -589,7 +570,7 @@ function user_js_cache($id=null)
 
 	if (!$id)
 		$id = 0; // before login
-	return PATH_TO_ROOT.'/company/'.user_company().'/js_cache/'.$id;
+	return PATH_TO_ROOT.'/company/js_cache/'.$id;
 }
 
 //--------------------------------------------------------------------------
@@ -704,23 +685,10 @@ function flush_dir($path, $wipe = false)
 	Returns current path to company private folder.
 	(Current path can change after chdir).
 */
-function company_path($comp=null)
+function company_path()
 {
 	global $SysPrefs;
 
-	$comp_path = $SysPrefs->comp_path;
-
-
-	if (!isset($comp))
-		$comp = user_company();
-
-	// if path is relative, set current path_to_root
-	return ($comp_path[0]=='.' ? PATH_TO_ROOT.'/'.basename($comp_path) : $comp_path)
-			. '/'.$comp;
-}
-
-function is_admin_company()
-{
-	return $this->company == 0;
+	return $SysPrefs->comp_path;
 }
 

@@ -48,7 +48,7 @@ function help_url($context=null)
 function page_header($title, $no_menu=false, $is_index=false, $onload="", $js="", $css='')
 {
 	// titles and screen header
-	global $SysPrefs, $db_connections, $js_static, $js_userlib, $css_files;
+	global $SysPrefs, $js_static, $js_userlib, $css_files;
 
 	if (in_ajax() || isset($_POST['REP_ID']))
 		return; // just for speed up

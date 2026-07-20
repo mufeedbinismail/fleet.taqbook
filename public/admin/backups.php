@@ -52,11 +52,11 @@ function check_paths()
 	}
 }
 
-function generate_backup($conn, $ext='no', $comm='')
+function generate_backup($ext='no', $comm='')
 {
 	global $SysPrefs;
 
-	$filename = db_backup($conn, $ext, $comm, $SysPrefs->backup_dir());
+	$filename = db_backup($ext, $comm, $SysPrefs->backup_dir());
 	if ($filename)
 		display_notification(__("Backup successfully generated."). ' '
 			. __("Filename") . ": " . $filename);
@@ -121,12 +121,11 @@ function download_file($filename)
     );
 }
 
-$conn = $db_connections[user_company()];
 $backup_name = clean_file_name(get_post('backups'));
 $backup_path = $SysPrefs->backup_dir() . $backup_name;
 
 if (get_post('creat')) {
-	generate_backup($conn, get_post('comp'), get_post('comments'));
+	generate_backup(get_post('comp'), get_post('comments'));
 	$Ajax->activate('backups');
 	$SysPrefs->refresh(); // re-read system setup
 };

@@ -38,8 +38,6 @@ if (check_faillog())
 }
 
 flush_dir(user_js_cache());
-if (!isset($def_coy))
-	$def_coy = 0;
 
 $login_timeout = $_SESSION["wa_current_user"]->last_act;
 
@@ -53,29 +51,18 @@ if (!$allow) {
 
 $password = $SysPrefs->allow_demo_mode ? "password":"";
 
-$coy = user_company();
-if (!isset($coy))
-	$coy = $def_coy;
-
-if (isset($_SESSION['wa_current_user'])) 
+if (isset($_SESSION['wa_current_user']))
 	$date = Today() . " | " . Now();
 else	
 	$date = date("m/d/Y") . " | " . date("h.i am");
 
-// Ensure db_connections is always set
-if (!isset($db_connections)) {
-	$db_connections = [];
-}
-
 echo view('auth.login', compact(
 	'login_timeout',
-	'username', 
+	'username',
 	'allow',
 	'demo_text',
 	'original_demo_text',
 	'password',
-	'coy',
-	'db_connections',
 	'date',
 	'SysPrefs',
 	'blocked'

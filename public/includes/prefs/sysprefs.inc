@@ -267,15 +267,9 @@ class sys_prefs extends stdClass
 		return $this->prefs['suppress_tax_rates'];
 	}
 
-	function backup_dir($comp=null)
+	function backup_dir()
 	{
-		if (!isset($comp))
-			$comp = user_company();
-
-		if (isset($this->backup_path))
-			return sprintf($this->backup_path, $comp);
-		else
-			return $this->comp_path.'/'.$comp."/backup/";
+		return $this->comp_path.'/backup/';
 	}
 }
 

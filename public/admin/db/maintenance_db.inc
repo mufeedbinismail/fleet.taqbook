@@ -10,6 +10,8 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
+use Illuminate\Support\Facades\DB;
+
 /**
  * @return Returns the array sorted as required
  * @param $aryData Array containing data to sort
@@ -58,69 +60,15 @@ function array_natsort($aryData, $strIndex, $strSortBy, $strSortType=false)
    return $aryResult;
 }
 
-function write_config_db($new = false)
+function db_backup($ext='no', $comm='', $path='')
 {
-	global $def_coy, $db_connections, $tb_pref_counter;
+	$filename = DB::connection()->getDatabaseName() . "_" . date("Ymd_Hi") . ".sql";
 
-	if ($new)
-		$tb_pref_counter++;
-	$msg = "<?php\n\n";
-	$msg .= "/*Connection Information for the database\n";
-	$msg .= "\$def_coy - the default company that is pre-selected on login\n\n";
-	$msg .= "'host' - the computer ip address or name where the database is. The default is 'localhost' assuming that the web server is also the sql server.\n\n";
-	$msg .= "'port' - the computer port where the database is. The default is '3306'. Set empty for default.\n\n";
-	$msg .= "'dbuser' - the user name under which the company database should be accessed.\n";
-	$msg .= "  NB it is not secure to use root as the dbuser with no password - a user with appropriate privileges must be set up.\n\n";
-	$msg .= "'dbpassword' - the password required for the dbuser to authorise the above database user.\n\n";
-	$msg .= "'dbname' - the name of the database as defined in the RDMS being used. Typically RDMS allow many databases to be maintained under the same server.\n";
-	$msg .= "'collation' - the character set used for the database.\n";
-	$msg .= "'tbpref' - prefix on table names, or '' if not used. Always use non-empty prefixes if multiply company use the same database.\n";
-	$msg .= "*/\n\n\n";
-
-	$msg .= "\$def_coy = " . $def_coy . ";\n\n";
-	$msg .= "\$tb_pref_counter = " . $tb_pref_counter . ";\n\n";
-	$msg .= "\$db_connections = " .var_export($db_connections, true);
-	$msg .= ";\n";
-
-	$filename = PATH_TO_ROOT . "/config_db.php";
-	// Check if the file exists and is writable first.
-	if ((!file_exists($filename) && is_writable(PATH_TO_ROOT)) || is_writable($filename))
-	{
-		if (!$zp = fopen($filename, 'w'))
-		{
-			return -1;
-		}
-		else
-		{
-			if (!fwrite($zp, $msg))
-			{
-				fclose($zp);
-				return -2;
-			}
-			// Close file
-			fclose($zp);
-			cache_invalidate($filename);
-		}
-	}
-	else
-	{
-		return -3;
-	}
-	return 0;
-}
-
-function db_backup($conn, $ext='no', $comm='', $path='')
-{
-	if ($conn['tbpref'] != "")
-		$filename = $conn['dbname'] . "_" . $conn['tbpref'] . date("Ymd_Hi") . ".sql";
-	else
-		$filename = $conn['dbname'] . "_" . date("Ymd_Hi") . ".sql";
-
-	return db_export($conn, $path . clean_file_name($filename), $ext, $comm);
+	return db_export($path . clean_file_name($filename), $ext, $comm);
 }
 // Generates a dump of $db database
 //
-function db_export($conn, $filename, $zip='no', $comment='')
+function db_export($filename, $zip='no', $comment='')
 {
 
 	global $SysPrefs, $version;
@@ -138,13 +86,14 @@ function db_export($conn, $filename, $zip='no', $comment='')
     	$backupfile = $filename . ".zip";
     else
     	$backupfile = $filename;
-    $company = $conn['name']; // get_company_pref('coy_name');
+    $company = get_company_pref('coy_name');
 
 	if (file_exists($backupfile))	// prevent appends
 		unlink($backupfile);
 
     //create comment
-    $out="# MySQL dump of database '".$conn["dbname"]."' on host '".$conn["host"]."'\n";
+    $connection = DB::connection();
+    $out="# MySQL dump of database '".$connection->getDatabaseName()."' on host '".$connection->getConfig('host')."'\n";
     $out.="# Backup Date and Time: ".date("Y-m-d H:i")."\n";
     $out.="# Built by " . $SysPrefs->app_title . " " . $version ."\n";
     $out.="# ".$SysPrefs->power_url."\n";
@@ -172,11 +121,8 @@ function db_export($conn, $filename, $zip='no', $comment='')
     // get auto_increment values and names of all tables
     $res = db_query("show table status");
     $all_tables = array();
-    while($row = db_fetch($res))
-    {
-		if (($conn["tbpref"] == "" && !preg_match('/[0-9]+_/', $row['Name'])) ||
-			($conn["tbpref"] != "" && strpos($row['Name'], $conn["tbpref"]) === 0))
-    		$all_tables[] = $row;
+    while($row = db_fetch($res)) {
+    	$all_tables[] = $row;
     }
         // get table structures
 	foreach ($all_tables as $table)

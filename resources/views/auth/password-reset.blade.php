@@ -47,8 +47,6 @@
                         </div>
                     </div>
 
-                    <input type="hidden" name="company_login_name" value="{{ $coy }}">
-
                     <!-- Info Message -->
                     <div class="mb-6">
                         <div class="bg-primary-accent bg-opacity-10 border-l-4 border-primary-accent p-4 rounded-r-lg">
@@ -116,16 +114,6 @@
 </div>
 
 <script>
-function defaultCompany() {
-    const companySelect = document.forms[0]?.company_login_name;
-    if (companySelect && companySelect.options) {
-        companySelect.options[{{ user_company() }}].selected = true;
-    }
-}
-
-// Set default company on load
-defaultCompany();
-
 // Focus on email field
 if (document.forms.length && document.forms[0].email_entry_field) {
     document.forms[0].email_entry_field.select();

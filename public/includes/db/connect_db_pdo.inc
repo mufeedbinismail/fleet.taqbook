@@ -19,16 +19,11 @@ if (!db_extension_exists()) {
 	throw new RuntimeException('The PDO MySQL extension is required.');
 }
 
-function set_global_connection($company=-1)
+function set_global_connection()
 {
 	global $db, $SysPrefs;
 
-	if ($company == -1) 
-		$company = user_company();
-
 	cancel_transaction(); // cancel all aborted transactions (if any)
-
-	$_SESSION["wa_current_user"]->cur_con = $company;
 
 	// Use Laravel's existing PDO connection
 	$db = \Illuminate\Support\Facades\DB::connection()->getPdo();

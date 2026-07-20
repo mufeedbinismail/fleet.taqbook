@@ -82,8 +82,6 @@
                             </div>
                         </div>
 
-                        <!-- Company Selection -->
-                        <input type="hidden" name="company_login_name" value="{{ $coy }}">
                     @endif
 
                     <!-- Status Message -->
@@ -101,7 +99,7 @@
                     <input type="hidden" id="ui_mode" name="ui_mode" value="{{ !fallback_mode() ? '1' : '0' }}">
                     
                     @foreach(session('timeout')['post'] as $p => $val)
-                        @if (!in_array($p, ['ui_mode', 'user_name_entry_field', 'password', 'SubmitUser', 'company_login_name']))
+                        @if (!in_array($p, ['ui_mode', 'user_name_entry_field', 'password', 'SubmitUser']))
                             @if (!is_array($val))
                                 <input type="hidden" name="{{ $p }}" value="{{ $val }}">
                             @else
@@ -148,16 +146,6 @@
 
 @if (!$login_timeout && !isset($blocked))
 <script>
-function defaultCompany() {
-    const companySelect = document.forms[0]?.company_login_name;
-    if (companySelect && companySelect.options) {
-        companySelect.options[{{ user_company() }}].selected = true;
-    }
-}
-
-// Set default company on load
-defaultCompany();
-
 // Focus on username field
 if (document.forms.length && document.forms[0].user_name_entry_field) {
     document.forms[0].user_name_entry_field.select();

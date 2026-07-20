@@ -13,29 +13,15 @@ require_once __DIR__ . "/../includes/ui.inc";
 
 add_js_file('login.js');
 
-if (!isset($def_coy))
-	$def_coy = 0;
-
 $login_timeout = $_SESSION["wa_current_user"]->last_act;
 
-$coy = user_company();
-if (!isset($coy))
-	$coy = $def_coy;
-
-if (isset($_SESSION['wa_current_user'])) 
+if (isset($_SESSION['wa_current_user']))
 	$date = Today() . " | " . Now();
-else	
+else
 	$date = date("m/d/Y") . " | " . date("h.i am");
-
-// Ensure db_connections is always set
-if (!isset($db_connections)) {
-	$db_connections = [];
-}
 
 echo view('auth.password-reset', compact(
 	'login_timeout',
-	'coy',
-	'db_connections',
 	'date',
 	'SysPrefs',
 	'version'

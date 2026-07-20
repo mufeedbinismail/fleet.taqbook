@@ -115,11 +115,6 @@ function print_price_listing()
     				    3 => array('text' => __('Sales Type'), 'from' => $stype, 'to' => ''),
     				    4 => array(  'text' => __('Show GP %'),'from' => $GP,'to' => ''));
 
-	if ($pictures)
-		$user_comp = user_company();
-	else
-		$user_comp = "";
-
     $rep = new FrontReport(__('Price Listing'), "PriceListing", user_pagesize(), 9, $orientation);
     if ($orientation == 'L')
     	recalculate_cols($cols);

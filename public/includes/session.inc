@@ -13,7 +13,7 @@ define('VARLIB_PATH', PATH_TO_ROOT.'/tmp');
 define('VARLOG_PATH', PATH_TO_ROOT.'/tmp');
 define('SECURE_ONLY', config('legacy.secure_only', true));
 
-global $SysPrefs, $Ajax, $db_connections,
+global $SysPrefs, $Ajax,
     $Validate, $Editors, $Pagehelp, $Refs,
     $lang, $db, $version, $cur_error_level;
 
@@ -326,18 +326,7 @@ if (!defined('FA_LOGOUT_PHP_FILE')){
         throw new \App\Legacy\Exception\FlowCompletedException;
       }
       else {
-        if (isset($_POST["company_login_nickname"]) && !isset($_POST["company_login_name"])) {
-          for ($i = 0; $i < count($db_connections); $i++) {
-            if ($db_connections[$i]["name"] == $_POST["company_login_nickname"]) {
-              $_POST["company_login_name"] = $i;
-              unset($_POST["company_login_nickname"]);
-              break 1; // cannot pass variables to break from PHP v5.4 onwards
-            }
-          }
-        }
-        $_succeed = isset($db_connections[$_POST["company_login_name"]]) &&
-          $_SESSION["wa_current_user"]->reset_password($_POST["company_login_name"],
-          $_POST["email_entry_field"]);
+        $_succeed = $_SESSION["wa_current_user"]->reset_password($_POST["email_entry_field"]);
         if ($_succeed)
         {
           password_reset_success();
@@ -369,17 +358,7 @@ if (!defined('FA_LOGOUT_PHP_FILE')){
 			require __DIR__ . "/../access/login.php";
 			throw new \App\Legacy\Exception\FlowTerminatedException;
 		} else {
-			if (isset($_POST["company_login_nickname"]) && !isset($_POST["company_login_name"])) {
-				for ($i = 0; $i < count($db_connections); $i++) {
-					if ($db_connections[$i]["name"] == $_POST["company_login_nickname"]) {
-						$_POST["company_login_name"] = $i;
-						unset($_POST["company_login_nickname"]);
-						break 1; // cannot pass variables to break from PHP v5.4 onwards
-					}
-				}
-			}
-			$succeed = isset($db_connections[$_POST["company_login_name"]]) &&
-				$_SESSION["wa_current_user"]->login($_POST["company_login_name"],
+			$succeed = $_SESSION["wa_current_user"]->login(
 				$_POST["user_name_entry_field"], $_POST["password"]);
 			// select full vs fallback ui mode on login
 			$_SESSION["wa_current_user"]->ui_mode = $_POST['ui_mode'];
