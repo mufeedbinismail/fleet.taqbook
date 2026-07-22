@@ -4,16 +4,21 @@ namespace App\Legacy\Session;
 
 use IteratorAggregate;
 use ArrayAccess;
-use Serializable;
 use Countable;
 use Illuminate\Session\SessionManager;
+use Illuminate\Support\Arr;
 
-class Store implements IteratorAggregate, ArrayAccess, Serializable, Countable
+class Store implements IteratorAggregate, ArrayAccess, Countable
 {
     /**
      * The Laravel session manager instance.
      */
-    protected SessionManager $manager;
+    protected ?SessionManager $manager;
+
+    /**
+     * The FrontAccounting session data.
+     */
+    protected array $items = [];
 
     /**
      * Create a new SessionArrayObject instance.
@@ -23,12 +28,40 @@ class Store implements IteratorAggregate, ArrayAccess, Serializable, Countable
         $this->manager = $manager;
     }
 
+    public function get($key, $default = null)
+    {
+        return Arr::get($this->items, $key, $default);
+    }
+
+    public function put($key, $value = null): void
+    {
+        if (is_null($key)) {
+            throw new \InvalidArgumentException("Session key cannot be null");
+        }
+
+        $keys = is_array($key) ? $key : [$key => $value];
+
+        foreach ($keys as $key => $value) {
+            Arr::set($this->items, $key, $value);
+        }
+    }
+
+    public function has($key): bool
+    {
+        return Arr::has($this->items, $key);
+    }
+
+    public function forget($keys): void
+    {
+        Arr::forget($this->items, $keys);
+    }
+
     /**
      * Get a value from the session.
      */
     public function offsetGet(mixed $offset): mixed
     {
-        return $this->manager()->driver()->get($offset);
+        return $this->get($offset);
     }
 
     /**
@@ -36,7 +69,7 @@ class Store implements IteratorAggregate, ArrayAccess, Serializable, Countable
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        $this->manager()->driver()->put($offset, $value);
+        $this->put($offset, $value);
     }
 
     /**
@@ -44,7 +77,7 @@ class Store implements IteratorAggregate, ArrayAccess, Serializable, Countable
      */
     public function offsetExists(mixed $offset): bool
     {
-        return $this->manager()->driver()->has($offset);
+        return $this->has($offset);
     }
 
     /**
@@ -52,7 +85,7 @@ class Store implements IteratorAggregate, ArrayAccess, Serializable, Countable
      */
     public function offsetUnset(mixed $offset): void
     {
-        $this->manager()->driver()->forget($offset);
+        $this->forget($offset);
     }
 
     /**
@@ -60,7 +93,7 @@ class Store implements IteratorAggregate, ArrayAccess, Serializable, Countable
      */
     public function getIterator(): \ArrayIterator
     {
-        return new \ArrayIterator($this->manager()->driver()->all());
+        return new \ArrayIterator($this->items);
     }
 
     /**
@@ -68,42 +101,52 @@ class Store implements IteratorAggregate, ArrayAccess, Serializable, Countable
      */
     public function count(): int
     {
-        return count($this->manager()->driver()->all());
+        return count($this->items);
     }
 
     /**
      * Unserialize session data.
      */
-    public function unserialize(string $data): void {
-        $this->manager()->driver()->setData(unserialize($data));
+    public function load(array $data): void {
+        $this->items = $data;
     }
 
     /**
      * Serialize session data.
      */
-    public function serialize(): string {
-        return serialize($this->manager()->driver()->all());
+    public function all(): array {
+        return $this->items;
     }
 
     /**
      * Push a value onto a session array's beginning.
      */
-    public function unshift($key, $value): void
+    public function prepend($key, $value): void
     {
-        $array = $this->manager()->driver()->get($key, []);
+        $array = $this->get($key, []);
         array_unshift($array, $value);
-        $this->manager()->driver()->put($key, $array);
+        $this->put($key, $array);
     }
 
     /**
      * Pop a value off a session array's beginning.
      */
-    public function shift($key): mixed
+    public function pop($key): mixed
     {
-        $array = $this->manager()->driver()->get($key, []);
+        $array = $this->get($key, []);
         $value = array_shift($array);
-        $this->manager()->driver()->put($key, $array);
+        $this->put($key, $array);
+
         return $value;
+    }
+
+    /**
+     * Clear the FA session and invalidate the underlying Laravel session.
+     */
+    public function invalidate(): void
+    {
+        $this->items = [];
+        $this->manager()->invalidate();
     }
 
     /**
@@ -127,7 +170,7 @@ class Store implements IteratorAggregate, ArrayAccess, Serializable, Countable
      */
     public function __get($key)
     {
-        return $this->manager()->driver()->get($key);
+        return $this->get($key);
     }
 
     /**
@@ -135,6 +178,6 @@ class Store implements IteratorAggregate, ArrayAccess, Serializable, Countable
      */
     public function __set($key, $value)
     {
-        $this->manager()->driver()->put($key, $value);
+        $this->put($key, $value);
     }
 }
