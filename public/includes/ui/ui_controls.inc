@@ -568,7 +568,7 @@ function context_call($call, $ctx='')
 	} else 
 		$context = isset($_SESSION[$ctx]) ? $_SESSION[$ctx] : null;
 
-    session()->unshift('Context', [
+    session()->prepend('Context', [
         'name' => $ctx, 
 		'ctx' => $context,
 		'caller' => url()->current(),
@@ -584,7 +584,7 @@ function context_restore()
 {
 	if ( count($_SESSION['Context'])) {
 		if (url()->current() == $_SESSION['Context'][0]['caller']) {
-			$ctx = session()->shift('Context');
+			$ctx = session()->pop('Context');
 			if ($ctx) {
 				if (is_array($ctx['ctx'])) {
 					foreach($ctx['ctx'] as $name => $val) 
