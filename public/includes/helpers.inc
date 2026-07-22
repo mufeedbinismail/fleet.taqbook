@@ -29,7 +29,9 @@ function url($path = null, $parameters = [], $secure = null)
 
 function url_from_path($path)
 {
-    if (($resolved_path = realpath($path)) !== false) {
+    if (strpos($path, PATH_TO_ROOT) === 0) {
+        $path = substr($path, strlen(PATH_TO_ROOT));
+    } elseif (($resolved_path = realpath($path)) !== false) {
         $root_path = realpath(PATH_TO_ROOT);
         if (strpos($resolved_path, $root_path) === 0) {
             $path = substr($resolved_path, strlen($root_path));
