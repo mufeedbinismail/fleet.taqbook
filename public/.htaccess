@@ -34,7 +34,12 @@ DirectoryIndex entry.php
     RewriteRule ^ entry.php [L,QSA,E=IS_LEGACY_ROUTE:true]
 
     # Redirect PHP files to front controller
+    # Exclude the front controller itself: on a per-directory rewrite,
+    # Apache re-runs this .htaccess against the rewritten path (entry.php),
+    # which would otherwise re-match \.php$ and wrongly flag clean Laravel
+    # routes as legacy.
     RewriteCond %{REQUEST_FILENAME} \.php$
+    RewriteCond %{REQUEST_FILENAME} !/entry\.php$
     RewriteRule ^ entry.php [L,QSA,E=IS_LEGACY_ROUTE:true]
 
     # Send Requests To Front Controller...

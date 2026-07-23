@@ -12,8 +12,17 @@ require __DIR__ . '/../helpers.php';
 | system in apache will have the IS_LEGACY_ROUTE environment variable set
 | to true from the .htaccess file (i.e. the RewriteRule). such routes are
 | considered as features from FrontAccounting.
+|
+| The .htaccess sets IS_LEGACY_ROUTE on the *original* request (a legacy
+| .php file or a real directory), which is then internally rewritten to
+| entry.php. Apache renames env vars set on a redirecting pass with a
+| REDIRECT_ prefix, so by the time this file runs the value lives in
+| REDIRECT_IS_LEGACY_ROUTE. We check both so the flag survives the rewrite.
 */
-define('IS_LEGACY_ROUTE', getenv('IS_LEGACY_ROUTE') === 'true');
+define('IS_LEGACY_ROUTE',
+    getenv('IS_LEGACY_ROUTE') === 'true' ||
+    getenv('REDIRECT_IS_LEGACY_ROUTE') === 'true'
+);
 
 if (IS_LEGACY_ROUTE) {
     require __DIR__.'/frontaccounting.php';
