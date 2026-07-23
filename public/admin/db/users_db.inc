@@ -127,10 +127,15 @@ function delete_user($id)
 function get_user_auth($user_id, $password)
 {
 
-	$sql = "SELECT * FROM users WHERE user_id = ".db_escape($user_id)." AND"
-		." password=".db_escape($password);
+	$sql = "SELECT password FROM users WHERE user_id = ".db_escape($user_id);
 
-	return db_num_rows(db_query($sql, "could not get validate user login for $user_id")) != 0;
+	$result = db_query($sql, "could not get validate user login for $user_id");
+	$row = db_fetch($result);
+
+	if ($row === false)
+		return false;
+
+	return app('hash')->check($password, $row['password']);
 }
 
 //-----------------------------------------------------------------------------------------------

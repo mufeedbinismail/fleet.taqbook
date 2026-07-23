@@ -55,7 +55,7 @@ class current_user
 		set_global_connection();
 		db_set_encoding(language()->getEncoding());
 
-		$Auth_Result = get_user_auth($loginname, md5($password));
+		$Auth_Result = get_user_auth($loginname, $password);
 
 		if ($SysPrefs->login_delay > 0)
 			write_login_filelog($loginname, $Auth_Result);
@@ -112,7 +112,7 @@ class current_user
 		if ($user != false) {
 
 			$password = generate_password();
-			$hash = md5($password);
+			$hash = app('hash')->make($password);
 
 			update_user_password($user['id'], $user['user_id'], $hash);
 			

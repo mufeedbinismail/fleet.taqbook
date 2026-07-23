@@ -24,7 +24,7 @@ function can_process()
 
 	$Auth_Result = get_user_auth(
         $_SESSION["wa_current_user"]->username,
-        md5($_POST['cur_password'])
+        $_POST['cur_password']
     );
 
 	if (!$Auth_Result)
@@ -66,9 +66,9 @@ if (isset($_POST['UPDATE_ITEM']) && check_csrf_token())
 		if ($SysPrefs->allow_demo_mode) {
 		    display_warning(__("Password cannot be changed in demo mode."));
 		} else {
-			update_user_password($_SESSION["wa_current_user"]->user, 
+			update_user_password($_SESSION["wa_current_user"]->user,
 				$_SESSION["wa_current_user"]->username,
-				md5($_POST['password']));
+				app('hash')->make($_POST['password']));
 		    display_notification(__("Your password has been updated."));
 		}
 		$Ajax->activate('_page_body');

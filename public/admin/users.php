@@ -66,13 +66,13 @@ if (($Mode=='ADD_ITEM' || $Mode=='UPDATE_ITEM') && check_csrf_token())
 					'print_profile', 'rep_popup' => 0, 'pos')));
 
     		if ($_POST['password'] != "")
-    			update_user_password($selected_id, $_POST['user_id'], md5($_POST['password']));
+    			update_user_password($selected_id, $_POST['user_id'], app('hash')->make($_POST['password']));
 
     		display_notification_centered(__("The selected user has been updated."));
     	} 
     	else 
     	{
-    		add_user($_POST['user_id'], $_POST['real_name'], md5($_POST['password']),
+    		add_user($_POST['user_id'], $_POST['real_name'], app('hash')->make($_POST['password']),
 				$_POST['phone'], $_POST['email'], $_POST['role_id'], $_POST['language'],
 				$_POST['print_profile'], check_value('rep_popup'), $_POST['pos']);
 			$id = db_insert_id();
