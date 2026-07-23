@@ -70,6 +70,8 @@
     "globe": 59850,
     "refresh": 59950,
     "bars": 61641,
-    "circle-user": 62141
+    "circle-user": 62141,
+    "clock": 59701,
+    "circle-check": 59702
   }
 }
