@@ -87,10 +87,11 @@ function page_header($title, $no_menu=false, $is_index=false, $onload="", $js=""
 
 
     echo view('layout.partials.header', [
-        'title'     => $title,
-        'onload'    => $onload,
-        'js_files'  => array_merge($js_static, $js_userlib),
-        'css_files' => array_merge(isset($css_files) ? $css_files : [], $css ? [$css] : []),
+        'is_legacy_page' => true,
+        'title'          => $title,
+        'onload'         => $onload,
+        'js_files'       => array_merge($js_static, $js_userlib),
+        'css_files'      => array_merge(isset($css_files) ? $css_files : [], $css ? [$css] : []),
     ])->render();
 
     require_once __DIR__ . "/../../themes/$theme/renderer.php";

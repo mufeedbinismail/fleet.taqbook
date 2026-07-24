@@ -32,6 +32,8 @@ function page_footer($no_menu=false, $is_index=false)
 		div_end();
 	}
     
-    echo view('layout.partials.footer')->render();
+    echo view('layout.partials.footer', [
+        'is_legacy_page' => true,
+    ])->render();
 }
 

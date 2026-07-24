@@ -3,9 +3,13 @@
 import icons from './icons';
 
 export default function initUI() {
+    if (document.querySelector('meta[name="is-legacy-page"]')?.content !== '1') {
+        return;
+    }
+
     /**
      * Refreshes the UI
-     * 
+     *
      * This function adds the necessary styling classes to elements,
      * Primarily, it is used to support the :has CSS selector
      */
