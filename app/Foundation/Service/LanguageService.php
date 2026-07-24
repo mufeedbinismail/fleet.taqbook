@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Legacy\Service;
+namespace App\Foundation\Service;
 
 /**
- * Legacy language service for FrontAccounting compatibility
- * Provides language object interface while using Laravel's translation system
+ * Bridges the current locale to a small object interface (locale, direction,
+ * encoding) consumed by the base layout. Backed entirely by Laravel's locale
+ * system — no FrontAccounting state.
  */
 class LanguageService
 {

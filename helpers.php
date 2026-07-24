@@ -73,6 +73,17 @@ function user_settings($key = null, $default = Arr::NOT_SET)
 }
 
 /**
+ * Get the language service bound to the current locale.
+ *
+ * @return \App\Foundation\Service\LanguageService
+ */
+function language()
+{
+    static $language;
+    return $language ??= new \App\Foundation\Service\LanguageService;
+}
+
+/**
  * Get the labels for an enum.
  *
  * @param class-string<UnitEnum> $enum The enum to get the labels for.
