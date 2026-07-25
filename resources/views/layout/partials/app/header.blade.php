@@ -30,9 +30,10 @@ $toolbox = [
         'label' => __('Change password')
     ],
     'logout' => [
-        'link' => url("/access/logout.php"),
+        'link' => route('logout'),
         'icon' => 'icon-logout',
-        'label' => __('Logout')
+        'label' => __('Logout'),
+        'method' => 'post'
     ]
 ];
 
@@ -122,10 +123,20 @@ $indicator = url("themes/".user_theme()."/images/ajax-loader.gif");
                         </li>
                         @foreach($toolbox as $key => $item)
                             <li>
-                                <a href="{{ $item['link'] }}" class="x-dropdown-item">
-                                    <span class="icon {{ $item['icon'] }}"></span>
-                                    <span>{{ $item['label'] }}</span>
-                                </a>
+                                @if (($item['method'] ?? 'get') === 'post')
+                                    <form method="POST" action="{{ $item['link'] }}">
+                                        @csrf
+                                        <button type="submit" class="x-dropdown-item w-full text-left bg-transparent border-0 cursor-pointer">
+                                            <span class="icon {{ $item['icon'] }}"></span>
+                                            <span>{{ $item['label'] }}</span>
+                                        </button>
+                                    </form>
+                                @else
+                                    <a href="{{ $item['link'] }}" class="x-dropdown-item">
+                                        <span class="icon {{ $item['icon'] }}"></span>
+                                        <span>{{ $item['label'] }}</span>
+                                    </a>
+                                @endif
                             </li>
                         @endforeach
                     </ul>
