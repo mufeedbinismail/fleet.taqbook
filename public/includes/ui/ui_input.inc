@@ -139,7 +139,7 @@ function submit($name, $value, $echo=true, $title=false, $atype=false, $icon=fal
 {
 	$aspect='';
 	if ($atype === null) {
-		$aspect = fallback_mode() ? " aspect='fallback'" : " style='display:none;'";
+		$aspect = " style='display:none;'";
 
 	} elseif (!is_bool($atype)) { // necessary: switch uses '=='
 

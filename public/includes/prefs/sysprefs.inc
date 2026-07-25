@@ -62,7 +62,6 @@ class sys_prefs extends stdClass
 	public int $use_costed_values;
 	public int $show_menu_category_icons;
 	public bool $allow_demo_mode;
-	public bool $allow_password_reset;
 	public int $pic_width;
 	public int $pic_height;
 	public int $max_image_size;
@@ -119,7 +118,6 @@ class sys_prefs extends stdClass
         $this->use_costed_values             = config('legacy.use_costed_values');
         $this->show_menu_category_icons      = config('legacy.show_menu_category_icons');
         $this->allow_demo_mode               = config('legacy.allow_demo_mode');
-        $this->allow_password_reset          = config('legacy.allow_password_reset');
         $this->pic_width                     = config('legacy.pic_width');
         $this->pic_height                    = config('legacy.pic_height');
         $this->max_image_size                = config('legacy.max_image_size');

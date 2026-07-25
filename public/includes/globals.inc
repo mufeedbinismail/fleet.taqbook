@@ -66,7 +66,6 @@ return [
     
     // System state
     'sql_queries'          => '',
-    'login_faillog'        => [],
     'cur_error_level'      => null,
     'SessionManager'       => null,
     'date_system'          => null,

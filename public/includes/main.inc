@@ -384,23 +384,6 @@ function clean_file_name($filename) {
     return preg_replace('/[^a-zA-Z0-9.\-_]/', '_', $filename);
 }
 
-/*
-	Simple random password generator.
-*/
-function generate_password()
-{
-	try {
-		$bytes = random_bytes(8);
-	} catch (\Throwable $e) {
-		$cstrong = false;
-		$bytes = openssl_random_pseudo_bytes(8, $cstrong);
-		if ($bytes === false) {
-			throw $e;
-		}
-	}
-
-	return base64_encode($bytes);
-}
 
 if (!function_exists('array_fill_keys')) // since 5.2
 {

@@ -28,13 +28,8 @@ class current_user
 	var $company; // user's company
 	var $pos;
 	var $access;
-	var $timeout;
-	var $last_act;
 	var $role_set = [];
-	var $logged;
-	var $ui_mode = 0;
-	var $login_attempt=0;
-	
+
 	var $prefs;
 
 	function __construct(?User $model = null)
@@ -48,7 +43,6 @@ class current_user
         if (! $this->model || ! $role) {
             $this->loginname = $this->username = $this->name = "";
             $this->company = 0;
-            $this->logged = false;
             $this->prefs = new user_prefs();
         } else {
             $areas = explode(';', (string) $role->areas);
@@ -68,98 +62,9 @@ class current_user
             $this->username = $model->user_id;
             $this->user = $model->id;
             $this->email = $model->email;
-            $this->logged = true;
             $this->prefs = new user_prefs($model->getAttributes());
         }
 	}
-
-	function logged_in()
-	{
-		return $this->logged;
-	}
-
-	function login($loginname, $password)
-	{
-		global $security_areas, $SysPrefs;
-
-	    $this->logged = false;
-
-		set_global_connection();
-		db_set_encoding(language()->getEncoding());
-
-		$Auth_Result = get_user_auth($loginname, $password);
-
-		if ($SysPrefs->login_delay > 0)
-			write_login_filelog($loginname, $Auth_Result);
-
-		if ($Auth_Result)
-		{
-			$myrow = get_user_by_login($loginname);
-			if ($myrow['language'] != language()->getLocale())
-			{	 // refresh language and user data
- 				language()->setLocale($myrow['language']);
-				db_set_encoding(language()->getEncoding());
-				$myrow = get_user_by_login($loginname);
-			}
-
-			if (! @$myrow["inactive"]) {
-				$this->role_set = array();
-        	    $this->access = $myrow["role_id"];
-				// store area codes available for current user role
-				$role = get_security_role($this->access);
-				if (!$role)
-					return false;
-				foreach ($role['areas'] as $code) {
-					if (in_array($code & ~0xff, $role['sections'])) {
-						$this->role_set[] = $code;
-					}
-				}
-        	    $this->name = $myrow["real_name"];
-        	    $this->pos = $myrow["pos"];
-        	    $this->loginname = $loginname;
-        	    $this->username = $this->loginname;
-        	    $this->prefs = new user_prefs($myrow);
-        	    $this->user = @$myrow["id"];
-                $this->email = @$myrow["email"];
-		    	update_user_visitdate($this->username);
-		    	$this->logged = true;
-		    	$this->login_attempt=0;
-				$this->last_act = time();
-				$this->timeout = session_timeout();
-				flush_dir(user_js_cache()); // refresh cache on login
-			}
-		}
-		return $this->logged;
-	}
-
-	function reset_password($email) {
-		global $SysPrefs;
-
-		$this->logged = false;
-
-		set_global_connection();
-
-		$user = get_user_by_email($email);
-
-		if ($user != false) {
-
-			$password = generate_password();
-			$hash = app('hash')->make($password);
-
-			update_user_password($user['id'], $user['user_id'], $hash);
-			
-			$sender = get_company_pref('email');
-			if (empty($sender))
-				$header = "";
-			else
-				$header = "From: $sender";
-
-			mail($email, __("New password for")." ".$SysPrefs->app_title, $password, $header);
-
-			return true;
-		}
-   		return false;
-    }
 
 	function check_user_access()
 	{
@@ -310,13 +215,6 @@ define('FLOAT_COMP_DELTA', 0.004);
 function floatcmp($a, $b)
 {
     return $a - $b > FLOAT_COMP_DELTA ? 1 : ($b - $a > FLOAT_COMP_DELTA ? -1 : 0);
-}
-
-//
-//	Current ui mode.
-//
-function fallback_mode() {
-    return $_SESSION["wa_current_user"]->ui_mode==0;
 }
 
 function price_format($number) {

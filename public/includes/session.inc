@@ -75,70 +75,6 @@ function password_reset_success()
 	throw new \App\Legacy\Exception\FlowCompletedException;
 }
 
-function check_faillog()
-{
-	global $SysPrefs, $login_faillog;
-
-	$user = $_SESSION["wa_current_user"]->user;
-
-	$_SESSION["wa_current_user"]->login_attempt++;
-	if (@$SysPrefs->login_delay && (@$login_faillog[$user][$_SERVER['REMOTE_ADDR']] >= @$SysPrefs->login_max_attempts) && (time() < $login_faillog[$user]['last'] + $SysPrefs->login_delay))
-		return true;
-
-	return false;
-}
-
-/*
-	Ensure file is re-read on next request if php caching is active
-*/
-function cache_invalidate($filename)
-{
-	if (function_exists('opcache_invalidate'))	// OpCode extension
-		opcache_invalidate($filename);
-}
-
-/*
-	Simple brute force attack detection is performed before connection to company database is open. Therefore access counters have to be stored in file.
-	Login attempts counter is created for every new user IP, which partialy prevent DOS attacks.
-*/
-function write_login_filelog($login, $result)
-{
-	global $login_faillog, $SysPrefs;
-
-	$user = $_SESSION["wa_current_user"]->user;
-
-	$ip = $_SERVER['REMOTE_ADDR'];
-
-	if (!isset($login_faillog[$user][$ip]) || $result) // init or reset on successfull login
-		$login_faillog[$user] = array($ip => 0, 'last' => '');
-
- 	if (!$result)
-	{
-		if ($login_faillog[$user][$ip] < @$SysPrefs->login_max_attempts) {
-
- 			$login_faillog[$user][$ip]++;
- 		} else {
- 			$login_faillog[$user][$ip] = 0; // comment out to restart counter only after successfull login.
-	 		error_log(sprintf(__("Brute force attack on account '%s' detected. Access for non-logged users temporarily blocked."	), $login));
-	 	}
- 		$login_faillog[$user]['last'] = time();
-	}
-
-	$msg = "<?php\n";
-	$msg .= "/*\n";
-	$msg .= "Login attempts info.\n";
-	$msg .= "*/\n";
-	$msg .= "\$GLOBALS['login_faillog'] = " .var_export($login_faillog, true). ";\n";
-
-	$filename = VARLIB_PATH."/faillog.php";
-
-	if ((!file_exists($filename) && is_writable(VARLIB_PATH)) || is_writable($filename))
-	{
-		file_put_contents($filename, $msg);
-		cache_invalidate($filename);
-	}
-}
-
 //----------------------------------------------------------------------------------------
 
 function check_page_security($page_security)
@@ -226,20 +162,8 @@ function html_cleanup(&$parms)
 }
 
 //============================================================================
-//
-//
-function login_timeout()
-{
-	// skip timeout on logout page
-	if ($_SESSION["wa_current_user"]->logged) {
-		$tout = $_SESSION["wa_current_user"]->timeout;
-		if ($tout && (time() > $_SESSION["wa_current_user"]->last_act + $tout))
-		{
-			$_SESSION["wa_current_user"]->logged = false;
-		}
-		$_SESSION["wa_current_user"]->last_act = time();
-	}
-}
+// The idle-timeout check formerly performed here by login_timeout() now lives
+// in App\Foundation\Auth\Http\Middleware\AuthenticateLegacy (the route guard).
 //============================================================================
 
 require_once __DIR__ . "/../includes/errors.inc";
@@ -279,9 +203,6 @@ if ($SysPrefs->error_logfile != '') {
 
 // this is to fix the "back-do-you-want-to-refresh" issue - thanx PHPFreaks
 header("Cache-control: private");
-
-if ($SysPrefs->login_delay > 0 && file_exists(VARLIB_PATH."/faillog.php"))
-	include_once(VARLIB_PATH."/faillog.php");
 
 // Page Initialisation
 require_once __DIR__ . "/../includes/access_levels.inc";

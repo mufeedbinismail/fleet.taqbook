@@ -275,7 +275,7 @@ $opts = array(		// default options
 	if ($select_submit != false || $search_button) {
 	// button class selects form reload/ajax selector update
 		$selector .= sprintf(SELECT_BUTTON, $disabled, user_theme(),
-			(fallback_mode() ? '' : 'display:none;'),
+			'display:none;',
 			 '_'.$name.'_update')."\n";
 	}
 // ------ make combo ----------
@@ -285,11 +285,11 @@ $opts = array(		// default options
 			$opts['size']."' maxlength='".$opts['max'].
 			"' value='$txt' class='$class' rel='$name' autocomplete='off' title='"
 			.$opts['box_hint']."'"
-			.(!fallback_mode() && !$by_id ? " style=display:none;":'')
+			.(!$by_id ? " style=display:none;":'')
 			.">\n";
 		if ($search_submit != false || $opts['editable']) {
 			$edit_entry .= sprintf(SEARCH_BUTTON, $disabled, user_theme(),
-				(fallback_mode() ? '' : 'display:none;'),
+				'display:none;',
 				$search_submit ? $search_submit : "_{$name}_button")."\n";
 		}
 	}
@@ -473,7 +473,7 @@ $opts = array(		// default options
 
 	if ($select_submit != false) { // if submit on change is used - add select button
 		$selector .= sprintf(SELECT_BUTTON, $disabled, user_theme(),
-			(fallback_mode() ? '' : 'display:none;'),
+			'display:none;',
 			 '_'.$name.'_update')."\n";
 	}
 	default_focus($name);
