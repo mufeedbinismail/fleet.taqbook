@@ -311,84 +311,16 @@ html_cleanup($_POST);
 html_cleanup($_REQUEST);
 html_cleanup($_SERVER);
 
-// logout.php is the only page we should have always 
-// accessable regardless of access level and current login status.
-if (!defined('FA_LOGOUT_PHP_FILE')){
+set_global_connection();
 
-	login_timeout();
+if (db_fixed())
+    db_set_encoding(language()->getEncoding());
 
-	if (!$_SESSION["wa_current_user"]->logged_in())
-	{
-      if (@$SysPrefs->allow_password_reset && !$SysPrefs->allow_demo_mode
-        && (isset($_GET['reset']) || isset($_POST['email_entry_field']))) {
-		  if (!isset($_POST["email_entry_field"])) {
-        require __DIR__ . "/../access/password_reset.php";
-        throw new \App\Legacy\Exception\FlowCompletedException;
-      }
-      else {
-        $_succeed = $_SESSION["wa_current_user"]->reset_password($_POST["email_entry_field"]);
-        if ($_succeed)
-        {
-          password_reset_success();
-        }
+$SysPrefs->refresh();
 
-        password_reset_fail();
-      }
-    }
-		// Show login screen
-		if (!isset($_POST["user_name_entry_field"]) or $_POST["user_name_entry_field"] == "")
-		{
-            $current_url = request()->fullUrl();
-            if ($current_url == '' || $current_url == url('/index.php') || $current_url == url('/')) {
-                $current_url = url('/index.php?application=orders');
-            }
-
-			// strip ajax marker from uri, to force synchronous page reload
-			$_SESSION['timeout'] = array(
-                'uri' => preg_replace(
-                    '/JsHttpRequest=(?:(\d+)-)?([^&]+)/s',
-					'',
-                    $current_url
-                ),
-				'post' => $_POST
-            );
-		if (in_ajax())
-			$Ajax->popup(url("/access/timeout.php"));
-		else
-			require __DIR__ . "/../access/login.php";
-			throw new \App\Legacy\Exception\FlowTerminatedException;
-		} else {
-			$succeed = $_SESSION["wa_current_user"]->login(
-				$_POST["user_name_entry_field"], $_POST["password"]);
-			// select full vs fallback ui mode on login
-			$_SESSION["wa_current_user"]->ui_mode = $_POST['ui_mode'];
-			if (!$succeed)
-			{
-			// Incorrect password
-				if (isset($_SESSION['timeout'])) {
-					require __DIR__ . "/../access/login.php";
-					throw new \App\Legacy\Exception\FlowTerminatedException;
-				} else
-					login_fail();
-			}
-			elseif(isset($_SESSION['timeout']) && !$_SESSION['timeout']['post'])
-			{
-                throw new \App\Legacy\Exception\FlowRedirectionException($_SESSION['timeout']['uri'], 307);
-			}
-		}
-	} else
-	{
-		set_global_connection();
-
-		if (db_fixed())
-			db_set_encoding(language()->getEncoding());
-
-		$SysPrefs->refresh();
-	}
-	if (!isset($_SESSION["App"])) {
-		$_SESSION["App"] = new front_accounting();
-		$_SESSION["App"]->init();
-	}
+if (!isset($_SESSION["App"])) {
+    $_SESSION["App"] = new front_accounting();
+    $_SESSION["App"]->init();
 }
 
 // POST vars cleanup needed for direct reuse.

@@ -10,11 +10,16 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
+use App\Foundation\Model\User;
+use Illuminate\Support\Facades\DB;
+
 require_once __DIR__ . "/../includes/prefs/userprefs.inc";
 //--------------------------------------------------------------------------
 
 class current_user
 {
+    protected ?User $model = null;
+
 	var $user = 0;
 	var $loginname;
 	var $username;
@@ -25,20 +30,47 @@ class current_user
 	var $access;
 	var $timeout;
 	var $last_act;
-	var $role_set = false;
+	var $role_set = [];
 	var $logged;
 	var $ui_mode = 0;
 	var $login_attempt=0;
 	
 	var $prefs;
 
-	function __construct()
+	function __construct(?User $model = null)
 	{
-		$this->loginname = $this->username = $this->name = "";
-		$this->company = 0;
-		$this->logged = false;
+        $this->model = $model;
 
-		$this->prefs = new user_prefs();
+        $role = $this->model
+            ? DB::table('security_roles')->where('id', $model->role_id)->first()
+            : null;
+        
+        if (! $this->model || ! $role) {
+            $this->loginname = $this->username = $this->name = "";
+            $this->company = 0;
+            $this->logged = false;
+            $this->prefs = new user_prefs();
+        } else {
+            $areas = explode(';', (string) $role->areas);
+            $sections = array_map('intval', explode(';', (string) $role->sections));
+
+            $this->role_set = array();
+            $this->access = $model->role_id;
+            foreach ($areas as $code) {
+                $code = (int) $code;
+                if ($code !== 0 && in_array($code & ~0xff, $sections, true))
+                    $this->role_set[] = $code;
+            }
+
+            $this->name = $model->real_name;
+            $this->pos = $model->pos;
+            $this->loginname = $model->user_id;
+            $this->username = $model->user_id;
+            $this->user = $model->id;
+            $this->email = $model->email;
+            $this->logged = true;
+            $this->prefs = new user_prefs($model->getAttributes());
+        }
 	}
 
 	function logged_in()
@@ -131,7 +163,7 @@ class current_user
 
 	function check_user_access()
 	{
-		return is_array($this->role_set);
+		return !empty($this->role_set);
 	}
 
 	function can_access($sec_area)
