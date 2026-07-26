@@ -1,0 +1,8 @@
+/*
+    Components shared by every screen, FrontAccounting or ported: each one is referenced from
+    resources/views/layout/**, which both render paths go through. Anything keyed to FA's own
+    markup belongs in fa/components instead.
+*/
+@import './drawer.css';
+@import './dropdown.css';
+@import './loader.css';

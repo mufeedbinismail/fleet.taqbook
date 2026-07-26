@@ -1,6 +1,6 @@
 {
   "inputDir": "./resources/icons",
-  "outputDir": "./resources/css/fonts",
+  "outputDir": "./resources/css/common/fonts",
   "name": "icomoon",
   "fontTypes": [
     "woff2",

@@ -1,9 +1,2 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
-@import './theme.css';
-@import './fa/reset.css';
 @import './fa/utils.css';
-@import './icons.css';
-@import './layout/index.css';
 @import './fa/components/index.css';

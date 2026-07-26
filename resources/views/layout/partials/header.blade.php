@@ -22,13 +22,14 @@ $is_legacy_page = $is_legacy_page ?? false;
         <!-- Scripts -->
         @vite([
             'resources/css/plugins.css',
-            'resources/css/fa.css',
+            'resources/css/index.css',
             'resources/js/plugins.js',
             'resources/js/app.js',
             'resources/js/fa.js'
         ])
 
         @if($is_legacy_page)
+            @vite('resources/css/fa.css')
             @php
             $js_files = $js_files ?? array_merge(
                 (!empty($GLOBALS['js_static']) && is_array($GLOBALS['js_static']) ? $GLOBALS['js_static'] : []),
