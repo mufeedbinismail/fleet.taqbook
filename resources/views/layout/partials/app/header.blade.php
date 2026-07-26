@@ -55,9 +55,6 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
     $help = implode('; ', $GLOBALS['Pagehelp']);
     $GLOBALS['Ajax']->addUpdate(true, 'hotkeyshelp', $help);
 }
-
-// Ajax indicator
-$indicator = url("themes/".user_theme()."/images/ajax-loader.gif");
 @endphp
 <section
     class="{{ conditional_join([
@@ -146,7 +143,6 @@ $indicator = url("themes/".user_theme()."/images/ajax-loader.gif");
         @endif
 
         <main class="main-content-area">
-            <img class="hidden" id='ajaxmark' src='{{ $indicator }}' style='visibility:hidden;' alt='ajaxmark'></img>
-            <div data-loader-container><div data-loader></div></div>
+            <div data-loader-container><div data-loader="spinner"></div></div>
             <section class="main-content">
 

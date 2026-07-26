@@ -1,20 +1,19 @@
-/* Hide the legacy <img> that precedes the loader (we only use it to distinguish type) */
-[data-loader-container] {
-  @apply hidden absolute top-0 bottom-0 right-0 left-0 inset-0 bg-main-bg bg-opacity-50 z-[2050] w-[100%] h-[100%];
-  pointer-events: none;
-}
+@layer components {
+    [data-loader-container] {
+        @apply hidden absolute top-0 bottom-0 right-0 left-0 inset-0 bg-main-bg bg-opacity-50 z-[2050] w-[100%] h-[100%];
+        pointer-events: none;
+    }
 
-#ajaxmark[style*="visible"] {
-    & + [data-loader-container] {
+    [data-loader-container][data-loader-visible] {
         @apply flex items-center justify-center;
         backdrop-filter: blur(5px);
     }
 
-    &[src$="progressbar.gif"] + [data-loader-container] [data-loader] {
+    [data-loader="progress"] {
         height: 60px;
         aspect-ratio: 2;
         border-bottom: 3px solid #0000;
-        background: 
+        background:
             linear-gradient(90deg,#524656 50%,#0000 0)
             -25% 100%/50% 3px repeat-x border-box;
         position: relative;
@@ -31,12 +30,12 @@
         }
     }
 
-    &[src$="ajax-loader.gif"] + [data-loader-container] [data-loader] {
+    [data-loader="spinner"] {
         --s: 64px;
         width: var(--s);
         aspect-ratio: 2;
             --_g: theme('colors.primary-accent') 90%,#0000;
-        background: 
+        background:
             radial-gradient(farthest-side,var(--_g)) 0   50%/25% 50%,
             radial-gradient(farthest-side at bottom,var(--_g)) 50%  calc(50% - var(--s)/16)/25% 25%,
             radial-gradient(farthest-side at top   ,var(--_g)) 50%  calc(50% + var(--s)/16)/25% 25%,
@@ -46,13 +45,15 @@
         animation: dot-through-dots 1s infinite;
     }
 
-    &[src$="warning.png"] + [data-loader-container] [data-loader] {
+    [data-loader="warning"] {
         @apply icon-style icon-warning;
         font-size: 5rem;
         color: theme('colors.error-accent');
     }
 }
 
+/* Left outside the layer: keyframes name an animation rather than declare one, so they take no part
+   in the cascade and nothing can override them. */
 @keyframes bouncing-ball-0 {
   to {background-position: -125% 100%}
 }

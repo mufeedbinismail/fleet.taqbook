@@ -229,14 +229,25 @@ export default function initUI() {
      * function is called with a null argument (ie. clear the ajax loader mark)
      */
     function monkeyPatchFASetMark() {
-        const originalSetMark = window.set_mark;
+        const loaderVariants = {
+            'progressbar.gif': 'progress',
+            'ajax-loader.gif': 'spinner',
+            'warning.png': 'warning',
+        };
 
-        if (!originalSetMark) {
+        if (!window.set_mark) {
             return;
         }
 
         window.set_mark = function set_mark(img) {
-            originalSetMark.apply(this, arguments);
+            const container = document.querySelector('[data-loader-container]');
+            const loader = container?.querySelector('[data-loader]');
+
+            if (loader) {
+                loader.dataset.loader = loaderVariants[img] ?? 'spinner';
+            }
+
+            container?.toggleAttribute('data-loader-visible', Boolean(img));
 
             // If there is no image its being called to clear the ajax
             // loader mark. This is a great place to refresh the UI
