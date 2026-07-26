@@ -3,6 +3,7 @@
 @import "tailwindcss/utilities";
 @import './common/theme.css';
 @import './common/reset.css';
+@import './common/utils.css';
 @import './common/icons.css';
 @import './common/layout/index.css';
 @import './common/components/index.css';
