@@ -1,9 +1,5 @@
-import $ from 'jquery';
-import select2 from 'select2/dist/js/select2.min.js';
+import jQuery from './plugins/jquery';
 import Alpine from './plugins/alpine';
 
-window.$ = $;
-window.jQuery = $;
-select2($);
-
+window.$ = window.jQuery = jQuery;
 window.Alpine = Alpine;
