@@ -10,8 +10,9 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
+use App\Foundation\Constant\Permission;
 use App\Foundation\Model\User;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 require_once __DIR__ . "/../includes/prefs/userprefs.inc";
 //--------------------------------------------------------------------------
@@ -28,7 +29,6 @@ class current_user
 	var $company; // user's company
 	var $pos;
 	var $access;
-	var $role_set = [];
 
 	var $prefs;
 
@@ -36,26 +36,12 @@ class current_user
 	{
         $this->model = $model;
 
-        $role = $this->model
-            ? DB::table('security_roles')->where('id', $model->role_id)->first()
-            : null;
-        
-        if (! $this->model || ! $role) {
+        if (! $this->model || ! $this->model->role) {
             $this->loginname = $this->username = $this->name = "";
             $this->company = 0;
             $this->prefs = new user_prefs();
         } else {
-            $areas = explode(';', (string) $role->areas);
-            $sections = array_map('intval', explode(';', (string) $role->sections));
-
-            $this->role_set = array();
             $this->access = $model->role_id;
-            foreach ($areas as $code) {
-                $code = (int) $code;
-                if ($code !== 0 && in_array($code & ~0xff, $sections, true))
-                    $this->role_set[] = $code;
-            }
-
             $this->name = $model->real_name;
             $this->pos = $model->pos;
             $this->loginname = $model->user_id;
@@ -68,21 +54,23 @@ class current_user
 
 	function check_user_access()
 	{
-		return !empty($this->role_set);
+		return (bool) $this->model?->hasConfiguredAccess();
 	}
 
 	function can_access($sec_area)
 	{
-		global $security_areas;
+        $ability = match ($sec_area) {
+            'SA_OPEN'          => Permission::OPEN,
+            'SA_DENIED'        => Permission::DENIED,
+            'SA_AUTHENTICATED' => Permission::AUTHENTICATED,
+            default            => config("permission.areas.{$sec_area}.key")
+        };
 
-		if ($sec_area === 'SA_OPEN') 
-			return true;
-		if ($sec_area === 'SA_DENIED' || $sec_area === '' || !isset($security_areas[$sec_area])) 
-			return false;
+		if (empty($ability)) {
+            return false;
+        }
 
-		$code = $security_areas[$sec_area][0];
-
-		return $code && in_array($code, $this->role_set);
+		return Gate::forUser($this->model)->allows($ability);
 	}
 
 	function can_access_page($page_level)

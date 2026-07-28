@@ -22,10 +22,6 @@ return [
     'selected_id'          => null,
     'selected_id2'         => null,
     
-    // Security globals
-    'security_areas'       => [],
-    'security_sections'    => [],
-    
     // Form and UI globals  
     'hidden_fields'        => [],
     'ajax_divs'            => [],
