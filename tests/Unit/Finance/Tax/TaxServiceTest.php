@@ -32,9 +32,9 @@ class TaxServiceTest extends TestCase
     private function taxGroupLineCollection(): TaxGroupLineCollection
     {
         return new TaxGroupLineCollection([
-            new TaxGroupLine(self::VAT_5_PERCENT, 'VAT 5%', 'sales', 'purchasing', BigDecimal::of('5'), false),
-            new TaxGroupLine(self::CONVENIENCE_TAX_2_PERCENT, 'Convenience Tax 2%', 'sales', 'purchasing', BigDecimal::of('2'), false),
-            new TaxGroupLine(self::SHIPPING_TAX_3_PERCENT, 'Shipping Tax 3%', 'sales', 'purchasing', BigDecimal::of('3'), true),
+            new TaxGroupLine(self::VAT_5_PERCENT, 'VAT 5%', 'sales', 'purchasing', null, BigDecimal::of('5'), false),
+            new TaxGroupLine(self::CONVENIENCE_TAX_2_PERCENT, 'Convenience Tax 2%', 'sales', 'purchasing', null, BigDecimal::of('2'), false),
+            new TaxGroupLine(self::SHIPPING_TAX_3_PERCENT, 'Shipping Tax 3%', 'sales', 'purchasing', null, BigDecimal::of('3'), true),
         ]);
     }
 
