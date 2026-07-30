@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Skills — check before writing code
+
+| Skill | Invoke it when |
+|---|---|
+| `commenting` | **MANDATORY** before writing, editing or reviewing **any** comment or docblock — a new class, function or test included. Hard rules, stricter than the default. Never write comments from memory. |
+
 ## Project Overview
 
 Taqbook is a Laravel 10 application wrapping a **legacy PHP accounting system** (FrontAccounting). The core purpose is to run the legacy codebase through Laravel's HTTP layer while incrementally porting modules to proper Laravel architecture.
@@ -25,19 +31,3 @@ See `.claude/CLAUDE.local.md` for environment specific PHP binary paths, local c
 
 ### New code follows the Laravel DDD-inspired architecture
 All new code (entities, repositories, services, collections, queries) goes under `app/<Domain>/` following the project structure. Do **not** add new functions to FrontAccounting `.inc` files. Legacy `.inc` files may call into Laravel classes via `app(ClassName::class)` — that is the bridge pattern. FrontAccounting is actively being ported; every new feature should be written in the Laravel layer.
-
-### Docblock & Commenting Etiquette
-
-#### DO NOT comment:
-- Obvious code (e.g. `// increment i` above `i++`)
-- How something is used elsewhere in the codebase — that belongs in the caller, not here
-- Anything a reader can already infer from reading the code itself
-- Type information in a docblock if the function signature is already strongly typed
-
-#### DO comment:
-- Type info that helps IntelliSense when arguments/returns are NOT type-hinted
-- The shape of structured or scalar arrays (e.g. `@param {id: number, name: string}[] users`)
-- Specific/narrowed types when the type hint is generic (e.g. `T` is actually always `string` here)
-- Hidden assumptions or dependencies that aren't visible from the code alone
-- Weird or non-obvious business logic that would otherwise get "fixed" by accident later
-- The *reasoning* behind a decision that took back-and-forth to settle — why it ended up this way, not just what it does
