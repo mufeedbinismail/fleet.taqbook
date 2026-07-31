@@ -2,8 +2,7 @@
 
 namespace App\Legacy\Provider;
 
-use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Route;
+use App\Navigation\Facade\Navigation;
 use Illuminate\Support\ServiceProvider;
 
 class LegacyServiceProvider extends ServiceProvider
@@ -22,7 +21,24 @@ class LegacyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->registerNavigation();
+    }
+
+    /**
+     * Everything FrontAccounting still owns. Each entry disappears as its domain is ported.
+     */
+    protected function registerNavigation(): void
+    {
+        Navigation::register(
+            \App\Legacy\Navigation\Source\SaleSource::class,
+            \App\Legacy\Navigation\Source\MarketplaceSource::class,
+            \App\Legacy\Navigation\Source\PurchaseSource::class,
+            \App\Legacy\Navigation\Source\InventorySource::class,
+            \App\Legacy\Navigation\Source\ManufacturingSource::class,
+            \App\Legacy\Navigation\Source\AssetSource::class,
+            \App\Legacy\Navigation\Source\FinanceSource::class,
+            \App\Legacy\Navigation\Source\SystemSource::class,
+        );
     }
 
     protected function registerSubProviders(): void
