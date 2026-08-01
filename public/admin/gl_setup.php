@@ -9,6 +9,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
+
+use App\Navigation\Facade\Navigation;
+
 $GLOBALS['page_security'] = 'SA_GLSETUP';
 require __DIR__ . "/../includes/session.inc";
 
@@ -98,7 +101,7 @@ function can_process()
 		return false;
 	}
 
-    if (session('wa_current_user')->check_application_access(session('App')->get_application('mp_orders'))) {
+    if (Navigation::tree()->has('trade.marketplace')) {
         if (!get_post('marketplace_expense_items')) {
             display_error(__("Please select the marketplace expense items."));
             set_focus('marketplace_expense_items');
@@ -287,7 +290,7 @@ text_row(__("Delivery Required By:"), 'default_delivery_required', $_POST['defau
 
 table_section(2);
 
-if (session('wa_current_user')->check_application_access(session('App')->get_application('mp_orders'))) {
+if (Navigation::tree()->has('trade.marketplace')) {
     table_section_title(__("Marketplace Sales Defaults"));
 
     start_row();
