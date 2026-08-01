@@ -6,8 +6,6 @@
     overflow-x: hidden;
     overscroll-behavior: contain;
     flex: 0 0 theme('width.sidebar');
-    height: 100vh;
-    height: 100dvh;
     background: inherit;
     background-color: theme('colors.sidebar-bg');
     color: theme('colors.primary-txt');

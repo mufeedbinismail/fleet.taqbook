@@ -57,12 +57,7 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
 }
 @endphp
 <section
-    class="{{ conditional_join([
-        'main-container',
-        'has-header' => true,
-        'has-sidebar' => !$no_menu,
-        'has-footer' => $shouldShowFooter,
-    ]) }}"
+    class="main-container"
     @if (!$no_menu)
         x-data
         x-drawer
