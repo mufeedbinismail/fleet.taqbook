@@ -64,7 +64,7 @@ function display_type ($type, $typename, $from, $to, $convert, $dimension, $dime
         
         if ($drilldown && $levelptr == 0)
         {
-            $url = "<a href='".url("/gl/inquiry/gl_account_inquiry.php", [
+            $url = "<a href='".legacy_url("/gl/inquiry/gl_account_inquiry.php", [
                     "TransFromDate" => $from,
                     "TransToDate" => $to,
                     "Dimension" => $dimension,
@@ -108,7 +108,7 @@ function display_type ($type, $typename, $from, $to, $convert, $dimension, $dime
 		if ($drilldown && $parent1 == $_POST["AccGrp"])
 		//END Patch#2		
 		{
-			$url = "<a href='".url("/gl/inquiry/balance_sheet.php", [
+			$url = "<a href='".legacy_url("/gl/inquiry/balance_sheet.php", [
                 "TransFromDate" => $from,
                 "TransToDate" => $to,
                 "Dimension" => $dimension,
@@ -191,7 +191,7 @@ function display_balance_sheet()
 				//Print Summary 
 				if ($TypeTotal != 0 )
 				{
-					$url = "<a href='".url("/gl/inquiry/balance_sheet.php", [
+					$url = "<a href='".legacy_url("/gl/inquiry/balance_sheet.php", [
                         "TransFromDate" => $from,
                         "TransToDate" => $to,
                         "Dimension" => $dimension,
@@ -229,7 +229,7 @@ function display_balance_sheet()
 		if ($lconvert == 1)
 			$calculateclose *= -1;
 		//Final Report Summary
-		$url = "<a href='".url("/gl/inquiry/profit_loss.php", [
+		$url = "<a href='".legacy_url("/gl/inquiry/profit_loss.php", [
             "TransFromDate" => $from,
             "TransToDate" => $to,
             "Dimension" => $dimension,

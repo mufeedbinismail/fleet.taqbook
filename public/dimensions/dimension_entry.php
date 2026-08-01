@@ -94,8 +94,8 @@ function safe_exit()
 	global $id;
 
 	hyperlink_no_params("", __("Enter a &new dimension"));
-	hyperlink_no_params(url("/dimensions/inquiry/search_dimensions.php"), __("&Select an existing dimension"));
-    hyperlink_no_params(url("/admin/attachments.php", [ "filterType" => 40, "trans_no" => $id ]), __("&Add Attachment"));
+	hyperlink_no_params(legacy_url("/dimensions/inquiry/search_dimensions.php"), __("&Select an existing dimension"));
+    hyperlink_no_params(legacy_url("/admin/attachments.php", [ "filterType" => 40, "trans_no" => $id ]), __("&Add Attachment"));
 
 	display_footer_exit();
 }

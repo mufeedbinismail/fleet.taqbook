@@ -172,7 +172,7 @@ function submit($name, $value, $echo=true, $title=false, $atype=false, $icon=fal
 	    ." name=\"$name\"  id=\"$name\" value=\"$value\""
 	    .($title ? " title='$title'" : '')
 	    .">"
-		.($icon ? "<img src='".url("/themes/".user_theme()."/images/$icon")."' height='12' alt=''>" : '')
+		.($icon ? "<img src='".legacy_url("/themes/".user_theme()."/images/$icon")."' height='12' alt=''>" : '')
 		."<span>$value</span>"
 		."</button>\n";
 	if ($echo)
@@ -287,7 +287,7 @@ function submit_js_confirm($name, $msg, $set = true) {
 function set_icon($icon, $title=false)
 {
 	if (basename($icon) === $icon) // standard icons does not contain path separator
-		$icon = url("/themes/".user_theme()."/images/$icon");
+		$icon = legacy_url("/themes/".user_theme()."/images/$icon");
 	return "<img src='$icon' style='vertical-align:middle;width:12px;height:12px;border:0;'".($title ? " title='$title'" : "")." >\n";	
 }
 
@@ -652,7 +652,7 @@ function date_cells($label, $name, $title = null, $check=null, $inc_days=0,
 	}
 	if (user_use_date_picker())
 	{
-		$calc_image = url(
+		$calc_image = legacy_url(
             (file_exists(PATH_TO_ROOT."/themes/".user_theme()."/images/cal.gif"))
                 ? "/themes/".user_theme()."/images/cal.gif"
                 : "/themes/default/images/cal.gif"
@@ -986,7 +986,7 @@ function customer_credit_row($customer, $credit, $parms='')
 {
 	label_row( __("Current Credit:"),
 		"<a target='_blank' " . ($credit<0 ? 'class="redfg"' : '')
-		."href='".url('/sales/inquiry/customer_inquiry.php', ['customer_id' => $customer])."'"
+		."href='".legacy_url('/sales/inquiry/customer_inquiry.php', ['customer_id' => $customer])."'"
 		." onclick=\"javascript:openWindow(this.href,this.target); return false;\" >"
 		. price_format($credit)
 		."</a>", $parms);
@@ -996,7 +996,7 @@ function supplier_credit_row($supplier, $credit, $parms='')
 {
 	label_row( __("Current Credit:"),
 		"<a target='_blank' " . ($credit<0 ? 'class="redfg"' : '')
-		."href='".url('/purchasing/inquiry/supplier_inquiry.php', ['supplier_id' => $supplier])."'"
+		."href='".legacy_url('/purchasing/inquiry/supplier_inquiry.php', ['supplier_id' => $supplier])."'"
 		." onclick=\"javascript:openWindow(this.href,this.target); return false;\" >"
 		. price_format($credit)
 		."</a>", $parms);
@@ -1008,7 +1008,7 @@ function bank_balance_row($bank_acc, $parms='')
 	$bal = get_balance_before_for_bank_account($bank_acc, $to);
 	label_row( __("Bank Balance:"),
 		"<a target='_blank' " . ($bal<0 ? 'class="redfg"' : '')
-		."href='".url('/gl/inquiry/bank_inquiry.php', ['bank_account' => $bank_acc])."'"
+		."href='".legacy_url('/gl/inquiry/bank_inquiry.php', ['bank_account' => $bank_acc])."'"
 		." onclick=\"javascript:openWindow(this.href,this.target); return false;\" >&nbsp;"
 		. price_format($bal)
 		."</a>", $parms);

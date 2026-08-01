@@ -96,7 +96,7 @@ if (isset($_GET['AddedID'])) {
 
 	hyperlink_params(url()->current(), __("Enter Another &Credit Note"), "NewCredit=yes{$marketplace_flg}");
 
-	hyperlink_params(url("/admin/attachments.php"), __("Add an Attachment"), "filterType=$trans_type&trans_no=$credit_no");
+	hyperlink_params(legacy_url("/admin/attachments.php"), __("Add an Attachment"), "filterType=$trans_type&trans_no=$credit_no");
 
 	display_footer_exit();
 } else

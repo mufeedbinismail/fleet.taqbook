@@ -138,7 +138,7 @@ function print_link($link_text, $rep, $pars = array(), $dir = '',
 	$icon=false, $class='printlink', $id='')
 {
 	global $SysPrefs;
-	$url = $dir == '' ? url('/reporting/prn_redirect.php').'?' : $dir;
+	$url = $dir == '' ? legacy_url('/reporting/prn_redirect.php').'?' : $dir;
 
 	$id = default_focus($id);
 	$parm = array();

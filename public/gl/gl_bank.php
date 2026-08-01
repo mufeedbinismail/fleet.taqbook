@@ -85,7 +85,7 @@ if (isset($_GET['AddedID']))
 
 	hyperlink_params(url()->current(), __("Enter A &Deposit"), "NewDeposit=yes");
 
-	hyperlink_params(url("/admin/attachments.php"), __("Add an Attachment"), "filterType=$trans_type&trans_no=$trans_no");
+	hyperlink_params(legacy_url("/admin/attachments.php"), __("Add an Attachment"), "filterType=$trans_type&trans_no=$trans_no");
 
 	display_footer_exit();
 }

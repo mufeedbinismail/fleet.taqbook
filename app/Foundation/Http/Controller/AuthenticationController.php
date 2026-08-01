@@ -33,6 +33,6 @@ class AuthenticationController extends Controller
 
     protected function defaultTarget(): string
     {
-        return url('/index.php?application=orders');
+        return legacy_url('/index.php', ['application' => 'orders']);
     }
 }

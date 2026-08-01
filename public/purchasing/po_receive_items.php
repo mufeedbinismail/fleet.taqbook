@@ -38,11 +38,11 @@ if (isset($_GET['AddedID']))
 	if ($clearing_act)	
 		display_note(get_gl_view_str($trans_type, $grn, __("View the GL Journal Entries for this Delivery")), 1);
 
-	hyperlink_params(url("/purchasing/supplier_invoice.php"), __("Entry purchase &invoice for this receival"), "New=1");
+	hyperlink_params(legacy_url("/purchasing/supplier_invoice.php"), __("Entry purchase &invoice for this receival"), "New=1");
 
-	hyperlink_no_params(url("/purchasing/inquiry/po_search.php"), __("Select a different &purchase order for receiving items against"));
+	hyperlink_no_params(legacy_url("/purchasing/inquiry/po_search.php"), __("Select a different &purchase order for receiving items against"));
 
-	hyperlink_params(url("/admin/attachments.php"), __("Add an Attachment"), 
+	hyperlink_params(legacy_url("/admin/attachments.php"), __("Add an Attachment"), 
 		"filterType=$trans_type&trans_no=$grn");
 
 	display_footer_exit();
@@ -241,10 +241,10 @@ function process_receive_po()
 	{
 		display_error(__("This order has been changed or invoiced since this delivery was started to be actioned. Processing halted. To enter a delivery against this purchase order, it must be re-selected and re-read again to update the changes made by the other user."));
 
-		hyperlink_no_params(url("/purchasing/inquiry/po_search.php"),
+		hyperlink_no_params(legacy_url("/purchasing/inquiry/po_search.php"),
 		 __("Select a different purchase order for receiving goods against"));
 
-		hyperlink_params(url("/purchasing/po_receive_items.php"),
+		hyperlink_params(legacy_url("/purchasing/po_receive_items.php"),
 			 __("Re-Read the updated purchase order for receiving goods against"),
 			 "PONumber=" . $_SESSION['PO']->order_no);
 

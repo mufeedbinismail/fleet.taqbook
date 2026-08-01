@@ -81,7 +81,7 @@ function display_type ($type, $typename, $from, $to, $begin, $end, $compare, $co
 		
 		if ($drilldown && $levelptr == 0)
 		{
-			$url = "<a href='".url("/gl/inquiry/gl_account_inquiry.php", [
+			$url = "<a href='".legacy_url("/gl/inquiry/gl_account_inquiry.php", [
                 "TransFromDate" => $from,
                 "TransToDate" => $to,
                 "Dimension" => $dimension,
@@ -132,7 +132,7 @@ function display_type ($type, $typename, $from, $to, $begin, $end, $compare, $co
 		//END Patch#2		
 		//elseif ($drilldown && $type != $_POST["AccGrp"])
 		{	
-			$url = "<a href='".url("/gl/inquiry/profit_loss.php", [
+			$url = "<a href='".legacy_url("/gl/inquiry/profit_loss.php", [
                 "TransFromDate" => $from,
                 "TransToDate" => $to,
                 "Compare" => $compare,
@@ -275,7 +275,7 @@ function display_profit_and_loss($compare)
 
 				if ($TypeTotal[0] != 0 || $TypeTotal[1] != 0 )
 				{
-					$url = "<a href='".url("/gl/inquiry/profit_loss.php", [
+					$url = "<a href='".legacy_url("/gl/inquiry/profit_loss.php", [
 						"TransFromDate" => $from,
 						"TransToDate" => $to,
 						"Compare" => $compare,

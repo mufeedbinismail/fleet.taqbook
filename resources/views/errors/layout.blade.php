@@ -21,7 +21,7 @@
             <div class="flex flex-wrap items-center justify-center gap-2 border-t border-soft-border bg-label-bg px-8 py-4">
                 @yield('actions')
 
-                <a href="{{ url('/index.php') }}"
+                <a href="{{ legacy_url('/index.php') }}"
                    class="inline-flex items-center gap-2 rounded-lg border-0 bg-primary-accent px-4 py-2 text-sm font-semibold text-white no-underline transition hover:opacity-90">
                     <span class="icon icon-statistics"></span>
                     {{ __("Go to dashboard") }}

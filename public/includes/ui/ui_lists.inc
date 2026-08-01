@@ -13,10 +13,10 @@ require_once __DIR__ . "/../../includes/banking.inc";
 require_once __DIR__ . "/../../includes/types.inc";
 require_once __DIR__ . "/../../includes/current_user.inc";
 
-define('SEARCH_BUTTON', "<input %s type='submit' class='combo_submit' style='border:0;background:url(".url("/themes/"
+define('SEARCH_BUTTON', "<input %s type='submit' class='combo_submit' style='border:0;background:url(".legacy_url("/themes/"
 	."%s/images/locate.png").") no-repeat;%s' aspect='fallback' name='%s' value=' ' title='".__("Set filter")."'> ");
 
-define('SELECT_BUTTON', "<input %s type='submit' class='combo_select' style='border:0;background:url(".url("/themes/"
+define('SELECT_BUTTON', "<input %s type='submit' class='combo_select' style='border:0;background:url(".legacy_url("/themes/"
 	."%s/images/button_ok.png").") no-repeat;%s' aspect='fallback' name='%s' value=' ' title='".__("Select")."'> ");
 
 //----------------------------------------------------------------------------
@@ -305,54 +305,54 @@ $opts = array(		// default options
   			if ($type != NULL) {
 	    		switch (strtolower($type)) {
 	      			case "stock":
-	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'all', 'client_id' => $id]);
+	        			$link = legacy_url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'all', 'client_id' => $id]);
 	        			$img_title = __("Search items");
 	        			break;
 	      			case "stock_manufactured":
-	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'manufactured', 'client_id' => $id]);
+	        			$link = legacy_url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'manufactured', 'client_id' => $id]);
 	        			$img_title = __("Search items");
 	        			break;
 	      			case "stock_purchased":
-	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'purchasable', 'client_id' => $id]);
+	        			$link = legacy_url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'purchasable', 'client_id' => $id]);
 	        			$img_title = __("Search items");
 	        			break;
 	      			case "stock_sales":
-	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'sales', 'client_id' => $id]);
+	        			$link = legacy_url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'sales', 'client_id' => $id]);
 	        			$img_title = __("Search items");
 	        			break;
 	      			case "stock_costable":
-	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'costable', 'client_id' => $id]);
+	        			$link = legacy_url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'costable', 'client_id' => $id]);
 	        			$img_title = __("Search items");
 	        			break;
 	      			case "component":
 	      				$parent = $opts['parent'];
-	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'component', 'parent' => $parent, 'client_id' => $id]);
+	        			$link = legacy_url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'component', 'parent' => $parent, 'client_id' => $id]);
 	        			$img_title = __("Search items");
 	        			break;
 	      			case "kits":
-	        			$link = url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'kits', 'client_id' => $id]);
+	        			$link = legacy_url("/inventory/inquiry/stock_list.php", ['popup' => 1, 'type' => 'kits', 'client_id' => $id]);
 	        			$img_title = __("Search items");
 	        			break;
 	      			case "customer":
-	        			$link = url("/sales/inquiry/customers_list.php", ['popup' => 1, 'client_id' => $id]);
+	        			$link = legacy_url("/sales/inquiry/customers_list.php", ['popup' => 1, 'client_id' => $id]);
 	        			$img_title = __("Search customers");
 	        			break;
 	      			case "marketplace":
-	        			$link = url("/sales/inquiry/marketplaces_list.php", ['popup' => 1, 'client_id' => $id]);
+	        			$link = legacy_url("/sales/inquiry/marketplaces_list.php", ['popup' => 1, 'client_id' => $id]);
 	        			$img_title = __("Search marketplaces");
 	        			break;
 	      			case "branch":
-	        			$link = url("/sales/inquiry/customer_branches_list.php", ['popup' => 1, 'client_id' => "{$id}#customer_id"]);
+	        			$link = legacy_url("/sales/inquiry/customer_branches_list.php", ['popup' => 1, 'client_id' => "{$id}#customer_id"]);
 	        			$img_title = __("Search branches");
 	        			break;
 	      			case "supplier":
-	        			$link = url("/purchasing/inquiry/suppliers_list.php", ['popup' => 1, 'client_id' => $id]);
+	        			$link = legacy_url("/purchasing/inquiry/suppliers_list.php", ['popup' => 1, 'client_id' => $id]);
 	        			$img_title = __("Search suppliers");
 	        			break;
 	      			case "account":
 	      			case "account2":
 	      				$skip = strtolower($type) == "account" ? false : true;
-	        			$link = url("/gl/inquiry/accounts_list.php", ['popup' => 1, 'skip' => $skip, 'client_id' => $id]);
+	        			$link = legacy_url("/gl/inquiry/accounts_list.php", ['popup' => 1, 'skip' => $skip, 'client_id' => $id]);
 	        			$img_title = __("Search GL accounts");
 	        			break;
 	    		}
@@ -361,7 +361,7 @@ $opts = array(		// default options
 
   		if ($link !=="") {
     		$theme = user_theme();
-    		$img = '<img src="'.url('/themes/'.$theme.'/images/'.ICON_VIEW).
+    		$img = '<img src="'.legacy_url('/themes/'.$theme.'/images/'.ICON_VIEW).
     			'" style="vertical-align:middle;width:12px;height:12px;border:0;" onclick="javascript:lookupWindow(&quot;'.
     			$link.'&quot;, &quot;&quot;);" title="' . $img_title . '" style="cursor:pointer;" />';
   		}
@@ -526,7 +526,7 @@ function add_edit_combo($type)
 
 	$key = $popup_editors[$type][1];
 	$onclick = "onclick=\"javascript:callEditor($key); return false;\"";
-	$img = "<img width='12' height='12' border='0' alt='Add/Edit' title='Add/Edit' src='".url('/themes/'.user_theme()."/images/".ICON_EDIT)."'>";
+	$img = "<img width='12' height='12' border='0' alt='Add/Edit' title='Add/Edit' src='".legacy_url('/themes/'.user_theme()."/images/".ICON_EDIT)."'>";
 	return "<a target = '_blank' href='#' $onclick tabindex='-1'>$img</a>"; 
 }
 

@@ -15,17 +15,17 @@ $shouldShowFooter = !$no_menu && !$is_index && null !== session('wa_current_user
 // Define toolbox
 $toolbox = [
     'dashboard' => [
-        'link' => url("/admin/dashboard.php", ['sel_app' => $sel_app]),
+        'link' => legacy_url("/admin/dashboard.php", ['sel_app' => $sel_app]),
         'icon' => 'icon-statistics',
         'label' => __('Dashboard')
     ],
     'preferences' => [
-        'link' => url("/admin/display_prefs.php"),
+        'link' => legacy_url("/admin/display_prefs.php"),
         'icon' => 'icon-prefs',
         'label' => __('Preferences')
     ],
     'change_password' => [
-        'link' => url("/admin/change_current_user_password.php", ['selected_id' => $user->username ?? '']),
+        'link' => legacy_url("/admin/change_current_user_password.php", ['selected_id' => $user->username ?? '']),
         'icon' => 'icon-security',
         'label' => __('Change password')
     ],

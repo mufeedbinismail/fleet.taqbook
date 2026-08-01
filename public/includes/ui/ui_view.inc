@@ -393,9 +393,9 @@ function get_comments_string($type, $type_no)
 function view_stock_status($stock_id, $description=null, $echo=true)
 {
 	if ($description)
-		$preview_str = "<a target='_blank' href='" . url("/inventory/inquiry/stock_status.php", ['stock_id' => $stock_id, 'popup' => 1]) . "' onclick=\"javascript:openWindow(this.href,this.target); return false;\" >". (user_show_codes()?$stock_id . " - ":"") . $description."</a>";
+		$preview_str = "<a target='_blank' href='" . legacy_url("/inventory/inquiry/stock_status.php", ['stock_id' => $stock_id, 'popup' => 1]) . "' onclick=\"javascript:openWindow(this.href,this.target); return false;\" >". (user_show_codes()?$stock_id . " - ":"") . $description."</a>";
 	else
-		$preview_str = "<a target='_blank' href='" . url("/inventory/inquiry/stock_status.php", ['stock_id' => $stock_id, 'popup' => 1]) . "' onclick=\"javascript:openWindow(this.href,this.target); return false;\" >$stock_id</a>";
+		$preview_str = "<a target='_blank' href='" . legacy_url("/inventory/inquiry/stock_status.php", ['stock_id' => $stock_id, 'popup' => 1]) . "' onclick=\"javascript:openWindow(this.href,this.target); return false;\" >$stock_id</a>";
 	if($echo)
 		echo $preview_str;
 	return $preview_str;

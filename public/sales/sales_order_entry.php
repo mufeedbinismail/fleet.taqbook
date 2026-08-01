@@ -726,7 +726,7 @@ function  handle_cancel_order()
 			}
 		} else {
 			processing_end();
-			meta_forward(url('/index.php'),'application=orders');
+			meta_forward(legacy_url('/index.php'),'application=orders');
 		}
 	}
 	processing_end();

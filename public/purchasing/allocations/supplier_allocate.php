@@ -102,7 +102,7 @@ if (isset($_POST['Process']))
 if (isset($_POST['Cancel']))
 {
 	clear_allocations();
-	meta_forward(url("/purchasing/allocations/supplier_allocation_main.php"));
+	meta_forward(legacy_url("/purchasing/allocations/supplier_allocation_main.php"));
 }
 
 //--------------------------------------------------------------------------------

@@ -81,7 +81,7 @@ if (isset($_GET['AddedID'])) {
 		display_note(get_gl_view_str(ST_MKTCUSTREFUND, $refund_no, __("View GL Entries for the &Refund")),1);
 	}
 
-	hyperlink_params(url("/admin/attachments.php"), __("Add an Attachment"), "filterType=$trans_type&trans_no=$credit_no");
+	hyperlink_params(legacy_url("/admin/attachments.php"), __("Add an Attachment"), "filterType=$trans_type&trans_no=$credit_no");
 
 	display_footer_exit();
 

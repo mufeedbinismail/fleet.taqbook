@@ -81,7 +81,7 @@ if (isset($_POST['BatchInvoice']))
     } else {
 		$_SESSION['DeliveryBatch'] = $selected;
         $marketplace_flg = check_value('is_marketplace_trans') ? '&Marketplace=Yes' : '';
-		meta_forward(url('/sales/customer_invoice.php'),'BatchInvoice=Yes' . $marketplace_flg);
+		meta_forward(legacy_url('/sales/customer_invoice.php'),'BatchInvoice=Yes' . $marketplace_flg);
     }
 }
 

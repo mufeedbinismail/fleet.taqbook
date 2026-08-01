@@ -129,7 +129,7 @@ function display_trial_balance($type, $typename)
 		{
 			alt_table_row_color($k);
 
-			$url = "<a href='".url("/gl/inquiry/gl_account_inquiry.php", [
+			$url = "<a href='".legacy_url("/gl/inquiry/gl_account_inquiry.php", [
                 "TransFromDate" => $_POST["TransFromDate"],
                 "TransToDate" => $_POST["TransToDate"],
                 "account" => $account["account_code"],

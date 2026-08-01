@@ -63,7 +63,7 @@ function get_attachment_string($type, $id)
     {
         if (strlen($str_return))
             $str_return = $str_return . " \n";    
-        $str_return .= __("Attached File:")." <a target='_blank' href='".url("/admin/attachments.php", ['vw' => $attachment["id"]])."' onclick='javascript:openWindow(this.href, this.target);return false;'> ".
+        $str_return .= __("Attached File:")." <a target='_blank' href='".legacy_url("/admin/attachments.php", ['vw' => $attachment["id"]])."' onclick='javascript:openWindow(this.href, this.target);return false;'> ".
         	$attachment["id"] . " " . $attachment["description"]. " - ". $attachment["filename"]."</a><br>";
     }
     return $str_return . "<br>";

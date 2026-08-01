@@ -219,7 +219,7 @@ class BoxReports
 					$st = "<input type='text' name='$name' value='$date'>";
 					if (user_use_date_picker())
 					{
-						$calc_image = url(
+						$calc_image = legacy_url(
                             (file_exists(PATH_TO_ROOT."/themes/".user_theme()."/images/cal.gif"))
                                 ? "/themes/".user_theme()."/images/cal.gif"
                                 : "/themes/default/images/cal.gif"

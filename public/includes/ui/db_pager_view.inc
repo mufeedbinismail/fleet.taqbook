@@ -15,7 +15,7 @@ function pager_link($link_text, $url, $icon=false)
 	if (user_graphic_links() && $icon)
 		$link_text = set_icon($icon, $link_text);
 
-	$href = url($url);
+	$href = legacy_url($url);
 	return "<a href='$href'>" . $link_text . "</a>";
 }
 
@@ -23,7 +23,7 @@ function navi_button($name, $value, $enabled=true, $icon = false) {
   	return "<button ". ($enabled ? '':'disabled')
   		." class=\"navibutton\" type=\"submit\""
 	    ." name=\"$name\"  id=\"$name\" value=\"$value\">"
-	  	.($icon ? "<img src='".url("/themes/".user_theme()."/images/".$icon)."'>":'')
+	  	.($icon ? "<img src='".legacy_url("/themes/".user_theme()."/images/".$icon)."'>":'')
 		."<span>$value</span></button>\n";
 }
 

@@ -467,7 +467,7 @@ function add_user_js_data() {
 
     $js = "\n"
 	  . "var user = {\n"
-	  . "theme: '". url('/themes/'. user_theme()). "/',\n"
+	  . "theme: '". legacy_url('/themes/'. user_theme()). "/',\n"
 	  . "loadtxt: '".__('Requesting data...')."',\n"
 	  . "date: '".Today()."',\n"	// server date
 	  . "datesys: ".$SysPrefs->date_system.",\n"

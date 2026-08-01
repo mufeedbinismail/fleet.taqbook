@@ -72,12 +72,12 @@ if (isset($_GET['AddedID']))
 
 	display_note(get_gl_view_str($trans_type, $invoice_no, __("View the GL Journal Entries for this Invoice")), 1);
 
-	hyperlink_params(url("/purchasing/supplier_payment.php"), __("Entry supplier &payment for this invoice"),
+	hyperlink_params(legacy_url("/purchasing/supplier_payment.php"), __("Entry supplier &payment for this invoice"),
 		"PInvoice=".$invoice_no."&trans_type=".$trans_type);
 
 	hyperlink_params(url()->current(), __("Enter Another Invoice"), "New=1");
 
-	hyperlink_params(url("/admin/attachments.php"), __("Add an Attachment"), "filterType=$trans_type&trans_no=$invoice_no");
+	hyperlink_params(legacy_url("/admin/attachments.php"), __("Add an Attachment"), "filterType=$trans_type&trans_no=$invoice_no");
 	
 	display_footer_exit();
 }
