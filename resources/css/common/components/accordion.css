@@ -1,0 +1,53 @@
+/* The looks that belong to the accordion itself rather than to any one menu built out of it: what
+   it means for a panel to be shut, and a chevron that knows which way it is facing. Everything else
+   — colour, spacing, weight, how deep a nested panel sits — is the caller's, which is the whole
+   point of a component that only writes classes.
+
+   Shutting takes a panel out of the flow rather than dimming it, so what it holds leaves the tab
+   order and the page's reading without a second attribute having to say so. A panel therefore
+   cannot also be the element carrying a display utility: the utility would outrank the shut state
+   and the panel would never close. Give it a child to lay out instead. */
+@layer components {
+    .x-accordion-panel {
+        display: none;
+    }
+
+    .x-accordion-panel.x-is-open {
+        display: block;
+    }
+
+    /* Opening is instant. A menu is used by pointing at it, and a panel that grows into place moves
+       the thing being pointed at while it is being pointed at. The fade is short enough to read as
+       the panel arriving rather than as the panel travelling. */
+    @media (prefers-reduced-motion: no-preference) {
+        .x-accordion-panel.x-is-open {
+            animation: x-accordion-panel-in 120ms ease-out;
+        }
+    }
+
+    /* Drawn rather than set in the icon font, which carries no chevron. Rotating a bordered corner
+       is the one construction that stays crisp at any zoom and takes its colour from the text.
+
+       The two borders are named by flow rather than by side, so the corner that is drawn is the far
+       one in either writing direction: the closed caret points the way the panel would open out,
+       and the same quarter turn brings it down to face the open panel. */
+    .x-accordion-caret {
+        @apply shrink-0 w-[0.4rem] h-[0.4rem] transition-transform;
+        border-inline-end: 1.5px solid currentColor;
+        border-block-end: 1.5px solid currentColor;
+        transform: rotate(-45deg);
+    }
+
+    .x-accordion-trigger.x-is-open .x-accordion-caret {
+        transform: rotate(45deg);
+    }
+}
+
+/* Left outside the layer: keyframes name an animation rather than declare one, so they take no part
+   in the cascade and nothing can override them. */
+@keyframes x-accordion-panel-in {
+    from {
+        opacity: 0;
+        transform: translateY(-0.125rem);
+    }
+}

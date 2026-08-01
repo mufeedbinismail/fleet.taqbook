@@ -3,6 +3,7 @@
     resources/views/layout/**, which both render paths go through. Anything keyed to FA's own
     markup belongs in fa/components instead.
 */
+@import './accordion.css';
 @import './drawer.css';
 @import './dropdown.css';
 @import './loader.css';
