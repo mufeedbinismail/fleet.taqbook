@@ -27,7 +27,7 @@ class FinanceSource extends LegacySource
             $finance->icon('icon-accountant')
                 ->help('Banking and General Ledger')
                 ->sort(70)
-                ->target($this->script('admin/dashboard.php', ['sel_app' => 'GL']));
+                ->target($this->script('index.php', ['area' => Area::FINANCE]));
 
             $finance->section(Section::FINANCE_TRANSACTION, $this->label('Transactions'), function (SectionBuilder $section) {
                 $section->page('payment.create', $this->label('&Payments'))

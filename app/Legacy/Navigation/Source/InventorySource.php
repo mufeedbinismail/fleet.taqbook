@@ -20,7 +20,7 @@ class InventorySource extends LegacySource
             $inventory->icon('icon-inventory')
                 ->help('Items and Inventory')
                 ->sort(40)
-                ->target($this->script('admin/dashboard.php', ['sel_app' => 'stock']));
+                ->target($this->script('index.php', ['area' => Area::INVENTORY]));
 
             $inventory->section(Section::INVENTORY_TRANSACTION, $this->label('Transactions'), function (SectionBuilder $section) {
                 $section->page('transfer.create', $this->label('Inventory Location &Transfers'))

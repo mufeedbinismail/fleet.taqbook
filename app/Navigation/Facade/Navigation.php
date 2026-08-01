@@ -9,6 +9,7 @@ use App\Navigation\Exception\LocationAlreadyResolvedException;
 use App\Navigation\Registry\SourceRegistry;
 use App\Navigation\ValueObject\Crumb;
 use App\Navigation\ValueObject\CurrentLocation;
+use App\Navigation\ValueObject\NavigationTree;
 use App\Navigation\ValueObject\Trail;
 
 /**
@@ -95,5 +96,10 @@ final class Navigation
     public static function location(): CurrentLocation
     {
         return app(CurrentLocation::class);
+    }
+
+    public static function tree(): NavigationTree
+    {
+        return app(NavigationTree::class);
     }
 }

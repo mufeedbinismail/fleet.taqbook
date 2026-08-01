@@ -53,8 +53,6 @@ function page_header($title, $no_menu=false, $is_index=false, $onload="", $js=""
 	if (in_ajax() || isset($_POST['REP_ID']))
 		return; // just for speed up
 
-	$theme = user_theme();
-
 	add_user_js_data();
 
 	if ($SysPrefs->help_base_url != null && $SysPrefs->use_popup_windows && $js == '')
@@ -72,20 +70,6 @@ function page_header($title, $no_menu=false, $is_index=false, $onload="", $js=""
 	{
 		$no_menu = false;
 	}
-	if (isset($_SESSION["App"]) && is_object($_SESSION["App"]) && isset($_SESSION["App"]->selected_application) &&
-		$_SESSION["App"]->selected_application != "")
-		$sel_app = $_SESSION["App"]->selected_application;
-	elseif (isset($_SESSION["sel_app"]) && $_SESSION["sel_app"] != "")
-		$sel_app = $_SESSION["sel_app"];
-	else
-		$sel_app = user_startup_tab();
-	$_SESSION["sel_app"] = $sel_app;
-
-	if (isset($_SESSION["App"]) && is_object($_SESSION["App"]))
-		$_SESSION["App"]->selected_application = 
-			isset($_SESSION["App"]->applications[$sel_app]) ? $sel_app : 'orders';
-
-
     echo view('layout.partials.header', [
         'is_legacy_page' => true,
         'title'          => $title,
@@ -94,9 +78,12 @@ function page_header($title, $no_menu=false, $is_index=false, $onload="", $js=""
         'css_files'      => array_merge(isset($css_files) ? $css_files : [], $css ? [$css] : []),
     ])->render();
 
-    require_once __DIR__ . "/../../themes/$theme/renderer.php";
-    $rend = new renderer();
-	$rend->menu_header($title, $no_menu, $is_index);
+    echo view('layout.partials.app.header', [
+        'title'    => $title,
+        'no_menu'  => $no_menu,
+        'is_index' => $is_index,
+    ])->render();
+
 	error_box();
 }
 

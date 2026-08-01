@@ -9,6 +9,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
+
+use App\Navigation\Facade\Navigation;
+
 require_once __DIR__ . "/../../includes/banking.inc";
 require_once __DIR__ . "/../../includes/types.inc";
 require_once __DIR__ . "/../../includes/current_user.inc";
@@ -2514,8 +2517,8 @@ function security_roles_list_row($label, $name, $selected_id=null, $new_item=fal
 function tab_list_row($label, $name, $selected_id=null)
 {
 	$tabs = array();
-	foreach ($_SESSION['App']->applications as $app) {
-		$tabs[$app->id] = access_string($app->name, true);
+	foreach (Navigation::tree()->areas() as $area) {
+		$tabs[$area->key()] = $area->label()->text();
 	}
 	echo "<tr>\n";
 	echo "<td class='label'>$label</td><td>\n";

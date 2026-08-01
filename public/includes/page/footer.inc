@@ -13,9 +13,10 @@ function page_footer($no_menu=false, $is_index=false)
 {
 	global $Validate, $Editors, $Ajax, $sql_queries;
 
-	require_once __DIR__ . "/../../themes/".user_theme()."/renderer.php";
-	$rend = new renderer();
-	$rend->menu_footer($no_menu, $is_index);
+	echo view('layout.partials.app.footer', [
+		'no_menu'  => $no_menu,
+		'is_index' => $is_index,
+	])->render();
 
 	$edits = "editors = ".$Ajax->php2js($Editors).";";
 	$Ajax->addScript('editors', $edits);

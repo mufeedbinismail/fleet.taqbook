@@ -8,7 +8,9 @@ use App\Navigation\Service\Resolver;
 use App\Navigation\ValueObject\CurrentLocation;
 use App\Navigation\ValueObject\NavigationTree;
 use App\Navigation\ValueObject\Sitemap;
+use App\Navigation\View\NavigationComposer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class NavigationServiceProvider extends ServiceProvider
@@ -40,5 +42,15 @@ class NavigationServiceProvider extends ServiceProvider
             $app->make(NavigationTree::class),
             $app->make(Request::class),
         ));
+    }
+
+    public function boot(): void
+    {
+        // Named one by one rather than by wildcard, so a view gains navigation by being listed here
+        // and never by where it happens to sit.
+        View::composer(
+            ['layout.app', 'layout.partials.app.header'],
+            NavigationComposer::class,
+        );
     }
 }

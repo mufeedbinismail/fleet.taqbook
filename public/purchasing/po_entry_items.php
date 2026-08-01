@@ -203,9 +203,9 @@ function handle_cancel_po()
 		unset($_SESSION['PO']);
 
     	if ($fixed_asset)
-			meta_forward(legacy_url('/index.php'),'application=assets');
+			meta_forward(legacy_url('/index.php'), 'area=asset');
 		else
-			meta_forward(legacy_url('/index.php'),'application=AP');
+			meta_forward(legacy_url('/index.php'), 'area=trade.purchase');
 	}
 
 	$_SESSION['PO']->clear_items();

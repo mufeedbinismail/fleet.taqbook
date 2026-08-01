@@ -20,7 +20,7 @@ class PurchaseSource extends LegacySource
             $purchase->icon('icon-procurement')
                 ->help('Purchases')
                 ->sort(30)
-                ->target($this->script('admin/dashboard.php', ['sel_app' => 'AP']));
+                ->target($this->script('index.php', ['area' => Area::PURCHASE]));
 
             $purchase->section(Section::PURCHASE_TRANSACTION, $this->label('Transactions'), function (SectionBuilder $section) {
                 $section->page('order.create', $this->label('Purchase &Order Entry'))

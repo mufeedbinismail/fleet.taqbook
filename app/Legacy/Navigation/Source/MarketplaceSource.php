@@ -21,7 +21,7 @@ class MarketplaceSource extends LegacySource
             $marketplace->icon('icon-storefront')
                 ->help('Marketplace Sales')
                 ->sort(20)
-                ->target($this->script('admin/dashboard.php', ['sel_app' => 'mp_orders']));
+                ->target($this->script('index.php', ['area' => Area::MARKETPLACE]));
 
             $marketplace->section(Section::MARKETPLACE_TRANSACTION, $this->label('Transactions'), function (SectionBuilder $section) {
                 $section->page('order.create', $this->label('Sales &Order Entry'))

@@ -4,18 +4,25 @@ $no_menu = $no_menu ?? false;
 $is_index = $is_index ?? false;
 $title = $title ?? null;
 
-// Access session data
-$applications = session('App')->applications ?? [];
-$sel_app = session('sel_app') ?? null;
-$user = session('wa_current_user') ?? null;
+// Straight from the guard, not from the legacy session: a page that never boots FrontAccounting
+// has nothing hydrated there, and this chrome is drawn on every page either way.
+$user = auth()->user();
 
-// Calculate derived values
+// The dashboard of the area this page is in, named outright: this leads to the figures for an area
+// rather than to the area itself, so it does not go through whatever else opening an area means.
+// With no area to be in, the home address is left to work that out.
+$dashboard = ($area = $location->area()?->key()) === null
+    ? legacy_url('index.php')
+    : legacy_url('admin/dashboard.php', ['area' => $area]);
+
+// Still the legacy session rather than the guard, and deliberately: what this gates is hotkey help,
+// which only a FrontAccounting-booted request produces. A logged-in user is not the question.
 $shouldShowFooter = !$no_menu && !$is_index && null !== session('wa_current_user');
 
 // Define toolbox
 $toolbox = [
     'dashboard' => [
-        'link' => legacy_url("/admin/dashboard.php", ['sel_app' => $sel_app]),
+        'link' => $dashboard,
         'icon' => 'icon-statistics',
         'label' => __('Dashboard')
     ],
@@ -25,7 +32,7 @@ $toolbox = [
         'label' => __('Preferences')
     ],
     'change_password' => [
-        'link' => legacy_url("/admin/change_current_user_password.php", ['selected_id' => $user->username ?? '']),
+        'link' => legacy_url("/admin/change_current_user_password.php", ['selected_id' => $user->user_id ?? '']),
         'icon' => 'icon-security',
         'label' => __('Change password')
     ],
@@ -35,19 +42,6 @@ $toolbox = [
         'label' => __('Logout'),
         'method' => 'post'
     ]
-];
-
-// Define application icons
-$appIcons = [
-    "orders" => "icon-storefront",
-    "mp_orders" => "icon-storefront",
-    "AP" => "icon-procurement",
-    "GL" => "icon-accountant",
-    "stock" => "icon-inventory",
-    "system" => "icon-settings",
-    "manuf" => "icon-manufacturing",
-    "assets" => "icon-fixed-assets",
-    "proj" => "icon-dimension"
 ];
 
 // Handle footer data and Ajax if needed
@@ -74,19 +68,7 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
                 <img src="{{ url("/themes/default/images/logo.svg") }}" alt="Logo">
                 taqbook <small><sub>ERP</sub></small>
             </h2>
-            <nav>
-                <ul>
-                    @foreach($applications as $app)
-                        @if ($user && $user->check_application_access($app))
-                            @php $acc = access_string($app->name); @endphp
-                            <li class="main-nav-item {{ $sel_app == $app->id ? 'selected' : '' }}">
-                                <span class="icon pe-2 {{ $appIcons[$app->id] ?? 'icon-spacer' }}"></span>
-                                {!! "<a href='" . url("/index.php", ['application' => $app->id]) . "' {$acc[1]}>{$acc[0]}</a>" !!}
-                            </li>
-                        @endif
-                    @endforeach
-                </ul>
-            </nav>
+            <x-nav.sidebar :navigation="$navigation" :location="$location" />
         </div>
     </aside>
     @endif
@@ -104,14 +86,14 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
             <div class="toolbar" x-dropdown>
                 <button type="button" x-dropdown:trigger>
                     <span class="icon icon-circle-user text-[2rem]"></span>
-                    <span class="hidden md:inline">{{ $user->name ?? '' }}</span>
+                    <span class="hidden md:inline">{{ $user->real_name ?? '' }}</span>
                 </button>
 
                 <template x-teleport="body">
                     <ul x-dropdown:panel x-transition x-cloak>
                         <li class="x-dropdown-header">
                             <span class="icon icon-circle-user"></span>
-                            <span class="x-dropdown-header-name">{{ $user->name ?? '' }}</span>
+                            <span class="x-dropdown-header-name">{{ $user->real_name ?? '' }}</span>
                         </li>
                         @foreach($toolbox as $key => $item)
                             <li>
@@ -135,6 +117,7 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
                 </template>
             </div>
         </header>
+        <x-nav.breadcrumbs :location="$location" />
         @endif
 
         <main class="main-content-area">

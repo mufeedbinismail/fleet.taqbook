@@ -2,39 +2,40 @@
     @apply border-e border-solid;
     position: relative;
     z-index: 100;
-    overflow-y: auto;
-    overflow-x: hidden;
-    overscroll-behavior: contain;
+    overflow: hidden;
     flex: 0 0 theme('width.sidebar');
     background: inherit;
     background-color: theme('colors.sidebar-bg');
-    color: theme('colors.primary-txt');
-    border-color: theme('colors.soft-border');
+    color: theme('colors.sidebar-txt');
+    border-color: theme('colors.sidebar-border');
     transition: flex 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
+    /* The menu scrolls here rather than on the box outside, because this is the element holding the
+       width the rows are laid out against. Where a platform draws a scrollbar that takes up room,
+       the gutter comes out of the scroller's own content box: scrolled from outside, this inner
+       would still be the full sidebar width while being given less than that to sit in, and the
+       overflow — the end padding of every row, which is all that keeps the caret off the edge —
+       would go under the scrollbar rather than push anything. Scrolled here, the gutter is taken
+       out of the width the rows measure themselves against, so what a row reserves at its end
+       survives.
+
+       Height rather than a stretch because a scroller needs a bound to scroll against, and the
+       shell is what states one. */
     .sidebar-inner {
         width: theme('width.sidebar');
-    }
-
-    .app-name, .main-nav-item {
-        @apply mb-3 p-4;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        overscroll-behavior: contain;
     }
 
     .app-name {
-        @apply text-2xl font-bold text-center;
+        @apply px-4 py-4 mb-1 text-2xl font-bold text-center;
+        border-block-end: 1px solid theme('colors.sidebar-border');
 
         img {
             @apply inline-block w-[2rem] align-text-bottom
         }
-    }
-
-    .main-nav-item {
-        @apply font-semibold transition-colors;
-    }
-
-    .main-nav-item.selected {
-        background-color: theme('colors.sidebar-selected-bg');
-        color: theme('colors.sidebar-selected-txt');
     }
 }
 

@@ -44,7 +44,7 @@ class UserSettingRepository extends Repository
             'query_size' => 0,
             'graphic_links' => 0,
             'sticky_doc_date' => 0,
-            'startup_tab' => 'orders',
+            'startup_tab' => '',
             'transaction_days' => -30,
             'save_report_selections' => 0,
             'use_date_picker' => 1,
@@ -191,6 +191,12 @@ class UserSettingRepository extends Repository
         return (bool) $this->items['sticky_doc_date'];
     }
 
+    /**
+     * Where this user asked to land, or an empty string when they never said.
+     *
+     * Nothing here checks that the answer still names somewhere reachable — a preference outlives
+     * the permissions of whoever set it, so that is the caller's question at the moment it lands.
+     */
     public function startupTab(): string
     {
         return $this->items['startup_tab'];

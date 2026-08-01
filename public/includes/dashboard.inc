@@ -43,7 +43,7 @@ div.square2 {
 }
 </style>";
 
-function dashboard($sel_app)
+function dashboard($area)
 {
 	global  $style;
 	if (is_object($sel_app) && !$_SESSION["wa_current_user"]->check_application_access($selected_app))
@@ -64,25 +64,23 @@ function dashboard($sel_app)
 		}
 		xhr.open('POST', location.pathname, true);
 		xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-		xhr.send('id='+id+'&'+el.id+'='+el.value+'&sel_app=$sel_app');		
+		xhr.send('id='+id+'&'+el.id+'='+el.value+'&area=$area');
 	}
 	</script>";
 	//check_for_overdue_recurrent_invoices();
-	if ($sel_app == "orders")
+	if ($area == "trade.sale")
 		display_customer_topten();
-	elseif ($sel_app == "AP")
+	elseif ($area == "trade.purchase")
 		display_supplier_topten();
-	elseif ($sel_app == "stock")
+	elseif ($area == "inventory")
 		display_stock_topten();
-	elseif ($sel_app == "manuf")
+	elseif ($area == "inventory.manufacturing")
 		display_stock_topten(1);
-	elseif ($sel_app == "assets")
+	elseif ($area == "asset")
 		display_stock_topten(2);
-	elseif ($sel_app == "proj")
-		display_dimension_topten();
-	elseif ($sel_app == "GL")
+	elseif ($area == "finance")
 		display_gl_info();
-	else	
+	else
 		display_all();
 }
 

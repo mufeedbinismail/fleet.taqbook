@@ -31,8 +31,13 @@ class AuthenticationController extends Controller
         return view('auth.logout');
     }
 
+    /**
+     * Deliberately the home address and nothing more specific. Choosing a destination is a decision
+     * about where this user belongs, and neither their preference nor what they may open is in view
+     * from here.
+     */
     protected function defaultTarget(): string
     {
-        return legacy_url('/index.php', ['application' => 'orders']);
+        return legacy_url('/index.php');
     }
 }

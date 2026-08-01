@@ -1,6 +1,9 @@
 @import './base.css';
 @import './container.css';
 @import './sidebar.css';
+@import './nav.css';
 @import './header.css';
+@import './breadcrumbs.css';
+@import './area-index.css';
 @import './footer.css';
 @import './content-area.css';

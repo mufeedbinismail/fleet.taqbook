@@ -22,7 +22,7 @@ class ManufacturingSource extends LegacySource
                 ->help('Manufacturing')
                 ->sort(50)
                 ->when(ManufacturingEnabled::class)
-                ->target($this->script('admin/dashboard.php', ['sel_app' => 'manuf']));
+                ->target($this->script('index.php', ['area' => Area::MANUFACTURING]));
 
             $manufacturing->section(Section::MANUFACTURING_TRANSACTION, $this->label('Transactions'), function (SectionBuilder $section) {
                 $section->page('work-order.create', $this->label('Work &Order Entry'))

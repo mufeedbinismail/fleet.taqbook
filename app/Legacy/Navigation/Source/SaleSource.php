@@ -20,7 +20,7 @@ class SaleSource extends LegacySource
             $sale->icon('icon-storefront')
                 ->help('Sales')
                 ->sort(10)
-                ->target($this->script('admin/dashboard.php', ['sel_app' => 'orders']));
+                ->target($this->script('index.php', ['area' => Area::SALE]));
 
             $sale->section(Section::SALE_TRANSACTION, $this->label('Transactions'), function (SectionBuilder $section) {
                 $section->page('quotation.create', $this->label('Sales &Quotation Entry'))

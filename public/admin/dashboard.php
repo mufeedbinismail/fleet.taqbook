@@ -19,10 +19,16 @@
 	else
 		require_once __DIR__ . "/../includes/dashboard.inc"; // here are all the dashboard routines.
 	$GLOBALS['page_security'] = 'SA_SETUPDISPLAY'; // A very low access level. The real access level is inside the routines.
-	$app = isset($_GET['sel_app']) ? $_GET['sel_app'] : (isset($_POST['sel_app']) ? $_POST['sel_app'] : "orders");
+	// Falling back to whichever area comes first rather than to a named one, so this page never
+	// opens on somewhere this user has no business being.
+	$area = isset($_GET['area'])
+		? $_GET['area']
+		: (isset($_POST['area'])
+			? $_POST['area']
+			: \App\Navigation\Facade\Navigation::tree()->areas()->first()?->key());
 	if (get_post('id'))
 	{
-		dashboard($app);
+		dashboard($area);
 		throw new \App\Legacy\Exception\FlowCompletedException;
 	}
 	
@@ -31,7 +37,7 @@
 		$js .= get_js_open_window(800, 500);
 
 	page(__($GLOBALS['help_context'] = "Dashboard"), false, false, "", $js);
-	dashboard($app);
+	dashboard($area);
 	end_page();
 	throw new \App\Legacy\Exception\FlowCompletedException;
 

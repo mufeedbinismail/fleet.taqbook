@@ -21,7 +21,7 @@ class AssetSource extends LegacySource
                 ->help('Fixed Assets')
                 ->sort(60)
                 ->when(FixedAssetsEnabled::class)
-                ->target($this->script('admin/dashboard.php', ['sel_app' => 'assets']));
+                ->target($this->script('index.php', ['area' => Area::ASSET]));
 
             $asset->section(Section::ASSET_TRANSACTION, $this->label('Transactions'), function (SectionBuilder $section) {
                 $section->page('purchase.create', $this->label('Fixed Assets &Purchase'))

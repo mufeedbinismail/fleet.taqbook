@@ -25,7 +25,7 @@ class SystemSource extends LegacySource
             $system->icon('icon-settings')
                 ->help('Setup')
                 ->sort(80)
-                ->target($this->script('admin/dashboard.php', ['sel_app' => 'system']));
+                ->target($this->script('index.php', ['area' => Area::SYSTEM]));
 
             $system->section(Section::SYSTEM_COMPANY, $this->label('Company Setup'), function (SectionBuilder $section) {
                 $section->page('preference.manage', $this->label('&Company Setup'))

@@ -75,11 +75,11 @@ class LegacyLocationTest extends TestCase
     }
 
     /**
-     * An area's own address is the dashboard for it, and the mode selector in that address is what
-     * separates one area's from another's. Asserted here rather than left to the sweep because the
-     * eight of them share a script, which is the shape that produces a silent winner.
+     * Every area's own address is the same script, and the area named in it is the only thing
+     * separating one from another. Asserted here rather than left to the sweep because sharing a
+     * script is exactly the shape that produces a silent winner.
      */
-    public function test_each_area_claims_its_own_dashboard(): void
+    public function test_each_area_claims_its_own_address(): void
     {
         $tree = $this->tree();
         $resolver = new LocationResolver;
