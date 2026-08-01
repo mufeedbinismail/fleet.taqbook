@@ -15,4 +15,3 @@ require_once __DIR__.'/../public/includes/ui/items_cart.inc';
 require_once __DIR__.'/../public/sales/includes/cart_class.inc';
 require_once __DIR__.'/../public/purchasing/includes/po_class.inc';
 require_once __DIR__.'/../public/purchasing/includes/supp_trans_class.inc';
-require_once __DIR__.'/../public/frontaccounting.php';

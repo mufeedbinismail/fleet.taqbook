@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
  * duration of a legacy request, keeping the FrontAccounting session fully
  * encapsulated inside the Laravel session.
  *
- * The FA session (live objects: current_user, front_accounting, carts, …) is
+ * The FA session (live objects: current_user, carts, …) is
  * held as a single opaque, serialized blob under {@see self::KEY}. It is only
  * ever unserialized here — where the FA classes are guaranteed loaded — and
  * re-serialized on the way out. To the Laravel session (and to any request that

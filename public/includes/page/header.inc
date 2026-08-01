@@ -9,42 +9,6 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-/*
-	If no context is set current page/menu screen is selected.
-*/
-function help_url($context=null)
-{
-
-	global $SysPrefs, $help_context;
-
-	$clean = 0;
-	
-	if ($context!=null)
-	{
-		$help_page_url = $context;
-	}
-	elseif (isset($help_context))
-	{
-		$help_page_url = $help_context;
-	} else // main menu
-	{
-		$app = $_SESSION['sel_app'];
-		$help_page_url = $_SESSION['App']->applications[$app]->help_context;
-		$clean = 1;
-	}
-
-	if (@$SysPrefs->old_style_help)
-		$help_page_url = __($help_page_url);
-
-	if ($clean)
-		$help_page_url = access_string($help_page_url, true);
-
-	return html_specials_encode(
-		$SysPrefs->help_base_url
-		.urlencode(strtr(ucwords($help_page_url), array(' '=>'', '/'=>'', '&'=>'And')))
-		.'&ctxhelp=1&lang='.language()->getLocale());
-}
-
 function page_header($title, $no_menu=false, $is_index=false, $onload="", $js="", $css='')
 {
 	// titles and screen header

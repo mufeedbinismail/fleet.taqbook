@@ -168,7 +168,6 @@ function html_cleanup(&$parms)
 
 require_once __DIR__ . "/../includes/errors.inc";
 require_once __DIR__ . "/../includes/current_user.inc";
-require_once __DIR__ . "/../frontaccounting.php";
 require_once __DIR__ . "/../admin/db/security_db.inc";
 require_once __DIR__ . "/../includes/ajax.inc";
 require_once __DIR__ . "/../includes/ui/ui_msgs.inc";
@@ -238,11 +237,6 @@ if (db_fixed())
     db_set_encoding(language()->getEncoding());
 
 $SysPrefs->refresh();
-
-if (!isset($_SESSION["App"])) {
-    $_SESSION["App"] = new front_accounting();
-    $_SESSION["App"]->init();
-}
 
 // POST vars cleanup needed for direct reuse.
 // We quote all values later with db_escape() before db update.

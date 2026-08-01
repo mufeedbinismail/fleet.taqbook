@@ -46,8 +46,6 @@ div.square2 {
 function dashboard($area)
 {
 	global  $style;
-	if (is_object($sel_app) && !$_SESSION["wa_current_user"]->check_application_access($selected_app))
-		return;
 	echo $style;
 	echo "<script> 
 	function chart_update(el, id)
@@ -323,35 +321,6 @@ function display_stock_topten($type=0)
 	stock_below_reorder($today, $type);
 	table_end();
 }
-
-function display_dimension_topten()
-{
-	table('100%', '25%');
-	echo "<div class='square square1'>".__('Dimensions')."<p class='span1'>";
-	echo get_num_dimensions()."</p></div>";
-	td('25%');
-	echo "<div class='square square1'>".__('Type 2 Dimensions')."<p class='span1'>";
-	echo get_dim_type2()."</p></div>";
-	td('25%');
-	$res = get_dim_total();
-	$s = $res[0] < 0.0 ? 2 : 1;
-	echo "<div class='square square{$s}'>".__('Dimensions Total Balance')."<p class='span1'>";
-	echo number_format2($res[0])."</p></div>";
-	td('25%');
-	$s = $res[1] < 0.0 ? 2 : 1;
-	echo "<div class='square square{$s}'>".__('Dimensions Total Result')."<p class='span1'>";
-	echo number_format2($res[1])."</p></div>";
-	table_end();
-	$pg = new chart('bar', 'd1');
-	if (isset($_POST['select_d1']))
-		$pg->type = $_POST['select_d1'];
-	table('100%', '50%');
-	$today = calc_today();
-	$title = dimension_top($today, 5, 66, $pg);
-	td('50%');
-	source_graphic($today, $title, __("Dimension"), $pg);
-	table_end();
-}	
 
 function display_gl_info()
 {

@@ -44,7 +44,6 @@ class sys_prefs extends stdClass
 	public int $use_audit_trail;
 	public int $use_oldstyle_convert;
 	public int $show_users_online;
-	public int $old_style_help;
 	public string $help_base_url;
 	public string $comp_path;
 	public int $date_system;
@@ -60,7 +59,6 @@ class sys_prefs extends stdClass
 	public bool $check_price_charged_vs_order_price;
 	public float $config_allocation_settled_allowance;
 	public int $use_costed_values;
-	public int $show_menu_category_icons;
 	public bool $allow_demo_mode;
 	public int $pic_width;
 	public int $pic_height;
@@ -68,7 +66,6 @@ class sys_prefs extends stdClass
 	public int $graph_skin;
 	public string $UTF8_fontfile;
 	public bool $text_company_selection;
-	public int $hide_inaccessible_menu_items;
 	public int $login_delay;
 	public int $login_max_attempts;
 	public array $xr_providers;
@@ -100,7 +97,6 @@ class sys_prefs extends stdClass
         $this->use_audit_trail               = config('legacy.use_audit_trail');
         $this->use_oldstyle_convert          = config('legacy.use_oldstyle_convert');
         $this->show_users_online             = config('legacy.show_users_online');
-        $this->old_style_help                = config('legacy.old_style_help');
         $this->help_base_url                 = config('legacy.help_base_url');
         $this->comp_path                     = config('legacy.comp_path');
         $this->date_system                   = config('legacy.date_system');
@@ -116,7 +112,6 @@ class sys_prefs extends stdClass
         $this->check_price_charged_vs_order_price  = config('legacy.check_price_charged_vs_order_price');
         $this->config_allocation_settled_allowance = config('legacy.config_allocation_settled_allowance');
         $this->use_costed_values             = config('legacy.use_costed_values');
-        $this->show_menu_category_icons      = config('legacy.show_menu_category_icons');
         $this->allow_demo_mode               = config('legacy.allow_demo_mode');
         $this->pic_width                     = config('legacy.pic_width');
         $this->pic_height                    = config('legacy.pic_height');
@@ -126,7 +121,6 @@ class sys_prefs extends stdClass
                                                 ? config('legacy.utf8_fontfile_rtl') 
                                                 : config('legacy.UTF8_fontfile');
         $this->text_company_selection        = config('legacy.text_company_selection');
-        $this->hide_inaccessible_menu_items  = config('legacy.hide_inaccessible_menu_items');
         $this->login_delay                   = config('legacy.login_delay');
         $this->login_max_attempts            = config('legacy.login_max_attempts');
         $this->xr_providers                  = config('legacy.xr_providers');
