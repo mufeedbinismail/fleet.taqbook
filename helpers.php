@@ -29,6 +29,27 @@ function conditional_join(array $elements, string $glue = ' '): string
 }
 
 /**
+ * The address of a FrontAccounting script, with its parameters as a query string.
+ *
+ * A script is addressed by path and asks for its arguments by name, so parameters have to arrive
+ * as a query rather than as further path segments — which is the whole of the difference between
+ * this and Laravel's url(). The two are named apart so that which one is meant is written down at
+ * every call, and so that neither depends on the other having been loaded.
+ *
+ * @param  array<string, scalar>  $parameters
+ */
+function legacy_url(string $path, array $parameters = [], ?bool $secure = null): string
+{
+    $url = app(\Illuminate\Contracts\Routing\UrlGenerator::class)->to($path, [], $secure);
+
+    if ($parameters === []) {
+        return $url;
+    }
+
+    return $url.(str_contains($url, '?') ? '&' : '?').http_build_query($parameters);
+}
+
+/**
  * Get / set the specified configuration value.
  *
  * If an array is passed as the key, we will assume you want to set an array of values.
