@@ -1,0 +1,68 @@
+@layer components {
+    .x-dialog {
+        @apply w-full max-w-sm rounded-xl border p-0 shadow-lg;
+        border-color: theme('colors.soft-border');
+        background-color: theme('colors.main-bg');
+
+        &::backdrop {
+            background-color: theme('colors.primary-txt');
+            opacity: 0.4;
+        }
+    }
+
+    .x-dialog-body {
+        @apply px-5 pt-5;
+    }
+
+    .x-dialog-icon {
+        @apply text-lg;
+        color: theme('colors.warning-accent');
+    }
+
+    .x-dialog--danger .x-dialog-icon {
+        color: theme('colors.secondary-accent');
+    }
+
+    .x-dialog-title {
+        @apply mt-2 flex items-center gap-2 text-base font-semibold;
+        color: theme('colors.primary-txt');
+    }
+
+    .x-dialog-text {
+        @apply mt-2 text-sm;
+        color: theme('colors.general-txt');
+    }
+
+    .x-dialog-actions {
+        @apply mt-5 flex justify-end gap-2 border-t px-5 py-3;
+        border-color: theme('colors.soft-border');
+        background-color: theme('colors.label-bg');
+    }
+
+    .x-dialog-button {
+        @apply cursor-pointer rounded-lg border px-4 py-2 text-sm font-semibold transition;
+    }
+
+    .x-dialog-button--cancel {
+        border-color: theme('colors.soft-border');
+        background-color: theme('colors.main-bg');
+        color: theme('colors.primary-txt');
+
+        &:hover {
+            background-color: theme('colors.label-bg');
+        }
+    }
+
+    .x-dialog-button--confirm {
+        @apply border-0 text-white;
+        background-color: theme('colors.primary-accent');
+
+        &:hover {
+            opacity: 0.9;
+        }
+    }
+
+    .x-dialog--danger .x-dialog-button--confirm {
+        background-color: theme('colors.secondary-accent');
+    }
+}

@@ -5,6 +5,7 @@
 */
 @import './accordion.css';
 @import './collapse.css';
+@import './dialog.css';
 @import './drawer.css';
 @import './dropdown.css';
 @import './loader.css';
