@@ -7,6 +7,7 @@ import drawer from '../components/drawer';
 import anchor from '../components/anchor';
 import dropdown from '../components/dropdown';
 import accordion from '../components/accordion';
+import collapse from '../components/collapse';
 
 Alpine.plugin(focus);
 Alpine.plugin(ui);
@@ -14,5 +15,6 @@ Alpine.plugin(drawer);
 Alpine.plugin(anchor);
 Alpine.plugin(dropdown);
 Alpine.plugin(accordion);
+Alpine.plugin(collapse);
 
 export default Alpine;

@@ -4,6 +4,7 @@
     markup belongs in fa/components instead.
 */
 @import './accordion.css';
+@import './collapse.css';
 @import './drawer.css';
 @import './dropdown.css';
 @import './loader.css';
