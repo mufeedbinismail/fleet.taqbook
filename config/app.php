@@ -188,6 +188,7 @@ return [
          */
         \App\Foundation\Provider\AppServiceProvider::class,
         \App\Foundation\Provider\AuthServiceProvider::class,
+        \App\Foundation\Provider\BladeServiceProvider::class,
         // \App\Foundation\Provider\BroadcastServiceProvider::class,
         \App\Foundation\Provider\EventServiceProvider::class,
         \App\Foundation\Provider\RouteServiceProvider::class,

@@ -3,6 +3,7 @@
 namespace App\Foundation\Provider;
 
 use App\Foundation\Model\User;
+use App\Foundation\Registry\ClientDataRegistry;
 use App\Foundation\Setting\SettingRepository;
 use App\Foundation\Setting\UserSettingRepository;
 use Illuminate\Support\ServiceProvider;
@@ -26,6 +27,10 @@ class AppServiceProvider extends ServiceProvider
 
             return new UserSettingRepository($user);
         });
+
+        $this->app->scoped(ClientDataRegistry::class, fn () => (new ClientDataRegistry)
+            ->routes(config('client_data.routes'))
+            ->translations(config('client_data.i18n')));
 
         // Alias registration
         $this->app->alias(SettingRepository::class, 'settings');
