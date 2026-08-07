@@ -8,6 +8,6 @@
                 @foreach($js_lib as $js){!! $js . "\n" !!}@endforeach
             </script>
         @endif
-        @yield('scripts')
+        @stack('scripts')
     </body>
 </html>
