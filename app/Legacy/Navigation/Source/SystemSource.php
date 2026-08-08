@@ -42,13 +42,6 @@ class SystemSource extends LegacySource
                     ->place(Column::Left)
                     ->sort(20);
 
-                $section->page('role.manage', $this->label('&Access Setup'))
-                    ->target($this->script('admin/security_roles.php'))
-                    ->permission(Permission::MANAGE_ROLE)
-                    ->category(Category::Settings)
-                    ->place(Column::Left)
-                    ->sort(30);
-
                 $section->page('display.manage', $this->label('&Display Setup'))
                     ->target($this->script('admin/display_prefs.php'))
                     ->permission(Permission::CONFIGURE_DISPLAY)

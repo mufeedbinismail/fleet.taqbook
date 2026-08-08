@@ -4,6 +4,8 @@ namespace App\Foundation\Auth\Provider;
 
 use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Auth\Model\User;
+use App\Foundation\Auth\Source\AccessSource;
+use App\Foundation\Navigation\Facade\Navigation;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -35,5 +37,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define(Permission::OPEN, fn (?User $user) => true);
         Gate::define(Permission::DENIED, fn (?User $user) => false);
         Gate::define(Permission::AUTHENTICATED, fn (?User $user) => $user !== null);
+
+        Navigation::register(AccessSource::class);
     }
 }
