@@ -25,7 +25,7 @@
 		? $_GET['area']
 		: (isset($_POST['area'])
 			? $_POST['area']
-			: \App\Navigation\Facade\Navigation::tree()->areas()->first()?->key());
+			: \App\Foundation\Navigation\Facade\Navigation::tree()->areas()->first()?->key());
 	if (get_post('id'))
 	{
 		dashboard($area);

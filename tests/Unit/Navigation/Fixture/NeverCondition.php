@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Navigation\Fixture;
 
-use App\Navigation\Contract\Condition;
+use App\Foundation\Navigation\Contract\Condition;
 
 final class NeverCondition implements Condition
 {

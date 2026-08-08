@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Navigation;
 
-use App\Navigation\ValueObject\TranslatedLabel;
+use App\Foundation\Navigation\ValueObject\TranslatedLabel;
 use Tests\TestCase;
 
 class TranslatedLabelTest extends TestCase

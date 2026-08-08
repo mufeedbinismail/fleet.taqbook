@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Navigation\Fixture;
 
-use App\Navigation\Builder\Builder;
-use App\Navigation\Contract\NavigationSource;
+use App\Foundation\Navigation\Builder\Builder;
+use App\Foundation\Navigation\Contract\NavigationSource;
 use Closure;
 
 /**

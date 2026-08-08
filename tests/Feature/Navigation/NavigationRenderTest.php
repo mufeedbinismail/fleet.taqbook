@@ -2,12 +2,12 @@
 
 namespace Tests\Feature\Navigation;
 
-use App\Navigation\Entity\Node;
-use App\Navigation\Service\Resolver;
-use App\Navigation\ValueObject\Crumb;
-use App\Navigation\ValueObject\CurrentLocation;
-use App\Navigation\ValueObject\NavigationTree;
-use App\Navigation\ValueObject\Sitemap;
+use App\Foundation\Navigation\Entity\Node;
+use App\Foundation\Navigation\Service\Resolver;
+use App\Foundation\Navigation\ValueObject\Crumb;
+use App\Foundation\Navigation\ValueObject\CurrentLocation;
+use App\Foundation\Navigation\ValueObject\NavigationTree;
+use App\Foundation\Navigation\ValueObject\Sitemap;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Blade;

@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Legacy\Navigation;
 
-use App\Navigation\DTO\Problem;
-use App\Navigation\Service\Validator;
-use App\Navigation\ValueObject\Sitemap;
+use App\Foundation\Navigation\DTO\Problem;
+use App\Foundation\Navigation\Service\Validator;
+use App\Foundation\Navigation\ValueObject\Sitemap;
 use Tests\TestCase;
 
 /**

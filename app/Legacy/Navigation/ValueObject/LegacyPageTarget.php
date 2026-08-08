@@ -3,7 +3,7 @@
 namespace App\Legacy\Navigation\ValueObject;
 
 use App\Legacy\Navigation\Enum\Query;
-use App\Navigation\Contract\Target;
+use App\Foundation\Navigation\Contract\Target;
 use Illuminate\Http\Request;
 
 /**

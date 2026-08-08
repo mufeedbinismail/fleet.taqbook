@@ -1,5 +1,5 @@
 @extends('layout.app')
-@use('App\Navigation\Enum\Column')
+@use('App\Foundation\Navigation\Enum\Column')
 @php
 /**
  * The two columns of one card, each a list of runs.

@@ -2,11 +2,11 @@
 
 namespace Tests\Unit\Navigation;
 
-use App\Navigation\Builder\AreaBuilder;
-use App\Navigation\Builder\Builder;
-use App\Navigation\Exception\NavigationException;
-use App\Navigation\Registry\SourceRegistry;
-use App\Navigation\ValueObject\UrlTarget;
+use App\Foundation\Navigation\Builder\AreaBuilder;
+use App\Foundation\Navigation\Builder\Builder;
+use App\Foundation\Navigation\Exception\NavigationException;
+use App\Foundation\Navigation\Registry\SourceRegistry;
+use App\Foundation\Navigation\ValueObject\UrlTarget;
 use Tests\TestCase;
 use Tests\Unit\Navigation\Fixture\ClosureSource;
 use Tests\Unit\Navigation\Fixture\RegisteringSource;

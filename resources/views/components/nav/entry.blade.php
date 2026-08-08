@@ -1,5 +1,5 @@
 @props(['node', 'accelerated' => true])
-@use('App\Navigation\Enum\Category')
+@use('App\Foundation\Navigation\Enum\Category')
 @php
 // A place draws the icon it declared, and otherwise borrows the one its kind of place wears here.
 // What a kind looks like is a decision this theme makes and can remake, which is why the mapping

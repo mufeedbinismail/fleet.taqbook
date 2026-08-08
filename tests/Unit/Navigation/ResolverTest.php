@@ -2,14 +2,14 @@
 
 namespace Tests\Unit\Navigation;
 
-use App\Navigation\Builder\AreaBuilder;
-use App\Navigation\Builder\Builder;
-use App\Navigation\Builder\SectionBuilder;
-use App\Navigation\Entity\Node;
-use App\Navigation\Registry\SourceRegistry;
-use App\Navigation\Service\Resolver;
-use App\Navigation\ValueObject\NavigationTree;
-use App\Navigation\ValueObject\UrlTarget;
+use App\Foundation\Navigation\Builder\AreaBuilder;
+use App\Foundation\Navigation\Builder\Builder;
+use App\Foundation\Navigation\Builder\SectionBuilder;
+use App\Foundation\Navigation\Entity\Node;
+use App\Foundation\Navigation\Registry\SourceRegistry;
+use App\Foundation\Navigation\Service\Resolver;
+use App\Foundation\Navigation\ValueObject\NavigationTree;
+use App\Foundation\Navigation\ValueObject\UrlTarget;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable;
 use PHPUnit\Framework\Attributes\DataProvider;

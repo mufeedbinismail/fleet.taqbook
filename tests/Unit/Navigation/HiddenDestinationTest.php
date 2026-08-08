@@ -2,17 +2,17 @@
 
 namespace Tests\Unit\Navigation;
 
-use App\Navigation\Builder\AreaBuilder;
-use App\Navigation\Builder\Builder;
-use App\Navigation\DTO\Problem;
-use App\Navigation\DTO\Report;
-use App\Navigation\Entity\Node;
-use App\Navigation\Exception\NavigationException;
-use App\Navigation\Registry\SourceRegistry;
-use App\Navigation\Service\Resolver;
-use App\Navigation\Service\Validator;
-use App\Navigation\ValueObject\NavigationTree;
-use App\Navigation\ValueObject\UrlTarget;
+use App\Foundation\Navigation\Builder\AreaBuilder;
+use App\Foundation\Navigation\Builder\Builder;
+use App\Foundation\Navigation\DTO\Problem;
+use App\Foundation\Navigation\DTO\Report;
+use App\Foundation\Navigation\Entity\Node;
+use App\Foundation\Navigation\Exception\NavigationException;
+use App\Foundation\Navigation\Registry\SourceRegistry;
+use App\Foundation\Navigation\Service\Resolver;
+use App\Foundation\Navigation\Service\Validator;
+use App\Foundation\Navigation\ValueObject\NavigationTree;
+use App\Foundation\Navigation\ValueObject\UrlTarget;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Tests\TestCase;

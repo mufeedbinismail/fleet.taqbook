@@ -10,7 +10,7 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
-use App\Navigation\Facade\Navigation;
+use App\Foundation\Navigation\Facade\Navigation;
 
 $GLOBALS['page_security'] = 'SA_GLSETUP';
 require __DIR__ . "/../includes/session.inc";

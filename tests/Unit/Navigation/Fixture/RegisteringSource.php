@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Navigation\Fixture;
 
-use App\Navigation\Builder\Builder;
-use App\Navigation\Contract\NavigationSource;
-use App\Navigation\Registry\SourceRegistry;
+use App\Foundation\Navigation\Builder\Builder;
+use App\Foundation\Navigation\Contract\NavigationSource;
+use App\Foundation\Navigation\Registry\SourceRegistry;
 
 /**
  * Declares nothing, and reaches for the registry from its constructor — the earliest moment a

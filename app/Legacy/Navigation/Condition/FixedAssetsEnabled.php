@@ -3,7 +3,7 @@
 namespace App\Legacy\Navigation\Condition;
 
 use App\Foundation\Setting\SettingRepository;
-use App\Navigation\Contract\Condition;
+use App\Foundation\Navigation\Contract\Condition;
 
 final class FixedAssetsEnabled implements Condition
 {

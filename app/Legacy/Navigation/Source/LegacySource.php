@@ -4,8 +4,8 @@ namespace App\Legacy\Navigation\Source;
 
 use App\Legacy\Navigation\ValueObject\AcceleratedLabel;
 use App\Legacy\Navigation\ValueObject\LegacyPageTarget;
-use App\Navigation\Contract\Label;
-use App\Navigation\Contract\NavigationSource;
+use App\Foundation\Navigation\Contract\Label;
+use App\Foundation\Navigation\Contract\NavigationSource;
 
 /**
  * Shared plumbing for the FrontAccounting menu sources. Temporary by design, and not for anything

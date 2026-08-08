@@ -1,7 +1,7 @@
 <?php
 
 use App\Foundation\Http\Controller\AuthenticationController;
-use App\Navigation\Http\Controller\AreaIndexController;
+use App\Foundation\Navigation\Http\Controller\AreaIndexController;
 use App\Foundation\Http\Middleware\IdleTimeout;
 use Illuminate\Support\Facades\Route;
 

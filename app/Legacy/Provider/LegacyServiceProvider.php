@@ -2,7 +2,7 @@
 
 namespace App\Legacy\Provider;
 
-use App\Navigation\Facade\Navigation;
+use App\Foundation\Navigation\Facade\Navigation;
 use Illuminate\Support\ServiceProvider;
 
 class LegacyServiceProvider extends ServiceProvider

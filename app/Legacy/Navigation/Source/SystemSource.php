@@ -3,13 +3,13 @@
 namespace App\Legacy\Navigation\Source;
 
 use App\Foundation\Constant\Permission;
-use App\Navigation\Builder\AreaBuilder;
-use App\Navigation\Builder\Builder;
-use App\Navigation\Builder\SectionBuilder;
-use App\Navigation\Constant\Area;
-use App\Navigation\Constant\Section;
-use App\Navigation\Enum\Category;
-use App\Navigation\Enum\Column;
+use App\Foundation\Navigation\Builder\AreaBuilder;
+use App\Foundation\Navigation\Builder\Builder;
+use App\Foundation\Navigation\Builder\SectionBuilder;
+use App\Foundation\Navigation\Constant\Area;
+use App\Foundation\Navigation\Constant\Section;
+use App\Foundation\Navigation\Enum\Category;
+use App\Foundation\Navigation\Enum\Column;
 
 /**
  * The Setup area, plus every legacy entry that currently lives in it.
