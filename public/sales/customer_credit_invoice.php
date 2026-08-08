@@ -1,6 +1,11 @@
 <?php
 
+use App\Foundation\Auth\Constant\Permission;
 use App\Trade\Sale\Enum\PaymentMethod;
+use App\Finance\Support\MoneyFactory;
+use App\Finance\Tax\ValueObject\TaxBreakdown;
+use App\Trade\Marketplace\Collection\ExpenseCollection;
+use App\Trade\Marketplace\Entity\Expense;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
@@ -17,12 +22,7 @@ use App\Trade\Sale\Enum\PaymentMethod;
 //	Entry/Modify Credit Note for selected Sales Invoice
 //
 
-use App\Finance\Support\MoneyFactory;
-use App\Finance\Tax\ValueObject\TaxBreakdown;
-use App\Trade\Marketplace\Collection\ExpenseCollection;
-use App\Trade\Marketplace\Entity\Expense;
-
-$GLOBALS['page_security'] = 'SA_SALESCREDITINV';
+$GLOBALS['page_security'] = Permission::CREATE_SALE_CREDIT_NOTE;
 
 require_once __DIR__ . "/../sales/includes/cart_class.inc";
 require_once __DIR__ . "/../includes/session.inc";
@@ -55,7 +55,7 @@ if (isset($_GET['ModifyCredit'])) {
 }
 
 if (isset($_GET['Marketplace']) || ($_SESSION['Items']->is_marketplace_trans ?? 0) != 0) {
-    $GLOBALS['page_security'] = 'SA_MP_SALESCREDITINV';
+    $GLOBALS['page_security'] = Permission::CREATE_MARKETPLACE_CREDIT_NOTE;
 }
 
 page($_SESSION['page_title'], false, false, "", $js);

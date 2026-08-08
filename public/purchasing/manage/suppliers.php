@@ -9,7 +9,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$GLOBALS['page_security'] = 'SA_SUPPLIER';
+
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::MANAGE_SUPPLIER;
 require_once __DIR__ . "/../../includes/db_pager.inc";
 require_once __DIR__ . "/../../includes/session.inc";
 
@@ -171,9 +174,9 @@ if (!$supplier_id)
 tabbed_content_start('tabs', array(
 		'settings' => array(__('&General settings'), $supplier_id),
 		'contacts' => array(__('&Contacts'), $supplier_id),
-		'transactions' => array(__('&Transactions'), (user_check_access('SA_SUPPTRANSVIEW') ? $supplier_id : null)),
-		'orders' => array(__('Purchase &Orders'), (user_check_access('SA_SUPPTRANSVIEW') ? $supplier_id : null)),
-		'attachments' => array(__('Attachments'), (user_check_access('SA_ATTACHDOCUMENT') ? $supplier_id : null)),
+		'transactions' => array(__('&Transactions'), (user_check_access(Permission::VIEW_PURCHASE_TRANSACTION) ? $supplier_id : null)),
+		'orders' => array(__('Purchase &Orders'), (user_check_access(Permission::VIEW_PURCHASE_TRANSACTION) ? $supplier_id : null)),
+		'attachments' => array(__('Attachments'), (user_check_access(Permission::MANAGE_ATTACHMENT) ? $supplier_id : null)),
 	));
 	
 	switch (get_post('_tabs_sel')) {

@@ -14,7 +14,10 @@ Author: Joe Hunt
 Name: Revenue / Cost Accruals v2.2
 Free software under GNU GPL
 ***********************************************/
-$GLOBALS['page_security'] = 'SA_ACCRUALS';
+
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::CREATE_ACCRUAL;
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/ui/items_cart.inc";

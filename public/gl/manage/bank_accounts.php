@@ -9,7 +9,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$GLOBALS['page_security'] = 'SA_BANKACCOUNT';
+
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::MANAGE_BANKING_ACCOUNT;
 require_once __DIR__ . "/../../includes/db_pager.inc";
 require __DIR__ . "/../../includes/session.inc";
 
@@ -241,8 +244,8 @@ if ($bank_id)
 
 tabbed_content_start('tabs', array(
 		'settings' => array(__('&General settings'), $bank_id),
-		'transactions' => array(__('&Transactions'), (user_check_access('SA_BANKTRANSVIEW') ? $bank_id : null)),
-		'attachments' => array(__('Attachments'), (user_check_access('SA_ATTACHDOCUMENT') ? $bank_id : null)),
+		'transactions' => array(__('&Transactions'), (user_check_access(Permission::VIEW_BANKING_TRANSACTION) ? $bank_id : null)),
+		'attachments' => array(__('Attachments'), (user_check_access(Permission::MANAGE_ATTACHMENT) ? $bank_id : null)),
 	));
 	
 	switch (get_post('_tabs_sel')) {

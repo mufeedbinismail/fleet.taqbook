@@ -9,7 +9,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$GLOBALS['page_security'] = 'SA_PURCHASEORDER';
+
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::CREATE_PURCHASE_ORDER;
 require_once __DIR__ . "/../purchasing/includes/po_class.inc";
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../purchasing/includes/purchasing_ui.inc";
@@ -17,16 +20,16 @@ require_once __DIR__ . "/../purchasing/includes/db/suppliers_db.inc";
 require_once __DIR__ . "/../reporting/includes/reporting.inc";
 
 set_page_security( @$_SESSION['PO']->trans_type,
-	array(	ST_PURCHORDER => 'SA_PURCHASEORDER',
-			ST_SUPPRECEIVE => 'SA_GRN',
-			ST_SUPPINVOICE => 'SA_SUPPLIERINVOICE'),
-	array(	'NewOrder' => 'SA_PURCHASEORDER',
-			'ModifyOrderNumber' => 'SA_PURCHASEORDER',
-			'AddedID' => 'SA_PURCHASEORDER',
-			'NewGRN' => 'SA_GRN',
-			'AddedGRN' => 'SA_GRN',
-			'NewInvoice' => 'SA_SUPPLIERINVOICE',
-			'AddedPI' => 'SA_SUPPLIERINVOICE')
+	array(	ST_PURCHORDER => Permission::CREATE_PURCHASE_ORDER,
+			ST_SUPPRECEIVE => Permission::CREATE_PURCHASE_RECEIVAL,
+			ST_SUPPINVOICE => Permission::CREATE_PURCHASE_INVOICE),
+	array(	'NewOrder' => Permission::CREATE_PURCHASE_ORDER,
+			'ModifyOrderNumber' => Permission::CREATE_PURCHASE_ORDER,
+			'AddedID' => Permission::CREATE_PURCHASE_ORDER,
+			'NewGRN' => Permission::CREATE_PURCHASE_RECEIVAL,
+			'AddedGRN' => Permission::CREATE_PURCHASE_RECEIVAL,
+			'NewInvoice' => Permission::CREATE_PURCHASE_INVOICE,
+			'AddedPI' => Permission::CREATE_PURCHASE_INVOICE)
 );
 
 $js = '';

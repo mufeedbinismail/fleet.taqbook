@@ -10,6 +10,9 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 //$colors = array('#008cc9','#4db625','#ef5500','#eef100','#05c6e6', '#5ee66a'); // Current in Use 	 
+
+use App\Foundation\Auth\Constant\Permission;
+
 $colors = Chart::$palette;
 $align = language()->isRtl() ? 'right' : 'left';
 $style = "<style>
@@ -405,7 +408,7 @@ function customer_top($today, $limit=10, $width='33', &$pg=null)
 	$th = array(__("Customer"), __("Amount"));
 	start_table(TABLESTYLE, "width='$width%'");
 	headers($th);
-	check_page_security('SA_SALESTRANSVIEW');
+	check_page_security(Permission::VIEW_SALE_TRANSACTION);
 	$k = 0; //row colour counter
 	$names = $totals = array();
 	$sales = 0;
@@ -447,7 +450,7 @@ function supplier_top($today, $limit=10, $width='33', &$pg=null)
 	$th = array(__("Supplier"), __("Amount"));
 	start_table(TABLESTYLE, "width='$width%'");
 	headers($th);
-	check_page_security('SA_SUPPTRANSVIEW');
+	check_page_security(Permission::VIEW_PURCHASE_TRANSACTION);
 	$k = 0; //row colour counter
 	$names = $totals = array();
 	$total = 0;
@@ -477,11 +480,11 @@ function supplier_top($today, $limit=10, $width='33', &$pg=null)
 function stock_top($today, $limit=10, $width='33', $type=0, &$pg=null)
 {
 	if ($type == 2)
-		$sec = 'SA_ASSETSANALYTIC';
+		$sec = Permission::ASSET_TRANSACTION_ANALYTICS;
 	elseif ($type == 1)
-		$sec = 'SA_WORKORDERANALYTIC';
+		$sec = Permission::WORK_ORDER_ANALYTICS;
 	else
-		$sec = 'SA_ITEMSTRANSVIEW';
+		$sec = Permission::VIEW_INVENTORY_TRANSACTION;
 	$begin = date2sql(begin_fiscalyear());
 	$today = date2sql($today);
 	if ($type == 0)
@@ -585,7 +588,7 @@ function dimension_top($today, $limit=10, $width='33', &$pg=null)
 	$th = array(__("Dimension"), __("Balance"), __("Result"));
 	start_table(TABLESTYLE, "width='$width%'");
 	headers($th);
-	check_page_security('SA_DIMTRANSVIEW');
+	check_page_security(Permission::VIEW_DIMENSION);
 	$k = 0; //row colour counter
 	$names = $balances = $results = array();
 	while ($myrow = db_fetch($result))
@@ -628,7 +631,7 @@ function gl_top($today, $width='33', &$pg=null)
 	$title = __("Class Balances");
 	display_title($title);
 	start_table(TABLESTYLE2, "width='$width%'");
-	check_page_security('SA_GLANALYTIC');
+	check_page_security(Permission::LEDGER_POSTING_ANALYTICS);
 	$total = 0;
 	$names = $totals = array();
 	while ($myrow = db_fetch($result))
@@ -686,7 +689,7 @@ function gl_week_performance($today, $width="33", $weeks=4)
 		GROUP BY week_name ORDER BY week_name ASC";
 	$result = db_query($sql, "Transactions could not be calculated");
 	$title = sprintf(__("Last %s weeks Performance"), $weeks);
-	check_page_security('SA_GLANALYTIC');
+	check_page_security(Permission::LEDGER_POSTING_ANALYTICS);
 	$week_names = $sales = $costs = $results = array();
 	while ($myrow = db_fetch($result))
 	{
@@ -725,7 +728,7 @@ function gl_month_performance($today, $width="33", $months=5)
 		GROUP BY month_name ORDER BY month_name ASC";
 	$result = db_query($sql, "Transactions could not be calculated");
 	$title = sprintf(__("Last %s Months Performance"), $months);
-	check_page_security('SA_GLANALYTIC');
+	check_page_security(Permission::LEDGER_POSTING_ANALYTICS);
 	$month_names = $sales = $costs = $results = array();
 	while ($myrow = db_fetch($result))
 	{
@@ -773,7 +776,7 @@ function customer_aging($today, $width="33")
     $row = db_fetch($result);
 
 	$title = __("Total Customers Aged Analysis");
-	check_page_security('SA_SALESTRANSVIEW');
+	check_page_security(Permission::VIEW_SALE_TRANSACTION);
 	$names = array();
 	$past1a = $past1 + 1;
 	$past2a = $past2 + 1;
@@ -826,7 +829,7 @@ function supplier_aging($today, $width="33")
     $row = db_fetch($result);
 
 	$title = __("Total Suppliers Aged Analysis");
-	check_page_security('SA_SUPPLIERANALYTIC');
+	check_page_security(Permission::PURCHASE_TRANSACTION_ANALYTICS);
 	$names = array();
 	$past1a = $past1 + 1;
 	$past2a = $past2 + 1;
@@ -911,7 +914,7 @@ function cash_flow($today)
 		$total[$i] = round($total[$i]);
 	}
 	$title = sprintf(__("Last %s Months Cash Flow"), $months);
-	check_page_security('SA_BANKREP');
+	check_page_security(Permission::BANKING_TRANSACTION_REPORT);
 	$pg->setLabels($date);
 	$pg->addSerie(__('Balances'), $total, false, true);
 	source_graphic($today, $title, __("Month"), $pg, __("Months"), $months);

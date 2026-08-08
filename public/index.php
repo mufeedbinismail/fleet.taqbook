@@ -10,9 +10,10 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
+use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Navigation\Facade\Navigation;
 
-$GLOBALS['page_security'] = 'SA_OPEN';
+$GLOBALS['page_security'] = Permission::OPEN;
 ini_set('xdebug.auto_trace',1);
 include_once("includes/session.inc");
 

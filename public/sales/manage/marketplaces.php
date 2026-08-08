@@ -1,6 +1,8 @@
 <?php
 
-$GLOBALS['page_security'] = 'SA_MARKETPLACE';
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::MANAGE_MARKETPLACE_CHANNEL;
 
 require_once __DIR__ . "/../../includes/db_pager.inc";
 require_once __DIR__ . "/../../includes/session.inc";
@@ -273,8 +275,8 @@ if (!$selected_id)
 
 tabbed_content_start('tabs', array(
     'settings' => array(__('&General settings'), $selected_id),
-    'transactions' => array(__('&Transactions'), (user_check_access('SA_MP_SALESTRANSVIEW') ? $selected_id : null)),
-    'orders' => array(__('Sales &Orders'), (user_check_access('SA_MP_SALESTRANSVIEW') ? $selected_id : null)),
+    'transactions' => array(__('&Transactions'), (user_check_access(Permission::VIEW_MARKETPLACE_SALE_TRANSACTION) ? $selected_id : null)),
+    'orders' => array(__('Sales &Orders'), (user_check_access(Permission::VIEW_MARKETPLACE_SALE_TRANSACTION) ? $selected_id : null)),
 ));
 	
 	switch (get_post('_tabs_sel')) {

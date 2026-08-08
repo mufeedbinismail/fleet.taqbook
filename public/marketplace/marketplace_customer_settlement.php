@@ -1,6 +1,16 @@
 <?php
 
-$GLOBALS['page_security'] = 'SA_MP_SALESPAYMNT';
+use App\Finance\Support\MoneyFactory;
+use App\Foundation\Auth\Constant\Permission;
+use App\Trade\Marketplace\Cart\CustomerSettlementCart;
+use App\Trade\Marketplace\Service\CustomerSettlementCartService;
+use App\Trade\Shared\Enum\CustomerTransactionSource;
+use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Shared\Enum\SystemType;
+use App\Foundation\Shared\ValueObject\DomainDateTime;
+use App\Foundation\Shared\ValueObject\TypedId;
+
+$GLOBALS['page_security'] = Permission::CREATE_MARKETPLACE_PAYMENT;
 
 require_once __DIR__ . '/../includes/session.inc';
 require_once __DIR__ . '/../includes/data_checks.inc';
@@ -9,15 +19,6 @@ require_once __DIR__ . "/../includes/ui.inc";
 require_once __DIR__ . '/../sales/includes/sales_db.inc';
 require_once __DIR__ . '/../purchasing/includes/purchasing_db.inc';
 require_once __DIR__ . '/includes/marketplace_customer_settlement_db.inc';
-
-use App\Finance\Support\MoneyFactory;
-use App\Trade\Marketplace\Cart\CustomerSettlementCart;
-use App\Trade\Marketplace\Service\CustomerSettlementCartService;
-use App\Trade\Shared\Enum\CustomerTransactionSource;
-use App\Foundation\Framework\DTO\ValidationResult;
-use App\Foundation\Shared\Enum\SystemType;
-use App\Foundation\Shared\ValueObject\DomainDateTime;
-use App\Foundation\Shared\ValueObject\TypedId;
 
 // One screen serves both the customer settlement (payment against invoices) and its
 // mirror, the customer refund (credit notes applied to a refund). The mode comes from

@@ -14,7 +14,10 @@
   in pages that have the supplier dropdown lists.
   Author: bogeyman2007 from Discussion Forum. Modified by Joe Hunt
 ***********************************************************************/
-$GLOBALS['page_security'] = "SA_PURCHASEORDER";
+
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::CREATE_PURCHASE_ORDER;
 require_once __DIR__ . "/../../includes/session.inc";
 require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../purchasing/includes/db/suppliers_db.inc";

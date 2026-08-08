@@ -10,9 +10,10 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
+use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Navigation\Facade\Navigation;
 
-$GLOBALS['page_security'] = 'SA_GLSETUP';
+$GLOBALS['page_security'] = Permission::CONFIGURE_LEDGER;
 require __DIR__ . "/../includes/session.inc";
 
 $js = "";

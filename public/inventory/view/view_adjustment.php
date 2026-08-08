@@ -9,7 +9,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$GLOBALS['page_security'] = 'SA_ITEMSTRANSVIEW';
+
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::VIEW_INVENTORY_TRANSACTION;
 
 require __DIR__ . "/../../includes/session.inc";
 

@@ -9,7 +9,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$GLOBALS['page_security'] = 'SA_SETUPDISPLAY';
+
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::CONFIGURE_DISPLAY;
 require __DIR__ . "/../includes/session.inc";
 
 page(__($GLOBALS['help_context'] = "Display Setup"));

@@ -19,6 +19,8 @@ this can be a string either "d/m/Y" for UK/Australia/New Zealand dates or
 
 */
 
+use App\Foundation\Auth\Constant\Permission;
+
 function __date($year, $month, $day)
 {
 	global $SysPrefs, $tmonths;
@@ -201,7 +203,7 @@ function is_date_in_fiscalyear($date, $convert=false)
 	if (is_date_closed($date2))
 		return 0;
 
-	if (user_check_access('SA_MULTIFISCALYEARS')) // allow all open years for this one
+	if (user_check_access(Permission::MANAGE_NON_CLOSED_YEAR)) // allow all open years for this one
 		return is_date_in_fiscalyears($date2, false);
 
 	$myrow = get_current_fiscalyear();

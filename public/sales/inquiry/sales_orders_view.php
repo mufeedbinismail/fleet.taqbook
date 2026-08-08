@@ -10,6 +10,8 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
+use App\Foundation\Auth\Constant\Permission;
+
 require_once __DIR__ . "/../../includes/db_pager.inc";
 require_once __DIR__ . "/../../includes/session.inc";
 require_once __DIR__ . "/../../sales/includes/sales_ui.inc";
@@ -20,26 +22,26 @@ if (isset($_GET['Marketplace'])) {
 }
 
 $GLOBALS['page_security'] = get_post('is_marketplace_trans')
-    ? 'SA_MP_SALESTRANSVIEW'
-    : 'SA_SALESTRANSVIEW';
+    ? Permission::VIEW_MARKETPLACE_SALE_TRANSACTION
+    : Permission::VIEW_SALE_TRANSACTION;
 
 set_page_security(
     @$_POST['order_view_mode'],
 	[
         'OutstandingOnly' => get_post('is_marketplace_trans')
-            ? 'SA_MP_SALESDELIVERY'
-            : 'SA_SALESDELIVERY',
-        'InvoiceTemplates' => 'SA_SALESINVOICE',
-        'DeliveryTemplates' => 'SA_SALESDELIVERY',
-        'PrepaidOrders' => 'SA_SALESINVOICE'
+            ? Permission::CREATE_MARKETPLACE_DELIVERY
+            : Permission::CREATE_SALE_DELIVERY,
+        'InvoiceTemplates' => Permission::CREATE_SALE_INVOICE,
+        'DeliveryTemplates' => Permission::CREATE_SALE_DELIVERY,
+        'PrepaidOrders' => Permission::CREATE_SALE_INVOICE
     ],
 	[
         'OutstandingOnly' => get_post('is_marketplace_trans')
-            ? 'SA_MP_SALESDELIVERY'
-            : 'SA_SALESDELIVERY',
-        'InvoiceTemplates' => 'SA_SALESINVOICE',
-        'DeliveryTemplates' => 'SA_SALESDELIVERY',
-        'PrepaidOrders' => 'SA_SALESINVOICE'
+            ? Permission::CREATE_MARKETPLACE_DELIVERY
+            : Permission::CREATE_SALE_DELIVERY,
+        'InvoiceTemplates' => Permission::CREATE_SALE_INVOICE,
+        'DeliveryTemplates' => Permission::CREATE_SALE_DELIVERY,
+        'PrepaidOrders' => Permission::CREATE_SALE_INVOICE
     ]
 );
 

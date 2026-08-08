@@ -10,8 +10,10 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
+use App\Foundation\Auth\Constant\Permission;
+
 $GLOBALS['page_security'] = $_POST['PARAM_0'] == $_POST['PARAM_1'] ?
-	'SA_SUPPTRANSVIEW' : 'SA_SUPPBULKREP';
+	Permission::VIEW_PURCHASE_TRANSACTION : Permission::BULK_PRINT_PURCHASE_DOCUMENT;
 // ----------------------------------------------------------------
 // $ Revision:	2.0 $
 // Creator:	Joe Hunt

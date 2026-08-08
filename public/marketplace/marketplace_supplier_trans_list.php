@@ -1,8 +1,9 @@
 <?php
 
+use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Shared\ValueObject\TypedId;
 
-$GLOBALS['page_security'] = 'SA_MP_SUPPTRANSVIEW';
+$GLOBALS['page_security'] = Permission::VIEW_MARKETPLACE_SUPPLIER_TRANSACTION;
 
 require_once __DIR__ . "/../includes/db_pager.inc";
 require_once __DIR__ . "/../includes/session.inc";

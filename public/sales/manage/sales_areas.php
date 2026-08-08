@@ -9,7 +9,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$GLOBALS['page_security'] = 'SA_SALESAREA';
+
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::MANAGE_SALE_AREA;
 require __DIR__ . "/../../includes/session.inc";
 
 page(__($GLOBALS['help_context'] = "Sales Areas"));

@@ -9,11 +9,14 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$GLOBALS['page_security'] = 'SA_ITEMCATEGORY';
+
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::MANAGE_INVENTORY_CATEGORY;
 require __DIR__ . "/../../includes/session.inc";
 
 if (isset($_GET['FixedAsset'])) {
-  $GLOBALS['page_security'] = 'SA_ASSETCATEGORY';
+  $GLOBALS['page_security'] = Permission::MANAGE_ASSET_CATEGORY;
   $GLOBALS['help_context'] = "Fixed Assets Categories";
   $_POST['mb_flag'] = 'F';
 }

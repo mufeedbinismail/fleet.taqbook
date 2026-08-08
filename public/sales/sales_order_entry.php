@@ -11,6 +11,7 @@
 ***********************************************************************/
 
 use App\Finance\Support\MoneyFactory;
+use App\Foundation\Auth\Constant\Permission;
 use App\Trade\Marketplace\Collection\ExpenseCollection;
 use App\Trade\Marketplace\Entity\Expense;
 use App\Trade\Sale\Enum\PaymentMethod;
@@ -23,7 +24,7 @@ use App\Trade\Sale\Enum\PaymentMethod;
 //	Entry Direct Invoice
 //
 
-$GLOBALS['page_security'] = 'SA_SALESORDER';
+$GLOBALS['page_security'] = Permission::CREATE_SALE_ORDER;
 
 require_once __DIR__ . "/../sales/includes/cart_class.inc";
 require_once __DIR__ . "/../includes/session.inc";
@@ -41,41 +42,41 @@ set_page_security(
     @$_SESSION['Items']->trans_type,
     @$_SESSION['Items']->is_marketplace_trans
         ? [
-            ST_SALESORDER =>'SA_MP_SALESORDER',
-            ST_CUSTDELIVERY => 'SA_MP_SALESDELIVERY',
-            ST_SALESINVOICE => 'SA_MP_SALESINVOICE'
+            ST_SALESORDER =>Permission::CREATE_MARKETPLACE_ORDER,
+            ST_CUSTDELIVERY => Permission::CREATE_MARKETPLACE_DELIVERY,
+            ST_SALESINVOICE => Permission::CREATE_MARKETPLACE_INVOICE
         ]
         : [
-            ST_SALESORDER =>'SA_SALESORDER',
-            ST_SALESQUOTE => 'SA_SALESQUOTE',
-            ST_CUSTDELIVERY => 'SA_SALESDELIVERY',
-            ST_SALESINVOICE => 'SA_SALESINVOICE'
+            ST_SALESORDER =>Permission::CREATE_SALE_ORDER,
+            ST_SALESQUOTE => Permission::CREATE_QUOTATION,
+            ST_CUSTDELIVERY => Permission::CREATE_SALE_DELIVERY,
+            ST_SALESINVOICE => Permission::CREATE_SALE_INVOICE
         ],
 	isset($_GET['Marketplace']) 
         ? [	
-            'NewOrder' => 'SA_MP_SALESORDER',
-            'AddedID' => 'SA_MP_SALESORDER',
-            'ModifyOrderNumber' => 'SA_MP_SALESORDER',
-            'UpdatedID' => 'SA_MP_SALESORDER',
-            'NewDelivery' => 'SA_MP_SALESDELIVERY',
-            'AddedDN' => 'SA_MP_SALESDELIVERY',
-            'NewInvoice' => 'SA_MP_SALESINVOICE',
-            'AddedDI' => 'SA_MP_SALESINVOICE',
+            'NewOrder' => Permission::CREATE_MARKETPLACE_ORDER,
+            'AddedID' => Permission::CREATE_MARKETPLACE_ORDER,
+            'ModifyOrderNumber' => Permission::CREATE_MARKETPLACE_ORDER,
+            'UpdatedID' => Permission::CREATE_MARKETPLACE_ORDER,
+            'NewDelivery' => Permission::CREATE_MARKETPLACE_DELIVERY,
+            'AddedDN' => Permission::CREATE_MARKETPLACE_DELIVERY,
+            'NewInvoice' => Permission::CREATE_MARKETPLACE_INVOICE,
+            'AddedDI' => Permission::CREATE_MARKETPLACE_INVOICE,
         ]
         : [	
-            'NewOrder' => 'SA_SALESORDER',
-            'ModifyOrderNumber' => 'SA_SALESORDER',
-            'AddedID' => 'SA_SALESORDER',
-            'UpdatedID' => 'SA_SALESORDER',
-            'NewQuotation' => 'SA_SALESQUOTE',
-            'ModifyQuotationNumber' => 'SA_SALESQUOTE',
-            'NewQuoteToSalesOrder' => 'SA_SALESQUOTE',
-            'AddedQU' => 'SA_SALESQUOTE',
-            'UpdatedQU' => 'SA_SALESQUOTE',
-            'NewDelivery' => 'SA_SALESDELIVERY',
-            'AddedDN' => 'SA_SALESDELIVERY',
-            'NewInvoice' => 'SA_SALESINVOICE',
-            'AddedDI' => 'SA_SALESINVOICE',
+            'NewOrder' => Permission::CREATE_SALE_ORDER,
+            'ModifyOrderNumber' => Permission::CREATE_SALE_ORDER,
+            'AddedID' => Permission::CREATE_SALE_ORDER,
+            'UpdatedID' => Permission::CREATE_SALE_ORDER,
+            'NewQuotation' => Permission::CREATE_QUOTATION,
+            'ModifyQuotationNumber' => Permission::CREATE_QUOTATION,
+            'NewQuoteToSalesOrder' => Permission::CREATE_QUOTATION,
+            'AddedQU' => Permission::CREATE_QUOTATION,
+            'UpdatedQU' => Permission::CREATE_QUOTATION,
+            'NewDelivery' => Permission::CREATE_SALE_DELIVERY,
+            'AddedDN' => Permission::CREATE_SALE_DELIVERY,
+            'NewInvoice' => Permission::CREATE_SALE_INVOICE,
+            'AddedDI' => Permission::CREATE_SALE_INVOICE,
         ]
 );
 

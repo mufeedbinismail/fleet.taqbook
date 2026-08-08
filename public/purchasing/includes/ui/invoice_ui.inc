@@ -11,6 +11,8 @@
 ***********************************************************************/
 //--------------------------------------------------------------------------------------------------
 
+use App\Foundation\Auth\Constant\Permission;
+
 function copy_from_trans(&$supp_trans)
 {
 	$_POST['Comments'] = $supp_trans->Comments;
@@ -421,7 +423,7 @@ function display_grn_items_for_selection(&$supp_trans, $k)
         		submit_cells('grn_item_id'.$n, __("Add"), '', __("Add to Invoice"), true);
         	else	
         		submit_cells('grn_item_id'.$n, __("Add"), '', __("Add to Credit Note"), true);
-    		if (($supp_trans->trans_type == ST_SUPPINVOICE) && $_SESSION["wa_current_user"]->can_access('SA_GRNDELETE')) {	// Added 2008-10-18 by Joe Hunt. Special access rights needed.
+    		if (($supp_trans->trans_type == ST_SUPPINVOICE) && $_SESSION["wa_current_user"]->can_access(Permission::DELETE_RECEIVAL_ITEM)) {	// Added 2008-10-18 by Joe Hunt. Special access rights needed.
         		submit_cells('void_item_id'.$n, __("Remove"), '', __("WARNING! Be careful with removal. The operation is executed immediately and cannot be undone !!!"), true);
 				submit_js_confirm('void_item_id'.$n,
 					sprintf(__('You are about to remove all yet non-invoiced items from delivery line #%d. This operation also irreversibly changes related order line. Do you want to continue ?'), $n));
@@ -454,7 +456,7 @@ function display_grn_items(&$supp_trans, $mode=0)
 		if ($supp_trans->trans_type == ST_SUPPINVOICE)
 		{
 			$heading = __("Items Received Yet to be Invoiced");
-    		if ($_SESSION["wa_current_user"]->can_access('SA_GRNDELETE'))	// Added 2008-10-18 by Joe Hunt. Only admins can remove GRNs
+    		if ($_SESSION["wa_current_user"]->can_access(Permission::DELETE_RECEIVAL_ITEM))	// Added 2008-10-18 by Joe Hunt. Only admins can remove GRNs
 				$heading2 = __("WARNING! Be careful with removal. The operation is executed immediately and cannot be undone !!!");
 		}
 		else
@@ -500,7 +502,7 @@ function display_grn_items(&$supp_trans, $mode=0)
     		__("Received On"), __("Quantity Received"), __("Quantity Invoiced"),
     		__("Qty Yet To Invoice"), $supp_trans->tax_included ? __("Price after Tax") : __("Price before Tax"), 
     		__("Total"), "");
-    	if (($supp_trans->trans_type == ST_SUPPINVOICE) && $_SESSION["wa_current_user"]->can_access('SA_GRNDELETE'))	// Added 2008-10-18 by Joe Hunt. Only admins can remove GRNs
+    	if (($supp_trans->trans_type == ST_SUPPINVOICE) && $_SESSION["wa_current_user"]->can_access(Permission::DELETE_RECEIVAL_ITEM))	// Added 2008-10-18 by Joe Hunt. Only admins can remove GRNs
     		$th[] = "";
 		if ($supp_trans->trans_type == ST_SUPPCREDIT)
 		{
@@ -547,7 +549,7 @@ function display_grn_items(&$supp_trans, $mode=0)
 			if ($mode == 1)
 			{
 				delete_button_cell("Delete" . $entered_grn->id, __("Edit"), __('Edit document line'));
-				if (($supp_trans->trans_type == ST_SUPPINVOICE) && $_SESSION["wa_current_user"]->can_access('SA_GRNDELETE'))	  
+				if (($supp_trans->trans_type == ST_SUPPINVOICE) && $_SESSION["wa_current_user"]->can_access(Permission::DELETE_RECEIVAL_ITEM))	  
 					label_cell("");
 			}	
 			end_row();

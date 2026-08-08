@@ -14,13 +14,16 @@
   in pages that have the supplier dropdown lists.
   Author: bogeyman2007 from Discussion Forum. Modified by Joe Hunt
 ***********************************************************************/
-$GLOBALS['page_security'] = "SA_SALESORDER";
+
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::CREATE_SALE_ORDER;
 require_once __DIR__ . "/../../includes/session.inc";
 require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../sales/includes/db/customers_db.inc";
 
-if (!user_check_access($GLOBALS['page_security']) && user_check_access('SA_MP_SALESORDER'))
-    $GLOBALS['page_security'] = 'SA_MP_SALESORDER';
+if (!user_check_access($GLOBALS['page_security']) && user_check_access(Permission::CREATE_MARKETPLACE_ORDER))
+    $GLOBALS['page_security'] = Permission::CREATE_MARKETPLACE_ORDER;
 
 $mode = get_company_pref('no_customer_list');
 if ($mode != 0)

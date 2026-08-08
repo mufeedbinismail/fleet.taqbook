@@ -9,7 +9,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$GLOBALS['page_security'] = 'SA_SUPPLIERINVOICE';
+
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::CREATE_PURCHASE_INVOICE;
 
 require_once __DIR__ . "/../purchasing/includes/purchasing_db.inc";
 
@@ -371,7 +374,7 @@ if ($id5 != -1)
 }
 
 $id2 = -1;
-if ($_SESSION["wa_current_user"]->can_access('SA_GRNDELETE'))
+if ($_SESSION["wa_current_user"]->can_access(Permission::DELETE_RECEIVAL_ITEM))
 {
 	$id2 = find_submit('void_item_id');
 	if ($id2 != -1) 

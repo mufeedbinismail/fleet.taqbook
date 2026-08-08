@@ -1,6 +1,12 @@
 <?php
 
+use App\Foundation\Auth\Constant\Permission;
 use App\Trade\Sale\Enum\PaymentMethod;
+use App\Finance\Support\MoneyFactory;
+use App\Inventory\Repository\ItemRepository;
+use App\Trade\Marketplace\Collection\ExpenseCollection;
+use App\Trade\Marketplace\Entity\Expense;
+use Illuminate\Support\Str;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
@@ -17,13 +23,8 @@ use App\Trade\Sale\Enum\PaymentMethod;
 //	Entry/Modify Sales Invoice against single delivery
 //	Entry/Modify Batch Sales Invoice against batch of deliveries
 //
-use App\Finance\Support\MoneyFactory;
-use App\Inventory\Repository\ItemRepository;
-use App\Trade\Marketplace\Collection\ExpenseCollection;
-use App\Trade\Marketplace\Entity\Expense;
-use Illuminate\Support\Str;
 
-$GLOBALS['page_security'] = 'SA_SALESINVOICE';
+$GLOBALS['page_security'] = Permission::CREATE_SALE_INVOICE;
 require_once __DIR__ . "/../sales/includes/cart_class.inc";
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/data_checks.inc";
@@ -44,7 +45,7 @@ if (isset($_GET['Marketplace']) || ($_SESSION['Items']->is_marketplace_trans ?? 
 }
 
 if (check_value('is_marketplace_trans')) {
-    $GLOBALS['page_security'] = 'SA_MP_SALESINVOICE';
+    $GLOBALS['page_security'] = Permission::CREATE_MARKETPLACE_INVOICE;
 }
 
 $js = "";

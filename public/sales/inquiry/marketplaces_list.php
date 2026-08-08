@@ -1,6 +1,8 @@
 <?php
 
-$GLOBALS['page_security'] = "SA_MP_SALESORDER";
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::CREATE_MARKETPLACE_ORDER;
 require_once __DIR__ . "/../../includes/session.inc";
 require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../sales/includes/db/marketplaces_db.inc";

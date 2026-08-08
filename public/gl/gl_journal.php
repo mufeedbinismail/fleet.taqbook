@@ -9,7 +9,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$GLOBALS['page_security'] = 'SA_JOURNALENTRY';
+
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::CREATE_LEDGER_JOURNAL_ENTRY;
 require_once __DIR__ . "/../includes/ui/items_cart.inc";
 
 require_once __DIR__ . "/../includes/session.inc";
@@ -402,7 +405,7 @@ function check_item_data()
    		return false;
 	}
 
-	if (!$_SESSION["wa_current_user"]->can_access('SA_BANKJOURNAL') && is_bank_account($_POST['code_id'])) 
+	if (!$_SESSION["wa_current_user"]->can_access(Permission::CREATE_BANKING_JOURNAL_ENTRY) && is_bank_account($_POST['code_id'])) 
 	{
 		display_error(__("You cannot make a journal entry for a bank account. Please use one of the banking functions for bank transactions."));
 		set_focus('code_id');

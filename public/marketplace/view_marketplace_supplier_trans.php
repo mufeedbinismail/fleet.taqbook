@@ -1,11 +1,12 @@
 <?php
 
 use App\Finance\Support\MoneyFactory;
+use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Shared\Enum\SystemType;
 use App\Foundation\Shared\ValueObject\TypedId;
 use App\Trade\Marketplace\Cart\SupplierTransCart;
 
-$GLOBALS['page_security'] = 'SA_MP_SUPPTRANSVIEW';
+$GLOBALS['page_security'] = Permission::VIEW_MARKETPLACE_SUPPLIER_TRANSACTION;
 
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../purchasing/includes/purchasing_db.inc";

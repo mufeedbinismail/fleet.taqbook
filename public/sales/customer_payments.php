@@ -1,5 +1,6 @@
 <?php
 
+use App\Foundation\Auth\Constant\Permission;
 use App\Trade\Sale\Enum\PaymentMethod;
 
 /**********************************************************************
@@ -12,7 +13,7 @@ use App\Trade\Sale\Enum\PaymentMethod;
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$GLOBALS['page_security'] = 'SA_SALESPAYMNT';
+$GLOBALS['page_security'] = Permission::CREATE_SALE_PAYMENT;
 require_once __DIR__ . "/../includes/ui/allocation_cart.inc";
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/date_functions.inc";

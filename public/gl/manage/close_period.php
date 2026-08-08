@@ -10,7 +10,9 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
-$GLOBALS['page_security'] = 'SA_GLCLOSE';
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::CLOSE_PERIOD;
 require_once __DIR__ . "/../../includes/session.inc";
 
 require_once __DIR__ . "/../../includes/date_functions.inc";
@@ -46,7 +48,7 @@ function check_data()
 			display_error(__("The entered date is earlier than date already selected as closing date."));
 			set_focus('date');
 			return false;
-		} elseif (!user_check_access('SA_GLREOPEN')) {
+		} elseif (!user_check_access(Permission::REOPEN_PERIOD)) {
 			display_error(__("You are not allowed to reopen already closed transactions."));
 			set_focus('date');
 			return false;

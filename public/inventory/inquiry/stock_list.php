@@ -14,7 +14,10 @@
   in pages that have the item dropdown lists.
   Author: bogeyman2007 from Discussion Forum. Modified by Joe Hunt
 ***********************************************************************/
-$GLOBALS['page_security'] = "SA_ITEM";
+
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::MANAGE_INVENTORY_ITEM;
 require_once __DIR__ . "/../../includes/session.inc";
 require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../inventory/includes/db/items_db.inc";

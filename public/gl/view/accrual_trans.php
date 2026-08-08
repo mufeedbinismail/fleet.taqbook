@@ -9,7 +9,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$GLOBALS['page_security'] = 'SA_ACCRUALS';
+
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::CREATE_ACCRUAL;
 require_once __DIR__ . "/../../includes/session.inc";
 
 $_SESSION['page_title'] = __($GLOBALS['help_context'] = __("Search General Ledger Transactions for account: ").$_GET['act']);

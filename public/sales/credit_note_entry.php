@@ -1,6 +1,7 @@
 <?php
 
 use App\Finance\Support\MoneyFactory;
+use App\Foundation\Auth\Constant\Permission;
 use App\Trade\Marketplace\Collection\ExpenseCollection;
 use App\Trade\Marketplace\Entity\Expense;
 use App\Trade\Sale\Enum\PaymentMethod;
@@ -19,7 +20,7 @@ use App\Trade\Sale\Enum\PaymentMethod;
 //
 //	Entry/Modify free hand Credit Note
 //
-$GLOBALS['page_security'] = 'SA_SALESCREDIT';
+$GLOBALS['page_security'] = Permission::CREATE_SALE_FREEHAND_CREDIT;
 require_once __DIR__ . "/../sales/includes/cart_class.inc";
 require_once __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/data_checks.inc";
@@ -54,7 +55,7 @@ if(isset($_GET['NewCredit'])) {
 }
 
 if (isset($_GET['Marketplace']) || ($_SESSION['Items']->is_marketplace_trans ?? 0) != 0) {
-    $GLOBALS['page_security'] = 'SA_MP_SALESCREDIT';
+    $GLOBALS['page_security'] = Permission::CREATE_MARKETPLACE_FREEHAND_CREDIT;
 }
 
 page($_SESSION['page_title'],false, false, "", $js);

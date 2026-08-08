@@ -10,6 +10,8 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
+use App\Foundation\Auth\Constant\Permission;
+
 	require_once __DIR__ . "/../includes/session.inc";
 	require_once __DIR__ . "/../includes/ui.inc";
 	require_once __DIR__ . "/../includes/data_checks.inc";
@@ -18,7 +20,7 @@
 		require_once __DIR__ . "/../themes/".user_theme()."/dashboard.inc"; // yse theme dashboard.inc
 	else
 		require_once __DIR__ . "/../includes/dashboard.inc"; // here are all the dashboard routines.
-	$GLOBALS['page_security'] = 'SA_SETUPDISPLAY'; // A very low access level. The real access level is inside the routines.
+	$GLOBALS['page_security'] = Permission::CONFIGURE_DISPLAY; // A very low access level. The real access level is inside the routines.
 	// Falling back to whichever area comes first rather than to a named one, so this page never
 	// opens on somewhere this user has no business being.
 	$area = isset($_GET['area'])

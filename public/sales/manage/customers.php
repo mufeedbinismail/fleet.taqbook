@@ -9,7 +9,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$GLOBALS['page_security'] = 'SA_CUSTOMER';
+
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::MANAGE_CUSTOMER;
 
 require_once __DIR__ . "/../../includes/db_pager.inc";
 require_once __DIR__ . "/../../includes/session.inc";
@@ -350,9 +353,9 @@ if (!$selected_id)
 tabbed_content_start('tabs', array(
 		'settings' => array(__('&General settings'), $selected_id),
 		'contacts' => array(__('&Contacts'), $selected_id),
-		'transactions' => array(__('&Transactions'), (user_check_access('SA_SALESTRANSVIEW') ? $selected_id : null)),
-		'orders' => array(__('Sales &Orders'), (user_check_access('SA_SALESTRANSVIEW') ? $selected_id : null)),
-		'attachments' => array(__('Attachments'), (user_check_access('SA_ATTACHDOCUMENT') ? $selected_id : null)),
+		'transactions' => array(__('&Transactions'), (user_check_access(Permission::VIEW_SALE_TRANSACTION) ? $selected_id : null)),
+		'orders' => array(__('Sales &Orders'), (user_check_access(Permission::VIEW_SALE_TRANSACTION) ? $selected_id : null)),
+		'attachments' => array(__('Attachments'), (user_check_access(Permission::MANAGE_ATTACHMENT) ? $selected_id : null)),
 	));
 	
 	switch (get_post('_tabs_sel')) {

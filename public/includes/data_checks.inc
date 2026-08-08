@@ -9,6 +9,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
+
+use App\Foundation\Auth\Constant\Permission;
+
 function db_has_customers()
 {
 	return check_empty_result("SELECT COUNT(*) FROM debtors_master");
@@ -608,7 +611,7 @@ function check_deferred_income_act($msg)
 
 function check_is_editable($trans_type, $trans_no, $msg=null)
 {
-	if (!$_SESSION['wa_current_user']->can_access('SA_EDITOTHERSTRANS'))
+	if (!$_SESSION['wa_current_user']->can_access(Permission::EDIT_OTHERS_RECORD))
 	{
 		$audit = get_audit_trail_last($trans_type, $trans_no);
 

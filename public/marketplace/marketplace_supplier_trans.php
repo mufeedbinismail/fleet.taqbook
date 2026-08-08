@@ -8,6 +8,7 @@ require_once __DIR__ . "/../purchasing/includes/purchasing_ui.inc";
 require_once __DIR__ . "/includes/marketplace_supplier_trans_ui.inc";
 require_once __DIR__ . "/includes/marketplace_supplier_trans_db.inc";
 
+use App\Foundation\Auth\Constant\Permission;
 use App\Trade\Marketplace\Cart\DraftSupplierTransLine;
 use App\Trade\Marketplace\Cart\SupplierTransCart;
 use App\Trade\Marketplace\Service\SupplierTransCartService;
@@ -23,7 +24,7 @@ abort_unless(
     \Illuminate\Http\Response::HTTP_NOT_FOUND
 );
 
-$GLOBALS['page_security'] = $transType === SystemType::SupplierCredit ? 'SA_MP_SUPPCREDIT' : 'SA_MP_SUPPINVOICE';;
+$GLOBALS['page_security'] = $transType === SystemType::SupplierCredit ? Permission::CREATE_MARKETPLACE_SUPPLIER_CREDIT : Permission::CREATE_MARKETPLACE_SUPPLIER_INVOICE;;
 $_SESSION['page_title'] = __("Marketplace :doc", ['doc' => $transType->label()]);
 
 page($_SESSION['page_title'], false, false, '', user_use_date_picker() ? get_js_date_picker() : '');

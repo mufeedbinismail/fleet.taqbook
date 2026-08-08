@@ -9,7 +9,10 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
-$GLOBALS['page_security'] = 'SA_ITEM';
+
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::MANAGE_INVENTORY_ITEM;
 require __DIR__ . "/../../includes/session.inc";
 require_once __DIR__ . "/../../reporting/includes/tcpdf.php";
 
@@ -20,7 +23,7 @@ if (user_use_date_picker())
 	$js .= get_js_date_picker();
 
 if (isset($_GET['FixedAsset'])) {
-  $GLOBALS['page_security'] = 'SA_ASSET';
+  $GLOBALS['page_security'] = Permission::MANAGE_ASSET_ITEM;
   $_SESSION['page_title'] = __($GLOBALS['help_context'] = "Fixed Assets");
   $_POST['mb_flag'] = 'F';
   $_POST['fixed_asset']  = 1;
@@ -585,18 +588,18 @@ $tabs = (get_post('fixed_asset'))
 	? array(
 		'settings' => array(__('&General settings'), $stock_id),
 		'movement' => array(__('&Transactions'), $stock_id),
-		'attachments' => array(__('Attachments'), (user_check_access('SA_ATTACHDOCUMENT') ? get_item_code_id($stock_id) : null)))
+		'attachments' => array(__('Attachments'), (user_check_access(Permission::MANAGE_ATTACHMENT) ? get_item_code_id($stock_id) : null)))
 	: array(
 		'settings' => array(__('&General settings'), $stock_id),
-		'sales_pricing' => array(__('S&ales Pricing'), (user_check_access('SA_SALESPRICE') ? $stock_id : null)),
-		'purchase_pricing' => array(__('&Purchasing Pricing'), (user_check_access('SA_PURCHASEPRICING') ? $stock_id : null)),
-		'standard_cost' => array(__('Standard &Costs'), (user_check_access('SA_STANDARDCOST') ? $stock_id : null)),
+		'sales_pricing' => array(__('S&ales Pricing'), (user_check_access(Permission::MANAGE_SALE_PRICE) ? $stock_id : null)),
+		'purchase_pricing' => array(__('&Purchasing Pricing'), (user_check_access(Permission::MANAGE_PURCHASE_PRICE) ? $stock_id : null)),
+		'standard_cost' => array(__('Standard &Costs'), (user_check_access(Permission::MANAGE_STANDARD_COST) ? $stock_id : null)),
 		'reorder_level' => array(__('&Reorder Levels'), (is_inventory_item($stock_id) && 
-			user_check_access('SA_REORDER') ? $stock_id : null)),
-		'movement' => array(__('&Transactions'), (user_check_access('SA_ITEMSTRANSVIEW') && is_inventory_item($stock_id) ? 
+			user_check_access(Permission::INVENTORY_REORDER_REPORT) ? $stock_id : null)),
+		'movement' => array(__('&Transactions'), (user_check_access(Permission::VIEW_INVENTORY_TRANSACTION) && is_inventory_item($stock_id) ? 
 			$stock_id : null)),
-		'status' => array(__('&Status'), (user_check_access('SA_ITEMSSTATVIEW') ? $stock_id : null)),
-		'attachments' => array(__('Attachments'), (user_check_access('SA_ATTACHDOCUMENT') ? get_item_code_id($stock_id) : null)),
+		'status' => array(__('&Status'), (user_check_access(Permission::VIEW_INVENTORY_STATUS) ? $stock_id : null)),
+		'attachments' => array(__('Attachments'), (user_check_access(Permission::MANAGE_ATTACHMENT) ? get_item_code_id($stock_id) : null)),
 	);
 
 tabbed_content_start('tabs', $tabs);

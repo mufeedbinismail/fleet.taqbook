@@ -14,7 +14,10 @@
   selection in pages that have GL account dropdown lists.
   Author: bogeyman2007 from Discussion Forum. Modified by Joe Hunt
 ***********************************************************************/
-$GLOBALS['page_security'] = "SA_GLACCOUNT";
+
+use App\Foundation\Auth\Constant\Permission;
+
+$GLOBALS['page_security'] = Permission::MANAGE_LEDGER_ACCOUNT;
 require_once __DIR__ . "/../../includes/session.inc";
 require_once __DIR__ . "/../../includes/ui.inc";
 require_once __DIR__ . "/../../gl/includes/db/gl_db_accounts.inc";

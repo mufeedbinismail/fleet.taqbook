@@ -9,11 +9,14 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
+
+use App\Foundation\Auth\Constant\Permission;
+
 require_once __DIR__ . "/../includes/ui/items_cart.inc";
 require_once __DIR__ . "/../includes/session.inc";
 $GLOBALS['page_security'] = isset($_GET['NewPayment']) || 
 	@($_SESSION['pay_items']->trans_type==ST_BANKPAYMENT)
- ? 'SA_PAYMENT' : 'SA_DEPOSIT';
+ ? Permission::CREATE_BANKING_PAYMENT : Permission::CREATE_DEPOSIT;
 
 require_once __DIR__ . "/../includes/date_functions.inc";
 require_once __DIR__ . "/../includes/data_checks.inc";

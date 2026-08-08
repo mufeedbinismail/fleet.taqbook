@@ -9,6 +9,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
+
+use App\Foundation\Auth\Constant\Permission;
+
 require __DIR__ . "/../includes/session.inc";
 require_once __DIR__ . "/../includes/types.inc"; // For tag constants
 require_once __DIR__ . "/../admin/db/tags_db.inc";
@@ -16,9 +19,9 @@ require_once __DIR__ . "/../includes/ui.inc";
 
 // Set up page security based on what type of tags we're working with
 if (@$_GET['type'] == "account" || get_post('type') == TAG_ACCOUNT) {
-	$GLOBALS['page_security'] = 'SA_GLACCOUNTTAGS';
+	$GLOBALS['page_security'] = Permission::MANAGE_ACCOUNT_TAG;
 } else if(@$_GET['type'] == "dimension" || get_post('type') == TAG_DIMENSION) {
-	$GLOBALS['page_security'] = 'SA_DIMTAGS';
+	$GLOBALS['page_security'] = Permission::MANAGE_DIMENSION_TAG;
 }
 
 // We use $_POST['type'] throughout this script, so convert $_GET vars

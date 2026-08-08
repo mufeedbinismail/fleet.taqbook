@@ -9,6 +9,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
+
+use App\Foundation\Auth\Constant\Permission;
+
 require_once __DIR__ . "/../../../includes/ui.inc";
 require_once __DIR__ . "/../../../includes/ui/items_cart.inc";
 
@@ -221,7 +224,7 @@ function gl_edit_item_controls(&$order, $dim, $sub_accounts, $Index=null)
 			$_POST['LineMemo'] = $item->reference;
 		}
 		hidden('Index', $id);
-		$skip_bank = !$_SESSION["wa_current_user"]->can_access('SA_BANKJOURNAL');
+		$skip_bank = !$_SESSION["wa_current_user"]->can_access(Permission::CREATE_BANKING_JOURNAL_ENTRY);
 		echo gl_all_accounts_list('code_id', null, $skip_bank, true, __('[Select account]'), true, false, false);
 
 		if (is_subledger_account(get_post('code_id')))
@@ -238,7 +241,7 @@ function gl_edit_item_controls(&$order, $dim, $sub_accounts, $Index=null)
 	}
 	else
 	{
-		$skip_bank = !$_SESSION["wa_current_user"]->can_access('SA_BANKJOURNAL');
+		$skip_bank = !$_SESSION["wa_current_user"]->can_access(Permission::CREATE_BANKING_JOURNAL_ENTRY);
 		echo gl_all_accounts_list('code_id', null, $skip_bank, true, __('[Select account]'), true, false, false);
 		if ($sub_accounts)
 		{
