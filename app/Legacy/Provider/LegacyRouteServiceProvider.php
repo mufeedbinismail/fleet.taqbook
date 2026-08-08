@@ -25,7 +25,7 @@ class LegacyRouteServiceProvider extends ServiceProvider
         ]);
 
         $this->routes(function () {
-            Route::middleware('legacy.web')->group(base_path('/routes/legacy_web.php'));
+            Route::middleware('legacy.web')->group(base_path('routes/legacy.php'));
         });
     }
 }
