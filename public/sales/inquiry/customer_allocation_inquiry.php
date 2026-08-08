@@ -10,7 +10,7 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
-use App\Shared\Enum\TransactionEffect;
+use App\Foundation\Shared\Enum\TransactionEffect;
 
 $GLOBALS['page_security'] = 'SA_SALESALLOC';
 require_once __DIR__ . "/../../includes/db_pager.inc";

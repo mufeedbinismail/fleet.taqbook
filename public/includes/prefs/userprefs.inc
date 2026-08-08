@@ -1,6 +1,6 @@
 <?php
 
-use App\Foundation\Setting\UserSettingRepository;
+use App\Foundation\Shared\Setting\UserSetting;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.
@@ -15,14 +15,14 @@ use App\Foundation\Setting\UserSettingRepository;
 
 class user_prefs
 {
-    protected UserSettingRepository $repo;
+    protected UserSetting $repo;
 
 	function __construct($user = null)
 	{
 		$this->repo = user_settings()->setUser($user);
 	}
 
-    public function repo(): UserSettingRepository
+    public function repo(): UserSetting
     {
         return $this->repo;
     }

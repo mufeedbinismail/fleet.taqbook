@@ -20,14 +20,14 @@ global $systypes_array, $bank_account_types, $bank_transfer_types,
     $bank_owner, $type_shortcuts, $tmonths, $pterm_types, $tax_algorithms,
     $supported_collations, $depreciation_methods, $fa_systypes_array;
 
-$systypes_array = \App\Shared\Enum\SystemType::labels();
+$systypes_array = \App\Foundation\Shared\Enum\SystemType::labels();
 
 $fa_systypes_array = array (
 	ST_INVADJUST => __("Fixed Assets Disposal"),
 	ST_COSTUPDATE => __("Fixed Assets Revaluation"),
 	);
 
-$type_shortcuts = \App\Shared\Enum\SystemType::abbreviations();
+$type_shortcuts = \App\Foundation\Shared\Enum\SystemType::abbreviations();
 
 
 //----------------------------------------------------------------------------------

@@ -10,7 +10,7 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
-use App\Shared\ValueObject\TypedId;
+use App\Foundation\Shared\ValueObject\TypedId;
 use App\Trade\Shared\Enum\CustomerTransactionSource;
 
 $GLOBALS['page_security'] = 'SA_SALESTRANSVIEW';

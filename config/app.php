@@ -186,12 +186,12 @@ return [
         /*
          * Application Service Providers...
          */
-        \App\Foundation\Provider\AppServiceProvider::class,
+        \App\Foundation\Framework\Provider\AppServiceProvider::class,
         \App\Foundation\Auth\Provider\AuthServiceProvider::class,
-        \App\Foundation\Provider\BladeServiceProvider::class,
-        // \App\Foundation\Provider\BroadcastServiceProvider::class,
-        \App\Foundation\Provider\EventServiceProvider::class,
-        \App\Foundation\Provider\RouteServiceProvider::class,
+        \App\Foundation\Framework\Provider\BladeServiceProvider::class,
+        // \App\Foundation\Framework\Provider\BroadcastServiceProvider::class,
+        \App\Foundation\Framework\Provider\EventServiceProvider::class,
+        \App\Foundation\Framework\Provider\RouteServiceProvider::class,
         \App\Foundation\Navigation\Provider\NavigationServiceProvider::class,
         \App\Legacy\Provider\LegacyServiceProvider::class,
         \App\Finance\Provider\FinanceServiceProvider::class,

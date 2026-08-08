@@ -2,8 +2,8 @@
 
 namespace App\Trade\Sale\Query\Allocation;
 
-use App\Shared\Enum\TransactionEffect;
-use App\Shared\ValueObject\TypedId;
+use App\Foundation\Shared\Enum\TransactionEffect;
+use App\Foundation\Shared\ValueObject\TypedId;
 use Illuminate\Support\Facades\DB;
 
 class AllocateesQuery

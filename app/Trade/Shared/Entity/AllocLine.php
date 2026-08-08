@@ -3,8 +3,8 @@
 namespace App\Trade\Shared\Entity;
 
 use App\Finance\Support\MoneyFactory;
-use App\Shared\ValueObject\DomainDateTime;
-use App\Shared\ValueObject\TypedId;
+use App\Foundation\Shared\ValueObject\DomainDateTime;
+use App\Foundation\Shared\ValueObject\TypedId;
 use Brick\Money\Money;
 
 /**

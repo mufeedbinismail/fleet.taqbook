@@ -11,7 +11,7 @@ use App\Foundation\Navigation\Constant\Area;
 use App\Foundation\Navigation\Constant\Section;
 use App\Foundation\Navigation\Enum\Category;
 use App\Foundation\Navigation\Enum\Column;
-use App\Shared\Enum\SystemType;
+use App\Foundation\Shared\Enum\SystemType;
 
 class MarketplaceSource extends LegacySource
 {

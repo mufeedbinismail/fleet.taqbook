@@ -2,8 +2,8 @@
 
 namespace App\Trade\Marketplace\Repository;
 
-use App\Shared\Enum\SystemType;
-use App\Shared\ValueObject\TypedId;
+use App\Foundation\Shared\Enum\SystemType;
+use App\Foundation\Shared\ValueObject\TypedId;
 use App\Trade\Sale\Query\Allocation\AllocateesQuery;
 use App\Trade\Sale\Query\Allocation\AllocatorsQuery;
 use App\Trade\Shared\Collection\DraftAllocationLineCollection;

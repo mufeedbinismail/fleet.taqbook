@@ -14,10 +14,10 @@ use App\Finance\Support\MoneyFactory;
 use App\Trade\Marketplace\Cart\CustomerSettlementCart;
 use App\Trade\Marketplace\Service\CustomerSettlementCartService;
 use App\Trade\Shared\Enum\CustomerTransactionSource;
-use App\Shared\DTO\ValidationResult;
-use App\Shared\Enum\SystemType;
-use App\Shared\ValueObject\DomainDateTime;
-use App\Shared\ValueObject\TypedId;
+use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Shared\Enum\SystemType;
+use App\Foundation\Shared\ValueObject\DomainDateTime;
+use App\Foundation\Shared\ValueObject\TypedId;
 
 // One screen serves both the customer settlement (payment against invoices) and its
 // mirror, the customer refund (credit notes applied to a refund). The mode comes from

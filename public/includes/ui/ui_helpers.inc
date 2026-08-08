@@ -5,7 +5,7 @@
  * indicating the session was replaced by opening a second browser tab.
  */
 
-use App\Shared\DTO\ValidationResult;
+use App\Foundation\Framework\DTO\ValidationResult;
 
 function check_cart_edit_conflict(string $posted_id, string $cart_id): void
 {

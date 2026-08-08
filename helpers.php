@@ -1,7 +1,7 @@
 <?php
 
-use App\Foundation\Contract\Enum\HasLabelContract;
-use App\Foundation\Support\Arr;
+use App\Foundation\Framework\Contract\Enum\HasLabelContract;
+use App\Foundation\Framework\Support\Arr;
 
 /**
  * The address of a FrontAccounting script, with its parameters as a query string.
@@ -31,7 +31,7 @@ function legacy_url(string $path, array $parameters = [], ?bool $secure = null):
  *
  * @param  array|string|null  $key
  * @param  mixed  $default
- * @return mixed|\App\Foundation\Setting\SettingRepository
+ * @return mixed|\App\Foundation\Shared\Setting\GlobalSetting
  */
 function settings($key = null, $default = Arr::NOT_SET)
 {
@@ -53,7 +53,7 @@ function settings($key = null, $default = Arr::NOT_SET)
  *
  * @param  array|string|null  $key
  * @param  mixed  $default
- * @return mixed|\App\Foundation\Setting\UserSettingRepository
+ * @return mixed|\App\Foundation\Shared\Setting\UserSetting
  */
 function user_settings($key = null, $default = Arr::NOT_SET)
 {
@@ -71,12 +71,12 @@ function user_settings($key = null, $default = Arr::NOT_SET)
 /**
  * Get the language service bound to the current locale.
  *
- * @return \App\Foundation\Service\LanguageService
+ * @return \App\Foundation\Framework\Support\Language
  */
 function language()
 {
     static $language;
-    return $language ??= new \App\Foundation\Service\LanguageService;
+    return $language ??= new \App\Foundation\Framework\Support\Language;
 }
 
 /**

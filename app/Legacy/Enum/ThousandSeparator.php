@@ -2,8 +2,8 @@
 
 namespace App\Legacy\Enum;
 
-use App\Foundation\Contract\Enum\HasLabelContract;
-use App\Foundation\Concern\Enum\HasLabelConcern;
+use App\Foundation\Framework\Contract\Enum\HasLabelContract;
+use App\Foundation\Framework\Concern\Enum\HasLabelConcern;
 
 enum ThousandSeparator: int implements HasLabelContract
 {

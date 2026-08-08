@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Navigation\Http\Controller;
 
-use App\Foundation\Http\Controller\Controller;
+use App\Foundation\Framework\Http\Controller\Controller;
 use App\Foundation\Navigation\Facade\Navigation;
 use Illuminate\Contracts\View\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

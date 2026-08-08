@@ -1,6 +1,6 @@
 <?php
 
-use App\Shared\ValueObject\TypedId;
+use App\Foundation\Shared\ValueObject\TypedId;
 
 $GLOBALS['page_security'] = 'SA_MP_SUPPTRANSVIEW';
 

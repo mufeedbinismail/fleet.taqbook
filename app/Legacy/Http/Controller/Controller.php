@@ -2,7 +2,7 @@
 
 namespace App\Legacy\Http\Controller;
 
-use App\Foundation\Http\Controller\Controller as BaseController;
+use App\Foundation\Framework\Http\Controller\Controller as BaseController;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 

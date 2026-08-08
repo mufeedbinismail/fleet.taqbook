@@ -6,9 +6,9 @@ use App\Finance\Support\MoneyFactory;
 use App\Trade\Sale\Entity\CustTransDocument;
 use App\Trade\Shared\Collection\DraftAllocationLineCollection;
 use App\Trade\Shared\Entity\DraftAllocationLine;
-use App\Shared\Enum\SystemType;
-use App\Shared\ValueObject\DomainDateTime;
-use App\Shared\ValueObject\TypedId;
+use App\Foundation\Shared\Enum\SystemType;
+use App\Foundation\Shared\ValueObject\DomainDateTime;
+use App\Foundation\Shared\ValueObject\TypedId;
 use Brick\Money\Money;
 
 class CustomerSettlementCart

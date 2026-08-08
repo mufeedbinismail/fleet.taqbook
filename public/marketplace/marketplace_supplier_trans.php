@@ -11,9 +11,9 @@ require_once __DIR__ . "/includes/marketplace_supplier_trans_db.inc";
 use App\Trade\Marketplace\Cart\DraftSupplierTransLine;
 use App\Trade\Marketplace\Cart\SupplierTransCart;
 use App\Trade\Marketplace\Service\SupplierTransCartService;
-use App\Shared\DTO\ValidationResult;
-use App\Shared\Enum\SystemType;
-use App\Shared\ValueObject\TypedId;
+use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Shared\Enum\SystemType;
+use App\Foundation\Shared\ValueObject\TypedId;
 
 $transType = mktpl_st_get_trans_type_from_request();
 

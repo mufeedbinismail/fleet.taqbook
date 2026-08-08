@@ -2,7 +2,7 @@
 
 use App\Trade\Sale\Enum\PaymentMethod;
 use App\Trade\Shared\Enum\CustomerTransactionSource;
-use App\Shared\Enum\TransactionEffect;
+use App\Foundation\Shared\Enum\TransactionEffect;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.

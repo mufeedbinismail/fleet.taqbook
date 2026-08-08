@@ -11,7 +11,7 @@
 ***********************************************************************/
 
 use App\Trade\Shared\Enum\SupplierTransactionSource;
-use App\Shared\Enum\TransactionEffect;
+use App\Foundation\Shared\Enum\TransactionEffect;
 
 require_once __DIR__ . "/../../../purchasing/includes/db/invoice_items_db.inc";
 require_once __DIR__ . "/../../../admin/db/attachments_db.inc";

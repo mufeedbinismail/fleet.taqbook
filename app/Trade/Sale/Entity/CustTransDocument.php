@@ -3,9 +3,9 @@
 namespace App\Trade\Sale\Entity;
 
 use App\Finance\Support\MoneyFactory;
-use App\Shared\ValueObject\DomainDateTime;
-use App\Shared\Enum\TransactionEffect;
-use App\Shared\ValueObject\TypedId;
+use App\Foundation\Shared\ValueObject\DomainDateTime;
+use App\Foundation\Shared\Enum\TransactionEffect;
+use App\Foundation\Shared\ValueObject\TypedId;
 use App\Trade\Sale\Collection\CustTransDocLineCollection;
 use App\Trade\Sale\Enum\PaymentMethod;
 use App\Trade\Shared\Collection\AllocLineCollection;

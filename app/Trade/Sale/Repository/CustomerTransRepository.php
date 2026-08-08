@@ -2,7 +2,7 @@
 
 namespace App\Trade\Sale\Repository;
 
-use App\Shared\ValueObject\TypedId;
+use App\Foundation\Shared\ValueObject\TypedId;
 use App\Trade\Sale\Collection\CustTransDocLineCollection;
 use App\Trade\Sale\Entity\CustTransDocument;
 use App\Trade\Shared\Collection\AllocLineCollection;

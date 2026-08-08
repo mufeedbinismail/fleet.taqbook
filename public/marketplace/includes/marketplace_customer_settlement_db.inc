@@ -5,8 +5,8 @@ use App\Trade\Marketplace\Cart\CustomerSettlementCart;
 use App\Trade\Sale\Enum\PaymentMethod;
 use App\Trade\Shared\Enum\CustomerTransactionSource;
 use App\Trade\Shared\Enum\SupplierTransactionSource;
-use App\Shared\Enum\TransactionEffect;
-use App\Shared\ValueObject\TypedId;
+use App\Foundation\Shared\Enum\TransactionEffect;
+use App\Foundation\Shared\ValueObject\TypedId;
 
 // Writes one half of the marketplace AR setoff and its paired marketplace AP row.
 // The cart's type selects which half:

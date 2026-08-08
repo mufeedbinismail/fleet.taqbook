@@ -4,8 +4,8 @@ namespace App\Trade\Marketplace\Cart;
 
 use App\Finance\Support\MoneyFactory;
 use App\Finance\Tax\Entity\TaxSetting;
-use App\Shared\Enum\SystemType;
-use App\Shared\ValueObject\TypedId;
+use App\Foundation\Shared\Enum\SystemType;
+use App\Foundation\Shared\ValueObject\TypedId;
 use Brick\Money\Money;
 
 class SupplierTransCart

@@ -1,8 +1,8 @@
 <?php
 
 use App\Finance\Support\MoneyFactory;
-use App\Shared\Enum\SystemType;
-use App\Shared\ValueObject\TypedId;
+use App\Foundation\Shared\Enum\SystemType;
+use App\Foundation\Shared\ValueObject\TypedId;
 use App\Trade\Marketplace\Cart\SupplierTransCart;
 
 $GLOBALS['page_security'] = 'SA_MP_SUPPTRANSVIEW';

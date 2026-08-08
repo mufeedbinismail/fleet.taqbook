@@ -145,7 +145,7 @@ function print_payment_report()
 				$rep->DateCol(2, 3,	$trans['due_date'], true);
 			else	
 				$rep->DateCol(2, 3,	$trans['tran_date'], true);
-			if ($trans['effect'] == \App\Shared\Enum\TransactionEffect::Decrease->value)
+			if ($trans['effect'] == \App\Foundation\Shared\Enum\TransactionEffect::Decrease->value)
 			{
 				$trans['TranTotal'] = -$trans['TranTotal'];
 				$trans['Balance'] = -$trans['Balance'];

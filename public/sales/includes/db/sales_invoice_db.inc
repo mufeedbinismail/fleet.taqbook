@@ -8,9 +8,9 @@ use App\Trade\Marketplace\Repository\ExpenseRepository;
 use App\Trade\Marketplace\Service\CustomerSettlementCartService;
 use App\Trade\Sale\Enum\PaymentMethod;
 use App\Trade\Shared\Enum\CustomerTransactionSource;
-use App\Shared\Enum\TransactionEffect;
-use App\Shared\ValueObject\DomainDateTime;
-use App\Shared\ValueObject\TypedId;
+use App\Foundation\Shared\Enum\TransactionEffect;
+use App\Foundation\Shared\ValueObject\DomainDateTime;
+use App\Foundation\Shared\ValueObject\TypedId;
 use App\Trade\Marketplace\Cart\CustomerSettlementCart;
 
 require_once __DIR__ . '/../../../purchasing/includes/purchasing_db.inc';

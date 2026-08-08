@@ -1,7 +1,7 @@
 <?php
 
 use App\Trade\Shared\Enum\SupplierTransactionSource;
-use App\Shared\Enum\TransactionEffect;
+use App\Foundation\Shared\Enum\TransactionEffect;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.

@@ -7,8 +7,8 @@ use App\Trade\Shared\Collection\DraftAllocationLineCollection;
 use App\Trade\Marketplace\Query\Marketplace\MarketplaceQuery;
 use App\Trade\Sale\Repository\CustomerRepository;
 use App\Trade\Sale\Repository\CustomerTransRepository;
-use App\Shared\DTO\ValidationResult;
-use App\Shared\ValueObject\TypedId;
+use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Shared\ValueObject\TypedId;
 use App\Trade\Marketplace\Repository\CustAllocRepository;
 
 class CustomerSettlementCartService

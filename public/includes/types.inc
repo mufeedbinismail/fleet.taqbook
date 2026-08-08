@@ -12,46 +12,46 @@
 //----------------------------------------------------------------------------------
 //	FrontAccounting system transaction types
 //
-define('ST_JOURNAL',      \App\Shared\Enum\SystemType::Journal->value);
+define('ST_JOURNAL',      \App\Foundation\Shared\Enum\SystemType::Journal->value);
 
-define('ST_BANKPAYMENT',  \App\Shared\Enum\SystemType::BankPayment->value);
-define('ST_BANKDEPOSIT',  \App\Shared\Enum\SystemType::BankDeposit->value);
-define('ST_BANKTRANSFER', \App\Shared\Enum\SystemType::BankTransfer->value);
+define('ST_BANKPAYMENT',  \App\Foundation\Shared\Enum\SystemType::BankPayment->value);
+define('ST_BANKDEPOSIT',  \App\Foundation\Shared\Enum\SystemType::BankDeposit->value);
+define('ST_BANKTRANSFER', \App\Foundation\Shared\Enum\SystemType::BankTransfer->value);
 
-define('ST_SALESINVOICE', \App\Shared\Enum\SystemType::SalesInvoice->value);
-define('ST_CUSTCREDIT',   \App\Shared\Enum\SystemType::CustomerCredit->value);
-define('ST_CUSTPAYMENT',  \App\Shared\Enum\SystemType::CustomerPayment->value);
-define('ST_CUSTDELIVERY', \App\Shared\Enum\SystemType::CustomerDelivery->value);
-define('ST_MKTCUSTPAYMENT', \App\Shared\Enum\SystemType::MarketplaceCustomerPayment->value);
-define('ST_MKTCUSTREFUND', \App\Shared\Enum\SystemType::MarketplaceCustomerRefund->value);
+define('ST_SALESINVOICE', \App\Foundation\Shared\Enum\SystemType::SalesInvoice->value);
+define('ST_CUSTCREDIT',   \App\Foundation\Shared\Enum\SystemType::CustomerCredit->value);
+define('ST_CUSTPAYMENT',  \App\Foundation\Shared\Enum\SystemType::CustomerPayment->value);
+define('ST_CUSTDELIVERY', \App\Foundation\Shared\Enum\SystemType::CustomerDelivery->value);
+define('ST_MKTCUSTPAYMENT', \App\Foundation\Shared\Enum\SystemType::MarketplaceCustomerPayment->value);
+define('ST_MKTCUSTREFUND', \App\Foundation\Shared\Enum\SystemType::MarketplaceCustomerRefund->value);
 
-define('ST_LOCTRANSFER',  \App\Shared\Enum\SystemType::LocTransfer->value);
-define('ST_INVADJUST',    \App\Shared\Enum\SystemType::InvAdjust->value);
+define('ST_LOCTRANSFER',  \App\Foundation\Shared\Enum\SystemType::LocTransfer->value);
+define('ST_INVADJUST',    \App\Foundation\Shared\Enum\SystemType::InvAdjust->value);
 
-define('ST_PURCHORDER',   \App\Shared\Enum\SystemType::PurchOrder->value);
-define('ST_SUPPINVOICE',  \App\Shared\Enum\SystemType::SupplierInvoice->value);
-define('ST_SUPPCREDIT',   \App\Shared\Enum\SystemType::SupplierCredit->value);
-define('ST_SUPPAYMENT',   \App\Shared\Enum\SystemType::SupplierPayment->value);
-define('ST_SUPPRECEIVE',  \App\Shared\Enum\SystemType::SupplierReceive->value);
+define('ST_PURCHORDER',   \App\Foundation\Shared\Enum\SystemType::PurchOrder->value);
+define('ST_SUPPINVOICE',  \App\Foundation\Shared\Enum\SystemType::SupplierInvoice->value);
+define('ST_SUPPCREDIT',   \App\Foundation\Shared\Enum\SystemType::SupplierCredit->value);
+define('ST_SUPPAYMENT',   \App\Foundation\Shared\Enum\SystemType::SupplierPayment->value);
+define('ST_SUPPRECEIVE',  \App\Foundation\Shared\Enum\SystemType::SupplierReceive->value);
 
-define('ST_WORKORDER',    \App\Shared\Enum\SystemType::WorkOrder->value);
-define('ST_MANUISSUE',    \App\Shared\Enum\SystemType::ManuIssue->value);
-define('ST_MANURECEIVE',  \App\Shared\Enum\SystemType::ManuReceive->value);
+define('ST_WORKORDER',    \App\Foundation\Shared\Enum\SystemType::WorkOrder->value);
+define('ST_MANUISSUE',    \App\Foundation\Shared\Enum\SystemType::ManuIssue->value);
+define('ST_MANURECEIVE',  \App\Foundation\Shared\Enum\SystemType::ManuReceive->value);
 
-define('ST_SALESORDER',  \App\Shared\Enum\SystemType::SalesOrder->value);
-define('ST_SALESQUOTE',  \App\Shared\Enum\SystemType::SalesQuote->value);
-define('ST_COSTUPDATE',  \App\Shared\Enum\SystemType::CostUpdate->value);
-define('ST_DIMENSION',   \App\Shared\Enum\SystemType::Dimension->value);
-define('ST_CUSTOMER',    \App\Shared\Enum\SystemType::Customer->value);
-define('ST_SUPPLIER',    \App\Shared\Enum\SystemType::Supplier->value);
-define('ST_ITEM',        \App\Shared\Enum\SystemType::Item->value);
-define('ST_FIXEDASSET',  \App\Shared\Enum\SystemType::FixedAsset->value);
-define('ST_BANKACCOUNT', \App\Shared\Enum\SystemType::BankAccount->value);
+define('ST_SALESORDER',  \App\Foundation\Shared\Enum\SystemType::SalesOrder->value);
+define('ST_SALESQUOTE',  \App\Foundation\Shared\Enum\SystemType::SalesQuote->value);
+define('ST_COSTUPDATE',  \App\Foundation\Shared\Enum\SystemType::CostUpdate->value);
+define('ST_DIMENSION',   \App\Foundation\Shared\Enum\SystemType::Dimension->value);
+define('ST_CUSTOMER',    \App\Foundation\Shared\Enum\SystemType::Customer->value);
+define('ST_SUPPLIER',    \App\Foundation\Shared\Enum\SystemType::Supplier->value);
+define('ST_ITEM',        \App\Foundation\Shared\Enum\SystemType::Item->value);
+define('ST_FIXEDASSET',  \App\Foundation\Shared\Enum\SystemType::FixedAsset->value);
+define('ST_BANKACCOUNT', \App\Foundation\Shared\Enum\SystemType::BankAccount->value);
 
 // Don't include these defines in the $systypes_array.
 // They are used for documents only.
-define('ST_STATEMENT', \App\Shared\Enum\SystemType::Statement->value);
-define('ST_CHEQUE',    \App\Shared\Enum\SystemType::Cheque->value);
+define('ST_STATEMENT', \App\Foundation\Shared\Enum\SystemType::Statement->value);
+define('ST_CHEQUE',    \App\Foundation\Shared\Enum\SystemType::Cheque->value);
 
 //
 //	Depreciation period types

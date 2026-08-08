@@ -10,7 +10,7 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
-use App\Foundation\Support\Arr;
+use App\Foundation\Framework\Support\Arr;
 
 /*
 	Retrieve value of POST variable(s).
