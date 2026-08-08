@@ -238,13 +238,15 @@ class NavigationRenderTest extends TestCase
 
     /**
      * The tail of an accordion item's opening tag, from the end of its class list to the key that
-     * names it. Written this way so that asking for a shut item cannot match an open one: the two
-     * differ only in what the class list ends with, and the key that follows anchors the match to
-     * one item rather than to any item whose classes happen to end the same way.
+     * names it. The key anchors the match to one item rather than to any item whose classes happen
+     * to end the same way.
+     *
+     * Asking for an open one narrows to those. Asking without matches the item in either state,
+     * because what marks it open sits ahead of the quote both forms start at.
      */
     private function item(string $key, bool $open = false): string
     {
-        return ($open ? ' is-open"' : '"').' x-accordion:item="'.$key.'"';
+        return ($open ? ' x-is-open"' : '"').' x-accordion:item="'.$key.'"';
     }
 
     /**
