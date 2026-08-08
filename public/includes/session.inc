@@ -163,7 +163,6 @@ function html_cleanup(&$parms)
 
 require_once __DIR__ . "/../includes/errors.inc";
 require_once __DIR__ . "/../includes/current_user.inc";
-require_once __DIR__ . "/../admin/db/security_db.inc";
 require_once __DIR__ . "/../includes/ajax.inc";
 require_once __DIR__ . "/../includes/ui/ui_msgs.inc";
 require_once __DIR__ . "/../includes/prefs/sysprefs.inc";
