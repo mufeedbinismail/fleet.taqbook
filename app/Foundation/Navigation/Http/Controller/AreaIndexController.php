@@ -27,7 +27,7 @@ class AreaIndexController extends Controller
         // work it out from the URL, which says only which area is being drawn.
         Navigation::here($key);
 
-        return view('navigation.area-index', [
+        return view('pages.foundation.area-index', [
             'area' => $area,
             'title' => $area->label()->text(),
         ]);

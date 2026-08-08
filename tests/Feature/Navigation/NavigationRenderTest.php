@@ -170,7 +170,7 @@ class NavigationRenderTest extends TestCase
         $location = new CurrentLocation($tree->find('trade.sale.order.modify'), [Crumb::of('#5')]);
 
         $html = $this->stripAccelerators($this->render(
-            '<x-nav.breadcrumbs :location="$location" />',
+            '<x-nav::breadcrumbs :location="$location" />',
             ['location' => $location],
         ));
 
@@ -186,7 +186,7 @@ class NavigationRenderTest extends TestCase
 
     public function test_breadcrumbs_draw_nothing_when_the_request_could_not_be_placed(): void
     {
-        $html = $this->render('<x-nav.breadcrumbs :location="$location" />', ['location' => new CurrentLocation]);
+        $html = $this->render('<x-nav::breadcrumbs :location="$location" />', ['location' => new CurrentLocation]);
 
         $this->assertSame('', trim($html));
     }
@@ -199,7 +199,7 @@ class NavigationRenderTest extends TestCase
     {
         $node = $this->tree()->find('trade.sale.order.create');
 
-        $html = $this->render('<x-nav.entry :node="$node" />', ['node' => $node]);
+        $html = $this->render('<x-nav::entry :node="$node" />', ['node' => $node]);
 
         $this->assertStringContainsString('accesskey="O"', $html);
         $this->assertStringContainsString('<u>O</u>', $html);
@@ -216,7 +216,7 @@ class NavigationRenderTest extends TestCase
 
         $this->assertStringContainsString(
             'icon icon-storefront',
-            $this->render('<x-nav.entry :node="$node" />', ['node' => $node]),
+            $this->render('<x-nav::entry :node="$node" />', ['node' => $node]),
         );
     }
 
@@ -231,7 +231,7 @@ class NavigationRenderTest extends TestCase
     private function sidebar(NavigationTree $tree, CurrentLocation $location): string
     {
         return $this->render(
-            '<x-nav.sidebar :navigation="$navigation" :location="$location" />',
+            '<x-nav::sidebar :navigation="$navigation" :location="$location" />',
             ['navigation' => $tree, 'location' => $location],
         );
     }

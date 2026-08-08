@@ -69,7 +69,7 @@ foreach ($area->sections() as $group) {
                             <div class="area-index-column col-span-1 p-2 md:p-4 grid grid-cols-1">
                                 @foreach ($runs as $run)
                                     @foreach ($run as $item)
-                                        <x-nav.entry :node="$item" :accelerated="false" class="col-span-1" />
+                                        <x-nav::entry :node="$item" :accelerated="false" class="col-span-1" />
                                     @endforeach
 
                                     @unless ($loop->last)

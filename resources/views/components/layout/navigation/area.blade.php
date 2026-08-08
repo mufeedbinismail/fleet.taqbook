@@ -28,7 +28,7 @@ $openSection = $sections->first(
     <div @class(['nav-row nav-row--split', 'is-current' => $current])>
         <a href="{{ $area->url() }}" @if ($accessKey !== null) accesskey="{{ $accessKey }}" @endif>
             <span class="icon {{ $area->icon() ?? 'icon-spacer' }}"></span>
-            <span class="nav-row-label"><x-nav.label :label="$area->label()" /></span>
+            <span class="nav-row-label"><x-nav::label :label="$area->label()" /></span>
         </a>
 
         <button aria-label="{{ $area->label()->text() }}" x-accordion:trigger>
@@ -49,7 +49,7 @@ $openSection = $sections->first(
                     <ul @class(['nav-panel', 'x-is-open' => $sectionKey === $openSection]) x-accordion:panel>
                         @foreach ($group->items as $item)
                             <li>
-                                <x-nav.entry
+                                <x-nav::entry
                                     :node="$item"
                                     :accelerated="$current"
                                     @class(['is-current' => $location->is($item->key())])

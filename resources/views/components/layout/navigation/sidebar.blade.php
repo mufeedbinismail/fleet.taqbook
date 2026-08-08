@@ -11,7 +11,7 @@
 <nav {{ $attributes->class('main-nav') }} x-accordion>
     <ul>
         @foreach ($navigation->areas() as $area)
-            <x-nav.area :area="$area" :location="$location" />
+            <x-nav::area :area="$area" :location="$location" />
         @endforeach
     </ul>
 </nav>

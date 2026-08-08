@@ -1,7 +1,4 @@
 @php
-// Set defaults from passed variables or session/globals
-$no_menu = $no_menu ?? false;
-$is_index = $is_index ?? false;
 $title = $title ?? null;
 
 // Straight from the guard, not from the legacy session: a page that never boots FrontAccounting
@@ -14,10 +11,6 @@ $user = auth()->user();
 $dashboard = ($area = $location->area()?->key()) === null
     ? legacy_url('index.php')
     : legacy_url('admin/dashboard.php', ['area' => $area]);
-
-// Still the legacy session rather than the guard, and deliberately: what this gates is hotkey help,
-// which only a FrontAccounting-booted request produces. A logged-in user is not the question.
-$shouldShowFooter = !$no_menu && !$is_index && null !== session('wa_current_user');
 
 // Define toolbox
 $toolbox = [
@@ -44,9 +37,9 @@ $toolbox = [
     ]
 ];
 
-// Handle footer data and Ajax if needed
+// The hints are drawn where the chrome closes, which on an ajax request is not sent. Queuing the
+// same text as an update is what puts it on a page that only replaced its middle.
 if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax'])) {
-    $help = implode('; ', $GLOBALS['Pagehelp']);
     $GLOBALS['Ajax']->addUpdate(true, 'hotkeyshelp', $help);
 }
 @endphp
@@ -68,7 +61,7 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
                 <img src="{{ url("/themes/default/images/logo.svg") }}" alt="Logo">
                 taqbook <small><sub>ERP</sub></small>
             </h2>
-            <x-nav.sidebar :navigation="$navigation" :location="$location" />
+            <x-nav::sidebar :navigation="$navigation" :location="$location" />
         </div>
     </aside>
     @endif
@@ -117,7 +110,7 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
                 </template>
             </div>
         </header>
-        <x-nav.breadcrumbs :location="$location" />
+        <x-nav::breadcrumbs :location="$location" />
         @endif
 
         <main class="main-content-area">

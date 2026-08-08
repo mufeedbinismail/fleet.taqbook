@@ -35,5 +35,5 @@ $accessKey = $accelerated ? $node->label()->accessKey() : null;
     {{ $attributes->class(['nav-entry', 'nav-row']) }}
 >
     <span class="icon nav-entry-icon {{ $icon }}"></span>
-    <span class="nav-entry-label"><x-nav.label :label="$node->label()" :marked="$accelerated" /></span>
+    <span class="nav-entry-label"><x-nav::label :label="$node->label()" :marked="$accelerated" /></span>
 </a>

@@ -15,7 +15,7 @@ class AuthenticationController extends Controller
             return redirect()->intended($this->defaultTarget());
         }
 
-        return view('auth.login');
+        return view('pages.foundation.login');
     }
 
     public function login(LoginRequest $request, UserAuthenticator $authenticator)
@@ -29,7 +29,7 @@ class AuthenticationController extends Controller
     {
         $authenticator->logout($request);
 
-        return view('auth.logout');
+        return view('pages.foundation.logout');
     }
 
     /**
