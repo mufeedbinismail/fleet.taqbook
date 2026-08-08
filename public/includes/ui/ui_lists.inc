@@ -2487,7 +2487,7 @@ function security_roles_list($name, $selected_id=null, $new_item=false, $submit_
 
 	$sql = "SELECT id, role, inactive FROM security_roles";
 
-	return combo_input($name, $selected_id, $sql, 'id', 'description',
+	return combo_input($name, $selected_id, $sql, 'id', 'role',
 		array(
 			'spec_option'=>$new_item ? __("New role") : false,
 			'spec_id' => '',
