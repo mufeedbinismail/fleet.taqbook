@@ -19,8 +19,13 @@ $is_legacy_page = $is_legacy_page ?? false;
                 nothing calling this can assume App is finished being assembled. Whatever is
                 handed over runs once it is, and calling later is no different — anything
                 arriving after that point runs straight away.
+
+                Boot, not ready: this fires while the page is still being assembled, which is the
+                one moment a component can still be registered and the last moment at which no
+                component's state exists yet. Anything needing live state belongs in that
+                component's own init(), which is called for it at the right time.
             */
-            App.ready = function (fn) { (App.ready.queue ??= []).push(fn); };
+            App.boot = function (fn) { (App.boot.queue ??= []).push(fn); };
         </script>
 
         <meta charset="{{ $lang->getEncoding() }}">
