@@ -1,7 +1,7 @@
 'use strict';
 
 import Alpine from './plugins/alpine';
-import { setBusyState, unsetBusyState } from './foundation/busy';
+import { setBusyState, unsetBusyState, isBusy } from './foundation/busy';
 import { route, url, buildQuery } from './foundation/route';
 import { i18n } from './foundation/i18n';
 
@@ -11,6 +11,7 @@ import { i18n } from './foundation/i18n';
 Object.assign(window.App, {
     setBusyState,
     unsetBusyState,
+    isBusy,
     route,
     i18n,
     url,
