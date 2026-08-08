@@ -10,7 +10,6 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
-use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Auth\Model\User;
 use Illuminate\Support\Facades\Gate;
 
@@ -57,19 +56,8 @@ class current_user
 		return (bool) $this->model?->hasConfiguredAccess();
 	}
 
-	function can_access($sec_area)
+	function can_access($ability)
 	{
-        $ability = match ($sec_area) {
-            'SA_OPEN'          => Permission::OPEN,
-            'SA_DENIED'        => Permission::DENIED,
-            'SA_AUTHENTICATED' => Permission::AUTHENTICATED,
-            default            => config("permission.areas.{$sec_area}.key")
-        };
-
-		if (empty($ability)) {
-            return false;
-        }
-
 		return Gate::forUser($this->model)->allows($ability);
 	}
 

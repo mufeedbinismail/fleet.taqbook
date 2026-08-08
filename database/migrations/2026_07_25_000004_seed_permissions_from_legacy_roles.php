@@ -5,9 +5,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Ports FrontAccounting's array/bitmap authorization into the permission tables:
- * the catalog comes from config/permission.php, and every existing role's grants are
- * rebuilt from the legacy `security_roles.areas`/`sections` columns.
+ * Ports FrontAccounting's array/bitmap authorization into the permission tables: the catalog is
+ * frozen below, and every existing role's grants are rebuilt from the legacy
+ * `security_roles.areas`/`sections` columns.
  */
 return new class extends Migration
 {
@@ -244,12 +244,208 @@ return new class extends Migration
             'SA_GLREP'               => [self::SS_GL_A |  4, 'GL reports and inquiries'],
         ];
 
-        $missing = array_diff(array_keys(config('permission.areas')), array_keys($catalog));
+        $missing = array_diff(array_keys($this->areaCatalog()), array_keys($catalog));
         if ($missing) {
             throw new RuntimeException('Legacy catalog is missing mapped areas: '.implode(', ', $missing));
         }
 
         return $catalog;
+    }
+
+    /**
+     * The permission groups as this migration first wrote them, `key => [name, sort]`.
+     *
+     * @return array<string, array{0: string, 1: int}>
+     */
+    private function groupCatalog(): array
+    {
+        return [
+            'foundation.system.setup'           => ['System settings', 100],
+            'foundation.access.setup'           => ['Users & access', 105],
+            'trade.sale.setup'                  => ['Sales setup', 200],
+            'trade.sale.data'                   => ['Customers', 205],
+            'trade.sale.operation'              => ['Sales transactions', 210],
+            'trade.sale.report'                 => ['Sales reports', 215],
+            'trade.purchase.setup'              => ['Purchasing setup', 300],
+            'trade.purchase.data'               => ['Suppliers', 305],
+            'trade.purchase.operation'          => ['Purchasing transactions', 310],
+            'trade.purchase.report'             => ['Purchasing reports', 315],
+            'trade.marketplace.setup'           => ['Marketplace setup', 400],
+            'trade.marketplace.operation'       => ['Marketplace transactions', 405],
+            'trade.marketplace.report'          => ['Marketplace reports', 410],
+            'trade.shared.setup'                => ['Shared trade setup', 500],
+            'inventory.setup'                   => ['Inventory setup', 600],
+            'inventory.data'                    => ['Items & kits', 605],
+            'inventory.operation'               => ['Inventory transactions', 610],
+            'inventory.report'                  => ['Inventory reports', 615],
+            'inventory.manufacturing.setup'     => ['Manufacturing setup', 700],
+            'inventory.manufacturing.operation' => ['Manufacturing transactions', 705],
+            'inventory.manufacturing.report'    => ['Manufacturing reports', 710],
+            'asset.setup'                       => ['Fixed asset setup', 800],
+            'asset.data'                        => ['Fixed assets', 805],
+            'asset.operation'                   => ['Fixed asset transactions', 810],
+            'asset.report'                      => ['Fixed asset reports', 815],
+            'finance.ledger.setup'              => ['Chart of accounts & ledger setup', 900],
+            'finance.ledger.operation'          => ['Ledger transactions', 905],
+            'finance.ledger.report'             => ['Ledger reports', 910],
+            'finance.banking.setup'             => ['Banking setup', 1000],
+            'finance.banking.operation'         => ['Banking transactions', 1005],
+            'finance.banking.report'            => ['Banking reports', 1010],
+            'finance.tax.setup'                 => ['Tax setup', 1100],
+            'finance.tax.report'                => ['Tax reports', 1105],
+            'finance.shared.setup'              => ['Currencies, periods & budgets', 1200],
+            'finance.shared.operation'          => ['Period & dimension transactions', 1205],
+            'finance.shared.report'             => ['Dimension reports', 1210],
+            'foundation.operation'              => ['Records & attachments', 1300],
+            'foundation.report'                 => ['Record inquiries', 1305],
+        ];
+    }
+
+    /**
+     * The area-to-permission mapping as this migration first wrote it,
+     * `SA_* => [permission key, group key]`.
+     *
+     * @return array<string, array{0: string, 1: string}>
+     */
+    private function areaCatalog(): array
+    {
+        return [
+            'SA_SETUPCOMPANY'         => ['foundation.system.company.configure',          'foundation.system.setup'],
+            'SA_SETUPDISPLAY'         => ['foundation.system.display.configure',          'foundation.system.setup'],
+            'SA_PRINTERS'             => ['foundation.system.printer.manage',             'foundation.system.setup'],
+            'SA_PRINTPROFILE'         => ['foundation.system.print-profile.manage',       'foundation.system.setup'],
+            'SA_FORMSETUP'            => ['foundation.system.form-template.manage',       'foundation.system.setup'],
+            'SA_BACKUP'               => ['foundation.system.backup.manage',              'foundation.system.setup'],
+            'SA_USERS'                => ['foundation.access.user.manage',                'foundation.access.setup'],
+            'SA_SECROLES'             => ['foundation.access.role.manage',                'foundation.access.setup'],
+            'SA_CHGPASSWD'            => ['foundation.access.password.change',            'foundation.access.setup'],
+            'SA_SALESTYPES'           => ['trade.sale.type.manage',                       'trade.sale.setup'],
+            'SA_SALESPRICE'           => ['trade.sale.price.manage',                      'trade.sale.setup'],
+            'SA_SALESMAN'             => ['trade.sale.salesman.manage',                   'trade.sale.setup'],
+            'SA_SALESAREA'            => ['trade.sale.area.manage',                       'trade.sale.setup'],
+            'SA_SALESGROUP'           => ['trade.sale.group.manage',                      'trade.sale.setup'],
+            'SA_STEMPLATE'            => ['trade.sale.template.manage',                   'trade.sale.setup'],
+            'SA_SRECURRENT'           => ['trade.sale.recurrent-invoice.manage',          'trade.sale.setup'],
+            'SA_POSSETUP'             => ['trade.sale.pos.manage',                        'trade.sale.setup'],
+            'SA_SHIPPING'             => ['trade.sale.shipping.manage',                   'trade.sale.setup'],
+            'SA_CRSTATUS'             => ['trade.sale.credit-status.manage',              'trade.sale.setup'],
+            'SA_CUSTOMER'             => ['trade.sale.customer.manage',                   'trade.sale.data'],
+            'SA_CRMCATEGORY'          => ['trade.sale.contact-category.manage',           'trade.sale.data'],
+            'SA_SALESQUOTE'           => ['trade.sale.quotation.create',                  'trade.sale.operation'],
+            'SA_SALESORDER'           => ['trade.sale.order.create',                      'trade.sale.operation'],
+            'SA_SALESDELIVERY'        => ['trade.sale.delivery.create',                   'trade.sale.operation'],
+            'SA_SALESINVOICE'         => ['trade.sale.invoice.create',                    'trade.sale.operation'],
+            'SA_SALESCREDITINV'       => ['trade.sale.credit-note.create',                'trade.sale.operation'],
+            'SA_SALESCREDIT'          => ['trade.sale.freehand-credit.create',            'trade.sale.operation'],
+            'SA_SALESPAYMNT'          => ['trade.sale.payment.create',                    'trade.sale.operation'],
+            'SA_SALESALLOC'           => ['trade.sale.payment.allocate',                  'trade.sale.operation'],
+            'SA_SALESTRANSVIEW'       => ['trade.sale.transaction.view',                  'trade.sale.report'],
+            'SA_SALESANALYTIC'        => ['trade.sale.transaction.analytics',             'trade.sale.report'],
+            'SA_SALESBULKREP'         => ['trade.sale.transaction.bulk-print',            'trade.sale.report'],
+            'SA_PRICEREP'             => ['trade.sale.price.report',                      'trade.sale.report'],
+            'SA_SALESMANREP'          => ['trade.sale.salesman.report',                   'trade.sale.report'],
+            'SA_CUSTBULKREP'          => ['trade.sale.customer.report',                   'trade.sale.report'],
+            'SA_CUSTSTATREP'          => ['trade.sale.customer-status.report',            'trade.sale.report'],
+            'SA_CUSTPAYMREP'          => ['trade.sale.customer-payment.report',           'trade.sale.report'],
+            'SA_PURCHASEPRICING'      => ['trade.purchase.price.manage',                  'trade.purchase.setup'],
+            'SA_SUPPLIER'             => ['trade.purchase.supplier.manage',               'trade.purchase.data'],
+            'SA_PURCHASEORDER'        => ['trade.purchase.order.create',                  'trade.purchase.operation'],
+            'SA_GRN'                  => ['trade.purchase.receival.create',               'trade.purchase.operation'],
+            'SA_SUPPLIERINVOICE'      => ['trade.purchase.invoice.create',                'trade.purchase.operation'],
+            'SA_GRNDELETE'            => ['trade.purchase.receival-item.delete',          'trade.purchase.operation'],
+            'SA_SUPPLIERCREDIT'       => ['trade.purchase.credit-note.create',            'trade.purchase.operation'],
+            'SA_SUPPLIERPAYMNT'       => ['trade.purchase.payment.create',                'trade.purchase.operation'],
+            'SA_SUPPLIERALLOC'        => ['trade.purchase.payment.allocate',              'trade.purchase.operation'],
+            'SA_SUPPTRANSVIEW'        => ['trade.purchase.transaction.view',              'trade.purchase.report'],
+            'SA_SUPPLIERANALYTIC'     => ['trade.purchase.transaction.analytics',         'trade.purchase.report'],
+            'SA_SUPPBULKREP'          => ['trade.purchase.document.bulk-print',           'trade.purchase.report'],
+            'SA_SUPPPAYMREP'          => ['trade.purchase.payment.report',                'trade.purchase.report'],
+            'SA_MARKETPLACE'          => ['trade.marketplace.channel.manage',             'trade.marketplace.setup'],
+            'SA_MP_SALESORDER'        => ['trade.marketplace.order.create',               'trade.marketplace.operation'],
+            'SA_MP_SALESDELIVERY'     => ['trade.marketplace.delivery.create',            'trade.marketplace.operation'],
+            'SA_MP_SALESINVOICE'      => ['trade.marketplace.invoice.create',             'trade.marketplace.operation'],
+            'SA_MP_SALESPAYMNT'       => ['trade.marketplace.payment.create',             'trade.marketplace.operation'],
+            'SA_MP_SALESALLOC'        => ['trade.marketplace.payment.allocate',           'trade.marketplace.operation'],
+            'SA_MP_SALESCREDITINV'    => ['trade.marketplace.credit-note.create',         'trade.marketplace.operation'],
+            'SA_MP_SALESCREDIT'       => ['trade.marketplace.freehand-credit.create',     'trade.marketplace.operation'],
+            'SA_MP_SUPPINVOICE'       => ['trade.marketplace.supplier-invoice.create',    'trade.marketplace.operation'],
+            'SA_MP_SUPPCREDIT'        => ['trade.marketplace.supplier-credit.create',     'trade.marketplace.operation'],
+            'SA_MP_SALESTRANSVIEW'    => ['trade.marketplace.sale-transaction.view',      'trade.marketplace.report'],
+            'SA_MP_SUPPTRANSVIEW'     => ['trade.marketplace.supplier-transaction.view',  'trade.marketplace.report'],
+            'SA_PAYTERMS'             => ['trade.shared.payment-term.manage',             'trade.shared.setup'],
+            'SA_ITEMCATEGORY'         => ['inventory.category.manage',                    'inventory.setup'],
+            'SA_UOM'                  => ['inventory.unit.manage',                        'inventory.setup'],
+            'SA_FORITEMCODE'          => ['inventory.foreign-code.manage',                'inventory.setup'],
+            'SA_INVENTORYLOCATION'    => ['inventory.location.manage',                    'inventory.setup'],
+            'SA_INVENTORYMOVETYPE'    => ['inventory.movement-type.manage',               'inventory.setup'],
+            'SA_ITEM'                 => ['inventory.item.manage',                        'inventory.data'],
+            'SA_SALESKIT'             => ['inventory.kit.manage',                         'inventory.data'],
+            'SA_LOCATIONTRANSFER'     => ['inventory.transfer.create',                    'inventory.operation'],
+            'SA_INVENTORYADJUSTMENT'  => ['inventory.adjustment.create',                  'inventory.operation'],
+            'SA_ITEMSSTATVIEW'        => ['inventory.status.view',                        'inventory.report'],
+            'SA_ITEMSTRANSVIEW'       => ['inventory.transaction.view',                   'inventory.report'],
+            'SA_REORDER'              => ['inventory.reorder.report',                     'inventory.report'],
+            'SA_ITEMSANALYTIC'        => ['inventory.transaction.analytics',              'inventory.report'],
+            'SA_ITEMSVALREP'          => ['inventory.valuation.report',                   'inventory.report'],
+            'SA_BOM'                  => ['inventory.manufacturing.bom.manage',           'inventory.manufacturing.setup'],
+            'SA_WORKCENTRES'          => ['inventory.manufacturing.work-centre.manage',   'inventory.manufacturing.setup'],
+            'SA_WORKORDERENTRY'       => ['inventory.manufacturing.work-order.create',    'inventory.manufacturing.operation'],
+            'SA_MANUFISSUE'           => ['inventory.manufacturing.issue.create',         'inventory.manufacturing.operation'],
+            'SA_MANUFRECEIVE'         => ['inventory.manufacturing.receival.create',      'inventory.manufacturing.operation'],
+            'SA_MANUFRELEASE'         => ['inventory.manufacturing.release.create',       'inventory.manufacturing.operation'],
+            'SA_MANUFTRANSVIEW'       => ['inventory.manufacturing.operation.view',       'inventory.manufacturing.report'],
+            'SA_WORKORDERANALYTIC'    => ['inventory.manufacturing.work-order.analytics', 'inventory.manufacturing.report'],
+            'SA_WORKORDERCOST'        => ['inventory.manufacturing.cost.report',          'inventory.manufacturing.report'],
+            'SA_MANUFBULKREP'         => ['inventory.manufacturing.document.bulk-print',  'inventory.manufacturing.report'],
+            'SA_BOMREP'               => ['inventory.manufacturing.bom.report',           'inventory.manufacturing.report'],
+            'SA_ASSETCATEGORY'        => ['asset.category.manage',                        'asset.setup'],
+            'SA_ASSETCLASS'           => ['asset.class.manage',                           'asset.setup'],
+            'SA_ASSET'                => ['asset.item.manage',                            'asset.data'],
+            'SA_ASSETTRANSFER'        => ['asset.transfer.create',                        'asset.operation'],
+            'SA_ASSETDISPOSAL'        => ['asset.disposal.create',                        'asset.operation'],
+            'SA_DEPRECIATION'         => ['asset.depreciation.create',                    'asset.operation'],
+            'SA_ASSETSTRANSVIEW'      => ['asset.transaction.view',                       'asset.report'],
+            'SA_ASSETSANALYTIC'       => ['asset.transaction.analytics',                  'asset.report'],
+            'SA_GLACCOUNT'            => ['finance.ledger.account.manage',                'finance.ledger.setup'],
+            'SA_GLACCOUNTGROUP'       => ['finance.ledger.account-group.manage',          'finance.ledger.setup'],
+            'SA_GLACCOUNTCLASS'       => ['finance.ledger.account-class.manage',          'finance.ledger.setup'],
+            'SA_GLACCOUNTTAGS'        => ['finance.ledger.account-tag.manage',            'finance.ledger.setup'],
+            'SA_QUICKENTRY'           => ['finance.ledger.quick-entry.manage',            'finance.ledger.setup'],
+            'SA_GLSETUP'              => ['finance.ledger.setup.configure',               'finance.ledger.setup'],
+            'SA_JOURNALENTRY'         => ['finance.ledger.journal-entry.create',          'finance.ledger.operation'],
+            'SA_ACCRUALS'             => ['finance.ledger.accrual.create',                'finance.ledger.operation'],
+            'SA_GLTRANSVIEW'          => ['finance.ledger.posting.view',                  'finance.ledger.report'],
+            'SA_GLANALYTIC'           => ['finance.ledger.posting.analytics',             'finance.ledger.report'],
+            'SA_GLREP'                => ['finance.ledger.posting.report',                'finance.ledger.report'],
+            'SA_BANKACCOUNT'          => ['finance.banking.account.manage',               'finance.banking.setup'],
+            'SA_PAYMENT'              => ['finance.banking.payment.create',               'finance.banking.operation'],
+            'SA_DEPOSIT'              => ['finance.banking.deposit.create',               'finance.banking.operation'],
+            'SA_BANKTRANSFER'         => ['finance.banking.transfer.create',              'finance.banking.operation'],
+            'SA_RECONCILE'            => ['finance.banking.reconciliation.create',        'finance.banking.operation'],
+            'SA_BANKJOURNAL'          => ['finance.banking.journal-entry.create',         'finance.banking.operation'],
+            'SA_BANKTRANSVIEW'        => ['finance.banking.transaction.view',             'finance.banking.report'],
+            'SA_BANKREP'              => ['finance.banking.transaction.report',           'finance.banking.report'],
+            'SA_ITEMTAXTYPE'          => ['finance.tax.item-type.manage',                 'finance.tax.setup'],
+            'SA_TAXRATES'             => ['finance.tax.rate.manage',                      'finance.tax.setup'],
+            'SA_TAXGROUPS'            => ['finance.tax.group.manage',                     'finance.tax.setup'],
+            'SA_TAXREP'               => ['finance.tax.transaction.report',               'finance.tax.report'],
+            'SA_CURRENCY'             => ['finance.shared.currency.manage',               'finance.shared.setup'],
+            'SA_EXCHANGERATE'         => ['finance.shared.exchange-rate.manage',          'finance.shared.setup'],
+            'SA_FISCALYEARS'          => ['finance.shared.fiscal-year.manage',            'finance.shared.setup'],
+            'SA_MULTIFISCALYEARS'     => ['finance.shared.non-closed-year.manage',        'finance.shared.setup'],
+            'SA_BUDGETENTRY'          => ['finance.shared.budget.manage',                 'finance.shared.setup'],
+            'SA_STANDARDCOST'         => ['finance.shared.standard-cost.manage',          'finance.shared.setup'],
+            'SA_DIMTAGS'              => ['finance.shared.dimension-tag.manage',          'finance.shared.setup'],
+            'SA_GLCLOSE'              => ['finance.shared.period.close',                  'finance.shared.operation'],
+            'SA_GLREOPEN'             => ['finance.shared.period.reopen',                 'finance.shared.operation'],
+            'SA_DIMENSION'            => ['finance.shared.dimension.create',              'finance.shared.operation'],
+            'SA_DIMTRANSVIEW'         => ['finance.shared.dimension.view',                'finance.shared.report'],
+            'SA_DIMENSIONREP'         => ['finance.shared.dimension.report',              'finance.shared.report'],
+            'SA_VOIDTRANSACTION'      => ['foundation.record.void',                       'foundation.operation'],
+            'SA_EDITOTHERSTRANS'      => ['foundation.record.edit-others',                'foundation.operation'],
+            'SA_ATTACHDOCUMENT'       => ['foundation.attachment.manage',                 'foundation.operation'],
+            'SA_VIEWPRINTTRANSACTION' => ['foundation.record.view',                       'foundation.report'],
+        ];
     }
 
     /** @return array<string, int> group key => id */
@@ -260,13 +456,13 @@ return new class extends Migration
         DB::table('permission_groups')->insert(array_map(
             fn ($key, $group) => [
                 'key' => $key,
-                'name' => $group['name'],
-                'sort' => $group['sort'],
+                'name' => $group[0],
+                'sort' => $group[1],
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-            array_keys(config('permission.groups')),
-            config('permission.groups'),
+            array_keys($this->groupCatalog()),
+            $this->groupCatalog(),
         ));
 
         return DB::table('permission_groups')->pluck('id', 'key')->all();
@@ -283,9 +479,7 @@ return new class extends Migration
         $sortWithinGroup = [];
         $rows = [];
 
-        foreach (config('permission.areas') as $area => $permission) {
-            $group = $permission['group'];
-
+        foreach ($this->areaCatalog() as $area => [$key, $group]) {
             if (!isset($groupIds[$group])) {
                 throw new RuntimeException("Area {$area} maps to unknown group '{$group}'.");
             }
@@ -293,7 +487,7 @@ return new class extends Migration
             $sort = $sortWithinGroup[$group] = ($sortWithinGroup[$group] ?? 0) + 1;
 
             $rows[] = [
-                'key' => $permission['key'],
+                'key' => $key,
                 'name' => $catalog[$area][1],
                 'permission_group_id' => $groupIds[$group],
                 'sort' => $sort,
@@ -315,8 +509,8 @@ return new class extends Migration
     {
         /** @var array<int, int> legacy int code => permission id */
         $idByCode = [];
-        foreach (config('permission.areas') as $area => $permission) {
-            $idByCode[$catalog[$area][0]] = $permissionIds[$permission['key']];
+        foreach ($this->areaCatalog() as $area => [$key]) {
+            $idByCode[$catalog[$area][0]] = $permissionIds[$key];
         }
 
         $orphanCodes = [];
@@ -349,7 +543,7 @@ return new class extends Migration
 
         foreach ($orphanCodes as $code => $roles) {
             Log::warning(sprintf(
-                'Legacy area code %d has no mapping in config/permission.php; dropped from roles: %s',
+                'Legacy area code %d has no mapping in the area catalog; dropped from roles: %s',
                 $code, implode(', ', array_unique($roles))
             ));
         }
@@ -373,8 +567,8 @@ return new class extends Migration
     {
         /** @var array<string, int> permission key => legacy int code */
         $codeByKey = [];
-        foreach (config('permission.areas') as $area => $permission) {
-            $codeByKey[$permission['key']] = $this->legacyCatalog()[$area][0];
+        foreach ($this->areaCatalog() as $area => [$key]) {
+            $codeByKey[$key] = $this->legacyCatalog()[$area][0];
         }
 
         $keysByRole = DB::table('role_permissions')
