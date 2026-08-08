@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Foundation;
 
-use App\Foundation\Constant\Permission;
-use App\Foundation\Model\User;
+use App\Foundation\Auth\Constant\Permission;
+use App\Foundation\Auth\Model\User;
 use Illuminate\Contracts\Auth\Access\Gate;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;

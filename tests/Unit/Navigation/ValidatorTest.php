@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Navigation;
 
-use App\Foundation\Constant\Permission;
-use App\Foundation\Model\Permission as PermissionRecord;
+use App\Foundation\Auth\Constant\Permission;
+use App\Foundation\Auth\Model\Permission as PermissionRecord;
 use App\Foundation\Navigation\Builder\AreaBuilder;
 use App\Foundation\Navigation\Builder\Builder;
 use App\Foundation\Navigation\DTO\Problem;

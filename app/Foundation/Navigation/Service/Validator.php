@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Navigation\Service;
 
-use App\Foundation\Model\Permission;
+use App\Foundation\Auth\Model\Permission;
 use App\Foundation\Navigation\Contract\Condition;
 use App\Foundation\Navigation\DTO\Problem;
 use App\Foundation\Navigation\DTO\Report;

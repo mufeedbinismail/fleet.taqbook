@@ -17,9 +17,9 @@ class LegacyRouteServiceProvider extends ServiceProvider
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Foundation\Http\Middleware\Authenticate::class,
+            \App\Foundation\Auth\Http\Middleware\Authenticate::class,
             \Illuminate\Session\Middleware\AuthenticateSession::class,
-            \App\Foundation\Http\Middleware\IdleTimeout::class,
+            \App\Foundation\Auth\Http\Middleware\IdleTimeout::class,
             \App\Legacy\Http\Middleware\WrapSession::class,
             \App\Legacy\Http\Middleware\HydrateCurrentUser::class,
         ]);

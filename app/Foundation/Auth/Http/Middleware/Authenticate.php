@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Foundation\Http\Middleware;
+namespace App\Foundation\Auth\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;

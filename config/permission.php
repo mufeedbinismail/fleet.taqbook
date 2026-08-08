@@ -1,7 +1,7 @@
 <?php
 
-use App\Foundation\Constant\Permission;
-use App\Foundation\Constant\PermissionGroup;
+use App\Foundation\Auth\Constant\Permission;
+use App\Foundation\Auth\Constant\PermissionGroup;
 
 return [
     'groups' => [

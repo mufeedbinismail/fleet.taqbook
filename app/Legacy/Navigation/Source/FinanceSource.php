@@ -2,7 +2,7 @@
 
 namespace App\Legacy\Navigation\Source;
 
-use App\Foundation\Constant\Permission;
+use App\Foundation\Auth\Constant\Permission;
 use App\Legacy\Navigation\Condition\DimensionsEnabled;
 use App\Legacy\Navigation\Enum\Query;
 use App\Foundation\Navigation\Builder\AreaBuilder;

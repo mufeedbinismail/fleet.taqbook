@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Foundation\Constant;
+namespace App\Foundation\Auth\Constant;
 
 /**
  * The key of every permission group, named so it cannot be mistyped.

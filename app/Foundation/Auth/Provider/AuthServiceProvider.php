@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Foundation\Provider;
+namespace App\Foundation\Auth\Provider;
 
-use App\Foundation\Constant\Permission;
-use App\Foundation\Model\User;
+use App\Foundation\Auth\Constant\Permission;
+use App\Foundation\Auth\Model\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 

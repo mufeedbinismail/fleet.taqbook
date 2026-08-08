@@ -2,7 +2,7 @@
 
 namespace App\Legacy\Http\Middleware;
 
-use App\Foundation\Service\UserAuthenticator;
+use App\Foundation\Auth\Service\UserAuthenticator;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

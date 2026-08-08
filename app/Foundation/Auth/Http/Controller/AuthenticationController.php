@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Foundation\Http\Controller;
+namespace App\Foundation\Auth\Http\Controller;
 
-use App\Foundation\Http\Request\LoginRequest;
-use App\Foundation\Service\UserAuthenticator;
+use App\Foundation\Auth\Http\Request\LoginRequest;
+use App\Foundation\Auth\Service\UserAuthenticator;
+use App\Foundation\Http\Controller\Controller;
 use Illuminate\Http\Request;
 
 class AuthenticationController extends Controller

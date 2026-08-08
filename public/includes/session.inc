@@ -161,11 +161,6 @@ function html_cleanup(&$parms)
 	reset($parms); // needed for direct key() usage later throughout the sources
 }
 
-//============================================================================
-// The idle-timeout check formerly performed here by login_timeout() now lives
-// in App\Foundation\Auth\Http\Middleware\AuthenticateLegacy (the route guard).
-//============================================================================
-
 require_once __DIR__ . "/../includes/errors.inc";
 require_once __DIR__ . "/../includes/current_user.inc";
 require_once __DIR__ . "/../admin/db/security_db.inc";

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Foundation\Service;
+namespace App\Foundation\Auth\Service;
 
-use App\Foundation\Http\Request\LoginRequest;
+use App\Foundation\Auth\Http\Request\LoginRequest;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\StatefulGuard;

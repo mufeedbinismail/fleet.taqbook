@@ -145,8 +145,8 @@ When an Entity or Constant shares a name with a Model, the Model is the one alia
 use — the domain object is the thing, the table is the detail:
 
 ```php
-use App\Foundation\Entity\Role;
-use App\Foundation\Model\Role as RoleRecord;
+use App\Foundation\Auth\Entity\Role;
+use App\Foundation\Auth\Model\Role as RoleRecord;
 ```
 
 ## The legacy boundary

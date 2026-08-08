@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Foundation\Http\Middleware;
+namespace App\Foundation\Auth\Http\Middleware;
 
-use App\Foundation\Service\UserAuthenticator;
+use App\Foundation\Auth\Service\UserAuthenticator;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;

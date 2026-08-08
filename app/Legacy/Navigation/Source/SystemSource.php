@@ -2,7 +2,7 @@
 
 namespace App\Legacy\Navigation\Source;
 
-use App\Foundation\Constant\Permission;
+use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Navigation\Builder\AreaBuilder;
 use App\Foundation\Navigation\Builder\Builder;
 use App\Foundation\Navigation\Builder\SectionBuilder;

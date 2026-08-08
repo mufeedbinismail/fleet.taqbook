@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Foundation\Repository;
+namespace App\Foundation\Auth\Repository;
 
-use App\Foundation\Model\PermissionGroup;
+use App\Foundation\Auth\Model\PermissionGroup;
 use Illuminate\Support\Collection;
 
 class PermissionRepository

@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Provider;
 
-use App\Foundation\Model\User;
+use App\Foundation\Auth\Model\User;
 use App\Foundation\Registry\ClientDataRegistry;
 use App\Foundation\Setting\SettingRepository;
 use App\Foundation\Setting\UserSettingRepository;
