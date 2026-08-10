@@ -2,9 +2,30 @@
 
 namespace App\Foundation\Framework\Support;
 
+use Illuminate\Contracts\Support\Arrayable;
+use JsonSerializable;
+
 class Arr extends \Illuminate\Support\Arr
 {
     const NOT_SET = '__NOT_SET__';
+
+    /**
+     * A value as the array it can be read as, or null where it cannot be read as one at all.
+     *
+     * A value that says how it wants to become an array is answered on its own terms rather than
+     * by having its properties read off it, so a class that hides or renames what it exposes is
+     * not quietly undone here.
+     */
+    public static function from(mixed $value): ?array
+    {
+        return match (true) {
+            is_array($value) => $value,
+            $value instanceof Arrayable => $value->toArray(),
+            $value instanceof JsonSerializable => (array) $value->jsonSerialize(),
+            is_object($value) => (array) $value,
+            default => null,
+        };
+    }
 
     /**
      * Get the value of a key from an array of key-value pairs.
