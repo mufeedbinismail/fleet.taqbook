@@ -6,6 +6,7 @@ use App\Foundation\Auth\Model\User;
 use App\Foundation\Framework\Registry\ClientDataRegistry;
 use App\Foundation\Shared\Setting\GlobalSetting;
 use App\Foundation\Shared\Setting\UserSetting;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
@@ -43,5 +44,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Str::createUuidsUsing(fn () => Uuid::uuid7());
+
+        Factory::guessFactoryNamesUsing(fn (string $model) => Str::replaceLast(
+            '\\Model\\',
+            '\\Database\\Factory\\',
+            $model,
+        ).'Factory');
     }
 }
