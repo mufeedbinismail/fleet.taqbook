@@ -1,6 +1,6 @@
 ---
 name: architecture
-description: Where code goes in this codebase — domain-first layout and every component type (Entity, Model, ValueObject, DTO, Intent, Collection, Repository, Query, Action, Service, Registry, Builder, Source, Condition, Cart, Support, Facade, Contract, Concern, Http/*). Invoke before creating any class, choosing a folder, or naming a file, and when reviewing whether existing code sits in the right place.
+description: Where code goes in this codebase — the domain-first layout, and what each component type may touch. Invoke before writing or moving any backend code — creating a class, choosing a folder, naming a file, deciding which component type a piece of behaviour belongs to — and when reviewing whether existing code sits in the right place.
 ---
 
 # Architecture
@@ -16,12 +16,19 @@ app/Finance/Tax/Repository/TaxRepository.php
 ```
 
 - `App\Foundation` — cross-cutting infrastructure (providers, middleware, base classes).
+- `App\Foundation\Component\<Name>` — the wire format and input validation every consumer of one UI
+  component shares. The rows it carries still come from the owning domain's Repository.
 - `App\Legacy` — the FrontAccounting wrapper. Nothing outside it may extend it.
 - `App\Shared` — types belonging to no single domain.
 - New domain work gets its own top-level namespace.
 
 **Singular everywhere.** `Controller`, not `Controllers`. `Entity`, `Setting`, `Action`. Folders
 and class names alike. Deliberate, so nobody has to guess.
+
+**A test sits at its subject's own path under a test root.** `app/Finance/Tax/Service/` is tested
+from `tests/Unit/Finance/Tax/`. The mirror stops above the component-type folder, because a test is
+named for a guarantee and a guarantee spans several of them. Placement copied off a neighbouring
+test instead is how a tree ends up teaching two conventions, and the second one to arrive wins.
 
 **Do not subdivide a domain further than it earns.** A subfolder is justified only when it could
 itself hold subfolders. `Finance/Ledger` and `Finance/Banking` qualify. `Sale/Customer` does not —
@@ -42,17 +49,17 @@ work:
 | **Entity** | A domain object **with identity**. Two with the same id are the same thing. If eloquent counterpart exists, entity is used sparingly. (only when eloquent is too heavy or causes serialization risk). |
 | **Model** | Eloquent. The *table*, relationships, accessors etc. Default. |
 | **ValueObject** | A read model, or a value with no identity. Read from, never mutated; a change returns a new one. |
-| **DTO** | A carrier with no identity and no behaviour. If it has an id, it is an Entity. |
+| **DTO** | A carrier with no identity and no behaviour. |
 | **Intent** | The DDD Command: immutable, already-validated data saying what is wanted. |
 | **Collection** | A typed collection over one Entity or ValueObject (`getType()`). |
 | **Enum** | A closed set the code switches on. May implement a `Contract/Enum` interface and use a `Concern/Enum` trait. |
-| **Constant** | Named literals. Handles on values the database owns, so an enum would mean maintaining the set twice. |
+| **Constant** | Named literals. |
 
 The Entity/DTO line is the one people get wrong: **identity decides it**, not size or purpose.
 
 **A string or int literal is written once, in `Constant`, and referenced everywhere else — config files
 included.** Enum where the code owns the set and switches on it; Constant where the database owns
-it and code only needs to name it without mistyping.
+it and an enum would mean maintaining the set twice.
 
 ### Behaviour
 
@@ -61,17 +68,23 @@ it and code only needs to name it without mistyping.
 | **Repository** | no | **yes — only here** | The sole door to the database. Returns Entities, ValueObjects or Collections. |
 | **Query** | no | builds | A named query builder handing back a Builder for a Repository to run. |
 | **Service** | **no** | via Repository | The default home for behaviour: a subject's verbs gathered on one class. Given everything it needs; reads no input. |
-| **Action** | no | via Repository | One verb that outgrew its Service. Executes an Intent. Refuses by throwing a domain Exception. |
+| **Action** | no | via Repository | One verb that outgrew its Service. Executes an Intent. |
 | **Registry** | **yes** | no | The type that legitimately holds state. |
 | **Cart** | **yes** | no | A mutable work-in-progress aggregate being assembled across a session. |
 | **Builder** | yes, briefly | no | A fluent DSL that materialises value objects. |
 | **Source** | no | no | A domain's declarative contribution to a Registry. |
+| **Select** | no | via Repository | A domain's declarative contribution to a shared UI component: which rows one control offers, and the narrowing it accepts. |
 | **Condition** | no | no | A predicate switching something on or off. |
 | **Support** | no | no | Framework extensions and factories. |
 | **Facade** | no | no | A static door that encapsulates. Used for fluency |
 | **Contract** | — | — | Interfaces. |
 | **Concern** | — | — | Traits. |
 | **Exception** | — | — | Exceptions. |
+
+A **Select** is named by a route, not resolved by a name off the wire — that is what keeps each
+list's permission gate on its own route. One per control, never one per table: the same rows under
+different narrowing are two Selects. The rules it accepts live on it, beside the query that reads
+them; a Repository that declared them would be reading raw input.
 
 ### Service or Action
 
@@ -87,6 +100,10 @@ a file. Splitting for symmetry is not a reason: a `SaveRoleAction` does not obli
 
 **A file earns its keep or it does not exist.** One method, no helpers, one caller is not a class —
 it is a method on the Service that already owns the subject.
+
+Counting callers settles this only where the callers exist. A shared component's surface answers to
+callers not yet written, so an uncalled member is evidence of nothing: drop one because it is
+improbable, never because it is unused.
 
 ### Refusing
 
@@ -124,16 +141,14 @@ write:  Http/Request  →  Intent  →  Service / Action  →  Repository
 read:   Http/Controller  →  Repository  →  Entity / ValueObject
 ```
 
-The Service is the ordinary executor; an Action stands in its place only for a verb heavy enough to
-have earned the file. Either way an Intent goes in, and neither reads the request itself.
-
 ## Naming
 
 Suffix the component type when the class **does** something; leave it off when the class **is**
 data.
 
 - Suffixed: `RoleRepository`, `SaveRoleAction`, `TaxService`, `LoginRequest`, `SourceRegistry`,
-  `ItemInfoQuery`, `AllocLineCollection`, `SystemSource`, `NavigationException`, `SaveRoleIntent`.
+  `ItemInfoQuery`, `AllocLineCollection`, `SystemSource`, `ItemSelect`, `NavigationException`,
+  `SaveRoleIntent`.
 - Bare: `Role` (Entity), `Crumb` (ValueObject), `Problem` (DTO),
   `SystemType` (Enum), `DimensionsEnabled` (Condition).
 
