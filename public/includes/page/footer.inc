@@ -11,7 +11,7 @@
 ***********************************************************************/
 function page_footer($no_menu=false, $is_index=false)
 {
-	global $Validate, $Editors, $Ajax, $sql_queries;
+	global $Validate, $Editors, $Ajax, $sql_queries, $js_lib;
 
 	echo view('layout.partials.app.footer', [
 		'no_menu'  => $no_menu,
@@ -33,8 +33,8 @@ function page_footer($no_menu=false, $is_index=false)
 		div_end();
 	}
     
-    echo view('layout.partials.footer', [
-        'is_legacy_page' => true,
+    echo view('layout.partials.legacy.footer', [
+        'js_lib' => is_array($js_lib) ? $js_lib : [],
     ])->render();
 }
 
