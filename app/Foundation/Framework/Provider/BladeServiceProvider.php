@@ -4,6 +4,7 @@ namespace App\Foundation\Framework\Provider;
 
 use App\Foundation\Framework\Facade\ClientData;
 use App\Foundation\Framework\View\ChromeComposer;
+use Illuminate\Foundation\Vite;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -17,6 +18,10 @@ class BladeServiceProvider extends ServiceProvider
     {
         Blade::directive('routes', fn ($expression) => '<?php \\'.ClientData::class."::routes({$expression}); ?>");
         Blade::directive('i18n', fn ($expression) => '<?php \\'.ClientData::class."::translations({$expression}); ?>");
+
+        // Push and asset in one word, so a page module can only ever travel the scripts stack —
+        // where in the document that stack lands is the layout's one decision.
+        Blade::directive('pageScript', fn ($expression) => "<?php \$__env->startPush('scripts'); echo app(\\".Vite::class."::class)({$expression}); \$__env->stopPush(); ?>");
 
         // A prefix per group of components, so a tag stays as short as the folder is deep and the
         // group a component belongs to is stated wherever it is used. `ui` knows nothing of the
