@@ -34,12 +34,11 @@ function page_header($title, $no_menu=false, $is_index=false, $onload="", $js=""
 	{
 		$no_menu = false;
 	}
-    echo view('layout.partials.header', [
-        'is_legacy_page' => true,
-        'title'          => $title,
-        'onload'         => $onload,
-        'js_files'       => array_merge($js_static, $js_userlib),
-        'css_files'      => array_merge(isset($css_files) ? $css_files : [], $css ? [$css] : []),
+    echo view('layout.partials.legacy.header', [
+        'title'     => $title,
+        'onload'    => $onload,
+        'js_files'  => array_merge($js_static, $js_userlib),
+        'css_files' => array_merge(isset($css_files) ? $css_files : [], $css ? [$css] : []),
     ])->render();
 
     echo view('layout.partials.app.header', [

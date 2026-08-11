@@ -112,6 +112,10 @@
 @endphp
 
 @section('head')
+{{-- The message boxes, the tab strip and the table styles this page documents are keyed to
+     FrontAccounting's own markup, and drawn by a stylesheet no page receives unless it asks. --}}
+@vite(['resources/css/fa.css'])
+
 {{-- Ahead of the stylesheet's first paint, so reloading the page in the dark theme does not flash
      the light one. A private window can throw on any storage access at all, so the read is guarded
      rather than the value checked. --}}
