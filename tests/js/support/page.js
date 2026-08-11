@@ -9,10 +9,8 @@ import { route } from '@/foundation/route';
  * data when they are first imported, so anything written onto window.App afterwards is written
  * somewhere nothing will read it again.
  *
- * Whatever a page stages under its own key is a different matter: it is read at import time by a
- * module that has no push API, so it has to be in place before the first import — which means the
- * setup file, not here. Page components are authored inline in Blade rather than as modules, so
- * nothing yet needs that.
+ * Whatever a page stages under its own key is a different matter: a page module's factory takes
+ * the whole supply as an argument, so a test hands the seed straight in and stages nothing.
  */
 export function stage({ routes = {}, translations = {} } = {}) {
     for (const [name, template] of Object.entries(routes)) {
