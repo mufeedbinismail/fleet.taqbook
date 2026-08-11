@@ -94,6 +94,10 @@ return [
         ],
     ],
 
+    'modal' => [
+        'close' => 'Close',
+    ],
+
     'select' => [
         'empty' => 'No results',
         'searching' => 'Searching…',

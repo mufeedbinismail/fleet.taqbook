@@ -649,11 +649,154 @@
         </div>
     </div>
 
+    <h2 class="mb-1 mt-8 text-base font-semibold text-card-title-txt">Modal</h2>
+    <p class="mb-3 max-w-3xl text-sm text-card-txt">
+        The box only — what goes in it is the page's, including whatever saves it. A native
+        <code>&lt;dialog&gt;</code>, so it opens in the top layer and is never clipped by an
+        overflow or trapped in an ancestor's stacking context. The body is the one part that
+        scrolls, which is what keeps the heading readable and the actions reachable through a form
+        longer than the screen.
+    </p>
+
+    <div class="rounded-xl border border-card-border bg-card-bg p-4 shadow-sm" x-data>
+        <div class="flex flex-col gap-3">
+            <div class="flex flex-wrap items-center gap-3">
+                <span class="w-32 flex-none text-xs font-semibold uppercase tracking-wide text-card-txt">size</span>
+                @foreach (['sm', 'md', 'lg', 'xl', 'full'] as $size)
+                    <x-button variant="outline" x-modal:open="'gallery-size-{{ $size }}'">{{ $size }}</x-button>
+                @endforeach
+                <span class="text-xs text-card-txt">a cap on the width, not a height</span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+                <span class="w-32 flex-none text-xs font-semibold uppercase tracking-wide text-card-txt">transition</span>
+                @foreach (['none', 'zoom', 'fade', 'slide'] as $transition)
+                    <x-button variant="outline" x-modal:open="'gallery-move-{{ $transition }}'">{{ $transition }}</x-button>
+                @endforeach
+                <span class="text-xs text-card-txt">none is the default, and what an older engine gets either way</span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+                <span class="w-32 flex-none text-xs font-semibold uppercase tracking-wide text-card-txt">behaviour</span>
+                <x-button variant="outline" x-modal:open="'gallery-static'">static</x-button>
+                <x-button variant="outline" x-modal:open="'gallery-plain'">no chrome</x-button>
+                <x-button variant="outline" x-modal:open="'gallery-long'">scrolling body</x-button>
+                <span class="text-xs text-card-txt">static withholds Escape and the backdrop click</span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+                <span class="w-32 flex-none text-xs font-semibold uppercase tracking-wide text-card-txt">stacking</span>
+                <x-button variant="outline" x-modal:open="'gallery-stacked'">one inside another</x-button>
+                <span class="text-xs text-card-txt">the second is drawn over the first, and the page is let go only once both are down</span>
+            </div>
+        </div>
+
+        @foreach (['sm', 'md', 'lg', 'xl', 'full'] as $size)
+            <x-ui.modal :name="'gallery-size-'.$size" :title="'Size — '.$size" :size="$size">
+                <p class="text-sm text-card-txt">
+                    The panel is capped at the <code>{{ $size }}</code> width and shrinks with the
+                    viewport below it, so the same modal is readable on a phone.
+                </p>
+
+                <x-slot:actions>
+                    <x-button variant="outline" x-modal:close>Cancel</x-button>
+                    <x-button x-modal:close>Save</x-button>
+                </x-slot>
+            </x-ui.modal>
+        @endforeach
+
+        @foreach (['none', 'zoom', 'fade', 'slide'] as $transition)
+            <x-ui.modal :name="'gallery-move-'.$transition" :title="'Transition — '.$transition" :transition="$transition">
+                <p class="text-sm text-card-txt">
+                    Opens and closes with <code>{{ $transition }}</code>. The panel and the scrim
+                    move together, so neither arrives before the other.
+                </p>
+            </x-ui.modal>
+        @endforeach
+
+        <x-ui.modal name="gallery-static" title="Static" static>
+            <p class="text-sm text-card-txt">
+                Escape and a click on the backdrop are withheld, so the only way out is a control
+                that says so. For the modal holding edits somebody would lose by brushing past it.
+            </p>
+
+            <x-slot:actions>
+                <x-button variant="outline" x-modal:close>Discard</x-button>
+                <x-button x-modal:close>Keep editing</x-button>
+            </x-slot>
+        </x-ui.modal>
+
+        <x-ui.modal name="gallery-plain" :dismissible="false" aria-label="Plain">
+            <p class="text-sm text-card-txt">
+                No heading and no close button, so there is no head band. Whatever closes this is
+                the page's to draw — and the name it would have been read out by comes from the
+                <code>aria-label</code> it carries instead.
+            </p>
+
+            <x-slot:actions>
+                <x-button x-modal:close>Done</x-button>
+            </x-slot>
+        </x-ui.modal>
+
+        <x-ui.modal name="gallery-long" title="Scrolling body" size="lg">
+            @foreach (range(1, 12) as $n)
+                <p class="mb-3 text-sm text-card-txt">
+                    Paragraph {{ $n }} — the body scrolls while the heading above and the actions
+                    below stay where they are, which is the arrangement a long form needs.
+                </p>
+            @endforeach
+
+            <x-slot:actions>
+                <x-button variant="outline" x-modal:close>Cancel</x-button>
+                <x-button x-modal:close>Save</x-button>
+            </x-slot>
+        </x-ui.modal>
+
+        <x-ui.modal name="gallery-stacked" title="One inside another" size="xl" transition="zoom">
+            <p class="mb-4 text-sm text-card-txt">
+                A modal opened from inside another is drawn over it. Both are in the top layer, in
+                the order they were opened, so neither is told which is in front and no
+                <code>z-index</code> is involved — which is the whole reason these are drawn as
+                <code>&lt;dialog&gt;</code> and not as a positioned box. The scrims stack with them,
+                so the page behind darkens twice while the first modal darkens once.
+            </p>
+
+            <x-button variant="outline" x-modal:open="'gallery-stacked-inner'">Open the second</x-button>
+
+            {{-- Written inside the modal that opens it, which nothing requires: a modal is reached
+                 by the name it registered under, and a dialog reaches the top layer from wherever
+                 it was declared. It sits here because that is where it is opened from. --}}
+            <x-ui.modal name="gallery-stacked-inner" title="The second" size="sm" transition="zoom">
+                <p class="text-sm text-card-txt">
+                    Escape takes this one and leaves the first standing, because a dismissal reaches
+                    the top of the stack and nothing below it. A click on the backdrop is the same:
+                    the backdrop under the pointer is this one's.
+                </p>
+
+                <p class="mt-3 text-sm text-card-txt">
+                    Both of these were opened by a click. Two opened together without one — by a
+                    script, or on load — share a single close watcher, and then one Escape takes
+                    both of them.
+                </p>
+
+                <x-slot:actions>
+                    <x-button x-modal:close>Back</x-button>
+                </x-slot>
+            </x-ui.modal>
+
+            <x-slot:actions>
+                <x-button variant="outline" x-modal:close>Close</x-button>
+            </x-slot>
+        </x-ui.modal>
+    </div>
+
     <h2 class="mb-1 mt-8 text-base font-semibold text-card-title-txt">Dialog</h2>
     <p class="mb-3 max-w-3xl text-sm text-card-txt">
-        <code>$confirm()</code> builds one native <code>&lt;dialog&gt;</code> lazily and reuses it,
-        resolving <code>true</code> on confirm and <code>false</code> on cancel, Escape or a click on
-        the backdrop. There is one layout, so a caller passes options rather than markup.
+        The confirm layout, drawn on the modal above: the box, the scrim and the action band are
+        the modal's, and only the icon, the wording and the two answers are the dialog's.
+        <code>$confirm()</code> builds one lazily and reuses it, resolving <code>true</code> on
+        confirm and <code>false</code> on cancel, Escape or a click on the backdrop. There is one
+        layout, so a caller passes options rather than markup.
     </p>
 
     <div class="rounded-xl border border-card-border bg-card-bg p-4 shadow-sm" x-data="{ outcome: null }">
