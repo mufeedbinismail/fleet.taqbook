@@ -1,19 +1,4 @@
 @layer components {
-    .x-dialog {
-        @apply w-full max-w-sm rounded-xl border p-0 shadow-lg;
-        border-color: theme('colors.panel-border');
-        background-color: theme('colors.panel-bg');
-
-        &::backdrop {
-            background-color: theme('colors.dialog-scrim');
-            opacity: 0.4;
-        }
-    }
-
-    .x-dialog__body {
-        @apply px-5 pt-5;
-    }
-
     .x-dialog__icon {
         @apply text-lg;
         color: theme('colors.dialog-icon');
@@ -33,18 +18,12 @@
         color: theme('colors.dialog-text-txt');
     }
 
-    .x-dialog__actions {
-        @apply mt-5 flex justify-end gap-2 border-t px-5 py-3;
-        border-color: theme('colors.dialog-actions-border');
-        background-color: theme('colors.dialog-actions-bg');
-    }
-
     .x-dialog__button {
         @apply cursor-pointer rounded-lg border px-4 py-2 text-sm font-semibold transition;
     }
 
     .x-dialog__button--cancel {
-        border-color: theme('colors.dialog-actions-border');
+        border-color: theme('colors.panel-border');
         background-color: theme('colors.dialog-cancel-bg');
         color: theme('colors.dialog-cancel-txt');
 

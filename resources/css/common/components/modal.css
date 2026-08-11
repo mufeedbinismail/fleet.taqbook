@@ -1,0 +1,136 @@
+@layer components {
+    /* A dialog is handed `overflow: auto` by the browser itself, which clips any panel opened from
+       a field inside it. The body below does the scrolling, so the box itself never needs to. */
+    .x-modal {
+        @apply w-[calc(100%-2rem)] flex-col overflow-visible rounded-xl border p-0 shadow-lg;
+        margin: auto;
+        max-height: calc(100dvh - 4rem);
+        border-color: theme('colors.panel-border');
+        background-color: theme('colors.panel-bg');
+    }
+
+    /* Only display, and only when open: unconditionally it would outrank the display: none a shut
+       dialog is given. flex-direction sits above because only display is held through the exit. */
+    .x-modal[open] {
+        @apply flex;
+    }
+
+    .x-modal::backdrop {
+        background-color: theme('colors.modal-scrim');
+        opacity: 0.4;
+    }
+
+    /*------------------------------------------------------------------------------------ size --*/
+
+    .x-modal--sm {
+        @apply max-w-sm;
+    }
+    .x-modal--md {
+        @apply max-w-lg;
+    }
+    .x-modal--lg {
+        @apply max-w-3xl;
+    }
+    .x-modal--xl {
+        @apply max-w-5xl;
+    }
+
+    .x-modal--full {
+        @apply max-w-none;
+        max-height: calc(100dvh - 2rem);
+    }
+
+    /*----------------------------------------------------------------------------------- parts --*/
+
+    .x-modal__head {
+        @apply flex shrink-0 items-center gap-3 border-b px-5 py-3;
+        border-color: theme('colors.panel-border');
+    }
+
+    .x-modal__title {
+        @apply text-sm font-semibold uppercase tracking-wide;
+        color: theme('colors.modal-title-txt');
+    }
+
+    /* The end of the band is the button's own to reach, not the title's to push it to: a modal
+       drawn without a heading has nothing there to do the pushing. */
+    .x-modal__close {
+        @apply -me-2 ms-auto inline-flex shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent px-2 transition;
+        @apply icon-style icon-close text-lg;
+        color: theme('colors.modal-close-txt');
+
+        &:hover {
+            color: theme('colors.modal-title-txt');
+        }
+    }
+
+    .x-modal__body {
+        @apply grow overflow-y-auto p-5;
+    }
+
+    .x-modal__foot {
+        @apply flex shrink-0 flex-wrap items-center justify-end gap-2 border-t px-5 py-3;
+        border-color: theme('colors.modal-foot-border');
+        background-color: theme('colors.modal-foot-bg');
+    }
+
+    /*------------------------------------------------------------------------------ transition --*/
+
+    /* display and overlay are discrete, so only allow-discrete holds the element in the top layer
+       long enough to be seen leaving; the shut state plus @starting-style animates both ways. */
+    @media (prefers-reduced-motion: no-preference) {
+        .x-modal {
+            transition:
+                opacity 150ms ease-out,
+                transform 150ms ease-out,
+                display 150ms allow-discrete,
+                overlay 150ms allow-discrete;
+        }
+
+        .x-modal::backdrop {
+            transition:
+                opacity 150ms ease-out,
+                display 150ms allow-discrete,
+                overlay 150ms allow-discrete;
+        }
+
+        .x-modal:not([open]) {
+            opacity: 0;
+        }
+        .x-modal:not([open])::backdrop {
+            opacity: 0;
+        }
+
+        @starting-style {
+            .x-modal[open] {
+                opacity: 0;
+            }
+            .x-modal[open]::backdrop {
+                opacity: 0;
+            }
+        }
+
+        /* --fade has no rule of its own: opacity is what the base above already carries, so the
+           class exists to let a page say which it meant rather than to declare anything. */
+        .x-modal--zoom:not([open]) {
+            transform: scale(0.96);
+        }
+        .x-modal--slide:not([open]) {
+            transform: translateY(1.5rem);
+        }
+
+        @starting-style {
+            .x-modal--zoom[open] {
+                transform: scale(0.96);
+            }
+            .x-modal--slide[open] {
+                transform: translateY(1.5rem);
+            }
+        }
+
+        .x-modal--none,
+        .x-modal--none::backdrop {
+            transition: none;
+        }
+    }
+}

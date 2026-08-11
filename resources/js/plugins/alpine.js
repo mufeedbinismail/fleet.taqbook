@@ -11,6 +11,7 @@ import collapse from '../components/collapse';
 import date from '../components/date';
 import dateRange from '../components/date-range';
 import dialog from '../components/dialog';
+import modal from '../components/modal';
 import select from '../components/select';
 import toggle from '../components/toggle';
 
@@ -24,6 +25,7 @@ Alpine.plugin(collapse);
 Alpine.plugin(date);
 Alpine.plugin(dateRange);
 Alpine.plugin(dialog);
+Alpine.plugin(modal);
 Alpine.plugin(select);
 Alpine.plugin(toggle);
 

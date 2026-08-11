@@ -9,6 +9,7 @@ import { i18n } from './foundation/i18n';
 import { factory as selectFactory } from './components/select';
 import { date } from './components/date';
 import { dateRange } from './components/date-range';
+import { modal } from './components/modal';
 
 const select = selectFactory(Alpine);
 
@@ -16,6 +17,10 @@ const select = selectFactory(Alpine);
 // standing outside anything that could bound it and lengthening the document.
 select.defaults({ panelParent: '.shell__content-scroller' });
 date.defaults({ panelParent: '.shell__content-scroller' });
+
+// The same region is what a modal holds still behind it, for the same reason: html and body never
+// scroll, so a lock put on either of them locks nothing.
+modal.defaults({ scroller: '.shell__content-scroller' });
 
 // Merge, not replace: a deferred module runs after the classic inline scripts that have already
 // staged onto window.App.
@@ -30,6 +35,7 @@ Object.assign(window.App, {
     select,
     date,
     dateRange,
+    modal,
 });
 
 // Deep-copied per callback, so nothing one edits can be read back by whoever boots next.

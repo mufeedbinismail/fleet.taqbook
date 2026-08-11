@@ -1,5 +1,7 @@
 'use strict';
 
+import { attach } from './modal';
+
 //   const ok = await this.$confirm({
 //       title: 'Delete this role?',
 //       text: 'Every permission granted to Sales will be removed. This cannot be undone.',
@@ -17,28 +19,28 @@ const ICONS = {
     question: 'icon-help-outline',
 };
 
-let dialogEl = null;
+let handle = null;
 
 export default function (Alpine) {
     Alpine.magic('confirm', () => fire);
 }
 
 function dialog() {
-    return (dialogEl ??= build());
+    return (handle ??= attach(build()));
 }
 
 function build() {
     const el = document.createElement('dialog');
-    el.className = 'x-dialog';
+    el.className = 'x-modal x-modal--sm x-modal--none';
     el.innerHTML = `
-        <div class="x-dialog__body">
+        <div class="x-modal__body">
             <h3 class="x-dialog__title">
                 <span class="x-dialog__icon icon" aria-hidden="true"></span>
                 <span data-title></span>
             </h3>
             <p class="x-dialog__text" data-text></p>
         </div>
-        <div class="x-dialog__actions">
+        <div class="x-modal__foot">
             <button type="button" class="x-dialog__button x-dialog__button--cancel" data-cancel></button>
             <button type="button" class="x-dialog__button x-dialog__button--confirm" data-confirm></button>
         </div>
@@ -57,11 +59,11 @@ function fire({
     confirmText = 'OK',
     cancelText = 'Cancel',
 } = {}) {
-    const el = dialog();
+    const { el, show, hide } = dialog();
 
     // A call arriving while the previous one is still open supersedes it rather than queuing:
     // closing here settles the earlier promise before this call's own listeners go on.
-    if (el.open) el.close();
+    if (el.open) hide();
 
     el.querySelector('[data-title]').textContent = title;
     el.querySelector('[data-text]').textContent = text;
@@ -74,12 +76,11 @@ function fire({
     confirmBtn.textContent = confirmText;
     cancelBtn.textContent = cancelText;
 
-    el.showModal();
+    show();
 
     return new Promise((resolve) => {
         function settle(result) {
             el.removeEventListener('close', onClose);
-            el.removeEventListener('click', onBackdrop);
             confirmBtn.removeEventListener('click', onConfirm);
             cancelBtn.removeEventListener('click', onCancel);
             resolve(result);
@@ -89,22 +90,18 @@ function fire({
         // resolving this same promise a second time.
         function onConfirm() {
             settle(true);
-            el.close();
+            hide();
         }
         function onCancel() {
             settle(false);
-            el.close();
+            hide();
         }
         function onClose() {
             settle(false);
-        }
-        function onBackdrop(event) {
-            if (event.target === el) onCancel();
         }
 
         confirmBtn.addEventListener('click', onConfirm);
         cancelBtn.addEventListener('click', onCancel);
         el.addEventListener('close', onClose);
-        el.addEventListener('click', onBackdrop);
     });
 }

@@ -10,6 +10,16 @@
         .shell__content-scroller {
             @apply w-full h-full overflow-auto relative p-6;
             overscroll-behavior: contain;
+            /* Held whether or not a scrollbar is drawn, so taking one away below does not step the
+               content sideways by its width on the platforms that draw one in the layout. */
+            scrollbar-gutter: stable;
+
+            /* What a modal holds the page still by. It lands here rather than on html because
+               reset.css already keeps html and body at overflow: hidden — everything the page
+               scrolls, it scrolls in here. */
+            &.is-scroll-locked {
+                overflow: hidden;
+            }
         }
     }
 }
