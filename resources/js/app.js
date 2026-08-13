@@ -6,6 +6,15 @@ import data from './foundation/data';
 import { setBusyState, unsetBusyState, isBusy } from './foundation/busy';
 import { route, url, buildQuery } from './foundation/route';
 import { i18n } from './foundation/i18n';
+import { factory as selectFactory } from './components/select';
+
+const select = selectFactory(Alpine);
+
+// The region every page of this application scrolls. A panel drawn into it travels with the field
+// it belongs to and is bounded by what somebody can actually see; one left to the document at large
+// stands outside anything that could bound it, and lengthens the page by opening near the foot of
+// it. Stated once here rather than at each of the places a control gets built.
+select.defaults({ panelParent: '.shell__content-scroller' });
 
 // Merge, not replace: by the time this deferred module runs, other classic inline scripts on
 // the page have already staged data onto window.App — reassigning it outright would discard
@@ -18,6 +27,7 @@ Object.assign(window.App, {
     i18n,
     url,
     buildQuery,
+    select,
 });
 
 // Passed in rather than left to be reached for on window, so a callback names what it depends on

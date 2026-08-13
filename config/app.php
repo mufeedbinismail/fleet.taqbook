@@ -192,6 +192,7 @@ return [
         // \App\Foundation\Framework\Provider\BroadcastServiceProvider::class,
         \App\Foundation\Framework\Provider\EventServiceProvider::class,
         \App\Foundation\Framework\Provider\RouteServiceProvider::class,
+        \App\Foundation\Component\Provider\ComponentServiceProvider::class,
         \App\Foundation\Navigation\Provider\NavigationServiceProvider::class,
         \App\Legacy\Provider\LegacyServiceProvider::class,
         \App\Finance\Provider\FinanceServiceProvider::class,

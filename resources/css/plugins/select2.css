@@ -39,7 +39,8 @@
             border-right-color: theme('colors.soft-border');
             color: theme('colors.sidebar-selected-txt');
 
-            &:hover, &:focus {
+            &:hover,
+            &:focus {
                 background-color: theme('colors.sidebar-selected-bg');
                 color: theme('colors.sidebar-selected-txt');
             }
@@ -58,7 +59,7 @@
             .select2-selection__arrow b {
                 border-color: transparent transparent #888 transparent;
                 border-width: 0 4px 5px 4px;
-            }   
+            }
         }
     }
 
@@ -87,7 +88,7 @@
     }
 }
 
-.select2-container--default[dir="rtl"] {
+.select2-container--default[dir='rtl'] {
     .select2-selection--multiple {
         .select2-selection__choice__remove {
             border-left-color: theme('colors.soft-border');

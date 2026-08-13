@@ -72,11 +72,20 @@ export default function initUI() {
                 }
             });
 
-        for (const select of document.getElementsByTagName('select')) {
-            if (select.options.length > 10 && !select.classList.contains('select2-hidden-accessible')) {
-                $(select).select2()
+        // Runs again after every round trip, and the pages this upgrades replace their <select>
+        // nodes wholesale on one — so a fresh node is picked up here, and one already carrying a
+        // control is left alone rather than given a second that would fight it for the same value.
+        for (const select of Array.from(document.getElementsByTagName('select'))) {
+            if (select.classList.contains('x-select__native') || select.hasAttribute('x-select')) {
+                continue;
             }
-        };
+
+            // A list this long is one nobody can find a row in without searching, which is the
+            // whole of what upgrading it buys.
+            if (select.options.length > 10) {
+                App.select(select);
+            }
+        }
     }
 
     /**

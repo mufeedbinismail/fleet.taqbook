@@ -17,5 +17,17 @@ return [
         'foundation.http.expired',
         'foundation.http.offline',
         'foundation.http.failed',
+
+        // A select can be built on any page, by a screen that never mentioned one — a legacy combo
+        // rebinding itself included — so its own strings belong to the baseline rather than to
+        // whichever screens happen to know they have one today.
+        'foundation.select.empty',
+        'foundation.select.searching',
+        'foundation.select.failed',
+        'foundation.select.retry',
+        'foundation.select.more',
+        'foundation.select.tooShort',
+        'foundation.select.remove',
+        'foundation.select.clear',
     ],
 ];

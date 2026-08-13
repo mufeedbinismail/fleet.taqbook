@@ -1,0 +1,287 @@
+@layer components {
+    /* The element still holds the value and still posts it, so it is hidden rather than removed —
+       and hidden without `display: none`, which would take a required field out of the browser's
+       own validation and leave a form that refuses to submit with nothing to point at. */
+    .x-select__native {
+        @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+    }
+
+    /* How wide a select is, said in one place and open to being said otherwise.
+
+       The width is stated rather than claimed as a share of the parent. A percentage counts for
+       nothing when the parent is a table cell sizing itself to its contents: the column comes out
+       measured as though the control were not there, and whatever shares the cell is squeezed past
+       its edge. A stated width is a width the column can add up. It still gives way to a container
+       narrower than itself.
+
+       It lands on the element itself as well as on the control, because an upgradeable field is on
+       screen before anything has upgraded it and holds only the row already chosen — drawn as wide
+       as that one row's text, the page shifts the moment a control arrives. Both carry it, so
+       nothing moves; once upgraded the element is hidden and this no longer reaches it.
+
+       A width class from the caller sits on the element and is carried onto the control with the
+       rest, and a utility outranks a component — so `class="w-[100px]"` is all it takes to have a
+       narrow one, on either side of the upgrade. */
+    .x-select__control {
+        @apply w-[300px];
+    }
+
+    /* Said in its own rule rather than beside the control's: an engine that cannot parse `:where`
+       throws out the whole selector list it appears in, and the control's width would go with it.
+       Alone, all that is lost is the field matching before it has been upgraded.
+
+       `:where` rather than a bare selector so the whole thing weighs nothing, and any width the
+       caller wrote on the element still wins. */
+    :where(select[x-select]:not(.x-select__native)) {
+        @apply w-[300px];
+    }
+
+    /* Inline, because it stands in for a field that was: a block takes the whole line and pushes
+       whatever sat beside it — a search button, a picker icon — onto the next one. */
+    .x-select {
+        @apply relative inline-block max-w-full align-middle;
+    }
+
+    /* Wears the field's appearance rather than waiting to be given one. A control built onto markup
+       nobody wrote for it has no caller to pass it a border, and one that looks like running text is
+       not something anybody can see they are meant to fill in.
+
+       Geometry and edge both match the inputs it stands among rather than the panels it opens: a
+       field drawn in the quieter colour those use reads as having no edge at all next to the ones
+       either side of it. */
+    .x-select__control {
+        @apply flex max-w-full items-center gap-1 px-1 py-0.5 rounded-sm border border-solid cursor-text;
+        border-color: theme('colors.field-border');
+        color: theme('colors.field-txt');
+        background-color: theme('colors.main-bg');
+    }
+
+    /* Focus is shown on the whole control, the way a field beside it shows it — the box being typed
+       into is a part, and lighting up a part says the part is the field. The edge it already has
+       carries it: a ring outside an edge that is itself changing colour is two rings.
+
+       An open list counts as well as a focused box, and both are stated here rather than one being
+       left to the other: a list can be opened by something other than the person at the keyboard,
+       and a control lit from one of the two conditions while its list is lit from the other is the
+       one thing this must never look like. */
+    .x-select__control:focus-within,
+    .x-select--open .x-select__control {
+        border-color: theme('colors.primary-accent');
+    }
+
+    /* The box being typed into is not the field — the control around it is. A focus ring drawn
+       here lands inside that control's own border, and reads as the field suddenly shrinking and
+       giving up its padding. */
+    .x-select__search {
+        @apply flex-1 min-w-0 p-0 bg-transparent border-0 outline-none text-inherit;
+
+        /* Drawn as plainly as a chosen value, because that is what it replaces: the row a select
+           shows when nothing is picked is an ordinary option in ordinary text, so fading it here
+           would change how the field looks the moment a control takes the element's place. */
+        &::placeholder {
+            color: inherit;
+            opacity: 1;
+        }
+    }
+
+    /*
+        A focused field is given a ring drawn in whatever colour it is told to use, so this one is
+        told to use none — the control around it is what shows focus. Said as a colour rather than
+        by cancelling the shadow, so anything else composed into that shadow still gets drawn.
+    */
+    .x-select__search:focus {
+        --tw-ring-color: transparent;
+        --tw-ring-offset-color: transparent;
+    }
+
+    .x-select--disabled .x-select__control {
+        @apply cursor-not-allowed opacity-50;
+    }
+
+    .x-select__caret {
+        @apply inline-block w-0 h-0 shrink-0 ml-1;
+        border: 0.3em solid transparent;
+        border-bottom-width: 0;
+        border-top-color: currentColor;
+    }
+
+    .x-select__clear {
+        @apply shrink-0 w-4 h-4 p-0 leading-none bg-transparent border-0 cursor-pointer;
+        color: theme('colors.general-txt');
+
+        &::before {
+            content: '×';
+            @apply text-base;
+        }
+
+        &:hover {
+            color: theme('colors.secondary-accent');
+        }
+    }
+
+    .x-select__chips {
+        @apply flex items-center gap-1 min-w-0;
+    }
+
+    .x-select__chip {
+        @apply inline-flex items-center gap-1 max-w-[12rem] rounded px-1.5 py-0.5 text-xs font-semibold;
+        background-color: theme('colors.label-bg');
+        color: theme('colors.general-txt');
+    }
+
+    .x-select__chip-label {
+        @apply truncate;
+    }
+
+    .x-select__chip-remove {
+        @apply shrink-0 p-0 leading-none bg-transparent border-0 cursor-pointer;
+        color: inherit;
+
+        &::before {
+            content: '×';
+        }
+
+        &:hover {
+            color: theme('colors.secondary-accent');
+        }
+    }
+
+    .x-select__overflow {
+        @apply text-xs font-semibold whitespace-nowrap;
+        color: theme('colors.general-txt');
+    }
+
+    /* Lifted clear of the page rather than merely layered onto it: this panel is drawn over
+       whatever the field sits in, and a stacking context it loses to puts rows behind the form
+       they belong to. */
+    .x-select__panel {
+        @apply absolute max-h-72 overflow-y-auto py-1 rounded-sm border border-solid shadow-lg z-[200];
+        background-color: theme('colors.main-bg');
+        border-color: theme('colors.soft-border');
+        color: theme('colors.primary-txt');
+    }
+
+    /* Open, the control and the list are one box. The edge where they meet is squared off on both
+       and drawn once — two rounded rectangles carrying their own outlines read as a field and a
+       card that happen to be near each other, rather than as the field being filled in. */
+    .x-select--below .x-select__control {
+        @apply rounded-b-none;
+    }
+
+    .x-select--above .x-select__control {
+        @apply rounded-t-none;
+    }
+
+    .x-select__panel--below {
+        @apply rounded-t-none border-t-0;
+    }
+
+    /* Lifted the other way when the list sits above, so its shadow falls away from the control
+       rather than across the very field somebody is reading and typing into. */
+    .x-select__panel--above {
+        @apply rounded-b-none border-b-0;
+        box-shadow:
+            0 -10px 15px -3px rgb(0 0 0 / 0.1),
+            0 -4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    /* One box, so one outline around it. The list carries the same edge the control has taken while
+       it is being typed into — an outline that changes colour halfway down reads as two boxes that
+       happen to be touching. */
+    .x-select__panel--below,
+    .x-select__panel--above {
+        border-color: theme('colors.primary-accent');
+    }
+
+    /* And the edge where the two meet stays the quiet one. It is a divider inside that box now, not
+       part of its outline, and drawing it in the accent puts a bright line across the middle. */
+    .x-select--below .x-select__control {
+        border-bottom-color: theme('colors.soft-border');
+    }
+
+    .x-select--above .x-select__control {
+        border-top-color: theme('colors.soft-border');
+    }
+
+    .x-select__tray {
+        @apply flex flex-wrap gap-1 px-2 pb-2 mb-1 border-0 border-b border-solid;
+        border-color: theme('colors.soft-border');
+    }
+
+    .x-select__list {
+        @apply list-none m-0 p-0;
+    }
+
+    /* Heavier and darker than the rows it caps, which is what separates a section from its
+       contents — the rows carry no indent, so the heading is doing all of that work. */
+    .x-select__group {
+        @apply px-3 pt-2 pb-1 font-medium cursor-default;
+        color: theme('colors.primary-txt');
+    }
+
+    .x-select__option {
+        @apply flex flex-col px-3 py-1.5 cursor-pointer;
+    }
+
+    /* Wherever the eye is, by key or by cursor. One rule for both, because the row under the pointer
+       is made a highlighted row as the pointer reaches it rather than being drawn by a second rule
+       that happens to match: two sources for one appearance can light two rows at once, which is
+       what happens the moment the list scrolls under a hand that is not moving. */
+    .x-select__option--highlighted {
+        background-color: theme('colors.primary-accent / 8%');
+        color: theme('colors.primary-accent');
+    }
+
+    /* What is already chosen is filled rather than merely tinted: it is a statement about the
+       list's state, not about where the eye happens to be, and has to stay legible while the
+       highlight moves over it. */
+    .x-select__option--selected,
+    .x-select__option--selected:hover {
+        @apply font-medium;
+        background-color: theme('colors.primary-accent');
+        color: theme('colors.main-bg');
+    }
+
+    .x-select__option--disabled {
+        @apply cursor-not-allowed opacity-50;
+    }
+
+    .x-select__option-description {
+        @apply text-xs;
+        color: theme('colors.general-txt');
+    }
+
+    /* Carried by the row rather than stated again: on a tinted or filled row the muted grey it
+       would otherwise keep is the one colour guaranteed not to read against either. Named by the
+       same two states that change the row's background, so a second line never changes while the
+       background under it does not. */
+    .x-select__option--highlighted .x-select__option-description,
+    .x-select__option--selected .x-select__option-description {
+        color: inherit;
+        opacity: 0.75;
+    }
+
+    /* Sits where the next row would, so the list reads as continuing rather than as having stopped.
+       Quieter than the rows around it and smaller than the line beneath them — the mark takes its
+       size from the text here, and at the size of a row it reads as content rather than as waiting. */
+    .x-select__waiting {
+        @apply hidden items-center justify-center px-3 py-2 text-xs;
+        color: theme('colors.general-txt / 55%');
+    }
+
+    .x-select__panel--loading .x-select__waiting {
+        @apply flex;
+    }
+
+    .x-select__message {
+        @apply flex items-center gap-2 px-3 py-2 text-sm;
+        color: theme('colors.general-txt');
+    }
+
+    .x-select__retry {
+        @apply p-0 text-sm font-semibold underline bg-transparent border-0 cursor-pointer;
+        color: theme('colors.primary-accent');
+    }
+}

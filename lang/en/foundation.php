@@ -72,4 +72,15 @@ return [
             'confirm' => 'Yes, delete',
         ],
     ],
+
+    'select' => [
+        'empty' => 'No results',
+        'searching' => 'Searching…',
+        'failed' => 'The list could not be loaded.',
+        'retry' => 'Retry',
+        'more' => 'Refine your search to see more',
+        'tooShort' => 'Keep typing to search',
+        'remove' => 'Remove :label',
+        'clear' => 'Clear',
+    ],
 ];
