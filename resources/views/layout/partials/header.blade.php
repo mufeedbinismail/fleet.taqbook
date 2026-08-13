@@ -8,7 +8,7 @@ $is_legacy_page = $is_legacy_page ?? false;
 <html dir="{{ $lang->getDir() }}" lang="{{ str_replace('_', '-', $lang->getLocale()) }}">
     <head>
         {{-- Everything this app owns on window hangs off one name, so it can never collide with
-             legacy FrontAccounting globals or a third-party script — jQuery/Alpine/axios stay bare
+             legacy FrontAccounting globals or a third-party script — Alpine and axios stay bare
              since those are their own ecosystem's convention, not ours to rename. First script in
              the document: everything after this, classic or deferred, can assume App exists. --}}
         <script>
