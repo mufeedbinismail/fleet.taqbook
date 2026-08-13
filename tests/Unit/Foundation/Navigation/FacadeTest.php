@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Navigation;
+namespace Tests\Unit\Foundation\Navigation;
 
 use App\Foundation\Navigation\Builder\AreaBuilder;
 use App\Foundation\Navigation\Builder\Builder;
@@ -13,7 +13,7 @@ use App\Foundation\Navigation\ValueObject\NavigationTree;
 use App\Foundation\Navigation\ValueObject\UrlTarget;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Tests\TestCase;
-use Tests\Unit\Navigation\Fixture\ClosureSource;
+use Tests\Unit\Foundation\Navigation\Fixture\ClosureSource;
 
 /**
  * The two lifetimes the global covers, asserted separately, because what makes them awkward to hold

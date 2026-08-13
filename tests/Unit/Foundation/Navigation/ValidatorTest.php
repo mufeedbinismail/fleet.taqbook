@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Navigation;
+namespace Tests\Unit\Foundation\Navigation;
 
 use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Auth\Model\Permission as PermissionRecord;
@@ -19,7 +19,7 @@ use App\Foundation\Navigation\ValueObject\UrlTarget;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use stdClass;
 use Tests\TestCase;
-use Tests\Unit\Navigation\Fixture\ClosureSource;
+use Tests\Unit\Foundation\Navigation\Fixture\ClosureSource;
 
 class ValidatorTest extends TestCase
 {

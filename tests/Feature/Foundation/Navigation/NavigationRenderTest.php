@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Navigation;
+namespace Tests\Feature\Foundation\Navigation;
 
 use App\Foundation\Navigation\Entity\Node;
 use App\Foundation\Navigation\Service\Resolver;

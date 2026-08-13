@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Navigation;
+namespace Tests\Unit\Foundation\Navigation;
 
 use App\Legacy\Navigation\Enum\Query;
 use App\Legacy\Navigation\ValueObject\LegacyPageTarget;
@@ -20,7 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
-use Tests\Unit\Navigation\Fixture\ClosureSource;
+use Tests\Unit\Foundation\Navigation\Fixture\ClosureSource;
 
 class LocationTest extends TestCase
 {

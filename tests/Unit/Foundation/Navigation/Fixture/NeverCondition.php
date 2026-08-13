@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Navigation\Fixture;
+namespace Tests\Unit\Foundation\Navigation\Fixture;
 
 use App\Foundation\Navigation\Contract\Condition;
 

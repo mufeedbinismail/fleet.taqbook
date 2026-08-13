@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Navigation;
+namespace Tests\Unit\Foundation\Navigation;
 
 use App\Foundation\Navigation\Builder\AreaBuilder;
 use App\Foundation\Navigation\Builder\Builder;
@@ -16,8 +16,8 @@ use App\Foundation\Navigation\ValueObject\UrlTarget;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Tests\TestCase;
-use Tests\Unit\Navigation\Fixture\ClosureSource;
-use Tests\Unit\Navigation\Fixture\NeverCondition;
+use Tests\Unit\Foundation\Navigation\Fixture\ClosureSource;
+use Tests\Unit\Foundation\Navigation\Fixture\NeverCondition;
 
 class HiddenDestinationTest extends TestCase
 {

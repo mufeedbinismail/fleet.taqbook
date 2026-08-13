@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Foundation;
+namespace Tests\Unit\Foundation\Auth;
 
 use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Auth\Model\User;

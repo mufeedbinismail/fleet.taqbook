@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Navigation;
+namespace Tests\Unit\Foundation\Navigation;
 
 use App\Foundation\Navigation\Builder\AreaBuilder;
 use App\Foundation\Navigation\Builder\Builder;
@@ -10,7 +10,7 @@ use App\Foundation\Navigation\Registry\SourceRegistry;
 use App\Foundation\Navigation\ValueObject\Sitemap;
 use App\Foundation\Navigation\ValueObject\UrlTarget;
 use Tests\TestCase;
-use Tests\Unit\Navigation\Fixture\ClosureSource;
+use Tests\Unit\Foundation\Navigation\Fixture\ClosureSource;
 
 class BuilderTest extends TestCase
 {

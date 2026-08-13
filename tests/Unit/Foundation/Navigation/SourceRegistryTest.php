@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Navigation;
+namespace Tests\Unit\Foundation\Navigation;
 
 use App\Foundation\Navigation\Builder\AreaBuilder;
 use App\Foundation\Navigation\Builder\Builder;
@@ -8,8 +8,8 @@ use App\Foundation\Navigation\Exception\NavigationException;
 use App\Foundation\Navigation\Registry\SourceRegistry;
 use App\Foundation\Navigation\ValueObject\UrlTarget;
 use Tests\TestCase;
-use Tests\Unit\Navigation\Fixture\ClosureSource;
-use Tests\Unit\Navigation\Fixture\RegisteringSource;
+use Tests\Unit\Foundation\Navigation\Fixture\ClosureSource;
+use Tests\Unit\Foundation\Navigation\Fixture\RegisteringSource;
 
 class SourceRegistryTest extends TestCase
 {

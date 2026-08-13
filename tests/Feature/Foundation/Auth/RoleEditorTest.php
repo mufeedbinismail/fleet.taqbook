@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Foundation;
+namespace Tests\Feature\Foundation\Auth;
 
 use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Auth\Model\Permission as PermissionRecord;
