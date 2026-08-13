@@ -31,6 +31,11 @@
 // current axis to stay on-screen without changing which side it's on.
 // Re-evaluated live via autoUpdate as the trigger moves/scrolls.
 //
+// `offset` is the gap left between reference and panel, 8 by default.
+// Zero it where the two are meant to read as one box rather than as a
+// panel floating away from what opened it — a combobox and its list.
+//     x-anchor="{ reference, open, offset: 0 }"
+//
 // An `onPlacement` callback may be passed in config, called with the
 // resolved side ('top' | 'right' | 'bottom' | 'left') after every
 // reposition — for a caller that wants to reflect which way the panel
@@ -39,10 +44,10 @@
 //     x-anchor="{ reference, open, onPlacement: (side) => ... }"
 import { computePosition, autoUpdate, autoPlacement, flip, shift, offset } from '@floating-ui/dom';
 
-function middlewareFor(strategy, placement) {
-    if (strategy === 'auto') return [offset(8), autoPlacement(), shift({ padding: 8 })];
-    if (strategy === 'pin') return [offset(8), shift({ padding: 8 })];
-    return [offset(8), flip(), shift({ padding: 8 })];
+function middlewareFor(strategy, placement, distance) {
+    if (strategy === 'auto') return [offset(distance), autoPlacement(), shift({ padding: 8 })];
+    if (strategy === 'pin') return [offset(distance), shift({ padding: 8 })];
+    return [offset(distance), flip(), shift({ padding: 8 })];
 }
 
 export default function (Alpine) {
@@ -53,14 +58,14 @@ export default function (Alpine) {
         el.style.position = 'absolute';
 
         effect(() => {
-            getConfig(({ reference, open, placement = 'bottom', strategy = 'flip', onPlacement = null }) => {
+            getConfig(({ reference, open, placement = 'bottom', strategy = 'flip', offset: distance = 8, onPlacement = null }) => {
                 if (open && reference) {
                     if (stopAutoUpdate) return;
 
                     stopAutoUpdate = autoUpdate(reference, el, () => {
                         computePosition(reference, el, {
                             placement,
-                            middleware: middlewareFor(strategy, placement),
+                            middleware: middlewareFor(strategy, placement, distance),
                         }).then(({ x, y, placement: finalPlacement }) => {
                             Object.assign(el.style, { left: `${x}px`, top: `${y}px` });
                             onPlacement?.(finalPlacement.split('-')[0]);
