@@ -19,6 +19,10 @@
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>
+        <!-- A developer's own APP_URL may be rooted under a subdirectory, which every request
+             addressed through the URL generator would then be given and no route would match.
+             Pinned here so the suite routes the same way on every machine. -->
+        <env name="APP_URL" value="http://localhost"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_DRIVER" value="array"/>
         <!-- <env name="DB_CONNECTION" value="sqlite"/> -->

@@ -7,25 +7,11 @@ use App\Foundation\Auth\Model\Permission as PermissionRecord;
 use App\Foundation\Auth\Model\Role;
 use App\Foundation\Auth\Model\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
 class RoleEditorTest extends TestCase
 {
     use DatabaseTransactions;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        /*
-            APP_URL carries a subdirectory, and test requests are addressed through the URL
-            generator rather than a bare path. Forcing the root URL here is what keeps a
-            PUT/DELETE in this file addressed to the route under test instead of drifting under
-            that subdirectory.
-        */
-        URL::forceRootUrl('http://localhost');
-    }
 
     /**
      * A user holding a role that can manage roles — the only combination from which a lockout is
