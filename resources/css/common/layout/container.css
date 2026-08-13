@@ -1,3 +1,12 @@
-.main-container {
-    @apply shadow-lg;
+/*
+    Layout is a component of the page like any other, and says so — left outside the layers it
+    is emitted after every utility, and a class put on one of these elements to move it loses
+    silently to the rule it was meant to override.
+*/
+@layer components {
+
+    .main-container {
+        @apply shadow-lg;
+    }
+
 }

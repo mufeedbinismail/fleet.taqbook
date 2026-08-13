@@ -1,72 +1,81 @@
-.main-container {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    overflow: hidden;
-    margin: 0 auto;
-    max-width: var(--breakpoint-3xl);
-    width: 100vw;
-    height: 100vh;
-    height: 100dvh;
+/*
+    Layout is a component of the page like any other, and says so — left outside the layers it
+    is emitted after every utility, and a class put on one of these elements to move it loses
+    silently to the rule it was meant to override.
+*/
+@layer components {
 
-    /* A column as tall as the shell, filled by measuring rather than by arithmetic. Every bar
-       across it takes the height it asks for and the content takes what is left over, so a bar can
-       be added, removed or hidden at a breakpoint without anything else being told. Stated as a
-       subtraction instead, each bar would have to be a fixed height known to a rule it does not
-       appear in, and any bar nobody remembered to subtract would push the last one off screen.
-
-       Its height is the one above it and is not restated here. The window is asserted once, by the
-       shell, and everything under it stretches to whatever that turns out to be — so a shell that
-       is one day something other than the whole window does not leave its contents hanging past it
-       at a height nothing on screen agrees with. */
-    .main-section {
+    .main-container {
         position: relative;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         overflow: hidden;
-        flex: 1;
-        max-width: 100%;
-        transition: flex 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        margin: 0 auto;
+        max-width: var(--breakpoint-3xl);
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
 
-        /* Said of the rows as a whole rather than one bar at a time: each holds the height it asks
-           for, and the content area is the only one that gives. A bar added later is then sized
-           right by being in the column at all, without having to be named anywhere. */
-        > * {
-            flex: none;
-        }
+        /* A column as tall as the shell, filled by measuring rather than by arithmetic. Every bar
+           across it takes the height it asks for and the content takes what is left over, so a bar can
+           be added, removed or hidden at a breakpoint without anything else being told. Stated as a
+           subtraction instead, each bar would have to be a fixed height known to a rule it does not
+           appear in, and any bar nobody remembered to subtract would push the last one off screen.
 
-        /* `min-height: 0` because a flex item refuses by default to shrink under its own content,
-           which would spend the overflow on pushing the rows below it out of the shell rather than
-           on scrolling in here, where there is already a scroller to do it. */
-        > .main-content-area {
+           Its height is the one above it and is not restated here. The window is asserted once, by the
+           shell, and everything under it stretches to whatever that turns out to be — so a shell that
+           is one day something other than the whole window does not leave its contents hanging past it
+           at a height nothing on screen agrees with. */
+        .main-section {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
             flex: 1;
-            min-height: 0;
+            max-width: 100%;
+            transition: flex 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+            /* Said of the rows as a whole rather than one bar at a time: each holds the height it asks
+               for, and the content area is the only one that gives. A bar added later is then sized
+               right by being in the column at all, without having to be named anywhere. */
+            > * {
+                flex: none;
+            }
+
+            /* `min-height: 0` because a flex item refuses by default to shrink under its own content,
+               which would spend the overflow on pushing the rows below it out of the shell rather than
+               on scrolling in here, where there is already a scroller to do it. */
+            > .main-content-area {
+                flex: 1;
+                min-height: 0;
+            }
         }
     }
-}
 
-.main-content-area {
-    position: relative;
-    width: 100%;
-}
-
-.main-footer {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    height: theme('height.footer');
-}
-
-.main-header {
-    position: relative;
-    overflow: hidden;
-    z-index: 110;
-    height: theme('height.header');
-    width: 100%;
-}
-
-@media (max-width: calc(theme('screens.md') - 1px)) {
-    .main-section {
-        margin-left: 0;
+    .main-content-area {
+        position: relative;
+        width: 100%;
     }
+
+    .main-footer {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        height: theme('height.footer');
+    }
+
+    .main-header {
+        position: relative;
+        overflow: hidden;
+        z-index: 110;
+        height: theme('height.header');
+        width: 100%;
+    }
+
+    @media (max-width: calc(theme('screens.md') - 1px)) {
+        .main-section {
+            margin-left: 0;
+        }
+    }
+
 }

@@ -1,79 +1,88 @@
-.main-sidebar {
-    @apply border-e border-solid;
-    position: relative;
-    z-index: 100;
-    overflow: hidden;
-    flex: 0 0 theme('width.sidebar');
-    background: inherit;
-    background-color: theme('colors.sidebar-bg');
-    color: theme('colors.sidebar-txt');
-    border-color: theme('colors.sidebar-border');
-    transition: flex 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+/*
+    Layout is a component of the page like any other, and says so — left outside the layers it
+    is emitted after every utility, and a class put on one of these elements to move it loses
+    silently to the rule it was meant to override.
+*/
+@layer components {
 
-    /* The menu scrolls here rather than on the box outside, because this is the element holding the
-       width the rows are laid out against. Where a platform draws a scrollbar that takes up room,
-       the gutter comes out of the scroller's own content box: scrolled from outside, this inner
-       would still be the full sidebar width while being given less than that to sit in, and the
-       overflow — the end padding of every row, which is all that keeps the caret off the edge —
-       would go under the scrollbar rather than push anything. Scrolled here, the gutter is taken
-       out of the width the rows measure themselves against, so what a row reserves at its end
-       survives.
+    .main-sidebar {
+        @apply border-e border-solid;
+        position: relative;
+        z-index: 100;
+        overflow: hidden;
+        flex: 0 0 theme('width.sidebar');
+        background: inherit;
+        background-color: theme('colors.sidebar-bg');
+        color: theme('colors.sidebar-txt');
+        border-color: theme('colors.sidebar-border');
+        transition: flex 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
-       Height rather than a stretch because a scroller needs a bound to scroll against, and the
-       shell is what states one. */
-    .sidebar-inner {
-        width: theme('width.sidebar');
-        height: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
-        overscroll-behavior: contain;
-    }
+        /* The menu scrolls here rather than on the box outside, because this is the element holding the
+           width the rows are laid out against. Where a platform draws a scrollbar that takes up room,
+           the gutter comes out of the scroller's own content box: scrolled from outside, this inner
+           would still be the full sidebar width while being given less than that to sit in, and the
+           overflow — the end padding of every row, which is all that keeps the caret off the edge —
+           would go under the scrollbar rather than push anything. Scrolled here, the gutter is taken
+           out of the width the rows measure themselves against, so what a row reserves at its end
+           survives.
 
-    .app-name {
-        @apply px-4 py-4 mb-1 text-2xl font-bold text-center;
-        border-block-end: 1px solid theme('colors.sidebar-border');
-
-        img {
-            @apply inline-block w-[2rem] align-text-bottom
-        }
-    }
-}
-
-/* Desktop collapse: .main-sidebar is a flex item here, so "closed" means
-   reclaiming its layout space via flex-basis, with its fixed-width inner
-   content sliding away to match the shrinking box — necessarily different
-   mechanics from the mobile drawer (position:fixed + self-transform, see
-   fa/components/drawer.css), since a flex item and a fixed-position
-   element don't collapse the same way. Both driven by the same
-   .x-drawer-closed class, though, and explicitly scoped to desktop so the
-   two mechanisms never overlap (previously this relied on .x-drawer's
-   position:fixed incidentally nullifying flex-basis on mobile, which left
-   .sidebar-inner still picking up this block's transform there too — a
-   real double-transform bug during the mobile slide, since
-   .main-sidebar.x-drawer-closed .sidebar-inner's specificity always beat the
-   old mobile "neutralize" attempt regardless of media query). */
-@media (min-width: theme('screens.md')) {
-    /* x-cloak (plugins/alpine.css) hides the sidebar for the whole window
-       between first paint and Alpine hydrating — needed on mobile, since
-       pre-hydration the panel has none of x-drawer's positioning classes
-       yet and would otherwise render in normal flow, overlapping content.
-       Desktop's default state is simply "visible" though, so undo the
-       cloak there specifically rather than wait on JS for something CSS
-       already knows unconditionally — this is what was causing the brief
-       flash of a hidden sidebar on desktop load. */
-    .main-sidebar[x-cloak] {
-        display: block !important;
-    }
-
-    .main-sidebar .sidebar-inner {
-        transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-
-    .main-sidebar.x-drawer-closed {
-        flex: 0 0 0px;
-
+           Height rather than a stretch because a scroller needs a bound to scroll against, and the
+           shell is what states one. */
         .sidebar-inner {
-            transform: translateX(-100%);
+            width: theme('width.sidebar');
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            overscroll-behavior: contain;
+        }
+
+        .app-name {
+            @apply px-4 py-4 mb-1 text-2xl font-bold text-center;
+            border-block-end: 1px solid theme('colors.sidebar-border');
+
+            img {
+                @apply inline-block w-[2rem] align-text-bottom
+            }
         }
     }
+
+    /* Desktop collapse: .main-sidebar is a flex item here, so "closed" means
+       reclaiming its layout space via flex-basis, with its fixed-width inner
+       content sliding away to match the shrinking box — necessarily different
+       mechanics from the mobile drawer (position:fixed + self-transform, see
+       fa/components/drawer.css), since a flex item and a fixed-position
+       element don't collapse the same way. Both driven by the same
+       .x-drawer-closed class, though, and explicitly scoped to desktop so the
+       two mechanisms never overlap (previously this relied on .x-drawer's
+       position:fixed incidentally nullifying flex-basis on mobile, which left
+       .sidebar-inner still picking up this block's transform there too — a
+       real double-transform bug during the mobile slide, since
+       .main-sidebar.x-drawer-closed .sidebar-inner's specificity always beat the
+       old mobile "neutralize" attempt regardless of media query). */
+    @media (min-width: theme('screens.md')) {
+        /* x-cloak (plugins/alpine.css) hides the sidebar for the whole window
+           between first paint and Alpine hydrating — needed on mobile, since
+           pre-hydration the panel has none of x-drawer's positioning classes
+           yet and would otherwise render in normal flow, overlapping content.
+           Desktop's default state is simply "visible" though, so undo the
+           cloak there specifically rather than wait on JS for something CSS
+           already knows unconditionally — this is what was causing the brief
+           flash of a hidden sidebar on desktop load. */
+        .main-sidebar[x-cloak] {
+            display: block !important;
+        }
+
+        .main-sidebar .sidebar-inner {
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .main-sidebar.x-drawer-closed {
+            flex: 0 0 0px;
+
+            .sidebar-inner {
+                transform: translateX(-100%);
+            }
+        }
+    }
+
 }

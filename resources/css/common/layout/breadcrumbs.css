@@ -1,43 +1,52 @@
-/* A second, quieter bar under the header. Hidden below md: the trail is an orientation aid, and on
-   a screen that narrow it would wrap to more rows than the content it is orienting.
+/*
+    Layout is a component of the page like any other, and says so — left outside the layers it
+    is emitted after every utility, and a class put on one of these elements to move it loses
+    silently to the rule it was meant to override.
+*/
+@layer components {
 
-   Sized well under the body text rather than just under it. The trail is an aside to the page, and
-   at anything close to body size the step you are on reads as a second heading competing with the
-   real one in the header above.
+    /* A second, quieter bar under the header. Hidden below md: the trail is an orientation aid, and on
+       a screen that narrow it would wrap to more rows than the content it is orienting.
 
-   Skinned in its own named values rather than borrowed from the bar above it, so the two can be
-   told apart — or deliberately made to match — without one of them changing by accident. */
-.breadcrumbs {
-    @apply hidden md:flex items-center px-4 py-1.5 text-xs leading-none;
-    background-color: theme('colors.breadcrumb-bg');
-    color: theme('colors.breadcrumb-txt');
-    border-block-start: 1px solid theme('colors.breadcrumb-border');
+       Sized well under the body text rather than just under it. The trail is an aside to the page, and
+       at anything close to body size the step you are on reads as a second heading competing with the
+       real one in the header above.
 
-    ol {
-        @apply flex flex-wrap items-center gap-x-1.5 gap-y-1;
-    }
+       Skinned in its own named values rather than borrowed from the bar above it, so the two can be
+       told apart — or deliberately made to match — without one of them changing by accident. */
+    .breadcrumbs {
+        @apply hidden md:flex items-center px-4 py-1.5 text-xs leading-none;
+        background-color: theme('colors.breadcrumb-bg');
+        color: theme('colors.breadcrumb-txt');
+        border-block-start: 1px solid theme('colors.breadcrumb-border');
 
-    li {
-        @apply flex items-center gap-x-1.5;
-    }
+        ol {
+            @apply flex flex-wrap items-center gap-x-1.5 gap-y-1;
+        }
 
-    /* Drawn between steps rather than after each one, so the trail never ends in a separator
-       pointing at nothing. */
-    li + li::before {
-        content: '\203A';
-        @apply opacity-50;
-    }
+        li {
+            @apply flex items-center gap-x-1.5;
+        }
 
-    a {
-        color: inherit;
+        /* Drawn between steps rather than after each one, so the trail never ends in a separator
+           pointing at nothing. */
+        li + li::before {
+            content: '\203A';
+            @apply opacity-50;
+        }
 
-        &:hover {
-            @apply underline;
+        a {
+            color: inherit;
+
+            &:hover {
+                @apply underline;
+            }
+        }
+
+        [aria-current='page'] {
+            @apply font-medium;
+            color: theme('colors.breadcrumb-current-txt');
         }
     }
 
-    [aria-current='page'] {
-        @apply font-medium;
-        color: theme('colors.breadcrumb-current-txt');
-    }
 }

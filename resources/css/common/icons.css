@@ -9,215 +9,224 @@
   font-display: block;
 }
 
-/* Canonical alignment for every icon — replaces per-use vertical-align nudges.
-   All glyphs share a uniform advance width, so this centers them consistently. */
-.icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  vertical-align: -0.125em;
-  line-height: 1;
-  /* Filled icons carry more "ink" than outline sets; a slight opacity softens
-     the dense ones so they don't dominate text. Tune 0.8–0.9 to taste. */
-  opacity: 0.85;
-}
+/*
+    A layer, so a utility on the same element still outranks the glyph's own styling. What
+    keeps these from being shaken out is the safelist, which is read from the declarations
+    below — no name is ever written out in a template, so nothing else could vouch for them.
+*/
+@layer components {
 
-.icon-style:before,
-.icon:before {
-  /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'icomoon' !important;
-  speak: never;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
+    /* Canonical alignment for every icon — replaces per-use vertical-align nudges.
+       All glyphs share a uniform advance width, so this centers them consistently. */
+    .icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        vertical-align: -0.125em;
+        line-height: 1;
+        /* Filled icons carry more "ink" than outline sets; a slight opacity softens
+           the dense ones so they don't dominate text. Tune 0.8–0.9 to taste. */
+        opacity: 0.85;
+    }
 
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+    .icon-style:before,
+    .icon:before {
+        /* use !important to prevent issues with browser extensions that change fonts */
+        font-family: 'icomoon' !important;
+        speak: never;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
 
-.icon-tools:before {
-  content: "\e933";
-}
-.icon-prefs:before {
-  content: "\e931";
-}
-.icon-data:before {
-  content: "\e930";
-}
-.icon-spacer:before {
-  content: "\e932";
-}
-.icon-reports:before {
-  content: "\e92d";
-}
-.icon-feature:before {
-  content: "\e92e";
-}
-.icon-setup-master:before {
-  content: "\e92f";
-}
-.icon-accountant:before {
-  content: "\e900";
-}
-.icon-alloc:before {
-  content: "\e901";
-}
-.icon-banknote:before {
-  content: "\e902";
-}
-.icon-block-flipped:before {
-  content: "\e903";
-}
-.icon-block:before {
-  content: "\e904";
-}
-.icon-button-ok:before {
-  content: "\e905";
-}
-.icon-cal:before {
-  content: "\e906";
-}
-.icon-cancel:before {
-  content: "\e907";
-}
-.icon-cog:before {
-  content: "\e908";
-}
-.icon-credit:before {
-  content: "\e909";
-}
-.icon-delete:before {
-  content: "\e90a";
-}
-.icon-deliver:before {
-  content: "\e90b";
-}
-.icon-dimension:before {
-  content: "\e90c";
-}
-.icon-download:before {
-  content: "\e90d";
-}
-.icon-edit:before {
-  content: "\e90e";
-}
-.icon-fixed-assets:before {
-  content: "\e90f";
-}
-.icon-gl:before {
-  content: "\e910";
-}
-.icon-growth:before {
-  content: "\e911";
-}
-.icon-help-outline:before {
-  content: "\e912";
-}
-.icon-inventory:before {
-  content: "\e913";
-}
-.icon-invoice:before {
-  content: "\e914";
-}
-.icon-lock:before {
-  content: "\e915";
-}
-.icon-login:before {
-  content: "\e916";
-}
-.icon-logout:before {
-  content: "\e917";
-}
-.icon-log:before {
-  content: "\e918";
-}
-.icon-manufacturing:before {
-  content: "\e919";
-}
-.icon-minus-outline:before {
-  content: "\e91a";
-}
-.icon-money-give:before {
-  content: "\e91b";
-}
-.icon-money-receive:before {
-  content: "\e91c";
-}
-.icon-pencil:before {
-  content: "\e91d";
-}
-.icon-plus-circle:before {
-  content: "\e91e";
-}
-.icon-print:before {
-  content: "\e91f";
-}
-.icon-procurement:before {
-  content: "\e920";
-}
-.icon-receive:before {
-  content: "\e921";
-}
-.icon-search:before {
-  content: "\e922";
-}
-.icon-security:before {
-  content: "\e923";
-}
-.icon-settings:before {
-  content: "\e924";
-}
-.icon-sort-asc:before {
-  content: "\e925";
-}
-.icon-sort-desc:before {
-  content: "\e926";
-}
-.icon-sort-none:before {
-  content: "\e927";
-}
-.icon-statistics:before {
-  content: "\e928";
-}
-.icon-storefront:before {
-  content: "\e929";
-}
-.icon-trash:before {
-  content: "\e92a";
-}
-.icon-view:before {
-  content: "\e92b";
-}
-.icon-warning:before {
-  content: "\e92c";
-}
-.icon-wrench:before {
-  content: "\f0ad";
-}
-.icon-file-pdf:before {
-  content: "\f1c1";
-}
-.icon-spinner:before {
-  content: "\e983";
-}
-.icon-globe:before {
-  content: "\e9ca";
-}
-.icon-refresh:before {
-  content: "\ea2e";
-}
-.icon-bars:before {
-  content: "\f0c9";
-}
-.icon-circle-user:before {
-  content: "\f2bd";
-}
-.icon-clock:before {
-  content: "\e935";
-}
-.icon-circle-check:before {
-  content: "\e936";
+        /* Better Font Rendering =========== */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .icon-tools:before {
+        content: "\e933";
+    }
+    .icon-prefs:before {
+        content: "\e931";
+    }
+    .icon-data:before {
+        content: "\e930";
+    }
+    .icon-spacer:before {
+        content: "\e932";
+    }
+    .icon-reports:before {
+        content: "\e92d";
+    }
+    .icon-feature:before {
+        content: "\e92e";
+    }
+    .icon-setup-master:before {
+        content: "\e92f";
+    }
+    .icon-accountant:before {
+        content: "\e900";
+    }
+    .icon-alloc:before {
+        content: "\e901";
+    }
+    .icon-banknote:before {
+        content: "\e902";
+    }
+    .icon-block-flipped:before {
+        content: "\e903";
+    }
+    .icon-block:before {
+        content: "\e904";
+    }
+    .icon-button-ok:before {
+        content: "\e905";
+    }
+    .icon-cal:before {
+        content: "\e906";
+    }
+    .icon-cancel:before {
+        content: "\e907";
+    }
+    .icon-cog:before {
+        content: "\e908";
+    }
+    .icon-credit:before {
+        content: "\e909";
+    }
+    .icon-delete:before {
+        content: "\e90a";
+    }
+    .icon-deliver:before {
+        content: "\e90b";
+    }
+    .icon-dimension:before {
+        content: "\e90c";
+    }
+    .icon-download:before {
+        content: "\e90d";
+    }
+    .icon-edit:before {
+        content: "\e90e";
+    }
+    .icon-fixed-assets:before {
+        content: "\e90f";
+    }
+    .icon-gl:before {
+        content: "\e910";
+    }
+    .icon-growth:before {
+        content: "\e911";
+    }
+    .icon-help-outline:before {
+        content: "\e912";
+    }
+    .icon-inventory:before {
+        content: "\e913";
+    }
+    .icon-invoice:before {
+        content: "\e914";
+    }
+    .icon-lock:before {
+        content: "\e915";
+    }
+    .icon-login:before {
+        content: "\e916";
+    }
+    .icon-logout:before {
+        content: "\e917";
+    }
+    .icon-log:before {
+        content: "\e918";
+    }
+    .icon-manufacturing:before {
+        content: "\e919";
+    }
+    .icon-minus-outline:before {
+        content: "\e91a";
+    }
+    .icon-money-give:before {
+        content: "\e91b";
+    }
+    .icon-money-receive:before {
+        content: "\e91c";
+    }
+    .icon-pencil:before {
+        content: "\e91d";
+    }
+    .icon-plus-circle:before {
+        content: "\e91e";
+    }
+    .icon-print:before {
+        content: "\e91f";
+    }
+    .icon-procurement:before {
+        content: "\e920";
+    }
+    .icon-receive:before {
+        content: "\e921";
+    }
+    .icon-search:before {
+        content: "\e922";
+    }
+    .icon-security:before {
+        content: "\e923";
+    }
+    .icon-settings:before {
+        content: "\e924";
+    }
+    .icon-sort-asc:before {
+        content: "\e925";
+    }
+    .icon-sort-desc:before {
+        content: "\e926";
+    }
+    .icon-sort-none:before {
+        content: "\e927";
+    }
+    .icon-statistics:before {
+        content: "\e928";
+    }
+    .icon-storefront:before {
+        content: "\e929";
+    }
+    .icon-trash:before {
+        content: "\e92a";
+    }
+    .icon-view:before {
+        content: "\e92b";
+    }
+    .icon-warning:before {
+        content: "\e92c";
+    }
+    .icon-wrench:before {
+        content: "\f0ad";
+    }
+    .icon-file-pdf:before {
+        content: "\f1c1";
+    }
+    .icon-spinner:before {
+        content: "\e983";
+    }
+    .icon-globe:before {
+        content: "\e9ca";
+    }
+    .icon-refresh:before {
+        content: "\ea2e";
+    }
+    .icon-bars:before {
+        content: "\f0c9";
+    }
+    .icon-circle-user:before {
+        content: "\f2bd";
+    }
+    .icon-clock:before {
+        content: "\e935";
+    }
+    .icon-circle-check:before {
+        content: "\e936";
+    }
+
 }

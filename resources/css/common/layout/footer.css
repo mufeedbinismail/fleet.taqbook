@@ -1,11 +1,20 @@
-.main-footer {
-    @apply text-xs p-1 flex items-center justify-between;
-    background-color: theme('colors.footer-bg');
-    color: theme('colors.footer-txt');
-}
+/*
+    Layout is a component of the page like any other, and says so — left outside the layers it
+    is emitted after every utility, and a class put on one of these elements to move it loses
+    silently to the rule it was meant to override.
+*/
+@layer components {
 
-@media (max-width: calc(theme('screens.md') - 1px)) {
-    #hotkeyshelp {
-        display: none;
+    .main-footer {
+        @apply text-xs p-1 flex items-center justify-between;
+        background-color: theme('colors.footer-bg');
+        color: theme('colors.footer-txt');
     }
+
+    @media (max-width: calc(theme('screens.md') - 1px)) {
+        #hotkeyshelp {
+            display: none;
+        }
+    }
+
 }

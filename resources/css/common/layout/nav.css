@@ -1,169 +1,178 @@
-/* The navigation tree in the sidebar: areas that open, sections that open inside them, entries that
-   go. What opens and what shuts is the accordion's business; everything here is what those depths
-   are worth to look at.
+/*
+    Layout is a component of the page like any other, and says so — left outside the layers it
+    is emitted after every utility, and a class put on one of these elements to move it loses
+    silently to the rule it was meant to override.
+*/
+@layer components {
 
-   Every depth is the same strip, edge to edge of the sidebar. Nothing is inset and nothing is
-   rounded: a row is a band of the sidebar rather than a control placed on top of one, so a filled
-   row reads as part of the panel it belongs to instead of as a button someone left there. Depth is
-   spent entirely on where the text starts, which is why the fill can run the full width at every
-   level without the levels blurring together.
+    /* The navigation tree in the sidebar: areas that open, sections that open inside them, entries that
+       go. What opens and what shuts is the accordion's business; everything here is what those depths
+       are worth to look at.
 
-   Being the thing the page is on is drawn the one way this theme draws it, at whichever depth it
-   happens: the area the page belongs to and the entry it is are both filled, which is the trail
-   read top to bottom rather than two unrelated marks that have to be learnt separately.
+       Every depth is the same strip, edge to edge of the sidebar. Nothing is inset and nothing is
+       rounded: a row is a band of the sidebar rather than a control placed on top of one, so a filled
+       row reads as part of the panel it belongs to instead of as a button someone left there. Depth is
+       spent entirely on where the text starts, which is why the fill can run the full width at every
+       level without the levels blurring together.
 
-   Every colour here is a named skin value, so what the menu is worth to look at can be restated
-   without touching what it is. */
-.main-nav {
-    @apply pb-6;
+       Being the thing the page is on is drawn the one way this theme draws it, at whichever depth it
+       happens: the area the page belongs to and the entry it is are both filled, which is the trail
+       read top to bottom rather than two unrelated marks that have to be learnt separately.
 
-    ul {
-        @apply list-none m-0 p-0;
+       Every colour here is a named skin value, so what the menu is worth to look at can be restated
+       without touching what it is. */
+    .main-nav {
+        @apply pb-6;
+
+        ul {
+            @apply list-none m-0 p-0;
+        }
     }
-}
 
-.nav-row {
-    @apply w-full flex items-center gap-2.5 px-4 py-2;
-    @apply text-start no-underline bg-transparent border-0 cursor-pointer transition-colors;
-    color: theme('colors.sidebar-txt');
+    .nav-row {
+        @apply w-full flex items-center gap-2.5 px-4 py-2;
+        @apply text-start no-underline bg-transparent border-0 cursor-pointer transition-colors;
+        color: theme('colors.sidebar-txt');
 
-    &:hover {
-        background-color: theme('colors.sidebar-hover-bg');
+        &:hover {
+            background-color: theme('colors.sidebar-hover-bg');
+        }
     }
-}
 
-/* Held flat under the pointer: it is already as loud as anything in the menu gets, and lighting it
-   would read as a change of state rather than as the pointer being over it. */
-.nav-row.is-current {
-    background-color: theme('colors.sidebar-selected-bg');
-    color: theme('colors.sidebar-selected-txt');
-
-    &:hover {
+    /* Held flat under the pointer: it is already as loud as anything in the menu gets, and lighting it
+       would read as a change of state rather than as the pointer being over it. */
+    .nav-row.is-current {
         background-color: theme('colors.sidebar-selected-bg');
-    }
-}
+        color: theme('colors.sidebar-selected-txt');
 
-/* A row that both leads somewhere and opens holds two controls instead of being one. The row keeps
-   the background, so the pair still lights as a single band, and hands its padding to the two that
-   now have to fill it — otherwise the caret's half of the strip would not answer to the pointer. */
-.nav-row--split {
-    @apply p-0 gap-0 items-stretch;
-
-    > * {
-        @apply flex items-center gap-2.5 px-4 bg-transparent border-0 cursor-pointer no-underline;
-        color: inherit;
+        &:hover {
+            background-color: theme('colors.sidebar-selected-bg');
+        }
     }
 
-    > :first-child {
+    /* A row that both leads somewhere and opens holds two controls instead of being one. The row keeps
+       the background, so the pair still lights as a single band, and hands its padding to the two that
+       now have to fill it — otherwise the caret's half of the strip would not answer to the pointer. */
+    .nav-row--split {
+        @apply p-0 gap-0 items-stretch;
+
+        > * {
+            @apply flex items-center gap-2.5 px-4 bg-transparent border-0 cursor-pointer no-underline;
+            color: inherit;
+        }
+
+        > :first-child {
+            @apply flex-1 min-w-0;
+        }
+
+        /* A 0.4rem chevron is a control a pointer can be aimed at and a finger cannot. Its half of the
+           strip is held to the smallest square a touch target is allowed to be, which is wider than the
+           mark plus the row's padding — so the caret is given the middle of it rather than left against
+           whichever edge the extra width fell on. */
+        > :last-child {
+            @apply justify-center min-w-11;
+        }
+    }
+
+    .nav-row-label {
         @apply flex-1 min-w-0;
     }
 
-    /* A 0.4rem chevron is a control a pointer can be aimed at and a finger cannot. Its half of the
-       strip is held to the smallest square a touch target is allowed to be, which is wider than the
-       mark plus the row's padding — so the caret is given the middle of it rather than left against
-       whichever edge the extra width fell on. */
-    > :last-child {
-        @apply justify-center min-w-11;
-    }
-}
-
-.nav-row-label {
-    @apply flex-1 min-w-0;
-}
-
-/* Decoration in a menu whose every other mark means something, so it is kept under the weight of
-   the label it belongs to until the pointer is on the row. */
-.nav-row .x-accordion-caret {
-    opacity: 0.5;
-}
-
-.nav-row:hover .x-accordion-caret,
-.nav-row.is-current .x-accordion-caret,
-.x-accordion-trigger.x-is-open .x-accordion-caret {
-    @apply opacity-100;
-}
-
-/* The rule that says a row is inside something. The rows it belongs to now reach both edges of the
-   sidebar, so it cannot sit beside them — it is drawn down the panel and over them, which is also
-   what carries the line unbroken across a strip that happens to be filled.
-
-   Written against the menu it is in rather than on its own, because a panel is often the same list
-   the reset above has just stripped the indent off. */
-.main-nav .nav-panel {
-    @apply relative;
-}
-
-/* Lifted a level because a panel holds panels. Positioning one to hang its own rule off also puts
-   everything inside it — the rules and the filled strips of every level below — above the rule of
-   the level above, which is what breaks the outer lines exactly where a deep row is filled. Raising
-   every rule together restores them as one ladder, and the sidebar is a stacking context of its
-   own, so nothing here can climb out of it. */
-.main-nav .nav-panel::before {
-    content: '';
-    @apply absolute inset-y-0 w-px z-[1];
-    inset-inline-start: var(--nav-guide, theme('spacing.5'));
-    background-color: theme('colors.sidebar-guide');
-}
-
-/* All any depth says for itself: how far in its rows start, and where the rule marking them as
-   inside it runs. */
-.nav-area > .nav-row {
-    @apply font-semibold;
-
-    /* The row has handed its padding to the pair of controls filling it, so the height an area
-       stands at is theirs to state and not the row's. */
-    > * {
-        @apply py-2.5;
+    /* Decoration in a menu whose every other mark means something, so it is kept under the weight of
+       the label it belongs to until the pointer is on the row. */
+    .nav-row .x-accordion-caret {
+        opacity: 0.5;
     }
 
-    .icon {
-        @apply text-[1.125em];
+    .nav-row:hover .x-accordion-caret,
+    .nav-row.is-current .x-accordion-caret,
+    .x-accordion-trigger.x-is-open .x-accordion-caret {
+        @apply opacity-100;
     }
-}
 
-.nav-area > .nav-panel {
-    --nav-guide: theme('spacing.5');
-}
+    /* The rule that says a row is inside something. The rows it belongs to now reach both edges of the
+       sidebar, so it cannot sit beside them — it is drawn down the panel and over them, which is also
+       what carries the line unbroken across a strip that happens to be filled.
 
-/* A heading rather than a place: small enough not to be mistaken for one of the entries it names,
-   and set apart by its case rather than by another colour. */
-.nav-section > .nav-row {
-    @apply ps-8 py-1.5 text-[0.75rem] font-semibold uppercase tracking-wide;
-    color: theme('colors.sidebar-section-txt');
-}
+       Written against the menu it is in rather than on its own, because a panel is often the same list
+       the reset above has just stripped the indent off. */
+    .main-nav .nav-panel {
+        @apply relative;
+    }
 
-.nav-section > .nav-row.x-is-open {
-    color: theme('colors.sidebar-txt');
-}
+    /* Lifted a level because a panel holds panels. Positioning one to hang its own rule off also puts
+       everything inside it — the rules and the filled strips of every level below — above the rule of
+       the level above, which is what breaks the outer lines exactly where a deep row is filled. Raising
+       every rule together restores them as one ladder, and the sidebar is a stacking context of its
+       own, so nothing here can climb out of it. */
+    .main-nav .nav-panel::before {
+        content: '';
+        @apply absolute inset-y-0 w-px z-[1];
+        inset-inline-start: var(--nav-guide, theme('spacing.5'));
+        background-color: theme('colors.sidebar-guide');
+    }
 
-.nav-section > .nav-panel {
-    --nav-guide: theme('spacing.9');
-}
+    /* All any depth says for itself: how far in its rows start, and where the rule marking them as
+       inside it runs. */
+    .nav-area > .nav-row {
+        @apply font-semibold;
 
-.main-nav .nav-entry {
-    @apply ps-11 py-1.5 text-[0.9375rem];
-}
+        /* The row has handed its padding to the pair of controls filling it, so the height an area
+           stands at is theirs to state and not the row's. */
+        > * {
+            @apply py-2.5;
+        }
 
-/* The accelerator's mark is the only thing naming the key that opens an entry, so it is pinned to
-   the font's own thickness rather than left to inherit a heavier rule from a container. */
-.nav-entry u {
-    text-decoration-thickness: from-font;
-}
+        .icon {
+            @apply text-[1.125em];
+        }
+    }
 
-/* Nothing to open: no pointer, and dimmed enough to read as unavailable rather than overlooked. */
-.nav-entry:not([href]) {
-    @apply opacity-50 cursor-default;
-}
+    .nav-area > .nav-panel {
+        --nav-guide: theme('spacing.5');
+    }
 
-/* The category icon is information, not decoration, but there are as many of them as there are
-   entries — so it sits back until the entry is the one being read. Dimmed rather than given a
-   colour of its own, so it keeps whatever the strip it is on writes with. */
-.main-nav .nav-entry-icon {
-    @apply shrink-0 text-[0.9em];
-    opacity: 0.55;
-}
+    /* A heading rather than a place: small enough not to be mistaken for one of the entries it names,
+       and set apart by its case rather than by another colour. */
+    .nav-section > .nav-row {
+        @apply ps-8 py-1.5 text-[0.75rem] font-semibold uppercase tracking-wide;
+        color: theme('colors.sidebar-section-txt');
+    }
 
-.nav-row:hover .nav-entry-icon,
-.nav-row.is-current .nav-entry-icon {
-    @apply opacity-100;
+    .nav-section > .nav-row.x-is-open {
+        color: theme('colors.sidebar-txt');
+    }
+
+    .nav-section > .nav-panel {
+        --nav-guide: theme('spacing.9');
+    }
+
+    .main-nav .nav-entry {
+        @apply ps-11 py-1.5 text-[0.9375rem];
+    }
+
+    /* The accelerator's mark is the only thing naming the key that opens an entry, so it is pinned to
+       the font's own thickness rather than left to inherit a heavier rule from a container. */
+    .nav-entry u {
+        text-decoration-thickness: from-font;
+    }
+
+    /* Nothing to open: no pointer, and dimmed enough to read as unavailable rather than overlooked. */
+    .nav-entry:not([href]) {
+        @apply opacity-50 cursor-default;
+    }
+
+    /* The category icon is information, not decoration, but there are as many of them as there are
+       entries — so it sits back until the entry is the one being read. Dimmed rather than given a
+       colour of its own, so it keeps whatever the strip it is on writes with. */
+    .main-nav .nav-entry-icon {
+        @apply shrink-0 text-[0.9em];
+        opacity: 0.55;
+    }
+
+    .nav-row:hover .nav-entry-icon,
+    .nav-row.is-current .nav-entry-icon {
+        @apply opacity-100;
+    }
+
 }

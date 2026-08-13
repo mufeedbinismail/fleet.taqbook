@@ -1,4 +1,12 @@
+/*
+    What an element does before anybody says otherwise. Base, so a component that wants an
+    element back is not arguing with a reset to get it.
+*/
+@layer base {
 
-[hidden] {
-    display: none !important;
+
+    [hidden] {
+        display: none !important;
+    }
+
 }

@@ -1,9 +1,17 @@
+import { classNames } from './resources/icons/names.mjs';
+
 /** @type {import('tailwindcss').Config} */
 export default {
     content: [
         './public/themes/**/renderer.php',
         `./resources/**/*.{js,css,php,blade.php}`,
     ],
+
+    // Rules written into a layer are kept only when something is seen using them, and an icon's
+    // class is put together out of a name the server picks — so the templates are searched for
+    // spellings that are never written down there. Taken from the stylesheet that declares them,
+    // which is the only place the full set exists.
+    safelist: classNames(new URL('./', import.meta.url)),
     theme: {
         fontFamily: {
             sans: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'Liberation Sans', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'],
