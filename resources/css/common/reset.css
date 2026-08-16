@@ -38,12 +38,15 @@
         white-space: nowrap;
     }
 
-    /* Base form element styles - keeping your styling preferences */
+    /* Every control gets the field's edge and text colour here rather than each component asking
+       for them, so a control nobody styled still reads as something to be filled in. */
     input,
     textarea,
     button,
     select {
-        @apply border border-solid border-gray-400 text-gray-900 rounded-sm px-1 py-0.5 transition-colors;
+        @apply border border-solid rounded-sm px-1 py-0.5 transition-colors;
+        border-color: theme('colors.field-border');
+        color: theme('colors.field-txt');
     }
 
     input,

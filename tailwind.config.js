@@ -69,6 +69,8 @@ export default {
                 'breadcrumb-border': '#d9e2e7',
                 'general-txt': '#3d4c57',
                 'soft-border': '#d9e2e7',
+                'field-border': '#9ca3af',
+                'field-txt': '#111827',
                 'primary-accent': '#00a3a3',
                 'secondary-accent': '#ff7066',
                 'ternary-accent': '#9d8df1',
