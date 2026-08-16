@@ -20,9 +20,10 @@ $openSection = $sections->first(
     Sections open one at a time within the area, which is a second accordion and not a second state:
     the two nest, and shutting or opening a section leaves the area it is in alone.
 
-    Both accordions are handed their opening state as the `x-is-open` class on the thing that is open,
-    which is the state before any script runs as much as it is the state after. So the menu is drawn
-    once, already showing the way to the page being read.
+    Both accordions are handed their opening state as the `x-is-open` class on the item, the trigger
+    and the panel, which is the state before any script runs as much as it is the state after. So the
+    menu is drawn once, already showing the way to the page being read. A part left out is a part
+    that renders shut over an open panel and then snaps round the moment the page is bound.
 --}}
 <li @class(['nav-area', 'x-is-open' => $current]) x-accordion:item="{{ $key }}">
     <div @class(['nav-row nav-row--split', 'is-current' => $current])>
@@ -31,7 +32,11 @@ $openSection = $sections->first(
             <span class="nav-row-label"><x-nav::label :label="$area->label()" /></span>
         </a>
 
-        <button aria-label="{{ $area->label()->text() }}" x-accordion:trigger>
+        <button
+            aria-label="{{ $area->label()->text() }}"
+            @class(['x-is-open' => $current])
+            x-accordion:trigger
+        >
             <span class="x-accordion-caret" aria-hidden="true"></span>
         </button>
     </div>
@@ -41,7 +46,7 @@ $openSection = $sections->first(
             @foreach ($sections as $group)
                 @php $sectionKey = $group->section->key; @endphp
                 <li @class(['nav-section', 'x-is-open' => $sectionKey === $openSection]) x-accordion:item="{{ $sectionKey }}">
-                    <button class="nav-row" x-accordion:trigger>
+                    <button @class(['nav-row', 'x-is-open' => $sectionKey === $openSection]) x-accordion:trigger>
                         <span class="nav-row-label">{{ $group->section->label->text() }}</span>
                         <span class="x-accordion-caret" aria-hidden="true"></span>
                     </button>

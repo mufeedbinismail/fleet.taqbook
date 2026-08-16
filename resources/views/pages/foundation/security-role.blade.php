@@ -185,7 +185,7 @@ ClientData::registry()
                                    aria-label="{{ __('foundation.role.permission.toggle_group', ['group' => $group->name]) }}">
 
                             <button type="button" x-collapse:trigger
-                                    class="flex grow cursor-pointer items-center gap-2 border-0 bg-transparent p-0 text-start text-general-txt">
+                                    @class(['flex grow cursor-pointer items-center gap-2 border-0 bg-transparent p-0 text-start text-general-txt', 'x-is-open' => $groupOpen])>
                                 <span class="text-sm font-semibold text-primary-txt">{{ $group->name }}</span>
                                 <span class="badge"
                                       x-text="keys.filter((key) => permissions.includes(key)).length + ' / ' + keys.length"></span>
@@ -196,7 +196,7 @@ ClientData::registry()
                              through display, which on the grid itself would take the columns with
                              it. A filter running over shut groups is reconciled by opening them, so
                              nothing here has to second-guess what the panel already decides. --}}
-                        <div x-collapse:panel>
+                        <div @class(['x-is-open' => $groupOpen]) x-collapse:panel>
                             <div class="grid gap-x-6 gap-y-1 bg-table-bg px-5 pb-4 pt-1 sm:grid-cols-2 xl:grid-cols-3">
                                 @foreach ($group->permissions as $permission)
                                     @php $isSelfLock = $permission->key === Permission::MANAGE_ROLE; @endphp
