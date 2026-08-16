@@ -71,6 +71,11 @@ enforces them: the calculation at the function, the wiring and consequence at th
 
 - Share the thing under test, never the data cases assert on — one test's setup must not decide
   what another asserts.
+- **Where a rule is implemented twice because it crosses a boundary neither half can see across,
+  state its cases once in a file both suites read.** This is the rule above rather than a carve-out
+  from it: the agreement between the two implementations *is* the thing under test, and no test owns
+  the cases for another to inherit. Written out per language instead, the two copies are correct on
+  the day and drift the first time one side gains a case, which nothing fails on.
 - A field one case needs goes in that case, not the fixture.
 - Seed the narrowest set, constrain queries to it, and never seed through the code path under test.
 

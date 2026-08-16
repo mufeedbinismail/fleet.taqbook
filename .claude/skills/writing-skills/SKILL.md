@@ -46,6 +46,12 @@ wherever noticing happens. Filing by subject is the instinct, and it buries the 
 nobody has open at the moment it would have helped. Same test the description is held to: what work
 is underway when this needs to be known?
 
+A moment is the undertaking, not the action inside it. Actions decompose without limit, so filing
+by action yields skills that are always needed together — many invocations to reach what one would
+have carried. The test is the invocation trace: if two skills would routinely be wanted in the same
+sitting, they are one skill. Split only where the sittings diverge — where whoever is in one has no
+use for the other.
+
 ## Keep the working tree out
 
 The change on the desk is the worst source of material, because all of it feels important while it
@@ -63,6 +69,15 @@ people actually get wrong, named so the reader recognises the moment when it arr
 that instead shows the code the rule produced is a specification, and invites copying the
 implementation rather than applying the rule. One pointed example at the confusable line beats a
 catalogue.
+
+## The rule leads; the reasoning follows
+
+**State the entry as an imperative first — one bold sentence that can be obeyed on its own — and
+let the root cause follow it, never replace it.** An entry recorded only as its diagnosis ("the
+tell that this went wrong is…") must be reverse-engineered into an instruction at the moment of
+use, and the reader doing that is the one with the least context — a fresh agent holding the skill
+and nothing else. The reasoning is what lets the rule transfer to a case it never named; the
+headline is what lets it be found and obeyed at all. An entry needs both, in that order.
 
 ## Every entry earns its keep
 

@@ -43,25 +43,43 @@ goes through a slot.
 - **Semantic variants, never colors, cross the boundary.** Which pixels `success` means lives in
   the stylesheet alone.
 - Every color is a token; tints derive from the token, never invented beside it.
-- Component classes are `x-<component>` (parts `x-<component>-<part>`, modifiers `--<modifier>`),
-  in `@layer components`, one file per component.
-- A state is `x-is-<state>` and takes its scope from the part it is composed onto —
-  `.x-select-option.x-is-selected`, never a modifier per part. A `--<modifier>` names a variation
-  the component was built with, never a state it is currently in.
+- A component's stylesheet lives in `@layer components`, one file per component.
 - A style-accepting input parses the common currencies — a variant the stylesheet knows, a CSS
   color, a class of the caller's own — rather than demanding one.
+- **A component writes none of its own appearance as a class in its own template — its stylesheet
+  draws it, and the template carries only what the caller wrote.** A utility outranks the component
+  layer, so an appearance default written into the markup is the one declaration the component's own
+  stylesheet cannot overrule: the rule that looks authoritative loses to the class nobody meant as a
+  decision. The tell is a stylesheet rule that reads correctly and renders nothing.
 
 ## Three layers
 
 - Behaviour is a framework-agnostic JS factory: dependencies injected, no element references,
   testable without markup. The Blade component wires configuration to the factory and draws. CSS
   reads the classes and attributes the markup sets and decides nothing.
+- **Whatever layers a component has move together.** Blade file, JS factory and component CSS are
+  one thing in as many trees as it needs — a behaviour may have no template, a template no script —
+  but a change that adds, renames or moves one without the others it does have leaves a component
+  that draws but does not behave, or behaves but cannot be styled.
 - Standing in for a native control is the exception, and only for that control's own element: it is
   not a reference to be avoided but the state itself, since it is what holds the value, submits it,
   and the server repopulates. The factory owns it and keeps no second copy — a truth held beside a
   form control drifts from it the first time anything else writes.
+- **A node the component does not own may be replaced without it being told.** Where a component
+  reads another element — a control it takes a filter from, a field it mirrors — it resolves the
+  selector afresh on each reading and hears from it by delegation. A reference taken once outlives
+  the node it was taken from, and a listener left on that node goes on listening to something
+  nothing reaches any more: the component keeps working and stops responding, which is the pair of
+  symptoms nobody goes looking for.
 - Every write a consumer can make, it can also make without announcing. A component that only ever
-  announces turns "adjust this control when that one changes" into a loop.
+  announces turns "adjust this control when that one changes" into a loop. And a control announcing
+  that it committed is not the same as its value having moved — whoever acts on the announcement
+  compares before acting, or a no-op commit reads as a change somebody made.
+- **A request the component makes for itself says so; only a request somebody is waiting on may
+  take the screen.** The shared busy indicator answers to whatever fetches, and its default has to
+  be "somebody is waiting" or the one request that forgets to say leaves a user staring at nothing.
+  So the quiet kind is the one that declares itself, and a list filling in behind a panel that does
+  not is indistinguishable from a form being submitted.
 - A translated sentence is one string with placeholders, never assembled from fragments.
 - PHP reaches a JS context only through `@js` / `Js::from` — "developer-supplied" values included.
   Configuration a component reads is data rather than a context: it travels as an escaped `data-`
