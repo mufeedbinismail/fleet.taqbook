@@ -10,7 +10,7 @@
 
     [data-loader='progress'] {
         height: 60px;
-        aspect-ratio: 2;
+        width: 120px;
         border-bottom: 3px solid #0000;
         background: linear-gradient(90deg, #524656 50%, #0000 0) -25% 100%/50% 3px repeat-x
             border-box;
@@ -31,7 +31,7 @@
     [data-loader='spinner'] {
         --s: 64px;
         width: var(--s);
-        aspect-ratio: 2;
+        height: calc(var(--s) / 2);
         --_g: theme('colors.primary-accent') 90%, #0000;
         background:
             radial-gradient(farthest-side, var(--_g)) 0 50%/25% 50%,
