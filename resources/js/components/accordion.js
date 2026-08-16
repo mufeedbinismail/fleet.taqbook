@@ -21,15 +21,20 @@
 // anyway for the page to look right before this file runs, and there is no second declaration of it
 // to fall out of step with the first.
 //
-// Classes are the whole output. `x-is-open` goes on the open item, on its trigger and on its panel,
-// and nothing here shows, hides, measures or moves anything — a panel is shut by being a panel
-// without that class, which is a thing CSS can know before any script has run. It also leaves an
-// implementer free to make an open item look like anything at all, the whole trail of open
-// ancestors included, since every one of them carries the class.
+// Classes are the styling output, and nothing here shows or hides anything. `x-is-open` goes on the
+// open item, on its trigger and on its panel, and a panel is shut by being a panel without that
+// class, which is a thing CSS can know before any script has run. It also leaves an implementer
+// free to make an open item look like anything at all, the whole trail of open ancestors included,
+// since every one of them carries the class. A root marks its own panels `x-toggled` when the first
+// toggle lands, so state a click changed is distinguishable from the state the page loaded already
+// showing. Marked on each panel rather than once on the root because a nested root's panels sit
+// inside an outer root's, and anything reading the mark from an ancestor would take an outer toggle
+// as licence to move an inner panel that nobody touched.
 //
 // x-accordion:item takes a plain key, not an expression: x-accordion:item="sales".
 const ROOT = '[x-accordion]';
 const ITEM = '[x-accordion\\:item]';
+const PANEL = '[x-accordion\\:panel]';
 
 let sequence = 0;
 
@@ -61,6 +66,10 @@ function ownItems(root) {
     return Array.from(root.querySelectorAll(ITEM)).filter((item) => rootOf(item) === root);
 }
 
+function ownPanels(root) {
+    return Array.from(root.querySelectorAll(PANEL)).filter((panel) => rootOf(panel) === root);
+}
+
 function handleRoot(el, Alpine) {
     el.classList.add('x-accordion');
 
@@ -75,6 +84,7 @@ function handleRoot(el, Alpine) {
 
                 toggle(key) {
                     this.open = this.open === key ? null : key;
+                    ownPanels(el).forEach((panel) => panel.classList.add('x-toggled'));
                 },
             };
         },
@@ -118,8 +128,52 @@ function handleTrigger(el, Alpine) {
         },
         '@click'() {
             this.$data.toggle(key);
+            holdStill(el);
         },
     });
+}
+
+// A toggle can shut a panel that sits above the trigger being clicked, and the collapse would
+// carry the trigger — the thing under the pointer — away with it. So while the layout is moving,
+// the nearest scroller is nudged by exactly the trigger's own displacement each frame: the clicked
+// control stays put whether the shut is animated or instant, and degrades to whatever room the
+// scroller has left when it cannot absorb the whole difference. The loop lets go once everything
+// has been still for a few frames; the frame cap is a leash for pages that never go still.
+function holdStill(trigger) {
+    const scroller = scrollerOf(trigger);
+
+    if (!scroller) return;
+
+    let top = trigger.getBoundingClientRect().top;
+    let rest = 0;
+    let frames = 0;
+
+    requestAnimationFrame(function hold() {
+        const moved = trigger.getBoundingClientRect().top - top;
+
+        if (Math.abs(moved) > 0.5) {
+            scroller.scrollTop += moved;
+            rest = 0;
+        } else rest++;
+
+        top = trigger.getBoundingClientRect().top;
+
+        if (rest < 3 && ++frames < 60) requestAnimationFrame(hold);
+    });
+}
+
+function scrollerOf(el) {
+    for (let node = el.parentElement; node; node = node.parentElement) {
+        const { overflowY } = getComputedStyle(node);
+
+        if (
+            (overflowY === 'auto' || overflowY === 'scroll') &&
+            node.scrollHeight > node.clientHeight
+        )
+            return node;
+    }
+
+    return document.scrollingElement;
 }
 
 function handlePanel(el, Alpine) {

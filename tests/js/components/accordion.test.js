@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { click, find, findAll, mount } from '../support/alpine';
 
 /*
-    The directive's whole output is the `x-is-open` class and the aria pair that go with it, so
-    every case here reads those. Nothing shows, hides or measures anything.
+    The directive's whole output is the `x-is-open` class, the `x-toggled` mark, and the aria pair
+    that go with them, so every case here reads those. Nothing shows, hides or measures anything.
 */
 
 const markup = `
@@ -21,6 +21,12 @@ const markup = `
 
 function isOpen(key) {
     return find(`[x-accordion\\:item="${key}"]`).classList.contains('x-is-open');
+}
+
+function toggled(key) {
+    return find(`[x-accordion\\:item="${key}"] > [x-accordion\\:panel]`).classList.contains(
+        'x-toggled',
+    );
 }
 
 describe('x-accordion', () => {
@@ -74,6 +80,51 @@ describe('x-accordion', () => {
 
         expect(isOpen('inner')).toBe(true);
         expect(isOpen('outer')).toBe(true);
+    });
+
+    /**
+     * The mark that separates state a click changed from the state the page loaded already
+     * showing — absent on a freshly drawn panel, permanent after the first toggle. Both panels
+     * take it, the one being shut having as much to say about it as the one being opened.
+     */
+    it('marks the panels once a toggle has happened', async () => {
+        await mount(markup);
+
+        expect(toggled('sales')).toBe(false);
+
+        await click('[x-accordion\\:item="stock"] [x-accordion\\:trigger]');
+
+        expect(toggled('stock')).toBe(true);
+        expect(toggled('sales')).toBe(true);
+    });
+
+    /**
+     * What the mark is read for is motion, and a panel drawn for the first time as the accordion
+     * above it opens is in the middle of its own first render — the one case the mark exists to
+     * sit out. Taking it from the outer toggle would animate a panel nobody touched, on top of the
+     * one that is already moving.
+     */
+    it('leaves a nested accordion’s panels unmarked when the one enclosing it is toggled', async () => {
+        await mount(`
+            <ul x-accordion>
+                <li x-accordion:item="outer">
+                    <button x-accordion:trigger>Outer</button>
+                    <div x-accordion:panel>
+                        <ul x-accordion>
+                            <li x-accordion:item="inner" class="x-is-open">
+                                <button x-accordion:trigger>Inner</button>
+                                <div x-accordion:panel>Inner panel</div>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        `);
+
+        await click('[x-accordion\\:item="outer"] [x-accordion\\:trigger]');
+
+        expect(toggled('outer')).toBe(true);
+        expect(toggled('inner')).toBe(false);
     });
 
     it('points each trigger at the panel it opens', async () => {

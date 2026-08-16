@@ -16,12 +16,56 @@
         display: block;
     }
 
-    /* Opening is instant. A menu is used by pointing at it, and a panel that grows into place moves
-       the thing being pointed at while it is being pointed at. The fade is short enough to read as
-       the panel arriving rather than as the panel travelling. */
+    /* A toggle shuts one panel as it opens another, and done in a single frame every row below the
+       shut panel — the row just clicked included — lands somewhere else at once. Sliding the two
+       heights over a beat turns that teleport into one movement the eye can follow.
+       `allow-discrete` holds the shutting panel rendered while it shrinks, then hands it back to
+       the shut state above; a browser that cannot interpolate a keyword height starts no
+       transition and toggles in a frame instead.
+
+       All motion sits behind the panel's own toggled marker because @starting-style and the fade
+       both fire at an element's first render too: ungated, the panel the server drew open would
+       slide open again on every page load. Read off the panel itself and not off an ancestor —
+       accordions nest, and a panel drawn for the first time as the accordion above it opens has an
+       ancestor that was just toggled while nothing touched the panel, which is the same first
+       render the gate exists to sit out. */
     @media (prefers-reduced-motion: no-preference) {
-        .x-accordion-panel.x-is-open {
+        /* Outside the gate below, needing nothing but the panel appearing: an engine that cannot
+           slide one open can still bring one in. */
+        .x-accordion-panel.x-is-open.x-toggled {
             animation: x-accordion-panel-in 120ms ease-out;
+        }
+
+        /* Gated on the interpolation rather than on the transition, because the two ship apart. An
+           engine holding `allow-discrete` but not `interpolate-size` parses this transition and
+           runs it, and a height it cannot interpolate between a length and a keyword animates
+           discretely — the panel sitting shut for half the duration and then appearing whole, which
+           is worse than not animating at all. An engine that does not know @supports skips the
+           block bodily and toggles in a frame, which is the plain correct page.
+
+           The entrance value below is a third feature again, and losing it alone costs only the
+           opening slide while the shut one keeps working. `overflow` is not on that footing — with
+           `height: 0` and no clipping a shut panel spills its contents — so it is spelled the way
+           every engine has always understood rather than the newer way. */
+        @supports (interpolate-size: allow-keywords) {
+            .x-accordion-panel.x-toggled {
+                interpolate-size: allow-keywords;
+                height: 0;
+                overflow: hidden;
+                transition:
+                    height 150ms ease,
+                    display 150ms allow-discrete;
+            }
+
+            .x-accordion-panel.x-toggled.x-is-open {
+                height: auto;
+            }
+
+            @starting-style {
+                .x-accordion-panel.x-toggled.x-is-open {
+                    height: 0;
+                }
+            }
         }
     }
 
@@ -48,6 +92,5 @@
 @keyframes x-accordion-panel-in {
     from {
         opacity: 0;
-        transform: translateY(-0.125rem);
     }
 }
