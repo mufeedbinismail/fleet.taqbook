@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+#
+# Refuses a push while anything in the tree is unformatted.
+
+. "$(cd "$(dirname "$0")" && pwd)/_shared.sh"
+
+php=$(taqbook_php)
+taqbook_require_node
+
+status=0
+
+if ! "$php" vendor/bin/pint --test; then
+    status=1
+fi
+
+if ! npm run --silent format:check; then
+    status=1
+fi
+
+if [ "$status" -ne 0 ]; then
+    echo >&2
+    echo "taqbook: push refused — the tree is not formatted." >&2
+    echo "Run 'vendor/bin/pint' and 'npm run format', then commit the result." >&2
+fi
+
+exit "$status"

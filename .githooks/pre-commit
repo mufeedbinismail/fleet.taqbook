@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+#
+# Formats what is about to be committed, then stages the result.
+
+. "$(cd "$(dirname "$0")" && pwd)/_shared.sh"
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+[ -n "$staged" ] || exit 0
+
+# Re-staging a formatted file stages the whole file. A file held back in part — `git add -p`, or an
+# edit made after staging — would have those withheld hunks swept into the commit unreviewed, so
+# stop instead and let the author decide.
+partial=$(comm -12 \
+    <(printf '%s\n' "$staged" | sort) \
+    <(git diff --name-only --diff-filter=ACMR | sort))
+
+if [ -n "$partial" ]; then
+    echo "taqbook: these files are staged only in part, and formatting them would commit the rest:" >&2
+    printf '%s\n' "$partial" | sed 's/^/  /' >&2
+    echo "Stage them fully, or stash the remainder, then commit again." >&2
+    exit 1
+fi
+
+# Pint applies its configured exclusions only while scanning directories: hand it a path and it
+# formats that path regardless. So the two kinds of file it must never touch — legacy
+# FrontAccounting sources, and Blade templates, whose directives it rewrites into broken markup —
+# have to be withheld here rather than left to the config.
+php_files=$(printf '%s\n' "$staged" \
+    | grep -E '\.php$' \
+    | grep -vE '\.blade\.php$' \
+    | grep -vE '^public/' \
+    || true)
+
+asset_files=$(printf '%s\n' "$staged" | grep -E '\.(js|mjs|cjs|css|json)$' || true)
+
+if [ -n "$php_files" ]; then
+    php=$(taqbook_php)
+    printf '%s\n' "$php_files" | tr '\n' '\0' | xargs -0 "$php" vendor/bin/pint --quiet --
+fi
+
+if [ -n "$asset_files" ]; then
+    taqbook_require_node
+    printf '%s\n' "$asset_files" | tr '\n' '\0' \
+        | xargs -0 npx --no-install prettier --write --ignore-unknown --log-level warn --
+fi
+
+touched=$(printf '%s\n%s\n' "$php_files" "$asset_files" | grep -v '^$' || true)
+[ -n "$touched" ] || exit 0
+
+# Only re-stage files a formatter actually rewrote, so untouched ones are not churned in the index.
+changed=$(printf '%s\n' "$touched" | tr '\n' '\0' | xargs -0 git diff --name-only --)
+[ -n "$changed" ] || exit 0
+
+printf '%s\n' "$changed" | tr '\n' '\0' | xargs -0 git add --
+echo "taqbook: reformatted and re-staged:"
+printf '%s\n' "$changed" | sed 's/^/  /'
