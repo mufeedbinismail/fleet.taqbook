@@ -1,3 +1,8 @@
+// `live` is a request made because of something just done. `background` is a request the page
+// made for itself: a list filling in behind a panel, something fetched ahead of being asked for.
+export const LIVE = 'live';
+export const BACKGROUND = 'background';
+
 let count = 0;
 
 function apply() {
