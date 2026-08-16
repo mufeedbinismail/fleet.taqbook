@@ -1,5 +1,9 @@
 # Taqbook
 
+A Laravel 10 application wrapping a legacy PHP accounting system (FrontAccounting). It runs the
+legacy codebase through Laravel's HTTP layer, while modules are incrementally ported to proper
+Laravel architecture.
+
 ## Code formatting
 
 PHP is formatted by [Pint](https://laravel.com/docs/pint), JavaScript and CSS by
