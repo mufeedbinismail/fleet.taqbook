@@ -13,7 +13,9 @@ export const ICONS_CSS = 'resources/css/common/icons.css';
  */
 export function codepoints(root) {
     const css = readFileSync(new URL(ICONS_CSS, root), 'utf8');
-    const declaration = /\.icon-([a-z0-9-]+):before\s*\{[^}]*?content:\s*"\\([0-9a-fA-F]+)"/g;
+    // Either quote, because the formatter rewrites the stylesheet's to single and this map going
+    // quietly empty costs every icon its glyph and its safelist entry alike.
+    const declaration = /\.icon-([a-z0-9-]+):before\s*\{[^}]*?content:\s*['"]\\([0-9a-fA-F]+)['"]/g;
     const found = {};
 
     for (const [, name, hex] of css.matchAll(declaration)) {
