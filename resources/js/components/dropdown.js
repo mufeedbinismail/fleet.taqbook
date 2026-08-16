@@ -45,7 +45,7 @@ function handleRoot(el, Alpine) {
 }
 
 function handleTrigger(el, Alpine) {
-    el.classList.add('x-dropdown-trigger');
+    el.classList.add('x-dropdown__trigger');
 
     const caretEl = buildCaret();
     el.appendChild(caretEl);
@@ -62,7 +62,7 @@ function handleTrigger(el, Alpine) {
 }
 
 function handlePanel(el, Alpine, modifiers) {
-    el.classList.add('x-dropdown-panel');
+    el.classList.add('x-dropdown__panel');
 
     const placement = modifiers[0] ?? 'bottom';
 
@@ -84,7 +84,7 @@ function handlePanel(el, Alpine, modifiers) {
 function buildCaret() {
     const caretEl = document.createElement('span');
 
-    caretEl.className = 'x-dropdown-caret';
+    caretEl.className = 'x-dropdown__caret';
     caretEl.setAttribute('aria-hidden', 'true');
 
     return caretEl;

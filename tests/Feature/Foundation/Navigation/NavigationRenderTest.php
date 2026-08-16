@@ -76,9 +76,9 @@ class NavigationRenderTest extends TestCase
 
         $html = $this->sidebar($tree, $location);
 
-        $this->assertSame(2, substr_count($html, 'is-current'));
-        $this->assertSame(1, substr_count($html, 'nav-entry nav-row is-current'));
-        $this->assertSame(1, substr_count($html, 'nav-row nav-row--split is-current'));
+        $this->assertSame(2, substr_count($html, 'nav__row--current'));
+        $this->assertSame(1, substr_count($html, 'nav__entry nav__row nav__row--current'));
+        $this->assertSame(1, substr_count($html, 'nav__row nav__row--split nav__row--current'));
         $this->assertSame(1, substr_count($html, $this->item('trade.sale', open: true)));
     }
 
@@ -122,7 +122,7 @@ class NavigationRenderTest extends TestCase
 
         $html = $this->sidebar($tree, new CurrentLocation);
 
-        $this->assertStringNotContainsString('is-current', $html);
+        $this->assertStringNotContainsString('nav__row--current', $html);
 
         foreach ($tree->areas() as $area) {
             $this->assertStringContainsString($this->item($area->key()), $html);
@@ -246,7 +246,7 @@ class NavigationRenderTest extends TestCase
      */
     private function item(string $key, bool $open = false): string
     {
-        return ($open ? ' x-is-open"' : '"').' x-accordion:item="'.$key.'"';
+        return ($open ? ' x-accordion__item--open"' : '"').' x-accordion:item="'.$key.'"';
     }
 
     /**

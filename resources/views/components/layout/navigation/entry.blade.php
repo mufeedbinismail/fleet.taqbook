@@ -26,14 +26,14 @@ $accessKey = $accelerated ? $node->label()->accessKey() : null;
 @endphp
 {{--
     A row of the menu like any other, said here rather than by whoever draws it, so an entry cannot
-    be placed in the tree and come out looking like something else. What is left to `nav-entry` is
+    be placed in the tree and come out looking like something else. What is left to `nav__entry` is
     only what a leaf has and the rows above it do not.
 --}}
 <a
     @if ($url !== null) href="{{ $url }}" @endif
     @if ($accessKey !== null) accesskey="{{ $accessKey }}" @endif
-    {{ $attributes->class(['nav-entry', 'nav-row']) }}
+    {{ $attributes->class(['nav__entry', 'nav__row']) }}
 >
-    <span class="icon nav-entry-icon {{ $icon }}"></span>
-    <span class="nav-entry-label"><x-nav::label :label="$node->label()" :marked="$accelerated" /></span>
+    <span class="icon nav__entry-icon {{ $icon }}"></span>
+    <span class="nav__row-label"><x-nav::label :label="$node->label()" :marked="$accelerated" /></span>
 </a>

@@ -5,7 +5,7 @@
     its own control an appearance, one selector at a time.
 */
 @layer base {
-    /* .main-container is the sole scroll shell (height: 100vh) with .main-content
+    /* .shell is the sole scroll shell (height: 100vh) with .shell__content-scroller
        as its only scrollable region — html/body must never scroll themselves,
        or the two scroll positions desync (inner scroll hits bottom, mobile
        Safari chains into the outer document scroll, dragging the fixed-height

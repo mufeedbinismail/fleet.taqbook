@@ -31,7 +31,7 @@ button > svg,
 /* Legacy icon-to-text spacing — same `.has-img-icon` scoping as above.
    Legacy buttons have no flex `gap` between their icon and label, so this
    margin is how they get separated; new components already handle that
-   spacing themselves (e.g. `.x-dropdown-trigger`'s `gap-2`), and would get
+   spacing themselves (e.g. `.x-dropdown__trigger`'s `gap-2`), and would get
    double-spaced if this margin applied to them too. */
 .has-img-icon:not(.is-icon) {
     & > img,

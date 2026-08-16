@@ -4,7 +4,7 @@
     silently to the rule it was meant to override.
 */
 @layer components {
-    .main-container {
+    .shell {
         position: relative;
         display: flex;
         flex-direction: row;
@@ -25,7 +25,7 @@
            shell, and everything under it stretches to whatever that turns out to be — so a shell that
            is one day something other than the whole window does not leave its contents hanging past it
            at a height nothing on screen agrees with. */
-        .main-section {
+        .shell__section {
             position: relative;
             display: flex;
             flex-direction: column;
@@ -44,26 +44,26 @@
             /* `min-height: 0` because a flex item refuses by default to shrink under its own content,
                which would spend the overflow on pushing the rows below it out of the shell rather than
                on scrolling in here, where there is already a scroller to do it. */
-            > .main-content-area {
+            > .shell__content {
                 flex: 1;
                 min-height: 0;
             }
         }
     }
 
-    .main-content-area {
+    .shell__content {
         position: relative;
         width: 100%;
     }
 
-    .main-footer {
+    .shell__footer {
         position: relative;
         overflow: hidden;
         width: 100%;
         height: theme('height.footer');
     }
 
-    .main-header {
+    .shell__header {
         position: relative;
         overflow: hidden;
         z-index: 110;
@@ -72,7 +72,7 @@
     }
 
     @media (max-width: calc(theme('screens.md') - 1px)) {
-        .main-section {
+        .shell__section {
             margin-left: 0;
         }
     }

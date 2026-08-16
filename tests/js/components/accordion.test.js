@@ -2,13 +2,14 @@ import { describe, expect, it } from 'vitest';
 import { click, find, findAll, mount } from '../support/alpine';
 
 /*
-    The directive's whole output is the `x-is-open` class, the `x-toggled` mark, and the aria pair
-    that go with them, so every case here reads those. Nothing shows, hides or measures anything.
+    The directive's whole output is each part's own open modifier, the panel's toggled one, and the
+    aria pair that go with them, so every case here reads those. Nothing shows, hides or measures
+    anything.
 */
 
 const markup = `
     <ul x-accordion>
-        <li x-accordion:item="sales" class="x-is-open">
+        <li x-accordion:item="sales" class="x-accordion__item--open">
             <button x-accordion:trigger>Sales</button>
             <div x-accordion:panel>Sales panel</div>
         </li>
@@ -20,12 +21,12 @@ const markup = `
 `;
 
 function isOpen(key) {
-    return find(`[x-accordion\\:item="${key}"]`).classList.contains('x-is-open');
+    return find(`[x-accordion\\:item="${key}"]`).classList.contains('x-accordion__item--open');
 }
 
 function toggled(key) {
     return find(`[x-accordion\\:item="${key}"] > [x-accordion\\:panel]`).classList.contains(
-        'x-toggled',
+        'x-accordion__panel--toggled',
     );
 }
 
@@ -62,7 +63,7 @@ describe('x-accordion', () => {
     it('leaves an enclosing accordion alone when a nested one opens', async () => {
         await mount(`
             <ul x-accordion>
-                <li x-accordion:item="outer" class="x-is-open">
+                <li x-accordion:item="outer" class="x-accordion__item--open">
                     <button x-accordion:trigger>Outer</button>
                     <div x-accordion:panel>
                         <ul x-accordion>
@@ -111,7 +112,7 @@ describe('x-accordion', () => {
                     <button x-accordion:trigger>Outer</button>
                     <div x-accordion:panel>
                         <ul x-accordion>
-                            <li x-accordion:item="inner" class="x-is-open">
+                            <li x-accordion:item="inner" class="x-accordion__item--open">
                                 <button x-accordion:trigger>Inner</button>
                                 <div x-accordion:panel>Inner panel</div>
                             </li>

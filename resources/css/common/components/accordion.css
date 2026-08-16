@@ -8,11 +8,11 @@
    cannot also be the element carrying a display utility: the utility would outrank the shut state
    and the panel would never close. Give it a child to lay out instead. */
 @layer components {
-    .x-accordion-panel {
+    .x-accordion__panel {
         display: none;
     }
 
-    .x-accordion-panel.x-is-open {
+    .x-accordion__panel--open {
         display: block;
     }
 
@@ -23,7 +23,7 @@
        the shut state above; a browser that cannot interpolate a keyword height starts no
        transition and toggles in a frame instead.
 
-       All motion sits behind the panel's own toggled marker because @starting-style and the fade
+       All motion sits behind the panel's own toggled modifier because @starting-style and the fade
        both fire at an element's first render too: ungated, the panel the server drew open would
        slide open again on every page load. Read off the panel itself and not off an ancestor —
        accordions nest, and a panel drawn for the first time as the accordion above it opens has an
@@ -32,7 +32,7 @@
     @media (prefers-reduced-motion: no-preference) {
         /* Outside the gate below, needing nothing but the panel appearing: an engine that cannot
            slide one open can still bring one in. */
-        .x-accordion-panel.x-is-open.x-toggled {
+        .x-accordion__panel--toggled.x-accordion__panel--open {
             animation: x-accordion-panel-in 120ms ease-out;
         }
 
@@ -48,7 +48,7 @@
            `height: 0` and no clipping a shut panel spills its contents — so it is spelled the way
            every engine has always understood rather than the newer way. */
         @supports (interpolate-size: allow-keywords) {
-            .x-accordion-panel.x-toggled {
+            .x-accordion__panel--toggled {
                 interpolate-size: allow-keywords;
                 height: 0;
                 overflow: hidden;
@@ -57,12 +57,12 @@
                     display 150ms allow-discrete;
             }
 
-            .x-accordion-panel.x-toggled.x-is-open {
+            .x-accordion__panel--toggled.x-accordion__panel--open {
                 height: auto;
             }
 
             @starting-style {
-                .x-accordion-panel.x-toggled.x-is-open {
+                .x-accordion__panel--toggled.x-accordion__panel--open {
                     height: 0;
                 }
             }
@@ -75,14 +75,14 @@
        The two borders are named by flow rather than by side, so the corner that is drawn is the far
        one in either writing direction: the closed caret points the way the panel would open out,
        and the same quarter turn brings it down to face the open panel. */
-    .x-accordion-caret {
+    .x-accordion__caret {
         @apply shrink-0 w-[0.4rem] h-[0.4rem] transition-transform;
         border-inline-end: 1.5px solid currentColor;
         border-block-end: 1.5px solid currentColor;
         transform: rotate(-45deg);
     }
 
-    .x-accordion-trigger.x-is-open .x-accordion-caret {
+    .x-accordion__trigger--open .x-accordion__caret {
         transform: rotate(45deg);
     }
 }

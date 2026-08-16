@@ -36,16 +36,16 @@ function build() {
     const el = document.createElement('dialog');
     el.className = 'x-dialog';
     el.innerHTML = `
-        <div class="x-dialog-body">
-            <h3 class="x-dialog-title">
-                <span class="x-dialog-icon icon" aria-hidden="true"></span>
+        <div class="x-dialog__body">
+            <h3 class="x-dialog__title">
+                <span class="x-dialog__icon icon" aria-hidden="true"></span>
                 <span data-title></span>
             </h3>
-            <p class="x-dialog-text" data-text></p>
+            <p class="x-dialog__text" data-text></p>
         </div>
-        <div class="x-dialog-actions">
-            <button type="button" class="x-dialog-button x-dialog-button--cancel" data-cancel></button>
-            <button type="button" class="x-dialog-button x-dialog-button--confirm" data-confirm></button>
+        <div class="x-dialog__actions">
+            <button type="button" class="x-dialog__button x-dialog__button--cancel" data-cancel></button>
+            <button type="button" class="x-dialog__button x-dialog__button--confirm" data-confirm></button>
         </div>
     `;
 
@@ -71,8 +71,8 @@ function fire({
 
     el.querySelector('[data-title]').textContent = title;
     el.querySelector('[data-text]').textContent = text;
-    el.querySelector('.x-dialog-icon').className =
-        `x-dialog-icon icon ${ICONS[icon] ?? ICONS.warning}`;
+    el.querySelector('.x-dialog__icon').className =
+        `x-dialog__icon icon ${ICONS[icon] ?? ICONS.warning}`;
     el.classList.toggle('x-dialog--danger', danger);
 
     const confirmBtn = el.querySelector('[data-confirm]');

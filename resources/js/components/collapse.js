@@ -1,23 +1,25 @@
 'use strict';
 
-// Self-contained collapse directive, same shape as x-accordion (Alpine.directive + Alpine.bind):
-// consumers only add x-collapse / x-collapse:item / x-collapse:trigger / x-collapse:panel — no
-// manual x-data, :class, @click or aria wiring. The trigger's caret is injected here too, same as
-// x-dropdown's — it holds no content of its own, only a direction, so the caller never authors it.
+// Self-contained collapse directive (Alpine.directive + Alpine.bind): consumers only add
+// x-collapse / x-collapse:item / x-collapse:trigger / x-collapse:panel — no manual x-data, :class,
+// @click or aria wiring. The trigger's caret is injected here rather than authored by the caller,
+// holding no content of its own, only a direction.
 //
 //   <div x-collapse>
-//     <div x-collapse:item="sales" class="x-is-open">
+//     <div x-collapse:item="sales" class="x-collapse__item--open">
 //       <button x-collapse:trigger>Sales</button>
 //       <div x-collapse:panel>...</div>
 //     </div>
 //   </div>
 //
-// Unlike an accordion, items open and close independently — opening one never shuts another. A root
-// exposes showAll()/hideAll() for a caller that wants an "expand all" control outside any one item.
+// Items open and close independently — opening one never shuts another, so any number may be open
+// at once. A root exposes showAll()/hideAll() for a caller that wants an "expand all" control
+// outside any one item.
 //
 // Which items start open is read out of the markup: whichever items were rendered already carrying
-// `x-is-open`. Classes are the whole output, same as x-accordion — nothing here shows, hides,
-// measures or moves anything.
+// the item's own open class. Classes are the whole output — each of the item, its trigger and its
+// panel carries the open state as a modifier of itself, and nothing here shows, hides, measures or
+// moves anything.
 //
 // x-collapse:item takes a plain key, not an expression: x-collapse:item="sales".
 const ROOT = '[x-collapse]';
@@ -58,7 +60,7 @@ function handleRoot(el, Alpine) {
             return {
                 open: new Set(
                     ownItems(el)
-                        .filter((item) => item.classList.contains('x-is-open'))
+                        .filter((item) => item.classList.contains('x-collapse__item--open'))
                         .map(keyOf),
                 ),
 
@@ -91,13 +93,13 @@ function handleRoot(el, Alpine) {
 }
 
 function handleItem(el, Alpine, key) {
-    el.classList.add('x-collapse-item');
+    el.classList.add('x-collapse__item');
 
     if (!el.id) el.id = `collapse-item-${++sequence}`;
 
     Alpine.bind(el, {
         ':class'() {
-            return { 'x-is-open': this.$data.isOpen(key) };
+            return { 'x-collapse__item--open': this.$data.isOpen(key) };
         },
     });
 }
@@ -109,7 +111,7 @@ function handleTrigger(el, Alpine) {
 
     const key = keyOf(item);
 
-    el.classList.add('x-collapse-trigger');
+    el.classList.add('x-collapse__trigger');
     el.appendChild(buildCaret());
 
     Alpine.bind(el, {
@@ -122,7 +124,7 @@ function handleTrigger(el, Alpine) {
             return this.$data.isOpen(key) ? 'true' : 'false';
         },
         ':class'() {
-            return { 'x-is-open': this.$data.isOpen(key) };
+            return { 'x-collapse__trigger--open': this.$data.isOpen(key) };
         },
         '@click'() {
             this.$data.toggle(key);
@@ -137,12 +139,12 @@ function handlePanel(el, Alpine) {
 
     const key = keyOf(item);
 
-    el.classList.add('x-collapse-panel');
+    el.classList.add('x-collapse__panel');
     el.id = panelId(item);
 
     Alpine.bind(el, {
         ':class'() {
-            return { 'x-is-open': this.$data.isOpen(key) };
+            return { 'x-collapse__panel--open': this.$data.isOpen(key) };
         },
     });
 }
@@ -154,7 +156,7 @@ function panelId(item) {
 function buildCaret() {
     const caretEl = document.createElement('span');
 
-    caretEl.className = 'x-collapse-caret';
+    caretEl.className = 'x-collapse__caret';
     caretEl.setAttribute('aria-hidden', 'true');
 
     return caretEl;

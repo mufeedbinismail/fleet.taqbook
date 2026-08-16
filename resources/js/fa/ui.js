@@ -93,7 +93,7 @@ export default function initUI() {
             return;
         }
 
-        const containerEl = document.querySelector('.main-content');
+        const containerEl = document.querySelector('.shell__content-scroller');
         const calendarId = 'CC';
         let currentInput = null;
         let currentBounds = null;

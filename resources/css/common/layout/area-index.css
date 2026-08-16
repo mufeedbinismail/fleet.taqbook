@@ -12,7 +12,7 @@
        than in the menu — which is a different answer, because a card is a sheet of the page and the
        menu is a panel beside it. So a row here is a line of a list that happens to lead somewhere,
        rather than a strip that fills when the pointer is over it. */
-    .area-index .nav-entry {
+    .area-index .nav__entry {
         @apply w-auto p-0 gap-2 text-[0.9375rem];
         color: theme('colors.primary-txt');
 
@@ -21,12 +21,12 @@
         }
     }
 
-    .area-index .nav-entry-icon {
+    .area-index .nav__entry-icon {
         @apply shrink-0 text-[0.9em];
         opacity: 0.6;
     }
 
-    .area-index .nav-entry:hover .nav-entry-icon {
+    .area-index .nav__entry:hover .nav__entry-icon {
         @apply opacity-100 no-underline;
     }
 }

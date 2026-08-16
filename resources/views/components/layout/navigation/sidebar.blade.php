@@ -8,7 +8,7 @@
     is no second statement of it in this file to disagree with what the page is already showing, and
     no moment on load where the menu is drawn some other way and then corrected.
 --}}
-<nav {{ $attributes->class('main-nav') }} x-accordion>
+<nav {{ $attributes->class('nav') }} x-accordion>
     <ul>
         @foreach ($navigation->areas() as $area)
             <x-nav::area :area="$area" :location="$location" />

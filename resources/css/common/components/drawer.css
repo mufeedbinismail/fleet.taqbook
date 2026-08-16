@@ -1,7 +1,7 @@
 /* Generic mobile overlay-drawer mechanics: a fixed-edge panel that slides
    in/out with a backdrop. Reusable by any component that needs this
    pattern (not just the app sidebar) — pair `.x-drawer` with `.x-drawer--left`
-   or `.x-drawer--right` for the slide direction, and toggle `.x-drawer-closed`
+   or `.x-drawer--right` for the slide direction, and toggle `.x-drawer--closed`
    to open/close it. */
 @layer components {
     @media (max-width: calc(theme('screens.md') - 1px)) {
@@ -24,15 +24,15 @@
             transform: translateX(0);
         }
 
-        .x-drawer-closed.x-drawer--left {
+        .x-drawer--closed.x-drawer--left {
             transform: translateX(-100%);
         }
 
-        .x-drawer-closed.x-drawer--right {
+        .x-drawer--closed.x-drawer--right {
             transform: translateX(100%);
         }
 
-        .x-drawer-backdrop {
+        .x-drawer__backdrop {
             display: block;
             position: fixed;
             inset: 0;
@@ -42,7 +42,7 @@
     }
 
     @media (min-width: theme('screens.md')) {
-        .x-drawer-backdrop {
+        .x-drawer__backdrop {
             display: none !important;
         }
     }

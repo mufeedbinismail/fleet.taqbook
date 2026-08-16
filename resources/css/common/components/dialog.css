@@ -10,40 +10,40 @@
         }
     }
 
-    .x-dialog-body {
+    .x-dialog__body {
         @apply px-5 pt-5;
     }
 
-    .x-dialog-icon {
+    .x-dialog__icon {
         @apply text-lg;
         color: theme('colors.warning-accent');
     }
 
-    .x-dialog--danger .x-dialog-icon {
+    .x-dialog--danger .x-dialog__icon {
         color: theme('colors.secondary-accent');
     }
 
-    .x-dialog-title {
+    .x-dialog__title {
         @apply mt-2 flex items-center gap-2 text-base font-semibold;
         color: theme('colors.primary-txt');
     }
 
-    .x-dialog-text {
+    .x-dialog__text {
         @apply mt-2 text-sm;
         color: theme('colors.general-txt');
     }
 
-    .x-dialog-actions {
+    .x-dialog__actions {
         @apply mt-5 flex justify-end gap-2 border-t px-5 py-3;
         border-color: theme('colors.soft-border');
         background-color: theme('colors.label-bg');
     }
 
-    .x-dialog-button {
+    .x-dialog__button {
         @apply cursor-pointer rounded-lg border px-4 py-2 text-sm font-semibold transition;
     }
 
-    .x-dialog-button--cancel {
+    .x-dialog__button--cancel {
         border-color: theme('colors.soft-border');
         background-color: theme('colors.main-bg');
         color: theme('colors.primary-txt');
@@ -53,7 +53,7 @@
         }
     }
 
-    .x-dialog-button--confirm {
+    .x-dialog__button--confirm {
         @apply border-0 text-white;
         background-color: theme('colors.primary-accent');
 
@@ -62,7 +62,7 @@
         }
     }
 
-    .x-dialog--danger .x-dialog-button--confirm {
+    .x-dialog--danger .x-dialog__button--confirm {
         background-color: theme('colors.secondary-accent');
     }
 }

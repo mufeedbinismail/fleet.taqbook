@@ -50,7 +50,7 @@ foreach ($area->sections() as $group) {
     --}}
     <div class="area-index mx-auto p-2 md:p-4">
         @foreach ($blocks as $block)
-            <section class="area-index-card bg-white text-primary-txt shadow-md rounded-lg mb-4">
+            <section class="area-index__card bg-white text-primary-txt shadow-md rounded-lg mb-4">
                 @if ($block['label'] !== null)
                     <div class="bg-card-header-bg text-card-header-txt p-2 md:p-4 rounded-t-lg">
                         <h2 class="text-lg font-semibold">{{ $block['label'] }}</h2>
@@ -66,14 +66,14 @@ foreach ($area->sections() as $group) {
                             width beside a column that could have used it.
                         --}}
                         @if ($column === Column::Left->value || $runs !== [])
-                            <div class="area-index-column col-span-1 p-2 md:p-4 grid grid-cols-1">
+                            <div class="area-index__column col-span-1 p-2 md:p-4 grid grid-cols-1">
                                 @foreach ($runs as $run)
                                     @foreach ($run as $item)
                                         <x-nav::entry :node="$item" :accelerated="false" class="col-span-1" />
                                     @endforeach
 
                                     @unless ($loop->last)
-                                        <div class="area-index-break col-span-1" aria-hidden="true">&nbsp;</div>
+                                        <div class="area-index__break col-span-1" aria-hidden="true">&nbsp;</div>
                                     @endunless
                                 @endforeach
                             </div>

@@ -44,7 +44,7 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
 }
 @endphp
 <section
-    class="main-container"
+    class="shell"
     @if (!$no_menu)
         x-data
         x-drawer
@@ -55,9 +55,9 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
     <div x-drawer:backdrop x-transition.opacity x-cloak></div>
 
     <!-- Sidebar -->
-    <aside class="main-sidebar" x-drawer:panel.left x-cloak>
-        <div class="sidebar-inner">
-            <h2 class="app-name">
+    <aside class="shell__sidebar" x-drawer:panel.left x-cloak>
+        <div class="shell__sidebar-inner">
+            <h2 class="shell__sidebar-brand">
                 <img src="{{ url("/themes/default/images/logo.svg") }}" alt="Logo">
                 taqbook <small><sub>ERP</sub></small>
             </h2>
@@ -66,17 +66,17 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
     </aside>
     @endif
 
-    <section class="main-section">
+    <section class="shell__section">
         @if(!$no_menu)
-        <header class="main-header">
+        <header class="shell__header">
             <!-- Sidebar Minimize Button -->
             <button id="sidebar-toggle" class="me-2 bg-transparent border-0 cursor-pointer" aria-label="Toggle sidebar" x-drawer:trigger>
                 <span class="icon icon-bars text-[2rem]"></span>
             </button>
             @if ($title && !$is_index)
-            <h1 class="title">{{ $title }}</h1>
+            <h1 class="shell__header-title">{{ $title }}</h1>
             @endif
-            <div class="toolbar" x-dropdown>
+            <div class="shell__header-toolbar" x-dropdown>
                 <button type="button" x-dropdown:trigger>
                     <span class="icon icon-circle-user text-[2rem]"></span>
                     <span class="hidden md:inline">{{ $user->real_name ?? '' }}</span>
@@ -84,22 +84,22 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
 
                 <template x-teleport="body">
                     <ul x-dropdown:panel x-transition x-cloak>
-                        <li class="x-dropdown-header">
+                        <li class="x-dropdown__header">
                             <span class="icon icon-circle-user"></span>
-                            <span class="x-dropdown-header-name">{{ $user->real_name ?? '' }}</span>
+                            <span class="x-dropdown__header-name">{{ $user->real_name ?? '' }}</span>
                         </li>
                         @foreach($toolbox as $key => $item)
                             <li>
                                 @if (($item['method'] ?? 'get') === 'post')
                                     <form method="POST" action="{{ $item['link'] }}">
                                         @csrf
-                                        <button type="submit" class="x-dropdown-item w-full text-left bg-transparent border-0 cursor-pointer">
+                                        <button type="submit" class="x-dropdown__item w-full text-left bg-transparent border-0 cursor-pointer">
                                             <span class="icon {{ $item['icon'] }}"></span>
                                             <span>{{ $item['label'] }}</span>
                                         </button>
                                     </form>
                                 @else
-                                    <a href="{{ $item['link'] }}" class="x-dropdown-item">
+                                    <a href="{{ $item['link'] }}" class="x-dropdown__item">
                                         <span class="icon {{ $item['icon'] }}"></span>
                                         <span>{{ $item['label'] }}</span>
                                     </a>
@@ -113,7 +113,7 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
         <x-nav::breadcrumbs :location="$location" />
         @endif
 
-        <main class="main-content-area">
+        <main class="shell__content">
             <div data-loader-container><div data-loader="spinner"></div></div>
-            <section class="main-content">
+            <section class="shell__content-scroller">
 

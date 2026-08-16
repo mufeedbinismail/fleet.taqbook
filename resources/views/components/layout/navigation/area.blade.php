@@ -20,44 +20,45 @@ $openSection = $sections->first(
     Sections open one at a time within the area, which is a second accordion and not a second state:
     the two nest, and shutting or opening a section leaves the area it is in alone.
 
-    Both accordions are handed their opening state as the `x-is-open` class on the item, the trigger
-    and the panel, which is the state before any script runs as much as it is the state after. So the
-    menu is drawn once, already showing the way to the page being read. A part left out is a part
-    that renders shut over an open panel and then snaps round the moment the page is bound.
+    Both accordions are handed their opening state as each part's own open class — the item's on the
+    item, the trigger's on the trigger, the panel's on the panel — which is the state before any
+    script runs as much as it is the state after. So the menu is drawn once, already showing the way
+    to the page being read. A part left out is a part that renders shut over an open panel and then
+    snaps round the moment the page is bound.
 --}}
-<li @class(['nav-area', 'x-is-open' => $current]) x-accordion:item="{{ $key }}">
-    <div @class(['nav-row nav-row--split', 'is-current' => $current])>
+<li @class(['nav__area', 'x-accordion__item--open' => $current]) x-accordion:item="{{ $key }}">
+    <div @class(['nav__row nav__row--split', 'nav__row--current' => $current])>
         <a href="{{ $area->url() }}" @if ($accessKey !== null) accesskey="{{ $accessKey }}" @endif>
             <span class="icon {{ $area->icon() ?? 'icon-spacer' }}"></span>
-            <span class="nav-row-label"><x-nav::label :label="$area->label()" /></span>
+            <span class="nav__row-label"><x-nav::label :label="$area->label()" /></span>
         </a>
 
         <button
             aria-label="{{ $area->label()->text() }}"
-            @class(['x-is-open' => $current])
+            @class(['x-accordion__trigger--open' => $current])
             x-accordion:trigger
         >
-            <span class="x-accordion-caret" aria-hidden="true"></span>
+            <span class="x-accordion__caret" aria-hidden="true"></span>
         </button>
     </div>
 
-    <div @class(['nav-panel', 'x-is-open' => $current]) x-accordion:panel>
+    <div @class(['nav__panel', 'x-accordion__panel--open' => $current]) x-accordion:panel>
         <ul x-accordion>
             @foreach ($sections as $group)
                 @php $sectionKey = $group->section->key; @endphp
-                <li @class(['nav-section', 'x-is-open' => $sectionKey === $openSection]) x-accordion:item="{{ $sectionKey }}">
-                    <button @class(['nav-row', 'x-is-open' => $sectionKey === $openSection]) x-accordion:trigger>
-                        <span class="nav-row-label">{{ $group->section->label->text() }}</span>
-                        <span class="x-accordion-caret" aria-hidden="true"></span>
+                <li @class(['nav__section', 'x-accordion__item--open' => $sectionKey === $openSection]) x-accordion:item="{{ $sectionKey }}">
+                    <button @class(['nav__row', 'x-accordion__trigger--open' => $sectionKey === $openSection]) x-accordion:trigger>
+                        <span class="nav__row-label">{{ $group->section->label->text() }}</span>
+                        <span class="x-accordion__caret" aria-hidden="true"></span>
                     </button>
 
-                    <ul @class(['nav-panel', 'x-is-open' => $sectionKey === $openSection]) x-accordion:panel>
+                    <ul @class(['nav__panel', 'x-accordion__panel--open' => $sectionKey === $openSection]) x-accordion:panel>
                         @foreach ($group->items as $item)
                             <li>
                                 <x-nav::entry
                                     :node="$item"
                                     :accelerated="$current"
-                                    @class(['is-current' => $location->is($item->key())])
+                                    @class(['nav__row--current' => $location->is($item->key())])
                                 />
                             </li>
                         @endforeach

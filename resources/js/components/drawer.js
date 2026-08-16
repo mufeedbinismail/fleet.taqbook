@@ -76,7 +76,7 @@ function handlePanel(el, Alpine, modifiers) {
 
     Alpine.bind(el, {
         ':class'() {
-            return { 'x-drawer-closed': !this.$data.open };
+            return { 'x-drawer--closed': !this.$data.open };
         },
         'x-trap.inert.noscroll'() {
             return this.$data.isMobile && this.$data.open;
@@ -85,7 +85,7 @@ function handlePanel(el, Alpine, modifiers) {
 }
 
 function handleBackdrop(el, Alpine) {
-    el.classList.add('x-drawer-backdrop');
+    el.classList.add('x-drawer__backdrop');
 
     Alpine.bind(el, {
         'x-show'() {

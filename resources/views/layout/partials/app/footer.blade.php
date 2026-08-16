@@ -1,7 +1,7 @@
             </section>
         </main>
         @if ($shouldShowFooter)
-        <footer class="main-footer">
+        <footer class="shell__footer">
             <div>{{ request()->getHost() . " | " . Today() . " | " . Now() }}</div>
             @if ($help)
             <div><span id="hotkeyshelp">{{ $help }}</span></div>

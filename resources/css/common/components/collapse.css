@@ -1,31 +1,30 @@
 /* What it means for a collapse panel to be shut, and a chevron that knows whether it is. Everything
-   else — colour, spacing, the trigger's own look — is the caller's, same split as the accordion.
+   else — colour, spacing, the trigger's own look — is the caller's.
 
    Shutting takes a panel out of the flow rather than dimming it, so what it holds leaves the tab
    order and the page's reading without a second attribute having to say so. A panel therefore
    cannot also be the element carrying a display utility: the utility would outrank the shut state
    and the panel would never close. Give it a child to lay out instead. */
 @layer components {
-    .x-collapse-panel {
+    .x-collapse__panel {
         display: none;
     }
 
-    .x-collapse-panel.x-is-open {
+    .x-collapse__panel--open {
         display: block;
     }
 
-    /* Drawn rather than set in the icon font, same construction as the accordion's — a bordered
-       corner stays crisp at any zoom and takes its colour from the text. Only ever points the two
-       ways a collapse panel can be (shut or open), unlike the dropdown's caret, which tracks which
-       of four sides a panel flipped to. */
-    .x-collapse-caret {
+    /* Drawn rather than set in the icon font, which carries no chevron: a rotated bordered corner
+       stays crisp at any zoom and takes its colour from the text. Only ever points the two ways a
+       collapse panel can be, shut or open, so one quarter turn is the whole of its vocabulary. */
+    .x-collapse__caret {
         @apply inline-block shrink-0 w-[0.4rem] h-[0.4rem] ml-auto transition-transform;
         border-inline-end: 1.5px solid currentColor;
         border-block-end: 1.5px solid currentColor;
         transform: rotate(45deg);
     }
 
-    .x-collapse-trigger.x-is-open .x-collapse-caret {
+    .x-collapse__trigger--open .x-collapse__caret {
         transform: rotate(225deg);
     }
 }

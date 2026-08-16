@@ -20,7 +20,7 @@
 
        Every colour here is a named skin value, so what the menu is worth to look at can be restated
        without touching what it is. */
-    .main-nav {
+    .nav {
         @apply pb-6;
 
         ul {
@@ -28,7 +28,7 @@
         }
     }
 
-    .nav-row {
+    .nav__row {
         @apply w-full flex items-center gap-2.5 px-4 py-2;
         @apply text-start no-underline bg-transparent border-0 cursor-pointer transition-colors;
         color: theme('colors.sidebar-txt');
@@ -40,7 +40,7 @@
 
     /* Held flat under the pointer: it is already as loud as anything in the menu gets, and lighting it
        would read as a change of state rather than as the pointer being over it. */
-    .nav-row.is-current {
+    .nav__row.nav__row--current {
         background-color: theme('colors.sidebar-selected-bg');
         color: theme('colors.sidebar-selected-txt');
 
@@ -52,7 +52,7 @@
     /* A row that both leads somewhere and opens holds two controls instead of being one. The row keeps
        the background, so the pair still lights as a single band, and hands its padding to the two that
        now have to fill it — otherwise the caret's half of the strip would not answer to the pointer. */
-    .nav-row--split {
+    .nav__row--split {
         @apply p-0 gap-0 items-stretch;
 
         > * {
@@ -73,19 +73,19 @@
         }
     }
 
-    .nav-row-label {
+    .nav__row-label {
         @apply flex-1 min-w-0;
     }
 
     /* Decoration in a menu whose every other mark means something, so it is kept under the weight of
        the label it belongs to until the pointer is on the row. */
-    .nav-row .x-accordion-caret {
+    .nav__row .x-accordion__caret {
         opacity: 0.5;
     }
 
-    .nav-row:hover .x-accordion-caret,
-    .nav-row.is-current .x-accordion-caret,
-    .x-accordion-trigger.x-is-open .x-accordion-caret {
+    .nav__row:hover .x-accordion__caret,
+    .nav__row.nav__row--current .x-accordion__caret,
+    .x-accordion__trigger--open .x-accordion__caret {
         @apply opacity-100;
     }
 
@@ -95,7 +95,7 @@
 
        Written against the menu it is in rather than on its own, because a panel is often the same list
        the reset above has just stripped the indent off. */
-    .main-nav .nav-panel {
+    .nav .nav__panel {
         @apply relative;
     }
 
@@ -104,7 +104,7 @@
        the level above, which is what breaks the outer lines exactly where a deep row is filled. Raising
        every rule together restores them as one ladder, and the sidebar is a stacking context of its
        own, so nothing here can climb out of it. */
-    .main-nav .nav-panel::before {
+    .nav .nav__panel::before {
         content: '';
         @apply absolute inset-y-0 w-px z-[1];
         inset-inline-start: var(--nav-guide, theme('spacing.5'));
@@ -113,7 +113,7 @@
 
     /* All any depth says for itself: how far in its rows start, and where the rule marking them as
        inside it runs. */
-    .nav-area > .nav-row {
+    .nav__area > .nav__row {
         @apply font-semibold;
 
         /* The row has handed its padding to the pair of controls filling it, so the height an area
@@ -127,50 +127,50 @@
         }
     }
 
-    .nav-area > .nav-panel {
+    .nav__area > .nav__panel {
         --nav-guide: theme('spacing.5');
     }
 
     /* A heading rather than a place: small enough not to be mistaken for one of the entries it names,
        and set apart by its case rather than by another colour. */
-    .nav-section > .nav-row {
+    .nav__section > .nav__row {
         @apply ps-8 py-1.5 text-[0.75rem] font-semibold uppercase tracking-wide;
         color: theme('colors.sidebar-section-txt');
     }
 
-    .nav-section > .nav-row.x-is-open {
+    .nav__section > .nav__row.x-accordion__trigger--open {
         color: theme('colors.sidebar-txt');
     }
 
-    .nav-section > .nav-panel {
+    .nav__section > .nav__panel {
         --nav-guide: theme('spacing.9');
     }
 
-    .main-nav .nav-entry {
+    .nav .nav__entry {
         @apply ps-11 py-1.5 text-[0.9375rem];
     }
 
     /* The accelerator's mark is the only thing naming the key that opens an entry, so it is pinned to
        the font's own thickness rather than left to inherit a heavier rule from a container. */
-    .nav-entry u {
+    .nav__entry u {
         text-decoration-thickness: from-font;
     }
 
     /* Nothing to open: no pointer, and dimmed enough to read as unavailable rather than overlooked. */
-    .nav-entry:not([href]) {
+    .nav__entry:not([href]) {
         @apply opacity-50 cursor-default;
     }
 
     /* The category icon is information, not decoration, but there are as many of them as there are
        entries — so it sits back until the entry is the one being read. Dimmed rather than given a
        colour of its own, so it keeps whatever the strip it is on writes with. */
-    .main-nav .nav-entry-icon {
+    .nav .nav__entry-icon {
         @apply shrink-0 text-[0.9em];
         opacity: 0.55;
     }
 
-    .nav-row:hover .nav-entry-icon,
-    .nav-row.is-current .nav-entry-icon {
+    .nav__row:hover .nav__entry-icon,
+    .nav__row.nav__row--current .nav__entry-icon {
         @apply opacity-100;
     }
 }

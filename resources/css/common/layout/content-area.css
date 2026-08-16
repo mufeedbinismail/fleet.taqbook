@@ -4,10 +4,10 @@
     silently to the rule it was meant to override.
 */
 @layer components {
-    .main-content-area {
+    .shell__content {
         @apply relative overflow-hidden;
 
-        .main-content {
+        .shell__content-scroller {
             @apply w-full h-full overflow-auto relative p-6;
             overscroll-behavior: contain;
         }
