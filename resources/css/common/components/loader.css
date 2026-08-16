@@ -46,6 +46,26 @@
         animation: dot-through-dots 1s infinite;
     }
 
+    /* Three dots lit in turn, for waiting that happens beside the page rather than in front of it —
+       a list filling in, a panel fetching its next rows. Sized in `em` and drawn in `currentColor`,
+       so it takes the size and colour of wherever it is put and needs nothing said about it.
+
+       Both sides of the box are stated rather than one derived from the other: with nothing else
+       giving this element a height, a ratio an engine cannot work out leaves the mark zero pixels
+       tall, and the whole affordance — not its polish — is what goes missing. */
+    [data-loader='dots'] {
+        --dot: no-repeat radial-gradient(circle closest-side, currentColor 90%, #0000);
+        display: inline-block;
+        width: 2.5em;
+        height: 0.625em;
+        background:
+            var(--dot) 0% 50%,
+            var(--dot) 50% 50%,
+            var(--dot) 100% 50%;
+        background-size: calc(100% / 3) 100%;
+        animation: travelling-dots 1s infinite linear;
+    }
+
     [data-loader='warning'] {
         @apply icon-style icon-warning;
         font-size: 5rem;
@@ -69,6 +89,29 @@
     98%,
     to {
         bottom: 0.1%;
+    }
+}
+
+/* Each dot collapses in turn, so the gap travels along the row rather than the dots pulsing
+   together — the difference between something still working and something merely blinking. */
+@keyframes travelling-dots {
+    33% {
+        background-size:
+            calc(100% / 3) 0%,
+            calc(100% / 3) 100%,
+            calc(100% / 3) 100%;
+    }
+    50% {
+        background-size:
+            calc(100% / 3) 100%,
+            calc(100% / 3) 0%,
+            calc(100% / 3) 100%;
+    }
+    66% {
+        background-size:
+            calc(100% / 3) 100%,
+            calc(100% / 3) 100%,
+            calc(100% / 3) 0%;
     }
 }
 
