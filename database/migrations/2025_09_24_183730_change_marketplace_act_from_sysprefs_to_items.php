@@ -10,7 +10,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-         DB::table('sys_prefs')->whereIn('name', [
+        DB::table('sys_prefs')->whereIn('name', [
             'marketplace_commission_act',
             'marketplace_shipping_act',
         ])->update([

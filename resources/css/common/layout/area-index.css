@@ -4,7 +4,6 @@
     silently to the rule it was meant to override.
 */
 @layer components {
-
     /* The area drawn as cards instead of as a column: one card per section, each holding two columns of
        entries with a break wherever the entries either side were declared apart.
 
@@ -30,5 +29,4 @@
     .area-index .nav-entry:hover .nav-entry-icon {
         @apply opacity-100 no-underline;
     }
-
 }

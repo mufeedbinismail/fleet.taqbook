@@ -58,24 +58,33 @@ export default function (Alpine) {
         el.style.position = 'absolute';
 
         effect(() => {
-            getConfig(({ reference, open, placement = 'bottom', strategy = 'flip', offset: distance = 8, onPlacement = null }) => {
-                if (open && reference) {
-                    if (stopAutoUpdate) return;
+            getConfig(
+                ({
+                    reference,
+                    open,
+                    placement = 'bottom',
+                    strategy = 'flip',
+                    offset: distance = 8,
+                    onPlacement = null,
+                }) => {
+                    if (open && reference) {
+                        if (stopAutoUpdate) return;
 
-                    stopAutoUpdate = autoUpdate(reference, el, () => {
-                        computePosition(reference, el, {
-                            placement,
-                            middleware: middlewareFor(strategy, placement, distance),
-                        }).then(({ x, y, placement: finalPlacement }) => {
-                            Object.assign(el.style, { left: `${x}px`, top: `${y}px` });
-                            onPlacement?.(finalPlacement.split('-')[0]);
+                        stopAutoUpdate = autoUpdate(reference, el, () => {
+                            computePosition(reference, el, {
+                                placement,
+                                middleware: middlewareFor(strategy, placement, distance),
+                            }).then(({ x, y, placement: finalPlacement }) => {
+                                Object.assign(el.style, { left: `${x}px`, top: `${y}px` });
+                                onPlacement?.(finalPlacement.split('-')[0]);
+                            });
                         });
-                    });
-                } else if (stopAutoUpdate) {
-                    stopAutoUpdate();
-                    stopAutoUpdate = null;
-                }
-            });
+                    } else if (stopAutoUpdate) {
+                        stopAutoUpdate();
+                        stopAutoUpdate = null;
+                    }
+                },
+            );
         });
 
         cleanup(() => stopAutoUpdate && stopAutoUpdate());

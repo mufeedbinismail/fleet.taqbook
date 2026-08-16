@@ -5,13 +5,13 @@
     its own control an appearance, one selector at a time.
 */
 @layer base {
-
     /* .main-container is the sole scroll shell (height: 100vh) with .main-content
        as its only scrollable region — html/body must never scroll themselves,
        or the two scroll positions desync (inner scroll hits bottom, mobile
        Safari chains into the outer document scroll, dragging the fixed-height
        shell — header included — out of view). */
-    html, body {
+    html,
+    body {
         height: 100%;
         overflow: hidden;
     }
@@ -24,11 +24,12 @@
     }
 
     table {
-        &[align="center"] {
+        &[align='center'] {
             @apply mx-auto;
         }
 
-        td:not(.has-table), th {
+        td:not(.has-table),
+        th {
             @apply p-1;
         }
     }
@@ -38,16 +39,33 @@
     }
 
     /* Base form element styles - keeping your styling preferences */
-    input, textarea, button, select {
+    input,
+    textarea,
+    button,
+    select {
         @apply border border-solid border-gray-400 text-gray-900 rounded-sm px-1 py-0.5 transition-colors;
     }
 
-    input, textarea, select {
-        @apply  bg-white;
+    input,
+    textarea,
+    select {
+        @apply bg-white;
     }
 
     /* Enhanced form element styles with specific type targeting but preserving your styling */
-    [type='text'], input:where(:not([type])), [type='email'], [type='url'], [type='password'], [type='number'], [type='date'], [type='datetime-local'], [type='month'], [type='search'], [type='tel'], [type='time'], [type='week'] {
+    [type='text'],
+    input:where(:not([type])),
+    [type='email'],
+    [type='url'],
+    [type='password'],
+    [type='number'],
+    [type='date'],
+    [type='datetime-local'],
+    [type='month'],
+    [type='search'],
+    [type='tel'],
+    [type='time'],
+    [type='week'] {
         -webkit-appearance: none;
         -moz-appearance: none;
         appearance: none;
@@ -61,33 +79,53 @@
     }
 
     /* Comprehensive focus states using theme colors */
-    [type='text']:focus, input:where(:not([type])):focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus, [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus, [type='time']:focus, [type='week']:focus, [multiple]:focus, textarea:focus, select:focus {
+    [type='text']:focus,
+    input:where(:not([type])):focus,
+    [type='email']:focus,
+    [type='url']:focus,
+    [type='password']:focus,
+    [type='number']:focus,
+    [type='date']:focus,
+    [type='datetime-local']:focus,
+    [type='month']:focus,
+    [type='search']:focus,
+    [type='tel']:focus,
+    [type='time']:focus,
+    [type='week']:focus,
+    [multiple]:focus,
+    textarea:focus,
+    select:focus {
         outline: 2px solid transparent;
         outline-offset: 2px;
-        --tw-ring-inset: var(--tw-empty,/*!*/ /*!*/);
+        --tw-ring-inset: var(--tw-empty, /*!*/ /*!*/);
         --tw-ring-offset-width: 0px;
         --tw-ring-offset-color: #fff;
         --tw-ring-color: theme('colors.primary-accent');
-        --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-        --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+        --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width)
+            var(--tw-ring-offset-color);
+        --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width))
+            var(--tw-ring-color);
         box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
         border-color: theme('colors.primary-accent');
     }
 
     /* Placeholder styles */
-    textarea, input {
+    textarea,
+    input {
         &::placeholder {
             @apply text-gray-400;
         }
     }
 
     /* Enhanced placeholder support using theme colors */
-    input::-moz-placeholder, textarea::-moz-placeholder {
+    input::-moz-placeholder,
+    textarea::-moz-placeholder {
         color: theme('colors.general-txt');
         opacity: 1;
     }
 
-    input::placeholder, textarea::placeholder {
+    input::placeholder,
+    textarea::placeholder {
         color: theme('colors.general-txt');
         opacity: 1;
     }
@@ -106,7 +144,15 @@
         display: inline-flex;
     }
 
-    ::-webkit-datetime-edit, ::-webkit-datetime-edit-year-field, ::-webkit-datetime-edit-month-field, ::-webkit-datetime-edit-day-field, ::-webkit-datetime-edit-hour-field, ::-webkit-datetime-edit-minute-field, ::-webkit-datetime-edit-second-field, ::-webkit-datetime-edit-millisecond-field, ::-webkit-datetime-edit-meridiem-field {
+    ::-webkit-datetime-edit,
+    ::-webkit-datetime-edit-year-field,
+    ::-webkit-datetime-edit-month-field,
+    ::-webkit-datetime-edit-day-field,
+    ::-webkit-datetime-edit-hour-field,
+    ::-webkit-datetime-edit-minute-field,
+    ::-webkit-datetime-edit-second-field,
+    ::-webkit-datetime-edit-millisecond-field,
+    ::-webkit-datetime-edit-meridiem-field {
         padding-top: 0;
         padding-bottom: 0;
     }
@@ -122,7 +168,8 @@
             @apply bg-gray-200;
         }
 
-        &[multiple], &[size]:not([size="1"]) {
+        &[multiple],
+        &[size]:not([size='1']) {
             @apply pe-1 bg-none;
             background-image: initial;
             background-position: initial;
@@ -134,7 +181,8 @@
     }
 
     /* Checkbox and radio button styles using theme colors */
-    [type='checkbox'], [type='radio'] {
+    [type='checkbox'],
+    [type='radio'] {
         -webkit-appearance: none;
         -moz-appearance: none;
         appearance: none;
@@ -163,19 +211,23 @@
         border-radius: 100%;
     }
 
-    [type='checkbox']:focus, [type='radio']:focus {
+    [type='checkbox']:focus,
+    [type='radio']:focus {
         outline: 2px solid transparent;
         outline-offset: 2px;
-        --tw-ring-inset: var(--tw-empty,/*!*/ /*!*/);
+        --tw-ring-inset: var(--tw-empty, /*!*/ /*!*/);
         --tw-ring-offset-width: 2px;
         --tw-ring-offset-color: #fff;
         --tw-ring-color: theme('colors.primary-accent');
-        --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-        --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+        --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width)
+            var(--tw-ring-offset-color);
+        --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width))
+            var(--tw-ring-color);
         box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     }
 
-    [type='checkbox']:checked, [type='radio']:checked {
+    [type='checkbox']:checked,
+    [type='radio']:checked {
         border-color: transparent;
         background-color: currentColor;
         background-size: 100% 100%;
@@ -207,7 +259,10 @@
         }
     }
 
-    [type='checkbox']:checked:hover, [type='checkbox']:checked:focus, [type='radio']:checked:hover, [type='radio']:checked:focus {
+    [type='checkbox']:checked:hover,
+    [type='checkbox']:checked:focus,
+    [type='radio']:checked:hover,
+    [type='radio']:checked:focus {
         border-color: transparent;
         background-color: currentColor;
     }
@@ -229,13 +284,14 @@
         }
     }
 
-    [type='checkbox']:indeterminate:hover, [type='checkbox']:indeterminate:focus {
+    [type='checkbox']:indeterminate:hover,
+    [type='checkbox']:indeterminate:focus {
         border-color: transparent;
         background-color: currentColor;
     }
 
     /* File input styles - keeping your styling approach */
-    input[type=file] {
+    input[type='file'] {
         @apply overflow-hidden;
         background: unset;
         border-color: inherit;
@@ -260,5 +316,4 @@
             outline: 1px auto -webkit-focus-ring-color;
         }
     }
-
 }

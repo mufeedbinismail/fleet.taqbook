@@ -2,16 +2,16 @@
 
 namespace App\Legacy\Enum;
 
-use App\Foundation\Framework\Contract\Enum\HasLabelContract;
 use App\Foundation\Framework\Concern\Enum\HasLabelConcern;
+use App\Foundation\Framework\Contract\Enum\HasLabelContract;
 
 enum ThousandSeparator: int implements HasLabelContract
 {
     use HasLabelConcern;
-    
+
     case COMMA = 0;
     case DOT = 1;
-    case SPACE = 2;   
+    case SPACE = 2;
 
     public static function labels(): array
     {

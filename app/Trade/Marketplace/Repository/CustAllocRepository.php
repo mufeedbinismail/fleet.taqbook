@@ -15,10 +15,9 @@ class CustAllocRepository
         ?int $marketplaceId = null,
         ?TypedId $ignoreAllocator = null,
         bool $lock = false
-    ): DraftAllocationLineCollection
-    {
-        if (!$customerId || !$marketplaceId) {
-            return new DraftAllocationLineCollection();
+    ): DraftAllocationLineCollection {
+        if (! $customerId || ! $marketplaceId) {
+            return new DraftAllocationLineCollection;
         }
 
         $query = (new AllocateesQuery)
@@ -46,10 +45,9 @@ class CustAllocRepository
         ?int $marketplaceId = null,
         ?TypedId $ignoreRefund = null,
         bool $lock = false
-    ): DraftAllocationLineCollection
-    {
-        if (!$customerId || !$marketplaceId) {
-            return new DraftAllocationLineCollection();
+    ): DraftAllocationLineCollection {
+        if (! $customerId || ! $marketplaceId) {
+            return new DraftAllocationLineCollection;
         }
 
         $query = (new AllocatorsQuery)

@@ -32,7 +32,8 @@ axios.interceptors.response.use(
             error.friendlyMessage = window.App.i18n('foundation.http.expired');
         } else if (status !== 422) {
             // 422 is left for the caller: only it knows how to map field errors to its own form.
-            error.friendlyMessage = error.response.data?.message ?? window.App.i18n('foundation.http.failed');
+            error.friendlyMessage =
+                error.response.data?.message ?? window.App.i18n('foundation.http.failed');
         }
 
         return Promise.reject(error);

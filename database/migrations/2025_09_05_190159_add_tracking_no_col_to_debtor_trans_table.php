@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (Schema::hasColumn('debtor_trans', 'tracking_no')) return;
+        if (Schema::hasColumn('debtor_trans', 'tracking_no')) {
+            return;
+        }
 
         Schema::table('debtor_trans', function (Blueprint $table) {
             $table->string('tracking_no', 50)->nullable()->after('reference');

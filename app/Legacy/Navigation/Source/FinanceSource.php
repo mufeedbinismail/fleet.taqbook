@@ -3,8 +3,6 @@
 namespace App\Legacy\Navigation\Source;
 
 use App\Foundation\Auth\Constant\Permission;
-use App\Legacy\Navigation\Condition\DimensionsEnabled;
-use App\Legacy\Navigation\Enum\Query;
 use App\Foundation\Navigation\Builder\AreaBuilder;
 use App\Foundation\Navigation\Builder\Builder;
 use App\Foundation\Navigation\Builder\SectionBuilder;
@@ -12,6 +10,8 @@ use App\Foundation\Navigation\Constant\Area;
 use App\Foundation\Navigation\Constant\Section;
 use App\Foundation\Navigation\Enum\Category;
 use App\Foundation\Navigation\Enum\Column;
+use App\Legacy\Navigation\Condition\DimensionsEnabled;
+use App\Legacy\Navigation\Enum\Query;
 
 /**
  * Dimensions are placed as a run of their own wherever they appear, rather than continuing the run

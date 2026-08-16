@@ -10,7 +10,7 @@ return new class extends Migration
     {
         DB::table('payment_methods')->insert([
             'id' => PaymentMethod::MarketplaceSetoff->value,
-            'name' => 'Marketplace Setoff'
+            'name' => 'Marketplace Setoff',
         ]);
     }
 

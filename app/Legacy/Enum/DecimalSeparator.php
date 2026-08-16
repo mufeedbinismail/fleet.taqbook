@@ -2,13 +2,13 @@
 
 namespace App\Legacy\Enum;
 
-use App\Foundation\Framework\Contract\Enum\HasLabelContract;
 use App\Foundation\Framework\Concern\Enum\HasLabelConcern;
+use App\Foundation\Framework\Contract\Enum\HasLabelContract;
 
 enum DecimalSeparator: int implements HasLabelContract
 {
     use HasLabelConcern;
-    
+
     case DOT = 0;
     case COMMA = 1;
 

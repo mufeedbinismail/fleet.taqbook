@@ -20,7 +20,7 @@ export async function mount(html, components = {}) {
 
     document.body.innerHTML = html;
 
-    if (! started) {
+    if (!started) {
         Alpine.start();
         started = true;
     }

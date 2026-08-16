@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class TaxGroupLinesQuery
 {
-    public function builder(int $taxGroupId = null, bool $shippingOnly = false): Builder
+    public function builder(?int $taxGroupId = null, bool $shippingOnly = false): Builder
     {
         return DB::query()
             ->select(

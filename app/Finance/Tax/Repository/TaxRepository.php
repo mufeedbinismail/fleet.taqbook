@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Cache;
 
 class TaxRepository
 {
-    public function getTaxGroupLines(int $taxGroupId = null, bool $shippingOnly = false): TaxGroupLineCollection
+    public function getTaxGroupLines(?int $taxGroupId = null, bool $shippingOnly = false): TaxGroupLineCollection
     {
         return TaxGroupLineCollection::fromCollection(
             (new TaxGroupLinesQuery)
@@ -60,8 +60,7 @@ class TaxRepository
         $taxIncluded,
         $taxGroupLines = [],
         $taxAlgorithm = null
-    ): TaxSetting
-    {
+    ): TaxSetting {
         if (is_null($taxAlgorithm)) {
             $taxAlgorithm = \settings()->taxTotalingAlgorithm();
         } else {

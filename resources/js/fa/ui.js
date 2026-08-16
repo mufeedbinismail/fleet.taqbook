@@ -16,57 +16,61 @@ export default function initUI() {
     function refreshUI() {
         // find all the td element which has direct child table element
         // and add the class has-table
-        document.querySelectorAll("td > table, th > table").forEach(table => {
-            table.parentElement.classList.add("has-table");
+        document.querySelectorAll('td > table, th > table').forEach((table) => {
+            table.parentElement.classList.add('has-table');
         });
 
         // find all the span that has a direct select element
         // and add the class has-select
-        document.querySelectorAll("span > select").forEach(select => {
-            select.parentElement.classList.add("has-select");
+        document.querySelectorAll('span > select').forEach((select) => {
+            select.parentElement.classList.add('has-select');
         });
 
         // find all the span that has a direct sibling element with
         // name ending on _update and add the class has-updatable-sibling
-        document.querySelectorAll("span + input[name$='_update']").forEach(update => {
-            update.previousElementSibling.classList.add("has-updatable-sibling");
+        document.querySelectorAll("span + input[name$='_update']").forEach((update) => {
+            update.previousElementSibling.classList.add('has-updatable-sibling');
         });
 
         // find all the span that has a direct sibling img element
         // and add the class has-img-sibling
-        document.querySelectorAll("span + img").forEach(img => {
-            img.previousElementSibling.classList.add("has-img-sibling");
+        document.querySelectorAll('span + img').forEach((img) => {
+            img.previousElementSibling.classList.add('has-img-sibling');
         });
 
         // find all the li inside ajaxtabs that has a direct current button
         // add the class has-current-button
-        document.querySelectorAll("ul.ajaxtabs li > button.current").forEach(current => {
-            current.parentElement.classList.add("has-current");
+        document.querySelectorAll('ul.ajaxtabs li > button.current').forEach((current) => {
+            current.parentElement.classList.add('has-current');
         });
 
         // find all parent elements that have an image icon inside it
-        document.querySelectorAll('button > img, input[name$="_update"] + img, span.has-select + img, input + a[href^="javascript:date_picker"] > img').forEach(img => {
-            const baseName = img.src.split('/').pop().split('.').shift();
-            const parent = img.parentElement;
+        document
+            .querySelectorAll(
+                'button > img, input[name$="_update"] + img, span.has-select + img, input + a[href^="javascript:date_picker"] > img',
+            )
+            .forEach((img) => {
+                const baseName = img.src.split('/').pop().split('.').shift();
+                const parent = img.parentElement;
 
-            if (!icons[baseName]) return; // Skip if icon not found
+                if (!icons[baseName]) return; // Skip if icon not found
 
-            // Convert SVG string to an actual SVG element
-            const icon = document.createElement("span");
-            icon.classList.add('icon', icons[baseName], 'text-lg');
-            icon.title = img.title;
-            icon.onclick = img.onclick;
+                // Convert SVG string to an actual SVG element
+                const icon = document.createElement('span');
+                icon.classList.add('icon', icons[baseName], 'text-lg');
+                icon.title = img.title;
+                icon.onclick = img.onclick;
 
-            parent.dataset.icon = baseName;
-            parent.classList.add("has-img-icon");
+                parent.dataset.icon = baseName;
+                parent.classList.add('has-img-icon');
 
-            // Replace the image with the new SVG
-            parent.replaceChild(icon, img);
+                // Replace the image with the new SVG
+                parent.replaceChild(icon, img);
 
-            if (parent.children.length == 1) {
-                parent.classList.add("is-icon");
-            }
-        });
+                if (parent.children.length == 1) {
+                    parent.classList.add('is-icon');
+                }
+            });
 
         for (const select of document.getElementsByTagName('select')) {
             if (select.options.length > 10 && !select.classList.contains('select2-hidden-accessible')) {
@@ -77,7 +81,7 @@ export default function initUI() {
 
     /**
      * Monkey patch the FrontAccounting date_picker
-     * 
+     *
      * This adds the ability to adjust the position of the date picker
      * element when it is out of bounds of the parent container.  
      * As well as follow the input field when the parent container is scrolled.
@@ -104,8 +108,8 @@ export default function initUI() {
                 w: currentBounds.getElementWidth(),
                 h: currentBounds.getElementHeight(),
                 r: currentBounds.getElementRight(),
-                b: currentBounds.getElementBottom()
-            }
+                b: currentBounds.getElementBottom(),
+            };
 
             originalDatePicker.apply(this, arguments);
 
@@ -119,7 +123,7 @@ export default function initUI() {
                     w: calendarPos.getElementWidth(),
                     h: calendarPos.getElementHeight(),
                     r: calendarPos.getElementRight(),
-                    b: calendarPos.getElementBottom()
+                    b: calendarPos.getElementBottom(),
                 };
 
                 let fieldPos = new positionInfo(currentInput);
@@ -129,34 +133,31 @@ export default function initUI() {
                     w: fieldPos.getElementWidth(),
                     h: fieldPos.getElementHeight(),
                     r: fieldPos.getElementRight(),
-                    b: fieldPos.getElementBottom()
+                    b: fieldPos.getElementBottom(),
                 };
-                
+
                 const outOfBounds = {
                     t: calendarPos.t < currentBounds.t,
                     l: calendarPos.l < currentBounds.l,
                     r: calendarPos.r > currentBounds.r,
-                    b: calendarPos.b > currentBounds.b
-                }
+                    b: calendarPos.b > currentBounds.b,
+                };
 
                 // check if the calendar is out of bounds and adjust the position
                 if (outOfBounds.r) {
-                    calendar.style.left = (fieldPos.r - calendarPos.w) + 'px';
+                    calendar.style.left = fieldPos.r - calendarPos.w + 'px';
                     calendar.style.right = 'auto';
                 }
 
-                if (
-                    outOfBounds.b
-                    && (fieldPos.t - calendarPos.h) > currentBounds.t
-                ) {
-                    calendar.style.top = (fieldPos.t - calendarPos.h) + 'px';
+                if (outOfBounds.b && fieldPos.t - calendarPos.h > currentBounds.t) {
+                    calendar.style.top = fieldPos.t - calendarPos.h + 'px';
                     calendar.style.bottom = 'auto';
                 }
             }
-        }
+        };
 
         // on scroll follow the input field
-        containerEl.addEventListener('scroll', function() {
+        containerEl.addEventListener('scroll', function () {
             let scrollTop = containerEl.scrollTop;
             let dir = scrollTop > lastScrollTop ? 'up' : 'down';
             let scrolled = Math.abs(scrollTop - lastScrollTop);
@@ -171,7 +172,7 @@ export default function initUI() {
                     w: calendarPos.getElementWidth(),
                     h: calendarPos.getElementHeight(),
                     r: calendarPos.getElementRight(),
-                    b: calendarPos.getElementBottom()
+                    b: calendarPos.getElementBottom(),
                 };
 
                 let fieldPos = new positionInfo(currentInput);
@@ -181,38 +182,30 @@ export default function initUI() {
                     w: fieldPos.getElementWidth(),
                     h: fieldPos.getElementHeight(),
                     r: fieldPos.getElementRight(),
-                    b: fieldPos.getElementBottom()
+                    b: fieldPos.getElementBottom(),
                 };
 
                 const outOfBounds = {
                     t: calendarPos.t < currentBounds.t,
                     l: calendarPos.l < currentBounds.l,
                     r: calendarPos.r > currentBounds.r,
-                    b: calendarPos.b > currentBounds.b
+                    b: calendarPos.b > currentBounds.b,
                 };
 
                 if (dir === 'up') {
-                    calendar.style.top = (calendarPos.t - scrolled) + 'px';
+                    calendar.style.top = calendarPos.t - scrolled + 'px';
                     calendar.style.bottom = 'auto';
 
-                    if (
-                        outOfBounds.t
-                        && (fieldPos.b + calendarPos.h) < currentBounds.b
-                    ) {
+                    if (outOfBounds.t && fieldPos.b + calendarPos.h < currentBounds.b) {
                         calendar.style.top = fieldPos.b + 'px';
                         calendar.style.bottom = 'auto';
                     }
-                }
-                
-                else {
-                    calendar.style.top = (calendarPos.t + scrolled) + 'px';
+                } else {
+                    calendar.style.top = calendarPos.t + scrolled + 'px';
                     calendar.style.bottom = 'auto';
 
-                    if (
-                        outOfBounds.b
-                        && (fieldPos.t - calendarPos.h) > currentBounds.t
-                    ) {
-                        calendar.style.top = (fieldPos.t - calendarPos.h) + 'px';
+                    if (outOfBounds.b && fieldPos.t - calendarPos.h > currentBounds.t) {
+                        calendar.style.top = fieldPos.t - calendarPos.h + 'px';
                         calendar.style.bottom = 'auto';
                     }
                 }
@@ -224,7 +217,7 @@ export default function initUI() {
 
     /**
      * Monkey patch the FrontAccounting set_mark function
-     * 
+     *
      * This adds the ability to refresh the UI when the set_mark
      * function is called with a null argument (ie. clear the ajax loader mark)
      */
@@ -254,10 +247,10 @@ export default function initUI() {
             if (!img) {
                 setTimeout(refreshUI);
             }
-        }
+        };
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener('DOMContentLoaded', function () {
         refreshUI();
         monkeyPatchFADatePicker();
         monkeyPatchFASetMark();

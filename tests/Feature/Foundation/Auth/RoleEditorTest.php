@@ -19,7 +19,7 @@ class RoleEditorTest extends TestCase
      */
     private function actor(): User
     {
-        $role = new Role();
+        $role = new Role;
         $role->role = 'ZZ Test Role';
         $role->inactive = 0;
         $role->save();
@@ -143,7 +143,7 @@ class RoleEditorTest extends TestCase
     {
         $user = $this->actor();
 
-        $spare = new Role();
+        $spare = new Role;
         $spare->role = 'ZZ Spare Role';
         $spare->inactive = 0;
         $spare->save();

@@ -15,7 +15,7 @@ class FinanceServiceProvider extends ServiceProvider
     {
         // repositories
         $this->app->singleton(TaxRepository::class);
-        
+
         // services
         $this->app->singleton(TaxService::class);
     }

@@ -2,7 +2,4 @@
 
 namespace App\Legacy\Exception;
 
-class FlowControlException extends \Exception
-{
-
-}
+class FlowControlException extends \Exception {}

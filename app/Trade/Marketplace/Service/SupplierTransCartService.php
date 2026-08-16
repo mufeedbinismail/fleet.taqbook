@@ -16,24 +16,24 @@ class SupplierTransCartService
 {
     public function __construct(
         private MarketplaceQuery $marketplaceQuery,
-        private TaxRepository    $taxRepository,
-        private TaxService       $taxService,
+        private TaxRepository $taxRepository,
+        private TaxService $taxService,
     ) {}
 
     public function setMarketplace(SupplierTransCart $cart, ?string $marketplaceId): void
     {
-        if (!$marketplaceId) {
-            $cart->marketplaceId        = null;
-            $cart->supplierId           = null;
-            $cart->provisionAccount     = null;
-            $cart->payableAccount       = null;
+        if (! $marketplaceId) {
+            $cart->marketplaceId = null;
+            $cart->supplierId = null;
+            $cart->provisionAccount = null;
+            $cart->payableAccount = null;
             $cart->marketplaceTaxSetting = null;
         } else {
             $marketplace = $this->marketplaceQuery->builder($marketplaceId)->first();
-            $cart->marketplaceId        = $marketplaceId;
-            $cart->supplierId           = (int) $marketplace->supplier_id;
-            $cart->provisionAccount     = $marketplace->provision_account;
-            $cart->payableAccount       = $marketplace->payable_account;
+            $cart->marketplaceId = $marketplaceId;
+            $cart->supplierId = (int) $marketplace->supplier_id;
+            $cart->provisionAccount = $marketplace->provision_account;
+            $cart->payableAccount = $marketplace->payable_account;
             $cart->marketplaceTaxSetting = $this->taxRepository->getTaxSetting(
                 $marketplace->tax_group_id,
                 $marketplace->tax_included
@@ -62,10 +62,12 @@ class SupplierTransCartService
 
     public function updateLine(SupplierTransCart $cart, int $index, DraftSupplierTransLine $draft): void
     {
-        if (!isset($cart->line_items[$index])) return;
+        if (! isset($cart->line_items[$index])) {
+            return;
+        }
 
-        $line         = $cart->line_items[$index];
-        $line->qty    = BigDecimal::of($draft->qty);
+        $line = $cart->line_items[$index];
+        $line->qty = BigDecimal::of($draft->qty);
         $line->amount = MoneyFactory::of($draft->amount);
         if ($cart->marketplaceTaxSetting) {
             $line->taxBreakdown = $this->taxService->getTaxBreakdownForSource($line, $cart->marketplaceTaxSetting);
@@ -74,7 +76,7 @@ class SupplierTransCartService
 
     public function recalculateAllTaxes(SupplierTransCart $cart): void
     {
-        if (!$cart->marketplaceTaxSetting) {
+        if (! $cart->marketplaceTaxSetting) {
             foreach ($cart->line_items as $line) {
                 $line->taxBreakdown = new TaxBreakdown(MoneyFactory::zero(), $line->toTaxableItem()->price);
             }

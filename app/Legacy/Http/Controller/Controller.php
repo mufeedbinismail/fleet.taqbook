@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Controller extends BaseController
 {
-    static $path = '';
+    public static $path = '';
 
     public function __invoke(Request $request)
     {
@@ -19,10 +19,10 @@ class Controller extends BaseController
         $filePath = public_path($requestPath);
 
         if (
-            !file_exists($filePath)
-            && !( is_dir($filePath) && file_exists($filePath = (rtrim($filePath, '/') . '/index.php')) )
+            ! file_exists($filePath)
+            && ! (is_dir($filePath) && file_exists($filePath = (rtrim($filePath, '/').'/index.php')))
         ) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException;
         }
 
         $response = null;
@@ -31,7 +31,7 @@ class Controller extends BaseController
 
         $obLevel = ob_get_level();
         ob_start();
-        try  {
+        try {
             self::$path = $filePath;
             $this->requireLegacyFile();
         } catch (\App\Legacy\Exception\FlowControlException $e) {
@@ -43,7 +43,7 @@ class Controller extends BaseController
                 $response = response()->redirectTo($e->getTargetUrl(), $e->getHttpCode());
             }
         } catch (\Throwable $e) {
-            if (!(isset($GLOBALS['Ajax']) && $GLOBALS['Ajax'] instanceof \Ajax)) {
+            if (! (isset($GLOBALS['Ajax']) && $GLOBALS['Ajax'] instanceof \Ajax)) {
                 throw $e;
             }
 
@@ -60,10 +60,12 @@ class Controller extends BaseController
             cancel_transaction();
         }
 
-        while (ob_get_level() > $obLevel + 1) ob_end_flush();
+        while (ob_get_level() > $obLevel + 1) {
+            ob_end_flush();
+        }
         $content = ob_get_clean();
 
-        if (!isset($response)) {
+        if (! isset($response)) {
             $response = response($content);
         }
 
@@ -72,7 +74,7 @@ class Controller extends BaseController
             [$key, $value] = explode(':', $header, 2) + [null, null];
             if ($key && $value) {
                 $response->headers->set(trim($key), trim($value));
-                header_remove(trim($key)); 
+                header_remove(trim($key));
             }
         }
 
@@ -81,14 +83,12 @@ class Controller extends BaseController
 
     /**
      * requires the legacy file in an isolated context
-     *
-     * @return void
      */
     protected function requireLegacyFile(): void
     {
         // Make all the global variables available as
         // regular variables within the scope of the included file.
-        foreach (require PATH_TO_ROOT . '/includes/globals.inc' as $key => $value) {
+        foreach (require PATH_TO_ROOT.'/includes/globals.inc' as $key => $value) {
             // Auto-loaded files define some globals themselves,
             // If so, avoid overwriting them because they will not
             // be included again.

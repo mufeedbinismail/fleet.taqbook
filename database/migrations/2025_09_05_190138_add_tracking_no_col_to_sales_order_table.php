@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (Schema::hasColumn('sales_orders', 'tracking_no')) return;
-        
+        if (Schema::hasColumn('sales_orders', 'tracking_no')) {
+            return;
+        }
+
         Schema::table('sales_orders', function (Blueprint $table) {
             $table->string('tracking_no', 50)->nullable()->after('reference');
         });

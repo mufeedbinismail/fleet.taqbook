@@ -33,5 +33,7 @@ export function codepoints(root) {
  * @return {string[]}
  */
 export function classNames(root) {
-    return Object.keys(codepoints(root)).sort().map((name) => `icon-${name}`);
+    return Object.keys(codepoints(root))
+        .sort()
+        .map((name) => `icon-${name}`);
 }

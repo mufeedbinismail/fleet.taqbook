@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     protected $table = 'debtors_master';
+
     protected $primaryKey = 'debtor_no';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -29,4 +31,3 @@ class Customer extends Model
         'inactive',
     ];
 }
-

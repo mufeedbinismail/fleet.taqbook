@@ -32,7 +32,7 @@ return new class extends Migration
                     WHEN name = 'marketplace_commission_item' THEN 'marketplace_commission_act' 
                     WHEN name = 'marketplace_shipping_item' THEN 'marketplace_shipping_act' 
                     ELSE name END)"
-                )
+                ),
             ]);
             DB::table('gl_trans')
                 ->where('account', '=', '')
@@ -44,9 +44,9 @@ return new class extends Migration
                         WHEN memo_ = 'Marketplace Commission' THEN '{$commissionAct}' 
                         WHEN memo_ = 'Marketplace Shipping Charge' THEN '{$shippingAct}' 
                         ELSE account END)"
-                    )
+                    ),
                 ]);
-            });
+        });
     }
 
     /**

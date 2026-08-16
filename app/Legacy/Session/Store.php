@@ -2,13 +2,13 @@
 
 namespace App\Legacy\Session;
 
-use IteratorAggregate;
 use ArrayAccess;
 use Countable;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Arr;
+use IteratorAggregate;
 
-class Store implements IteratorAggregate, ArrayAccess, Countable
+class Store implements ArrayAccess, Countable, IteratorAggregate
 {
     /**
      * The Laravel session manager instance.
@@ -23,7 +23,7 @@ class Store implements IteratorAggregate, ArrayAccess, Countable
     /**
      * Create a new SessionArrayObject instance.
      */
-    public function __construct(SessionManager $manager = null)
+    public function __construct(?SessionManager $manager = null)
     {
         $this->manager = $manager;
     }
@@ -36,7 +36,7 @@ class Store implements IteratorAggregate, ArrayAccess, Countable
     public function put($key, $value = null): void
     {
         if (is_null($key)) {
-            throw new \InvalidArgumentException("Session key cannot be null");
+            throw new \InvalidArgumentException('Session key cannot be null');
         }
 
         $keys = is_array($key) ? $key : [$key => $value];
@@ -107,14 +107,16 @@ class Store implements IteratorAggregate, ArrayAccess, Countable
     /**
      * Unserialize session data.
      */
-    public function load(array $data): void {
+    public function load(array $data): void
+    {
         $this->items = $data;
     }
 
     /**
      * Serialize session data.
      */
-    public function all(): array {
+    public function all(): array
+    {
         return $this->items;
     }
 

@@ -7,18 +7,21 @@ use App\Finance\Tax\Entity\ItemTaxSetting;
 use App\Finance\Tax\Entity\TaxableItem;
 use App\Finance\Tax\Entity\TaxableItemSource;
 use App\Finance\Tax\Repository\TaxRepository;
-use App\Finance\Tax\Service\TaxService;
 use App\Finance\Tax\ValueObject\TaxBreakdown;
 use Brick\Money\Money;
 
 class Expense implements TaxableItemSource
 {
     public string $uuid;
+
     public string $stockId;
+
     public string $description;
+
     public Money $amount;
-    
+
     public ItemTaxSetting $itemTaxSetting;
+
     public TaxBreakdown $taxBreakdown;
 
     /**
@@ -32,8 +35,7 @@ class Expense implements TaxableItemSource
         string $description,
         Money $amount,
         ?TaxBreakdown $taxBreakdown = null
-    )
-    {
+    ) {
         $this->uuid = $uuid;
         $this->stockId = $stockId;
         $this->description = $description;

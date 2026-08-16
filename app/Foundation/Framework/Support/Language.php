@@ -10,7 +10,9 @@ namespace App\Foundation\Framework\Support;
 class Language
 {
     protected $locale;
+
     protected $dir;
+
     protected $encoding = 'UTF-8';
 
     public function __construct()
@@ -52,4 +54,3 @@ class Language
         return $this->encoding;
     }
 }
-

@@ -2,8 +2,8 @@
 
 namespace App\Legacy\Enum;
 
-use App\Foundation\Framework\Contract\Enum\HasLabelContract;
 use App\Foundation\Framework\Concern\Enum\HasLabelConcern;
+use App\Foundation\Framework\Contract\Enum\HasLabelContract;
 
 enum DateSystem: int implements HasLabelContract
 {

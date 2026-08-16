@@ -2,8 +2,8 @@
 
 namespace App\Legacy\Navigation\Condition;
 
-use App\Foundation\Shared\Setting\GlobalSetting;
 use App\Foundation\Navigation\Contract\Condition;
+use App\Foundation\Shared\Setting\GlobalSetting;
 
 final class DimensionsEnabled implements Condition
 {

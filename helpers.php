@@ -76,22 +76,23 @@ function user_settings($key = null, $default = Arr::NOT_SET)
 function language()
 {
     static $language;
+
     return $language ??= new \App\Foundation\Framework\Support\Language;
 }
 
 /**
  * Get the labels for an enum.
  *
- * @param class-string<UnitEnum> $enum The enum to get the labels for.
+ * @param  class-string<UnitEnum>  $enum  The enum to get the labels for.
  * @return array The labels for the enum.
  */
 function get_labels_from_enum(string $enum): array
 {
     if (is_subclass_of($enum, HasLabelContract::class)) {
         return call_user_func([$enum, 'labels']);
-    } else if (is_subclass_of($enum, UnitEnum::class)) {
+    } elseif (is_subclass_of($enum, UnitEnum::class)) {
         return array_column(call_user_func([$enum, 'cases']), 'name');
     }
-    
+
     throw new \InvalidArgumentException("Invalid enum class: $enum");
 }

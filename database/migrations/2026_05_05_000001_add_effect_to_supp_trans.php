@@ -20,17 +20,17 @@ return new class extends Migration
             $table->double('total')->storedAs('ov_amount + ov_gst + ov_discount')->after('effect');
         });
 
-        DB::statement("
+        DB::statement('
             UPDATE supp_trans SET effect = CASE type
-                WHEN " . SystemType::SupplierInvoice->value . " THEN  1
-                WHEN " . SystemType::BankDeposit->value     . " THEN  1
-                WHEN " . SystemType::SupplierCredit->value  . " THEN -1
-                WHEN " . SystemType::SupplierPayment->value . " THEN -1
-                WHEN " . SystemType::BankPayment->value     . " THEN -1
-                WHEN " . SystemType::Journal->value         . " THEN IF(ov_amount > 0, 1, -1)
+                WHEN '.SystemType::SupplierInvoice->value.' THEN  1
+                WHEN '.SystemType::BankDeposit->value.' THEN  1
+                WHEN '.SystemType::SupplierCredit->value.' THEN -1
+                WHEN '.SystemType::SupplierPayment->value.' THEN -1
+                WHEN '.SystemType::BankPayment->value.' THEN -1
+                WHEN '.SystemType::Journal->value.' THEN IF(ov_amount > 0, 1, -1)
                 ELSE 1
             END
-        ");
+        ');
 
         DB::statement('ALTER TABLE supp_trans MODIFY effect TINYINT NOT NULL');
     }

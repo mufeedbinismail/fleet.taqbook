@@ -17,7 +17,7 @@ final class TypedId implements Stringable
 
     public function isExisting(): bool
     {
-        return !$this->isNew();
+        return ! $this->isNew();
     }
 
     public function isNew(): bool
@@ -28,31 +28,31 @@ final class TypedId implements Stringable
     public static function tryFromString(string $provided): ?static
     {
         $result = explode(self::SEPARATOR, $provided, 2);
-        
-        if (count($result) < 2 || !SystemType::tryFrom($result[0])) {
+
+        if (count($result) < 2 || ! SystemType::tryFrom($result[0])) {
             return null;
         }
-        
-        return new static(SystemType::from($result[0]), $result[1]);
+
+        return new self(SystemType::from($result[0]), $result[1]);
     }
 
     public static function fromString(string $provided): static
     {
         $result = static::tryFromString($provided);
-        
-        if (!$result) {
+
+        if (! $result) {
             throw new InvalidArgumentException(
-                "Failed to dismantle string. Input must be a delimited string where the first part: " .
+                'Failed to dismantle string. Input must be a delimited string where the first part: '.
                 "a valid SystemType enum. Provided: '{$provided}'"
             );
         }
-        
+
         return $result;
     }
 
     public function toString(): string
     {
-        return $this->type->value . self::SEPARATOR . $this->id;
+        return $this->type->value.self::SEPARATOR.$this->id;
     }
 
     public function __toString(): string
@@ -68,7 +68,7 @@ final class TypedId implements Stringable
     public static function make($type, $id = null)
     {
         if (! $type instanceof SystemType) {
-            if (!is_numeric($type) || !SystemType::tryFrom((int) $type)) {
+            if (! is_numeric($type) || ! SystemType::tryFrom((int) $type)) {
                 throw new InvalidArgumentException(
                     "Failed to recognize a valid SystemType enum. Provided: '{$type}'"
                 );
@@ -79,4 +79,3 @@ final class TypedId implements Stringable
         return new static($type, ((string) $id) ?: null);
     }
 }
-

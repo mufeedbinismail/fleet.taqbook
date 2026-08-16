@@ -2,8 +2,6 @@
 
 namespace Tests\Unit\Foundation\Navigation;
 
-use App\Legacy\Navigation\Enum\Query;
-use App\Legacy\Navigation\ValueObject\LegacyPageTarget;
 use App\Foundation\Navigation\Builder\AreaBuilder;
 use App\Foundation\Navigation\Builder\Builder;
 use App\Foundation\Navigation\Facade\Navigation;
@@ -14,6 +12,8 @@ use App\Foundation\Navigation\ValueObject\Crumb;
 use App\Foundation\Navigation\ValueObject\CurrentLocation;
 use App\Foundation\Navigation\ValueObject\RouteTarget;
 use App\Foundation\Navigation\ValueObject\UrlTarget;
+use App\Legacy\Navigation\Enum\Query;
+use App\Legacy\Navigation\ValueObject\LegacyPageTarget;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;

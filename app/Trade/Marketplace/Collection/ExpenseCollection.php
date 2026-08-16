@@ -14,10 +14,11 @@ class ExpenseCollection extends AbstractCollection
 
     public static function fromDbRows(iterable $rows): self
     {
-        $collection = new self();
+        $collection = new self;
         foreach ($rows as $row) {
             $collection[] = Expense::fromDbRow($row);
         }
+
         return $collection;
     }
 }

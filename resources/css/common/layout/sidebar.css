@@ -4,7 +4,6 @@
     silently to the rule it was meant to override.
 */
 @layer components {
-
     .main-sidebar {
         @apply border-e border-solid;
         position: relative;
@@ -41,7 +40,7 @@
             border-block-end: 1px solid theme('colors.sidebar-border');
 
             img {
-                @apply inline-block w-[2rem] align-text-bottom
+                @apply inline-block w-[2rem] align-text-bottom;
             }
         }
     }
@@ -84,5 +83,4 @@
             }
         }
     }
-
 }

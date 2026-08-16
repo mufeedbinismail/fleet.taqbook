@@ -4,10 +4,10 @@ use App\Legacy\Enum\ChartSkin;
 use App\Legacy\Enum\DateFormat;
 use App\Legacy\Enum\DateSeparator;
 use App\Legacy\Enum\DateSystem;
-use App\Legacy\Enum\ThousandSeparator;
 use App\Legacy\Enum\DecimalSeparator;
-use App\Legacy\Enum\PageSize;
 use App\Legacy\Enum\ExchangeRateProvider;
+use App\Legacy\Enum\PageSize;
+use App\Legacy\Enum\ThousandSeparator;
 
 return [
 
@@ -39,7 +39,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | When true, accessing through HTTP will result in a blocked message
-    | 
+    |
     | "HTTP access is not allowed on this site. This is unsecure. If you
     | really want to access this unsecure site then set LEGACY_ALLOW_HTTPS_ONLY"
     |

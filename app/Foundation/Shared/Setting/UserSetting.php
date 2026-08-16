@@ -56,7 +56,7 @@ class UserSetting extends Store
             return $all;
         }
 
-        if (!array_key_exists($key, $all)) {
+        if (! array_key_exists($key, $all)) {
             throw new InvalidArgumentException("Unknown user setting key: {$key}.");
         }
 
@@ -77,12 +77,12 @@ class UserSetting extends Store
             $items[$key] = Arr::kvGet($user, $key, $default);
         }
 
-        if (!isset($user['sticky_doc_date'])) {
+        if (! isset($user['sticky_doc_date'])) {
             $items['sticky_date'] = $defaults['sticky_doc_date'];
             $items['startup_tab'] = $defaults['startup_tab'];
         }
 
-        if (!file_exists(public_path('themes/' . $items['theme']))) {
+        if (! file_exists(public_path('themes/'.$items['theme']))) {
             $items['theme'] = $defaults['theme'];
         }
 

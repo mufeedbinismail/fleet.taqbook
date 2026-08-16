@@ -5,7 +5,6 @@ namespace App\Legacy\Http\Middleware;
 use App\Foundation\Auth\Service\UserAuthenticator;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class HydrateCurrentUser

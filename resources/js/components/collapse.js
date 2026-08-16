@@ -27,27 +27,27 @@ let sequence = 0;
 
 export default function (Alpine) {
     Alpine.directive('collapse', (el, directive) => {
-        if      (directive.value === 'item')    handleItem(el, Alpine, directive.expression)
-        else if (directive.value === 'trigger') handleTrigger(el, Alpine)
-        else if (directive.value === 'panel')   handlePanel(el, Alpine)
-        else                                     handleRoot(el, Alpine)
-    })
+        if (directive.value === 'item') handleItem(el, Alpine, directive.expression);
+        else if (directive.value === 'trigger') handleTrigger(el, Alpine);
+        else if (directive.value === 'panel') handlePanel(el, Alpine);
+        else handleRoot(el, Alpine);
+    });
 }
 
 function itemOf(el) {
-    return el.parentElement?.closest(ITEM) ?? null
+    return el.parentElement?.closest(ITEM) ?? null;
 }
 
 function rootOf(el) {
-    return el.parentElement?.closest(ROOT) ?? null
+    return el.parentElement?.closest(ROOT) ?? null;
 }
 
 function keyOf(item) {
-    return item?.getAttribute('x-collapse:item') ?? null
+    return item?.getAttribute('x-collapse:item') ?? null;
 }
 
 function ownItems(root) {
-    return Array.from(root.querySelectorAll(ITEM)).filter((item) => rootOf(item) === root)
+    return Array.from(root.querySelectorAll(ITEM)).filter((item) => rootOf(item) === root);
 }
 
 function handleRoot(el, Alpine) {
@@ -56,7 +56,11 @@ function handleRoot(el, Alpine) {
     Alpine.bind(el, {
         'x-data'() {
             return {
-                open: new Set(ownItems(el).filter((item) => item.classList.contains('x-is-open')).map(keyOf)),
+                open: new Set(
+                    ownItems(el)
+                        .filter((item) => item.classList.contains('x-is-open'))
+                        .map(keyOf),
+                ),
 
                 isOpen(key) {
                     return key !== null && this.open.has(key);
@@ -81,25 +85,27 @@ function handleRoot(el, Alpine) {
                 hideAll() {
                     this.open.clear();
                 },
-            }
+            };
         },
-    })
+    });
 }
 
 function handleItem(el, Alpine, key) {
     el.classList.add('x-collapse-item');
 
-    if (! el.id) el.id = `collapse-item-${++sequence}`;
+    if (!el.id) el.id = `collapse-item-${++sequence}`;
 
     Alpine.bind(el, {
-        ':class'() { return { 'x-is-open': this.$data.isOpen(key) } },
-    })
+        ':class'() {
+            return { 'x-is-open': this.$data.isOpen(key) };
+        },
+    });
 }
 
 function handleTrigger(el, Alpine) {
     const item = itemOf(el);
 
-    if (! item) return;
+    if (!item) return;
 
     const key = keyOf(item);
 
@@ -108,19 +114,26 @@ function handleTrigger(el, Alpine) {
 
     Alpine.bind(el, {
         'x-init'() {
-            if (el.tagName.toLowerCase() === 'button' && !el.hasAttribute('type')) el.type = 'button';
+            if (el.tagName.toLowerCase() === 'button' && !el.hasAttribute('type'))
+                el.type = 'button';
         },
         'aria-controls': panelId(item),
-        ':aria-expanded'() { return this.$data.isOpen(key) ? 'true' : 'false' },
-        ':class'() { return { 'x-is-open': this.$data.isOpen(key) } },
-        '@click'() { this.$data.toggle(key) },
-    })
+        ':aria-expanded'() {
+            return this.$data.isOpen(key) ? 'true' : 'false';
+        },
+        ':class'() {
+            return { 'x-is-open': this.$data.isOpen(key) };
+        },
+        '@click'() {
+            this.$data.toggle(key);
+        },
+    });
 }
 
 function handlePanel(el, Alpine) {
     const item = itemOf(el);
 
-    if (! item) return;
+    if (!item) return;
 
     const key = keyOf(item);
 
@@ -128,8 +141,10 @@ function handlePanel(el, Alpine) {
     el.id = panelId(item);
 
     Alpine.bind(el, {
-        ':class'() { return { 'x-is-open': this.$data.isOpen(key) } },
-    })
+        ':class'() {
+            return { 'x-is-open': this.$data.isOpen(key) };
+        },
+    });
 }
 
 function panelId(item) {

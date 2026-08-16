@@ -4,7 +4,6 @@
     silently to the rule it was meant to override.
 */
 @layer components {
-
     /* A second, quieter bar under the header. Hidden below md: the trail is an orientation aid, and on
        a screen that narrow it would wrap to more rows than the content it is orienting.
 
@@ -48,5 +47,4 @@
             color: theme('colors.breadcrumb-current-txt');
         }
     }
-
 }

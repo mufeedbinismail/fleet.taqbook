@@ -14,18 +14,20 @@ class DraftAllocationLineCollection extends AbstractCollection
 
     public static function fromOne(DraftAllocationLine $line): self
     {
-        $collection = new self();
+        $collection = new self;
         $collection[$line->transId->toString()] = $line;
+
         return $collection;
     }
 
     public static function fromDbRows(iterable $rows): self
     {
-        $collection = new self();
+        $collection = new self;
         foreach ($rows as $row) {
             $line = DraftAllocationLine::fromDbRow($row);
             $collection[$line->transId->toString()] = $line;
         }
+
         return $collection;
     }
 }

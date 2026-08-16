@@ -10,20 +10,32 @@ use Brick\Money\Money;
 
 class SupplierTransCart
 {
-    public readonly string  $cartId;
+    public readonly string $cartId;
 
-    public ?SystemType $transType    = null;
-    public int     $transNo          = 0;
-    public ?string $marketplaceId    = null;
-    public ?int    $supplierId       = null;
+    public ?SystemType $transType = null;
+
+    public int $transNo = 0;
+
+    public ?string $marketplaceId = null;
+
+    public ?int $supplierId = null;
+
     public ?string $provisionAccount = null;
-    public ?string $payableAccount   = null;
-    public ?string $date             = null;
-    public ?string $reference        = null;
-    public ?string $supplierRef      = null;
-    public string  $receiveInto      = '';
-    public string  $receiveAddress   = '';
-    public string  $comments         = '';
+
+    public ?string $payableAccount = null;
+
+    public ?string $date = null;
+
+    public ?string $reference = null;
+
+    public ?string $supplierRef = null;
+
+    public string $receiveInto = '';
+
+    public string $receiveAddress = '';
+
+    public string $comments = '';
+
     public ?TaxSetting $marketplaceTaxSetting = null;
 
     /** @var SupplierTransCartLine[] */

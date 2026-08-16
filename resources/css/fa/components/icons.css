@@ -1,7 +1,7 @@
 /* Search button next to select box  */
-input[name$="_update"],
+input[name$='_update'],
 span.has-select {
-    &  + img,
+    & + img,
     & + svg,
     & + span.icon {
         @apply inline-block cursor-pointer;
@@ -11,7 +11,7 @@ span.has-select {
 }
 
 span.has-updatable-sibling > select span.has-img-sibling > select {
-  max-width: calc(100% - 1.75rem);
+    max-width: calc(100% - 1.75rem);
 }
 
 /* Icons inside button.
@@ -24,8 +24,8 @@ span.has-updatable-sibling > select span.has-img-sibling > select {
 button > img,
 button > svg,
 .has-img-icon > span.icon {
-  @apply inline-block align-text-bottom;
-  height: 1rem !important;
+    @apply inline-block align-text-bottom;
+    height: 1rem !important;
 }
 
 /* Legacy icon-to-text spacing — same `.has-img-icon` scoping as above.
@@ -34,24 +34,24 @@ button > svg,
    spacing themselves (e.g. `.x-dropdown-trigger`'s `gap-2`), and would get
    double-spaced if this margin applied to them too. */
 .has-img-icon:not(.is-icon) {
-  & > img,
-  & > svg,
-  & > span.icon {
-    @apply me-2 mb-[0.125rem];
-  }
+    & > img,
+    & > svg,
+    & > span.icon {
+        @apply me-2 mb-[0.125rem];
+    }
 }
 
 /* sort button inside headers */
 button.navibutton {
-  @apply border-0 bg-transparent;
-  color: theme("colors.table-header-txt");
+    @apply border-0 bg-transparent;
+    color: theme('colors.table-header-txt');
 
-  :not(img, svg, span.icon) {
-    @apply cursor-pointer border-b border-solid;
-    border-color: theme("colors.table-header-txt");
-  }
+    :not(img, svg, span.icon) {
+        @apply cursor-pointer border-b border-solid;
+        border-color: theme('colors.table-header-txt');
+    }
 }
 
 button.is-icon {
-   @apply p-0 cursor-pointer border-0
+    @apply p-0 cursor-pointer border-0;
 }

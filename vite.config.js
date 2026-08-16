@@ -10,7 +10,7 @@ export default defineConfig({
         },
     },
     esbuild: {
-        charset: 'ascii'
+        charset: 'ascii',
     },
     plugins: [
         laravel({

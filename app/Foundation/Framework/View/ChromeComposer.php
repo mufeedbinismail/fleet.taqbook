@@ -26,7 +26,7 @@ class ChromeComposer
         // Read from the legacy session rather than the guard, and deliberately: what this gates is
         // hotkey help, which only a FrontAccounting-booted request produces. A logged-in user is
         // not the question.
-        $shouldShowFooter = ! $noMenu && ! $isIndex && null !== session('wa_current_user');
+        $shouldShowFooter = ! $noMenu && ! $isIndex && session('wa_current_user') !== null;
 
         $view->with([
             'no_menu' => $noMenu,

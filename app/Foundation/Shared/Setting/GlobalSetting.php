@@ -179,6 +179,7 @@ class GlobalSetting extends Store
     public function itemPriceRoundToMinorUnit(): int
     {
         $value = (int) $this->get('round_to', 1);
+
         return ($value <= 0) ? 1 : $value;
     }
 

@@ -41,22 +41,22 @@
         border: 0.3em solid transparent;
     }
 
-    .x-dropdown-caret[data-side="bottom"] {
+    .x-dropdown-caret[data-side='bottom'] {
         border-bottom-width: 0;
         border-top-color: currentColor;
     }
 
-    .x-dropdown-caret[data-side="top"] {
+    .x-dropdown-caret[data-side='top'] {
         border-top-width: 0;
         border-bottom-color: currentColor;
     }
 
-    .x-dropdown-caret[data-side="right"] {
+    .x-dropdown-caret[data-side='right'] {
         border-right-width: 0;
         border-left-color: currentColor;
     }
 
-    .x-dropdown-caret[data-side="left"] {
+    .x-dropdown-caret[data-side='left'] {
         border-left-width: 0;
         border-right-color: currentColor;
     }

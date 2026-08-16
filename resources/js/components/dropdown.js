@@ -27,10 +27,10 @@
 // reads that.
 export default function (Alpine) {
     Alpine.directive('dropdown', (el, directive) => {
-        if      (directive.value === 'trigger') handleTrigger(el, Alpine)
-        else if (directive.value === 'panel')   handlePanel(el, Alpine, directive.modifiers)
-        else                                      handleRoot(el, Alpine)
-    })
+        if (directive.value === 'trigger') handleTrigger(el, Alpine);
+        else if (directive.value === 'panel') handlePanel(el, Alpine, directive.modifiers);
+        else handleRoot(el, Alpine);
+    });
 }
 
 function handleRoot(el, Alpine) {
@@ -39,9 +39,9 @@ function handleRoot(el, Alpine) {
     Alpine.bind(el, {
         'x-popover': true,
         'x-data'() {
-            return { side: 'bottom' }
+            return { side: 'bottom' };
         },
-    })
+    });
 }
 
 function handleTrigger(el, Alpine) {
@@ -52,11 +52,13 @@ function handleTrigger(el, Alpine) {
 
     Alpine.bind(el, {
         'x-popover:button': true,
-    })
+    });
 
     Alpine.bind(caretEl, {
-        ':data-side'() { return this.side },
-    })
+        ':data-side'() {
+            return this.side;
+        },
+    });
 }
 
 function handlePanel(el, Alpine, modifiers) {
@@ -71,10 +73,12 @@ function handlePanel(el, Alpine, modifiers) {
                 reference: this.$refs.button,
                 open: this.$popover.isOpen,
                 placement,
-                onPlacement: (side) => { this.side = side },
-            }
+                onPlacement: (side) => {
+                    this.side = side;
+                },
+            };
         },
-    })
+    });
 }
 
 function buildCaret() {

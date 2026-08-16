@@ -1,7 +1,7 @@
 <?php
 
-use App\Trade\Sale\Enum\PaymentMethod;
 use App\Foundation\Shared\Enum\SystemType;
+use App\Trade\Sale\Enum\PaymentMethod;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;

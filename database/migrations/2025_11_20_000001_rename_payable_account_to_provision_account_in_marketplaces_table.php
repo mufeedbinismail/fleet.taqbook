@@ -21,4 +21,3 @@ return new class extends Migration
         DB::statement('ALTER TABLE `marketplaces` CHANGE `provision_account` `payable_account` VARCHAR(60) NOT NULL');
     }
 };
-

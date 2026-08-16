@@ -104,7 +104,7 @@ class UserAuthenticator
 
     protected function throttleKey(string $login, string $ip): string
     {
-        return Str::transliterate(Str::lower($login) . '|' . $ip);
+        return Str::transliterate(Str::lower($login).'|'.$ip);
     }
 
     protected function maxAttempts(): int

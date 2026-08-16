@@ -2,21 +2,21 @@
 
 namespace App\Trade\Marketplace\Service;
 
-use App\Trade\Marketplace\Cart\CustomerSettlementCart;
-use App\Trade\Shared\Collection\DraftAllocationLineCollection;
-use App\Trade\Marketplace\Query\Marketplace\MarketplaceQuery;
-use App\Trade\Sale\Repository\CustomerRepository;
-use App\Trade\Sale\Repository\CustomerTransRepository;
 use App\Foundation\Framework\DTO\ValidationResult;
 use App\Foundation\Shared\ValueObject\TypedId;
+use App\Trade\Marketplace\Cart\CustomerSettlementCart;
+use App\Trade\Marketplace\Query\Marketplace\MarketplaceQuery;
 use App\Trade\Marketplace\Repository\CustAllocRepository;
+use App\Trade\Sale\Repository\CustomerRepository;
+use App\Trade\Sale\Repository\CustomerTransRepository;
+use App\Trade\Shared\Collection\DraftAllocationLineCollection;
 
 class CustomerSettlementCartService
 {
     public function __construct(
-        private MarketplaceQuery        $marketplaceQuery,
-        private CustAllocRepository     $custAllocRepository,
-        private CustomerRepository      $customerRepository,
+        private MarketplaceQuery $marketplaceQuery,
+        private CustAllocRepository $custAllocRepository,
+        private CustomerRepository $customerRepository,
         private CustomerTransRepository $customerTransRepository
     ) {}
 
@@ -24,7 +24,7 @@ class CustomerSettlementCartService
     {
         $old = $this->customerTransRepository->find($id);
 
-        if (!$old) {
+        if (! $old) {
             throw new \RuntimeException("Marketplace settlement {$id->toString()} not found.");
         }
 
@@ -46,7 +46,7 @@ class CustomerSettlementCartService
     {
         $fresh = $this->customerTransRepository->find($cart->transId, lock: true);
 
-        if (!$fresh) {
+        if (! $fresh) {
             return ValidationResult::error(null, __('This settlement no longer exists. You cannot modify this settlement anymore.'));
         }
 
@@ -58,7 +58,7 @@ class CustomerSettlementCartService
             && $fresh->total->isEqualTo($old->total)
             && $fresh->allocated->isEqualTo($old->allocated);
 
-        if (!$unchanged) {
+        if (! $unchanged) {
             return ValidationResult::error(null, __(
                 'This settlement changed since the page was loaded. Reload the page and try again.'
             ));
@@ -90,7 +90,7 @@ class CustomerSettlementCartService
 
     private function setBranch(CustomerSettlementCart $cart, ?int $branchId): void
     {
-        $cart->branchId          = $branchId;
+        $cart->branchId = $branchId;
         $cart->receivableAccount = ($cart->customerId && $branchId)
             ? $this->customerRepository->getReceivableAccount($cart->customerId, $branchId)
             : null;
@@ -116,10 +116,10 @@ class CustomerSettlementCartService
         if ($cart->marketplaceId) {
             $marketplace = $this->marketplaceQuery->builder($cart->marketplaceId)->first();
 
-            $cart->supplierId     = $marketplace?->supplier_id ? (int) $marketplace->supplier_id : null;
+            $cart->supplierId = $marketplace?->supplier_id ? (int) $marketplace->supplier_id : null;
             $cart->payableAccount = $marketplace?->payable_account;
         } else {
-            $cart->supplierId     = null;
+            $cart->supplierId = null;
             $cart->payableAccount = null;
         }
     }
@@ -175,14 +175,14 @@ class CustomerSettlementCartService
         foreach ($cart->selectedLines() as $line) {
             $current = $fresh[$line->transId->toString()] ?? null;
 
-            if (!$current) {
+            if (! $current) {
                 return ValidationResult::error(null, __(
                     ':doc #:n is no longer open for allocation. Reload the page and try again.',
                     ['doc' => $doc, 'n' => $line->transId->id]
                 ));
             }
 
-            if (!$current->total->isEqualTo($line->total) || !$current->allocated->isEqualTo($line->allocated)) {
+            if (! $current->total->isEqualTo($line->total) || ! $current->allocated->isEqualTo($line->allocated)) {
                 return ValidationResult::error(null, __(
                     ':doc #:n changed since the page was loaded. Reload the page and try again.',
                     ['doc' => $doc, 'n' => $line->transId->id]

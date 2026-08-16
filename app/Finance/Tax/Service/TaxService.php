@@ -7,10 +7,10 @@ use App\Finance\Tax\Collection\DraftTaxGroupLineCollection;
 use App\Finance\Tax\Collection\TaxableItemCollection;
 use App\Finance\Tax\Collection\TaxGroupLineCollection;
 use App\Finance\Tax\Entity\ItemTaxSetting;
-use App\Finance\Tax\Entity\TaxGroupLine;
-use App\Finance\Tax\Entity\TaxSetting;
 use App\Finance\Tax\Entity\TaxableItem;
 use App\Finance\Tax\Entity\TaxableItemSource;
+use App\Finance\Tax\Entity\TaxGroupLine;
+use App\Finance\Tax\Entity\TaxSetting;
 use App\Finance\Tax\Enum\TaxAlgorithm;
 use App\Finance\Tax\ValueObject\TaxBreakdown;
 use Brick\Math\BigDecimal;
@@ -21,8 +21,7 @@ class TaxService
     public function getTaxBreakdownForItem(
         TaxableItem $taxableItem,
         TaxSetting $taxSetting
-    ): TaxBreakdown
-    {
+    ): TaxBreakdown {
         $applicable = $this->filterApplicableTaxLines(
             $taxableItem->itemTaxSetting,
             $taxSetting->taxGroupLines
@@ -38,16 +37,14 @@ class TaxService
     public function getTaxBreakdownForSource(
         TaxableItemSource $source,
         TaxSetting $taxSetting
-    ): TaxBreakdown
-    {
+    ): TaxBreakdown {
         return $this->getTaxBreakdownForItem($source->toTaxableItem(), $taxSetting);
     }
 
     public function getTaxBreakdownForShipping(
         Money $shippingCharge,
         TaxSetting $taxSetting
-    ): TaxBreakdown
-    {
+    ): TaxBreakdown {
         return $this->getTaxBreakdown(
             $shippingCharge,
             $taxSetting->taxGroupLines->shippingLines(),
@@ -59,8 +56,7 @@ class TaxService
         Money $price,
         TaxGroupLineCollection $applicable,
         TaxSetting $taxSetting
-    ): TaxBreakdown
-    {
+    ): TaxBreakdown {
         if ($price->isZero()) {
             return new TaxBreakdown(MoneyFactory::zero(), MoneyFactory::zero());
         }
@@ -80,7 +76,7 @@ class TaxService
             );
             $tax = $tax->plus($breakdown->tax);
         }
-        
+
         if ($taxSetting->taxIncluded) {
             return new TaxBreakdown($tax, $price->minus($tax));
         } else {
@@ -110,6 +106,7 @@ class TaxService
 
             if ($isFullyExempt || $applicable->count() === 0) {
                 $exempt->net = $exempt->net->plus($taxableItem->price);
+
                 continue;
             }
 
@@ -121,7 +118,7 @@ class TaxService
             );
         }
 
-        if (!$shippingCharge->isZero()) {
+        if (! $shippingCharge->isZero()) {
             $this->distributeTax(
                 $shippingCharge,
                 $taxSetting->taxGroupLines->shippingLines(),
@@ -147,13 +144,12 @@ class TaxService
     public function filterApplicableTaxLines(
         ItemTaxSetting $itemTaxSetting,
         TaxGroupLineCollection $taxGroupLines
-    ): TaxGroupLineCollection
-    {
+    ): TaxGroupLineCollection {
         if ($itemTaxSetting->fullyExempt) {
             return new TaxGroupLineCollection([]);
         }
-        
-        return $taxGroupLines->filter(fn (TaxGroupLine $line) => !in_array(
+
+        return $taxGroupLines->filter(fn (TaxGroupLine $line) => ! in_array(
             $line->taxTypeId, $itemTaxSetting->exemptTaxTypeIds
         ));
     }
@@ -163,8 +159,7 @@ class TaxService
         TaxGroupLineCollection $applicable,
         bool $taxIncluded,
         DraftTaxGroupLineCollection $draft
-    ): void
-    {
+    ): void {
         if ($applicable->count() === 0) {
             return;
         }
@@ -186,6 +181,7 @@ class TaxService
     ): TaxBreakdown {
         $tax = $unitTax->multipliedBy($qty, MoneyFactory::defaultRoundingMode());
         $net = $unitPrice->multipliedBy($qty, MoneyFactory::defaultRoundingMode());
+
         return new TaxBreakdown($tax, $taxIncluded ? $net->minus($tax) : $net);
     }
 
@@ -194,8 +190,7 @@ class TaxService
         BigDecimal $lineTaxRate,
         BigDecimal $totalTaxRate,
         bool $taxIncluded
-    ): TaxBreakdown
-    {
+    ): TaxBreakdown {
         if ($price->isZero()) {
             return new TaxBreakdown(MoneyFactory::zero(), MoneyFactory::zero());
         }

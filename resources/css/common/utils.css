@@ -3,10 +3,7 @@
     element back is not arguing with a reset to get it.
 */
 @layer base {
-
-
     [hidden] {
         display: none !important;
     }
-
 }

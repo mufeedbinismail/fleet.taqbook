@@ -35,7 +35,7 @@ return [
     | Application Released At
     |--------------------------------------------------------------------------
     |
-    | This value is the date and time when the new version was released. 
+    | This value is the date and time when the new version was released.
     | This value is used for tracking the application's release history.
     | and potentially for tracking outdated versions.
     */

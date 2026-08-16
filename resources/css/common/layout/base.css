@@ -4,7 +4,6 @@
     silently to the rule it was meant to override.
 */
 @layer components {
-
     .main-container {
         position: relative;
         display: flex;
@@ -77,5 +76,4 @@
             margin-left: 0;
         }
     }
-
 }

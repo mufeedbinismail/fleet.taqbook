@@ -9,12 +9,12 @@ return new class extends Migration
     public function up(): void
     {
         DB::table('reflines')->insert([
-            'trans_type'  => SystemType::MarketplaceCustomerRefund->value,
-            'prefix'      => '',
-            'pattern'     => '{001}/{YYYY}',
+            'trans_type' => SystemType::MarketplaceCustomerRefund->value,
+            'prefix' => '',
+            'pattern' => '{001}/{YYYY}',
             'description' => '',
-            'default'     => 1,
-            'inactive'    => 0,
+            'default' => 1,
+            'inactive' => 0,
         ]);
     }
 

@@ -13,17 +13,15 @@
 // fa/components/drawer.css.
 export default function (Alpine) {
     Alpine.directive('drawer', (el, directive) => {
-        if      (directive.value === 'trigger')  handleTrigger(el, Alpine)
-        else if (directive.value === 'panel')    handlePanel(el, Alpine, directive.modifiers)
-        else if (directive.value === 'backdrop') handleBackdrop(el, Alpine)
-        else                                      handleRoot(el, Alpine)
-    })
+        if (directive.value === 'trigger') handleTrigger(el, Alpine);
+        else if (directive.value === 'panel') handlePanel(el, Alpine, directive.modifiers);
+        else if (directive.value === 'backdrop') handleBackdrop(el, Alpine);
+        else handleRoot(el, Alpine);
+    });
 }
 
 function breakpointMd() {
-    return getComputedStyle(document.documentElement)
-        .getPropertyValue('--breakpoint-md')
-        .trim();
+    return getComputedStyle(document.documentElement).getPropertyValue('--breakpoint-md').trim();
 }
 
 function handleRoot(el, Alpine) {
@@ -51,21 +49,24 @@ function handleRoot(el, Alpine) {
                 close() {
                     this.open = false;
                 },
-            }
+            };
         },
         '@keydown.escape.window'() {
             if (this.isMobile) this.close();
         },
-    })
+    });
 }
 
 function handleTrigger(el, Alpine) {
     Alpine.bind(el, {
         'x-init'() {
-            if (el.tagName.toLowerCase() === 'button' && !el.hasAttribute('type')) el.type = 'button';
+            if (el.tagName.toLowerCase() === 'button' && !el.hasAttribute('type'))
+                el.type = 'button';
         },
-        '@click'() { this.$data.toggle() },
-    })
+        '@click'() {
+            this.$data.toggle();
+        },
+    });
 }
 
 function handlePanel(el, Alpine, modifiers) {
@@ -74,17 +75,25 @@ function handlePanel(el, Alpine, modifiers) {
     el.classList.add('x-drawer', `x-drawer--${side}`);
 
     Alpine.bind(el, {
-        ':class'() { return { 'x-drawer-closed': !this.$data.open } },
-        'x-trap.inert.noscroll'() { return this.$data.isMobile && this.$data.open },
-    })
+        ':class'() {
+            return { 'x-drawer-closed': !this.$data.open };
+        },
+        'x-trap.inert.noscroll'() {
+            return this.$data.isMobile && this.$data.open;
+        },
+    });
 }
 
 function handleBackdrop(el, Alpine) {
     el.classList.add('x-drawer-backdrop');
 
     Alpine.bind(el, {
-        'x-show'() { return this.$data.open },
-        '@click'() { this.$data.close() },
+        'x-show'() {
+            return this.$data.open;
+        },
+        '@click'() {
+            this.$data.close();
+        },
         'aria-hidden': 'true',
-    })
+    });
 }

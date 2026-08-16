@@ -29,7 +29,7 @@ export default function (Alpine) {
 }
 
 function dialog() {
-    return dialogEl ??= build();
+    return (dialogEl ??= build());
 }
 
 function build() {
@@ -54,7 +54,14 @@ function build() {
     return el;
 }
 
-function fire({ title = '', text = '', icon = 'warning', danger = false, confirmText = 'OK', cancelText = 'Cancel' } = {}) {
+function fire({
+    title = '',
+    text = '',
+    icon = 'warning',
+    danger = false,
+    confirmText = 'OK',
+    cancelText = 'Cancel',
+} = {}) {
     const el = dialog();
 
     // A call arriving while the previous one is still open supersedes it rather than queuing —
@@ -64,7 +71,8 @@ function fire({ title = '', text = '', icon = 'warning', danger = false, confirm
 
     el.querySelector('[data-title]').textContent = title;
     el.querySelector('[data-text]').textContent = text;
-    el.querySelector('.x-dialog-icon').className = `x-dialog-icon icon ${ICONS[icon] ?? ICONS.warning}`;
+    el.querySelector('.x-dialog-icon').className =
+        `x-dialog-icon icon ${ICONS[icon] ?? ICONS.warning}`;
     el.classList.toggle('x-dialog--danger', danger);
 
     const confirmBtn = el.querySelector('[data-confirm]');
@@ -85,10 +93,20 @@ function fire({ title = '', text = '', icon = 'warning', danger = false, confirm
 
         // close() fires 'close' synchronously, so settling first keeps that listener from
         // resolving this same promise a second time.
-        function onConfirm() { settle(true); el.close(); }
-        function onCancel() { settle(false); el.close(); }
-        function onClose() { settle(false); }
-        function onBackdrop(event) { if (event.target === el) onCancel(); }
+        function onConfirm() {
+            settle(true);
+            el.close();
+        }
+        function onCancel() {
+            settle(false);
+            el.close();
+        }
+        function onClose() {
+            settle(false);
+        }
+        function onBackdrop(event) {
+            if (event.target === el) onCancel();
+        }
 
         confirmBtn.addEventListener('click', onConfirm);
         cancelBtn.addEventListener('click', onCancel);

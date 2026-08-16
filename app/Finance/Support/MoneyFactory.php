@@ -6,8 +6,8 @@ use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context;
 use Brick\Money\Context\DefaultContext;
-use Brick\Money\Money as BrickMoney;
 use Brick\Money\Currency;
+use Brick\Money\Money as BrickMoney;
 use UnexpectedValueException;
 
 final class MoneyFactory
@@ -19,9 +19,10 @@ final class MoneyFactory
      */
     public static function defaultCurrency(): string
     {
-        if (! ($currency = \settings()->homeCurrency()) ) {
+        if (! ($currency = \settings()->homeCurrency())) {
             throw new UnexpectedValueException('Home currency is not set. Configure curr_default in company settings.');
         }
+
         return $currency;
     }
 
@@ -33,34 +34,36 @@ final class MoneyFactory
     public static function of(
         BigNumber|int|float|string $amount,
         Currency|string|int|null $currency = null,
-        Context|null $context = null,
-        RoundingMode|null $roundingMode = null,
+        ?Context $context = null,
+        ?RoundingMode $roundingMode = null,
     ): BrickMoney {
         $currency ??= self::defaultCurrency();
-        $context ??= new DefaultContext();
+        $context ??= new DefaultContext;
         $roundingMode ??= self::defaultRoundingMode();
+
         return BrickMoney::of($amount, $currency, $context, $roundingMode);
     }
 
     public static function ofMinor(
         BigNumber|int|float|string $minorAmount,
         Currency|string|int|null $currency = null,
-        Context|null $context = null,
-        RoundingMode|null $roundingMode = null,
+        ?Context $context = null,
+        ?RoundingMode $roundingMode = null,
     ): BrickMoney {
         $currency ??= self::defaultCurrency();
-        $context ??= new DefaultContext();
+        $context ??= new DefaultContext;
         $roundingMode ??= self::defaultRoundingMode();
+
         return BrickMoney::ofMinor($minorAmount, $currency, $context, $roundingMode);
     }
 
     public static function zero(
         Currency|string|int|null $currency = null,
-        Context|null $context = null
-    ): BrickMoney
-    {
+        ?Context $context = null
+    ): BrickMoney {
         $currency ??= self::defaultCurrency();
-        $context ??= new DefaultContext();
+        $context ??= new DefaultContext;
+
         return BrickMoney::zero($currency, $context);
     }
 
@@ -68,9 +71,10 @@ final class MoneyFactory
         BigNumber $amount,
         Currency $currency,
         Context $context,
-        RoundingMode|null $roundingMode = null,
+        ?RoundingMode $roundingMode = null,
     ): BrickMoney {
         $roundingMode ??= self::defaultRoundingMode();
+
         return BrickMoney::create($amount, $currency, $context, $roundingMode);
     }
 
@@ -89,6 +93,7 @@ final class MoneyFactory
                 $sum = $sum->plus($money);
             }
         }
+
         return $sum ?? self::zero();
     }
 }

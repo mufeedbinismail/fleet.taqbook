@@ -9,21 +9,27 @@ import { vi } from 'vitest';
 export function httpDouble(respond = () => ({})) {
     const requests = [];
 
-    const send = (method) => (url, ...rest) => {
-        const request = {
-            method,
-            url,
-            body: method === 'get' || method === 'delete' ? undefined : rest[0],
+    const send =
+        (method) =>
+        (url, ...rest) => {
+            const request = {
+                method,
+                url,
+                body: method === 'get' || method === 'delete' ? undefined : rest[0],
+            };
+
+            requests.push(request);
+
+            try {
+                return Promise.resolve({
+                    status: 200,
+                    headers: {},
+                    data: respond(request, requests.length),
+                });
+            } catch (error) {
+                return Promise.reject(error);
+            }
         };
-
-        requests.push(request);
-
-        try {
-            return Promise.resolve({ status: 200, headers: {}, data: respond(request, requests.length) });
-        } catch (error) {
-            return Promise.reject(error);
-        }
-    };
 
     return {
         requests,
@@ -52,15 +58,17 @@ export function deferredHttp() {
     const requests = [];
     const pending = [];
 
-    const send = (method) => (url, ...rest) => {
-        requests.push({
-            method,
-            url,
-            body: method === 'get' || method === 'delete' ? undefined : rest[0],
-        });
+    const send =
+        (method) =>
+        (url, ...rest) => {
+            requests.push({
+                method,
+                url,
+                body: method === 'get' || method === 'delete' ? undefined : rest[0],
+            });
 
-        return new Promise((resolve, reject) => pending.push({ resolve, reject }));
-    };
+            return new Promise((resolve, reject) => pending.push({ resolve, reject }));
+        };
 
     return {
         requests,

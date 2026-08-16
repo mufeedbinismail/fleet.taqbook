@@ -14,10 +14,11 @@ class CustTransDocLineCollection extends AbstractCollection
 
     public static function fromDbRows(iterable $rows, string $currency): self
     {
-        $collection = new self();
+        $collection = new self;
         foreach ($rows as $row) {
             $collection[] = CustTransDocLine::fromDbRow($row, $currency);
         }
+
         return $collection;
     }
 }

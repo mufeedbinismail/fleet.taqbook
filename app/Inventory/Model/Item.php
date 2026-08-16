@@ -7,9 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Item extends Model
 {
     protected $table = 'stock_master';
+
     protected $primaryKey = 'stock_id';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -43,4 +47,3 @@ class Item extends Model
         'fa_class_id',
     ];
 }
-

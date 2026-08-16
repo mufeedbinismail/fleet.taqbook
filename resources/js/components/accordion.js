@@ -35,30 +35,30 @@ let sequence = 0;
 
 export default function (Alpine) {
     Alpine.directive('accordion', (el, directive) => {
-        if      (directive.value === 'item')    handleItem(el, Alpine, directive.expression)
-        else if (directive.value === 'trigger') handleTrigger(el, Alpine)
-        else if (directive.value === 'panel')   handlePanel(el, Alpine)
-        else                                     handleRoot(el, Alpine)
-    })
+        if (directive.value === 'item') handleItem(el, Alpine, directive.expression);
+        else if (directive.value === 'trigger') handleTrigger(el, Alpine);
+        else if (directive.value === 'panel') handlePanel(el, Alpine);
+        else handleRoot(el, Alpine);
+    });
 }
 
 // Both start from the parent rather than the element, so nothing ever answers with itself: an item
 // looking for its root would otherwise find its own root attribute if it carried one.
 function itemOf(el) {
-    return el.parentElement?.closest(ITEM) ?? null
+    return el.parentElement?.closest(ITEM) ?? null;
 }
 
 function rootOf(el) {
-    return el.parentElement?.closest(ROOT) ?? null
+    return el.parentElement?.closest(ROOT) ?? null;
 }
 
 function keyOf(item) {
-    return item?.getAttribute('x-accordion:item') ?? null
+    return item?.getAttribute('x-accordion:item') ?? null;
 }
 
 // An item inside a nested root belongs to that root, and its state is that root's business.
 function ownItems(root) {
-    return Array.from(root.querySelectorAll(ITEM)).filter((item) => rootOf(item) === root)
+    return Array.from(root.querySelectorAll(ITEM)).filter((item) => rootOf(item) === root);
 }
 
 function handleRoot(el, Alpine) {
@@ -76,9 +76,9 @@ function handleRoot(el, Alpine) {
                 toggle(key) {
                     this.open = this.open === key ? null : key;
                 },
-            }
+            };
         },
-    })
+    });
 }
 
 function handleItem(el, Alpine, key) {
@@ -86,17 +86,19 @@ function handleItem(el, Alpine, key) {
 
     // The trigger and the panel are siblings that have to agree on one name, and the item is the
     // only thing they both know about — so the name is derived from it and neither has to be told.
-    if (! el.id) el.id = `accordion-item-${++sequence}`;
+    if (!el.id) el.id = `accordion-item-${++sequence}`;
 
     Alpine.bind(el, {
-        ':class'() { return { 'x-is-open': this.$data.isOpen(key) } },
-    })
+        ':class'() {
+            return { 'x-is-open': this.$data.isOpen(key) };
+        },
+    });
 }
 
 function handleTrigger(el, Alpine) {
     const item = itemOf(el);
 
-    if (! item) return;
+    if (!item) return;
 
     const key = keyOf(item);
 
@@ -104,19 +106,26 @@ function handleTrigger(el, Alpine) {
 
     Alpine.bind(el, {
         'x-init'() {
-            if (el.tagName.toLowerCase() === 'button' && !el.hasAttribute('type')) el.type = 'button';
+            if (el.tagName.toLowerCase() === 'button' && !el.hasAttribute('type'))
+                el.type = 'button';
         },
         'aria-controls': panelId(item),
-        ':aria-expanded'() { return this.$data.isOpen(key) ? 'true' : 'false' },
-        ':class'() { return { 'x-is-open': this.$data.isOpen(key) } },
-        '@click'() { this.$data.toggle(key) },
-    })
+        ':aria-expanded'() {
+            return this.$data.isOpen(key) ? 'true' : 'false';
+        },
+        ':class'() {
+            return { 'x-is-open': this.$data.isOpen(key) };
+        },
+        '@click'() {
+            this.$data.toggle(key);
+        },
+    });
 }
 
 function handlePanel(el, Alpine) {
     const item = itemOf(el);
 
-    if (! item) return;
+    if (!item) return;
 
     const key = keyOf(item);
 
@@ -124,8 +133,10 @@ function handlePanel(el, Alpine) {
     el.id = panelId(item);
 
     Alpine.bind(el, {
-        ':class'() { return { 'x-is-open': this.$data.isOpen(key) } },
-    })
+        ':class'() {
+            return { 'x-is-open': this.$data.isOpen(key) };
+        },
+    });
 }
 
 function panelId(item) {

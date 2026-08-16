@@ -12,6 +12,7 @@ class Role extends Model
     use HasFactory;
 
     protected $table = 'security_roles';
+
     public $timestamps = false;
 
     /** @var array<string, true>|null */

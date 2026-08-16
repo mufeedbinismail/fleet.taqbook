@@ -11,12 +11,19 @@ namespace App\Foundation\Navigation\Constant;
  */
 final class Area
 {
-    public const ASSET         = 'asset';
-    public const FINANCE       = 'finance';
-    public const INVENTORY     = 'inventory';
+    public const ASSET = 'asset';
+
+    public const FINANCE = 'finance';
+
+    public const INVENTORY = 'inventory';
+
     public const MANUFACTURING = 'inventory.manufacturing';
-    public const MARKETPLACE   = 'trade.marketplace';
-    public const PURCHASE      = 'trade.purchase';
-    public const SALE          = 'trade.sale';
-    public const SYSTEM        = 'foundation.system';
+
+    public const MARKETPLACE = 'trade.marketplace';
+
+    public const PURCHASE = 'trade.purchase';
+
+    public const SALE = 'trade.sale';
+
+    public const SYSTEM = 'foundation.system';
 }

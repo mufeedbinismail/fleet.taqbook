@@ -2,7 +2,7 @@
     @apply hidden absolute m-0 p-0 z-10 top-0 left-0 h-[250px] w-[270px];
 }
 
-#CC { 
+#CC {
     @apply hidden absolute bg-white m-0 p-0 z-10;
 
     table {
@@ -15,7 +15,8 @@
     }
 
     .header {
-        td, th {
+        td,
+        th {
             @apply py-2;
         }
 
@@ -24,19 +25,30 @@
         }
     }
 
-    table, tbody, tr, td, th {
+    table,
+    tbody,
+    tr,
+    td,
+    th {
         @apply rounded-lg;
     }
 
-    th, td {
+    th,
+    td {
         @apply text-center font-normal;
     }
 
-    .weekday, .weekend, .current, .weekno, .empty {
+    .weekday,
+    .weekend,
+    .current,
+    .weekno,
+    .empty {
         @apply px-2 py-1.5;
     }
 
-    .weekday, .weekend, .current {
+    .weekday,
+    .weekend,
+    .current {
         @apply -m-1 block cursor-pointer;
 
         &:hover {
@@ -66,19 +78,24 @@
         @apply text-right;
     }
 
-    .previous, .next, .title, th {
-        &, a {
+    .previous,
+    .next,
+    .title,
+    th {
+        &,
+        a {
             @apply font-bold;
         }
     }
 
-    .previous, .next {
+    .previous,
+    .next {
         & a {
-            @apply px-2
+            @apply px-2;
         }
     }
 
-    a[href$="hideCC();"] {
-        @apply pb-2
+    a[href$='hideCC();'] {
+        @apply pb-2;
     }
 }

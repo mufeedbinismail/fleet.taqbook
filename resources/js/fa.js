@@ -1,5 +1,5 @@
 'use strict';
 
-import initUI from "./fa/ui";
+import initUI from './fa/ui';
 
 initUI();

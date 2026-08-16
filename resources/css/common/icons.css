@@ -1,12 +1,13 @@
 /* Font is rebuilt from resources/icons/*.svg via `npm run icons` (fantasticon). */
 @font-face {
-  font-family: 'icomoon';
-  src:  url('fonts/icomoon.woff2?v8') format('woff2'),
-    url('fonts/icomoon.woff?v8') format('woff'),
-    url('fonts/icomoon.ttf?v8') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: block;
+    font-family: 'icomoon';
+    src:
+        url('fonts/icomoon.woff2?v8') format('woff2'),
+        url('fonts/icomoon.woff?v8') format('woff'),
+        url('fonts/icomoon.ttf?v8') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
 }
 
 /*
@@ -15,7 +16,6 @@
     below — no name is ever written out in a template, so nothing else could vouch for them.
 */
 @layer components {
-
     /* Canonical alignment for every icon — replaces per-use vertical-align nudges.
        All glyphs share a uniform advance width, so this centers them consistently. */
     .icon {
@@ -46,187 +46,186 @@
     }
 
     .icon-tools:before {
-        content: "\e933";
+        content: '\e933';
     }
     .icon-prefs:before {
-        content: "\e931";
+        content: '\e931';
     }
     .icon-data:before {
-        content: "\e930";
+        content: '\e930';
     }
     .icon-spacer:before {
-        content: "\e932";
+        content: '\e932';
     }
     .icon-reports:before {
-        content: "\e92d";
+        content: '\e92d';
     }
     .icon-feature:before {
-        content: "\e92e";
+        content: '\e92e';
     }
     .icon-setup-master:before {
-        content: "\e92f";
+        content: '\e92f';
     }
     .icon-accountant:before {
-        content: "\e900";
+        content: '\e900';
     }
     .icon-alloc:before {
-        content: "\e901";
+        content: '\e901';
     }
     .icon-banknote:before {
-        content: "\e902";
+        content: '\e902';
     }
     .icon-block-flipped:before {
-        content: "\e903";
+        content: '\e903';
     }
     .icon-block:before {
-        content: "\e904";
+        content: '\e904';
     }
     .icon-button-ok:before {
-        content: "\e905";
+        content: '\e905';
     }
     .icon-cal:before {
-        content: "\e906";
+        content: '\e906';
     }
     .icon-cancel:before {
-        content: "\e907";
+        content: '\e907';
     }
     .icon-cog:before {
-        content: "\e908";
+        content: '\e908';
     }
     .icon-credit:before {
-        content: "\e909";
+        content: '\e909';
     }
     .icon-delete:before {
-        content: "\e90a";
+        content: '\e90a';
     }
     .icon-deliver:before {
-        content: "\e90b";
+        content: '\e90b';
     }
     .icon-dimension:before {
-        content: "\e90c";
+        content: '\e90c';
     }
     .icon-download:before {
-        content: "\e90d";
+        content: '\e90d';
     }
     .icon-edit:before {
-        content: "\e90e";
+        content: '\e90e';
     }
     .icon-fixed-assets:before {
-        content: "\e90f";
+        content: '\e90f';
     }
     .icon-gl:before {
-        content: "\e910";
+        content: '\e910';
     }
     .icon-growth:before {
-        content: "\e911";
+        content: '\e911';
     }
     .icon-help-outline:before {
-        content: "\e912";
+        content: '\e912';
     }
     .icon-inventory:before {
-        content: "\e913";
+        content: '\e913';
     }
     .icon-invoice:before {
-        content: "\e914";
+        content: '\e914';
     }
     .icon-lock:before {
-        content: "\e915";
+        content: '\e915';
     }
     .icon-login:before {
-        content: "\e916";
+        content: '\e916';
     }
     .icon-logout:before {
-        content: "\e917";
+        content: '\e917';
     }
     .icon-log:before {
-        content: "\e918";
+        content: '\e918';
     }
     .icon-manufacturing:before {
-        content: "\e919";
+        content: '\e919';
     }
     .icon-minus-outline:before {
-        content: "\e91a";
+        content: '\e91a';
     }
     .icon-money-give:before {
-        content: "\e91b";
+        content: '\e91b';
     }
     .icon-money-receive:before {
-        content: "\e91c";
+        content: '\e91c';
     }
     .icon-pencil:before {
-        content: "\e91d";
+        content: '\e91d';
     }
     .icon-plus-circle:before {
-        content: "\e91e";
+        content: '\e91e';
     }
     .icon-print:before {
-        content: "\e91f";
+        content: '\e91f';
     }
     .icon-procurement:before {
-        content: "\e920";
+        content: '\e920';
     }
     .icon-receive:before {
-        content: "\e921";
+        content: '\e921';
     }
     .icon-search:before {
-        content: "\e922";
+        content: '\e922';
     }
     .icon-security:before {
-        content: "\e923";
+        content: '\e923';
     }
     .icon-settings:before {
-        content: "\e924";
+        content: '\e924';
     }
     .icon-sort-asc:before {
-        content: "\e925";
+        content: '\e925';
     }
     .icon-sort-desc:before {
-        content: "\e926";
+        content: '\e926';
     }
     .icon-sort-none:before {
-        content: "\e927";
+        content: '\e927';
     }
     .icon-statistics:before {
-        content: "\e928";
+        content: '\e928';
     }
     .icon-storefront:before {
-        content: "\e929";
+        content: '\e929';
     }
     .icon-trash:before {
-        content: "\e92a";
+        content: '\e92a';
     }
     .icon-view:before {
-        content: "\e92b";
+        content: '\e92b';
     }
     .icon-warning:before {
-        content: "\e92c";
+        content: '\e92c';
     }
     .icon-wrench:before {
-        content: "\f0ad";
+        content: '\f0ad';
     }
     .icon-file-pdf:before {
-        content: "\f1c1";
+        content: '\f1c1';
     }
     .icon-spinner:before {
-        content: "\e983";
+        content: '\e983';
     }
     .icon-globe:before {
-        content: "\e9ca";
+        content: '\e9ca';
     }
     .icon-refresh:before {
-        content: "\ea2e";
+        content: '\ea2e';
     }
     .icon-bars:before {
-        content: "\f0c9";
+        content: '\f0c9';
     }
     .icon-circle-user:before {
-        content: "\f2bd";
+        content: '\f2bd';
     }
     .icon-clock:before {
-        content: "\e935";
+        content: '\e935';
     }
     .icon-circle-check:before {
-        content: "\e936";
+        content: '\e936';
     }
-
 }

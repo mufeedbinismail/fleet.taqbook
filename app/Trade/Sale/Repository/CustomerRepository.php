@@ -9,9 +9,10 @@ class CustomerRepository
     public function getDefaultBranch(int $customerId): CustomerBranch
     {
         $branch = CustomerBranch::where('debtor_no', $customerId)->first();
-        if (!$branch) {
+        if (! $branch) {
             throw new \DomainException("No branch found for customer ID: $customerId");
         }
+
         return $branch;
     }
 
@@ -21,8 +22,8 @@ class CustomerRepository
             ->where('branch_code', $branchId)
             ->first();
 
-        if (!$branch) {
-            throw new \DomainException(sprintf("No branch found for customer ID: %d, branch ID: %d", $customerId, $branchId));
+        if (! $branch) {
+            throw new \DomainException(sprintf('No branch found for customer ID: %d, branch ID: %d', $customerId, $branchId));
         }
 
         return $branch;

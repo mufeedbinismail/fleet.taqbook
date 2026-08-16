@@ -4,7 +4,6 @@
     silently to the rule it was meant to override.
 */
 @layer components {
-
     /* The navigation tree in the sidebar: areas that open, sections that open inside them, entries that
        go. What opens and what shuts is the accordion's business; everything here is what those depths
        are worth to look at.
@@ -174,5 +173,4 @@
     .nav-row.is-current .nav-entry-icon {
         @apply opacity-100;
     }
-
 }

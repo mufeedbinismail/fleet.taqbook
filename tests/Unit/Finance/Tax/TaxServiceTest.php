@@ -6,9 +6,9 @@ use App\Finance\Support\MoneyFactory;
 use App\Finance\Tax\Collection\TaxableItemCollection;
 use App\Finance\Tax\Collection\TaxGroupLineCollection;
 use App\Finance\Tax\Entity\ItemTaxSetting;
+use App\Finance\Tax\Entity\TaxableItem;
 use App\Finance\Tax\Entity\TaxGroupLine;
 use App\Finance\Tax\Entity\TaxSetting;
-use App\Finance\Tax\Entity\TaxableItem;
 use App\Finance\Tax\Enum\TaxAlgorithm;
 use App\Finance\Tax\Service\TaxService;
 use Brick\Math\BigDecimal;
@@ -17,16 +17,19 @@ use Tests\TestCase;
 class TaxServiceTest extends TestCase
 {
     const VAT_5_PERCENT = '1';
+
     const CONVENIENCE_TAX_2_PERCENT = '2';
+
     const SHIPPING_TAX_3_PERCENT = '3';
+
     const EXEMPT_LINE = 'exempt';
-    
+
     private TaxService $service;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new TaxService();
+        $this->service = new TaxService;
     }
 
     private function taxGroupLineCollection(): TaxGroupLineCollection
@@ -94,7 +97,7 @@ class TaxServiceTest extends TestCase
         ]);
         $setting = $this->taxExclusiveCalculateThenSum();
         $draft = $this->service->calculateTaxes($items, $setting);
-        
+
         foreach ($draft as $key => $line) {
             self::assertTrue($line->tax->isZero());
             if ($key === self::EXEMPT_LINE) {
@@ -119,7 +122,7 @@ class TaxServiceTest extends TestCase
         self::assertTrue($draft[self::CONVENIENCE_TAX_2_PERCENT]->tax->isEqualTo(MoneyFactory::of(2)));
         self::assertTrue($draft[self::CONVENIENCE_TAX_2_PERCENT]->net->isEqualTo(MoneyFactory::of(100)));
 
-        self::assertTrue($draft[self::SHIPPING_TAX_3_PERCENT]->tax->isEqualTo(MoneyFactory::of("0.3")));
+        self::assertTrue($draft[self::SHIPPING_TAX_3_PERCENT]->tax->isEqualTo(MoneyFactory::of('0.3')));
         self::assertTrue($draft[self::SHIPPING_TAX_3_PERCENT]->net->isEqualTo(MoneyFactory::of(10)));
     }
 
@@ -129,7 +132,7 @@ class TaxServiceTest extends TestCase
             new TaxableItem($this->itemNotExempt(), MoneyFactory::of(107)),
         ]);
         $setting = $this->taxInclusiveCalculateThenSum();
-        $draft = $this->service->calculateTaxes($items, $setting, MoneyFactory::of("10.3"));
+        $draft = $this->service->calculateTaxes($items, $setting, MoneyFactory::of('10.3'));
 
         self::assertTrue($draft[self::VAT_5_PERCENT]->tax->isEqualTo(MoneyFactory::of(5)));
         self::assertTrue($draft[self::VAT_5_PERCENT]->net->isEqualTo(MoneyFactory::of(100)));
@@ -137,7 +140,7 @@ class TaxServiceTest extends TestCase
         self::assertTrue($draft[self::CONVENIENCE_TAX_2_PERCENT]->tax->isEqualTo(MoneyFactory::of(2)));
         self::assertTrue($draft[self::CONVENIENCE_TAX_2_PERCENT]->net->isEqualTo(MoneyFactory::of(100)));
 
-        self::assertTrue($draft[self::SHIPPING_TAX_3_PERCENT]->tax->isEqualTo(MoneyFactory::of("0.3")));
+        self::assertTrue($draft[self::SHIPPING_TAX_3_PERCENT]->tax->isEqualTo(MoneyFactory::of('0.3')));
         self::assertTrue($draft[self::SHIPPING_TAX_3_PERCENT]->net->isEqualTo(MoneyFactory::of(10)));
     }
 

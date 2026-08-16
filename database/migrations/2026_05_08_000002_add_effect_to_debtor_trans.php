@@ -1,7 +1,6 @@
 <?php
 
 use App\Foundation\Shared\Enum\SystemType;
-use App\Foundation\Shared\Enum\TransactionEffect;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -21,16 +20,16 @@ return new class extends Migration
             $table->double('total')->storedAs('ov_amount + ov_gst + ov_freight + ov_freight_tax + ov_discount')->after('ov_freight_tax');
         });
 
-        DB::statement("
+        DB::statement('
             UPDATE debtor_trans SET effect = CASE type
-                WHEN " . SystemType::CustomerDelivery->value . " THEN 0
-                WHEN " . SystemType::CustomerCredit->value   . " THEN -1
-                WHEN " . SystemType::CustomerPayment->value  . " THEN -1
-                WHEN " . SystemType::BankDeposit->value      . " THEN -1
-                WHEN " . SystemType::Journal->value          . " THEN IF(ov_amount > 0, 1, -1)
+                WHEN '.SystemType::CustomerDelivery->value.' THEN 0
+                WHEN '.SystemType::CustomerCredit->value.' THEN -1
+                WHEN '.SystemType::CustomerPayment->value.' THEN -1
+                WHEN '.SystemType::BankDeposit->value.' THEN -1
+                WHEN '.SystemType::Journal->value.' THEN IF(ov_amount > 0, 1, -1)
                 ELSE 1
             END
-        ");
+        ');
 
         DB::statement('ALTER TABLE debtor_trans MODIFY effect TINYINT NOT NULL');
     }

@@ -20,43 +20,54 @@ input.small {
 }
 
 .oddrow {
-    &, & > td {
+    &,
+    & > td {
         @apply bg-gray-100;
     }
 }
 
 .evenrow {
-    &, & > td {
+    &,
+    & > td {
         @apply bg-main-bg;
     }
 }
 
 .settledbg {
-    &, & > td {
+    &,
+    & > td {
         @apply bg-teal-100;
     }
 }
 
 .settledfg {
-    &, & > td {
+    &,
+    & > td {
         @apply text-primary-accent;
     }
 }
 
 .inquirybg {
-    &, & > td {
+    &,
+    & > td {
         @apply bg-amber-50;
     }
 }
 
-.currencybg, .stockmankobg, .overduebg {
-    &, & > td {
+.currencybg,
+.stockmankobg,
+.overduebg {
+    &,
+    & > td {
         @apply bg-red-100;
     }
 }
 
-.stockmankofg, .overduefg, .currentfg {
-    &, & > td {
+.stockmankofg,
+.overduefg,
+.currentfg {
+    &,
+    & > td {
         @apply text-error-accent;
     }
 }
@@ -81,7 +92,6 @@ input.small {
 .label {
     @apply bg-label-bg;
 }
-
 
 /* Amount & Text Classes */
 .amount {

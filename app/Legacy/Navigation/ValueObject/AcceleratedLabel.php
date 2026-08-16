@@ -2,8 +2,8 @@
 
 namespace App\Legacy\Navigation\ValueObject;
 
-use App\Legacy\Navigation\Service\Accelerator;
 use App\Foundation\Navigation\Contract\Label;
+use App\Legacy\Navigation\Service\Accelerator;
 
 /**
  * A label written in FrontAccounting's inline accelerator notation — "Sales &Order Entry".

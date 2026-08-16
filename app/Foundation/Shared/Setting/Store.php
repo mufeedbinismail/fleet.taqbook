@@ -2,10 +2,10 @@
 
 namespace App\Foundation\Shared\Setting;
 
-use Illuminate\Config\Repository as BaseRepository;
 use App\Foundation\Framework\Support\Arr;
 use ArrayIterator;
 use Countable;
+use Illuminate\Config\Repository as BaseRepository;
 use IteratorAggregate;
 use Traversable;
 

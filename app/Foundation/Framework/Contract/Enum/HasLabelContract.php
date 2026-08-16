@@ -9,7 +9,7 @@ namespace App\Foundation\Framework\Contract\Enum;
  * ```php
  * // old array
  * $dateseps = ['/', '.', '-', ' '];
- * 
+ *
  * // new enum
  * enum DateSeparator: int implements HasLabel
  * {
@@ -17,12 +17,12 @@ namespace App\Foundation\Framework\Contract\Enum;
  *     case DOT = 1;
  *     case DASH = 2;
  *     case SPACE = 3;
- * 
+ *
  *     public function label(): string
  *     {
  *         return self::labels()[$this->value];
  *     }
- * 
+ *
  *     public static function labels(): array
  *     {
  *         return [
@@ -39,8 +39,6 @@ interface HasLabelContract
 {
     /**
      * Label for the enum value.
-     *
-     * @return string
      */
     public function label(): string;
 

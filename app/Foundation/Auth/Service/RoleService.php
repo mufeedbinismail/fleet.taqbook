@@ -77,7 +77,7 @@ class RoleService
      * @param  int|null  $actorRoleId  the role held by whoever is saving
      *
      * @throws RoleException if the save was never checked and would lock its own author out, or
-     *                        would collide with a name another role already carries
+     *                       would collide with a name another role already carries
      */
     public function save(SaveRoleIntent $intent, ?int $actorRoleId): Role
     {

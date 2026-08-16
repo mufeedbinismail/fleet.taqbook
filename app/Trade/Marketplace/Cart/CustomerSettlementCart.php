@@ -3,29 +3,39 @@
 namespace App\Trade\Marketplace\Cart;
 
 use App\Finance\Support\MoneyFactory;
-use App\Trade\Sale\Entity\CustTransDocument;
-use App\Trade\Shared\Collection\DraftAllocationLineCollection;
-use App\Trade\Shared\Entity\DraftAllocationLine;
 use App\Foundation\Shared\Enum\SystemType;
 use App\Foundation\Shared\ValueObject\DomainDateTime;
 use App\Foundation\Shared\ValueObject\TypedId;
+use App\Trade\Sale\Entity\CustTransDocument;
+use App\Trade\Shared\Collection\DraftAllocationLineCollection;
+use App\Trade\Shared\Entity\DraftAllocationLine;
 use Brick\Money\Money;
 
 class CustomerSettlementCart
 {
     public readonly string $cartId;
 
-    public TypedId         $transId;
-    public ?int            $customerId        = null;
-    public ?int            $branchId          = null;
-    public ?string         $receivableAccount = null;
-    public ?int            $marketplaceId     = null;
-    public ?int            $supplierId        = null;
-    public ?string         $payableAccount    = null;
-    public DomainDateTime  $transDate;
-    public ?string         $reference         = null;
-    public ?Money          $amount            = null;
-    public string          $memo              = '';
+    public TypedId $transId;
+
+    public ?int $customerId = null;
+
+    public ?int $branchId = null;
+
+    public ?string $receivableAccount = null;
+
+    public ?int $marketplaceId = null;
+
+    public ?int $supplierId = null;
+
+    public ?string $payableAccount = null;
+
+    public DomainDateTime $transDate;
+
+    public ?string $reference = null;
+
+    public ?Money $amount = null;
+
+    public string $memo = '';
 
     public DraftAllocationLineCollection $lines;
 
@@ -35,71 +45,69 @@ class CustomerSettlementCart
         TypedId $transId,
         DomainDateTime $transDate,
         DraftAllocationLineCollection $lines
-    )
-    {
-        $this->cartId    = uniqid('');
-        $this->transId   = $transId;
+    ) {
+        $this->cartId = uniqid('');
+        $this->transId = $transId;
         $this->transDate = $transDate;
-        $this->lines     = $lines;
+        $this->lines = $lines;
     }
 
     public static function draft(SystemType $transType): static
     {
-        return new static (TypedId::make($transType), DomainDateTime::now(), new DraftAllocationLineCollection());
+        return new static (TypedId::make($transType), DomainDateTime::now(), new DraftAllocationLineCollection);
     }
 
     public static function fromDocument(CustTransDocument $old): static
     {
-        $cart = new static($old->id, $old->transDate, new DraftAllocationLineCollection());
+        $cart = new static($old->id, $old->transDate, new DraftAllocationLineCollection);
 
-        $cart->customerId    = $old->customerId;
+        $cart->customerId = $old->customerId;
         $cart->marketplaceId = $old->marketplaceId;
-        $cart->reference     = $old->reference;
-        $cart->memo          = $old->memo;
-        $cart->amount        = $old->total;
-        $cart->old           = $old;
+        $cart->reference = $old->reference;
+        $cart->memo = $old->memo;
+        $cart->amount = $old->total;
+        $cart->old = $old;
 
         return $cart;
     }
 
     public static function forAutoOffset(
-        TypedId        $originDocId,
-        string         $originDocReference,
+        TypedId $originDocId,
+        string $originDocReference,
         DomainDateTime $transDate,
-        int            $customerId,
-        int            $branchId,
-        string         $receivableAccount,
-        int            $marketplaceId,
-        int            $supplierId,
-        string         $payableAccount,
-        Money          $amount,
-        TypedId        $offsetDocId,
-        string         $offsetDocReference
+        int $customerId,
+        int $branchId,
+        string $receivableAccount,
+        int $marketplaceId,
+        int $supplierId,
+        string $payableAccount,
+        Money $amount,
+        TypedId $offsetDocId,
+        string $offsetDocReference
 
-    ): static
-    {
+    ): static {
         $cart = new static(
             $offsetDocId,
             $transDate,
             DraftAllocationLineCollection::fromOne(new DraftAllocationLine(
-                transId:        $originDocId,
-                reference:      $originDocReference,
-                transDate:      $transDate,
-                total:          $amount,
-                allocated:      $amount->multipliedBy(0),
-                outstanding:    $amount,
+                transId: $originDocId,
+                reference: $originDocReference,
+                transDate: $transDate,
+                total: $amount,
+                allocated: $amount->multipliedBy(0),
+                outstanding: $amount,
                 thisAllocation: $amount,
             ))
         );
 
-        $cart->reference         = $offsetDocReference;
-        $cart->amount            = $amount;
-        $cart->customerId        = $customerId;
-        $cart->branchId          = $branchId;
+        $cart->reference = $offsetDocReference;
+        $cart->amount = $amount;
+        $cart->customerId = $customerId;
+        $cart->branchId = $branchId;
         $cart->receivableAccount = $receivableAccount;
-        $cart->marketplaceId     = $marketplaceId;
-        $cart->supplierId        = $supplierId;
-        $cart->payableAccount    = $payableAccount;
+        $cart->marketplaceId = $marketplaceId;
+        $cart->supplierId = $supplierId;
+        $cart->payableAccount = $payableAccount;
 
         return $cart;
     }
@@ -132,6 +140,6 @@ class CustomerSettlementCart
 
     public function clearLines(): void
     {
-        $this->lines = new DraftAllocationLineCollection();
+        $this->lines = new DraftAllocationLineCollection;
     }
 }

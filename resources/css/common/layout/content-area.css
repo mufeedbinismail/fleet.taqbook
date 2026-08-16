@@ -4,7 +4,6 @@
     silently to the rule it was meant to override.
 */
 @layer components {
-
     .main-content-area {
         @apply relative overflow-hidden;
 
@@ -13,5 +12,4 @@
             overscroll-behavior: contain;
         }
     }
-
 }

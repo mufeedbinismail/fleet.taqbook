@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Legacy\Navigation;
 
-use App\Legacy\Navigation\Enum\Query;
-use App\Legacy\Navigation\ValueObject\LegacyPageTarget;
 use App\Foundation\Navigation\Entity\Area;
 use App\Foundation\Navigation\Entity\Destination;
 use App\Foundation\Navigation\Entity\HiddenDestination;
@@ -12,6 +10,8 @@ use App\Foundation\Navigation\Service\LocationResolver;
 use App\Foundation\Navigation\Service\Resolver;
 use App\Foundation\Navigation\ValueObject\NavigationTree;
 use App\Foundation\Navigation\ValueObject\Sitemap;
+use App\Legacy\Navigation\Enum\Query;
+use App\Legacy\Navigation\ValueObject\LegacyPageTarget;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;

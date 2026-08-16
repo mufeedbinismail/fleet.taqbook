@@ -4,7 +4,6 @@
     silently to the rule it was meant to override.
 */
 @layer components {
-
     .main-footer {
         @apply text-xs p-1 flex items-center justify-between;
         background-color: theme('colors.footer-bg');
@@ -16,5 +15,4 @@
             display: none;
         }
     }
-
 }

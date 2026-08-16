@@ -2,7 +2,6 @@
 
 namespace App\Finance\Tax\Collection;
 
-use App\Finance\Tax\Collection\TaxGroupLineCollection;
 use App\Finance\Tax\Entity\DraftTaxGroupLine;
 use Illuminate\Contracts\Support\Arrayable;
 use Ramsey\Collection\AbstractCollection;
@@ -22,7 +21,7 @@ final class DraftTaxGroupLineCollection extends AbstractCollection implements Ar
     {
         $this['exempt'] = DraftTaxGroupLine::exempt();
         foreach ($data as $item) {
-            $this[$item->taxTypeId] = $item; 
+            $this[$item->taxTypeId] = $item;
         }
     }
 
@@ -35,10 +34,11 @@ final class DraftTaxGroupLineCollection extends AbstractCollection implements Ar
 
     public static function fromArray(array $data): self
     {
-        $collection = new self();
+        $collection = new self;
         foreach ($data as $key => $item) {
             $collection[$key] = DraftTaxGroupLine::fromArray($item);
         }
+
         return $collection;
     }
 
@@ -48,6 +48,7 @@ final class DraftTaxGroupLineCollection extends AbstractCollection implements Ar
         foreach ($this as $key => $item) {
             $result[$key] = $item->toArray();
         }
+
         return $result;
     }
 }

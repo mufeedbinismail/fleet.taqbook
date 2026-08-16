@@ -2,8 +2,8 @@
 
 namespace App\Legacy\Navigation\ValueObject;
 
-use App\Legacy\Navigation\Enum\Query;
 use App\Foundation\Navigation\Contract\Target;
+use App\Legacy\Navigation\Enum\Query;
 use Illuminate\Http\Request;
 
 /**

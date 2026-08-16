@@ -33,7 +33,7 @@ class CustomerTransRepository
 
         $header = $headerQuery->first();
 
-        if (!$header) {
+        if (! $header) {
             return null;
         }
 

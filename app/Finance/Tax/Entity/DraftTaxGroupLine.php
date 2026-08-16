@@ -67,7 +67,7 @@ final class DraftTaxGroupLine implements Arrayable
             'rate' => (string) $this->rate,
             'tax_shipping' => (int) $this->taxShipping,
             'Value' => MoneyFactory::value($this->tax),
-            'Net' => MoneyFactory::value($this->net)
+            'Net' => MoneyFactory::value($this->net),
         ];
     }
 }

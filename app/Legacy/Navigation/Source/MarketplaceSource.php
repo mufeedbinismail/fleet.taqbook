@@ -3,7 +3,6 @@
 namespace App\Legacy\Navigation\Source;
 
 use App\Foundation\Auth\Constant\Permission;
-use App\Legacy\Navigation\Enum\Query;
 use App\Foundation\Navigation\Builder\AreaBuilder;
 use App\Foundation\Navigation\Builder\Builder;
 use App\Foundation\Navigation\Builder\SectionBuilder;
@@ -12,6 +11,7 @@ use App\Foundation\Navigation\Constant\Section;
 use App\Foundation\Navigation\Enum\Category;
 use App\Foundation\Navigation\Enum\Column;
 use App\Foundation\Shared\Enum\SystemType;
+use App\Legacy\Navigation\Enum\Query;
 
 class MarketplaceSource extends LegacySource
 {

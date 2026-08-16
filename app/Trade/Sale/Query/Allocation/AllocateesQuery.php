@@ -13,14 +13,14 @@ class AllocateesQuery
         $query = DB::table('debtor_trans as trans')
             ->join('debtors_master as cust', 'cust.debtor_no', 'trans.debtor_no')
             ->select(
-                "trans.type as trans_type",
-                "trans.trans_no",
-                "trans.debtor_no",
-                "trans.marketplace_id",
-                "trans.reference",
-                "trans.tran_date",
-                "trans.total",
-                "cust.curr_code as currency"
+                'trans.type as trans_type',
+                'trans.trans_no',
+                'trans.debtor_no',
+                'trans.marketplace_id',
+                'trans.reference',
+                'trans.tran_date',
+                'trans.total',
+                'cust.curr_code as currency'
             )
             ->where('trans.effect', TransactionEffect::Increase->value)
             ->orderBy('trans.tran_date')

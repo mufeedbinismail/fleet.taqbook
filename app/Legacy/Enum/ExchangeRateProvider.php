@@ -2,13 +2,13 @@
 
 namespace App\Legacy\Enum;
 
-use App\Foundation\Framework\Contract\Enum\HasLabelContract;
 use App\Foundation\Framework\Concern\Enum\HasLabelConcern;
+use App\Foundation\Framework\Contract\Enum\HasLabelContract;
 
 enum ExchangeRateProvider: int implements HasLabelContract
 {
     use HasLabelConcern;
-    
+
     case ECB = 0;
     case EXCHANGE_RATES_ORG = 1;
     case GOOGLE = 2;

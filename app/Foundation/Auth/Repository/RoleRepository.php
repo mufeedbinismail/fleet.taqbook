@@ -67,7 +67,7 @@ class RoleRepository
     {
         return DB::transaction(function () use ($intent) {
             $record = $intent->roleId === null
-                ? new RoleRecord()
+                ? new RoleRecord
                 : RoleRecord::find($intent->roleId) ?? throw ResourceNotFoundException::for('Role', $intent->roleId);
 
             $record->role = $intent->name;

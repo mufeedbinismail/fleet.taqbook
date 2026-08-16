@@ -2,10 +2,7 @@ import { classNames } from './resources/icons/names.mjs';
 
 /** @type {import('tailwindcss').Config} */
 export default {
-    content: [
-        './public/themes/**/renderer.php',
-        `./resources/**/*.{js,css,php,blade.php}`,
-    ],
+    content: ['./public/themes/**/renderer.php', `./resources/**/*.{js,css,php,blade.php}`],
 
     // Rules written into a layer are kept only when something is seen using them, and an icon's
     // class is put together out of a name the server picks — so the templates are searched for
@@ -14,13 +11,35 @@ export default {
     safelist: classNames(new URL('./', import.meta.url)),
     theme: {
         fontFamily: {
-            sans: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'Liberation Sans', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'],
-            mono: ['SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
+            sans: [
+                'system-ui',
+                '-apple-system',
+                'Segoe UI',
+                'Roboto',
+                'Helvetica Neue',
+                'Arial',
+                'Noto Sans',
+                'Liberation Sans',
+                'sans-serif',
+                'Apple Color Emoji',
+                'Segoe UI Emoji',
+                'Segoe UI Symbol',
+                'Noto Color Emoji',
+            ],
+            mono: [
+                'SFMono-Regular',
+                'Menlo',
+                'Monaco',
+                'Consolas',
+                'Liberation Mono',
+                'Courier New',
+                'monospace',
+            ],
         },
         extend: {
             screens: {
-              '2xl': '100rem',
-              '3xl': '120rem'
+                '2xl': '100rem',
+                '3xl': '120rem',
             },
             colors: {
                 'main-bg': '#ffffff',
@@ -56,7 +75,7 @@ export default {
                 'warning-accent': '#ffb547',
                 'success-accent': '#4caf89',
                 'error-accent': '#e94f64',
-                'label-bg': '#f1f5f7'
+                'label-bg': '#f1f5f7',
             },
             width: {
                 sidebar: '280px',
@@ -67,5 +86,4 @@ export default {
             },
         },
     },
-}
-
+};
