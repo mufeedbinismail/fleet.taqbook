@@ -1,9 +1,6 @@
 <?php
 
 use App\Legacy\Enum\ChartSkin;
-use App\Legacy\Enum\DateFormat;
-use App\Legacy\Enum\DateSeparator;
-use App\Legacy\Enum\DateSystem;
 use App\Legacy\Enum\DecimalSeparator;
 use App\Legacy\Enum\ExchangeRateProvider;
 use App\Legacy\Enum\PageSize;
@@ -236,16 +233,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Date System
-    |--------------------------------------------------------------------------
-    |
-    | Possible values are defined in \App\Legacy\Enum\DateSystem.
-    |
-    */
-    'date_system' => DateSystem::Traditional->value,
-
-    /*
-    |--------------------------------------------------------------------------
     | Allow GL Reopen
     |--------------------------------------------------------------------------
     |
@@ -253,26 +240,6 @@ return [
     |
     */
     'allow_gl_reopen' => true,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Date Formats
-    |--------------------------------------------------------------------------
-    |
-    | Possible values are defined in \App\Legacy\Enum\DateFormat.
-    |
-    */
-    'dateformats' => get_labels_from_enum(DateFormat::class),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Date Separators
-    |--------------------------------------------------------------------------
-    |
-    | Possible values are defined in \App\Legacy\Enum\DateSeparator.
-    |
-    */
-    'dateseps' => get_labels_from_enum(DateSeparator::class),
 
     /*
     |--------------------------------------------------------------------------
@@ -293,26 +260,6 @@ return [
     |
     */
     'decseps' => get_labels_from_enum(DecimalSeparator::class),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default Date Format Index
-    |--------------------------------------------------------------------------
-    |
-    | Possible values are defined in \App\Legacy\Enum\DateFormat.
-    |
-    */
-    'dflt_date_fmt' => DateFormat::DDMMYYYY->value,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default Date Separator Index
-    |--------------------------------------------------------------------------
-    |
-    | Possible values are defined in \App\Legacy\Enum\DateSeparator.
-    |
-    */
-    'dflt_date_sep' => DateSeparator::SLASH->value,
 
     /*
     |--------------------------------------------------------------------------

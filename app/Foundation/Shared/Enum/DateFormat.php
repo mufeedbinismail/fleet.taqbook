@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Legacy\Enum;
+namespace App\Foundation\Shared\Enum;
 
 enum DateFormat: int
 {

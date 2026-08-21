@@ -86,9 +86,6 @@ dateformats_list_row(__("Date Format:"), "date_format", user_date_format());
 
 dateseps_list_row(__("Date Separator:"), "date_sep", user_date_sep());
 
-/* The array $dateseps is set up in config/legacy.php for modifications
-possible separators can be added by modifying the array definition by editing that file */
-
 thoseps_list_row(__("Thousand Separator:"), "tho_sep", user_tho_sep());
 
 /* The array $thoseps is set up in config/legacy.php for modifications

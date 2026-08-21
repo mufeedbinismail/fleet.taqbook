@@ -3,8 +3,8 @@
 namespace App\Foundation\Shared\Setting;
 
 use App\Foundation\Framework\Support\Arr;
-use App\Legacy\Enum\DateFormat;
-use App\Legacy\Enum\DateSeparator;
+use App\Foundation\Shared\Enum\DateFormat;
+use App\Foundation\Shared\Enum\DateSeparator;
 use App\Legacy\Enum\DecimalSeparator;
 use App\Legacy\Enum\PageSize;
 use App\Legacy\Enum\PrintDestination;
@@ -32,8 +32,8 @@ class UserSetting extends Store
             'percent_dec' => 0,
             'show_gl' => 0,
             'show_codes' => 0,
-            'date_format' => config('legacy.dflt_date_fmt'),
-            'date_sep' => config('legacy.dflt_date_sep'),
+            'date_format' => config('date.format_id'),
+            'date_sep' => config('date.separator_id'),
             'tho_sep' => ThousandSeparator::COMMA->value,
             'dec_sep' => DecimalSeparator::DOT->value,
             'theme' => 'default',

@@ -13,7 +13,6 @@
 date validation and parsing functions
 
 These functions refer to the global variable defining the date format
-The date format is defined in config/legacy.php called dateformats
 this can be a string either "d/m/Y" for UK/Australia/New Zealand dates or
 "m/d/Y" for US/Canada format dates depending on setting in preferences.
 
