@@ -5,6 +5,7 @@ namespace App\Foundation\Shared\Setting;
 use App\Foundation\Framework\Support\Arr;
 use App\Foundation\Shared\Enum\DateFormat;
 use App\Foundation\Shared\Enum\DateSeparator;
+use App\Foundation\Shared\Enum\DateSystem;
 use App\Legacy\Enum\DecimalSeparator;
 use App\Legacy\Enum\PageSize;
 use App\Legacy\Enum\PrintDestination;
@@ -230,5 +231,10 @@ class UserSetting extends Store
     public function dateFormat(): string
     {
         return $this->dateFormatIdx()->format($this->dateSepIdx());
+    }
+
+    public function calendarSystem(): DateSystem
+    {
+        return DateSystem::from((int) config('date.calendar_system_id'));
     }
 }
