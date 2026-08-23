@@ -7,6 +7,7 @@ use App\Foundation\Shared\Enum\DateFormat;
 use App\Foundation\Shared\Enum\DateSeparator;
 use App\Foundation\Shared\Enum\DateSystem;
 use App\Foundation\Shared\Enum\TimeFormat;
+use App\Foundation\Shared\Enum\WeekDay;
 use App\Legacy\Enum\DecimalSeparator;
 use App\Legacy\Enum\PageSize;
 use App\Legacy\Enum\PrintDestination;
@@ -19,10 +20,9 @@ class UserSetting extends Store
     /**
      * Default values keyed by db column.
      *
-     * @param  string|null  $key  Db column name. If null, returns all defaults.
      * @return array<string, mixed>|mixed
      *
-     * @throws InvalidArgumentException When key is provided but does not exist.
+     * @throws InvalidArgumentException
      */
     public static function defaults(?string $key = null): mixed
     {
@@ -37,6 +37,7 @@ class UserSetting extends Store
             'time_format' => config('date.time_format_id'),
             'date_format' => config('date.format_id'),
             'date_sep' => config('date.separator_id'),
+            'week_start' => config('date.week_start_id'),
             'tho_sep' => ThousandSeparator::COMMA->value,
             'dec_sep' => DecimalSeparator::DOT->value,
             'theme' => 'default',
@@ -195,10 +196,8 @@ class UserSetting extends Store
     }
 
     /**
-     * Where this user asked to land, or an empty string when they never said.
-     *
-     * Nothing here checks that the answer still names somewhere reachable — a preference outlives
-     * the permissions of whoever set it, so that is the caller's question at the moment it lands.
+     * Nothing here checks the tab still names somewhere reachable: a preference outlives the
+     * permissions of whoever set it.
      */
     public function startupTab(): string
     {
@@ -253,6 +252,35 @@ class UserSetting extends Store
     public function dateTimeFormat(): string
     {
         return $this->dateFormat().' '.$this->timeFormat();
+    }
+
+    /**
+     * The day standing against this account, which is the installation's until the account says
+     * otherwise. Null only where the installation named none either, and it is offered to a form
+     * rather than resolved so that the question can still be left open there.
+     */
+    public function chosenWeekStart(): ?WeekDay
+    {
+        return WeekDay::fromChoice($this->items['week_start']);
+    }
+
+    public function weekStart(): WeekDay
+    {
+        return $this->chosenWeekStart() ?? $this->inferredWeekStart();
+    }
+
+    /**
+     * Deliberately a poor rule: it reads a calendar convention off a display preference, and the
+     * two vary apart. It is kept because a week beginning on a different day either side of the
+     * port boundary is misread at a glance rather than noticed.
+     */
+    private function inferredWeekStart(): WeekDay
+    {
+        if ($this->calendarSystem()->startsWeekOnSaturday()) {
+            return WeekDay::Saturday;
+        }
+
+        return $this->dateFormatIdx()->writesMonthFirst() ? WeekDay::Sunday : WeekDay::Monday;
     }
 
     public function calendarSystem(): DateSystem

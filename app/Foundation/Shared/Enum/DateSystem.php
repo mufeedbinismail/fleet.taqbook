@@ -14,6 +14,11 @@ enum DateSystem: int implements HasLabelContract
     case Islamic = 2;
     case TraditionalFriSat = 3;
 
+    public function startsWeekOnSaturday(): bool
+    {
+        return $this !== self::Traditional;
+    }
+
     public static function labels(): array
     {
         return [

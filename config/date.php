@@ -23,5 +23,11 @@ return [
 
     'separator_id' => DateSeparator::SLASH->value,
 
+    /*
+     | Null is a choice, and the one worth having: it leaves the day to be worked out rather than
+     | recording an installation-wide answer nobody gave.
+     */
+    'week_start_id' => null,
+
     'time_format_id' => TimeFormat::TwelveHour->value,
 ];
