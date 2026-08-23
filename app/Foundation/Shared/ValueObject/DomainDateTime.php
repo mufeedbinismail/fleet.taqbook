@@ -10,24 +10,27 @@ final class DomainDateTime extends CarbonImmutable
     const DATE_STRING_FORMAT = 'Y-m-d';
 
     /**
-     * Reads a value against one format, refusing anything that format does not describe exactly.
+     * A value is a date written that way only if writing that date back out under the same format
+     * reproduces it exactly.
      *
-     * The underlying parser is forgiving in a way that is wrong for a date somebody has to trust:
-     * a day past the end of its month is counted forward into the next one, so the 31st of
-     * February answers with the 2nd of March. It reports that as a warning while still handing
-     * back a value, which is why the warnings are read here rather than the return alone.
+     * One rule, because the parser underneath is forgiving in several directions at once: it counts
+     * a day past the end of its month forward, so the 31st of February answers with the 2nd of
+     * March; it drops text left over at the end; it takes `9` where the format says `d` and `MAR`
+     * where it says `M`; and given a weekday that contradicts its own date it reads the name,
+     * discards it, and answers with the real one. None of those write back what arrived.
      *
-     * The all-zero date the legacy schema uses where there is no date is refused by the same rule,
-     * having no month and no day — so it arrives as an absence rather than as a year in antiquity.
+     * The all-zero date the legacy schema writes where there is no date fails the same rule, so it
+     * arrives as an absence rather than as a year in antiquity.
      *
      * @throws InvalidFormatException
      */
     public static function fromFormat(string $format, string $value): static
     {
-        $parsed = self::createFromFormat($format, trim($value));
-        $problems = self::getLastErrors();
+        $value = trim($value);
 
-        if ($problems !== false && ($problems['error_count'] > 0 || $problems['warning_count'] > 0)) {
+        $parsed = self::createFromFormat($format, $value);
+
+        if (! $parsed instanceof self || $parsed->format($format) !== $value) {
             throw new InvalidFormatException(sprintf(
                 'The value "%s" is not a date written as "%s".',
                 $value,
