@@ -26,12 +26,12 @@ records where instinct fails, not where it suffices.
 
 A bite has three descriptions; only one belongs in the skill.
 
-- The **symptom** names the incident: "the table grew a badge-map prop." It expires the day that
-  component is finished.
-- The **mechanism** names the fix's machinery: the helper reached for, the prop renamed, the class
-  introduced. It expires the day the implementation changes.
-- The **root cause** names the decision that went wrong: "a component held an opinion about what
-  the consumer's content means." It was true before the incident and stays true after the code is
+- The **symptom** names the incident: "the exporter grew a special case for one caller's status
+  values." It expires the day that code is finished.
+- The **mechanism** names the fix's machinery: the helper reached for, the argument renamed, the
+  class introduced. It expires the day the implementation changes.
+- The **root cause** names the decision that went wrong: "a shared unit held an opinion about what
+  its caller's data means." It was true before the incident and stays true after the code is
   deleted.
 
 The test: delete, in your head, the code that prompted the entry. An entry that stops making sense
@@ -78,6 +78,14 @@ tell that this went wrong is…") must be reverse-engineered into an instruction
 use, and the reader doing that is the one with the least context — a fresh agent holding the skill
 and nothing else. The reasoning is what lets the rule transfer to a case it never named; the
 headline is what lets it be found and obeyed at all. An entry needs both, in that order.
+
+**Then stop at the shortest reasoning that makes the rule transfer, and put anything longer in
+`references/`.** A skill is loaded whole on every invocation, so every line of justification is
+charged to every reader — including the many who would have obeyed the headline alone. Prose that
+argues past the point of obedience displaces the rules around it, which is how a dense skill
+becomes a document nobody finishes. The derivation, the measurement, the alternatives weighed and
+rejected: those are sought deliberately, by the reader who has a reason to doubt, and a reference
+is where they wait for that reader without taxing the rest.
 
 ## Every entry earns its keep
 

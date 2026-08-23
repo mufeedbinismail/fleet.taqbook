@@ -180,7 +180,9 @@ use App\Foundation\Auth\Model\Role as RoleRecord;
 
 FrontAccounting is being ported, not maintained.
 
-- Never add a function to a `.inc` file.
+- Never add a function that carries logic to a `.inc` file. A named accessor that only forwards to
+  Laravel is not logic — it is the bridge below, given a name so legacy call sites read like their
+  neighbours.
 - A `.inc` file may call into Laravel via `app(ClassName::class)` — that is the bridge, and the
   traffic only goes that way.
 - Every new feature is written in the Laravel layer, even when its screen is still legacy.
