@@ -160,10 +160,17 @@
         padding-bottom: 0;
     }
 
-    /* Select styles - keeping your styling but updating dropdown arrow color */
+    /* The end padding has to clear the caret plus the gap it sits in, so it and
+       `background-position` only ever move together.
+
+       A background image cannot follow `currentColor`, so the caret's fill is written out here and
+       has to be re-stated by hand whenever the control's text colour moves. */
     select {
-        @apply inline-block pe-5 bg-no-repeat bg-right bg-[length:16px_12px] appearance-none;
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23364a59' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+        @apply inline-block appearance-none bg-no-repeat;
+        padding-inline-end: 1.9rem;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 5'%3e%3cpath fill='%23111827' d='M0 0h10L5 5z'/%3e%3c/svg%3e");
+        background-position: right 0.65rem center;
+        background-size: 0.6em 0.3em;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
 
