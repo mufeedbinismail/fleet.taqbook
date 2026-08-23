@@ -51,6 +51,7 @@ class sys_prefs extends stdClass
 	public int $allow_gl_reopen;
 	public array $dateformats;
 	public array $dateseps;
+	public array $weekdays;
 	public array $thoseps;
 	public array $decseps;
 	public int $dflt_time_fmt;
@@ -105,6 +106,7 @@ class sys_prefs extends stdClass
         $this->allow_gl_reopen               = config('legacy.allow_gl_reopen');
         $this->dateformats                   = get_labels_from_enum(\App\Foundation\Shared\Enum\DateFormat::class);
         $this->dateseps                      = get_labels_from_enum(\App\Foundation\Shared\Enum\DateSeparator::class);
+        $this->weekdays                      = get_labels_from_enum(\App\Foundation\Shared\Enum\WeekDay::class);
         $this->thoseps                       = config('legacy.thoseps');
         $this->decseps                       = config('legacy.decseps');
         $this->dflt_time_fmt                 = config('date.time_format_id');
@@ -144,6 +146,14 @@ class sys_prefs extends stdClass
 	function refresh()
 	{
 		settings()->refresh();
+	}
+
+	function dflt_week_start(): int
+	{
+		// No id of its own to read: an installation may decline to name a day, and the day still
+		// has to be worked out from somewhere. The setting store with no account loaded is that
+		// somewhere, and answers both cases.
+		return user_settings()->weekStart()->value;
 	}
 
 	function dflt_time_display(): string

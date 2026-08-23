@@ -2132,6 +2132,18 @@ function dateseps_list_row($label, $name, $value=null)
 	echo "</td></tr>\n";
 }
 
+function weekdays_list_row($label, $name, $value=null)
+{
+	global $SysPrefs;
+
+	echo "<tr><td class='label'>$label</td>\n<td>";
+	// Cast so a chosen Sunday reaches the selector as '0' rather than as something loosely equal
+	// to null, which the selector reads as nothing chosen and answers with the special option.
+	echo array_selector($name, (string)$value, $SysPrefs->weekdays,
+		array('spec_option' => __("Automatic"), 'spec_id' => ''));
+	echo "</td></tr>\n";
+}
+
 function thoseps_list_row($label, $name, $value=null)
 {
 	global $SysPrefs;

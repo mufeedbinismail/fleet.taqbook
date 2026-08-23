@@ -82,6 +82,19 @@ class user_prefs
 		return $this->repo->dateFormat();
 	}
 
+	function week_start() 
+	{
+		return $this->repo->weekStart()->value;
+	}
+
+	/**
+	 * What was said, rather than what it resolves to: null where nobody has said.
+	 */
+	function chosen_week_start() 
+	{
+		return $this->repo->chosenWeekStart()?->value;
+	}
+
 	function time_format() 
 	{
 		return $this->repo->timeFormatIdx()->value;

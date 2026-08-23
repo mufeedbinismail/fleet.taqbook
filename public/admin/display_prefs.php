@@ -37,10 +37,11 @@ if (isset($_POST['setprefs']))
 		$chg_lang = language()->getLocale() != $_POST['language'];
 		$chg_date_format = user_date_format() != $_POST['date_format'];
 		$chg_date_sep = user_date_sep() != $_POST['date_sep'];
+		$chg_week_start = user_chosen_week_start() != $_POST['week_start'];
 
 		set_user_prefs(get_post( 
 			array('prices_dec', 'qty_dec', 'rates_dec', 'percent_dec',
-			'date_format', 'date_sep', 'tho_sep', 'dec_sep', 'print_profile', 
+			'date_format', 'date_sep', 'week_start', 'tho_sep', 'dec_sep', 'print_profile', 
 			'theme', 'page_size', 'language', 'startup_tab',
 			'query_size' => 10, 'transaction_days' => 30, 'save_report_selections' => 0,
 			'def_print_destination' => 0, 'def_print_orientation' => 0)));
@@ -57,7 +58,7 @@ if (isset($_POST['setprefs']))
 
 		if ($chg_theme && $SysPrefs->allow_demo_mode)
 			$_SESSION["wa_current_user"]->prefs->theme = $_POST['theme'];
-		if ($chg_theme || $chg_lang || $chg_date_format || $chg_date_sep)
+		if ($chg_theme || $chg_lang || $chg_date_format || $chg_date_sep || $chg_week_start)
 			meta_forward(url()->current());
 
 		
@@ -85,6 +86,10 @@ table_section_title(__("Date Format and Separators"));
 dateformats_list_row(__("Date Format:"), "date_format", user_date_format());
 
 dateseps_list_row(__("Date Separator:"), "date_sep", user_date_sep());
+
+/* Offers what was said and not what it resolves to: a resolved day sitting in the selector is
+saved back as a chosen one on the next visit, and the choice to leave it unsaid is gone. */
+weekdays_list_row(__("Week Starts On:"), 'week_start', user_chosen_week_start());
 
 thoseps_list_row(__("Thousand Separator:"), "tho_sep", user_tho_sep());
 

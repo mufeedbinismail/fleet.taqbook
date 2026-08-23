@@ -282,6 +282,18 @@ function user_date_display()
   	}
 }
 
+function user_week_start()
+{
+	global $SysPrefs;
+
+	return isset($_SESSION["wa_current_user"]) ? $_SESSION["wa_current_user"]->prefs->week_start() : $SysPrefs->dflt_week_start();
+}
+
+function user_chosen_week_start()
+{
+	return isset($_SESSION["wa_current_user"]) ? $_SESSION["wa_current_user"]->prefs->chosen_week_start() : null;
+}
+
 function user_time_format()
 {
 	global $SysPrefs;

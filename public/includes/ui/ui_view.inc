@@ -1003,7 +1003,7 @@ function get_js_date_picker()
 	$dateseps = $SysPrefs->dateseps;
 	$how = user_date_format();				// 0 = us/ca, 1 = eu, au, nz, 2 = jp, sw
 	$sep = $dateseps[user_date_sep()];		// date separator
-	$wstart = (($date_system == 1 || $date_system == 2 || $date_system == 3) ? 6 : ($how == 0 || $how == 3 ? 0 : 1));	// weekstart (sun = 0, mon = 1)
+	$wstart = user_week_start();			// weekstart (sun = 0, mon = 1)
 	$months = array(__("January"),__("February"),__("March"),__("April"),__("May"),__("June"),__("July"),__("August"),__("September"),__("October"),__("November"),__("December"));
 	$wdays = array(__("Su"),__("Mo"),__("Tu"),__("We"),__("Th"),__("Fr"),__("Sa"));
 	$wno = __("W"); // week no
