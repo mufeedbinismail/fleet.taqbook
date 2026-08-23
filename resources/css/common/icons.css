@@ -11,6 +11,21 @@
 }
 
 /*
+    Outside the layer deliberately, and the only rule here that is.
+
+    A font-size utility carries a line-height with it — `text-lg` is `1.125rem`/`1.75rem` — and a
+    utility outranks a layer, so a consumer asking a glyph for a size was silently asking it for
+    leading half again as tall as the glyph as well. A consumer may restyle a glyph, which is what
+    the layer below is for; it may not stretch the box the glyph is drawn and aligned inside. So the
+    leading sits where a utility cannot reach it.
+*/
+.icon,
+.icon-style:before,
+.icon:before {
+    line-height: 1;
+}
+
+/*
     A layer, so a utility on the same element still outranks the glyph's own styling. What
     keeps these from being shaken out is the safelist, which is read from the declarations
     below — no name is ever written out in a template, so nothing else could vouch for them.
@@ -22,8 +37,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        vertical-align: -0.125em;
-        line-height: 1;
+        vertical-align: middle;
         /* Filled icons carry more "ink" than outline sets; a slight opacity softens
            the dense ones so they don't dominate text. Tune 0.8–0.9 to taste. */
         opacity: 0.85;
@@ -38,7 +52,6 @@
         font-weight: normal;
         font-variant: normal;
         text-transform: none;
-        line-height: 1;
 
         /* Better Font Rendering =========== */
         -webkit-font-smoothing: antialiased;

@@ -6,7 +6,7 @@ span.has-select {
     & + span.icon {
         @apply inline-block cursor-pointer;
         padding: 0 !important;
-        vertical-align: text-bottom !important;
+        vertical-align: middle !important;
     }
 }
 
@@ -16,28 +16,42 @@ span.has-updatable-sibling > select span.has-img-sibling > select {
 
 /* Icons inside button.
    `img`/`svg` stay unscoped — those only ever come from legacy FA markup
-   (raw <img>, pre-conversion) which always wants this fixed sizing.
-   `span.icon` is scoped to `.has-img-icon`, the marker refreshUI() (fa/ui.js)
-   adds to a button exactly when it swaps that legacy <img> for this span —
-   so new components rendering their own <span class="icon"> (never routed
-   through that conversion) aren't forced into the legacy fixed size. */
+   (raw <img>, pre-conversion) which always wants this fixed sizing. */
 button > img,
-button > svg,
-.has-img-icon > span.icon {
-    @apply inline-block align-text-bottom;
+button > svg {
+    @apply inline-block align-middle;
     height: 1rem !important;
+}
+
+/* The converted icon is type rather than a bitmap, so it needs neither of the two things its
+   <img> did. Its glyph is drawn at whatever font size the conversion asked for, so a fixed box
+   height cropped the box without ever reaching the glyph, which went on overflowing it. And the
+   icon font carries no descender — every glyph is drawn wholly above its own baseline — so
+   `text-bottom` parked the glyph's foot on the parent's descender line, a few pixels below the
+   baseline the label beside it sits on. `middle` puts it against the label's own middle instead,
+   which is where a reader looks for it.
+
+   Scoped to `.has-img-icon`, the marker refreshUI() (fa/ui.js) adds to a button exactly when it
+   swaps that legacy <img> for this span — so new components rendering their own
+   <span class="icon"> (never routed through that conversion) keep the alignment they chose. */
+.has-img-icon > span.icon {
+    @apply align-middle;
 }
 
 /* Legacy icon-to-text spacing — same `.has-img-icon` scoping as above.
    Legacy buttons have no flex `gap` between their icon and label, so this
    margin is how they get separated; new components already handle that
    spacing themselves (e.g. `.x-dropdown__trigger`'s `gap-2`), and would get
-   double-spaced if this margin applied to them too. */
+   double-spaced if this margin applied to them too.
+
+   Horizontal only: the bottom margin that used to sit here was a nudge against the alignment
+   above, and a margin is part of the box `middle` centres, so keeping it would tilt the very
+   thing it was compensating for. */
 .has-img-icon:not(.is-icon) {
     & > img,
     & > svg,
     & > span.icon {
-        @apply me-2 mb-[0.125rem];
+        @apply me-2;
     }
 }
 
