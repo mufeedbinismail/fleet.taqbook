@@ -50,6 +50,40 @@ function middlewareFor(strategy, placement, distance) {
     return [offset(distance), flip(), shift({ padding: 8 })];
 }
 
+/**
+ * Keeps a floating panel positioned against a reference, by the strategies described above.
+ *
+ * The directive is the ordinary way in and reads this. It is exported for the panel that no
+ * template can put a directive on — one a library builds and hands back — so that such a panel is
+ * placed by the same rules as every other floating thing here rather than by a second opinion about
+ * what to do at the edge of the screen. A component reaching for this is saying it has no element
+ * of its own to write `x-anchor` on, and nothing else.
+ *
+ * @param  reference  what the panel is placed against
+ * @param  floating  the panel
+ * @return a function that stops tracking
+ */
+export function anchorTo(reference, floating, options = {}) {
+    const {
+        placement = 'bottom',
+        strategy = 'flip',
+        offset: distance = 8,
+        onPlacement = null,
+    } = options;
+
+    floating.style.position = 'absolute';
+
+    return autoUpdate(reference, floating, () => {
+        computePosition(reference, floating, {
+            placement,
+            middleware: middlewareFor(strategy, placement, distance),
+        }).then(({ x, y, placement: resolved }) => {
+            Object.assign(floating.style, { left: `${x}px`, top: `${y}px` });
+            onPlacement?.(resolved.split('-')[0]);
+        });
+    });
+}
+
 export default function (Alpine) {
     Alpine.directive('anchor', (el, { expression }, { effect, evaluateLater, cleanup }) => {
         const getConfig = evaluateLater(expression);
