@@ -171,10 +171,7 @@ function Today()
 
 function Now() 
 {
-	if (user_date_format() == 0)
-		return date("h:i a");
-	else
-		return date("H:i");
+	return date(user_time_display());
 }
 //
 //	Retrieve and optionaly set default date for new document.

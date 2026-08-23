@@ -102,10 +102,7 @@ function print_audit_trail()
     while ($myrow=db_fetch($trans))
     {
         $rep->TextCol(0, 1, sql2date(date("Y-m-d", $myrow['unix_stamp'])));
-        if (user_date_format() == 0)
-        	$rep->TextCol(1, 2, date("h:i:s a", $myrow['unix_stamp']));
-        else	
-        	$rep->TextCol(1, 2, date("H:i:s", $myrow['unix_stamp']));
+        $rep->TextCol(1, 2, date(user_time_display_with_seconds(), $myrow['unix_stamp']));
         $rep->TextCol(2, 3, $myrow['user_id']);
         $rep->TextCol(3, 4, sql2date($myrow['gl_date']));
         $rep->TextCol(4, 5, $systypes_array[$myrow['type']]);

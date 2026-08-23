@@ -82,6 +82,21 @@ class user_prefs
 		return $this->repo->dateFormat();
 	}
 
+	function time_format() 
+	{
+		return $this->repo->timeFormatIdx()->value;
+	}
+
+	function time_display() 
+	{
+		return $this->repo->timeFormat();
+	}
+
+	function time_display_with_seconds() 
+	{
+		return $this->repo->timeFormatWithSeconds();
+	}
+
 	function tho_sep() 
 	{
 		return $this->repo->thousandSepIdx()->value;

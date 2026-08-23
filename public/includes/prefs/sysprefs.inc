@@ -10,6 +10,7 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
+use App\Foundation\Shared\Enum\TimeFormat;
 use App\Foundation\Shared\Setting\GlobalSetting;
 
 require_once __DIR__ . "/../../admin/db/company_db.inc";
@@ -52,6 +53,7 @@ class sys_prefs extends stdClass
 	public array $dateseps;
 	public array $thoseps;
 	public array $decseps;
+	public int $dflt_time_fmt;
 	public int $dflt_date_fmt;
 	public int $dflt_date_sep;
 	public array $pagesizes;
@@ -105,6 +107,7 @@ class sys_prefs extends stdClass
         $this->dateseps                      = get_labels_from_enum(\App\Foundation\Shared\Enum\DateSeparator::class);
         $this->thoseps                       = config('legacy.thoseps');
         $this->decseps                       = config('legacy.decseps');
+        $this->dflt_time_fmt                 = config('date.time_format_id');
         $this->dflt_date_fmt                 = config('date.format_id');
         $this->dflt_date_sep                 = config('date.separator_id');
         $this->pagesizes                     = config('legacy.pagesizes');
@@ -141,6 +144,16 @@ class sys_prefs extends stdClass
 	function refresh()
 	{
 		settings()->refresh();
+	}
+
+	function dflt_time_display(): string
+	{
+		return TimeFormat::from($this->dflt_time_fmt)->format();
+	}
+
+	function dflt_time_display_with_seconds(): string
+	{
+		return TimeFormat::from($this->dflt_time_fmt)->formatWithSeconds();
 	}
 
 	function allow_negative_stock() 

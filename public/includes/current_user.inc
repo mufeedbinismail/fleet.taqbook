@@ -282,6 +282,27 @@ function user_date_display()
   	}
 }
 
+function user_time_format()
+{
+	global $SysPrefs;
+
+	return isset($_SESSION["wa_current_user"]) ? $_SESSION["wa_current_user"]->prefs->time_format() : $SysPrefs->dflt_time_fmt;
+}
+
+function user_time_display()
+{
+	global $SysPrefs;
+
+	return isset($_SESSION["wa_current_user"]) ? $_SESSION["wa_current_user"]->prefs->time_display() : $SysPrefs->dflt_time_display();
+}
+
+function user_time_display_with_seconds()
+{
+	global $SysPrefs;
+
+	return isset($_SESSION["wa_current_user"]) ? $_SESSION["wa_current_user"]->prefs->time_display_with_seconds() : $SysPrefs->dflt_time_display_with_seconds();
+}
+
 function user_date_sep()
 {
 	global $SysPrefs;
