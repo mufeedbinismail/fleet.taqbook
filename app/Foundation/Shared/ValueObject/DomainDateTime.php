@@ -7,6 +7,8 @@ use Carbon\Exceptions\InvalidFormatException;
 
 final class DomainDateTime extends CarbonImmutable
 {
+    const DATE_STRING_FORMAT = 'Y-m-d';
+
     /**
      * Reads a value against one format, refusing anything that format does not describe exactly.
      *
@@ -109,16 +111,16 @@ final class DomainDateTime extends CarbonImmutable
 
     public static function userDateTimeFormat(): string
     {
-        return self::userDateFormat().' '.self::userTimeFormat();
+        return user_settings()->dateTimeFormat();
     }
 
     public static function userTimeFormat(): string
     {
-        return 'h:i a';
+        return user_settings()->timeFormat();
     }
 
     public static function dateString(): string
     {
-        return 'Y-m-d';
+        return self::DATE_STRING_FORMAT;
     }
 }

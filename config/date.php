@@ -3,6 +3,7 @@
 use App\Foundation\Shared\Enum\DateFormat;
 use App\Foundation\Shared\Enum\DateSeparator;
 use App\Foundation\Shared\Enum\DateSystem;
+use App\Foundation\Shared\Enum\TimeFormat;
 
 /*
  | ------------------------------------------------------------------------------------------
@@ -22,4 +23,5 @@ return [
 
     'separator_id' => DateSeparator::SLASH->value,
 
+    'time_format_id' => TimeFormat::TwelveHour->value,
 ];

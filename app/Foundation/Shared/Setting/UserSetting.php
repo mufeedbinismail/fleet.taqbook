@@ -6,6 +6,7 @@ use App\Foundation\Framework\Support\Arr;
 use App\Foundation\Shared\Enum\DateFormat;
 use App\Foundation\Shared\Enum\DateSeparator;
 use App\Foundation\Shared\Enum\DateSystem;
+use App\Foundation\Shared\Enum\TimeFormat;
 use App\Legacy\Enum\DecimalSeparator;
 use App\Legacy\Enum\PageSize;
 use App\Legacy\Enum\PrintDestination;
@@ -33,6 +34,7 @@ class UserSetting extends Store
             'percent_dec' => 0,
             'show_gl' => 0,
             'show_codes' => 0,
+            'time_format' => config('date.time_format_id'),
             'date_format' => config('date.format_id'),
             'date_sep' => config('date.separator_id'),
             'tho_sep' => ThousandSeparator::COMMA->value,
@@ -231,6 +233,26 @@ class UserSetting extends Store
     public function dateFormat(): string
     {
         return $this->dateFormatIdx()->format($this->dateSepIdx());
+    }
+
+    public function timeFormatIdx(): TimeFormat
+    {
+        return TimeFormat::from((int) $this->items['time_format']);
+    }
+
+    public function timeFormat(): string
+    {
+        return $this->timeFormatIdx()->format();
+    }
+
+    public function timeFormatWithSeconds(): string
+    {
+        return $this->timeFormatIdx()->formatWithSeconds();
+    }
+
+    public function dateTimeFormat(): string
+    {
+        return $this->dateFormat().' '.$this->timeFormat();
     }
 
     public function calendarSystem(): DateSystem
