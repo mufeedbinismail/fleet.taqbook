@@ -241,4 +241,10 @@
     .icon-circle-check:before {
         content: '\e936';
     }
+    .icon-moon:before {
+        content: '\e937';
+    }
+    .icon-sun:before {
+        content: '\e938';
+    }
 }

@@ -68,6 +68,8 @@
         "bars": 61641,
         "circle-user": 62141,
         "clock": 59701,
-        "circle-check": 59702
+        "circle-check": 59702,
+        "moon": 59703,
+        "sun": 59704
     }
 }
