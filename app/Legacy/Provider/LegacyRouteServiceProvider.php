@@ -20,6 +20,7 @@ class LegacyRouteServiceProvider extends ServiceProvider
             \App\Foundation\Auth\Http\Middleware\Authenticate::class,
             \Illuminate\Session\Middleware\AuthenticateSession::class,
             \App\Foundation\Auth\Http\Middleware\IdleTimeout::class,
+            \App\Legacy\Http\Middleware\RequireLegacyRuntime::class,
             \App\Legacy\Http\Middleware\WrapSession::class,
             \App\Legacy\Http\Middleware\HydrateCurrentUser::class,
         ]);

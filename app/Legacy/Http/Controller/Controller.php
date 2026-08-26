@@ -18,10 +18,11 @@ class Controller extends BaseController
         }
         $filePath = public_path($requestPath);
 
-        if (
-            ! file_exists($filePath)
-            && ! (is_dir($filePath) && file_exists($filePath = (rtrim($filePath, '/').'/index.php')))
-        ) {
+        if (is_dir($filePath)) {
+            $filePath = rtrim($filePath, '/').'/index.php';
+        }
+
+        if (! file_exists($filePath)) {
             throw new NotFoundHttpException;
         }
 
