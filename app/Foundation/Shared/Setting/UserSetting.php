@@ -6,6 +6,7 @@ use App\Foundation\Framework\Support\Arr;
 use App\Foundation\Shared\Enum\DateFormat;
 use App\Foundation\Shared\Enum\DateSeparator;
 use App\Foundation\Shared\Enum\DateSystem;
+use App\Foundation\Shared\Enum\Skin;
 use App\Foundation\Shared\Enum\TimeFormat;
 use App\Foundation\Shared\Enum\WeekDay;
 use App\Legacy\Enum\DecimalSeparator;
@@ -41,6 +42,7 @@ class UserSetting extends Store
             'tho_sep' => ThousandSeparator::COMMA->value,
             'dec_sep' => DecimalSeparator::DOT->value,
             'theme' => 'default',
+            'skin' => Skin::Light->value,
             'page_size' => PageSize::A4->value,
             'show_hints' => 0,
             'print_profile' => null,
@@ -158,6 +160,11 @@ class UserSetting extends Store
     public function theme(): string
     {
         return $this->items['theme'];
+    }
+
+    public function skin(): Skin
+    {
+        return Skin::from($this->items['skin']);
     }
 
     public function pageSizeIdx(): PageSize

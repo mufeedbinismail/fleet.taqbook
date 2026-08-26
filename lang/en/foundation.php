@@ -78,6 +78,12 @@ return [
         'off' => 'Off',
     ],
 
+    'skin' => [
+        'label' => 'Skin',
+        'light' => 'Light',
+        'dark' => 'Dark',
+    ],
+
     'select' => [
         'empty' => 'No results',
         'searching' => 'Searching…',

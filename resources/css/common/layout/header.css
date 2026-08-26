@@ -26,7 +26,7 @@
         }
 
         .shell__header-toolbar {
-            @apply flex-1 flex justify-end items-center;
+            @apply flex-1 flex justify-end items-center gap-3;
         }
     }
 }

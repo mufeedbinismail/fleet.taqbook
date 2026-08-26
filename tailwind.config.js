@@ -78,6 +78,17 @@ export default {
                 'success-accent': '#4caf89',
                 'error-accent': '#e94f64',
                 'label-bg': '#f1f5f7',
+
+                // Two whole sets rather than an on state that overrides part of the off state:
+                // how a switch reads when it is on is its own decision, not a variation of the other.
+                'toggle-flush': '#c2d3db',
+                'toggle-txt': '#2c3e50',
+                'toggle-border': '#364a59',
+                'toggle-knob': '#ffffff',
+                'toggle-on-flush': '#2c3e50',
+                'toggle-on-txt': '#d1e0e5',
+                'toggle-on-border': 'transparent',
+                'toggle-on-knob': '#ffffff',
             },
             width: {
                 sidebar: '280px',

@@ -11,6 +11,7 @@
 return [
     'routes' => [
         'login',
+        'preference.skin',
     ],
 
     'i18n' => [

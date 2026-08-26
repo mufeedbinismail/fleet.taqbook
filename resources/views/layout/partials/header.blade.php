@@ -1,11 +1,18 @@
 @php
+use App\Foundation\Shared\Enum\Skin;
+
 $onload = $onload ?? null;
 $lang = language();
 
 $is_legacy_page = $is_legacy_page ?? false;
+$skin = user_settings()->skin() === Skin::Dark ? 'dark' : null;
 @endphp
 <!DOCTYPE html>
-<html dir="{{ $lang->getDir() }}" lang="{{ str_replace('_', '-', $lang->getLocale()) }}">
+<html
+    dir="{{ $lang->getDir() }}"
+    lang="{{ str_replace('_', '-', $lang->getLocale()) }}"
+    @if ($skin) data-skin="{{ $skin }}" @endif
+>
     <head>
         {{-- Everything this app owns on window hangs off one name, so it can never collide with
              legacy FrontAccounting globals or a third-party script — Alpine and axios stay bare

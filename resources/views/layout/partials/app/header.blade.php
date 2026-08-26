@@ -1,9 +1,13 @@
 @php
+use App\Foundation\Shared\Enum\Skin;
+
 $title = $title ?? null;
 
 // Straight from the guard, not from the legacy session: a page that never boots FrontAccounting
 // has nothing hydrated there, and this chrome is drawn on every page either way.
 $user = auth()->user();
+
+$dark = user_settings()->skin() === Skin::Dark;
 
 // The dashboard of the area this page is in, named outright: this leads to the figures for an area
 // rather than to the area itself, so it does not go through whatever else opening an area means.
@@ -76,38 +80,48 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
             @if ($title && !$is_index)
             <h1 class="shell__header-title">{{ $title }}</h1>
             @endif
-            <div class="shell__header-toolbar" x-dropdown>
-                <button type="button" x-dropdown:trigger>
-                    <span class="icon icon-circle-user text-[2rem]"></span>
-                    <span class="hidden md:inline">{{ $user->real_name ?? '' }}</span>
-                </button>
+            <div class="shell__header-toolbar">
+                <x-ui.toggle
+                    :checked="$dark"
+                    :on="['label' => __('foundation.skin.dark'), 'icon' => 'moon']"
+                    :off="['label' => __('foundation.skin.light'), 'icon' => 'sun']"
+                    :aria-label="__('foundation.skin.label')"
+                    @toggled="App.setSkin($event.detail.on)"
+                />
 
-                <template x-teleport="body">
-                    <ul x-dropdown:panel x-transition x-cloak>
-                        <li class="x-dropdown__header">
-                            <span class="icon icon-circle-user"></span>
-                            <span class="x-dropdown__header-name">{{ $user->real_name ?? '' }}</span>
-                        </li>
-                        @foreach($toolbox as $key => $item)
-                            <li>
-                                @if (($item['method'] ?? 'get') === 'post')
-                                    <form method="POST" action="{{ $item['link'] }}">
-                                        @csrf
-                                        <button type="submit" class="x-dropdown__item w-full text-left bg-transparent border-0 cursor-pointer">
+                <div x-dropdown>
+                    <button type="button" x-dropdown:trigger>
+                        <span class="icon icon-circle-user text-[2rem]"></span>
+                        <span class="hidden md:inline">{{ $user->real_name ?? '' }}</span>
+                    </button>
+
+                    <template x-teleport="body">
+                        <ul x-dropdown:panel x-transition x-cloak>
+                            <li class="x-dropdown__header">
+                                <span class="icon icon-circle-user"></span>
+                                <span class="x-dropdown__header-name">{{ $user->real_name ?? '' }}</span>
+                            </li>
+                            @foreach($toolbox as $key => $item)
+                                <li>
+                                    @if (($item['method'] ?? 'get') === 'post')
+                                        <form method="POST" action="{{ $item['link'] }}">
+                                            @csrf
+                                            <button type="submit" class="x-dropdown__item w-full text-left bg-transparent border-0 cursor-pointer">
+                                                <span class="icon {{ $item['icon'] }}"></span>
+                                                <span>{{ $item['label'] }}</span>
+                                            </button>
+                                        </form>
+                                    @else
+                                        <a href="{{ $item['link'] }}" class="x-dropdown__item">
                                             <span class="icon {{ $item['icon'] }}"></span>
                                             <span>{{ $item['label'] }}</span>
-                                        </button>
-                                    </form>
-                                @else
-                                    <a href="{{ $item['link'] }}" class="x-dropdown__item">
-                                        <span class="icon {{ $item['icon'] }}"></span>
-                                        <span>{{ $item['label'] }}</span>
-                                    </a>
-                                @endif
-                            </li>
-                        @endforeach
-                    </ul>
-                </template>
+                                        </a>
+                                    @endif
+                                </li>
+                            @endforeach
+                        </ul>
+                    </template>
+                </div>
             </div>
         </header>
         <x-nav::breadcrumbs :location="$location" />
