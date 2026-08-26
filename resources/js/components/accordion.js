@@ -133,52 +133,8 @@ function handleTrigger(el, Alpine) {
         },
         '@click'() {
             this.$data.toggle(key);
-            holdStill(el);
         },
     });
-}
-
-// A toggle can shut a panel that sits above the trigger being clicked, and the collapse would
-// carry the trigger — the thing under the pointer — away with it. So while the layout is moving,
-// the nearest scroller is nudged by exactly the trigger's own displacement each frame: the clicked
-// control stays put whether the shut is animated or instant, and degrades to whatever room the
-// scroller has left when it cannot absorb the whole difference. The loop lets go once everything
-// has been still for a few frames; the frame cap is a leash for pages that never go still.
-function holdStill(trigger) {
-    const scroller = scrollerOf(trigger);
-
-    if (!scroller) return;
-
-    let top = trigger.getBoundingClientRect().top;
-    let rest = 0;
-    let frames = 0;
-
-    requestAnimationFrame(function hold() {
-        const moved = trigger.getBoundingClientRect().top - top;
-
-        if (Math.abs(moved) > 0.5) {
-            scroller.scrollTop += moved;
-            rest = 0;
-        } else rest++;
-
-        top = trigger.getBoundingClientRect().top;
-
-        if (rest < 3 && ++frames < 60) requestAnimationFrame(hold);
-    });
-}
-
-function scrollerOf(el) {
-    for (let node = el.parentElement; node; node = node.parentElement) {
-        const { overflowY } = getComputedStyle(node);
-
-        if (
-            (overflowY === 'auto' || overflowY === 'scroll') &&
-            node.scrollHeight > node.clientHeight
-        )
-            return node;
-    }
-
-    return document.scrollingElement;
 }
 
 function handlePanel(el, Alpine) {
