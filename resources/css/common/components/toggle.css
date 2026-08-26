@@ -1,0 +1,105 @@
+@layer components {
+    /* Every part of the look is a custom property with a default, so a variant, a caller's own
+       class and an inline style all reach it the same way — by saying what one of them is. The
+       width is on both states, so only colour changes and nothing moves as it is switched. */
+    .x-toggle {
+        @apply inline-flex cursor-pointer items-center gap-2 rounded-full border border-solid px-1.5 py-1 text-sm;
+        color: var(--toggle-txt, theme('colors.toggle-txt'));
+        background-color: var(--toggle-flush, theme('colors.toggle-flush'));
+        border-color: var(--toggle-border, theme('colors.toggle-border'));
+        transition:
+            background-color 150ms ease-in-out,
+            border-color 150ms ease-in-out;
+    }
+
+    /* The same parts in the other order. A direction rather than a distance, because `row` is the
+       inline axis — so the knob lands on the far side in Arabic too, which a rule naming left or
+       right would get backwards. */
+    .x-toggle--on {
+        @apply flex-row-reverse;
+        color: var(--toggle-on-txt, theme('colors.toggle-on-txt'));
+        background-color: var(--toggle-on-flush, theme('colors.toggle-on-flush'));
+        border-color: var(--toggle-on-border, theme('colors.toggle-on-border'));
+    }
+
+    .x-toggle__icon {
+        @apply flex-none;
+        color: var(--toggle-icon, inherit);
+    }
+
+    .x-toggle--on .x-toggle__icon {
+        color: var(--toggle-on-icon, inherit);
+    }
+
+    .x-toggle:disabled {
+        @apply cursor-not-allowed opacity-50;
+    }
+
+    /* The element still holds the value and still posts it, so it is hidden rather than removed —
+       and hidden without `display: none`, which would take a required field out of the browser's
+       own validation and leave a form that refuses to submit with nothing to point at. */
+    .x-toggle__native {
+        @apply absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+    }
+
+    .x-toggle__knob {
+        @apply inline-block h-4 w-4 flex-none rounded-full;
+        background-color: var(--toggle-knob, theme('colors.toggle-knob'));
+    }
+
+    .x-toggle--on .x-toggle__knob {
+        background-color: var(--toggle-on-knob, theme('colors.toggle-on-knob'));
+    }
+
+    .x-toggle__label {
+        @apply whitespace-nowrap leading-none;
+    }
+
+    /* A variant says what being on looks like. Off is left neutral in all of them: a switch shows
+       its state by the difference between the two, and two coloured states have to be told apart by
+       hue alone.
+
+       Washed rather than filled, so an accent names the switch without shouting over the screen it
+       sits on. The word stays dark against it — the accent read on its own wash falls as low as
+       1.55:1, while the dark one holds above 9:1 on every wash here — and the edge and the knob are
+       the accent at full strength, which is what carries the colour at a size worth reading it at.
+
+       A straight alpha rather than a mix with the page, so nothing has to be said a second time
+       for engines that cannot resolve one. */
+    .x-toggle--primary {
+        --toggle-on-flush: theme('colors.primary-accent / 15%');
+        --toggle-on-txt: theme('colors.primary-txt');
+        --toggle-on-border: theme('colors.primary-accent');
+        --toggle-on-knob: theme('colors.primary-accent');
+    }
+
+    .x-toggle--success {
+        --toggle-on-flush: theme('colors.success-accent / 15%');
+        --toggle-on-txt: theme('colors.primary-txt');
+        --toggle-on-border: theme('colors.success-accent');
+        --toggle-on-knob: theme('colors.success-accent');
+    }
+
+    .x-toggle--warning {
+        --toggle-on-flush: theme('colors.warning-accent / 15%');
+        --toggle-on-txt: theme('colors.primary-txt');
+        --toggle-on-border: theme('colors.warning-accent');
+        --toggle-on-knob: theme('colors.warning-accent');
+    }
+
+    .x-toggle--danger {
+        --toggle-on-flush: theme('colors.error-accent / 15%');
+        --toggle-on-txt: theme('colors.primary-txt');
+        --toggle-on-border: theme('colors.error-accent');
+        --toggle-on-knob: theme('colors.error-accent');
+    }
+
+    .x-toggle--neutral {
+        --toggle-on-flush: theme('colors.general-txt / 15%');
+        --toggle-on-txt: theme('colors.primary-txt');
+        --toggle-on-border: theme('colors.general-txt');
+        --toggle-on-knob: theme('colors.general-txt');
+    }
+}

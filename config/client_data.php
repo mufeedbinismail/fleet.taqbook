@@ -29,5 +29,11 @@ return [
         'foundation.select.tooShort',
         'foundation.select.remove',
         'foundation.select.clear',
+
+        // The two words a switch falls back on are drawn by the switch itself, wherever one is
+        // built and whatever the screen around it knows — a chrome that carries one on every page
+        // included — so they belong to the baseline rather than to whoever remembered to send them.
+        'foundation.toggle.on',
+        'foundation.toggle.off',
     ],
 ];

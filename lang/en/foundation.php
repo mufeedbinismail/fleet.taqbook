@@ -73,6 +73,11 @@ return [
         ],
     ],
 
+    'toggle' => [
+        'on' => 'On',
+        'off' => 'Off',
+    ],
+
     'select' => [
         'empty' => 'No results',
         'searching' => 'Searching…',

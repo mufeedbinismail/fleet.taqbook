@@ -10,6 +10,7 @@ import accordion from '../components/accordion';
 import collapse from '../components/collapse';
 import dialog from '../components/dialog';
 import select from '../components/select';
+import toggle from '../components/toggle';
 
 Alpine.plugin(focus);
 Alpine.plugin(ui);
@@ -20,5 +21,6 @@ Alpine.plugin(accordion);
 Alpine.plugin(collapse);
 Alpine.plugin(dialog);
 Alpine.plugin(select);
+Alpine.plugin(toggle);
 
 export default Alpine;
