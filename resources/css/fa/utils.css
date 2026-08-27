@@ -1,6 +1,3 @@
-/* FrontAccounting Utility Classes */
-/* These are essential utility classes required for proper FA functionality */
-
 /* Form Input Utilities */
 input.big {
     @apply w-[100px];
@@ -12,45 +9,45 @@ input.small {
 
 /* Semantic Status Classes */
 .inactive {
-    @apply text-gray-400;
+    @apply text-row-inactive-txt;
 
     option& {
-        @apply line-through text-gray-400;
+        @apply line-through text-row-inactive-txt;
     }
 }
 
 .oddrow {
     &,
     & > td {
-        @apply bg-gray-100;
+        @apply bg-table-row-odd-bg;
     }
 }
 
 .evenrow {
     &,
     & > td {
-        @apply bg-main-bg;
+        @apply bg-table-row-even-bg;
     }
 }
 
 .settledbg {
     &,
     & > td {
-        @apply bg-teal-100;
+        @apply bg-row-settled-bg;
     }
 }
 
 .settledfg {
     &,
     & > td {
-        @apply text-primary-accent;
+        @apply text-row-settled-txt;
     }
 }
 
 .inquirybg {
     &,
     & > td {
-        @apply bg-amber-50;
+        @apply bg-row-inquiry-bg;
     }
 }
 
@@ -59,7 +56,7 @@ input.small {
 .overduebg {
     &,
     & > td {
-        @apply bg-red-100;
+        @apply bg-row-overdue-bg;
     }
 }
 
@@ -68,7 +65,7 @@ input.small {
 .currentfg {
     &,
     & > td {
-        @apply text-error-accent;
+        @apply text-row-overdue-txt;
     }
 }
 
@@ -86,11 +83,11 @@ input.small {
 }
 
 .redfg {
-    @apply text-error-accent;
+    @apply text-row-overdue-txt;
 }
 
 .label {
-    @apply bg-label-bg;
+    @apply bg-row-label-bg;
 }
 
 /* Amount & Text Classes */

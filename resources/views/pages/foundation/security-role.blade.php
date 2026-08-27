@@ -47,15 +47,15 @@ ClientData::registry()
 
     {{-- Picking a role replaces the form wholesale, so an unsaved edit can never be written to the
          wrong role. --}}
-    <div class="mb-5 flex flex-wrap items-end gap-4 rounded-xl border border-soft-border bg-white p-4 shadow-sm">
+    <div class="mb-5 flex flex-wrap items-end gap-4 rounded-xl border border-card-border bg-card-bg p-4 shadow-sm">
         {{-- Prefers 16rem, grows into free space, and min-w-0 lets it shrink below that rather
              than force the row to overflow on a narrow screen. --}}
         <div class="grow basis-64 min-w-0">
-            <label for="role-picker" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-general-txt">
+            <label for="role-picker" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-card-txt">
                 {{ __('foundation.role.picker.label') }}
             </label>
             <select id="role-picker" data-picker x-ref="picker" @change="switchTo($event.target.value)"
-                    class="field border-soft-border">
+                    class="field border-field-border">
                 <option value="">{{ __('foundation.role.new') }}</option>
                 {{-- The selected role stays listed even when inactive and the filter is off, otherwise
                      the picker would silently disagree with the form below it. --}}
@@ -66,7 +66,7 @@ ClientData::registry()
             </select>
         </div>
 
-        <label class="flex cursor-pointer items-center gap-2 py-2 text-sm text-general-txt">
+        <label class="flex cursor-pointer items-center gap-2 py-2 text-sm text-card-txt">
             <input type="checkbox" class="tick" x-model="showInactive">
             <span>{{ __('foundation.role.picker.show_inactive') }}</span>
         </label>
@@ -74,14 +74,14 @@ ClientData::registry()
 
     <form data-form @submit.prevent="save()">
         {{-- Details --}}
-        <div class="mb-5 rounded-xl border border-soft-border bg-white shadow-sm">
-            <div class="flex flex-wrap items-center gap-2 border-b border-soft-border px-5 py-3">
-                <h2 class="text-sm font-semibold uppercase tracking-wide text-primary-txt"
+        <div class="mb-5 rounded-xl border border-card-border bg-card-bg shadow-sm">
+            <div class="flex flex-wrap items-center gap-2 border-b border-card-divider px-5 py-3">
+                <h2 class="text-sm font-semibold uppercase tracking-wide text-card-title-txt"
                     x-text="id ? @js(__('foundation.role.details')) : @js(__('foundation.role.new'))"></h2>
 
                 {{-- Warns before a rejected save has to: this is the role the current user holds. --}}
                 <span x-show="own"
-                      class="inline-flex items-center gap-1 rounded-full bg-warning-accent/10 px-2 py-0.5 text-xs font-semibold text-warning-accent">
+                      class="inline-flex items-center gap-1 rounded-full bg-banner-warning-bg px-2 py-0.5 text-xs font-semibold text-banner-warning-txt">
                     <span class="icon icon-lock text-xs"></span>
                     {{ __('foundation.role.own') }}
                 </span>
@@ -89,27 +89,27 @@ ClientData::registry()
 
             <div class="grid gap-4 p-5 md:grid-cols-2">
                 <div>
-                    <label for="role-name" class="mb-1 block text-sm font-semibold text-primary-txt">
+                    <label for="role-name" class="mb-1 block text-sm font-semibold text-card-title-txt">
                         {{ __('foundation.role.field.name') }}
                     </label>
                     <input type="text" id="role-name" data-role-name maxlength="30" required autofocus x-ref="roleName"
-                           x-model="role_name" :class="roleNameError !== null ? 'border-error-accent' : 'border-soft-border'"
+                           x-model="role_name" :class="roleNameError !== null ? 'border-error-accent' : 'border-field-border'"
                            class="field">
                     <div class="mt-1 flex items-center justify-between gap-2">
                         <p x-show="roleNameError !== null" x-text="roleNameError"
                            class="text-sm font-semibold text-error-accent"></p>
-                        <span class="ms-auto text-xs text-general-txt" x-text="role_name.length + ' / 30'"></span>
+                        <span class="ms-auto text-xs text-card-txt" x-text="role_name.length + ' / 30'"></span>
                     </div>
                 </div>
 
                 <div>
-                    <span class="mb-1 block text-sm font-semibold text-primary-txt">{{ __('foundation.role.field.status') }}</span>
-                    <div class="inline-flex overflow-hidden rounded-lg border border-soft-border">
+                    <span class="mb-1 block text-sm font-semibold text-card-title-txt">{{ __('foundation.role.field.status') }}</span>
+                    <div class="inline-flex overflow-hidden rounded-lg border border-field-border">
                         @foreach ([['false', __('foundation.role.field.active')], ['true', __('foundation.role.field.inactive')]] as [$value, $label])
                             <label class="cursor-pointer">
                                 <input type="radio" name="inactive" value="{{ $value }}"
                                        x-model.boolean="inactive" class="peer sr-only">
-                                <span class="block px-4 py-2 text-sm font-semibold text-general-txt transition peer-checked:bg-primary-accent peer-checked:text-white">
+                                <span class="block px-4 py-2 text-sm font-semibold text-card-txt transition peer-checked:bg-segment-selected-bg peer-checked:text-segment-selected-txt">
                                     {{ $label }}
                                 </span>
                             </label>
@@ -120,33 +120,33 @@ ClientData::registry()
         </div>
 
         {{-- Permissions --}}
-        <div class="rounded-xl border border-soft-border bg-white shadow-sm" x-collapse>
-            <div class="flex flex-wrap items-center gap-3 border-b border-soft-border px-5 py-3">
-                <h2 class="me-auto flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-primary-txt">
+        <div class="rounded-xl border border-card-border bg-card-bg shadow-sm" x-collapse>
+            <div class="flex flex-wrap items-center gap-3 border-b border-card-divider px-5 py-3">
+                <h2 class="me-auto flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-card-title-txt">
                     {{ __('foundation.role.permission.heading') }}
                     <span class="badge" x-text="permissions.length + ' / ' + {{ $totalCount }}"></span>
                 </h2>
 
                 <div class="relative w-full sm:w-64">
-                    <span class="icon icon-search pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-general-txt"></span>
+                    <span class="icon icon-search pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-field-icon"></span>
                     {{-- Bound after x-model's own input listener, so `filter` already carries what
                          was typed by the time the groups are reconciled against it. --}}
                     <input type="search" data-filter x-model="filter" @input="syncGroups()"
-                           class="field border-soft-border ps-9"
+                           class="field border-field-border ps-9"
                            placeholder="{{ __('foundation.role.permission.filter_placeholder') }}"
                            aria-label="{{ __('foundation.role.permission.filter') }}">
                 </div>
 
                 <div class="flex items-center gap-1 text-sm">
-                    <button type="button" @click="showAll()" class="ghost text-primary-accent">
+                    <button type="button" @click="showAll()" class="ghost text-link-txt">
                         {{ __('foundation.role.permission.expand_all') }}
                     </button>
-                    <span class="text-soft-border">|</span>
-                    <button type="button" @click="hideAll()" class="ghost text-primary-accent">
+                    <span class="text-card-divider">|</span>
+                    <button type="button" @click="hideAll()" class="ghost text-link-txt">
                         {{ __('foundation.role.permission.collapse_all') }}
                     </button>
-                    <span class="text-soft-border">|</span>
-                    <button type="button" @click="permissions = []" class="ghost text-secondary-accent">
+                    <span class="text-card-divider">|</span>
+                    <button type="button" @click="permissions = []" class="ghost text-button-danger-txt">
                         {{ __('foundation.role.permission.clear') }}
                     </button>
                 </div>
@@ -154,7 +154,7 @@ ClientData::registry()
 
             {{-- The catalog is static, so it is rendered once here; only which boxes are ticked and
                  which groups are open are left to Alpine. --}}
-            <div class="divide-y divide-soft-border">
+            <div class="divide-y divide-card-divider">
                 @foreach ($groups as $group)
                     @php
                         $groupKeys = $group->permissions->pluck('key')->values()->all();
@@ -175,7 +175,7 @@ ClientData::registry()
                     <section data-group x-collapse:item="{{ $group->name }}" @class(['x-collapse__item--open' => $groupOpen])
                              x-show="groupVisible({{ $loop->index }})"
                              x-data="{ keys: {{ Js::from($groupKeys) }}, group_name: {{ Js::from(Str::lower($group->name)) }} }">
-                        <div class="flex items-center gap-3 px-5 py-3 transition hover:bg-table-bg">
+                        <div class="flex items-center gap-3 px-5 py-3 transition hover:bg-card-hover-bg">
                             <input type="checkbox" class="tick"
                                    :checked="keys.every((key) => permissions.includes(key))"
                                    x-effect="$el.indeterminate = keys.some((key) => permissions.includes(key)) && !keys.every((key) => permissions.includes(key))"
@@ -185,8 +185,8 @@ ClientData::registry()
                                    aria-label="{{ __('foundation.role.permission.toggle_group', ['group' => $group->name]) }}">
 
                             <button type="button" x-collapse:trigger
-                                    @class(['flex grow cursor-pointer items-center gap-2 border-0 bg-transparent p-0 text-start text-general-txt', 'x-collapse__trigger--open' => $groupOpen])>
-                                <span class="text-sm font-semibold text-primary-txt">{{ $group->name }}</span>
+                                    @class(['flex grow cursor-pointer items-center gap-2 border-0 bg-transparent p-0 text-start text-card-txt', 'x-collapse__trigger--open' => $groupOpen])>
+                                <span class="text-sm font-semibold text-card-title-txt">{{ $group->name }}</span>
                                 <span class="badge"
                                       x-text="keys.filter((key) => permissions.includes(key)).length + ' / ' + keys.length"></span>
                             </button>
@@ -197,12 +197,12 @@ ClientData::registry()
                              it. A filter running over shut groups is reconciled by opening them, so
                              nothing here has to second-guess what the panel already decides. --}}
                         <div @class(['x-collapse__panel--open' => $groupOpen]) x-collapse:panel>
-                            <div class="grid gap-x-6 gap-y-1 bg-table-bg px-5 pb-4 pt-1 sm:grid-cols-2 xl:grid-cols-3">
+                            <div class="grid gap-x-6 gap-y-1 bg-card-sunken-bg px-5 pb-4 pt-1 sm:grid-cols-2 xl:grid-cols-3">
                                 @foreach ($group->permissions as $permission)
                                     @php $isSelfLock = $permission->key === Permission::MANAGE_ROLE; @endphp
                                     <label data-permission
                                            x-show="matches(group_name) || matches({{ Js::from(Str::lower($permission->name)) }})"
-                                           class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-general-txt transition hover:bg-white">
+                                           class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-card-txt transition hover:bg-card-row-hover-bg">
                                         <input type="checkbox" class="tick" value="{{ $permission->key }}" x-model="permissions"
                                                @if ($isSelfLock) :disabled="own" @endif>
                                         <span>{{ $permission->name }}</span>
@@ -225,7 +225,7 @@ ClientData::registry()
                 @endforeach
 
                 <p x-show="!catalog.some((group, i) => groupVisible(i))"
-                   class="px-5 py-8 text-center text-sm text-general-txt">
+                   class="px-5 py-8 text-center text-sm text-card-txt">
                     {{ __('foundation.role.permission.empty') }}
                 </p>
             </div>
@@ -235,26 +235,26 @@ ClientData::registry()
         {{-- Sticky, so Save stays reachable through 36 permission groups. It overlays the card
              while scrolling, hence the z-10 and the container's bottom padding — without the
              latter the final rows would sit permanently behind it. --}}
-        <div class="sticky bottom-4 z-10 mt-5 rounded-xl border border-soft-border bg-white/95 shadow-md backdrop-blur">
+        <div class="sticky bottom-4 z-10 mt-5 rounded-xl border border-card-border bg-card-sticky-bg shadow-md backdrop-blur">
             {{-- Kept beside the buttons that trigger it, not at the top of the page — the user's
                  eyes are already down here when Save/Delete responds. --}}
             <div data-notice x-show="notice !== null"
-                 class="flex items-center gap-2 rounded-t-xl border-b border-success-accent bg-success-accent/10 px-4 py-3 text-sm font-semibold text-success-accent">
+                 class="flex items-center gap-2 rounded-t-xl border-b border-banner-success-border bg-banner-success-bg px-4 py-3 text-sm font-semibold text-banner-success-txt">
                 <span class="icon icon-circle-check"></span>
                 <span x-text="notice" class="grow"></span>
                 <button type="button" @click="notice = null"
-                        class="shrink-0 cursor-pointer border-0 bg-transparent text-lg leading-none text-success-accent hover:opacity-70"
-                        aria-label="{{ __('foundation.role.action.dismiss') }}">&times;</button>
+                        class="icon icon-close shrink-0 cursor-pointer border-0 bg-transparent text-banner-success-txt hover:text-banner-success-close-hover-txt"
+                        aria-label="{{ __('foundation.role.action.dismiss') }}"></button>
             </div>
 
             <div data-error x-show="errors.length"
-                 class="rounded-t-xl border-b border-error-accent bg-error-accent/10 px-4 py-3 text-sm text-error-accent">
+                 class="rounded-t-xl border-b border-banner-error-border bg-banner-error-bg px-4 py-3 text-sm text-banner-error-txt">
                 <div class="flex items-center gap-2 font-semibold">
                     <span class="icon icon-warning"></span>
                     <span class="grow">{{ __('foundation.role.error.heading') }}</span>
                     <button type="button" @click="errors = []"
-                            class="shrink-0 cursor-pointer border-0 bg-transparent text-lg leading-none text-error-accent hover:opacity-70"
-                            aria-label="{{ __('foundation.role.action.dismiss') }}">&times;</button>
+                            class="icon icon-close shrink-0 cursor-pointer border-0 bg-transparent text-banner-error-txt hover:text-banner-error-close-hover-txt"
+                            aria-label="{{ __('foundation.role.action.dismiss') }}"></button>
                 </div>
                 <ul class="mt-1 list-disc ps-6">
                     <template x-for="error in errors" :key="error">
@@ -283,7 +283,7 @@ ClientData::registry()
                 </x-button>
 
                 <button type="button" data-action="cancel" @click="cancel()"
-                        class="ms-auto cursor-pointer border-0 bg-transparent text-sm text-general-txt transition hover:text-primary-txt">
+                        class="ms-auto cursor-pointer border-0 bg-transparent text-sm text-card-txt transition hover:text-button-outline-txt">
                     {{ __('foundation.role.action.cancel') }}
                 </button>
             </div>

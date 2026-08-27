@@ -4,7 +4,7 @@
        color over the page rather than its own value, so it follows wherever a theme takes it. */
     .x-badge {
         @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold leading-4;
-        color: var(--badge-color, theme('colors.general-txt'));
+        color: var(--badge-color, theme('colors.badge-txt'));
         /* Static fallback for an engine below Safari 16.2, which cannot parse color-mix().
            A plain second declaration for the same property is not enough here: the
            color-mix() call carries a var() inside it, and a declaration containing var()
@@ -18,36 +18,36 @@
            for the same reason -- but it comes from the same default token, so a change to
            the theme still moves both, and a badge with no engine support still reads as a
            chip rather than bare text. */
-        background-color: theme('colors.general-txt / 12%');
+        background-color: theme('colors.badge-txt / 12%');
     }
 
     @supports (background-color: color-mix(in srgb, red 12%, transparent)) {
         .x-badge {
             background-color: color-mix(
                 in srgb,
-                var(--badge-color, theme('colors.general-txt')) 12%,
+                var(--badge-color, theme('colors.badge-txt')) 12%,
                 transparent
             );
         }
     }
 
     .x-badge--success {
-        --badge-color: theme('colors.success-accent');
+        --badge-color: theme('colors.badge-success');
     }
 
     .x-badge--warning {
-        --badge-color: theme('colors.warning-accent');
+        --badge-color: theme('colors.badge-warning');
     }
 
     .x-badge--danger {
-        --badge-color: theme('colors.error-accent');
+        --badge-color: theme('colors.badge-danger');
     }
 
     .x-badge--info {
-        --badge-color: theme('colors.primary-accent');
+        --badge-color: theme('colors.badge-info');
     }
 
     .x-badge--neutral {
-        --badge-color: theme('colors.general-txt');
+        --badge-color: theme('colors.badge-neutral');
     }
 }

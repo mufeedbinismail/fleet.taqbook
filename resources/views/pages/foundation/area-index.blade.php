@@ -50,7 +50,7 @@ foreach ($area->sections() as $group) {
     --}}
     <div class="area-index mx-auto p-2 md:p-4">
         @foreach ($blocks as $block)
-            <section class="area-index__card bg-white text-primary-txt shadow-md rounded-lg mb-4">
+            <section class="area-index__card bg-card-bg text-card-title-txt shadow-md rounded-lg mb-4">
                 @if ($block['label'] !== null)
                     <div class="bg-card-header-bg text-card-header-txt p-2 md:p-4 rounded-t-lg">
                         <h2 class="text-lg font-semibold">{{ $block['label'] }}</h2>

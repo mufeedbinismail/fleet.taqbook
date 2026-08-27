@@ -1,11 +1,81 @@
+/*
+    The strip is a row, not a line of text. `inline-block` items on a block container are laid out
+    as words, so the newline the legacy renderer writes between one `</li>` and the next `<li>` is
+    a word space — 4px the design never asked for — and `gap` says nothing on a block box, so the
+    `gap-0` meant to close it was never in a position to apply. Flex is what makes it true: the
+    whitespace stops counting and the gap becomes a real one.
+
+    `auto` rather than `scroll`, because the strip only overflows on a page carrying more tabs than
+    fit. `scroll` reserves the bar wherever the platform draws one, whether or not there is
+    anything to scroll.
+
+    The strip carries the rule the tabs stand on and nothing else — one along its top as well closes
+    the tabs into a band and takes the page with them.
+
+    That rule is the panel's top edge, so it is drawn in the panel's colour rather than the tab's,
+    and the panel is told below not to draw a second one under it.
+*/
 ul.ajaxtabs {
-    @apply font-medium w-full overflow-x-scroll gap-0;
+    @apply flex w-full gap-0 overflow-x-auto font-medium;
+    @apply border-0 border-b border-solid border-tab-rule;
 
+    /*
+        A tab that is not the current one is a label standing beside the open one, not a box in a
+        row of boxes. Outlining all of them was what stopped this reading as tabs: five identical
+        outlines say five buttons, and the one that is open says nothing the others do not.
+
+        The border is still declared on every tab and merely painted in nothing on the closed ones,
+        so opening a different tab does not move the strip by a pixel. The rounding rides with it —
+        it is the shape of a tab rather than of a box, so it is only ever seen on the one tab that
+        is currently shaped like one.
+    */
     li {
-        @apply inline-block border border-solid border-gray-400 rounded-t-sm py-1 px-2 hover:bg-gray-200 whitespace-nowrap;
+        @apply -mb-px inline-block whitespace-nowrap rounded-t-sm py-1 px-2;
+        @apply border border-solid border-transparent;
+        color: theme('colors.tab-txt');
 
+        &:hover {
+            @apply bg-tab-hover-bg;
+        }
+
+        /*
+            The open tab is the panel's top edge rather than a control in a row: it takes the
+            border on the three sides it still has and drops the fourth, so it is a shape left open
+            towards the thing it belongs to. Every tab is pulled a pixel down onto the rule so that
+            open side lands on it — otherwise the rule runs on underneath and closes the tab again
+            with a line it does not own.
+
+            What it fills with is the rest of why this reads as a tab. Painted in the page's own
+            colour it sat on a different surface from the panel it opens into, which on these pages
+            begins with its caption band — so the tab met an edge it did not match and went on
+            looking like a box parked above the panel. The fill is that band's rung instead, and
+            the open edge stops being a boundary: tab and panel are one surface.
+
+            Its hover is itself — the tab already open is not a thing to offer.
+        */
         &.has-current {
-            @apply border-b-0;
+            @apply border-b-0 border-tab-border font-semibold;
+            background-color: theme('colors.tab-current-bg');
+            color: theme('colors.tab-current-txt');
+
+            &:hover {
+                background-color: theme('colors.tab-current-bg');
+            }
+        }
+
+        button {
+            @apply bg-transparent border-0 p-0 m-0;
         }
     }
+}
+
+/*
+    An FA table draws a border on its first row, so a panel opening straight onto one puts that
+    border a hair under the strip's rule and the top reads as two lines rather than one.
+
+    `center:first-child` rather than `center`, because only the table flush against the strip
+    doubles the rule — a second one further down the panel keeps its own first row.
+*/
+.contentBox > center:first-child > table:first-child > tbody > tr:first-child > td {
+    border-top-width: 0;
 }

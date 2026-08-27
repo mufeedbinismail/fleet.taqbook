@@ -1,11 +1,13 @@
 @layer components {
-    /* The mark's two colours are the brand's own and are the same everywhere it appears. They sit
-       here rather than on the paths so the markup carries no presentation. */
+    /* The letterform is the one part that has to answer to the theme: it is drawn in the ink
+       colour, which on a dark skin is the far end of the ramp from where it sits on a light one.
+       The accent does not move — it is the brand, and a brand that changes with the skin is not
+       one. */
     .x-brand-logo__mark {
-        fill: #2c3e50;
+        fill: theme('colors.logo-mark');
     }
 
     .x-brand-logo__accent {
-        fill: #00a3a3;
+        fill: theme('colors.logo-accent');
     }
 }

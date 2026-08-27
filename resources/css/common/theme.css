@@ -10,5 +10,717 @@
     :root {
         --breakpoint-md: theme('screens.md');
         --breakpoint-3xl: theme('screens.3xl');
+
+        /* --- Theme palette ---
+           Families are named for the part they play in the 60/30/10 split, never for the hue
+           they currently render — a hue name stops being true the moment the skin changes,
+           which defeats the point of a palette.
+
+           `light` and `dark` are two families, not one ramp with a gap — the band between
+           them is what makes the split read, not a defect to fill. Each family owns its own
+           numbering: equal rung numbers across families are not equal lightness.
+
+           Every family's canonical colour sits at *-500*, and is the designer's own value,
+           verbatim, nothing synthesised.
+
+           The set is deliberately finite — a rung exists because something needs it, and a
+           family gets a new rung only when a real use demands one, not to complete a scale. */
+
+        /* light — the 60% */
+        --c-light-50: #f5f7f8;
+        --c-light-100: #f1f5f7;
+        --c-light-200: #e8f0f3;
+        --c-light-300: #d9e2e7;
+        --c-light-400: #d1e0e5;
+        --c-light-500: #c2d3db;
+        --c-light-600: #adc2cb;
+        /* The rung the dark theme's muted ink stands on. It is inside the band that separates
+           `light` from `dark` — a band that exists so the 60/30 split reads, and which is not
+           being filled in: one rung is added because one thing needs it, and the rest of the
+           band stays empty. It continues the family's own trend rather than starting a new one
+           — hue held at the family's, chroma one step up as lightness drops. */
+        --c-light-700: #728992; /* oklch(0.615 0.030 223.5) */
+
+        /* dark — the 30% */
+        --c-dark-50: #5a6b76;
+        --c-dark-100: #4a5d6b;
+        --c-dark-200: #3d4c57;
+        --c-dark-300: #2c3e50;
+        --c-dark-400: #1e3143;
+        --c-dark-500: #112437;
+        --c-dark-600: #04182b;
+        --c-dark-700: #000d1f;
+
+        /* brand — the 10% */
+        --c-brand-50: #e2f9f8;
+        --c-brand-100: #c2edec;
+        --c-brand-400: #49c4c3;
+        --c-brand-500: #00a3a3;
+        --c-brand-600: #008080;
+        --c-brand-800: #001818; /* dark wash — oklch(0.189 0.032 194.8) */
+
+        --c-success-50: #e5fbdf;
+        --c-success-100: #c8f1bd;
+        --c-success-400: #73d854;
+        --c-success-500: #4db625;
+        --c-success-600: #339300;
+        --c-success-800: #081805; /* dark wash — oklch(0.189 0.044 139.8) */
+
+        --c-warning-50: #fff1e1;
+        --c-warning-100: #ffdcb5;
+        --c-warning-400: #ffcb8e;
+        --c-warning-500: #f59e0b;
+        --c-warning-600: #ca8100;
+        --c-warning-800: #1f1000; /* dark wash — oklch(0.190 0.041 70.9) */
+
+        --c-danger-50: #ffefef;
+        --c-danger-100: #ffd8d9;
+        --c-danger-400: #ff818b;
+        --c-danger-500: #e94f64;
+        --c-danger-600: #c12d48;
+        --c-danger-700: #39181c; /* dark wash, one layer up from 800 — oklch(0.260 0.052 15.3) */
+        --c-danger-800: #240a0d; /* dark wash — oklch(0.189 0.044 15.3) */
+
+        --c-info-50: #e8f6ff;
+        --c-info-100: #c7e8ff;
+        --c-info-400: #43adea;
+        --c-info-500: #008cc9;
+        --c-info-600: #006b9c;
+        --c-info-800: #001624; /* dark wash — oklch(0.190 0.042 237.5) */
+
+        --c-accent-1-50: #f3f2ff;
+        --c-accent-1-100: #e2dfff;
+        --c-accent-1-400: #bdb4ff;
+        --c-accent-1-500: #9d8df1;
+        --c-accent-1-600: #7e6ecb;
+        --c-accent-1-800: #141026; /* dark wash — oklch(0.191 0.044 290.0) */
+
+        --c-accent-2-50: #e0f9ff;
+        --c-accent-2-100: #bbedf9;
+        --c-accent-2-400: #75e5ff;
+        --c-accent-2-500: #05c6e6;
+        --c-accent-2-600: #00a2bd;
+        --c-accent-2-800: #00171d; /* dark wash — oklch(0.189 0.034 216.2) */
+
+        /* neutral — hueless only */
+        /* The greys are Tailwind's own, kept on the rungs Tailwind numbers them, so a
+           value that arrives from a utility class lands on a rung rather than between two. */
+        --c-neutral-0: #ffffff; /* white — the ramp's light endpoint */
+        --c-neutral-100: #f3f4f6;
+        --c-neutral-200: #e5e7eb;
+        --c-neutral-300: #d1d5db;
+        --c-neutral-400: #9ca3af;
+        --c-neutral-900: #111827;
+        --c-neutral-1000: #000000; /* black — the ramp's dark endpoint */
+
+        /* --- Roles ---
+           What each part of the interface is painted with, said as a rung rather than a value.
+           This is the layer a theme moves: a role is repointed at a different rung, and the
+           palette above never changes. Tailwind's tokens read these, so markup names a role
+           and never a rung. */
+        --header-bg: var(--c-light-500);
+        --header-txt: var(--c-dark-300);
+        --footer-bg: var(--c-light-200);
+        --footer-txt: var(--c-dark-50);
+        --footer-border: var(--c-light-300);
+        --table-header-bg: var(--c-light-500);
+        --table-header-txt: var(--c-dark-300);
+        --card-header-bg: var(--c-dark-300);
+        --card-header-txt: var(--c-light-400);
+        --sidebar-bg: var(--c-light-400);
+        --sidebar-txt: var(--c-dark-300);
+        --sidebar-border: var(--c-light-300);
+        --logo-mark: var(--c-dark-300);
+        --logo-accent: var(--c-brand-500);
+        --breadcrumb-bg: var(--c-light-200);
+        --breadcrumb-txt: var(--c-dark-200);
+        --breadcrumb-current-txt: var(--c-dark-300);
+        --breadcrumb-border: var(--c-light-300);
+        --field-border: var(--c-neutral-400);
+        --field-txt: var(--c-neutral-900);
+        --primary-accent: var(--c-brand-500);
+        --warning-accent: var(--c-warning-500);
+        --error-accent: var(--c-danger-500);
+        --page-bg: var(--c-neutral-0);
+        --page-txt: var(--c-neutral-900);
+        --page-caption-bg: var(--c-light-200);
+        --page-caption-txt: var(--c-dark-50);
+        --hero-bg: var(--c-light-500);
+        --hero-title-txt: var(--c-dark-300);
+        --hero-subtitle-txt: var(--c-dark-200);
+        --nav-txt: var(--c-dark-300);
+        --nav-hover-bg: var(--c-light-500);
+        --nav-selected-bg: var(--c-dark-300);
+        --nav-selected-txt: var(--c-light-400);
+        --nav-section-txt: var(--c-dark-50);
+        --nav-guide: var(--c-light-600);
+        --nav-caret: var(--c-dark-50);
+        --nav-caret-hover: var(--c-dark-300);
+        --nav-icon: var(--c-dark-50);
+        --nav-icon-hover: var(--c-dark-300);
+        --nav-disabled-txt: var(--c-dark-50);
+        --breadcrumb-separator: var(--c-light-600);
+        --card-bg: var(--c-neutral-0);
+        --card-sticky-bg: rgb(255 255 255 / 0.95);
+        --card-txt: var(--c-dark-200);
+        --card-title-txt: var(--c-dark-300);
+        --card-border: var(--c-light-300);
+        --card-divider: var(--c-light-300);
+        --card-footer-bg: var(--c-light-100);
+        /* The well inside a card body is its own surface, not a third copy of the two bands that
+           bookend the card. It sat at `light-50`, one rung off white, which is 1.07 off the card
+           and 1.02 off the footer — a well nobody can see the edge of.
+
+           `light-300` would separate it properly, and is not used: that is the divider rung, and a
+           divider running into the edge of a well painted its own colour disappears. `light-200`
+           is what is left — 1.15 off the card, and the divider still reads on it at 1.14.
+
+           It leaves the well and the footer 1.05 apart, which is not a real difference. On a white
+           card the whole of this vocabulary lives in a narrow band, and there is no rung below
+           `light-200` that is not already a border. The dark skin has the room and takes it. */
+        --card-sunken-bg: var(--c-light-200);
+        --card-hover-bg: var(--c-light-50);
+        --card-row-hover-bg: var(--c-neutral-0);
+        --card-entry-txt: var(--c-dark-300);
+        --card-entry-icon: var(--c-dark-50);
+        --card-entry-icon-hover: var(--c-dark-300);
+        --panel-bg: var(--c-neutral-0);
+        --panel-txt: var(--c-dark-300);
+        --panel-border: var(--c-light-300);
+        --dropdown-item-hover-bg: var(--c-light-200);
+        --dropdown-header-border: var(--c-light-300);
+        --dialog-scrim: var(--c-dark-300);
+        --dialog-title-txt: var(--c-dark-300);
+        --dialog-text-txt: var(--c-dark-200);
+        --dialog-icon: var(--c-warning-500);
+        --dialog-danger-icon: var(--c-warning-500);
+        --dialog-actions-bg: var(--c-light-100);
+        --dialog-actions-border: var(--c-light-300);
+        --dialog-cancel-bg: var(--c-neutral-0);
+        --dialog-cancel-txt: var(--c-dark-300);
+        --dialog-cancel-hover-bg: var(--c-light-100);
+        --dialog-confirm-bg: var(--c-brand-500);
+        --dialog-confirm-hover-bg: var(--c-brand-600);
+        --dialog-confirm-txt: var(--c-neutral-0);
+        --dialog-danger-confirm-bg: var(--c-danger-500);
+        --drawer-scrim: rgb(0 0 0 / 0.5);
+
+        --shadow-rgb: 0 0 0;
+
+        /* The native select's caret is painted as a background image, and a colour cannot be
+           escaped into a data URI — so the whole image is the variable. A theme swaps the glyph,
+           not the fill inside it. The three checkbox glyphs need no such treatment: they are drawn
+           over the checked fill, which is the brand colour in any theme. */
+        --field-caret-glyph: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 5'%3e%3cpath fill='%23111827' d='M0 0h10L5 5z'/%3e%3c/svg%3e");
+        --field-bg: var(--c-neutral-0);
+        --field-emphasis-txt: var(--c-dark-300);
+        --field-placeholder-txt: var(--c-dark-50);
+        --field-focus-border: var(--c-brand-500);
+        --field-ring-offset: var(--c-neutral-0);
+        --field-disabled-bg: var(--c-neutral-200);
+        --field-icon: var(--c-dark-200);
+        --field-legend-txt: var(--c-dark-300);
+        --check-bg: var(--c-neutral-0);
+        --check-border: var(--c-neutral-400);
+        --check-fill: var(--c-brand-500);
+        --file-button-bg: var(--c-neutral-200);
+        --file-button-txt: var(--c-neutral-900);
+        --file-button-border: var(--c-light-300);
+        --file-button-hover-bg: var(--c-neutral-300);
+        --segment-selected-bg: var(--c-brand-500);
+        --segment-selected-txt: var(--c-neutral-0);
+
+        /* Off is neutral here: the hueless family, so the switch reads as a control rather than as
+           a piece of the chrome. It used to be `light-500`, which is the header band's own colour —
+           flush with the bar it sat in, and carried entirely by its edge. Off the chrome's hue that
+           trick is gone, so the fill does the separating instead: `neutral-200` stands 1.24 off the
+           header band and 1.24 off a white card, which is a switch you can see in both places.
+
+           The edge follows every other control's in this skin — `field-border` is `neutral-400`,
+           and a switch is a control. It is the quieter edge the old blue-grey one was, which is the
+           price of the fill no longer being invisible.
+
+           On is a second set rather than an override of part of the first: how a switch reads when
+           it is on is its own decision, not a variation of the other. */
+        --toggle-flush: var(--c-neutral-200);
+        --toggle-txt: var(--c-neutral-900);
+        --toggle-border: var(--c-neutral-400);
+        /* The knob is the opposite of the track it rides on, in both states and both skins. A
+           white one on the off track is the convention and reads at 1.54 — a dot that says which
+           side you are on cannot be the one part of the switch nobody can find. */
+        --toggle-knob: var(--c-neutral-900);
+        --toggle-on-flush: var(--c-dark-300);
+        --toggle-on-txt: var(--c-light-400);
+        /* The on pill carries its state in the fill, so it has no edge of its own. Kept as a role
+           rather than written into the component, so a skin that wants one has somewhere to say
+           so — which is the whole reason this is a token and not `border: 0`. */
+        --toggle-on-border: transparent;
+        --toggle-on-knob: var(--c-neutral-0);
+
+        /* A variant washes the on state instead of filling it, so an accent names the switch
+           without shouting over the screen around it. The wash is the family's own `50` rung: at
+           full strength the accent is a slab, and the ink here is picked to sit on a tint. One ink
+           serves all five — each wash is light enough to carry it, and a variant that had its own
+           would be five decisions where the washes only ask one. */
+        --toggle-wash-txt: var(--c-dark-300);
+        /* The mark takes `600`, not the anchor. `500` is the accent as it reads on the page, and
+           on that family's own `50` it is the page again — 2.83 for brand, 2.39 for success, where
+           the knob alone needs 3. `600` is the rung that exists for a light surface and it carries
+           both: 4.35 and 3.61. Warning is the one that will not come: amber has no darker rung that
+           is still amber, so it lands at 2.84 against its wash. Its outer edge clears the page at
+           3.16, which is what keeps the pill findable; the shortfall is against its own fill. */
+        --toggle-primary-flush: var(--c-brand-50);
+        --toggle-primary-mark: var(--c-brand-600);
+        --toggle-success-flush: var(--c-success-50);
+        --toggle-success-mark: var(--c-success-600);
+        --toggle-warning-flush: var(--c-warning-50);
+        --toggle-warning-mark: var(--c-warning-600);
+        --toggle-danger-flush: var(--c-danger-50);
+        --toggle-danger-mark: var(--c-danger-600);
+        --toggle-neutral-flush: var(--c-light-200);
+        --toggle-neutral-mark: var(--c-dark-200);
+
+        /* Disabled names its colours instead of dimming whatever it landed on. It is one state, so
+           it is one set: every variant and both halves of the switch arrive here, and the surface
+           and ink are the ones the disabled field already uses. The ink sits at 2.05 against the
+           pill on purpose — the enabled switch reads at 7.13, and the drop is the message. */
+        /* One rung deeper than the off state now that off is neutral too — `neutral-200` was both,
+           which would have left a disabled switch and a live one wearing the same fill and only the
+           ink telling them apart. The edge comes off its own fill for the same reason. */
+        --toggle-disabled-flush: var(--c-neutral-300);
+        --toggle-disabled-txt: var(--c-neutral-400);
+        --toggle-disabled-border: var(--c-neutral-400);
+        --toggle-disabled-knob: var(--c-neutral-400);
+        --select-chip-bg: var(--c-light-100);
+        --select-chip-txt: var(--c-dark-200);
+        --select-clear-txt: var(--c-dark-200);
+        --select-clear-hover-txt: var(--c-warning-600);
+        --select-overflow-txt: var(--c-dark-200);
+        --select-tray-border: var(--c-light-300);
+        --select-joined-edge: var(--c-light-300);
+        --select-waiting-txt: var(--c-dark-50);
+        --select-message-txt: var(--c-dark-200);
+        --select-retry-txt: var(--c-brand-500);
+        --select-option-selected-bg: var(--c-dark-300);
+        --select-option-highlight-bg: var(--c-light-200);
+        --select-option-selected-txt: var(--c-light-400);
+        --select-option-highlight-txt: var(--c-dark-300);
+        --select-option-desc-txt: var(--c-dark-200);
+        --select-option-desc-selected-txt: var(--c-light-500);
+        --select-option-disabled-txt: var(--c-neutral-400);
+        --select-group-txt: var(--c-dark-300);
+        --date-cell-hover-bg: var(--c-light-200);
+        --date-cell-hover-txt: var(--c-dark-300);
+        --date-cell-selected-bg: var(--c-dark-300);
+        --date-cell-selected-txt: var(--c-light-400);
+        --date-cell-weekno-txt: var(--c-neutral-400);
+        --date-cell-weekend-txt: var(--c-warning-500);
+        --badge-txt: var(--c-dark-200);
+        --badge-count-bg: var(--c-light-100);
+        --badge-success: var(--c-success-500);
+        --badge-warning: var(--c-warning-500);
+        --badge-danger: var(--c-danger-500);
+        --badge-info: var(--c-brand-500);
+        --badge-neutral: var(--c-dark-200);
+        --button-primary-bg: var(--c-brand-500);
+        --button-primary-hover-bg: var(--c-brand-600);
+        --button-primary-txt: var(--c-neutral-0);
+        --button-outline-bg: var(--c-neutral-0);
+        --button-outline-txt: var(--c-dark-300);
+        --button-outline-border: var(--c-light-300);
+        --button-outline-hover-bg: var(--c-light-100);
+        --button-danger-txt: var(--c-danger-600);
+        --button-danger-border: var(--c-light-300);
+        --button-danger-hover-bg: var(--c-light-100);
+        --button-ghost-hover-bg: var(--c-light-100);
+        --loader-overlay-bg: var(--c-neutral-0);
+        --loader-track: var(--c-light-300);
+        --loader-ball: var(--c-brand-500);
+        --loader-spinner: var(--c-brand-500);
+        --loader-error: var(--c-danger-500);
+        --table-border: var(--c-light-300);
+        --table-row-odd-bg: var(--c-neutral-100);
+        --table-row-even-bg: var(--c-neutral-0);
+        --row-settled-bg: var(--c-success-50);
+        --row-settled-txt: var(--c-brand-500);
+        --row-inquiry-bg: var(--c-warning-50);
+        --row-overdue-bg: var(--c-danger-50);
+        --row-overdue-txt: var(--c-danger-500);
+        --row-inactive-txt: var(--c-neutral-400);
+        --row-label-bg: var(--c-light-100);
+        /* A rung below the fill rather than the one the tables draw with. An outline has to
+           step away from what it outlines, and the open tab is filled now: `light-300` is
+           lighter than the `light-500` inside it, so the border read as absent against the
+           one edge it exists to draw. The dark theme's value already steps away — `dark-400`
+           is lighter than the `dark-600` fill and lighter than the page behind it — which is
+           why only this side moves. */
+        --tab-border: var(--c-light-600);
+        --tab-hover-bg: var(--c-light-200);
+        --tab-rule: var(--c-light-300);
+        --tab-txt: var(--c-dark-50);
+        --tab-current-bg: var(--c-light-500);
+        --tab-current-txt: var(--c-dark-300);
+        --message-error-bg: var(--c-danger-50);
+        --message-error-border: var(--c-danger-500);
+        --message-error-txt: var(--c-danger-600);
+        --message-warning-bg: var(--c-warning-50);
+        --message-warning-border: var(--c-warning-500);
+        --message-warning-txt: var(--c-warning-600);
+        --message-note-bg: var(--c-success-50);
+        --message-note-border: var(--c-success-500);
+        --message-note-txt: var(--c-success-600);
+        --backtrace-frame-border: var(--c-danger-500);
+        --backtrace-frame-bg: var(--c-danger-100);
+        --backtrace-index-txt: var(--c-neutral-400);
+        --backtrace-path-txt: var(--c-dark-50);
+        --backtrace-file-txt: var(--c-dark-300);
+        --backtrace-line-txt: var(--c-danger-600);
+        --backtrace-call-txt: var(--c-dark-300);
+        --banner-brand-bg: var(--c-brand-50);
+        --banner-brand-txt: var(--c-brand-600);
+        --banner-success-bg: var(--c-success-50);
+        --banner-success-border: var(--c-success-500);
+        --banner-success-txt: var(--c-success-600);
+        --banner-success-close-hover-txt: var(--c-dark-300);
+        --banner-warning-bg: var(--c-warning-50);
+        --banner-warning-border: var(--c-warning-500);
+        --banner-warning-txt: var(--c-warning-600);
+        --banner-error-bg: var(--c-danger-50);
+        --banner-error-border: var(--c-danger-500);
+        --banner-error-txt: var(--c-danger-600);
+        --banner-error-close-hover-txt: var(--c-dark-300);
+        --link-txt: var(--c-brand-500);
+        --link-utility-txt: var(--c-brand-500);
+    }
+
+    /* --- Dark theme ---
+       Not an inversion. Inverting each role literally puts the chrome — a band *away from* the
+       page in the light theme — at the lightest end here, so the shell outshines the content it
+       frames, and it drags the ink to the top of the light family, where body text halates.
+
+       What is preserved instead is elevation: further forward is lighter. The rungs are pitched
+       against a dark theme built on the same blue-tinted hue band this palette uses, so the
+       distances are measured rather than guessed:
+
+           dark-700  0.157  the page, the sidebar with it, and genuine recesses — a sunken well,
+                            an inset field, a strip set back from a card.
+           dark-600  0.204  cards, and the chrome bands that sit one rung off the page.
+           dark-500  0.254  panels, popovers and dialogs — the plane in front of a card.
+           dark-400  0.306  borders, dividers, and the hover fill inside a panel.
+           dark-300  0.356  the selected row in the menu.
+           dark-200  0.408  the selected option and the selected date, a rung past the keyboard
+                            highlight so both can be on screen without merging.
+
+       A border is a real step, not a hairline: `dark-400` stands 0.148 of lightness off the page,
+       because on a dark surface an edge drawn at the light theme's 0.093 disappears. It stays in
+       the `dark` family — a border taken from `light` is the commonest dark-mode tell. The one
+       exception is a control's own edge, which is an affordance rather than a boundary and goes
+       to `dark-50` to clear 3:1 against the field it encloses.
+
+       Ink is not pinned to the top of the light family: body is `light-200`, titles `light-50`,
+       secondary `light-600`, muted `light-700`. Muted used to borrow `dark-50` for want of
+       anywhere better, which left it at 3.53 / 3.25 / 2.85 on the page / card / panel against
+       light's own 5.53 / 4.79 / 4.08 — visibly fainter, not a rounding difference. `light-700`
+       is the rung that band was missing: 5.30 / 4.88 / 4.29, which is 0.31 of the body ink's
+       contrast on the page, the same fraction light's muted holds there.
+
+       Three tiers of ink below body, and they are not interchangeable:
+
+           light-700  muted / secondary — placeholders, captions, section labels, entry icons,
+                      the footer strip, week numbers, backtrace paths and indices. Read at a
+                      glance, just not first.
+           dark-50    one step down — a menu entry the account has no access to. Present and
+                      legible, plainly not actionable. Also where a control's own edge sits,
+                      which is the affordance above, not ink.
+           dark-100   the faintest — an inactive record, an unselectable option. 0.17 of body,
+                      which is where light puts the same tier at `neutral-400`.
+
+       Chromatic anchors do not move: `-500` is the brand in every theme. Only the two
+       lightness-relative rungs swap — the `-600` hover darkens on a light surface and so becomes
+       `-400`, which lightens on a dark one, and the `-50`/`-100` washes, which would glare as
+       pale blocks here, become the `-800` dark washes. */
+    :root[data-skin='dark'] {
+        --header-bg: var(--c-dark-600);
+        --header-txt: var(--c-light-50);
+        --footer-bg: var(--c-dark-600);
+        --footer-txt: var(--c-light-700);
+        --footer-border: var(--c-dark-400);
+        --table-header-bg: var(--c-dark-600);
+        --table-header-txt: var(--c-light-50);
+        /* The band is set back rather than brought forward. In light it is the ink family used
+           as a fill, which inverts to a bright slab across the top of a card — the loudest thing
+           on screen, for a title. Recessed instead, and the ink carries the emphasis. */
+        --card-header-bg: var(--c-dark-700);
+        --card-header-txt: var(--c-light-50);
+        --sidebar-bg: var(--c-dark-500);
+        --sidebar-txt: var(--c-light-200);
+        --sidebar-border: var(--c-dark-400);
+        --logo-mark: var(--c-light-50);
+        --logo-accent: var(--c-brand-500);
+        --breadcrumb-bg: var(--c-dark-600);
+        --breadcrumb-txt: var(--c-light-600);
+        --breadcrumb-current-txt: var(--c-light-50);
+        --breadcrumb-border: var(--c-dark-400);
+        /* A control's edge is an affordance, not a boundary, so it is the one border allowed out
+           of the quiet range — far enough off the inset field to clear 3:1. */
+        --field-border: var(--c-dark-50);
+        --field-txt: var(--c-light-200);
+        --primary-accent: var(--c-brand-500);
+        --warning-accent: var(--c-warning-500);
+        --error-accent: var(--c-danger-500);
+        --page-bg: var(--c-dark-700);
+        --page-txt: var(--c-light-200);
+        --page-caption-bg: var(--c-dark-600);
+        --page-caption-txt: var(--c-light-700);
+        /* Raised off the card, not level with it. Taking this from `header-bg` put it on
+           `dark-600`, which is exactly what `card-bg` is — so the band and the body it heads were
+           the same colour and the hero stopped being a band at all. The light theme steps 1.54 off
+           its card here; `dark-300` steps 1.63, which is the same statement, and it clears the page
+           behind the card at 1.46 so the band is not mistakable for the page either. Lighter rather
+           than darker because a hero is the most forward thing on a guest screen, and forward is
+           lighter in this theme.
+
+           Not the 1.54 the light theme uses, though that is what the arithmetic first suggested:
+           the same ratio reads harder on a dark ground, and `dark-300` at 1.63 came out as a slab
+           rather than a band. 1.35 is where it stops competing with the title standing on it. */
+        --hero-bg: var(--c-dark-400);
+        --hero-title-txt: var(--c-light-50);
+        --hero-subtitle-txt: var(--c-light-600);
+        --nav-txt: var(--c-light-200);
+        --nav-hover-bg: var(--c-dark-400);
+        --nav-selected-bg: var(--c-brand-500);
+        --nav-selected-txt: var(--c-dark-700);
+        --nav-section-txt: var(--c-light-700);
+        --nav-guide: var(--c-dark-300);
+        --nav-caret: var(--c-light-700);
+        --nav-caret-hover: var(--c-light-50);
+        --nav-icon: var(--c-light-700);
+        --nav-icon-hover: var(--c-light-50);
+        --nav-disabled-txt: var(--c-dark-50);
+        --breadcrumb-separator: var(--c-dark-300);
+        --card-bg: var(--c-dark-600);
+        --card-sticky-bg: rgb(4 24 43 / 0.95);
+        --card-txt: var(--c-light-600);
+        --card-title-txt: var(--c-light-50);
+        /* Follows the divider, as it does in the light skin where the two are one rung. Left behind
+           at `dark-400` it was the well's own colour, so a card's outline disappeared along every
+           stretch an open panel ran to its inner edge — 1.00, and only where a panel happened to be
+           open, which is the kind of thing nobody reports. */
+        --card-border: var(--c-dark-300);
+        /* Off the well's rung, which it used to share. A line has to read on both things it can
+           run against — the card at 1.63 and the open well at 1.21 — and `dark-400` now reads on
+           neither, being the well itself. */
+        --card-divider: var(--c-dark-300);
+        --card-footer-bg: var(--c-dark-700);
+        /* Here the header and the footer had already taken the only rung below the card, so all
+           three came out identical — 1.00 against each other, the same colour three times. The
+           well goes up instead of down: `dark-700` is spoken for, nothing sits between it and the
+           card, and a rung invented there would be a step no eye could see. Lighter is also the
+           direction this theme reads as forward, so the well becomes an inset panel rather than a
+           deeper hole.
+
+           It sits at `dark-400` so that all four surfaces a card stacks are distinct — the body at
+           `600`, a row hovered on it at `500`, this well at `400`, and a row hovered inside it at
+           `300`. That was the divider's rung, and the divider moved rather than the well: a well is
+           a surface something is read on and a divider is a line, and of the two it is the line
+           that can afford to be found elsewhere. */
+        --card-sunken-bg: var(--c-dark-400);
+        --card-hover-bg: var(--c-dark-500);
+        /* A row inside the well, which is a different surface from a row on the card body and so
+           cannot share its hover. Both were `dark-500`, and once the well moved the hover inside it
+           was the well's own colour — 1.00, a hover that runs and paints nothing. No rung is
+           missing here: this family is an even ramp, ~0.050 of lightness at every step. Four roles
+           were pointed at one of them. */
+        --card-row-hover-bg: var(--c-dark-300);
+        --card-entry-txt: var(--c-light-200);
+        --card-entry-icon: var(--c-light-700);
+        --card-entry-icon-hover: var(--c-light-50);
+        --panel-bg: var(--c-dark-500);
+        --panel-txt: var(--c-light-200);
+        --panel-border: var(--c-dark-300);
+        --dropdown-item-hover-bg: var(--c-dark-400);
+        --dropdown-header-border: var(--c-dark-300);
+        --dialog-scrim: var(--c-neutral-1000);
+        --dialog-title-txt: var(--c-light-50);
+        --dialog-text-txt: var(--c-light-600);
+        --dialog-icon: var(--c-warning-500);
+        --dialog-danger-icon: var(--c-warning-500);
+        --dialog-actions-bg: var(--c-dark-600);
+        --dialog-actions-border: var(--c-dark-300);
+        --dialog-cancel-bg: var(--c-dark-500);
+        --dialog-cancel-txt: var(--c-light-200);
+        --dialog-cancel-hover-bg: var(--c-dark-400);
+        --dialog-confirm-bg: var(--c-brand-500);
+        --dialog-confirm-hover-bg: var(--c-brand-400);
+        --dialog-confirm-txt: var(--c-dark-700);
+        --dialog-danger-confirm-bg: var(--c-danger-500);
+        /* A scrim has less headroom over a dark page than over a white one, so it is taken up
+           rather than down; the dialog's own scrim reaches black for the same reason. */
+        --drawer-scrim: rgb(0 0 0 / 0.7);
+        /* Held at black deliberately. The alpha lives in tailwind.config.js and is shared with
+           the light theme, so black is already the strongest darkening this knob can ask for —
+           and moving it toward white would turn a shadow into a glow. Depth is carried by the
+           surface ladder here instead, which is what the ladder is for. */
+        --shadow-rgb: 0 0 0;
+        --field-caret-glyph: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 5'%3e%3cpath fill='%23e8f0f3' d='M0 0h10L5 5z'/%3e%3c/svg%3e");
+        --field-bg: var(--c-dark-700);
+        --field-emphasis-txt: var(--c-light-50);
+        --field-placeholder-txt: var(--c-light-700);
+        --field-focus-border: var(--c-brand-500);
+        --field-ring-offset: var(--c-dark-600);
+        --field-disabled-bg: var(--c-dark-600);
+        --field-icon: var(--c-light-600);
+        --field-legend-txt: var(--c-light-50);
+        --check-bg: var(--c-dark-700);
+        --check-border: var(--c-dark-50);
+        --check-fill: var(--c-brand-500);
+        --file-button-bg: var(--c-dark-500);
+        --file-button-txt: var(--c-light-200);
+        --file-button-border: var(--c-dark-400);
+        --file-button-hover-bg: var(--c-dark-400);
+        --segment-selected-bg: var(--c-brand-500);
+        --segment-selected-txt: var(--c-dark-700);
+
+        /* Flush still means flush: the fill follows the header band down to `dark-600`, and the
+           edge goes to the affordance rung the fields use, which is the one border allowed out of
+           the quiet range because it encloses a control rather than bounding a region.
+
+           The on state does not move between skins — the four values below are the light theme's,
+           repeated verbatim. It is already a dark slab carrying light ink, which is what a dark
+           skin would have converted it into anyway, and it reads on both headers without changing:
+           `dark-300` sits lighter than this skin's `dark-600` band and darker than the other's
+           `light-500`, so the same colour is raised here and recessed there. Off is what wears the
+           skin; on is the fixed thing the two states are told apart by. */
+        --toggle-flush: var(--c-dark-600);
+        --toggle-txt: var(--c-light-200);
+        --toggle-border: var(--c-dark-50);
+        --toggle-knob: var(--c-light-200);
+        --toggle-on-flush: var(--c-dark-300);
+        --toggle-on-txt: var(--c-light-400);
+        --toggle-on-border: transparent;
+        --toggle-on-knob: var(--c-neutral-0);
+
+        /* The washes take the `-800` dark rungs, which is where every other wash in this theme
+           goes, and the ink inverts with them. `neutral` has no dark wash of its own — it is the
+           one variant whose colour is the ink family rather than a status, so it recesses to the
+           page instead. The marks go back to `500`: `600` darkens, which is what a pale wash
+           wanted and the exact wrong direction on a near-black one — the anchor already clears
+           5.1 to 10.5 against every dark wash, warning included. */
+        --toggle-wash-txt: var(--c-light-200);
+        --toggle-primary-flush: var(--c-brand-800);
+        --toggle-primary-mark: var(--c-brand-500);
+        --toggle-success-flush: var(--c-success-800);
+        --toggle-success-mark: var(--c-success-500);
+        --toggle-warning-flush: var(--c-warning-800);
+        --toggle-warning-mark: var(--c-warning-500);
+        --toggle-danger-flush: var(--c-danger-800);
+        --toggle-danger-mark: var(--c-danger-500);
+        --toggle-neutral-flush: var(--c-dark-700);
+        --toggle-neutral-mark: var(--c-light-600);
+
+        /* Disabled moves off the enabled surface rather than under it — the same direction the
+           disabled field takes here, where an inset control at `dark-700` comes up to `dark-600`
+           when it stops being one. The switch is already `dark-600`, so it comes up to `dark-500`,
+           and the ink drops to the faintest tier. */
+        --toggle-disabled-flush: var(--c-dark-500);
+        --toggle-disabled-txt: var(--c-dark-100);
+        --toggle-disabled-border: var(--c-dark-400);
+        --toggle-disabled-knob: var(--c-dark-100);
+        --select-chip-bg: var(--c-dark-500);
+        --select-chip-txt: var(--c-light-600);
+        --select-clear-txt: var(--c-light-600);
+        --select-clear-hover-txt: var(--c-warning-400);
+        --select-overflow-txt: var(--c-light-600);
+        --select-tray-border: var(--c-dark-300);
+        --select-joined-edge: var(--c-dark-300);
+        --select-waiting-txt: var(--c-light-700);
+        --select-message-txt: var(--c-light-600);
+        --select-retry-txt: var(--c-brand-500);
+        --select-option-selected-bg: var(--c-dark-200);
+        --select-option-highlight-bg: var(--c-dark-400);
+        --select-option-selected-txt: var(--c-light-50);
+        --select-option-highlight-txt: var(--c-light-200);
+        --select-option-desc-txt: var(--c-light-600);
+        --select-option-desc-selected-txt: var(--c-light-600);
+        --select-option-disabled-txt: var(--c-dark-100);
+        --select-group-txt: var(--c-light-50);
+        --date-cell-hover-bg: var(--c-dark-400);
+        --date-cell-hover-txt: var(--c-light-50);
+        --date-cell-selected-bg: var(--c-dark-200);
+        --date-cell-selected-txt: var(--c-light-50);
+        --date-cell-weekno-txt: var(--c-light-700);
+        --date-cell-weekend-txt: var(--c-warning-500);
+        --badge-txt: var(--c-light-600);
+        --badge-count-bg: var(--c-dark-700);
+        --badge-success: var(--c-success-500);
+        --badge-warning: var(--c-warning-500);
+        --badge-danger: var(--c-danger-500);
+        --badge-info: var(--c-brand-500);
+        --badge-neutral: var(--c-light-600);
+        --button-primary-bg: var(--c-brand-500);
+        --button-primary-hover-bg: var(--c-brand-400);
+        --button-primary-txt: var(--c-dark-700);
+        --button-outline-bg: var(--c-dark-600);
+        --button-outline-txt: var(--c-light-200);
+        --button-outline-border: var(--c-dark-400);
+        --button-outline-hover-bg: var(--c-dark-500);
+        --button-danger-txt: var(--c-danger-400);
+        --button-danger-border: var(--c-dark-400);
+        --button-danger-hover-bg: var(--c-dark-500);
+        --button-ghost-hover-bg: var(--c-dark-500);
+        --loader-overlay-bg: var(--c-dark-700);
+        --loader-track: var(--c-dark-400);
+        --loader-ball: var(--c-brand-500);
+        --loader-spinner: var(--c-brand-500);
+        --loader-error: var(--c-danger-500);
+        --table-border: var(--c-dark-400);
+        --table-row-odd-bg: var(--c-dark-700);
+        --table-row-even-bg: var(--c-dark-600);
+        --row-settled-bg: var(--c-success-800);
+        --row-settled-txt: var(--c-brand-500);
+        --row-inquiry-bg: var(--c-warning-800);
+        --row-overdue-bg: var(--c-danger-800);
+        --row-overdue-txt: var(--c-danger-500);
+        --row-inactive-txt: var(--c-dark-100);
+        --row-label-bg: var(--c-dark-700);
+        --tab-border: var(--c-dark-400);
+        --tab-hover-bg: var(--c-dark-500);
+        --tab-rule: var(--c-dark-400);
+        --tab-txt: var(--c-light-700);
+        --tab-current-bg: var(--c-dark-600);
+        --tab-current-txt: var(--c-light-200);
+        --message-error-bg: var(--c-danger-800);
+        --message-error-border: var(--c-danger-500);
+        --message-error-txt: var(--c-danger-400);
+        --message-warning-bg: var(--c-warning-800);
+        --message-warning-border: var(--c-warning-500);
+        --message-warning-txt: var(--c-warning-400);
+        --message-note-bg: var(--c-success-800);
+        --message-note-border: var(--c-success-500);
+        --message-note-txt: var(--c-success-400);
+        --backtrace-frame-border: var(--c-danger-500);
+        /* Your own frames are a step in front of the error box, not a second red wash — there is
+           one dark wash per family, and stacking it on itself would flatten the two levels. */
+        --backtrace-frame-bg: var(--c-danger-700);
+        --backtrace-index-txt: var(--c-light-700);
+        --backtrace-path-txt: var(--c-light-700);
+        --backtrace-file-txt: var(--c-light-50);
+        --backtrace-line-txt: var(--c-danger-400);
+        --backtrace-call-txt: var(--c-light-200);
+        --banner-brand-bg: var(--c-brand-800);
+        --banner-brand-txt: var(--c-brand-400);
+        --banner-success-bg: var(--c-success-800);
+        --banner-success-border: var(--c-success-500);
+        --banner-success-txt: var(--c-success-400);
+        --banner-success-close-hover-txt: var(--c-light-50);
+        --banner-warning-bg: var(--c-warning-800);
+        --banner-warning-border: var(--c-warning-500);
+        --banner-warning-txt: var(--c-warning-400);
+        --banner-error-bg: var(--c-danger-800);
+        --banner-error-border: var(--c-danger-500);
+        --banner-error-txt: var(--c-danger-400);
+        --banner-error-close-hover-txt: var(--c-light-50);
+        --link-txt: var(--c-brand-500);
+        --link-utility-txt: var(--c-brand-500);
     }
 }

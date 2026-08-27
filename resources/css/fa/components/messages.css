@@ -1,26 +1,26 @@
 div.err_msg {
     margin: 10px;
     padding: 3px;
-    border: 1px solid #cc3300;
-    background-color: #ffcccc;
-    color: #dd2200;
+    border: 1px solid theme('colors.message-error-border');
+    background-color: theme('colors.message-error-bg');
+    color: theme('colors.message-error-txt');
     text-align: center;
 }
 
 div.warn_msg {
     margin: 10px;
     padding: 3px;
-    border: 1px solid #ff9900;
-    background-color: #ffff00;
-    color: #ff5500;
+    border: 1px solid theme('colors.message-warning-border');
+    background-color: theme('colors.message-warning-bg');
+    color: theme('colors.message-warning-txt');
     text-align: center;
 }
 
 div.note_msg {
     margin: 10px;
     padding: 3px;
-    border: 1px solid #33cc00;
-    background-color: #ccffcc;
-    color: #007700;
+    border: 1px solid theme('colors.message-note-border');
+    background-color: theme('colors.message-note-bg');
+    color: theme('colors.message-note-txt');
     text-align: center;
 }

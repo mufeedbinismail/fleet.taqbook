@@ -16,7 +16,7 @@
         @if ($fold)
             <div x-collapse:item="vendor-{{ $loop->index }}">
                 <button type="button"
-                        class="x-collapse__trigger flex w-full items-center gap-2 px-2 py-1 text-start text-[#aaaaaa] opacity-40"
+                        class="x-collapse__trigger flex w-full items-center gap-2 px-2 py-1 text-start text-backtrace-index-txt opacity-40"
                         x-collapse:trigger>
                     {{ count($group['frames']) }} frames from vendor
                 </button>
@@ -32,7 +32,7 @@
         @else
             <div @class([
                 'border-l-2',
-                'border-[#cc3300] bg-[#cc3300]/5' => ! $group['vendor'],
+                'border-backtrace-frame-border bg-backtrace-frame-bg' => ! $group['vendor'],
                 'border-transparent opacity-40' => $group['vendor'],
             ])>
                 @foreach ($group['frames'] as $frame)

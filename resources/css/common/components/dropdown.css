@@ -5,22 +5,22 @@
 
     .x-dropdown__panel {
         @apply absolute min-w-[200px] py-1 rounded border border-solid shadow-lg z-[200];
-        background-color: theme('colors.main-bg');
-        border-color: theme('colors.soft-border');
-        color: theme('colors.primary-txt');
+        background-color: theme('colors.panel-bg');
+        border-color: theme('colors.panel-border');
+        color: theme('colors.panel-txt');
     }
 
     .x-dropdown__item {
         @apply flex items-center gap-2 px-4 py-2 transition-colors;
 
         &:hover {
-            background-color: theme('colors.label-bg');
+            background-color: theme('colors.dropdown-item-hover-bg');
         }
     }
 
     .x-dropdown__header {
         @apply flex items-center gap-2 px-4 py-3 mb-1 border-0 border-b border-solid;
-        border-color: theme('colors.soft-border');
+        border-color: theme('colors.dropdown-header-border');
 
         .icon {
             font-size: 2.5rem;

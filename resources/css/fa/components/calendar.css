@@ -3,11 +3,11 @@
 }
 
 #CC {
-    @apply hidden absolute bg-white m-0 p-0 z-10;
+    @apply hidden absolute bg-panel-bg m-0 p-0 z-10;
 
     table {
         @apply border-separate border-spacing-0 text-sm shadow-lg border border-solid;
-        border-color: theme('colors.soft-border');
+        border-color: theme('colors.panel-border');
     }
 
     * {
@@ -52,22 +52,22 @@
         @apply -m-1 block cursor-pointer;
 
         &:hover {
-            background-color: theme('colors.header-bg');
-            color: theme('colors.header-txt');
+            background-color: theme('colors.date-cell-hover-bg');
+            color: theme('colors.date-cell-hover-txt');
         }
     }
 
     .current {
-        background-color: theme('colors.sidebar-selected-bg');
-        color: theme('colors.sidebar-selected-txt');
+        background-color: theme('colors.date-cell-selected-bg');
+        color: theme('colors.date-cell-selected-txt');
     }
 
     .weekno {
-        @apply text-gray-400;
+        @apply text-date-cell-weekno-txt;
     }
 
     .weekend {
-        @apply text-amber-500;
+        @apply text-date-cell-weekend-txt;
     }
 
     .previous {

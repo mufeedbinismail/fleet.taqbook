@@ -14,7 +14,7 @@
        rather than a strip that fills when the pointer is over it. */
     .area-index .nav__entry {
         @apply w-auto p-0 gap-2 text-[0.9375rem];
-        color: theme('colors.primary-txt');
+        color: theme('colors.card-entry-txt');
 
         &:hover {
             @apply bg-transparent underline;
@@ -23,10 +23,11 @@
 
     .area-index .nav__entry-icon {
         @apply shrink-0 text-[0.9em];
-        opacity: 0.6;
+        color: theme('colors.card-entry-icon');
     }
 
     .area-index .nav__entry:hover .nav__entry-icon {
-        @apply opacity-100 no-underline;
+        @apply no-underline;
+        color: theme('colors.card-entry-icon-hover');
     }
 }

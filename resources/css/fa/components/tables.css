@@ -14,7 +14,7 @@ table {
             & > td,
             & > th {
                 @apply border border-solid;
-                border-color: theme('colors.soft-border');
+                border-color: theme('colors.table-border');
             }
         }
     }

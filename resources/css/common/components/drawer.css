@@ -37,7 +37,7 @@
             position: fixed;
             inset: 0;
             z-index: 999;
-            background: rgb(0 0 0 / 50%);
+            background: theme('colors.drawer-scrim');
         }
     }
 

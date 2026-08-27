@@ -17,7 +17,11 @@
         @apply hidden md:flex items-center px-4 py-1.5 text-xs leading-none;
         background-color: theme('colors.breadcrumb-bg');
         color: theme('colors.breadcrumb-txt');
+        /* An edge on both sides, not just the one. The bar above and the page below are each a
+           rung away from this strip and no more, so a single border left it reading as an edge of
+           the header rather than as a bar of its own. */
         border-block-start: 1px solid theme('colors.breadcrumb-border');
+        border-block-end: 1px solid theme('colors.breadcrumb-border');
 
         ol {
             @apply flex flex-wrap items-center gap-x-1.5 gap-y-1;
@@ -31,7 +35,7 @@
            pointing at nothing. */
         li + li::before {
             content: '\203A';
-            @apply opacity-50;
+            color: theme('colors.breadcrumb-separator');
         }
 
         a {

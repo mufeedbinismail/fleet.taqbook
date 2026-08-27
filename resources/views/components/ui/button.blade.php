@@ -2,9 +2,9 @@
 
 @php
 $variants = [
-    'primary' => 'border-0 bg-primary-accent text-white hover:opacity-90',
-    'outline' => 'border border-soft-border bg-transparent text-primary-txt hover:bg-label-bg',
-    'danger' => 'border border-soft-border bg-transparent text-secondary-accent hover:bg-label-bg',
+    'primary' => 'border-0 bg-button-primary-bg text-button-primary-txt hover:bg-button-primary-hover-bg',
+    'outline' => 'border border-button-outline-border bg-transparent text-button-outline-txt hover:bg-button-outline-hover-bg',
+    'danger' => 'border border-button-danger-border bg-transparent text-button-danger-txt hover:bg-button-danger-hover-bg',
 ];
 @endphp
 

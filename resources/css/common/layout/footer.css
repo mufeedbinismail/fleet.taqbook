@@ -4,10 +4,13 @@
     silently to the rule it was meant to override.
 */
 @layer components {
+    /* The strip is one rung off the page it closes, which on its own reads as the page simply
+       ending rather than as a bar. The edge is what says it is a bar. */
     .shell__footer {
         @apply text-xs p-1 flex items-center justify-between;
         background-color: theme('colors.footer-bg');
         color: theme('colors.footer-txt');
+        border-block-start: 1px solid theme('colors.footer-border');
     }
 
     @media (max-width: calc(theme('screens.md') - 1px)) {

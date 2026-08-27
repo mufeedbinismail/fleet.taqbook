@@ -1,6 +1,7 @@
-{{-- Drawn into the page rather than linked. An <img> is a document of its own that no rule on
-     this page reaches inside, so the mark's parts are only addressable from the stylesheet once
-     the paths are here.
+{{-- Drawn into the page rather than linked, because the ink it is drawn in is a skin value. An
+     <img> is a document of its own and no rule on this page reaches inside it, so a linked mark
+     holds the one colour it was saved with while everything around it is re-skinned — which on a
+     dark surface leaves the letterform painted in very nearly the colour behind it.
 
      Sized by the caller. The box is square, so a class naming either axis carries the other. --}}
 <svg {{ $attributes->merge(['class' => 'x-brand-logo']) }}

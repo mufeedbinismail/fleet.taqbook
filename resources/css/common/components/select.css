@@ -55,7 +55,7 @@
         @apply flex max-w-full items-center gap-1 px-1 py-0.5 rounded-sm border border-solid cursor-text;
         border-color: theme('colors.field-border');
         color: theme('colors.field-txt');
-        background-color: theme('colors.main-bg');
+        background-color: theme('colors.field-bg');
     }
 
     /* Focus is shown on the whole control, the way a field beside it shows it — the box being typed
@@ -68,7 +68,7 @@
        one thing this must never look like. */
     .x-select__control:focus-within,
     .x-select--open .x-select__control {
-        border-color: theme('colors.primary-accent');
+        border-color: theme('colors.field-focus-border');
     }
 
     /* The box being typed into is not the field — the control around it is. A focus ring drawn
@@ -123,10 +123,10 @@
     .x-select__clear {
         @apply inline-flex items-center justify-center shrink-0 p-0 bg-transparent border-0 cursor-pointer;
         @apply icon-style icon-close text-[0.75em];
-        color: theme('colors.general-txt');
+        color: theme('colors.select-clear-txt');
 
         &:hover {
-            color: theme('colors.secondary-accent');
+            color: theme('colors.select-clear-hover-txt');
         }
     }
 
@@ -136,8 +136,8 @@
 
     .x-select__chip {
         @apply inline-flex items-center gap-1 max-w-[12rem] rounded px-1.5 py-0.5 text-xs font-semibold;
-        background-color: theme('colors.label-bg');
-        color: theme('colors.general-txt');
+        background-color: theme('colors.select-chip-bg');
+        color: theme('colors.select-chip-txt');
     }
 
     .x-select__chip-label {
@@ -150,13 +150,13 @@
         color: inherit;
 
         &:hover {
-            color: theme('colors.secondary-accent');
+            color: theme('colors.select-clear-hover-txt');
         }
     }
 
     .x-select__overflow {
         @apply text-xs font-semibold whitespace-nowrap;
-        color: theme('colors.general-txt');
+        color: theme('colors.select-overflow-txt');
     }
 
     /* Lifted clear of the page rather than merely layered onto it: this panel is drawn over
@@ -164,9 +164,9 @@
        they belong to. */
     .x-select__panel {
         @apply absolute max-h-72 overflow-y-auto py-1 rounded-sm border border-solid shadow-lg z-[200];
-        background-color: theme('colors.main-bg');
-        border-color: theme('colors.soft-border');
-        color: theme('colors.primary-txt');
+        background-color: theme('colors.panel-bg');
+        border-color: theme('colors.panel-border');
+        color: theme('colors.panel-txt');
     }
 
     /* Open, the control and the list are one box. The edge where they meet is squared off on both
@@ -189,8 +189,8 @@
     .x-select__panel--above {
         @apply rounded-b-none border-b-0;
         box-shadow:
-            0 -10px 15px -3px rgb(0 0 0 / 0.1),
-            0 -4px 6px -4px rgb(0 0 0 / 0.1);
+            0 -10px 15px -3px rgb(var(--shadow-rgb) / 0.1),
+            0 -4px 6px -4px rgb(var(--shadow-rgb) / 0.1);
     }
 
     /* One box, so one outline around it. The list carries the same edge the control has taken while
@@ -198,22 +198,22 @@
        happen to be touching. */
     .x-select__panel--below,
     .x-select__panel--above {
-        border-color: theme('colors.primary-accent');
+        border-color: theme('colors.field-focus-border');
     }
 
     /* And the edge where the two meet stays the quiet one. It is a divider inside that box now, not
        part of its outline, and drawing it in the accent puts a bright line across the middle. */
     .x-select--below .x-select__control {
-        border-bottom-color: theme('colors.soft-border');
+        border-bottom-color: theme('colors.select-joined-edge');
     }
 
     .x-select--above .x-select__control {
-        border-top-color: theme('colors.soft-border');
+        border-top-color: theme('colors.select-joined-edge');
     }
 
     .x-select__tray {
         @apply flex flex-wrap gap-1 px-2 pb-2 mb-1 border-0 border-b border-solid;
-        border-color: theme('colors.soft-border');
+        border-color: theme('colors.select-tray-border');
     }
 
     .x-select__list {
@@ -224,7 +224,7 @@
        contents — the rows carry no indent, so the heading is doing all of that work. */
     .x-select__group {
         @apply px-3 pt-2 pb-1 font-medium cursor-default;
-        color: theme('colors.primary-txt');
+        color: theme('colors.select-group-txt');
     }
 
     .x-select__option {
@@ -236,8 +236,8 @@
        that happens to match: two sources for one appearance can light two rows at once, which is
        what happens the moment the list scrolls under a hand that is not moving. */
     .x-select__option--highlighted {
-        background-color: theme('colors.primary-accent / 8%');
-        color: theme('colors.primary-accent');
+        background-color: theme('colors.select-option-highlight-bg');
+        color: theme('colors.select-option-highlight-txt');
     }
 
     /* What is already chosen is filled rather than merely tinted: it is a statement about the
@@ -246,27 +246,31 @@
     .x-select__option--selected,
     .x-select__option--selected:hover {
         @apply font-medium;
-        background-color: theme('colors.primary-accent');
-        color: theme('colors.main-bg');
+        background-color: theme('colors.select-option-selected-bg');
+        color: theme('colors.select-option-selected-txt');
     }
 
     .x-select__option--disabled {
-        @apply cursor-not-allowed opacity-50;
+        @apply cursor-not-allowed;
+        color: theme('colors.select-option-disabled-txt');
     }
 
     .x-select__option-description {
         @apply text-xs;
-        color: theme('colors.general-txt');
+        color: theme('colors.select-option-desc-txt');
     }
 
-    /* Carried by the row rather than stated again: on a tinted or filled row the muted grey it
-       would otherwise keep is the one colour guaranteed not to read against either. Named by the
-       same two states that change the row's background, so a second line never changes while the
-       background under it does not. */
-    .x-select__option--highlighted .x-select__option-description,
+    /* Carried by the row rather than stated again. The highlighted row is a light tint, so the
+       description's usual muted grey still reads against it unchanged. The selected row is filled
+       solid, and grey would not read there — so it takes a quieter tint of the row's own colour
+       instead, one rule per background rather than the single `color: inherit` that used to answer
+       both. */
+    .x-select__option--highlighted .x-select__option-description {
+        color: theme('colors.select-option-desc-txt');
+    }
+
     .x-select__option--selected .x-select__option-description {
-        color: inherit;
-        opacity: 0.75;
+        color: theme('colors.select-option-desc-selected-txt');
     }
 
     /* Sits where the next row would, so the list reads as continuing rather than as having stopped.
@@ -274,7 +278,7 @@
        size from the text here, and at the size of a row it reads as content rather than as waiting. */
     .x-select__waiting {
         @apply hidden items-center justify-center px-3 py-2 text-xs;
-        color: theme('colors.general-txt / 55%');
+        color: theme('colors.select-waiting-txt');
     }
 
     .x-select__panel--loading .x-select__waiting {
@@ -283,11 +287,11 @@
 
     .x-select__message {
         @apply flex items-center gap-2 px-3 py-2 text-sm;
-        color: theme('colors.general-txt');
+        color: theme('colors.select-message-txt');
     }
 
     .x-select__retry {
         @apply p-0 text-sm font-semibold underline bg-transparent border-0 cursor-pointer;
-        color: theme('colors.primary-accent');
+        color: theme('colors.select-retry-txt');
     }
 }

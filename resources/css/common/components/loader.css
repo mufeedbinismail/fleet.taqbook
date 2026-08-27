@@ -1,6 +1,6 @@
 @layer components {
     [data-loader-container] {
-        @apply hidden absolute top-0 bottom-0 right-0 left-0 inset-0 bg-main-bg bg-opacity-50 z-[2050] w-[100%] h-[100%];
+        @apply hidden absolute top-0 bottom-0 right-0 left-0 inset-0 bg-loader-overlay-bg bg-opacity-50 z-[2050] w-[100%] h-[100%];
     }
 
     [data-loader-container][data-loader-visible] {
@@ -12,8 +12,8 @@
         height: 60px;
         width: 120px;
         border-bottom: 3px solid #0000;
-        background: linear-gradient(90deg, #524656 50%, #0000 0) -25% 100%/50% 3px repeat-x
-            border-box;
+        background: linear-gradient(90deg, theme('colors.loader-track') 50%, #0000 0) -25% 100%/50%
+            3px repeat-x border-box;
         position: relative;
         animation: bouncing-ball-0 0.75s linear infinite;
 
@@ -23,7 +23,7 @@
             inset: auto 42.5% 0;
             aspect-ratio: 1;
             border-radius: 50%;
-            background: theme('colors.secondary-accent');
+            background: theme('colors.loader-ball');
             animation: bouncing-ball-1 0.75s cubic-bezier(0, 900, 1, 900) infinite;
         }
     }
@@ -32,7 +32,7 @@
         --s: 64px;
         width: var(--s);
         height: calc(var(--s) / 2);
-        --_g: theme('colors.primary-accent') 90%, #0000;
+        --_g: theme('colors.loader-spinner') 90%, #0000;
         background:
             radial-gradient(farthest-side, var(--_g)) 0 50%/25% 50%,
             radial-gradient(farthest-side at bottom, var(--_g)) 50% calc(50% - var(--s) / 16) / 25%
@@ -69,7 +69,7 @@
     [data-loader='warning'] {
         @apply icon-style icon-warning;
         font-size: 5rem;
-        color: theme('colors.error-accent');
+        color: theme('colors.loader-error');
     }
 }
 

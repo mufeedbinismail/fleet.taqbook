@@ -17,8 +17,8 @@
     }
 
     body {
-        @apply text-gray-900 antialiased font-normal text-base;
-        background-color: theme('colors.main-bg');
+        @apply text-page-txt antialiased font-normal text-base;
+        background-color: theme('colors.page-bg');
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         margin: 0;
     }
@@ -52,10 +52,9 @@
     input,
     textarea,
     select {
-        @apply bg-white;
+        @apply bg-field-bg;
     }
 
-    /* Enhanced form element styles with specific type targeting but preserving your styling */
     [type='text'],
     input:where(:not([type])),
     [type='email'],
@@ -81,7 +80,6 @@
         min-height: calc(1.5em + (0.75rem + 2px));
     }
 
-    /* Comprehensive focus states using theme colors */
     [type='text']:focus,
     input:where(:not([type])):focus,
     [type='email']:focus,
@@ -102,38 +100,28 @@
         outline-offset: 2px;
         --tw-ring-inset: var(--tw-empty, /*!*/ /*!*/);
         --tw-ring-offset-width: 0px;
-        --tw-ring-offset-color: #fff;
-        --tw-ring-color: theme('colors.primary-accent');
+        --tw-ring-offset-color: theme('colors.field-ring-offset');
+        --tw-ring-color: theme('colors.field-focus-border');
         --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width)
             var(--tw-ring-offset-color);
         --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width))
             var(--tw-ring-color);
         box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-        border-color: theme('colors.primary-accent');
+        border-color: theme('colors.field-focus-border');
     }
 
-    /* Placeholder styles */
-    textarea,
-    input {
-        &::placeholder {
-            @apply text-gray-400;
-        }
-    }
-
-    /* Enhanced placeholder support using theme colors */
     input::-moz-placeholder,
     textarea::-moz-placeholder {
-        color: theme('colors.general-txt');
+        color: theme('colors.field-placeholder-txt');
         opacity: 1;
     }
 
     input::placeholder,
     textarea::placeholder {
-        color: theme('colors.general-txt');
+        color: theme('colors.field-placeholder-txt');
         opacity: 1;
     }
 
-    /* Webkit datetime input styles */
     ::-webkit-datetime-edit-fields-wrapper {
         padding: 0;
     }
@@ -164,18 +152,23 @@
        `background-position` only ever move together.
 
        A background image cannot follow `currentColor`, so the caret's fill is written out here and
-       has to be re-stated by hand whenever the control's text colour moves. */
+       has to be re-stated by hand whenever the control's text colour moves.
+
+       It cannot come from a token either: a data URI has to percent-escape its `#`, and `theme()`
+       is not substituted inside a quoted `url()` string — the string is one opaque token to the
+       parser, and CSS has no way to join two. The value below is `neutral-900` (`#111827`), the
+       same rung `field-txt` reads; move that and this has to be moved with it. */
     select {
         @apply inline-block appearance-none bg-no-repeat;
         padding-inline-end: 1.9rem;
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 5'%3e%3cpath fill='%23111827' d='M0 0h10L5 5z'/%3e%3c/svg%3e");
+        background-image: var(--field-caret-glyph);
         background-position: right 0.65rem center;
         background-size: 0.6em 0.3em;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
 
         &:disabled {
-            @apply bg-gray-200;
+            @apply bg-field-disabled-bg;
         }
 
         &[multiple],
@@ -190,7 +183,6 @@
         }
     }
 
-    /* Checkbox and radio button styles using theme colors */
     [type='checkbox'],
     [type='radio'] {
         -webkit-appearance: none;
@@ -207,10 +199,9 @@
         flex-shrink: 0;
         height: 1rem;
         width: 1rem;
-        color: theme('colors.primary-accent');
+        color: theme('colors.check-fill');
         --tw-shadow: 0 0 #0000;
-        /* Keeping your border and background styling */
-        @apply border border-solid border-gray-400 bg-white;
+        @apply border border-solid border-check-border bg-check-bg;
     }
 
     [type='checkbox'] {
@@ -227,8 +218,8 @@
         outline-offset: 2px;
         --tw-ring-inset: var(--tw-empty, /*!*/ /*!*/);
         --tw-ring-offset-width: 2px;
-        --tw-ring-offset-color: #fff;
-        --tw-ring-color: theme('colors.primary-accent');
+        --tw-ring-offset-color: theme('colors.field-ring-offset');
+        --tw-ring-color: theme('colors.field-focus-border');
         --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width)
             var(--tw-ring-offset-color);
         --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width))
@@ -236,6 +227,11 @@
         box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     }
 
+    /* The tick, the dot and the dash are painted by a data URI for the same reason the select's
+       caret is, and are unreachable from a token for the same reason: `theme()` does not resolve
+       inside a quoted `url()` string. All three are drawn in `neutral-0` (`white`) against the
+       `check-fill` the box is filled with, and have to be re-stated by hand if that pairing
+       changes. */
     [type='checkbox']:checked,
     [type='radio']:checked {
         border-color: transparent;
@@ -310,14 +306,14 @@
         line-height: inherit;
 
         &::file-selector-button {
-            @apply py-0.5 px-1 -my-0.5 -mx-1 me-1 bg-gray-200 border-0 border-solid border-inherit border-e rounded-e-sm transition-colors;
+            @apply py-0.5 px-1 -my-0.5 -mx-1 me-1 bg-file-button-bg text-file-button-txt border-0 border-solid border-file-button-border border-e rounded-e-sm transition-colors;
         }
 
         &:not(:disabled):not([readonly]) {
             @apply cursor-pointer;
 
             &::file-selector-button {
-                @apply bg-gray-300;
+                @apply bg-file-button-hover-bg;
             }
         }
 

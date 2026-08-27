@@ -1,18 +1,18 @@
 @layer components {
     .field {
-        @apply w-full px-3 py-2 bg-white border rounded-lg text-primary-txt placeholder:text-general-txt/60;
-        @apply focus:outline-none focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition;
+        @apply w-full px-3 py-2 bg-field-bg border rounded-lg text-field-emphasis-txt placeholder:text-field-placeholder-txt;
+        @apply focus:outline-none focus:ring-2 focus:ring-field-focus-border focus:border-field-focus-border transition;
     }
 
     .tick {
-        @apply w-4 h-4 shrink-0 rounded accent-primary-accent cursor-pointer;
+        @apply w-4 h-4 shrink-0 rounded accent-check-fill cursor-pointer;
     }
 
     .ghost {
-        @apply rounded-md border-0 bg-transparent px-2 py-1 cursor-pointer hover:bg-label-bg transition;
+        @apply rounded-md border-0 bg-transparent px-2 py-1 cursor-pointer hover:bg-button-ghost-hover-bg transition;
     }
 
     .badge {
-        @apply rounded-full bg-label-bg px-2 py-0.5 text-xs font-semibold text-general-txt tabular-nums;
+        @apply rounded-full bg-badge-count-bg px-2 py-0.5 text-xs font-semibold text-badge-txt tabular-nums;
     }
 }
