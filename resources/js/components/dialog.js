@@ -18,8 +18,8 @@
 const ICONS = {
     warning: 'icon-warning',
     info: 'icon-info',
-    success: 'icon-check',
-    question: 'icon-help',
+    success: 'icon-button-ok',
+    question: 'icon-help-outline',
 };
 
 let dialogEl = null;
