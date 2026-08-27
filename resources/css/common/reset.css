@@ -300,12 +300,12 @@
         background-color: currentColor;
     }
 
-    /* File input styles - keeping your styling approach */
+    /* The edge and the fill are the ones every other control got above, and are deliberately not
+       taken back here. Zeroing them left the file input as the one field on any screen with no box
+       around it — and it also stranded the button below, whose negative margins exist to pull it
+       flush against the padding of a box that had been removed. */
     input[type='file'] {
         @apply overflow-hidden;
-        background: unset;
-        border-color: inherit;
-        border-width: 0;
         font-size: unset;
         line-height: inherit;
 
