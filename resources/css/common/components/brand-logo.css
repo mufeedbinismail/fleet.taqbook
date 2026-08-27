@@ -1,0 +1,11 @@
+@layer components {
+    /* The mark's two colours are the brand's own and are the same everywhere it appears. They sit
+       here rather than on the paths so the markup carries no presentation. */
+    .x-brand-logo__mark {
+        fill: #2c3e50;
+    }
+
+    .x-brand-logo__accent {
+        fill: #00a3a3;
+    }
+}

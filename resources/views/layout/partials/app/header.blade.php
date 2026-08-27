@@ -62,7 +62,7 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
     <aside class="shell__sidebar" x-drawer:panel.left x-cloak>
         <div class="shell__sidebar-inner">
             <h2 class="shell__sidebar-brand">
-                <img src="{{ url("/themes/default/images/logo.svg") }}" alt="Logo">
+                <x-ui.brand-logo />
                 taqbook <small><sub>ERP</sub></small>
             </h2>
             <x-nav::sidebar :navigation="$navigation" :location="$location" />

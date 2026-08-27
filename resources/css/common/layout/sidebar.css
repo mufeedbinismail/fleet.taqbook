@@ -39,7 +39,7 @@
             @apply px-4 py-4 mb-1 text-2xl font-bold text-center;
             border-block-end: 1px solid theme('colors.sidebar-border');
 
-            img {
+            .x-brand-logo {
                 @apply inline-block w-[2rem] align-text-bottom;
             }
         }

@@ -11,7 +11,7 @@
             <div class="bg-header-bg px-8 py-10 text-center">
                 <div class="mb-6">
                     <a href="{{ config('legacy.power_url', '#') }}" target="_blank" class="inline-block transition-transform hover:scale-105">
-                        <img src="{{ url('/themes/default/images/logo.svg') }}" alt="taqbook ERP" class="h-12 mx-auto">
+                        <x-ui.brand-logo class="h-12 mx-auto" />
                     </a>
                 </div>
                 <h1 class="text-2xl font-bold text-header-txt mb-2">
