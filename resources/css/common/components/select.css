@@ -96,8 +96,16 @@
         --tw-ring-offset-color: transparent;
     }
 
+    /* Told to the box being typed into as well as to the control around it: `cursor` inherits,
+       but a disabled form control takes the engine's own `default` over anything handed down, so
+       the one part of the control a pointer actually sits over would read as ordinary. */
+    .x-select--disabled .x-select__control,
+    .x-select--disabled .x-select__search {
+        @apply cursor-not-allowed;
+    }
+
     .x-select--disabled .x-select__control {
-        @apply cursor-not-allowed opacity-50;
+        @apply opacity-50;
     }
 
     .x-select__caret {
