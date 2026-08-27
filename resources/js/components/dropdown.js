@@ -70,7 +70,7 @@ function handlePanel(el, Alpine, modifiers) {
         'x-popover:panel': true,
         'x-anchor'() {
             return {
-                reference: this.$refs.button,
+                reference: triggerFor(el),
                 open: this.$popover.isOpen,
                 placement,
                 onPlacement: (side) => {
@@ -79,6 +79,28 @@ function handlePanel(el, Alpine, modifiers) {
             };
         },
     });
+}
+
+/*
+    A panel is routinely teleported out of its dropdown — it has to be, or the scrolling content
+    area clips it — and `$refs` then resolves from where the panel landed instead of where it was
+    written, so with two dropdowns on a screen every panel anchors to the same button.
+
+    Alpine leaves `_x_teleportBack` pointing at the template the panel was moved from, so the root
+    is reachable from either side of the move. Resolved on every reposition rather than captured
+    once — the panel does not own the trigger, and nothing tells it when one is replaced.
+*/
+function triggerFor(el) {
+    const root = (el._x_teleportBack ?? el).closest('.x-dropdown');
+
+    if (!root) return null;
+
+    // A dropdown nested inside this one's panel has a trigger too, so the direct child is asked
+    // for first and the descendant search is only the fallback for a trigger inside a wrapper.
+    return (
+        root.querySelector(':scope > .x-dropdown__trigger') ??
+        root.querySelector('.x-dropdown__trigger')
+    );
 }
 
 function buildCaret() {
