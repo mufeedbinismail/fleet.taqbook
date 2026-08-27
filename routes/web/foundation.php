@@ -4,8 +4,11 @@ use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Auth\Http\Controller\AuthenticationController;
 use App\Foundation\Auth\Http\Controller\RoleController;
 use App\Foundation\Auth\Http\Controller\UserPreferenceController;
+use App\Foundation\Framework\Http\Controller\ComponentGalleryController;
 use App\Foundation\Navigation\Http\Controller\AreaIndexController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('demo/component-gallery', ComponentGalleryController::class)->name('demo.component-gallery');
 
 Route::post('logout', [AuthenticationController::class, 'logout'])->name('logout');
 
