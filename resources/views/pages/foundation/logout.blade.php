@@ -8,16 +8,10 @@
         <!-- Main Logout Card -->
         <div class="bg-white rounded-xl shadow-lg border border-soft-border overflow-hidden">
             <!-- Header Section -->
-            <div class="bg-header-bg px-8 py-10 text-center">
-                <div class="mb-6">
+            <div class="bg-header-bg px-8 py-8 text-center">
+                <div class="mb-3">
                     <x-ui.brand-logo class="h-12 mx-auto" />
                 </div>
-                <h1 class="text-2xl font-bold text-header-txt mb-2">
-                    taqbook <span class="text-lg font-normal">ERP</span>
-                </h1>
-                <p class="text-header-txt opacity-75 text-sm">
-                    {{ __("Enterprise Resource Planning") }}
-                </p>
             </div>
 
             <!-- Content Section -->
@@ -44,14 +38,11 @@
 
                 <!-- Security Notice -->
                 <div class="bg-table-bg border-l-4 border-primary-accent p-4 rounded-r-lg mb-8">
-                    <div class="flex items-start">
-                        <i class="icon icon-lock text-xl text-primary-accent mt-0.5 mr-3 flex-shrink-0"></i>
+                    <div class="flex items-center">
+                        <i class="icon icon-lock text-xl text-primary-accent mr-3 flex-shrink-0"></i>
                         <div>
                             <p class="font-medium text-primary-txt text-sm">
                                 {{ __("Session Securely Terminated") }}
-                            </p>
-                            <p class="text-general-txt text-sm mt-1">
-                                {{ __("Your session has been safely closed and all data is protected.") }}
                             </p>
                         </div>
                     </div>

@@ -1,5 +1,7 @@
 @extends('layout.base')
 
 @section('body')
-    @yield('content')
+    <div class="h-full overflow-y-auto">
+        @yield('content')
+    </div>
 @endsection
