@@ -247,4 +247,10 @@
     .icon-sun:before {
         content: '\e938';
     }
+    .icon-close:before {
+        content: '\e939';
+    }
+    .icon-info:before {
+        content: '\e93a';
+    }
 }
