@@ -107,14 +107,15 @@
         border-top-color: currentColor;
     }
 
+    /* Drawn from the icon font rather than written as a `×`, because a character is placed by its
+       baseline and the baseline is not the middle of the box — so centring the box leaves the mark
+       sitting low by an amount that belongs to the font and is different in the next one. A face
+       glyph fills its em box, which makes the box being centred and the mark inside it the same
+       shape. */
     .x-select__clear {
-        @apply shrink-0 w-4 h-4 p-0 leading-none bg-transparent border-0 cursor-pointer;
+        @apply inline-flex items-center justify-center shrink-0 p-0 bg-transparent border-0 cursor-pointer;
+        @apply icon-style icon-close text-[0.75em];
         color: theme('colors.general-txt');
-
-        &::before {
-            content: '×';
-            @apply text-base;
-        }
 
         &:hover {
             color: theme('colors.secondary-accent');
@@ -136,12 +137,9 @@
     }
 
     .x-select__chip-remove {
-        @apply shrink-0 p-0 leading-none bg-transparent border-0 cursor-pointer;
+        @apply inline-flex items-center justify-center shrink-0 p-0 bg-transparent border-0 cursor-pointer;
+        @apply icon-style icon-close text-[0.75em];
         color: inherit;
-
-        &::before {
-            content: '×';
-        }
 
         &:hover {
             color: theme('colors.secondary-accent');
