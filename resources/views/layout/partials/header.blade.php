@@ -1,39 +1,18 @@
 @php
-use App\Foundation\Shared\Enum\Skin;
-
 $onload = $onload ?? null;
 $lang = language();
 
 $is_legacy_page = $is_legacy_page ?? false;
-$skin = user_settings()->skin() === Skin::Dark ? 'dark' : null;
+$skin = auth()->check() ? user_settings()->skin()->value : null;
 @endphp
 <!DOCTYPE html>
 <html
     dir="{{ $lang->getDir() }}"
     lang="{{ str_replace('_', '-', $lang->getLocale()) }}"
-    @if ($skin) data-skin="{{ $skin }}" @endif
+    @if ($skin !== null) data-skin="{{ $skin }}" @endif
 >
     <head>
-        {{-- Everything this app owns on window hangs off one name, so it can never collide with
-             legacy FrontAccounting globals or a third-party script — Alpine and axios stay bare
-             since those are their own ecosystem's convention, not ours to rename. First script in
-             the document: everything after this, classic or deferred, can assume App exists. --}}
-        <script>
-            window.App = window.App || {};
-
-            /*
-                Queued rather than run: a classic script executes before any module does, so
-                nothing calling this can assume App is finished being assembled. Whatever is
-                handed over runs once it is, and calling later is no different — anything
-                arriving after that point runs straight away.
-
-                Boot, not ready: this fires while the page is still being assembled, which is the
-                one moment a component can still be registered and the last moment at which no
-                component's state exists yet. Anything needing live state belongs in that
-                component's own init(), which is called for it at the right time.
-            */
-            App.boot = function (fn) { (App.boot.queue ??= []).push(fn); };
-        </script>
+        <script src="{{ asset('js/bootstrap.js').'?v='.filemtime(public_path('js/bootstrap.js')) }}"></script>
 
         <meta charset="{{ $lang->getEncoding() }}">
         <meta name="viewport" content="width=device-width, initial-scale=1">

@@ -42,7 +42,7 @@ class UserSetting extends Store
             'tho_sep' => ThousandSeparator::COMMA->value,
             'dec_sep' => DecimalSeparator::DOT->value,
             'theme' => 'default',
-            'skin' => Skin::Light->value,
+            'skin' => Skin::System->value,
             'page_size' => PageSize::A4->value,
             'show_hints' => 0,
             'print_profile' => null,

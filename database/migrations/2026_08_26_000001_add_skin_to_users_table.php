@@ -10,7 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('skin', 10)->default(Skin::Light->value)->after('theme');
+            $table->string('skin', 10)->default(Skin::System->value)->after('theme');
         });
     }
 

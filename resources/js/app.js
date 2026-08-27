@@ -6,7 +6,6 @@ import data from './foundation/data';
 import { setBusyState, unsetBusyState, isBusy } from './foundation/busy';
 import { route, url, buildQuery } from './foundation/route';
 import { i18n } from './foundation/i18n';
-import { wear as setSkin } from './foundation/skin';
 import { factory as selectFactory } from './components/select';
 
 const select = selectFactory(Alpine);
@@ -28,7 +27,6 @@ Object.assign(window.App, {
     i18n,
     url,
     buildQuery,
-    setSkin,
     select,
 });
 

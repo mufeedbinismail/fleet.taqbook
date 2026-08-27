@@ -80,6 +80,7 @@ return [
 
     'skin' => [
         'label' => 'Skin',
+        'system' => 'Auto',
         'light' => 'Light',
         'dark' => 'Dark',
     ],

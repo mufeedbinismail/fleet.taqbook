@@ -13,10 +13,22 @@ class SaveSkinRequest extends FormRequest
         return true;
     }
 
+    /*
+     * An empty skin is the one that leaves the choice to the browser, and it arrives here as null:
+     * every empty string in a request is turned into one before anything of ours is asked about it.
+     * Put back, because here it is a value and not the absence of one.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('skin')) {
+            $this->merge(['skin' => $this->input('skin') ?? '']);
+        }
+    }
+
     public function rules(): array
     {
         return [
-            'skin' => ['required', Rule::enum(Skin::class)],
+            'skin' => ['present', Rule::enum(Skin::class)],
         ];
     }
 

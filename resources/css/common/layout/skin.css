@@ -1,0 +1,13 @@
+@layer components {
+    .skin__mark--dark {
+        display: none;
+    }
+
+    [data-skin='dark'] .skin__mark--light {
+        display: none;
+    }
+
+    [data-skin='dark'] .skin__mark--dark {
+        display: inline-flex;
+    }
+}

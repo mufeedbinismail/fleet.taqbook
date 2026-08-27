@@ -7,7 +7,11 @@ $title = $title ?? null;
 // has nothing hydrated there, and this chrome is drawn on every page either way.
 $user = auth()->user();
 
-$dark = user_settings()->skin() === Skin::Dark;
+$skins = [
+    ['skin' => Skin::System, 'label' => __('foundation.skin.system'), 'icon' => null],
+    ['skin' => Skin::Light, 'label' => __('foundation.skin.light'), 'icon' => 'icon-sun'],
+    ['skin' => Skin::Dark, 'label' => __('foundation.skin.dark'), 'icon' => 'icon-moon'],
+];
 
 // The dashboard of the area this page is in, named outright: this leads to the figures for an area
 // rather than to the area itself, so it does not go through whatever else opening an area means.
@@ -81,13 +85,32 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
             <h1 class="shell__header-title">{{ $title }}</h1>
             @endif
             <div class="shell__header-toolbar">
-                <x-ui.toggle
-                    :checked="$dark"
-                    :on="['label' => __('foundation.skin.dark'), 'icon' => 'moon']"
-                    :off="['label' => __('foundation.skin.light'), 'icon' => 'sun']"
-                    :aria-label="__('foundation.skin.label')"
-                    @toggled="App.setSkin($event.detail.on)"
-                />
+                <div class="skin" x-dropdown>
+                    <button type="button" x-dropdown:trigger.bare aria-label="{{ __('foundation.skin.label') }}">
+                        <span class="skin__mark skin__mark--light icon icon-sun text-[2rem]"></span>
+                        <span class="skin__mark skin__mark--dark icon icon-moon text-[2rem]"></span>
+                    </button>
+
+                    <template x-teleport="body">
+                        <ul class="min-w-0" x-dropdown:panel x-transition x-cloak>
+                            @foreach ($skins as $choice)
+                                <li>
+                                    <button
+                                        type="button"
+                                        @class([
+                                            'x-dropdown__item w-full text-left bg-transparent border-0 cursor-pointer',
+                                            'italic' => $choice['skin'] === Skin::System,
+                                        ])
+                                        @click="App.setSkin('{{ $choice['skin']->value }}'); $popover.close()"
+                                    >
+                                        <span class="icon {{ $choice['icon'] }} w-4"></span>
+                                        <span>{{ $choice['label'] }}</span>
+                                    </button>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </template>
+                </div>
 
                 <div x-dropdown>
                     <button type="button" x-dropdown:trigger>
