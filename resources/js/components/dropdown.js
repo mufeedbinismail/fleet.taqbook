@@ -16,6 +16,10 @@
 //     x-dropdown:panel
 //     x-dropdown:panel.bottom-end
 //
+// x-dropdown:trigger takes an optional 'bare' modifier, for a trigger with no
+// room to say which way it opens — a glyph alone:
+//     x-dropdown:trigger.bare
+//
 // The trigger carries a caret indicating which way the panel will open —
 // down, up, left or right — rather than the panel carrying a tail pointing
 // back at the trigger: the trigger is what a user reads before opening it,
@@ -27,7 +31,7 @@
 // reads that.
 export default function (Alpine) {
     Alpine.directive('dropdown', (el, directive) => {
-        if (directive.value === 'trigger') handleTrigger(el, Alpine);
+        if (directive.value === 'trigger') handleTrigger(el, Alpine, directive.modifiers);
         else if (directive.value === 'panel') handlePanel(el, Alpine, directive.modifiers);
         else handleRoot(el, Alpine);
     });
@@ -44,15 +48,17 @@ function handleRoot(el, Alpine) {
     });
 }
 
-function handleTrigger(el, Alpine) {
+function handleTrigger(el, Alpine, modifiers) {
     el.classList.add('x-dropdown__trigger');
-
-    const caretEl = buildCaret();
-    el.appendChild(caretEl);
 
     Alpine.bind(el, {
         'x-popover:button': true,
     });
+
+    if (modifiers.includes('bare')) return;
+
+    const caretEl = buildCaret();
+    el.appendChild(caretEl);
 
     Alpine.bind(caretEl, {
         ':data-side'() {
