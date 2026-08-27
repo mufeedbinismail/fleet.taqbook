@@ -64,6 +64,10 @@
         type="button"
         x-toggle
         data-toggle="{{ $data }}"
+
+        {{-- A switch posting nothing has no value to keep, so the only thing readonly can mean
+             here is what disabled already means. --}}
+        @disabled($disabled || $readonly)
         {{ $attributes->class(['x-toggle', $look => $look, 'x-toggle--on' => $held]) }}
     ></button>
 @else
