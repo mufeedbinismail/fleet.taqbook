@@ -85,6 +85,16 @@ return [
         'dark' => 'Dark',
     ],
 
+    'date' => [
+        'today' => 'Today',
+        'clear' => 'Clear',
+
+        'range' => [
+            'from' => 'From',
+            'to' => 'To',
+        ],
+    ],
+
     'select' => [
         'empty' => 'No results',
         'searching' => 'Searching…',

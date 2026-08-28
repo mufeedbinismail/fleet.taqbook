@@ -1,14 +1,17 @@
 import { classNames } from './resources/icons/names.mjs';
+import { panelClassNames } from './resources/css/common/components/date-panel-classes.mjs';
 
 /** @type {import('tailwindcss').Config} */
 export default {
     content: ['./public/themes/**/renderer.php', `./resources/**/*.{js,css,php,blade.php}`],
 
-    // Rules written into a layer are kept only when something is seen using them, and an icon's
-    // class is put together out of a name the server picks — so the templates are searched for
-    // spellings that are never written down there. Taken from the stylesheet that declares them,
-    // which is the only place the full set exists.
-    safelist: classNames(new URL('./', import.meta.url)),
+    // Rules written into a layer are kept only when something is seen using them, and neither set
+    // below is written down anywhere the content search reaches. Each is derived from the
+    // stylesheet that declares it rather than listed out here.
+    safelist: [
+        ...classNames(new URL('./', import.meta.url)),
+        ...panelClassNames(new URL('./', import.meta.url)),
+    ],
     theme: {
         fontFamily: {
             sans: [
@@ -187,14 +190,32 @@ export default {
                 'select-group-txt': 'var(--select-group-txt)',
 
                 // Date panel
+                'date-nav-icon': 'var(--date-nav-icon)',
+                'date-nav-icon-hover': 'var(--date-nav-icon-hover)',
+                'date-nav-secondary': 'var(--date-nav-secondary)',
+                'date-day-name-txt': 'var(--date-day-name-txt)',
+                'date-day-name-hover-txt': 'var(--date-day-name-hover-txt)',
+                'date-btn-txt': 'var(--date-btn-txt)',
+                'date-time-track': 'var(--date-time-track)',
+                'date-time-track-hover': 'var(--date-time-track-hover)',
+                'date-time-thumb-bg': 'var(--date-time-thumb-bg)',
+                'date-time-thumb-glow': 'var(--date-time-thumb-glow)',
+                'date-time-period-txt': 'var(--date-time-period-txt)',
+
                 'date-cell-hover-bg': 'var(--date-cell-hover-bg)',
                 'date-cell-hover-txt': 'var(--date-cell-hover-txt)',
                 'date-cell-selected-bg': 'var(--date-cell-selected-bg)',
                 'date-cell-selected-txt': 'var(--date-cell-selected-txt)',
+                'date-cell-today-txt': 'var(--date-cell-today-txt)',
+                'date-cell-highlighted-mark': 'var(--date-cell-highlighted-mark)',
                 'date-cell-weekno-txt': 'var(--date-cell-weekno-txt)',
-                // The designer confirmed the weekend marking and the warning colour are the same
-                // colour, not two that happen to coincide — so this rung moves when warning does.
                 'date-cell-weekend-txt': 'var(--date-cell-weekend-txt)',
+                'date-cell-other-month-txt': 'var(--date-cell-other-month-txt)',
+                'date-cell-other-month-hover-txt': 'var(--date-cell-other-month-hover-txt)',
+                'date-cell-disabled-txt': 'var(--date-cell-disabled-txt)',
+                'date-cell-disabled-in-range-txt': 'var(--date-cell-disabled-in-range-txt)',
+                'date-cell-range-bg': 'var(--date-cell-range-bg)',
+                'date-cell-range-hover-bg': 'var(--date-cell-range-hover-bg)',
 
                 'badge-txt': 'var(--badge-txt)',
                 'badge-count-bg': 'var(--badge-count-bg)',

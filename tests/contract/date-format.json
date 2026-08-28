@@ -1,0 +1,283 @@
+{
+    "about": [
+        "How a date is written and read, stated where both sides of the wire can be held to it.",
+        "",
+        "What a date looks like belongs to whoever is logged in, and the server owns that preference —",
+        "an order and a separator, assembled into one PHP format string. The field in the browser is",
+        "handed that same string and has to write text the server will accept, and accept text the",
+        "server will write. So the rule is implemented twice, in two languages, and neither",
+        "implementation can see the other.",
+        "",
+        "Drift between them is silent in the worst way. A spelling the browser writes and the server",
+        "refuses is a bound that vanishes out of a filter with nothing said; a spelling the server",
+        "accepts and the browser refuses is a field that reports somebody's own saved value as",
+        "unreadable. Neither raises anything at the moment it goes wrong.",
+        "",
+        "Both sides hold themselves to one rule, stated the same way in each: a text is a date written",
+        "in a format only if writing that date back out under the same format reproduces the text. That",
+        "is what makes the cases below agree by construction rather than by two lists being kept in step",
+        "— padding, letter case and the spelling of a named month are all covered by it at once, and",
+        "neither side needs a list of the ways a token can be mis-typed.",
+        "",
+        "It also keeps a token meaning what the format says. Left to its own devices PHP's parser reads",
+        "`9/3/2026` under `d/m/Y`, which would make `d` a second way of writing `j` and leave the",
+        "distinction the format draws unenforced. Under the round trip both sides refuse it, because",
+        "`d` writes `09`.",
+        "",
+        "`writes` are round trips both sides must agree on: writing the instant under the format must",
+        "produce exactly that text, and reading that text back must return exactly that instant.",
+        "`refuses` must be refused by both, since a date half-understood is worse than one rejected.",
+        "`names` is the other half of the same agreement. A named month is not a translation either side",
+        "gets to make: PHP's date formatting ignores the locale — `F` answers \"March\" whether the locale",
+        "is French, German or Japanese — and `createFromFormat` reads back only these spellings, refusing",
+        "`mars`, `Mär` and `3月` alike. So the browser holds them as constants rather than being sent them,",
+        "and this is what holds the two lists to each other. Should either side ever start translating a",
+        "month, the field would show a name somebody recognises and then refuse to read it back; this is",
+        "what fails first instead. `daysMin` is the exception with only one side to it: no format token",
+        "writes it, so it is held to the columns a week is drawn in rather than to a written date.",
+        "",
+        "`means` is the instant, written in `as` — the one spelling that does not vary and belongs to",
+        "no preference. A case naming no time is about a day, and is compared as one.",
+        "",
+        "`machineFormats` is the other list neither side owns: the spellings a seeded value is tried",
+        "under once the format in force has been. A value is written by one side and read back by the",
+        "other, so a spelling only one of them tries is a saved value reported back as unreadable to",
+        "whoever saved it. The set is the agreement; the order is not, and no case pins one. Under the",
+        "round trip a shorter spelling cannot match a longer text — `Y-m-d` refuses `2026-03-09 15:05`",
+        "for the text left over — so trying them in any order answers the same.",
+        "",
+        "`tokens` and `halves` are the second question both sides ask of a format, after how to spell",
+        "one date in it: which of the two halves it spells at all. That is what decides whether a",
+        "field draws a grid of days, a clock, or both — so where the two sides read a format",
+        "differently, one of them draws a control for something the other is not asking for, and the",
+        "field offers a day to fill in that will never be posted. `halves` covers what a token on its",
+        "own cannot: a backslash makes a letter of whatever follows it, and a letter is not a token.",
+        "",
+        "`separators` is what the preference may put between the parts of a date. The browser splits",
+        "a format into its halves along them, so one the server can write and the browser does not",
+        "know leaves that punctuation stranded on a half it does not belong to."
+    ],
+    "machineFormats": ["Y-m-d H:i:s", "Y-m-d H:i", "Y-m-d"],
+    "separators": ["/", ".", "-", " "],
+    "tokens": {
+        "date": ["d", "j", "m", "n", "M", "F", "Y", "y"],
+        "time": ["H", "G", "h", "g", "i", "s", "a", "A"]
+    },
+    "halves": {
+        "a date and no clock": {
+            "format": "d/m/Y",
+            "carriesDate": true,
+            "carriesTime": false
+        },
+        "a date and a clock": {
+            "format": "d/m/Y h:i A",
+            "carriesDate": true,
+            "carriesTime": true
+        },
+        "a clock and no date": {
+            "format": "h:i A",
+            "carriesDate": false,
+            "carriesTime": true
+        },
+        "a preference stating its time before its date": {
+            "format": "h:i A d/m/Y",
+            "carriesDate": true,
+            "carriesTime": true
+        },
+        "letters a backslash has turned into text, standing beside a clock": {
+            "format": "\\a\\t H:i",
+            "carriesDate": false,
+            "carriesTime": true
+        },
+        "letters a backslash has turned into text, standing beside a date": {
+            "format": "\\o\\n d/m/Y",
+            "carriesDate": true,
+            "carriesTime": false
+        },
+        "an escaped backslash, which leaves the token after it a token": {
+            "format": "\\\\H:i",
+            "carriesDate": false,
+            "carriesTime": true
+        },
+        "text naming neither half": {
+            "format": "\\n\\o\\n\\e",
+            "carriesDate": false,
+            "carriesTime": false
+        }
+    },
+    "names": {
+        "months": [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ],
+        "monthsShort": [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+        ],
+        "days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        "daysShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        "daysMin": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+    },
+    "writes": {
+        "the month-first order most of North America writes": {
+            "format": "m/d/Y",
+            "text": "03/09/2026",
+            "as": "Y-m-d",
+            "means": "2026-03-09"
+        },
+        "the day-first order most of Europe writes": {
+            "format": "d/m/Y",
+            "text": "09/03/2026",
+            "as": "Y-m-d",
+            "means": "2026-03-09"
+        },
+        "the year-first order, dash separated": {
+            "format": "Y-m-d",
+            "text": "2026-03-09",
+            "as": "Y-m-d",
+            "means": "2026-03-09"
+        },
+        "a named month standing before its day": {
+            "format": "M j Y",
+            "text": "Mar 9 2026",
+            "as": "Y-m-d",
+            "means": "2026-03-09"
+        },
+        "a named month standing after its day": {
+            "format": "j M Y",
+            "text": "9 Mar 2026",
+            "as": "Y-m-d",
+            "means": "2026-03-09"
+        },
+        "a named month in the year-first order": {
+            "format": "Y M j",
+            "text": "2026 Mar 9",
+            "as": "Y-m-d",
+            "means": "2026-03-09"
+        },
+        "the dot separator": {
+            "format": "d.m.Y",
+            "text": "09.03.2026",
+            "as": "Y-m-d",
+            "means": "2026-03-09"
+        },
+        "the dash separator in the day-first order": {
+            "format": "d-m-Y",
+            "text": "09-03-2026",
+            "as": "Y-m-d",
+            "means": "2026-03-09"
+        },
+        "the space separator": {
+            "format": "d m Y",
+            "text": "09 03 2026",
+            "as": "Y-m-d",
+            "means": "2026-03-09"
+        },
+        "a two-digit year, which is this century up to sixty-nine": {
+            "format": "d/m/y",
+            "text": "09/03/69",
+            "as": "Y-m-d",
+            "means": "2069-03-09"
+        },
+        "a two-digit year, which is the last century from seventy": {
+            "format": "d/m/y",
+            "text": "09/03/70",
+            "as": "Y-m-d",
+            "means": "1970-03-09"
+        },
+        "an afternoon, written on the twelve-hour clock": {
+            "format": "d/m/Y h:i A",
+            "text": "09/03/2026 03:05 PM",
+            "as": "Y-m-d H:i",
+            "means": "2026-03-09 15:05"
+        },
+        "a morning, written on the twelve-hour clock": {
+            "format": "d/m/Y h:i A",
+            "text": "09/03/2026 09:05 AM",
+            "as": "Y-m-d H:i",
+            "means": "2026-03-09 09:05"
+        },
+        "midnight, which the twelve-hour clock calls twelve rather than nought": {
+            "format": "d/m/Y h:i A",
+            "text": "09/03/2026 12:00 AM",
+            "as": "Y-m-d H:i",
+            "means": "2026-03-09 00:00"
+        },
+        "noon, which the twelve-hour clock also calls twelve": {
+            "format": "d/m/Y h:i A",
+            "text": "09/03/2026 12:00 PM",
+            "as": "Y-m-d H:i",
+            "means": "2026-03-09 12:00"
+        }
+    },
+    "refuses": {
+        "a day past the end of the month it names": {
+            "format": "d/m/Y",
+            "text": "31/02/2026"
+        },
+        "a day before the first of the month it names": {
+            "format": "d/m/Y",
+            "text": "00/03/2026"
+        },
+        "a month past the end of the year": {
+            "format": "Y-m-d",
+            "text": "2026-13-01"
+        },
+        "a date written in an order other than the one in force": {
+            "format": "Y-m-d",
+            "text": "09/03/2026"
+        },
+        "a month name that merely begins like a real one": {
+            "format": "M j Y",
+            "text": "Mars 9 2026"
+        },
+        "text that is not a date at all": {
+            "format": "d/m/Y",
+            "text": "not a date"
+        },
+        "a day and a month written without the pad the format asks for": {
+            "format": "d/m/Y",
+            "text": "9/3/2026"
+        },
+        "an hour written without the pad the format asks for": {
+            "format": "d/m/Y h:i A",
+            "text": "09/03/2026 3:05 PM"
+        },
+        "a named month in the wrong case": {
+            "format": "M j Y",
+            "text": "mar 9 2026"
+        },
+        "the all-zero date the legacy schema writes where there is no date": {
+            "format": "Y-m-d",
+            "text": "0000-00-00"
+        },
+        "text left over after the date": {
+            "format": "d/m/Y",
+            "text": "09/03/2026 extra"
+        },
+        "a meridiem in the wrong case, the format having asked for the upper one": {
+            "format": "d/m/Y h:i A",
+            "text": "09/03/2026 03:05 pm"
+        }
+    }
+}

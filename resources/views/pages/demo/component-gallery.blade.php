@@ -88,6 +88,27 @@
             ],
         ],
     ];
+
+    /*
+        The days the calendars below are built around, counted off the month somebody is looking at:
+        every state a cell can be in needs a day to stand on, and fixed dates would put most of them
+        in a month nobody pages to.
+    */
+    $month = now()->startOfMonth();
+    $on = fn (int $day) => $month->copy()->addDays($day - 1)->format('Y-m-d');
+
+    $calendar = [
+        'chosen' => $on(12),
+        'from' => $on(8),
+        'to' => $on(19),
+        'floor' => $on(4),
+        'ceiling' => $on(26),
+        // The last falls inside the period below, which is the only way to see a refusal read
+        // against covered ground.
+        'refused' => [$on(10), $on(11), $on(17)],
+        'marked' => [$on(15), $on(22)],
+        'moment' => $month->copy()->addDays(11)->setTime(14, 30)->format('Y-m-d H:i'),
+    ];
 @endphp
 
 @section('head')
@@ -504,6 +525,84 @@
                 <select><option>Sales invoices</option></select>
                 <input value="SO-1041">
                 <span class="text-xs text-card-txt">all three are 30px — the check this page failed before the fields above were stripped</span>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="mb-1 mt-8 text-base font-semibold text-card-title-txt">Date</h2>
+    <p class="mb-3 max-w-3xl text-sm text-card-txt">
+        <code>&lt;x-ui.date&gt;</code> and <code>&lt;x-ui.date-range&gt;</code>, drawn open so every
+        colour a cell can carry is on the screen at once rather than one click at a time. These are
+        the same panels a field opens — the fields above each one still work, and the month and year
+        in the heading still page and zoom.
+    </p>
+    <p class="mb-3 max-w-3xl text-sm text-card-txt">
+        Six states answer to the pointer and cannot be shown standing still: a cell under it, a day
+        from the month either side under it, a day inside a period under it, the two paging controls
+        under it, and a chosen cell it has not left yet. Hover any panel to check those.
+    </p>
+
+    <div class="rounded-xl border border-card-border bg-card-bg p-4 shadow-sm">
+        <div class="flex flex-wrap items-start gap-6">
+            <div class="flex flex-col gap-2">
+                <span class="text-xs font-semibold uppercase tracking-wide text-card-txt">resting</span>
+                <x-ui.date inline />
+                <span class="max-w-64 text-xs text-card-txt">today's ink, the weekend pair, the days either side of the month, and the row of day names</span>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <span class="text-xs font-semibold uppercase tracking-wide text-card-txt">chosen</span>
+                <x-ui.date inline :value="$calendar['chosen']" />
+                <span class="max-w-64 text-xs text-card-txt">the fill and the ink that says "this is the one", with today still marked beside it</span>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <span class="text-xs font-semibold uppercase tracking-wide text-card-txt">refusing</span>
+                <x-ui.date inline :min="$calendar['floor']" :max="$calendar['ceiling']" :disable="$calendar['refused']" />
+                <span class="max-w-64 text-xs text-card-txt">a window and three days named individually — both refusals wear one ink</span>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <span class="text-xs font-semibold uppercase tracking-wide text-card-txt">marked</span>
+                <x-ui.date inline :highlight="$calendar['marked']" :value="$calendar['marked'][0]" />
+                <span class="max-w-64 text-xs text-card-txt">underlined rather than filled, and the mark stands down under the day that was chosen</span>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <span class="text-xs font-semibold uppercase tracking-wide text-card-txt">with a clock</span>
+                <x-ui.date inline time today clearable :value="$calendar['moment']" />
+                <span class="max-w-64 text-xs text-card-txt">the track, its thumb and the half of the day, over the panel's own two buttons</span>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <span class="text-xs font-semibold uppercase tracking-wide text-card-txt">the pair, shut</span>
+                <x-ui.date-range
+                    legend="Period"
+                    :from="$calendar['from']"
+                    :to="$calendar['to']"
+                />
+                <span class="max-w-64 text-xs text-card-txt">the two ends joined into one box, the gap between them the only divider, and the word naming what they answer together</span>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <span class="text-xs font-semibold uppercase tracking-wide text-card-txt">a period</span>
+                {{-- The pair assembled here rather than drawn by <x-ui.date-range>, which joins its
+                     two ends into one box — a box an open panel is inserted into, leaving two
+                     calendars wedged between two fields. The directive is what makes two date
+                     fields a period, and it asks only to be wrapped around them. --}}
+                <div x-date-range class="flex flex-wrap items-start gap-4">
+                    {{-- An end and its panel share a column because the panel is put on the page
+                         beside the field it belongs to, and two ends in one row would leave each
+                         calendar standing next to the other end's field. --}}
+                    <div class="flex flex-col gap-2">
+                        <x-ui.date inline :value="$calendar['from']" :disable="$calendar['refused']" />
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <x-ui.date inline :value="$calendar['to']" :disable="$calendar['refused']" />
+                    </div>
+                </div>
+                <span class="max-w-[34rem] text-xs text-card-txt">both ends drawn open, each showing the whole span — covered ground, the chosen day at its own end, and a refused day read against that ground rather than against the panel</span>
             </div>
         </div>
     </div>

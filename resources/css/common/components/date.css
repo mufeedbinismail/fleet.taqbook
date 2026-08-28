@@ -1,0 +1,238 @@
+/* The panel's own stylesheet, pulled into the component layer so the rules below can overrule it
+   by sitting later in the same one. Left unlayered it would outrank every layered rule here and the
+   overrides would read correctly while drawing nothing.
+
+   Said through the panel's own custom properties wherever it publishes one — a property is a name
+   it promises, while a rule aimed at its internals is a bet on markup nobody here writes. */
+@import 'air-datepicker/air-datepicker.css' layer(components);
+
+@layer components {
+    /* Dressed in this application's tokens, weighed the same as the defaults they replace and
+       written after them, which is what settles it. */
+    .x-date__panel {
+        --adp-font-family: inherit;
+        --adp-font-size: theme('fontSize.sm');
+        --adp-width: 17rem;
+
+        /* Above the panels it may be opened from, since it is opened over them. */
+        --adp-z-index: 60;
+
+        --adp-background-color: theme('colors.panel-bg');
+        --adp-background-color-hover: theme('colors.date-cell-hover-bg');
+        --adp-background-color-active: theme('colors.date-cell-hover-bg');
+
+        --adp-color: theme('colors.panel-txt');
+
+        --adp-border-color: theme('colors.panel-border');
+        --adp-border-color-inner: theme('colors.panel-border');
+        --adp-border-color-inline: theme('colors.panel-border');
+        --adp-border-radius: theme('borderRadius.DEFAULT');
+        --adp-cell-border-radius: theme('borderRadius.sm');
+
+        /* One height for every view: left alone each sizes to its own grid and the panel resizes
+           under the pointer. Days are the tallest, so their six-row case sets it and the coarser
+           grids divide it. The band of day names is pinned below so this arithmetic cannot drift. */
+        --x-date-panel-body: calc(6 * var(--adp-day-cell-height) + 2.1875rem);
+        --adp-month-cell-height: calc(var(--x-date-panel-body) / 4);
+        --adp-year-cell-height: calc(var(--x-date-panel-body) / 3);
+
+        /* The chosen day wears this application's own pairing for "this is the one". */
+        --adp-cell-background-color-selected: theme('colors.date-cell-selected-bg');
+        --adp-cell-background-color-selected-hover: theme('colors.date-cell-selected-bg');
+        --adp-cell-background-color-hover: theme('colors.date-cell-hover-bg');
+
+        /* A day chosen from the month on either side is chosen like any other; the two colours
+           kept for that case are otherwise the only hue here nothing else uses. */
+        --adp-background-color-selected-other-month: theme('colors.date-cell-selected-bg');
+        --adp-background-color-selected-other-month-focused: theme('colors.date-cell-selected-bg');
+
+        --adp-color-current-date: theme('colors.date-cell-today-txt');
+        --adp-color-other-month: theme('colors.date-cell-other-month-txt');
+        --adp-color-other-month-hover: theme('colors.date-cell-other-month-hover-txt');
+        --adp-color-disabled: theme('colors.date-cell-disabled-txt');
+
+        --adp-day-name-color: theme('colors.date-day-name-txt');
+        --adp-day-name-color-hover: theme('colors.date-day-name-hover-txt');
+
+        --adp-nav-color-secondary: theme('colors.date-nav-secondary');
+
+        --adp-btn-color: theme('colors.date-btn-txt');
+        --adp-btn-color-hover: theme('colors.date-btn-txt');
+
+        --adp-time-track-color: theme('colors.date-time-track');
+        --adp-time-track-color-hover: theme('colors.date-time-track-hover');
+        --adp-time-day-period-color: theme('colors.date-time-period-txt');
+    }
+
+    /* The two halves of holding every view to one height, and the only place here that names the
+       panel's own structure rather than a property it publishes, there being no property for
+       either. The floor catches a month spanning five week-rows, which draws one row fewer than the
+       six the height is built from. */
+    .x-date__panel .air-datepicker-body--day-names {
+        height: 1.5rem;
+        margin: 0.5rem 0 0.1875rem;
+    }
+
+    .x-date__panel .air-datepicker--content {
+        min-height: var(--x-date-panel-body);
+    }
+
+    /* The grid animates on `all`, which takes in the ink it inherits — so a change of skin
+       transitions the numbers out of the old one. Narrowed to what actually moves. */
+    .x-date__panel .air-datepicker-body {
+        transition-property: opacity, transform;
+    }
+
+    /* What the panel paints from values written into its own rules rather than from a property it
+       publishes, each right on a pale skin and wrong on a dark one. */
+    .x-date__panel {
+        @apply shadow-lg;
+    }
+
+    .x-date__panel .air-datepicker--pointer:after {
+        background: theme('colors.panel-bg');
+    }
+
+    .x-date__panel .air-datepicker-cell.-selected-,
+    .x-date__panel .air-datepicker-cell.-selected-.-current- {
+        color: theme('colors.date-cell-selected-txt');
+    }
+
+    /* Weighed to match the panel's own rule for the same cell rather than to beat it: equal
+       weight, and later. */
+    .x-date__panel .air-datepicker-cell.-selected-.-other-month-,
+    .x-date__panel .air-datepicker-cell.-selected-.-other-decade- {
+        color: theme('colors.date-cell-selected-txt');
+    }
+
+    /* One rule per engine, never grouped: a selector an engine cannot parse takes down every
+       selector grouped with it. The edge goes to the fill's own colour, since a pale ring reads as
+       the knob being the wrong size; the blur is what makes the light a glow rather than a second
+       border. */
+    .x-date__panel .air-datepicker-time--row input[type='range']::-webkit-slider-thumb {
+        background: theme('colors.date-time-thumb-bg');
+        border-color: theme('colors.date-time-thumb-bg');
+        box-shadow: 0 0 6px -1px theme('colors.date-time-thumb-glow');
+    }
+
+    .x-date__panel .air-datepicker-time--row input[type='range']::-moz-range-thumb {
+        background: theme('colors.date-time-thumb-bg');
+        border-color: theme('colors.date-time-thumb-bg');
+        box-shadow: 0 0 6px -1px theme('colors.date-time-thumb-glow');
+    }
+
+    .x-date__panel .air-datepicker-time--row input[type='range']::-ms-thumb {
+        background: theme('colors.date-time-thumb-bg');
+        border-color: theme('colors.date-time-thumb-bg');
+        box-shadow: 0 0 6px -1px theme('colors.date-time-thumb-glow');
+    }
+
+    /* Focus would repaint the knob in the chosen-day colour, among the darkest here — so the knob
+       would drop to its lowest contrast the moment it is reached for by keyboard. */
+    .x-date__panel .air-datepicker-time--row input[type='range']:focus::-webkit-slider-thumb {
+        background: theme('colors.date-time-thumb-bg');
+        border-color: theme('colors.date-time-thumb-bg');
+    }
+
+    .x-date__panel .air-datepicker-time--row input[type='range']:focus::-moz-range-thumb {
+        background: theme('colors.date-time-thumb-bg');
+        border-color: theme('colors.date-time-thumb-bg');
+    }
+
+    .x-date__panel .air-datepicker-time--row input[type='range']:focus::-ms-thumb {
+        background: theme('colors.date-time-thumb-bg');
+        border-color: theme('colors.date-time-thumb-bg');
+    }
+
+    /* Glyphs rather than the drawn arrows the panel ships, so the colour is carried by the text
+       colour rather than by a stroke on a path. */
+    .x-date__panel .air-datepicker-nav--action {
+        color: theme('colors.date-nav-icon');
+    }
+
+    .x-date__panel .air-datepicker-nav--action:hover {
+        color: theme('colors.date-nav-icon-hover');
+    }
+
+    /* Sized against the control rather than the panel's text, standing alone in a button. */
+    .x-date__panel .air-datepicker-nav--action .icon {
+        font-size: theme('fontSize.base');
+    }
+
+    /* Wide enough for the longest date the preference can write, and no wider. A floor rather
+       than a width, so a field still grows into the room a flex row or table cell gives it and
+       refuses only to shrink below a whole date — half a date still reads as a date. In `ch`,
+       because what has to fit is a count of characters. */
+    input[x-date] {
+        min-width: 11ch;
+    }
+
+    /* A time needs the room the clock takes, asked for by the modifier rather than measured from
+       the value, since a field is this wide while empty too. Named against the same attribute the
+       floor above is: an attribute weighs what a class does, so by class alone the floor would
+       outrank the modifier meant to raise it. */
+    input[x-date].x-date--with-time {
+        min-width: 20ch;
+    }
+
+    /* Named against the attribute for the same reason the modifier above is. */
+    input[x-date].x-date--time-only {
+        min-width: 9ch;
+    }
+
+    /* Told apart by colour alone: it is still a day somebody may pick. */
+    .x-date__panel .x-date__cell--weekend {
+        color: theme('colors.date-cell-weekend-txt');
+    }
+
+    /* Ground the period covers, quieter than the fill that says "chosen" because it says a day is
+       inside something rather than that anybody picked it. A period is these classes and nothing
+       else — the panel's own range mode is not used, so every state below is stated here. */
+    .x-date__panel .x-date__cell--within {
+        background-color: theme('colors.date-cell-range-bg');
+    }
+
+    /* Weighed to beat the ground above, which already outranks the panel's own hover. */
+    .x-date__panel .x-date__cell--within:hover,
+    .x-date__panel .x-date__cell--within.-focus- {
+        background-color: theme('colors.date-cell-range-hover-bg');
+    }
+
+    /* The days a period is bounded by and the day this field holds, one pairing: the far end is as
+       chosen as the near one. Written after the ground and its hover on purpose — all three weigh
+       the same, so unstated the fill would be painted over by the ground it stands on. */
+    .x-date__panel .air-datepicker-cell.x-date__cell--edge,
+    .x-date__panel .air-datepicker-cell.x-date__cell--edge:hover,
+    .x-date__panel .air-datepicker-cell.-selected-.x-date__cell--within,
+    .x-date__panel .air-datepicker-cell.-selected-.x-date__cell--within:hover {
+        background: theme('colors.date-cell-selected-bg');
+        color: theme('colors.date-cell-selected-txt');
+    }
+
+    /* A day worth noticing, underlined rather than filled, since the fill says "chosen". */
+    .x-date__panel .x-date__cell--highlighted {
+        font-weight: theme('fontWeight.bold');
+        box-shadow: inset 0 -2px 0 0 theme('colors.date-cell-highlighted-mark');
+    }
+
+    /* The mark would draw over the fill's own corner. Its own rule rather than grouped, so an
+       engine that cannot parse the selector loses only the tidying. */
+    .x-date__panel .x-date__cell--highlighted.-selected- {
+        box-shadow: none;
+    }
+
+    /* Every refusal, last of all: each colour above weighs at least what the panel's own refusal
+       does, so the order is the whole of the guarantee that nothing paints over one. */
+    .x-date__panel .air-datepicker-cell.-disabled-.x-date__cell--weekend,
+    .x-date__panel .air-datepicker-cell.-disabled-.x-date__cell--edge {
+        color: theme('colors.date-cell-disabled-txt');
+        background: none;
+    }
+
+    .x-date__panel .air-datepicker-cell.-disabled-.x-date__cell--within,
+    .x-date__panel .air-datepicker-cell.-disabled-.x-date__cell--within.x-date__cell--weekend,
+    .x-date__panel .air-datepicker-cell.-disabled-.x-date__cell--within.x-date__cell--edge {
+        color: theme('colors.date-cell-disabled-in-range-txt');
+        background-color: theme('colors.date-cell-range-bg');
+    }
+}

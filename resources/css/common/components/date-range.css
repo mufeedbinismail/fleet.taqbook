@@ -1,0 +1,39 @@
+/* A period, as its two ends: one box holding two fields, the ends being halves of one answer.
+
+   The divider is the gap itself — the box is painted in its own edge colour and the fields over it,
+   so the 1px between them lands wherever the gap does, down between two ends side by side and
+   across between two that have wrapped. Each end asks for its own basis and the row may wrap, so
+   the stacking happens when two ends stop fitting rather than at a guessed width. */
+@layer components {
+    .x-date-range {
+        @apply border-0 p-0 m-0 min-w-0;
+    }
+
+    .x-date-range__fields {
+        @apply flex flex-wrap items-stretch overflow-hidden rounded-sm border border-solid min-w-0;
+        border-color: theme('colors.field-border');
+        background-color: theme('colors.field-border');
+        gap: 1px;
+    }
+
+    .x-date-range__legend {
+        @apply mb-1 p-0 text-sm font-semibold normal-case tracking-normal;
+        color: theme('colors.field-legend-txt');
+    }
+
+    /* Each end gives up its own edge, which the box around the pair draws once for both. Never
+       shrunk past a date: the automatic minimum size is left alone, which is what turns "these no
+       longer fit" into a wrap rather than a field hanging out of the box. */
+    input[x-date].x-date-range__field {
+        @apply rounded-none border-0;
+        background-color: theme('colors.field-bg');
+        flex: 1 1 11ch;
+    }
+
+    /* The edge is gone, so the focus mark is drawn inside the field, where a ring around it would
+       be clipped by the box holding the pair. */
+    input[x-date].x-date-range__field:focus {
+        box-shadow: inset 0 0 0 1px theme('colors.field-focus-border');
+        outline: none;
+    }
+}

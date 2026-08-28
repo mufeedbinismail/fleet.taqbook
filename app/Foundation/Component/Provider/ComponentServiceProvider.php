@@ -2,7 +2,9 @@
 
 namespace App\Foundation\Component\Provider;
 
+use App\Foundation\Component\Date\Source\DateSource;
 use App\Foundation\Component\Select\Http\Controller\SelectController;
+use App\Foundation\Framework\Registry\ClientDataRegistry;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +24,7 @@ class ComponentServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->registerOptionListRoute();
+        $this->registerDateDefaults();
     }
 
     /**
@@ -39,5 +42,17 @@ class ComponentServiceProvider extends ServiceProvider
                 ->defaults('select', $select)
                 ->name(str_replace('/', '.', $path).'.options');
         });
+    }
+
+    /**
+     * Hung off the registry being resolved rather than the binding that builds it, so the date
+     * settings are stated among the components; registration closes at the first read.
+     */
+    private function registerDateDefaults(): void
+    {
+        $this->app->resolving(
+            ClientDataRegistry::class,
+            fn (ClientDataRegistry $registry) => $registry->put(DateSource::NAMESPACE, DateSource::all()),
+        );
     }
 }
