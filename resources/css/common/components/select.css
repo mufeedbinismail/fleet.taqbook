@@ -220,15 +220,21 @@
         @apply list-none m-0 p-0;
     }
 
-    /* Heavier and darker than the rows it caps, which is what separates a section from its
-       contents — the rows carry no indent, so the heading is doing all of that work. */
+    /* The bold italic an engine draws an `optgroup` in of its own accord, lost the moment this
+       panel took over drawing the list. */
     .x-select__group {
-        @apply px-3 pt-2 pb-1 font-medium cursor-default;
+        @apply px-3 pt-2 pb-1 font-bold italic cursor-default;
         color: theme('colors.select-group-txt');
     }
 
     .x-select__option {
         @apply flex flex-col px-3 py-1.5 cursor-pointer;
+    }
+
+    /* Has to stay below the rule it overrides: both weigh a single class, so position is the only
+       thing deciding which padding wins. */
+    .x-select__option--grouped {
+        @apply ps-6;
     }
 
     /* Wherever the eye is, by key or by cursor. One rule for both, because the row under the pointer

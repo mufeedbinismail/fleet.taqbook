@@ -347,6 +347,7 @@ export function mount(el, raw = {}, Alpine, http = axios) {
             row.classList.toggle('x-select__option--selected', core.isSelected(option.value));
             row.classList.toggle('x-select__option--highlighted', index === highlighted);
             row.classList.toggle('x-select__option--disabled', option.disabled);
+            row.classList.toggle('x-select__option--grouped', option.group !== null);
 
             if (option.disabled) row.setAttribute('aria-disabled', 'true');
 

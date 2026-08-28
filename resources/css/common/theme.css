@@ -308,7 +308,7 @@
         --select-option-desc-txt: var(--c-dark-200);
         --select-option-desc-selected-txt: var(--c-light-500);
         --select-option-disabled-txt: var(--c-neutral-400);
-        --select-group-txt: var(--c-dark-300);
+        --select-group-txt: var(--c-dark-500);
         --date-cell-hover-bg: var(--c-light-200);
         --date-cell-hover-txt: var(--c-dark-300);
         --date-cell-selected-bg: var(--c-dark-300);
