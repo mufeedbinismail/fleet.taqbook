@@ -234,4 +234,10 @@
     .icon-info:before {
         content: '\e93a';
     }
+    .icon-chevron-left:before {
+        content: '\e93b';
+    }
+    .icon-chevron-right:before {
+        content: '\e93c';
+    }
 }

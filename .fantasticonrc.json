@@ -72,6 +72,8 @@
         "moon": 59703,
         "sun": 59704,
         "close": 59705,
-        "info": 59706
+        "info": 59706,
+        "chevron-left": 59707,
+        "chevron-right": 59708
     }
 }
