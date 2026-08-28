@@ -7,6 +7,8 @@ import { setBusyState, unsetBusyState, isBusy } from './foundation/busy';
 import { route, url, buildQuery } from './foundation/route';
 import { i18n } from './foundation/i18n';
 import { factory as selectFactory } from './components/select';
+import { date } from './components/date';
+import { dateRange } from './components/date-range';
 
 const select = selectFactory(Alpine);
 
@@ -15,6 +17,7 @@ const select = selectFactory(Alpine);
 // stands outside anything that could bound it, and lengthens the page by opening near the foot of
 // it. Stated once here rather than at each of the places a control gets built.
 select.defaults({ panelParent: '.shell__content-scroller' });
+date.defaults({ panelParent: '.shell__content-scroller' });
 
 // Merge, not replace: by the time this deferred module runs, other classic inline scripts on
 // the page have already staged data onto window.App — reassigning it outright would discard
@@ -28,6 +31,8 @@ Object.assign(window.App, {
     url,
     buildQuery,
     select,
+    date,
+    dateRange,
 });
 
 // Passed in rather than left to be reached for on window, so a callback names what it depends on

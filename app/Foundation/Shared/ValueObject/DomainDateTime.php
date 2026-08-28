@@ -4,23 +4,20 @@ namespace App\Foundation\Shared\ValueObject;
 
 use Carbon\CarbonImmutable;
 use Carbon\Exceptions\InvalidFormatException;
+use DateTimeInterface;
 
 final class DomainDateTime extends CarbonImmutable
 {
     const DATE_STRING_FORMAT = 'Y-m-d';
 
+    const DATE_TIME_STRING_FORMAT = 'Y-m-d H:i:s';
+
+    const TIME_STRING_FORMAT = 'H:i:s';
+
     /**
-     * A value is a date written that way only if writing that date back out under the same format
-     * reproduces it exactly.
-     *
-     * One rule, because the parser underneath is forgiving in several directions at once: it counts
-     * a day past the end of its month forward, so the 31st of February answers with the 2nd of
-     * March; it drops text left over at the end; it takes `9` where the format says `d` and `MAR`
-     * where it says `M`; and given a weekday that contradicts its own date it reads the name,
-     * discards it, and answers with the real one. None of those write back what arrived.
-     *
-     * The all-zero date the legacy schema writes where there is no date fails the same rule, so it
-     * arrives as an absence rather than as a year in antiquity.
+     * Only a value that writes back out unchanged counts: the parser counts an overflowing day
+     * into the next month, drops trailing text, takes unpadded or wrongly cased parts, and reads
+     * an all-zero date as a real one.
      *
      * @throws InvalidFormatException
      */
@@ -125,5 +122,74 @@ final class DomainDateTime extends CarbonImmutable
     public static function dateString(): string
     {
         return self::DATE_STRING_FORMAT;
+    }
+
+    /**
+     * Preference first, so a text both spellings accept is read the way the preference means it.
+     *
+     * @return list<string>
+     */
+    public static function readableDateFormats(): array
+    {
+        return [self::userDateFormat(), self::DATE_STRING_FORMAT];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function readableDateTimeFormats(): array
+    {
+        return [self::userDateTimeFormat(), self::DATE_TIME_STRING_FORMAT];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function readableTimeFormats(): array
+    {
+        return [self::userTimeFormat(), self::TIME_STRING_FORMAT];
+    }
+
+    public static function readDate(DateTimeInterface|string|null $value, ?string $format = null): ?static
+    {
+        return self::readAs($value, self::readableDateFormats(), $format);
+    }
+
+    public static function readDateTime(DateTimeInterface|string|null $value, ?string $format = null): ?static
+    {
+        return self::readAs($value, self::readableDateTimeFormats(), $format);
+    }
+
+    public static function readTime(DateTimeInterface|string|null $value, ?string $format = null): ?static
+    {
+        return self::readAs($value, self::readableTimeFormats(), $format);
+    }
+
+    /**
+     * @param  list<string>  $readable
+     */
+    private static function readAs(DateTimeInterface|string|null $value, array $readable, ?string $format = null): ?static
+    {
+        if ($value instanceof DateTimeInterface) {
+            return self::instance($value);
+        }
+
+        $value = trim((string) $value);
+
+        if ($value === '') {
+            return null;
+        }
+
+        $spellings = $format === null ? $readable : [$format, ...$readable];
+
+        foreach ($spellings as $spelling) {
+            $parsed = self::tryFromFormat($spelling, $value);
+
+            if ($parsed !== null) {
+                return $parsed;
+            }
+        }
+
+        return null;
     }
 }

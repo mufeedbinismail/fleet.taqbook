@@ -309,12 +309,38 @@
         --select-option-desc-selected-txt: var(--c-light-500);
         --select-option-disabled-txt: var(--c-neutral-400);
         --select-group-txt: var(--c-dark-500);
+        --date-nav-icon: var(--c-dark-100);
+        --date-nav-icon-hover: var(--c-dark-300);
+        --date-nav-secondary: var(--c-neutral-400);
+        --date-day-name-txt: var(--c-neutral-400);
+        --date-day-name-hover-txt: var(--c-dark-300);
+        --date-btn-txt: var(--c-dark-300);
+        --date-time-track: var(--c-light-300);
+        --date-time-track-hover: var(--c-neutral-400);
+        /* The knob carries the accent rather than the surface it stands on, which would leave a
+           hairline's difference from the rail on the one thing that has to be found. Lit as well as
+           filled, since a 1px rail gives it nothing to read against. */
+        --date-time-thumb-bg: var(--c-brand-500);
+        --date-time-thumb-glow: var(--c-brand-500);
+        --date-time-period-txt: var(--c-neutral-400);
         --date-cell-hover-bg: var(--c-light-200);
         --date-cell-hover-txt: var(--c-dark-300);
         --date-cell-selected-bg: var(--c-dark-300);
         --date-cell-selected-txt: var(--c-light-400);
+        --date-cell-today-txt: var(--c-brand-500);
+        --date-cell-highlighted-mark: var(--c-brand-500);
         --date-cell-weekno-txt: var(--c-neutral-400);
+        /* The designer confirmed the weekend marking and the warning colour are the same colour,
+           not two that happen to coincide — so this rung moves when warning does. */
         --date-cell-weekend-txt: var(--c-warning-500);
+        /* Two roles on one rung: a day from the month on either side, and a day this field
+           refuses. They say different things and are read the same way — past, not at. */
+        --date-cell-other-month-txt: var(--c-light-300);
+        --date-cell-disabled-txt: var(--c-light-300);
+        --date-cell-other-month-hover-txt: var(--c-neutral-400);
+        --date-cell-disabled-in-range-txt: var(--c-neutral-400);
+        --date-cell-range-bg: var(--c-light-100);
+        --date-cell-range-hover-bg: var(--c-light-200);
         --badge-txt: var(--c-dark-200);
         --badge-count-bg: var(--c-light-100);
         --badge-success: var(--c-success-500);
@@ -644,12 +670,34 @@
         --select-option-desc-selected-txt: var(--c-light-600);
         --select-option-disabled-txt: var(--c-dark-100);
         --select-group-txt: var(--c-light-50);
+        --date-nav-icon: var(--c-light-600);
+        --date-nav-icon-hover: var(--c-light-50);
+        --date-nav-secondary: var(--c-light-700);
+        --date-day-name-txt: var(--c-light-700);
+        --date-day-name-hover-txt: var(--c-light-50);
+        --date-btn-txt: var(--c-light-50);
+        --date-time-track: var(--c-dark-300);
+        --date-time-track-hover: var(--c-light-700);
+        --date-time-thumb-bg: var(--c-brand-500);
+        --date-time-thumb-glow: var(--c-brand-500);
+        --date-time-period-txt: var(--c-light-700);
         --date-cell-hover-bg: var(--c-dark-400);
         --date-cell-hover-txt: var(--c-light-50);
         --date-cell-selected-bg: var(--c-dark-200);
         --date-cell-selected-txt: var(--c-light-50);
+        --date-cell-today-txt: var(--c-brand-500);
+        --date-cell-highlighted-mark: var(--c-brand-500);
         --date-cell-weekno-txt: var(--c-light-700);
         --date-cell-weekend-txt: var(--c-warning-500);
+        --date-cell-other-month-txt: var(--c-dark-100);
+        --date-cell-disabled-txt: var(--c-dark-100);
+        --date-cell-other-month-hover-txt: var(--c-light-700);
+        --date-cell-disabled-in-range-txt: var(--c-light-700);
+        /* Recesses here and lifts in the other skin, the one place the two move in opposite
+           directions: the panel stands at `dark-500` and hover already holds the rung above it, so
+           a ground quieter than hover has to take the rung below the panel. */
+        --date-cell-range-bg: var(--c-dark-600);
+        --date-cell-range-hover-bg: var(--c-dark-400);
         --badge-txt: var(--c-light-600);
         --badge-count-bg: var(--c-dark-700);
         --badge-success: var(--c-success-500);
