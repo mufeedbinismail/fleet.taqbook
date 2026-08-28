@@ -80,7 +80,7 @@ neighbour is how a tree ends up teaching two conventions, and the second one to 
 | **Repository** | Loads and persists. Returns Entities, ValueObjects or Collections. |
 | **Query** | A named description of a set of rows, handing back a Builder for whoever needs it to run. |
 | **Service** | The default home for behaviour: a subject's verbs gathered on one class. |
-| **Action** | One verb that outgrew its Service. Executes an Intent. |
+| **Action** | One verb executing an Intent, through `execute()`. Where callers need the answer without the effect, `validate()` sits beside it — the same predicate `execute()` enforces for itself. Also where a verb outgrew its Service. |
 | **Registry** | A store built once and read from thereafter. |
 | **Cart** | A mutable work-in-progress aggregate being assembled across a session. |
 | **Builder** | A fluent DSL that materialises value objects. |
@@ -117,20 +117,34 @@ kernel and its commands.
   the first one's name: give it its own class.
 - **Only Registry, Cart and Builder hold state.** Every other behaviour type is given everything it
   needs and keeps nothing.
+- **Adding a parameter to a verb re-decides every parameter already beside it.** A second value
+  read off the same thing as an existing one is that thing asking to be passed whole: replace the
+  slice with the object, never append a second slice. The ruling that made one value the right
+  argument — one value is nothing to bundle — was conditional on there being one, and the smallest
+  diff into the existing signature is precisely what keeps that condition from being re-read. The
+  tell is two parameters that cannot be wrong independently: an actor handed in as an id, then also
+  as a role id, then also as a flag.
 
 ## Service or Action
 
-**Reach for a Service first: one subject's verbs gathered on one class.** `RoleService` saves a
-role, deletes one, and answers whether a save would lock its owner out. Most behaviour is a
-handful of short methods that belong beside each other, and a class per method buys nothing but
-files to open.
+**Reach for a Service first: one subject's verbs gathered on one class.** Two things promote a verb
+out of it, and the first is a fact about the verb rather than a judgement about its size, so it
+decides first:
 
-**Split out an Action only when the verb and its private helpers would bloat the Service** — when
-the Service has begun to read as two classes sharing a file. Splitting for symmetry is not a
-reason: a `SaveRoleAction` does not oblige a `DeleteRoleAction`.
+1. **A caller wants the answer without the effect** — the verb has a check worth asking on its
+   own. It becomes an Action: `validate()` beside `execute()`, both taking the Intent. **Where
+   the verb's whole input is one value, both take the value** — an Intent exists to carry several
+   already-validated values as one thing, and one value is nothing to bundle.
+2. **The verb and its private helpers would bloat the Service** into two classes sharing a file.
+
+Splitting for symmetry is neither: a `SaveRoleAction` does not oblige a `DeleteRoleAction`. When a
+Service does split, its shared privates go **down** into a Query or Repository, or the Actions take
+the Service — never sideways into a `Concern`, which is how a trait becomes a second Service nobody
+named.
 
 **A file earns its keep or it does not exist.** One method, no helpers, one caller is not a class —
-it is a method on the Service that already owns the subject.
+it is a method on the Service that already owns the subject. Trigger 1 never argues with this: a
+validate/execute pair is two public methods by construction.
 
 **Count callers only where the callers exist.** A shared component's surface answers to callers
 not yet written, so an uncalled member is evidence of nothing: drop one because it is improbable,
@@ -140,14 +154,19 @@ never because it is unused.
 
 **A Service or Action may not throw `ValidationException`, and may not read or shape a response.**
 
-- **Ask before doing.** Checks are methods returning a `ValidationResult`, beside the verb —
-  `validateSave()` beside `save()`. Whoever calls decides what a failure looks like.
-- **Refuse if asked anyway.** Execution reaching a breached invariant throws a domain `Exception`
-  — one defined in the domain's own `Exception` folder, never the framework's. That reports a
-  caller who skipped the check, not a user who typed something wrong, so it carries nothing
-  anybody should be shown.
+- **A check only the verb consumes is an ordinary guard** — inside the verb, public to nobody,
+  named nothing. Most checks are this one.
+- **A check a caller wants to ask without doing makes the verb an Action**: `validate()` beside
+  `execute()`, returning a `ValidationResult`. It is one predicate, not two. `execute()` calls
+  `validate()` itself, inside the transaction and under whatever lock the write needs, and *that*
+  call is the authoritative evaluation — the one concurrency has to get past. The public half is
+  the same check offered early, for a 422, a greyed-out button, or a bulk screen reporting every
+  failure without attempting every write. A caller who skips it changes nothing about correctness.
+- **The refusal is the domain's own exception.** A check failing at execution throws from the
+  domain's `Exception` folder — never the framework's. It reports a caller who skipped the check,
+  not a user who typed something wrong, so it carries nothing anybody should be shown.
 - **Only the HTTP layer turns a `ValidationResult` into a `ValidationException` and a 422** — in
-  the Controller or the `Http/Request`, never below. The Service says which field is at fault; the
+  the Controller or the `Http/Request`, never below. The Action says which field is at fault; the
   boundary decides what that is worth.
 
 ## Naming

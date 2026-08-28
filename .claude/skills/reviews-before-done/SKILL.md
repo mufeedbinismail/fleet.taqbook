@@ -70,10 +70,10 @@ catches it:
 **Point at every line here that exists to tolerate something outside this change. Each one is a
 finding about that thing, not a line to review.**
 
-Fix what is being tolerated, or say in the report why it cannot be. What must not happen is tidying
-the accommodation — naming it, lifting it somewhere shared. That is the answer the question above
-would give, and here it is the wrong one: it makes the tolerated thing permanent and retires the
-only evidence that anyone should still be asking about it.
+Report what is being tolerated, and whether it can be answered at its source. What must not be
+proposed is tidying the accommodation — naming it, lifting it somewhere shared. That is the answer
+the question above would give, and here it is the wrong one: it makes the tolerated thing permanent
+and retires the only evidence that anyone should still be asking about it.
 
 ## Case law
 
@@ -89,15 +89,16 @@ writing either into a skill turns a decision procedure into a catalogue.
 
 ## Closing
 
-A finding is fixed before done is declared, or surfaced as an explicit open decision — never
-silently dropped.
+**The pass reports; nothing in it edits.** A walk that begins fixing has swapped back into the
+authoring stance this pass exists to get out of, and what it reviewed is no longer what is there.
+It also holds the findings without the priorities: which of them are worth a change, and whether
+now is when, is not a judgement this pass stands in the right place to make.
 
-**Fixing findings authors a diff, and that diff is owed the same pass.** A writer who has just
-finished is the one reader in the world who cannot see what they missed — every line is still
-attached to the reason it was chosen. Tests passing says the change works, which is the writing
-pass's own question and never was this one's. So the fixes go through the same pass — every
-question, fresh agents again — and it is a clean walk, not the fixer's confidence, that ends the
-loop.
+A finding is reported or it does not exist — never quietly dropped, and never fixed instead of
+said. One weighed and rejected is reported with the reason: silence and a verdict read the same to
+whoever holds the report.
 
-The pass ends with one line in the report: what was walked, what was found, what changed because
-of it. "Reviewed, nothing found" is a legitimate outcome and is still said.
+Fixing is a separate task, asked for separately, and the diff it authors is owed its own pass.
+
+The pass ends with one line: what was walked, and what was found. "Reviewed, nothing found" is a
+legitimate outcome and is still said.
