@@ -96,7 +96,7 @@ ClientData::registry()
                            x-model="role_name" :class="roleNameError !== null ? 'border-error-accent' : 'border-field-border'"
                            class="field">
                     <div class="mt-1 flex items-center justify-between gap-2">
-                        <p x-show="roleNameError !== null" x-text="roleNameError"
+                        <p data-name-error x-show="roleNameError !== null" x-text="roleNameError"
                            class="text-sm font-semibold text-error-accent"></p>
                         <span class="ms-auto text-xs text-card-txt" x-text="role_name.length + ' / 30'"></span>
                     </div>
@@ -272,7 +272,7 @@ ClientData::registry()
                     {{ __('foundation.role.action.clone') }}
                 </x-button>
 
-                <x-button variant="danger" icon="trash" x-show="id"
+                <x-button data-action="delete" variant="danger" icon="trash" x-show="id"
                         @click="$confirm({
                             title: App.i18n('foundation.role.delete.title'),
                             text: App.i18n('foundation.role.delete.text', { role: role_name }),
@@ -292,190 +292,4 @@ ClientData::registry()
 </div>
 @endsection
 
-@push('scripts')
-<script>
-@verbatim
-App.boot(({ Alpine, App, axios, data }) => {
-    const seed = data.roleEditor;
-
-    Alpine.data('roleEditor', () => ({
-        ...seed.state,
-        roles: seed.roles,
-        catalog: seed.catalog,
-        filter: '',
-        showInactive: false,
-        notice: null,
-        errors: [],
-        roleNameError: null,
-
-        matches(text) {
-            return this.filter.trim() === '' || text.includes(this.filter.trim().toLowerCase());
-        },
-
-        groupVisible(index) {
-            return this.matches(this.catalog[index].group_name)
-                || this.catalog[index].permissions.some((name) => this.matches(name));
-        },
-
-        //----------------------------------------------------------------------------- messages --
-
-        clearMessages() {
-            this.notice = null;
-            this.errors = [];
-            this.roleNameError = null;
-        },
-
-        showNotice(text) {
-            this.clearMessages();
-            this.notice = text;
-        },
-
-        showErrors(messages, roleNameMessage) {
-            this.clearMessages();
-            this.roleNameError = roleNameMessage ?? null;
-            this.errors = messages;
-        },
-
-        //------------------------------------------------------------------------------ network --
-
-        /* Never stacks: a call arriving while a request is already in flight resolves to null
-           rather than racing it. Keyboard-driven submits are the ones that get this far, so the
-           guard cannot be dropped in favour of anything that only reaches the pointer. */
-        async request(method, url, payload) {
-            if (App.isBusy()) return null;
-
-            this.clearMessages();
-
-            try {
-                const response = await axios({ method, url, data: payload });
-                return response.data;
-            } catch (error) {
-                this.handle(error);
-                return null;
-            }
-        },
-
-        handle(error) {
-            // 422 is the only response whose payload is field-level, so it is the only one worth
-            // unpacking onto the form; every other failure can be shown as a single message at most.
-            if (error.response?.status === 422) {
-                const errors = error.response.data.errors || {};
-                const roleName = (errors.name || [])[0];
-                const rest = Object.keys(errors)
-                    .filter((key) => key !== 'name')
-                    .flatMap((key) => errors[key]);
-
-                this.showErrors(rest, roleName);
-                return;
-            }
-
-            if (error.friendlyMessage) this.showErrors([error.friendlyMessage]);
-        },
-
-        /* Keeps ?role= in step with the picker without reloading, so the URL stays shareable. */
-        syncUrl() {
-            window.history.replaceState(null, '', this.id
-                ? App.route('access.roles.index', null, { query: { role: this.id } })
-                : App.route('access.roles.index'));
-        },
-
-        /* Looked up per call rather than held: this component is walked before anything inside it,
-           so at the moment its own state is built there is no collapse to reach for yet. */
-        collapse() {
-            return Alpine.$data(this.$el.querySelector('[x-collapse]'));
-        },
-
-        /* Only groups the role actually uses stand open, mirroring what the server already decided
-           for the page's first paint — this runs on every later state swap, which the server never
-           sees.
-
-           A running filter overrides that and opens everything: a match inside a shut group would
-           be invisible, leaving a page of headers that reads as no result at all. */
-        syncGroups() {
-            const collapse = this.collapse();
-
-            if (this.filter.trim() !== '') {
-                collapse.showAll();
-                return;
-            }
-
-            collapse.hideAll();
-            seed.groups.forEach((group) => {
-                if (group.keys.some((key) => this.permissions.includes(key))) collapse.show(group.group_name);
-            });
-        },
-
-        apply(next) {
-            Object.assign(this, next);
-            this.syncGroups();
-            this.syncUrl();
-        },
-
-        //------------------------------------------------------------------------------ actions --
-
-        async switchTo(id) {
-            if (id === '') {
-                this.clearMessages();
-                this.apply({ id: null, role_name: '', inactive: false, permissions: [], own: false });
-                return;
-            }
-
-            const body = await this.request('get', App.route('access.roles.show', { role: id }));
-
-            // The picker is a command rather than a mirror of the state, so a refused switch has to
-            // be walked back by hand — nothing else would put it back on the role still loaded.
-            if (body) this.apply(body.state);
-            else this.$refs.picker.value = this.id === null ? '' : String(this.id);
-        },
-
-        async save() {
-            const payload = {
-                // The request field is the form's own, so it keeps the input's name.
-                name: this.role_name.trim(),
-                inactive: this.inactive,
-                permissions: [...this.permissions],
-            };
-
-            const body = this.id
-                ? await this.request('put', App.route('access.roles.update', { role: this.id }), payload)
-                : await this.request('post', App.route('access.roles.store'), payload);
-
-            if (!body) return;
-
-            this.roles = body.roles;
-            this.apply(body.state);
-            this.showNotice(body.notice);
-        },
-
-        /* Not destroy(): Alpine treats a method of that name as a teardown hook and calls it when
-           the component's element leaves the page, which here would fire the request off at nobody's
-           asking. */
-        async deleteRole() {
-            const body = await this.request('delete', App.route('access.roles.destroy', { role: this.id }));
-
-            if (!body) return;
-
-            this.roles = body.roles;
-            this.apply(body.state);
-            this.showNotice(body.notice);
-        },
-
-        /* Client-side only: the ticks on screen become a new role, so nothing is saved until Save. */
-        clone() {
-            this.clearMessages();
-            this.id = null;
-            this.own = false;
-            this.syncUrl();
-            this.$refs.roleName.focus();
-            this.$refs.roleName.select();
-        },
-
-        cancel() {
-            this.clearMessages();
-            this.apply({ id: null, role_name: '', inactive: false, permissions: [], own: false });
-        },
-    }));
-});
-@endverbatim
-</script>
-@endpush
+@pageScript('resources/js/pages/foundation/role-editor.js')
