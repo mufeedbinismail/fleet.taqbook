@@ -74,6 +74,11 @@
         "close": 59705,
         "info": 59706,
         "chevron-left": 59707,
-        "chevron-right": 59708
+        "chevron-right": 59708,
+        "page-first": 59709,
+        "page-previous": 59710,
+        "page-next": 59711,
+        "page-last": 59712,
+        "filter": 59713
     }
 }

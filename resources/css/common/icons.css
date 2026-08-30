@@ -240,4 +240,19 @@
     .icon-chevron-right:before {
         content: '\e93c';
     }
+    .icon-page-first:before {
+        content: '\e93d';
+    }
+    .icon-page-previous:before {
+        content: '\e93e';
+    }
+    .icon-page-next:before {
+        content: '\e93f';
+    }
+    .icon-page-last:before {
+        content: '\e940';
+    }
+    .icon-filter:before {
+        content: '\e941';
+    }
 }
