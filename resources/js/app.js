@@ -12,16 +12,13 @@ import { dateRange } from './components/date-range';
 
 const select = selectFactory(Alpine);
 
-// The region every page of this application scrolls. A panel drawn into it travels with the field
-// it belongs to and is bounded by what somebody can actually see; one left to the document at large
-// stands outside anything that could bound it, and lengthens the page by opening near the foot of
-// it. Stated once here rather than at each of the places a control gets built.
+// Bounded by the region that scrolls, so a panel opens against what is visible rather than
+// standing outside anything that could bound it and lengthening the document.
 select.defaults({ panelParent: '.shell__content-scroller' });
 date.defaults({ panelParent: '.shell__content-scroller' });
 
-// Merge, not replace: by the time this deferred module runs, other classic inline scripts on
-// the page have already staged data onto window.App — reassigning it outright would discard
-// that.
+// Merge, not replace: a deferred module runs after the classic inline scripts that have already
+// staged onto window.App.
 Object.assign(window.App, {
     setBusyState,
     unsetBusyState,
@@ -35,19 +32,13 @@ Object.assign(window.App, {
     dateRange,
 });
 
-// Passed in rather than left to be reached for on window, so a callback names what it depends on
-// and boot stays the only place that decides where any of it comes from.
-//
-// The staged data is deep-copied per callback, so what one is handed is its own to keep and edit:
-// nothing it does to that copy can be read back by whoever boots next, and the server's word on how
-// the page opened stays intact underneath for anyone still to ask for it. structuredClone is enough
-// because the payload arrives as parsed JSON and holds nothing that isn't.
+// Deep-copied per callback, so nothing one edits can be read back by whoever boots next.
+// structuredClone is enough because the payload arrives as parsed JSON.
 const supply = () => ({ Alpine, App: window.App, axios, data: structuredClone(data) });
 
-// Drained before Alpine starts, so a callback still gets to register components with it.
-// Replacing the queueing version with a direct call is what lets one name serve both sides of
-// boot: a script arriving with an AJAX fragment long afterwards runs immediately, rather than
-// joining a queue nothing will drain again.
+// Drained before Alpine starts, so a callback still gets to register components with it. The
+// queueing version is then replaced with a direct call, so one arriving later runs immediately
+// rather than joining a queue nothing will drain again.
 const queued = App.boot?.queue ?? [];
 
 App.boot = (fn) => fn(supply());
