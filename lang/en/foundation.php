@@ -59,8 +59,7 @@ return [
             'assigned' => 'This role is currently assigned to some users and cannot be deleted.',
         ],
 
-        // Names the validator substitutes into its own messages, so they read mid-sentence and
-        // lowercase rather than as headings.
+        // Substituted into validation messages, so they read mid-sentence and lowercase.
         'attribute' => [
             'name' => 'role name',
             'permissions' => 'permissions',

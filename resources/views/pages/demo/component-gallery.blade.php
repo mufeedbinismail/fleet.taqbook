@@ -2,25 +2,15 @@
 @section('title', $title)
 
 {{--
-    The reference screen for the theme: every colour below arrives through a role token, and every
-    control below is the component the application actually draws, invoked the way a screen invokes
-    it. Nothing here is a copy of anything — a copy agrees with the app on the day it is written and
-    then drifts without saying so, which is the failure this page exists to make impossible.
-
-    The two exceptions are stated where they occur: the palette card, whose swatches are the fixed
-    palette itself and so cannot be said in role terms, and the sample data, which is invented
-    because there is no record to show.
+    Nothing here is a copy of anything: a copy agrees on the day it is written and then drifts
+    without saying so, which is the failure this page exists to make impossible. Every exception
+    is stated where it occurs.
 --}}
 
 @php
     /*
-        The palette, named rung by rung so the card below can draw it without repeating itself. The
-        values are never written here — each swatch is painted with `var(--c-…)` and prints the hex
-        the browser resolved, so a rung added or moved in the stylesheet shows up here by itself.
-
-        `ink` names which rungs need the light label rather than the dark one. Both are palette
-        references rather than hexes for the same reason everything else on the page is: the palette
-        does not move between themes, so one pair is legible on these swatches in either.
+        Rung names only, never values: a swatch is painted with `var(--c-…)` and prints the hex read
+        back off it. `ink` names the rungs needing the light label rather than the dark one.
     */
     $families = [
         [
@@ -48,9 +38,6 @@
         ],
     ];
 
-    // Sample rows for the two selects. Shaped the way a screen's own rows arrive — value, label,
-    // description, group, disabled — so the control is exercised through the same flattening a real
-    // caller's data goes through rather than a hand-made shortcut.
     $documents = [
         ['value' => 'so', 'label' => 'Sales orders', 'description' => 'Open and pending', 'group' => 'Sales'],
         ['value' => 'si', 'label' => 'Sales invoices', 'description' => 'Posted to the ledger', 'group' => 'Sales'],
@@ -69,8 +56,6 @@
         ['value' => '5', 'label' => 'Contoso', 'description' => 'Inactive'],
     ];
 
-    // Frames for the real backtrace partial, in the shape the backtrace partial groups them: a run of
-    // the app's own, then a folded run from vendor.
     $backtrace = [
         [
             'vendor' => false,
@@ -89,11 +74,8 @@
         ],
     ];
 
-    /*
-        The days the calendars below are built around, counted off the month somebody is looking at:
-        every state a cell can be in needs a day to stand on, and fixed dates would put most of them
-        in a month nobody pages to.
-    */
+    // Counted off the current month rather than fixed, or most of these states would land in a
+    // month nobody pages to.
     $month = now()->startOfMonth();
     $on = fn (int $day) => $month->copy()->addDays($day - 1)->format('Y-m-d');
 
@@ -103,8 +85,7 @@
         'to' => $on(19),
         'floor' => $on(4),
         'ceiling' => $on(26),
-        // The last falls inside the period below, which is the only way to see a refusal read
-        // against covered ground.
+        // The last falls inside the from–to period, the only way to see a refusal on covered ground.
         'refused' => [$on(10), $on(11), $on(17)],
         'marked' => [$on(15), $on(22)],
         'moment' => $month->copy()->addDays(11)->setTime(14, 30)->format('Y-m-d H:i'),
@@ -112,8 +93,7 @@
 @endphp
 
 @section('head')
-{{-- The message boxes, the tab strip and the table styles this page documents are keyed to
-     FrontAccounting's own markup, and drawn by a stylesheet no page receives unless it asks. --}}
+{{-- Asked for here, because no page receives this stylesheet without asking. --}}
 @vite(['resources/css/fa.css'])
 
 {{-- Ahead of the stylesheet's first paint, so reloading the page in the dark theme does not flash
@@ -133,9 +113,8 @@
 @section('content')
 <div class="mx-auto max-w-7xl p-4 md:p-6" x-data>
 
-    {{-- The theme switch belongs to this page rather than to the chrome — nothing else in the
-         application offers one yet — so it sits in the page's own header beside the title, where a
-         screen puts its own controls, instead of floating over the content. --}}
+    {{-- The theme switch is this page's own, so it sits in the page header rather than floating
+         over the content. --}}
     <div class="mb-6 flex flex-wrap items-center gap-4 rounded-xl border border-card-border bg-card-bg p-4 shadow-sm">
         <div class="me-auto min-w-0">
             <h1 class="m-0 text-lg font-semibold text-card-title-txt">Component gallery</h1>
@@ -188,16 +167,8 @@
         @endforeach
     </div>
 
-    {{--
-        Every section below is one component type, and shows that component's variations side by
-        side within it. The shape is the same throughout — a label naming the variation, the
-        variations themselves in a row, and a note where a rung or a caveat is worth saying — so a
-        reader learns the layout once and then only reads the differences.
-
-        Nothing on this page wears a class that only exists on this page. Where a control is bare it
-        is because `reset.css` already draws it, and anything added on top would be this page's
-        opinion being read back as the theme's.
-    --}}
+    {{-- No section wears a class that exists only here: an addition would be read back as the
+         theme's. Where a control is bare, it is already drawn for it. --}}
 
     <h2 class="mb-1 mt-8 text-base font-semibold text-card-title-txt">Button</h2>
     <p class="mb-3 max-w-3xl text-sm text-card-txt">
@@ -331,10 +302,8 @@
 
     <div class="rounded-xl border border-card-border bg-card-bg p-4 shadow-sm">
         <div class="flex flex-col gap-3">
-            {{-- Each variant's classes are written out whole. Tailwind reads the templates as text
-                 to decide what to generate, so a class assembled from a variable — `bg-message-{$tone}-bg`
-                 — is a class it never sees and never emits: the box renders with no fill at all,
-                 and nothing anywhere reports it. --}}
+            {{-- Written out whole: Tailwind reads templates as text, so a class assembled from a
+                 variable is one it never sees and never emits. --}}
             @foreach ([
                 ['error', 'border-message-error-border bg-message-error-bg text-message-error-txt', 'You must enter at least one non empty item line.'],
                 ['warning', 'border-message-warning-border bg-message-warning-bg text-message-warning-txt', 'The reference is already used by another transaction.'],
@@ -398,11 +367,8 @@
                 <span class="text-xs text-card-txt">click it — the ring is the one <code>reset.css</code> draws, not a copy of it</span>
             </div>
 
-            {{-- Recorded rather than shown as a peer: `.field` is a second field look, 42px against
-                 the reset's 30 and an 8px radius against its 2px, worn by two ported screens and by
-                 no shared component. A reader who meets only one of the two reads it as the field,
-                 and then everything built to the other looks broken — which is exactly what this
-                 page did to the select until it was taken off. --}}
+            {{-- Recorded rather than shown as a peer: `.field` is a second field look, and a reader
+                 meeting only one of the two would read it as the field. --}}
             <div class="flex flex-wrap items-center gap-3">
                 <span class="w-32 flex-none text-xs font-semibold uppercase tracking-wide text-card-txt">.field</span>
                 <input class="field w-[220px]" value="FBN Trading LLC">
@@ -447,7 +413,7 @@
             @endforeach
 
             {{-- One set for every variant and both halves, so a disabled `danger` is not still a
-                 red-edged pill. The pair on the right is off and on, and both arrive here. --}}
+                 red-edged pill. --}}
             <div class="flex flex-wrap items-center gap-3">
                 <span class="w-32 flex-none text-xs font-semibold uppercase tracking-wide text-card-txt">disabled</span>
                 <x-ui.toggle :on="['label' => 'On']" :off="['label' => 'Off']" disabled />
@@ -457,8 +423,6 @@
                 </span>
             </div>
 
-            {{-- What the header wears. Icons rather than a second word, and the word still there
-                 behind them for anything reading the control out. --}}
             <div class="flex flex-wrap items-center gap-3">
                 <span class="w-32 flex-none text-xs font-semibold uppercase tracking-wide text-card-txt">with icon</span>
                 <x-ui.toggle :on="['label' => 'Dark', 'icon' => 'moon']" :off="['label' => 'Light', 'icon' => 'sun']" />
@@ -590,13 +554,10 @@
 
             <div class="flex flex-col gap-2">
                 <span class="text-xs font-semibold uppercase tracking-wide text-card-txt">a period</span>
-                {{-- The pair assembled here rather than drawn by <x-ui.date-range>, which joins its
-                     two ends into one box — a box an open panel is inserted into, leaving two
-                     calendars wedged between two fields. The directive is what makes two date
-                     fields a period, and it asks only to be wrapped around them. --}}
+                {{-- Assembled here rather than with <x-ui.date-range>, so each end and its panel
+                     can share a column; x-date-range is all a period needs. --}}
                 <div x-date-range class="flex flex-wrap items-start gap-4">
-                    {{-- An end and its panel share a column because the panel is put on the page
-                         beside the field it belongs to, and two ends in one row would leave each
+                    {{-- An end and its panel share a column: two ends in one row would leave each
                          calendar standing next to the other end's field. --}}
                     <div class="flex flex-col gap-2">
                         <x-ui.date inline :value="$calendar['from']" :disable="$calendar['refused']" />
@@ -975,10 +936,8 @@
                                      leading, trailing or doubled. --}}
                                 <div class="area-index__break col-span-1" aria-hidden="true">&nbsp;</div>
                             @else
-                                {{-- What `<x-nav::entry>` renders. Written out here because that
-                                     component takes a navigation node and there is no tree on this
-                                     page to take one from — the one hand-written thing in this
-                                     section, and only its leaf. --}}
+                                {{-- Hand-written, because there is no navigation tree on this page
+                                     to hand the component. The one copy in this section. --}}
                                 <a class="nav__entry nav__row col-span-1" href="#">
                                     <span class="icon nav__entry-icon icon-{{ $entry[0] }}"></span>
                                     <span class="nav__row-label">{{ $entry[1] }}</span>
@@ -1068,17 +1027,15 @@
 
     label();
 
-    /* The focus row shows the ring `reset.css` draws rather than a copy of it, which means
-       something has to actually put focus there — a hand-written imitation is the one thing a
-       reference may not do. Not on page load, which would scroll the page down to it. */
+    /* Focus is put there on click rather than on load, which would scroll the page down to it —
+       and the ring shown has to be the real one, never an imitation. */
     var focusable = document.querySelector('[data-gallery-focus]');
 
     if (focusable) {
         focusable.addEventListener('click', function () { focusable.select(); });
     }
 
-    /* Every hex on the palette card is printed by reading the custom property back, so the swatch
-       and its label can never disagree with the stylesheet that painted it. */
+    /* Each hex is read back off the custom property, so a swatch and its label cannot disagree. */
     var computed = getComputedStyle(root);
 
     Array.prototype.forEach.call(document.querySelectorAll('[data-rung]'), function (el) {

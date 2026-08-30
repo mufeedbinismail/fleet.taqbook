@@ -1,10 +1,5 @@
 'use strict';
 
-// Imperative confirm dialog, in the fire()/then() shape SweetAlert2 uses, rather than the
-// declarative x-collapse/x-accordion/x-drawer directives: there is exactly one layout (icon,
-// title, text, cancel/confirm), so a caller has options to pass, not markup to author. One native
-// <dialog> is built lazily and reused for every call.
-//
 //   const ok = await this.$confirm({
 //       title: 'Delete this role?',
 //       text: 'Every permission granted to Sales will be removed. This cannot be undone.',
@@ -13,8 +8,8 @@
 //   });
 //   if (ok) destroy();
 //
-// Resolves true on confirm, false on cancel, Escape, or a backdrop click — a dismissed dialog is
-// not an error, so there is no reject path.
+// Resolves true on confirm and false on every dismissal: a dialog waved away is not an error, so
+// there is no reject path.
 const ICONS = {
     warning: 'icon-warning',
     info: 'icon-info',
@@ -64,9 +59,8 @@ function fire({
 } = {}) {
     const el = dialog();
 
-    // A call arriving while the previous one is still open supersedes it rather than queuing —
-    // closing here settles that earlier promise (via the 'close' listener below) before this
-    // call's own listeners go on.
+    // A call arriving while the previous one is still open supersedes it rather than queuing:
+    // closing here settles the earlier promise before this call's own listeners go on.
     if (el.open) el.close();
 
     el.querySelector('[data-title]').textContent = title;

@@ -5,9 +5,8 @@ import { panelClassNames } from './resources/css/common/components/date-panel-cl
 export default {
     content: ['./public/themes/**/renderer.php', `./resources/**/*.{js,css,php,blade.php}`],
 
-    // Rules written into a layer are kept only when something is seen using them, and neither set
-    // below is written down anywhere the content search reaches. Each is derived from the
-    // stylesheet that declares it rather than listed out here.
+    // A layer's rules are kept only where something is seen using them, and neither set below is
+    // written anywhere the content search reaches.
     safelist: [
         ...classNames(new URL('./', import.meta.url)),
         ...panelClassNames(new URL('./', import.meta.url)),
@@ -85,8 +84,7 @@ export default {
 
                 'page-bg': 'var(--page-bg)',
                 'page-txt': 'var(--page-txt)',
-                // The strip a guest or error page signs off with — host and timestamp — which sits
-                // on the page rather than in the app shell, so it is not the footer's to colour.
+                // Caption (the host-and-timestamp strip a guest or error page signs off with)
                 'page-caption-bg': 'var(--page-caption-bg)',
                 'page-caption-txt': 'var(--page-caption-txt)',
 
@@ -163,9 +161,7 @@ export default {
                 'file-button-border': 'var(--file-button-border)',
                 'file-button-hover-bg': 'var(--file-button-hover-bg)',
 
-                // Segment (the on/off pair a radio group is drawn as). Named apart from the
-                // toggle below because they are two components, not one: this is a row of choices
-                // where one is chosen, the switch is one control with two states.
+                // Segment (the on/off pair a radio group is drawn as)
                 'segment-selected-bg': 'var(--segment-selected-bg)',
                 'segment-selected-txt': 'var(--segment-selected-txt)',
 

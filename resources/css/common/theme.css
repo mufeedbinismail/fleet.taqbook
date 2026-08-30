@@ -5,8 +5,7 @@
 @layer base {
     /* Tailwind v3 doesn't expose theme values as CSS custom properties on its own
        (unlike v4's @theme). A few components read breakpoints directly via var(),
-       so polyfill the ones actually referenced. Values are pulled from
-       tailwind.config.js via theme() rather than duplicated here. */
+       so polyfill the ones actually referenced. */
     :root {
         --breakpoint-md: theme('screens.md');
         --breakpoint-3xl: theme('screens.3xl');
@@ -583,10 +582,9 @@
         /* A scrim has less headroom over a dark page than over a white one, so it is taken up
            rather than down; the dialog's own scrim reaches black for the same reason. */
         --drawer-scrim: rgb(0 0 0 / 0.7);
-        /* Held at black deliberately. The alpha lives in tailwind.config.js and is shared with
-           the light theme, so black is already the strongest darkening this knob can ask for —
-           and moving it toward white would turn a shadow into a glow. Depth is carried by the
-           surface ladder here instead, which is what the ladder is for. */
+        /* Held at black deliberately: this knob is the hue only, so black is already the
+           strongest darkening it can ask for, and moving it toward white would turn a shadow
+           into a glow. Depth is carried by the surface ladder here instead. */
         --shadow-rgb: 0 0 0;
         --field-caret-glyph: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 5'%3e%3cpath fill='%23e8f0f3' d='M0 0h10L5 5z'/%3e%3c/svg%3e");
         --field-bg: var(--c-dark-700);
