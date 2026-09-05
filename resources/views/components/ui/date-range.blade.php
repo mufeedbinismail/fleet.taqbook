@@ -26,7 +26,7 @@
 ])
 
 @php
-    use App\Foundation\Component\Support\Control;
+    use App\Foundation\Component\Control\Support\Control;
 
     $id = Control::id($attributes, 'date-range', $fromName);
 

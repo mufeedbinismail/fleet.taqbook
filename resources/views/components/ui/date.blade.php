@@ -24,7 +24,7 @@
 ])
 
 @php
-    use App\Foundation\Component\Support\Control;
+    use App\Foundation\Component\Control\Support\Control;
     use App\Foundation\Shared\ValueObject\DomainDateTime;
 
     // A format of its own is for a field that genuinely differs.
