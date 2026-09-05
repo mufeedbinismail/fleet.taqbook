@@ -124,6 +124,10 @@
         --footer-border: var(--c-light-300);
         --table-header-bg: var(--c-light-500);
         --table-header-txt: var(--c-dark-300);
+        --table-header-icon: var(--c-dark-100);
+        --table-header-muted: var(--c-dark-50);
+        --table-header-mark-bg: var(--c-dark-300);
+        --table-header-mark-txt: var(--c-light-400);
         --card-header-bg: var(--c-dark-300);
         --card-header-txt: var(--c-light-400);
         --sidebar-bg: var(--c-light-400);
@@ -474,6 +478,11 @@
         --footer-border: var(--c-dark-400);
         --table-header-bg: var(--c-dark-600);
         --table-header-txt: var(--c-light-50);
+        --table-header-icon: var(--c-light-600);
+        --table-header-muted: var(--c-light-700);
+        /* A fill against the band rather than ink on it, so it inverts with the band. */
+        --table-header-mark-bg: var(--c-light-500);
+        --table-header-mark-txt: var(--c-dark-600);
         /* The band is set back rather than brought forward. In light it is the ink family used
            as a fill, which inverts to a bright slab across the top of a card — the loudest thing
            on screen, for a title. Recessed instead, and the ink carries the emphasis. */

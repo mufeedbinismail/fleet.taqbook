@@ -1,0 +1,670 @@
+@layer components {
+    /* One card, not three bands sitting near each other. Clipped, so the grid's corners are the
+       card's and no band needs an opinion about being first or last. */
+    .x-table {
+        @apply overflow-hidden rounded-md border border-solid shadow-sm;
+        border-color: theme('colors.table-border');
+        background-color: theme('colors.table-row-even-bg');
+    }
+
+    /* Separated by the hairline the card is edged in rather than by a gap, so it stays one
+       surface. */
+    .x-table__bar {
+        @apply flex flex-wrap items-center justify-between gap-3 border-0 border-b border-solid px-4 py-3;
+        border-color: theme('colors.table-border');
+    }
+
+    .x-table__bar-actions {
+        @apply flex flex-wrap items-center gap-2;
+    }
+
+    .x-table__search {
+        @apply inline-flex items-center gap-2 rounded-lg border border-solid px-3 py-2 transition;
+        border-color: theme('colors.table-border');
+        background-color: theme('colors.table-row-even-bg');
+    }
+
+    /* Taken by the box rather than the input, the box being what is drawn as the field. */
+    .x-table__search:focus-within {
+        border-color: theme('colors.primary-accent');
+        box-shadow: 0 0 0 2px theme('colors.primary-accent');
+    }
+
+    .x-table__search-icon {
+        color: theme('colors.card-txt');
+    }
+
+    .x-table__search-input {
+        @apply border-0 bg-transparent p-0 text-sm outline-none;
+        min-width: 16rem;
+        color: theme('colors.card-title-txt');
+    }
+
+    /* The box around it shows focus, so this ring is told to draw in no colour. Said as a colour
+       rather than by cancelling the shadow, so anything else composed into it still draws. */
+    .x-table__search-input:focus {
+        --tw-ring-color: transparent;
+        --tw-ring-offset-color: transparent;
+    }
+
+    .x-table__error {
+        @apply border-0 border-b border-solid px-4 py-2 text-sm;
+        border-color: theme('colors.table-border');
+        color: theme('colors.error-accent');
+        background-color: theme('colors.row-label-bg');
+    }
+
+    .x-table__chips {
+        @apply flex flex-wrap items-center gap-2 border-0 border-b border-solid px-4 py-2;
+        border-color: theme('colors.table-border');
+    }
+
+    /* The whole chip removes the filter, so the whole chip has to be a target a thumb can hit. */
+    .x-table__chip {
+        @apply inline-flex min-h-[2rem] cursor-pointer items-center gap-1.5 rounded-full border border-solid py-1 pe-1 ps-3 text-xs;
+        border-color: theme('colors.table-border');
+        background-color: theme('colors.row-label-bg');
+        color: theme('colors.card-title-txt');
+
+        &:hover {
+            border-color: theme('colors.primary-accent');
+        }
+    }
+
+    .x-table__chip-label {
+        @apply font-semibold;
+    }
+
+    /* Sized to a fingertip rather than to the glyph, so what the eye reads as the button and what
+       the thumb finds are the same thing. */
+    .x-table__chip-remove {
+        @apply inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-base leading-none;
+        color: theme('colors.card-txt');
+    }
+
+    .x-table__chip:hover .x-table__chip-remove {
+        background-color: theme('colors.table-row-even-bg');
+        color: theme('colors.error-accent');
+    }
+
+    /* What the busy indicator is placed against. It cannot be the scroller: a box placed absolutely
+       inside a scrolling one is placed against the content, so the indicator would travel with the
+       rows and end up off screen. */
+    .x-table__body {
+        @apply relative;
+    }
+
+    /* Only the rows go behind the indicator: the pinned heading and footer are as true mid-fetch as
+       before it. Done by level rather than by insetting to a heading height nothing here can
+       measure — this sits at the pinned columns' level and after them, and they stand higher. */
+    .x-table__body > [data-loader-container] {
+        @apply z-[1];
+    }
+
+    /* The one place a table is allowed to be wider than the page.
+
+       A box scrollable on one axis computes `visible` on the other to `auto`, so this is a vertical
+       scroll container whether or not one was wanted; `overflow: clip` would avoid that and is newer
+       than the oldest engine here. A sticky cell holds its place against the nearest scrolling
+       ancestor, which is therefore this box — so the vertical pinning hangs off the capped class. */
+    .x-table__scroll {
+        @apply w-full;
+    }
+
+    /* Granted to the whole contract rather than to the class: the role, the name and the tabindex
+       each fail invisibly on their own, and written as one selector a wrapper missing any of them
+       does not scroll at all — which is the kind of wrong somebody notices. */
+    .x-table__scroll[role='region'][aria-labelledby][tabindex] {
+        @apply overflow-auto;
+    }
+
+    /* Inset, the pane being flush against the card's edge and a ring outside it clipped.
+
+       Given to `:focus` and taken back under `:focus-visible` rather than given to the latter alone:
+       an engine that cannot parse it drops that rule and keeps the ring, which is plainer and
+       correct. The other way round, the ring is gone. */
+    .x-table__scroll:focus {
+        outline: 2px solid theme('colors.primary-accent');
+        outline-offset: -2px;
+    }
+
+    .x-table__scroll:focus:not(:focus-visible) {
+        @apply outline-none;
+    }
+
+    /* Clipped rather than hidden: `display: none` and `visibility: hidden` take an element out of
+       the accessibility tree, and the region's name would then be carried by nothing. Both `clip`
+       and `clip-path`, the oldest engines here knowing only the first. */
+    .x-table__caption {
+        @apply absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+    }
+
+    /* The table with no heading above it to borrow a name from says its own. */
+    .x-table__caption--visible {
+        @apply static m-0 h-auto w-auto overflow-visible whitespace-normal border-0 border-b border-solid px-4 py-3 text-start text-sm font-semibold;
+        clip: auto;
+        clip-path: none;
+        border-color: theme('colors.table-border');
+        color: theme('colors.card-title-txt');
+    }
+
+    /* Clipped rather than hidden: a live region taken out of the accessibility tree is written to
+       forever and heard never. Its own rule, since the caption alone can be asked to show itself. */
+    .x-table__announcement {
+        @apply absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+    }
+
+    /* Said, not drawn. Clipped rather than hidden, a region nothing can see being a region
+       nothing is announced from. */
+    .x-table__alert {
+        @apply absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+    }
+
+    /* Scrollbars that take up room instead of floating over the pinned column and the pinned
+       footer, which are the two things here that cannot move aside for one. Behind a pointer query,
+       a touch screen's bar fading away by itself. Each vendor pseudo-element in a rule of its own,
+       an engine that cannot parse one dropping the whole rule it appears in. */
+    @media (hover: hover) and (pointer: fine) {
+        /* No `scrollbar-width` beside these: set to anything but `auto` it takes precedence and
+           drops these whole, and `thin` is still an overlay bar where overlay bars are drawn. */
+        .x-table__scroll::-webkit-scrollbar {
+            @apply h-3 w-3;
+        }
+
+        .x-table__scroll::-webkit-scrollbar-track {
+            background-color: theme('colors.row-label-bg');
+        }
+
+        /* The border holds the thumb off the walls of its track, and in the track's own colour it
+           reads as padding. */
+        .x-table__scroll::-webkit-scrollbar-thumb {
+            @apply rounded-full border-2 border-solid;
+            border-color: theme('colors.row-label-bg');
+            background-color: theme('colors.table-border');
+        }
+
+        .x-table__scroll::-webkit-scrollbar-thumb:hover {
+            background-color: theme('colors.table-header-icon');
+        }
+
+        .x-table__scroll::-webkit-scrollbar-corner {
+            background-color: theme('colors.row-label-bg');
+        }
+    }
+
+    /* Separated borders at no distance, which looks collapsed while belonging to the cells: a
+       collapsed grid's rules are painted by the table, and a heading that holds its edge slides out
+       from under the one drawn for it. The price is one side per cell, drawn by hand, or the two
+       cells meeting at a junction both draw it and the hairline comes out double. */
+    .x-table__grid {
+        @apply w-full border-separate text-sm;
+        border-spacing: 0;
+    }
+
+    /* Small text on a strong ground, so the contrast comes from the band rather than from setting
+       thirty headings as loudly as the figures under them. The rule along the bottom is the band's
+       own rather than the first row's, a rule belonging to that row leaving when it scrolls. */
+    .x-table__head {
+        @apply whitespace-nowrap border-0 border-b border-solid px-3 py-2.5 text-left align-middle text-sm font-bold;
+        border-color: theme('colors.table-border');
+        background-color: theme('colors.table-header-bg');
+        color: theme('colors.table-header-txt');
+    }
+
+    /* Only the heading row pins; a filter row scrolls away with the rows it narrows. Above a pinned
+       column rather than level with it, equal levels being settled by document order and the rows
+       coming last. Only in a capped pane, there being nothing else to hold a place against. */
+    .x-table__scroll--capped .x-table__grid thead tr:first-child .x-table__head {
+        @apply sticky top-0 z-[2];
+    }
+
+    .x-table__head--right {
+        @apply text-right;
+    }
+
+    .x-table__head--center {
+        @apply text-center;
+    }
+
+    /* The name, and the funnel held out at the column's far edge so it clears names of any
+       length. */
+    .x-table__head-bar {
+        @apply flex items-center justify-between gap-1;
+    }
+
+    /* Reversed for a column read from its right-hand edge, so the name stays with its figures. */
+    .x-table__head--right .x-table__head-bar {
+        @apply flex-row-reverse;
+    }
+
+    .x-table__head--center .x-table__head-bar {
+        @apply justify-center;
+    }
+
+    .x-table__head-label {
+        @apply inline-flex min-w-0 items-center transition;
+    }
+
+    /* Open, the heading gives way rather than pushing every row down for a word nobody is reading.
+       Stood down by its own colour rather than by opacity, which fades towards whatever is behind
+       it and so lands on a shade nobody chose. */
+    .x-table__head--filtering .x-table__head-label {
+        @apply text-[0.6875rem];
+        color: theme('colors.table-header-muted');
+    }
+
+    /* Quiet until wanted, and marked once the column is narrowing the table, so one look across the
+       band says which are in force. */
+    .x-table__head-funnel {
+        @apply inline-flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded border-0 bg-transparent p-0 text-sm transition;
+        color: theme('colors.table-header-icon');
+
+        &:hover {
+            color: theme('colors.table-header-txt');
+        }
+    }
+
+    .x-table__head-funnel--set {
+        background-color: theme('colors.table-header-mark-bg');
+        color: theme('colors.table-header-mark-txt');
+    }
+
+    /* Closed by the stylesheet rather than by x-show, so the state painted before any script runs
+       is the closed one rather than thirty filters flashing open. */
+    .x-table__head-filter {
+        @apply hidden pt-1.5;
+    }
+
+    .x-table__head--filtering .x-table__head-filter {
+        @apply block;
+    }
+
+    /* The heading is the target, not the words in the middle of it: the control takes back as its
+       own padding what the cell gives up, so the whole height answers a click. The cell keeps its
+       horizontal padding, or the control runs under the funnel.
+
+       A form control inherits neither size nor colour, so both are asked for by name — and asked
+       for rather than stated, or the words go on at full size after the heading has shrunk. */
+    .x-table__sort {
+        @apply flex w-full cursor-pointer items-center gap-1.5 border-0 bg-transparent px-0 py-2.5 font-bold transition;
+        color: inherit;
+        font-size: inherit;
+        line-height: inherit;
+    }
+
+    /* Given up to the control, which puts the same measurement back as its own padding. */
+    .x-table__head--sortable {
+        @apply py-0;
+    }
+
+    .x-table__head--sortable .x-table__head-label {
+        @apply flex-1;
+    }
+
+    /* Open, that exchange is called in: the cell spends its own padding again and the control
+       spends none, leaving the same box a heading that sorts nothing draws. Left as it stands, the
+       one sorting column would move every row down further than the one beside it. */
+    .x-table__head--sortable.x-table__head--filtering {
+        @apply py-2.5;
+    }
+
+    .x-table__head--filtering .x-table__sort {
+        @apply py-0;
+    }
+
+    .x-table__head--sortable.x-table__head--filtering .x-table__head-filter {
+        @apply pb-0;
+    }
+
+    /* Once the control fills the heading, where the words sit is its to say, and it says whatever
+       the column says. */
+    .x-table__head--right .x-table__sort {
+        @apply justify-end;
+    }
+
+    .x-table__head--center .x-table__sort {
+        @apply justify-center;
+    }
+
+    /* Drawn inside the control's own edge, so the pane the heading scrolls in cannot clip it. Given
+       to `:focus` and taken back under `:focus-visible`, so an engine knowing neither still draws
+       it. */
+    .x-table__sort:focus {
+        outline: 2px solid theme('colors.primary-accent');
+        outline-offset: -2px;
+    }
+
+    .x-table__sort:focus:not(:focus-visible) {
+        @apply outline-none;
+    }
+
+    .x-table__sort:hover .x-table__sort-arrow {
+        color: theme('colors.table-header-txt');
+    }
+
+    /* Always shown: what can be sorted is part of what a heading says about its column. Told apart
+       by colour rather than opacity, so both shades are ones somebody chose. */
+    .x-table__sort-arrow {
+        @apply transition;
+        color: theme('colors.table-header-icon');
+        font-size: inherit;
+    }
+
+    .x-table__sort-arrow.icon-sort-asc,
+    .x-table__sort-arrow.icon-sort-desc {
+        color: theme('colors.table-header-txt');
+    }
+
+    /* Where this column falls in a multi-column sort, shown only while there is more than one. */
+    .x-table__sort-position {
+        @apply inline-flex h-4 min-w-[1rem] items-center justify-center rounded-full px-1 text-[0.625rem] font-bold leading-none;
+        background-color: theme('colors.primary-accent');
+        color: theme('colors.button-primary-txt');
+    }
+
+    /* Left as the reset draws a field; only that it fills its column, and that what is typed into
+       it is not a heading. The weight undoes an inheritance rather than the reset, a control taking
+       its weight from whatever it sits in. */
+    .x-table__filter-input {
+        @apply w-full font-normal;
+    }
+
+    .x-table__filter-range {
+        @apply flex items-center gap-1;
+    }
+
+    /* Said rather than shown: the word is there to be pointed at by the name of the box beside it.
+       Clipped rather than hidden, a name pointing at a removed element resolving to nothing, and
+       out of flow so the boxes are not spaced around it. */
+    .x-table__filter-bound {
+        @apply absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+    }
+
+    .x-table__row {
+        &:hover {
+            background-color: theme('colors.row-label-bg');
+        }
+    }
+
+    .x-table__row--link {
+        @apply cursor-pointer;
+    }
+
+    /* What the totals band looks like, true of every table; what it does about scrolling is below,
+       true only of one whose pane scrolls. */
+    .x-table__tfoot .x-table__cell {
+        @apply border-0 border-t border-solid font-semibold;
+        border-color: theme('colors.table-border');
+        background-color: theme('colors.row-label-bg');
+    }
+
+    /* Held against the foot of the pane, and only where there is a pane that moves. */
+    .x-table__scroll--capped .x-table__tfoot .x-table__cell {
+        @apply sticky bottom-0 z-[2];
+    }
+
+    /* One side only, so the two cells meeting at a rule never both draw it. */
+    .x-table__cell {
+        @apply border-0 border-t border-solid px-3 py-2 align-middle;
+        border-color: theme('colors.table-border');
+    }
+
+    /* Except against the heading, which draws that one itself. */
+    .x-table__grid tbody .x-table__row:first-of-type .x-table__cell {
+        @apply border-t-0;
+    }
+
+    .x-table__cell--right {
+        @apply text-right;
+    }
+
+    .x-table__cell--center {
+        @apply text-center;
+    }
+
+    .x-table__cell--date,
+    .x-table__cell--datetime,
+    .x-table__cell--money {
+        @apply whitespace-nowrap tabular-nums;
+    }
+
+    .x-table__cell--money-negative {
+        color: theme('colors.error-accent');
+    }
+
+    /* How far a pinned column sits from its edge is written per cell by the markup, being the
+       widths already pinned there summed.
+
+       Physical sides with the pair swapped for a right-to-left page rather than `inset-inline-*`:
+       an engine that cannot parse a logical inset drops the declaration, and a pinned column left
+       without a distance still pins — parking over the rows wherever it started. */
+    .x-table__head--sticky-start,
+    .x-table__cell--sticky-start {
+        @apply sticky z-[1];
+        left: var(--x-table-stick);
+    }
+
+    .x-table__head--sticky-end,
+    .x-table__cell--sticky-end {
+        @apply sticky z-[1];
+        right: var(--x-table-stick);
+    }
+
+    [dir='rtl'] .x-table__head--sticky-start,
+    [dir='rtl'] .x-table__cell--sticky-start {
+        left: auto;
+        right: var(--x-table-stick);
+    }
+
+    [dir='rtl'] .x-table__head--sticky-end,
+    [dir='rtl'] .x-table__cell--sticky-end {
+        right: auto;
+        left: var(--x-table-stick);
+    }
+
+    /* Opaque, or the rows sliding underneath read straight through it. */
+    .x-table__cell--sticky-start,
+    .x-table__cell--sticky-end {
+        background-color: theme('colors.table-row-even-bg');
+    }
+
+    /* The row paints the hover colour and a pinned cell covers it, so it repaints it. */
+    .x-table__row:hover .x-table__cell--sticky-start,
+    .x-table__row:hover .x-table__cell--sticky-end {
+        background-color: theme('colors.row-label-bg');
+    }
+
+    /* The corner staying put on both axes at once, so it stands above the two that each stay put on
+       one. Written under the capped pane along with them, a shorter selector losing to the rule it
+       is correcting. */
+    .x-table__scroll--capped .x-table__grid thead tr:first-child .x-table__head--sticky-start,
+    .x-table__scroll--capped .x-table__grid thead tr:first-child .x-table__head--sticky-end,
+    .x-table__scroll--capped .x-table__tfoot .x-table__cell--sticky-start,
+    .x-table__scroll--capped .x-table__tfoot .x-table__cell--sticky-end {
+        @apply z-[3];
+    }
+
+    /* Drawn on the innermost column of a run alone, so the run reads as one edge. An inset shadow
+       rather than a border: painted inside the cell's box, it takes no room from a column held to an
+       exact width. */
+    .x-table__head--sticky-start.x-table__head--sticky-edge,
+    .x-table__cell--sticky-start.x-table__cell--sticky-edge,
+    [dir='rtl'] .x-table__head--sticky-end.x-table__head--sticky-edge,
+    [dir='rtl'] .x-table__cell--sticky-end.x-table__cell--sticky-edge {
+        box-shadow: inset -1px 0 0 theme('colors.table-border');
+    }
+
+    .x-table__head--sticky-end.x-table__head--sticky-edge,
+    .x-table__cell--sticky-end.x-table__cell--sticky-edge,
+    [dir='rtl'] .x-table__head--sticky-start.x-table__head--sticky-edge,
+    [dir='rtl'] .x-table__cell--sticky-start.x-table__cell--sticky-edge {
+        box-shadow: inset 1px 0 0 theme('colors.table-border');
+    }
+
+    /* Shrinks to its buttons, so the width left over stays with the data. */
+    .x-table__actions {
+        @apply w-px whitespace-nowrap;
+    }
+
+    .x-table__empty {
+        @apply px-4 py-10 text-center text-sm;
+        color: theme('colors.card-txt');
+    }
+
+    /* The count on one side and everything that moves on the other, or the page size is stranded
+       between the two. */
+    .x-table__foot {
+        @apply flex flex-wrap items-center justify-between gap-3 border-0 border-t border-solid px-4 py-2.5;
+        border-color: theme('colors.table-border');
+        background-color: theme('colors.row-label-bg');
+    }
+
+    .x-table__foot-controls {
+        @apply flex flex-wrap items-center gap-4;
+    }
+
+    /* Told, not announced: where a page falls in a set is the least of what anybody came to
+       read. */
+    .x-table__summary {
+        @apply text-xs tabular-nums;
+        color: theme('colors.card-txt');
+    }
+
+    .x-table__size {
+        @apply inline-flex items-center gap-2 text-xs;
+        color: theme('colors.card-txt');
+    }
+
+    /* At the footer's type size the reset gives a 22px box, under the 24px floor a pointer target
+       may not go below. A floor rather than a height, so taller digits still get the room. */
+    .x-table__size-select {
+        @apply min-h-6 cursor-pointer;
+    }
+
+    /* One segmented control rather than five loose boxes with the position adrift between two of
+       them. */
+    .x-table__pager {
+        @apply inline-flex items-center overflow-hidden rounded-lg border border-solid;
+        border-color: theme('colors.table-border');
+    }
+
+    .x-table__pager-step {
+        @apply inline-flex h-8 w-8 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-sm leading-none transition;
+        color: theme('colors.card-txt');
+
+        &:hover:not(:disabled) {
+            background-color: theme('colors.row-label-bg');
+            color: theme('colors.card-title-txt');
+        }
+
+        /* Faint rather than half-there: a disabled control that still reads as one is a control
+           people go on pressing. */
+        &:disabled {
+            @apply cursor-not-allowed opacity-25;
+        }
+    }
+
+    /* Spaced by the gap, laying the parts out as flex items being what collapses the whitespace
+       written between them. */
+    .x-table__pager-count {
+        @apply inline-flex h-8 items-center gap-1 border-0 border-l border-r border-solid px-3 text-xs tabular-nums;
+        border-color: theme('colors.table-border');
+        color: theme('colors.card-txt');
+    }
+
+    /* The rows already loaded, laid out as a document rather than as the screen showing them.
+       Nothing is fetched for print. */
+    @media print {
+        /* Controls for a reader who is no longer there to press them. */
+        .x-table__bar {
+            @apply hidden;
+        }
+
+        /* Still true of the rows under them, but a chip exists to be clicked. */
+        .x-table__chips {
+            @apply hidden;
+        }
+
+        /* The column still says what it is; only the control that would narrow it further goes. */
+        .x-table__head-funnel {
+            @apply hidden;
+        }
+
+        .x-table__filter-input {
+            @apply hidden;
+        }
+
+        .x-table__filter-range {
+            @apply hidden;
+        }
+
+        .x-table__foot-controls {
+            @apply hidden;
+        }
+
+        .x-table__pager {
+            @apply hidden;
+        }
+
+        .x-table__size {
+            @apply hidden;
+        }
+
+        /* Hiding every cell the column owns takes the column with it, nothing declaring it
+           separately. */
+        .x-table__actions {
+            @apply hidden;
+        }
+
+        /* Already closed whenever nothing is loading, so this guards the page printed mid-fetch. */
+        [data-loader-container] {
+            @apply hidden;
+        }
+
+        /* Paper has no fixed height, so the cap goes. `max-height` is set inline for a capped
+           table, and an inline style outranks any selector here — `!important` is the one way past
+           it, and the one place in this file that needs to. */
+        .x-table__scroll {
+            max-height: none !important;
+        }
+
+        /* Spelled out to match the rule granting the scrolling: a media query adds nothing to
+           specificity, so a shorter selector would lose and the pane would print one screenful. */
+        .x-table__scroll[role='region'][aria-labelledby][tabindex] {
+            @apply overflow-visible;
+        }
+
+        /* With the pane's scrolling given up above, a sticky cell has no scrolling ancestor left
+           and resolves to an engine's own guess. Un-stuck, both sit where the document places
+           them. */
+        .x-table__scroll--capped .x-table__grid thead tr:first-child .x-table__head {
+            @apply static;
+        }
+
+        .x-table__scroll--capped .x-table__tfoot .x-table__cell {
+            @apply static;
+        }
+
+        /* Most print paths drop backgrounds, so a rule stands in for the band's fill — drawn
+           stronger than the row dividers, which would all but disappear with no band behind
+           them. */
+        .x-table__head {
+            @apply border-b-2;
+            background-color: transparent;
+            border-color: theme('colors.table-border');
+        }
+
+        /* The heading reappears at the top of whichever page the rows spill onto. */
+        thead {
+            display: table-header-group;
+        }
+    }
+}

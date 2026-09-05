@@ -1,0 +1,384 @@
+{
+    "about": [
+        "What a table says over the wire, stated where both sides can be held to it.",
+        "",
+        "`sort` is an ordering and the steps it means; `address` a query string exactly as sent;",
+        "`envelope` one answer, and the position a handed page answers for; `columns` everything one",
+        "table publishes about one field; `filters` a narrowing the table offers with no field carrying",
+        "it.",
+        "",
+        "Every position is spelled out in full, the absent parts included, so that reading one never",
+        "finds a difference between a key left out and the same key written as its fallback.",
+        "",
+        "A definition groups what it can and says `null` once where there is nothing to answer for:",
+        "no filter is one key rather than four, and no column drawn is one key rather than five."
+    ],
+    "sort": {
+        "a bare key runs ascending": {
+            "expression": "cost",
+            "steps": [
+                {
+                    "key": "cost",
+                    "direction": "asc"
+                }
+            ],
+            "written": "cost"
+        },
+        "a leading minus runs descending": {
+            "expression": "-cost",
+            "steps": [
+                {
+                    "key": "cost",
+                    "direction": "desc"
+                }
+            ],
+            "written": "-cost"
+        },
+        "position carries precedence": {
+            "expression": "-cost,stock_id",
+            "steps": [
+                {
+                    "key": "cost",
+                    "direction": "desc"
+                },
+                {
+                    "key": "stock_id",
+                    "direction": "asc"
+                }
+            ],
+            "written": "-cost,stock_id"
+        },
+        "nothing written is no ordering": {
+            "expression": "",
+            "steps": [],
+            "written": ""
+        },
+        "space alone is no ordering": {
+            "expression": "   ",
+            "steps": [],
+            "written": ""
+        },
+        "a minus naming nothing is no ordering": {
+            "expression": "-",
+            "steps": [],
+            "written": ""
+        },
+        "a step with nothing in it is passed over": {
+            "expression": "cost,,stock_id",
+            "steps": [
+                {
+                    "key": "cost",
+                    "direction": "asc"
+                },
+                {
+                    "key": "stock_id",
+                    "direction": "asc"
+                }
+            ],
+            "written": "cost,stock_id"
+        },
+        "space around a step is not part of the key": {
+            "expression": " cost , -stock_id ",
+            "steps": [
+                {
+                    "key": "cost",
+                    "direction": "asc"
+                },
+                {
+                    "key": "stock_id",
+                    "direction": "desc"
+                }
+            ],
+            "written": "cost,-stock_id"
+        },
+        "a key mentioned twice is the mention that came first": {
+            "expression": "-cost,cost",
+            "steps": [
+                {
+                    "key": "cost",
+                    "direction": "desc"
+                }
+            ],
+            "written": "-cost"
+        }
+    },
+    "address": {
+        "a table opens on the page, size, search, ordering and filters its own keys carry": {
+            "name": "stock",
+            "query": "stock[page]=2&stock[per_page]=50&stock[q]=widget&stock[sort]=-cost,stock_id&stock[filter][group]=3",
+            "means": {
+                "page": 2,
+                "per_page": 50,
+                "q": "widget",
+                "sort": "-cost,stock_id",
+                "filters": {
+                    "group": "3"
+                }
+            }
+        },
+        "keys written under another table's name say nothing about this one": {
+            "name": "stock",
+            "query": "orders[page]=7&orders[q]=widget&orders[filter][group]=3",
+            "means": {
+                "page": 1,
+                "per_page": null,
+                "q": null,
+                "sort": "",
+                "filters": {}
+            }
+        },
+        "keys written under no table's name belong to no table": {
+            "name": "stock",
+            "query": "page=7&per_page=100&q=widget&sort=-cost&filter[group]=3",
+            "means": {
+                "page": 1,
+                "per_page": null,
+                "q": null,
+                "sort": "",
+                "filters": {}
+            }
+        },
+        "a range filter arrives as the pair of bounds it was set as": {
+            "name": "stock",
+            "query": "stock[filter][visited][from]=2024-01-01&stock[filter][visited][to]=2024-03-31",
+            "means": {
+                "page": 1,
+                "per_page": null,
+                "q": null,
+                "sort": "",
+                "filters": {
+                    "visited": {
+                        "from": "2024-01-01",
+                        "to": "2024-03-31"
+                    }
+                }
+            }
+        },
+        "a set filter arrives as every member of the set": {
+            "name": "stock",
+            "query": "stock[filter][cats][0]=9&stock[filter][cats][1]=12",
+            "means": {
+                "page": 1,
+                "per_page": null,
+                "q": null,
+                "sort": "",
+                "filters": {
+                    "cats": {
+                        "0": "9",
+                        "1": "12"
+                    }
+                }
+            }
+        },
+        "one address carrying two tables reads as the first of them": {
+            "name": "stock",
+            "query": "stock[page]=2&stock[q]=widget&orders[page]=7&orders[q]=crate",
+            "means": {
+                "page": 2,
+                "per_page": null,
+                "q": "widget",
+                "sort": "",
+                "filters": {}
+            }
+        },
+        "one address carrying two tables reads as the second of them": {
+            "name": "orders",
+            "query": "stock[page]=2&stock[q]=widget&orders[page]=7&orders[q]=crate",
+            "means": {
+                "page": 7,
+                "per_page": null,
+                "q": "crate",
+                "sort": "",
+                "filters": {}
+            }
+        },
+        "a filter carrying nothing is not part of the position": {
+            "name": "stock",
+            "query": "stock[page]=2&stock[filter][group]=",
+            "means": {
+                "page": 2,
+                "per_page": null,
+                "q": null,
+                "sort": "",
+                "filters": {}
+            }
+        }
+    },
+    "envelope": {
+        "parts": {
+            "rows": [
+                {
+                    "stock_id": "w-1",
+                    "description": "Widget",
+                    "material_cost": 12.5
+                }
+            ],
+            "page": 2,
+            "per_page": 10,
+            "total": 42,
+            "pages": 5,
+            "footer": [
+                {
+                    "description": "Total",
+                    "material_cost": 99.5
+                }
+            ],
+            "q": "widget",
+            "sort": [
+                {
+                    "key": "cost",
+                    "direction": "desc"
+                }
+            ],
+            "filters": {
+                "group": "1",
+                "visited": {
+                    "from": "2024-01-01",
+                    "to": null
+                }
+            }
+        },
+        "asked": {
+            "page": 3,
+            "per_page": 25,
+            "q": "widget",
+            "sort": "-cost,stock_id",
+            "filters": {
+                "group": "3"
+            }
+        }
+    },
+    "columns": {
+        "a drawn column offering a filter says so under one key": {
+            "key": "group",
+            "label": "Group",
+            "dataType": "text",
+            "sortable": true,
+            "exportable": true,
+            "filter": {
+                "key": "group",
+                "control": "select",
+                "options": {
+                    "1": "Hardware",
+                    "2": "Software"
+                },
+                "source": null,
+                "multiple": false
+            },
+            "appearance": {
+                "align": "left",
+                "class": "",
+                "default": null,
+                "width": null,
+                "sticky": null
+            }
+        },
+        "a definition offering no filter says so once": {
+            "key": "material_cost",
+            "label": "Cost",
+            "dataType": "money",
+            "sortable": false,
+            "exportable": true,
+            "filter": null,
+            "appearance": {
+                "align": "right",
+                "class": "x-table__cell--tight",
+                "default": "—",
+                "width": "8rem",
+                "sticky": "end"
+            }
+        },
+        "a definition drawing no column says so once": {
+            "key": "deletable",
+            "label": "",
+            "dataType": "boolean",
+            "sortable": false,
+            "exportable": false,
+            "filter": null,
+            "appearance": null
+        },
+        "a filter whose choices are fetched says where from": {
+            "key": "customer",
+            "label": "Customer",
+            "dataType": "text",
+            "sortable": false,
+            "exportable": true,
+            "filter": {
+                "key": "customer",
+                "control": "lookup",
+                "options": {},
+                "source": {
+                    "url": "/customers",
+                    "params": [],
+                    "dependsOn": [],
+                    "minSearch": 2
+                },
+                "multiple": false
+            },
+            "appearance": {
+                "align": "left",
+                "class": "",
+                "default": null,
+                "width": null,
+                "sticky": null
+            }
+        },
+        "a filter over a period says the longest one it offers": {
+            "key": "visited",
+            "label": "When",
+            "dataType": "datetime",
+            "sortable": false,
+            "exportable": true,
+            "filter": {
+                "key": "visited",
+                "control": "dateRange",
+                "options": {},
+                "source": null,
+                "maxDays": 31
+            },
+            "appearance": {
+                "align": "left",
+                "class": "",
+                "default": null,
+                "width": null,
+                "sticky": null
+            }
+        },
+        "a filter over a period offering no cap says nothing about one": {
+            "key": "seen",
+            "label": "Seen",
+            "dataType": "date",
+            "sortable": false,
+            "exportable": true,
+            "filter": {
+                "key": "seen",
+                "control": "dateRange",
+                "options": {},
+                "source": null
+            },
+            "appearance": {
+                "align": "left",
+                "class": "",
+                "default": null,
+                "width": null,
+                "sticky": null
+            }
+        }
+    },
+    "filters": {
+        "a narrowing no heading carries says so under one key": {
+            "key": "family",
+            "label": "Family",
+            "filter": {
+                "key": "family",
+                "control": "select",
+                "options": {
+                    "1": "Hardware",
+                    "2": "Software"
+                },
+                "source": null,
+                "multiple": false
+            }
+        }
+    }
+}
