@@ -25,8 +25,10 @@
         <env name="APP_URL" value="http://localhost"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_DRIVER" value="array"/>
-        <!-- <env name="DB_CONNECTION" value="sqlite"/> -->
-        <!-- <env name="DB_DATABASE" value=":memory:"/> -->
+        <!-- MariaDB rather than sqlite: a LIKE carrying no ESCAPE clause escapes on backslash
+             here and on nothing at all there, so a term's wildcards would be held to a rule the
+             application never runs under. -->
+        <env name="DB_CONNECTION" value="mysql_test"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
