@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Foundation\Component\Support;
+namespace App\Foundation\Component\Control\Support;
 
 use Illuminate\Support\Str;
 use Illuminate\View\ComponentAttributeBag;

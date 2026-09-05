@@ -26,7 +26,7 @@
 @php
     use App\Foundation\Component\Date\Constant\DateReading;
     use App\Foundation\Component\Date\Constant\DateToken;
-    use App\Foundation\Component\Support\Control;
+    use App\Foundation\Component\Control\Support\Control;
     use App\Foundation\Shared\ValueObject\DomainDateTime;
 
     // Naming a format is for a field that genuinely differs; the ordinary case says nothing and

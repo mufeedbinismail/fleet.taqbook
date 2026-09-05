@@ -24,7 +24,7 @@
 ])
 
 @php
-    use App\Foundation\Component\Support\Control;
+    use App\Foundation\Component\Control\Support\Control;
 
     // Options are flattened here rather than in the browser, so whatever shape a screen already has
     // its rows in — models, arrays, a value-keyed map — reaches the control as one shape and the

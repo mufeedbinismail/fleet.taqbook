@@ -9,7 +9,7 @@
 ])
 
 @php
-    use App\Foundation\Component\Support\Control;
+    use App\Foundation\Component\Control\Support\Control;
 
     /*
         Grouped by state rather than by property: it is the only shape in which the value and the
