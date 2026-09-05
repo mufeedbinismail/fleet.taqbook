@@ -4,6 +4,7 @@ namespace App\Foundation\Component\Provider;
 
 use App\Foundation\Component\Date\Source\DateSource;
 use App\Foundation\Component\Select\Http\Controller\SelectController;
+use App\Foundation\Component\Table\Http\Controller\TableController;
 use App\Foundation\Framework\Registry\ClientDataRegistry;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -24,6 +25,7 @@ class ComponentServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->registerOptionListRoute();
+        $this->registerTableDataRoute();
         $this->registerDateDefaults();
     }
 
@@ -41,6 +43,18 @@ class ComponentServiceProvider extends ServiceProvider
             return Route::get($path.'/options', SelectController::class)
                 ->defaults('select', $select)
                 ->name(str_replace('/', '.', $path).'.options');
+        });
+    }
+
+    /**
+     * Applies no authorization: a route made here is open until it is narrowed.
+     */
+    private function registerTableDataRoute(): void
+    {
+        Route::macro('tableData', function (string $path, string $table) {
+            return Route::get($path.'/list', TableController::class)
+                ->defaults('table', $table)
+                ->name(str_replace('/', '.', $path).'.list');
         });
     }
 

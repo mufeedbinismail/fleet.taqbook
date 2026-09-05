@@ -13,6 +13,7 @@ import dateRange from '../components/date-range';
 import dialog from '../components/dialog';
 import modal from '../components/modal';
 import select from '../components/select';
+import table from '../components/table';
 import toggle from '../components/toggle';
 
 Alpine.plugin(focus);
@@ -27,6 +28,7 @@ Alpine.plugin(dateRange);
 Alpine.plugin(dialog);
 Alpine.plugin(modal);
 Alpine.plugin(select);
+Alpine.plugin(table);
 Alpine.plugin(toggle);
 
 export default Alpine;

@@ -940,6 +940,105 @@
         </div>
     </div>
 
+    <h2 class="mb-1 mt-8 text-base font-semibold text-card-title-txt">Data table — heading band</h2>
+    <p class="mb-3 max-w-3xl text-sm text-card-txt">
+        The four tokens the sorting and filtering controls wear, which no other surface uses. Sort
+        arrow and funnel share one ink; a heading whose filter is open drops its label a tier; a
+        filter in force is a filled mark rather than a tint, so it survives being glanced past.
+    </p>
+
+    <div class="overflow-hidden rounded-xl border border-card-border bg-card-bg shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-sm">
+                <thead>
+                    <tr class="bg-table-header-bg text-table-header-txt">
+                        <th class="border border-table-border px-3 py-2 text-start font-semibold">
+                            <div class="flex items-center justify-between gap-1">
+                                <span class="inline-flex min-w-0 items-center">Login</span>
+                            </div>
+                        </th>
+                        <th class="border border-table-border px-3 py-2 text-start font-semibold">
+                            <div class="flex items-center justify-between gap-1">
+                                <span class="inline-flex min-w-0 items-center gap-1.5">
+                                    Customer
+                                    <span class="icon icon-sort-asc text-table-header-icon" aria-hidden="true"></span>
+                                    <span class="inline-flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-primary-accent px-1 text-[0.625rem] font-bold leading-none text-button-primary-txt">1</span>
+                                </span>
+                            </div>
+                        </th>
+                        <th class="border border-table-border px-3 py-2 text-start font-semibold">
+                            <div class="flex items-center justify-between gap-1">
+                                <span class="inline-flex min-w-0 items-center text-[0.6875rem] text-table-header-muted">Reference</span>
+                                <span class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded bg-table-header-mark-bg text-table-header-mark-txt">
+                                    <span class="icon icon-filter" aria-hidden="true"></span>
+                                </span>
+                            </div>
+                        </th>
+                        <th class="border border-table-border px-3 py-2 text-start font-semibold">
+                            <div class="flex items-center justify-between gap-1">
+                                <span class="inline-flex min-w-0 items-center">Status</span>
+                                <span class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded text-table-header-icon">
+                                    <span class="icon icon-filter" aria-hidden="true"></span>
+                                </span>
+                            </div>
+                        </th>
+                        <th class="border border-table-border px-3 py-2 text-end font-semibold">Amount</th>
+                    </tr>
+                </thead>
+                <tbody class="text-page-txt">
+                    @foreach ([
+                        ['bg-table-row-odd-bg', 'a.chen', 'Acme Ltd', 'SO-1041', 'Open', '4,210.00'],
+                        ['bg-table-row-even-bg', 'r.diaz', 'Umbrella', 'SO-1042', 'Open', '2,110.00'],
+                        ['bg-table-row-odd-bg', 'k.okafor', 'Globex', 'SO-1002', 'Settled', '1,980.00'],
+                    ] as [$rowClass, $login, $customer, $ref, $status, $amount])
+                        <tr class="{{ $rowClass }}">
+                            <td class="border border-table-border px-3 py-2">{{ $login }}</td>
+                            <td class="border border-table-border px-3 py-2">{{ $customer }}</td>
+                            <td class="border border-table-border px-3 py-2">{{ $ref }}</td>
+                            <td class="border border-table-border px-3 py-2">{{ $status }}</td>
+                            <td class="border border-table-border px-3 py-2 text-end">{{ $amount }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-3 border-0 border-t border-solid border-table-border bg-row-label-bg px-4 py-2.5">
+            <span class="text-xs text-card-txt">Showing 1–3 of 128</span>
+            <div class="inline-flex items-center">
+                @foreach (['page-first', 'page-previous'] as $icon)
+                    <button type="button" class="inline-flex h-8 w-8 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-sm leading-none text-card-txt hover:bg-row-label-bg hover:text-card-title-txt">
+                        <span class="icon icon-{{ $icon }}" aria-hidden="true"></span>
+                    </button>
+                @endforeach
+                <span class="inline-flex h-8 items-center gap-1 border-0 border-l border-r border-solid border-table-border px-3 text-xs tabular-nums text-card-txt">1 / 43</span>
+                @foreach (['page-next', 'page-last'] as $icon)
+                    <button type="button" class="inline-flex h-8 w-8 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-sm leading-none text-card-txt hover:bg-row-label-bg hover:text-card-title-txt">
+                        <span class="icon icon-{{ $icon }}" aria-hidden="true"></span>
+                    </button>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3 grid gap-2 sm:grid-cols-2">
+        @foreach ([
+            ['table-header-icon', 'sort arrow, funnel, scrollbar thumb hover', 'dark-100', 'light-600'],
+            ['table-header-muted', 'the label while its filter is open', 'dark-50', 'light-700'],
+            ['table-header-mark-bg', 'fill of a filter in force', 'dark-300', 'light-500'],
+            ['table-header-mark-txt', 'ink on that mark', 'light-400', 'dark-600'],
+        ] as [$token, $job, $lightRung, $darkRung])
+            <div class="flex items-center gap-3 rounded-lg border border-card-border bg-card-sunken-bg px-3 py-2">
+                <span class="h-8 w-8 flex-none rounded border border-card-border" style="background: var(--{{ $token }})"></span>
+                <span class="min-w-0">
+                    <code class="block text-xs font-semibold text-card-title-txt">{{ $token }}</code>
+                    <span class="block text-xs text-card-txt">{{ $job }}</span>
+                    <span class="block text-[0.6875rem] text-card-txt opacity-70">light {{ $lightRung }} · dark {{ $darkRung }}</span>
+                </span>
+            </div>
+        @endforeach
+    </div>
+
     <h2 class="mb-1 mt-8 text-base font-semibold text-card-title-txt">Toolbar and pagination</h2>
     <p class="mb-3 max-w-3xl text-sm text-card-txt">
         The strips a listing is framed by. Both are recipes rather than components — a card divider,
