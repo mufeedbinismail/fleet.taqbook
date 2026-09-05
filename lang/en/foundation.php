@@ -75,6 +75,10 @@ return [
     'toggle' => [
         'on' => 'On',
         'off' => 'Off',
+
+        'error' => [
+            'not_yes_or_no' => 'This is neither yes nor no.',
+        ],
     ],
 
     'skin' => [
@@ -88,9 +92,21 @@ return [
         'today' => 'Today',
         'clear' => 'Clear',
 
+        'error' => [
+            'not_a_date' => 'This is not a date that can be read.',
+            'before_earliest' => 'This is earlier than the days offered here.',
+            'after_latest' => 'This is later than the days offered here.',
+        ],
+
         'range' => [
             'from' => 'From',
             'to' => 'To',
+
+            'error' => [
+                'not_a_range' => 'This asks for a period, and one was not given.',
+                'needs_both_ends' => 'This period needs both a start and an end.',
+                'too_long' => 'This period is longer than the :limit days offered here.',
+            ],
         ],
     ],
 
@@ -107,5 +123,16 @@ return [
         'tooShort' => 'Keep typing to search',
         'remove' => 'Remove :label',
         'clear' => 'Clear',
+
+        'error' => [
+            'not_a_choice' => 'This is not one of the choices offered.',
+            'not_one_value' => 'This holds one value, and several were given.',
+        ],
+    ],
+
+    'text' => [
+        'error' => [
+            'not_one_value' => 'This holds one value, and several were given.',
+        ],
     ],
 ];
