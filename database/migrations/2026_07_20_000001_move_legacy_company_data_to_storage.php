@@ -19,20 +19,19 @@ return new class extends Migration
     }
 
     /**
-     * taqbook is single-tenant, so the FrontAccounting convention of nesting
-     * per-company data under public/company/<id>/ only ever had one id (0),
-     * and living inside the webroot meant its permissions had to be managed
-     * separately from the rest of Laravel's storage tree.
-     *
-     * This moves that data out to storage/app/legacy (dropping the pointless
-     * index segment along the way) so it's managed like any other storage
-     * disk. A `public/company` symlink to storage/app/legacy (added to
-     * config/filesystems.php's `links` and created via `storage:link`) keeps
-     * every existing path/URL computed from company_path() working unchanged.
+     * Single-tenant, so FrontAccounting's per-company nesting only ever had one id to nest under,
+     * and sitting inside the webroot meant these permissions were managed apart from the rest of
+     * the storage tree.
      */
     public function up(): void
     {
         if (! File::isDirectory($this->publicCompanyPath)) {
+            return;
+        }
+
+        // Compared resolved, because once the move has happened this path is a link onto the
+        // destination: followed, it hands the destination its own contents and then deletes them.
+        if (realpath($this->publicCompanyPath) === realpath($this->storagePath)) {
             return;
         }
 
@@ -57,6 +56,12 @@ return new class extends Migration
             return;
         }
 
+        // The link goes, never what it points at: left standing, the path rebuilt under it would
+        // lead back inside the very directory being emptied.
+        if (is_link($this->publicCompanyPath)) {
+            unlink($this->publicCompanyPath);
+        }
+
         File::ensureDirectoryExists($this->legacyIndexPath);
 
         $this->mergeMoveContents($this->storagePath, $this->legacyIndexPath);
@@ -65,23 +70,28 @@ return new class extends Migration
     }
 
     /**
-     * Moves every entry directly inside $from into $to, merging into any
-     * colliding directories instead of overwriting them wholesale.
+     * Illuminate's file and directory listings skip dotfiles, which here would be left behind to
+     * be deleted along with the directory they sat in.
      */
     private function mergeMoveContents(string $from, string $to): void
     {
-        foreach (File::directories($from) as $dir) {
-            $this->mergeMove($dir, $to.'/'.basename($dir));
-        }
+        foreach (scandir($from) as $entry) {
+            if ($entry === '.' || $entry === '..') {
+                continue;
+            }
 
-        foreach (File::files($from) as $file) {
-            $this->mergeMove($file->getPathname(), $to.'/'.$file->getFilename());
+            $this->mergeMove($from.'/'.$entry, $to.'/'.$entry);
         }
     }
 
+    /**
+     * A colliding directory is merged into rather than overwritten wholesale.
+     */
     private function mergeMove(string $from, string $to): void
     {
-        if (File::isDirectory($from)) {
+        // A link is carried across whole rather than walked into: what it points at need not sit
+        // under this directory, and emptying it would reach outside the move entirely.
+        if (File::isDirectory($from) && ! is_link($from)) {
             File::ensureDirectoryExists($to);
             $this->mergeMoveContents($from, $to);
             File::deleteDirectory($from);
