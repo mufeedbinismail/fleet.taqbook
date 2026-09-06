@@ -7,11 +7,12 @@ use App\Foundation\Auth\Model\Permission as PermissionRecord;
 use App\Foundation\Auth\Model\Role;
 use App\Foundation\Auth\Model\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\Concern\ReadsClientData;
 use Tests\TestCase;
 
 class RoleEditorTest extends TestCase
 {
-    use DatabaseTransactions;
+    use DatabaseTransactions, ReadsClientData;
 
     /**
      * A user holding a role that can manage roles — the only combination from which a lockout is
@@ -57,17 +58,6 @@ class RoleEditorTest extends TestCase
         $this->assertNotEmpty($seed['groups']);
         $this->assertSameSize($seed['groups'], $seed['catalog']);
         $this->assertNotEmpty($seed['groups'][0]['keys']);
-    }
-
-    /**
-     * The staged payload reaches the page as the body of a JS string literal wrapped in
-     * JSON.parse(), so reading it back is that literal decoded and then the JSON inside it.
-     */
-    private function clientData(string $html): array
-    {
-        $this->assertSame(1, preg_match("/window\.App\.data = JSON\.parse\('(.*)'\);/U", $html, $match));
-
-        return json_decode(json_decode('"'.$match[1].'"'), associative: true);
     }
 
     public function test_stripping_your_own_roles_access_is_refused_against_the_permissions_field(): void
