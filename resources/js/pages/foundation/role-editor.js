@@ -7,7 +7,6 @@ export function roleEditor({ Alpine, App, axios, data }) {
         catalog: seed.catalog,
         filter: '',
         showInactive: false,
-        notice: null,
         errors: [],
         roleNameError: null,
 
@@ -31,14 +30,13 @@ export function roleEditor({ Alpine, App, axios, data }) {
         //----------------------------------------------------------------------------- messages --
 
         clearMessages() {
-            this.notice = null;
             this.errors = [];
             this.roleNameError = null;
         },
 
         showNotice(text) {
             this.clearMessages();
-            this.notice = text;
+            App.notify.success(text);
         },
 
         showErrors(messages, roleNameMessage) {

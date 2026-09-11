@@ -2,6 +2,8 @@
 
 namespace App\Foundation\Auth\Http\Controller;
 
+use App\Foundation\Auth\Action\DeleteRoleAction;
+use App\Foundation\Auth\Action\SaveRoleAction;
 use App\Foundation\Auth\Entity\Role;
 use App\Foundation\Auth\Http\Request\RoleEditorRequest;
 use App\Foundation\Auth\Http\Request\SaveRoleRequest;
@@ -41,25 +43,25 @@ class RoleController extends Controller
         return response()->json(['state' => $this->state($role, $request)->toArray()]);
     }
 
-    public function store(SaveRoleRequest $request): JsonResponse
+    public function store(SaveRoleRequest $request, SaveRoleAction $action): JsonResponse
     {
-        $saved = $this->save($request);
+        $saved = $this->save($request, $action);
 
         return $this->payload($this->state($saved->id, $request), __('foundation.role.notice.created'));
     }
 
-    public function update(SaveRoleRequest $request, int $role): JsonResponse
+    public function update(SaveRoleRequest $request, SaveRoleAction $action, int $role): JsonResponse
     {
-        $saved = $this->save($request);
+        $saved = $this->save($request, $action);
 
         return $this->payload($this->state($saved->id, $request), __('foundation.role.notice.updated'));
     }
 
-    public function destroy(Request $request, int $role): JsonResponse
+    public function destroy(Request $request, DeleteRoleAction $action, int $role): JsonResponse
     {
-        $this->refuse($this->service->validateDelete($role));
+        $this->refuse($action->validate($role));
 
-        $this->service->delete($role);
+        $action->execute($role);
 
         return $this->payload(
             $this->state(null, $request),
@@ -71,14 +73,14 @@ class RoleController extends Controller
      * Checked and then written, in that order: past the check the same breach stops being something
      * to report and becomes a fault, which is why only this side of it produces a message.
      */
-    protected function save(SaveRoleRequest $request): Role
+    protected function save(SaveRoleRequest $request, SaveRoleAction $action): Role
     {
         $intent = $request->toIntent();
         $actor = $this->actor($request);
 
-        $this->refuse($this->service->validateSave($intent, $actor));
+        $this->refuse($action->validate($intent, $actor));
 
-        return $this->service->save($intent, $actor);
+        return $action->execute($intent, $actor);
     }
 
     /**
