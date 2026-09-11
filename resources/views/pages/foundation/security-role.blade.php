@@ -236,17 +236,6 @@ ClientData::registry()
              while scrolling, hence the z-10 and the container's bottom padding — without the
              latter the final rows would sit permanently behind it. --}}
         <div class="sticky bottom-4 z-10 mt-5 rounded-xl border border-card-border bg-card-sticky-bg shadow-md backdrop-blur">
-            {{-- Kept beside the buttons that trigger it, not at the top of the page — the user's
-                 eyes are already down here when Save/Delete responds. --}}
-            <div data-notice x-show="notice !== null"
-                 class="flex items-center gap-2 rounded-t-xl border-b border-banner-success-border bg-banner-success-bg px-4 py-3 text-sm font-semibold text-banner-success-txt">
-                <span class="icon icon-circle-check"></span>
-                <span x-text="notice" class="grow"></span>
-                <button type="button" @click="notice = null"
-                        class="icon icon-close shrink-0 cursor-pointer border-0 bg-transparent text-banner-success-txt hover:text-banner-success-close-hover-txt"
-                        aria-label="{{ __('foundation.role.action.dismiss') }}"></button>
-            </div>
-
             <div data-error x-show="errors.length"
                  class="rounded-t-xl border-b border-banner-error-border bg-banner-error-bg px-4 py-3 text-sm text-banner-error-txt">
                 <div class="flex items-center gap-2 font-semibold">
