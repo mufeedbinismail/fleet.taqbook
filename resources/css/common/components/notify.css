@@ -1,0 +1,86 @@
+/* The library positions and animates; what a toast looks like is said here, per type, on the
+   banner tokens. */
+@layer components {
+    /* Stacked from under the header rather than over it, so nothing in the toolbar is covered while
+       a toast is up. */
+    .notyf {
+        top: theme('height.header');
+        height: auto;
+        bottom: 0;
+    }
+
+    .notyf__toast.x-notify {
+        @apply rounded-xl border border-solid px-4 shadow-md;
+        max-width: 24rem;
+    }
+
+    .x-notify .notyf__wrapper {
+        @apply py-3 pe-8;
+    }
+
+    /* Nothing inside the box moves on its own: the parts come with the toast and go with it. */
+    .x-notify .notyf__icon,
+    .x-notify .notyf__message,
+    .x-notify .notyf__dismiss,
+    .x-notify.notyf__toast--disappear .notyf__icon,
+    .x-notify.notyf__toast--disappear .notyf__message,
+    .x-notify.notyf__toast--disappear .notyf__dismiss {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+
+    .x-notify .notyf__icon {
+        @apply me-3 flex w-auto items-center text-lg leading-none;
+    }
+
+    .x-notify .notyf__message {
+        @apply text-sm font-semibold;
+    }
+
+    /* The library's cross is a full-height wash strip flush to the rim, invisible on a light
+       banner. Brought inboard as a plain glyph in the text colour, with room kept for it. */
+    .x-notify .notyf__dismiss {
+        @apply end-0 w-6;
+        margin-right: 0;
+    }
+
+    .x-notify .notyf__dismiss-btn,
+    .x-notify .notyf__dismiss-btn:hover {
+        background-color: transparent;
+    }
+
+    .x-notify .notyf__dismiss-btn {
+        color: inherit;
+        opacity: 0.7;
+    }
+
+    .x-notify .notyf__dismiss-btn:hover {
+        opacity: 1;
+    }
+
+    .x-notify .notyf__dismiss-btn:before,
+    .x-notify .notyf__dismiss-btn:after {
+        background: currentColor;
+        height: 14px;
+        top: calc(50% - 7px);
+    }
+
+    .x-notify--success {
+        background-color: theme('colors.banner-success-bg');
+        border-color: theme('colors.banner-success-border');
+        color: theme('colors.banner-success-txt');
+    }
+
+    .x-notify--warning {
+        background-color: theme('colors.banner-warning-bg');
+        border-color: theme('colors.banner-warning-border');
+        color: theme('colors.banner-warning-txt');
+    }
+
+    .x-notify--error {
+        background-color: theme('colors.banner-error-bg');
+        border-color: theme('colors.banner-error-border');
+        color: theme('colors.banner-error-txt');
+    }
+}

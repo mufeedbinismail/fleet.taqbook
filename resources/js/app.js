@@ -11,6 +11,7 @@ import { factory as selectFactory } from './components/select';
 import { date } from './components/date';
 import { dateRange } from './components/date-range';
 import { modal } from './components/modal';
+import { notify } from './components/notify';
 
 const select = selectFactory(Alpine);
 
@@ -39,6 +40,7 @@ Object.assign(window.App, {
     date,
     dateRange,
     modal,
+    notify,
 });
 
 // Deep-copied per callback, so nothing one edits can be read back by whoever boots next.
