@@ -2493,39 +2493,6 @@ function class_types_list_row($label, $name, $selected_id=null, $submit_on_chang
 
 //------------------------------------------------------------------------------------------------
 
-function security_roles_list($name, $selected_id=null, $new_item=false, $submit_on_change=false,
-	$show_inactive = false)
-{
-
-	$sql = "SELECT id, role, inactive FROM security_roles";
-
-	return combo_input($name, $selected_id, $sql, 'id', 'role',
-		array(
-			'spec_option'=>$new_item ? __("New role") : false,
-			'spec_id' => '',
-			'select_submit'=> $submit_on_change,
-			'show_inactive' => $show_inactive
-		) );
-}
-
-function security_roles_list_cells($label, $name, $selected_id=null, $new_item=false, $submit_on_change=false,
-	$show_inactive = false)
-{
-	if ($label != null)
-		echo "<td>$label</td>\n";
-	echo "<td>";
-	echo security_roles_list($name, $selected_id, $new_item, $submit_on_change, $show_inactive);
-	echo "</td>\n";
-}
-
-function security_roles_list_row($label, $name, $selected_id=null, $new_item=false, $submit_on_change=false,
-	$show_inactive = false)
-{
-	echo "<tr><td class='label'>$label</td>";
-	security_roles_list_cells(null, $name, $selected_id, $new_item, $submit_on_change, $show_inactive);
-	echo "</tr>\n";
-}
-
 function tab_list_row($label, $name, $selected_id=null)
 {
 	$tabs = array();
