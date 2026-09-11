@@ -72,6 +72,103 @@ return [
         ],
     ],
 
+    'user' => [
+        'title' => 'User Accounts Setup',
+        'new' => 'New user',
+        'edit' => 'Edit user',
+
+        'column' => [
+            'login' => 'User login',
+            'real_name' => 'Full name',
+            'phone' => 'Phone',
+            'email' => 'E-mail',
+            'last_visit' => 'Last visit',
+            'role' => 'Access level',
+            'actions' => '',
+        ],
+
+        'section' => [
+            'sign_in' => 'Sign in',
+            'person' => 'Person',
+            'access' => 'Access and workspace',
+        ],
+
+        'field' => [
+            'login' => 'User login',
+            'password' => 'Password',
+            'password_hint' => 'Enter a new password to change it, leave empty to keep the current one.',
+            'real_name' => 'Full name',
+            'phone' => 'Telephone no.',
+            'email' => 'Email address',
+            'role' => 'Access level',
+            'pos' => "User's POS",
+        ],
+
+        'filter' => [
+            'show_inactive' => 'Show inactive',
+            'inactive' => 'Inactive',
+        ],
+
+        'badge' => [
+            'inactive' => 'inactive',
+        ],
+
+        'action' => [
+            'new' => 'New user',
+            'edit' => 'Edit',
+            'save' => 'Save user',
+            'create' => 'Create user',
+            'cancel' => 'Cancel',
+            'delete' => 'Delete',
+            'deactivate' => 'Deactivate',
+            'activate' => 'Reactivate',
+        ],
+
+        'notice' => [
+            'created' => 'A new user has been added.',
+            'updated' => 'The selected user has been updated.',
+            'deleted' => 'The user has been deleted.',
+            'activated' => 'The user has been reactivated.',
+            'deactivated' => 'The user has been deactivated.',
+        ],
+
+        'error' => [
+            'heading' => 'This user could not be saved',
+            'duplicate_login' => 'Another account already uses this login.',
+            'self_removal' => 'You cannot delete your own account.',
+            'self_deactivation' => 'You cannot deactivate your own account.',
+            'inactive_edit' => 'An inactive account cannot be edited. Reactivate it first.',
+            'has_history' => 'This user has posted transactions, so the account can only be deactivated.',
+            'no_history' => 'This user has never posted a transaction, so the account is deleted rather than deactivated.',
+        ],
+
+        // Names the validator substitutes into its own messages, so they read mid-sentence and
+        // lowercase rather than as headings.
+        'attribute' => [
+            'login' => 'user login',
+            'password' => 'password',
+            'real_name' => 'full name',
+            'role' => 'access level',
+            'pos' => 'point of sale',
+        ],
+
+        'password' => [
+            'error' => [
+                'contains_login' => 'The password cannot contain the user login.',
+            ],
+        ],
+
+        'delete' => [
+            'title' => 'Delete this user?',
+            'text' => 'The account for :user will be removed. This cannot be undone.',
+            'confirm' => 'Yes, delete',
+        ],
+
+        'footer' => [
+            'total' => ':count logins',
+        ],
+    ],
+
     'toggle' => [
         'on' => 'On',
         'off' => 'Off',
