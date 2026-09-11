@@ -38,6 +38,18 @@
         white-space: nowrap;
     }
 
+    /* Tailwind's preflight zeroes a fieldset's border, so the element's own box — the legend
+       breaking its top edge — has to be asked for. */
+    fieldset {
+        @apply rounded-lg border border-solid px-4 pb-4 pt-2;
+        border-color: theme('colors.field-border');
+    }
+
+    legend {
+        @apply px-2 text-xs font-semibold uppercase tracking-wide;
+        color: theme('colors.field-legend-txt');
+    }
+
     /* Every control gets the field's edge and text colour here rather than each component asking
        for them, so a control nobody styled still reads as something to be filled in. */
     input,
