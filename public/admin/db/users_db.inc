@@ -10,46 +10,12 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
-function add_user($user_id, $real_name, $password, $phone, $email, $role_id, 
-	$language, $profile, $rep_popup, $pos)
-{
-	$sql = "INSERT INTO users (user_id, real_name, password"
-		.", phone, email, role_id, language, pos, print_profile, rep_popup)
-		VALUES (".db_escape($user_id).", 
-		".db_escape($real_name).", ".db_escape($password) .",".db_escape($phone)
-		.",".db_escape($email).", ".db_escape($role_id).", ".db_escape($language)
-		.", ".db_escape($pos).",".db_escape($profile).",".db_escape($rep_popup)
-		." )";
-
-	return db_query($sql, "could not add user for $user_id");
-}
-
-//-----------------------------------------------------------------------------------------------
-
 function update_user_password($id, $user_id, $password)
 {
 	$sql = "UPDATE users SET password=".db_escape($password) . ",
 		user_id = ".db_escape($user_id). " WHERE id=".db_escape($id);
 
 	return db_query($sql, "could not update user password for $user_id");
-}
-
-//-----------------------------------------------------------------------------------------------
-
-function update_user($id, $user_id, $real_name, $phone, $email, $role_id, 
-	$language, $profile, $rep_popup, $pos)
-{
-	$sql = "UPDATE users SET real_name=".db_escape($real_name).
-	", phone=".db_escape($phone).",
-		email=".db_escape($email).",
-		role_id=".db_escape($role_id).",
-		language=".db_escape($language).",
-		print_profile=".db_escape($profile).",
-		rep_popup=".db_escape($rep_popup).",
-		pos=".db_escape($pos).",
-		user_id = " . db_escape($user_id)
-		. " WHERE id=" . db_escape($id);
-	return db_query($sql, "could not update user for $user_id");
 }
 
 //-----------------------------------------------------------------------------------------------
@@ -67,17 +33,6 @@ function update_user_prefs($id, $prefs)
 
 //-----------------------------------------------------------------------------------------------
 
-
-function get_users($all=false)
-{
-	$sql = "SELECT u.*, r.role FROM users u, security_roles r
-		WHERE u.role_id=r.id";
-	if (!$all) $sql .= " AND !u.inactive";
-	
-	return db_query($sql, "could not get users");
-}
-
-//-----------------------------------------------------------------------------------------------
 
 function get_user($id)
 {
@@ -97,15 +52,6 @@ function get_user_by_login($user_id)
 	$result = db_query($sql, "could not get user $user_id");
 
 	return db_fetch($result);
-}
-
-//-----------------------------------------------------------------------------------------------
-
-function delete_user($id)
-{
-	$sql="DELETE FROM users WHERE id=".db_escape($id);
-
-	db_query($sql, "could not delete user $id");
 }
 
 //-----------------------------------------------------------------------------------------------

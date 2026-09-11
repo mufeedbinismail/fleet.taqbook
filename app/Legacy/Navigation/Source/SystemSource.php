@@ -35,13 +35,6 @@ class SystemSource extends LegacySource
                     ->place(Column::Left)
                     ->sort(10);
 
-                $section->page('user.manage', $this->label('&User Accounts Setup'))
-                    ->target($this->script('admin/users.php'))
-                    ->permission(Permission::MANAGE_USER)
-                    ->category(Category::Settings)
-                    ->place(Column::Left)
-                    ->sort(20);
-
                 $section->page('display.manage', $this->label('&Display Setup'))
                     ->target($this->script('admin/display_prefs.php'))
                     ->permission(Permission::CONFIGURE_DISPLAY)
