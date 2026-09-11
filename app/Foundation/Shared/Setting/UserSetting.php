@@ -2,6 +2,7 @@
 
 namespace App\Foundation\Shared\Setting;
 
+use App\Foundation\Auth\Constant\DisplayPreference;
 use App\Foundation\Framework\Support\Arr;
 use App\Foundation\Shared\Enum\DateFormat;
 use App\Foundation\Shared\Enum\DateSeparator;
@@ -28,34 +29,34 @@ class UserSetting extends Store
     public static function defaults(?string $key = null): mixed
     {
         $all = [
-            'language' => app()->getLocale(),
-            'qty_dec' => 0,
-            'prices_dec' => 2,
-            'rates_dec' => 0,
-            'percent_dec' => 0,
-            'show_gl' => 0,
-            'show_codes' => 0,
+            DisplayPreference::LOCALE => app()->getLocale(),
+            DisplayPreference::QUANTITY_DECIMALS => 0,
+            DisplayPreference::PRICE_DECIMALS => 2,
+            DisplayPreference::EXCHANGE_RATE_DECIMALS => 0,
+            DisplayPreference::PERCENT_DECIMALS => 0,
+            DisplayPreference::ENABLE_VIEW_GL_LINKS => 0,
+            DisplayPreference::SHOW_ITEM_CODES_ALSO => 0,
             'time_format' => config('date.time_format_id'),
-            'date_format' => config('date.format_id'),
-            'date_sep' => config('date.separator_id'),
+            DisplayPreference::DATE_FORMAT_IDX => config('date.format_id'),
+            DisplayPreference::DATE_SEP_IDX => config('date.separator_id'),
             'week_start' => config('date.week_start_id'),
-            'tho_sep' => ThousandSeparator::COMMA->value,
-            'dec_sep' => DecimalSeparator::DOT->value,
-            'theme' => 'default',
+            DisplayPreference::THOUSAND_SEP_IDX => ThousandSeparator::COMMA->value,
+            DisplayPreference::DECIMAL_SEP_IDX => DecimalSeparator::DOT->value,
+            DisplayPreference::THEME => 'default',
             'skin' => Skin::System->value,
-            'page_size' => PageSize::A4->value,
-            'show_hints' => 0,
-            'print_profile' => null,
-            'rep_popup' => 0,
-            'query_size' => 0,
-            'graphic_links' => 0,
-            'sticky_doc_date' => 0,
-            'startup_tab' => '',
-            'transaction_days' => -30,
-            'save_report_selections' => 0,
-            'use_date_picker' => 1,
-            'def_print_destination' => PrintDestination::PDF_PRINTER->value,
-            'def_print_orientation' => PrintOrientation::PORTRAIT->value,
+            DisplayPreference::PAGE_SIZE_IDX => PageSize::A4->value,
+            DisplayPreference::SHOW_HINTS => 0,
+            DisplayPreference::PRINT_PROFILE_NAME => null,
+            DisplayPreference::SHOW_REPORT_AS_POPUP => 0,
+            DisplayPreference::ROWS_PER_PAGE => 0,
+            DisplayPreference::USE_ICONS_IN_LINKS => 0,
+            DisplayPreference::USE_STICKY_DOC_DATE => 0,
+            DisplayPreference::STARTUP_TAB => '',
+            DisplayPreference::TRANSACTION_DAYS => -30,
+            DisplayPreference::REPORT_SELECTION_RETENTION_DAYS => 0,
+            DisplayPreference::USE_DATE_PICKER => 1,
+            DisplayPreference::PRINT_DESTINATION_IDX => PrintDestination::PDF_PRINTER->value,
+            DisplayPreference::PRINT_ORIENTATION_IDX => PrintOrientation::PORTRAIT->value,
         ];
 
         if ($key === null) {
@@ -83,13 +84,13 @@ class UserSetting extends Store
             $items[$key] = Arr::kvGet($user, $key, $default);
         }
 
-        if (! isset($user['sticky_doc_date'])) {
-            $items['sticky_date'] = $defaults['sticky_doc_date'];
-            $items['startup_tab'] = $defaults['startup_tab'];
+        if (! isset($user[DisplayPreference::USE_STICKY_DOC_DATE])) {
+            $items['sticky_date'] = $defaults[DisplayPreference::USE_STICKY_DOC_DATE];
+            $items[DisplayPreference::STARTUP_TAB] = $defaults[DisplayPreference::STARTUP_TAB];
         }
 
-        if (! file_exists(public_path('themes/'.$items['theme']))) {
-            $items['theme'] = $defaults['theme'];
+        if (! file_exists(public_path('themes/'.$items[DisplayPreference::THEME]))) {
+            $items[DisplayPreference::THEME] = $defaults[DisplayPreference::THEME];
         }
 
         return $items;
@@ -104,62 +105,62 @@ class UserSetting extends Store
 
     public function locale(): string
     {
-        return $this->items['language'];
+        return $this->items[DisplayPreference::LOCALE];
     }
 
     public function quantityDecimals(): int
     {
-        return (int) $this->items['qty_dec'];
+        return (int) $this->items[DisplayPreference::QUANTITY_DECIMALS];
     }
 
     public function priceDecimals(): int
     {
-        return (int) $this->items['prices_dec'];
+        return (int) $this->items[DisplayPreference::PRICE_DECIMALS];
     }
 
     public function exchangeRateDecimals(): int
     {
-        return (int) $this->items['rates_dec'];
+        return (int) $this->items[DisplayPreference::EXCHANGE_RATE_DECIMALS];
     }
 
     public function percentDecimals(): int
     {
-        return (int) $this->items['percent_dec'];
+        return (int) $this->items[DisplayPreference::PERCENT_DECIMALS];
     }
 
     public function enableViewGlLinks(): bool
     {
-        return (bool) $this->items['show_gl'];
+        return (bool) $this->items[DisplayPreference::ENABLE_VIEW_GL_LINKS];
     }
 
     public function showItemCodesAlso(): bool
     {
-        return (bool) $this->items['show_codes'];
+        return (bool) $this->items[DisplayPreference::SHOW_ITEM_CODES_ALSO];
     }
 
     public function dateFormatIdx(): DateFormat
     {
-        return DateFormat::from((int) $this->items['date_format']);
+        return DateFormat::from((int) $this->items[DisplayPreference::DATE_FORMAT_IDX]);
     }
 
     public function dateSepIdx(): DateSeparator
     {
-        return DateSeparator::from((int) $this->items['date_sep']);
+        return DateSeparator::from((int) $this->items[DisplayPreference::DATE_SEP_IDX]);
     }
 
     public function thousandSepIdx(): ThousandSeparator
     {
-        return ThousandSeparator::from((int) $this->items['tho_sep']);
+        return ThousandSeparator::from((int) $this->items[DisplayPreference::THOUSAND_SEP_IDX]);
     }
 
     public function decimalSepIdx(): DecimalSeparator
     {
-        return DecimalSeparator::from((int) $this->items['dec_sep']);
+        return DecimalSeparator::from((int) $this->items[DisplayPreference::DECIMAL_SEP_IDX]);
     }
 
     public function theme(): string
     {
-        return $this->items['theme'];
+        return $this->items[DisplayPreference::THEME];
     }
 
     public function skin(): Skin
@@ -169,37 +170,37 @@ class UserSetting extends Store
 
     public function pageSizeIdx(): PageSize
     {
-        return PageSize::from($this->items['page_size']);
+        return PageSize::from($this->items[DisplayPreference::PAGE_SIZE_IDX]);
     }
 
     public function showHints(): bool
     {
-        return (bool) $this->items['show_hints'];
+        return (bool) $this->items[DisplayPreference::SHOW_HINTS];
     }
 
     public function printProfileName(): ?string
     {
-        return $this->items['print_profile'];
+        return $this->items[DisplayPreference::PRINT_PROFILE_NAME];
     }
 
     public function showReportAsPopup(): bool
     {
-        return (bool) $this->items['rep_popup'];
+        return (bool) $this->items[DisplayPreference::SHOW_REPORT_AS_POPUP];
     }
 
     public function rowsPerPage(): int
     {
-        return (int) $this->items['query_size'];
+        return (int) $this->items[DisplayPreference::ROWS_PER_PAGE];
     }
 
     public function useIconsInLinks(): bool
     {
-        return (bool) $this->items['graphic_links'];
+        return (bool) $this->items[DisplayPreference::USE_ICONS_IN_LINKS];
     }
 
     public function useStickyDocDate(): bool
     {
-        return (bool) $this->items['sticky_doc_date'];
+        return (bool) $this->items[DisplayPreference::USE_STICKY_DOC_DATE];
     }
 
     /**
@@ -208,32 +209,32 @@ class UserSetting extends Store
      */
     public function startupTab(): string
     {
-        return $this->items['startup_tab'];
+        return $this->items[DisplayPreference::STARTUP_TAB];
     }
 
     public function transactionDays(): int
     {
-        return (int) $this->items['transaction_days'];
+        return (int) $this->items[DisplayPreference::TRANSACTION_DAYS];
     }
 
     public function reportSelectionRetentionDays(): int
     {
-        return (int) $this->items['save_report_selections'];
+        return (int) $this->items[DisplayPreference::REPORT_SELECTION_RETENTION_DAYS];
     }
 
     public function useDatePicker(): bool
     {
-        return (bool) $this->items['use_date_picker'];
+        return (bool) $this->items[DisplayPreference::USE_DATE_PICKER];
     }
 
     public function printDestinationIdx(): PrintDestination
     {
-        return PrintDestination::from((int) $this->items['def_print_destination']);
+        return PrintDestination::from((int) $this->items[DisplayPreference::PRINT_DESTINATION_IDX]);
     }
 
     public function printOrientationIdx(): PrintOrientation
     {
-        return PrintOrientation::from((int) $this->items['def_print_orientation']);
+        return PrintOrientation::from((int) $this->items[DisplayPreference::PRINT_ORIENTATION_IDX]);
     }
 
     public function dateFormat(): string
