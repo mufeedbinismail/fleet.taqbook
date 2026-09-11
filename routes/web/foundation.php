@@ -1,9 +1,11 @@
 <?php
 
 use App\Foundation\Auth\Component\Select\RoleSelect;
+use App\Foundation\Auth\Component\Table\UserTable;
 use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Auth\Http\Controller\AuthenticationController;
 use App\Foundation\Auth\Http\Controller\RoleController;
+use App\Foundation\Auth\Http\Controller\UserController;
 use App\Foundation\Auth\Http\Controller\UserPreferenceController;
 use App\Foundation\Framework\Http\Controller\ComponentGalleryController;
 use App\Foundation\Navigation\Http\Controller\AreaIndexController;
@@ -29,5 +31,18 @@ Route::prefix('access/roles')
         Route::put('{role}', [RoleController::class, 'update'])->whereNumber('role')->name('update');
         Route::delete('{role}', [RoleController::class, 'destroy'])->whereNumber('role')->name('destroy');
     });
+
+Route::prefix('access/users')
+    ->middleware('can:'.Permission::MANAGE_USER)
+    ->name('access.users.')
+    ->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::post('/', [UserController::class, 'store'])->name('store');
+        Route::put('{user}', [UserController::class, 'update'])->whereNumber('user')->name('update');
+        Route::delete('{user}', [UserController::class, 'destroy'])->whereNumber('user')->name('destroy');
+        Route::put('{user}/status', [UserController::class, 'status'])->whereNumber('user')->name('status');
+    });
+
+Route::tableData('access/users', UserTable::class)->middleware('can:'.Permission::MANAGE_USER);
 
 Route::optionList('access/roles', RoleSelect::class)->middleware('can:'.Permission::AUTHENTICATED);
