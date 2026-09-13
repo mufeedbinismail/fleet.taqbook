@@ -1,5 +1,6 @@
 <?php
 
+use App\Foundation\Auth\Component\Select\RoleSelect;
 use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Auth\Http\Controller\AuthenticationController;
 use App\Foundation\Auth\Http\Controller\RoleController;
@@ -28,3 +29,5 @@ Route::prefix('access/roles')
         Route::put('{role}', [RoleController::class, 'update'])->whereNumber('role')->name('update');
         Route::delete('{role}', [RoleController::class, 'destroy'])->whereNumber('role')->name('destroy');
     });
+
+Route::optionList('access/roles', RoleSelect::class)->middleware('can:'.Permission::AUTHENTICATED);
