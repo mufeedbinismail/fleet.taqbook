@@ -2,7 +2,10 @@
 
 namespace App\Foundation\Component\Select\ValueObject;
 
+use App\Foundation\Component\Select\Exception\SelectException;
 use App\Foundation\Component\Select\Support\DataAttributes;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * One choosable row.
@@ -10,14 +13,12 @@ use App\Foundation\Component\Select\Support\DataAttributes;
  * The value is a string because a `<select>` holds no other kind: a value that left as an integer
  * and came back as text would otherwise stop matching the row it came from.
  */
-final class Option
+final class Option implements Arrayable
 {
     /**
-     * What this row carries beyond its own name, for whoever reads the chosen option back.
-     *
-     * Written by whatever defines the list and never asked for by the screen consuming it: a screen
-     * naming the columns it wanted would be choosing what the query selects, which is the same hole
-     * as a screen handing over a condition of its own.
+     * What this row carries beyond its own name. Written by whatever defines the list, never
+     * chosen by whatever consumes it: naming the columns wanted would be choosing what the query
+     * selects.
      *
      * @var array<string, string>
      */
@@ -55,11 +56,60 @@ final class Option
     }
 
     /**
-     * The second line, built from whichever of the parts a row actually has.
+     * Refused rather than defaulted without a value or a label: a default would hide the missing
+     * alias.
      *
-     * How the parts are held apart is one decision about how a row reads, and a list spelling it out
-     * for itself is a list that reads unlike the one beside it — which is what a person picking from
-     * both of them notices before anything else.
+     * @throws SelectException
+     */
+    public static function fromDbRow(object $row): self
+    {
+        $columns = $row instanceof Model ? $row->getAttributes() : get_object_vars($row);
+
+        foreach (['value', 'label'] as $required) {
+            if (($columns[$required] ?? null) === null) {
+                throw SelectException::rowWithout($required);
+            }
+        }
+
+        $data = [];
+        foreach ($columns as $column => $carried) {
+            if (str_starts_with($column, 'data_')) {
+                $data[substr($column, 5)] = $carried;
+            }
+        }
+
+        return new self(
+            (string) $columns['value'],
+            (string) $columns['label'],
+            isset($columns['description']) ? (string) $columns['description'] : null,
+            (bool) ($columns['disabled'] ?? false),
+            isset($columns['group']) ? (string) $columns['group'] : null,
+            $data,
+        );
+    }
+
+    /**
+     * The one wire shape a row has, whichever way it reached the control. `data` is nested rather
+     * than spread so a column named like one of the keys above cannot quietly take its place.
+     *
+     * @return array{value: string, label: string, description: string|null, disabled: bool,
+     *               group: string|null, data: array<string, string>}
+     */
+    public function toArray(): array
+    {
+        return [
+            'value' => $this->value,
+            'label' => $this->label,
+            'description' => $this->description,
+            'disabled' => $this->disabled,
+            'group' => $this->group,
+            'data' => $this->data,
+        ];
+    }
+
+    /**
+     * The second line, built from whichever of the parts a row actually has — held apart the same
+     * way in every list, so two lists read alike.
      */
     public static function description(?string ...$parts): ?string
     {

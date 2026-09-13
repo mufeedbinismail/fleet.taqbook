@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\Select\Contract;
 
-use App\Foundation\Component\Select\ValueObject\Option;
+use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -23,7 +23,9 @@ interface SelectDefinition
 {
     /**
      * The rows this list is drawn from, ordered as they are meant to be read, narrowed by nothing a
-     * screen asked for and not yet limited.
+     * screen asked for and not yet limited — selected as options: `value` and `label` by those
+     * aliases, `description`, `disabled` and `group` where a row has them, and anything else a
+     * row carries as `data_<name>`. A column under no such name reaches nothing.
      *
      * Either builder, named as the two of them rather than by the interface they share: that
      * interface declares no methods at all, so a list typed by it promises a thing nothing can be
@@ -33,19 +35,22 @@ interface SelectDefinition
     public function query(): EloquentBuilder|QueryBuilder;
 
     /**
-     * The columns a typed term is matched against, qualified wherever the query joins.
+     * The columns a typed term is matched against, qualified wherever the query joins — or an
+     * expression, where what is searched is not one column as stored.
      *
-     * @return list<string>
+     * @return list<string|Expression>
      */
     public function searchColumns(): array;
 
     /**
-     * The column an option's value is read from, and so the column a held value is matched on.
+     * The column an option's value is read from, and so the column a held value is matched on —
+     * or the expression that is; a select alias cannot be matched on, so `value` is not enough.
      */
-    public function valueColumn(): string;
+    public function valueColumn(): string|Expression;
 
     /**
-     * What one row of this query is called.
+     * The name of the route this list is fetched at once it is too large to be declared in full.
+     * Naming it does not register it.
      */
-    public function toOption(object $row): Option;
+    public static function routeName(): string;
 }

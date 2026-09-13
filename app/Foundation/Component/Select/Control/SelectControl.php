@@ -5,6 +5,8 @@ namespace App\Foundation\Component\Select\Control;
 use App\Foundation\Component\Control\Contract\ScalarControl;
 use App\Foundation\Component\Control\Enum\ControlName;
 use App\Foundation\Component\Select\Exception\SelectException;
+use App\Foundation\Component\Select\ValueObject\Option;
+use App\Foundation\Component\Select\ValueObject\OptionChannel;
 use App\Foundation\Component\Select\ValueObject\OptionSource;
 use App\Foundation\Framework\DTO\ValidationResult;
 
@@ -16,13 +18,14 @@ final class SelectControl extends ChoiceControl implements ScalarControl
     /**
      * A set small enough to be declared in full.
      *
-     * @param  array<int|string, string>  $options  `value => label`, and at least one
+     * @param  array<int|string, string>|list<Option>  $options  `value => label`, or rows already
+     *                                                           named; at least one either way
      *
      * @throws SelectException if there is nothing to choose from
      */
     public static function simple(array $options): self
     {
-        return new self($options, null);
+        return new self(OptionChannel::inline(self::rows($options)));
     }
 
     /**
@@ -30,14 +33,19 @@ final class SelectControl extends ChoiceControl implements ScalarControl
      */
     public static function lookup(OptionSource $source): self
     {
-        return new self([], $source);
+        return new self(OptionChannel::fromSource($source));
+    }
+
+    public static function from(OptionChannel $channel): self
+    {
+        return new self($channel);
     }
 
     public function config(): array
     {
         return [
-            ...$this->offering(),
-            'control' => ($this->fetched() ? ControlName::Lookup : ControlName::Select)->value,
+            ...$this->channel->toArray(),
+            'control' => ($this->isFetchedFromSource() ? ControlName::Lookup : ControlName::Select)->value,
             'multiple' => false,
         ];
     }

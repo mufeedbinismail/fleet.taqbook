@@ -16,7 +16,7 @@ abstract class Control implements ControlContract
 
     final public function validate(string $field, mixed $raw): ValidationResult
     {
-        return $this->absent($raw)
+        return $this->isAbsent($raw)
             ? ValidationResult::success()
             : $this->check($field, $raw);
     }

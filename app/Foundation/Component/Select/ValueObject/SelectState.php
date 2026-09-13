@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Foundation\Component\Select\Intent;
+namespace App\Foundation\Component\Select\ValueObject;
 
 /**
  * Fetch one page of choosable options.
@@ -8,12 +8,8 @@ namespace App\Foundation\Component\Select\Intent;
  * Every value here has already been through validation, filters included — a repository holding
  * one of these can put it straight into a query.
  */
-final class OptionSearchIntent
+final class SelectState
 {
-    public const PER_PAGE = 25;
-
-    public const MAX_PER_PAGE = 100;
-
     /**
      * @param  string  $search  the typed term, already trimmed; empty means unfiltered
      * @param  list<string>  $selected  values the client holds and wants a verdict on

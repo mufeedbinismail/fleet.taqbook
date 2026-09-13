@@ -518,13 +518,10 @@
                                         :id="$controlId"
                                         :name="$controlId"
                                         :multiple="$several"
-                                        :options="$column['filter']['options']"
+                                        :channel="$column['filter']"
                                         :selected="$filters[$column['filter']['key']] ?? []"
                                         :placeholder="__('foundation.table.filter.any')"
-                                        :url="$column['filter']['source']['url'] ?? null"
-                                        :params="$column['filter']['source']['params'] ?? []"
                                         :param-sources="$narrowedBy"
-                                        :min-search="$column['filter']['source']['minSearch'] ?? 0"
                                         :attributes="$bind"
                                     />
                                 @elseif ($column['filter']['control'] === ControlName::Select->value)
@@ -538,8 +535,8 @@
                                              control, the choice being free to arrive with the
                                              address before this control exists to hold one. --}}
                                         <option value="" :selected="filterValue(@js($column['filter']['key'])) === ''">{{ __('foundation.table.filter.any') }}</option>
-                                        @foreach ($column['filter']['options'] as $value => $label)
-                                            <option value="{{ $value }}" :selected="filterValue(@js($column['filter']['key'])) === @js((string) $value)">{{ $label }}</option>
+                                        @foreach ($column['filter']['options'] as $option)
+                                            <option value="{{ $option['value'] }}" @disabled($option['disabled']) :selected="filterValue(@js($column['filter']['key'])) === @js($option['value'])">{{ $option['label'] }}</option>
                                         @endforeach
                                     </select>
                                 @elseif ($column['filter']['control'] === ControlName::Toggle->value)

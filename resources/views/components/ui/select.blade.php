@@ -1,5 +1,6 @@
 @props([
     'name',
+    'channel' => null,
     'options' => [],
     'selected' => null,
     'placeholder' => null,
@@ -11,7 +12,7 @@
     'url' => null,
     'params' => [],
     'paramSources' => [],
-    'perPage' => \App\Foundation\Component\Select\Intent\OptionSearchIntent::PER_PAGE,
+    'perPage' => (int) config('component.select.per_page'),
     'minSearch' => 0,
     'clearOnParamChange' => false,
     'panelParent' => null,
@@ -25,6 +26,16 @@
 
 @php
     use App\Foundation\Component\Control\Support\Control;
+    use App\Foundation\Component\Select\ValueObject\OptionChannel;
+
+    if ($channel !== null) {
+        $channel = $channel instanceof OptionChannel ? $channel->toArray() : $channel;
+
+        $options = [...collect($options)->all(), ...($channel['options'] ?? [])];
+        $url = $channel['source']['url'] ?? null;
+        $params = $channel['source']['params'] ?? [];
+        $minSearch = $channel['source']['minSearch'] ?? 0;
+    }
 
     // Options are flattened here rather than in the browser, so whatever shape a screen already has
     // its rows in — models, arrays, a value-keyed map — reaches the control as one shape and the
@@ -47,7 +58,7 @@
             // from the server and one that has since re-fetched carry their extras identically.
             'data' => \App\Foundation\Component\Select\Support\DataAttributes::of(data_get($row, $dataField)),
         ];
-    })->values();
+    })->unique('value')->values();
 
     // Grouped rows are written inside the group that names them, because that is where a select
     // keeps them — and where the control reads them back from when no dataset was handed over.

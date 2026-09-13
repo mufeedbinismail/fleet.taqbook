@@ -28,6 +28,11 @@ class StockTable implements TableDefinition
 
     public const NAME = 'stock';
 
+    public static function routeName(): string
+    {
+        return '_test.stock.list';
+    }
+
     public function table(TableBuilder $tables): Table
     {
         return self::declare($tables)->definition();

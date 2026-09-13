@@ -56,7 +56,7 @@ class TableEndpointTest extends TestCase
      */
     public function test_a_set_the_format_cannot_carry_is_refused_before_a_byte_is_written(): void
     {
-        config(['table.export.xlsx_rows' => 2]);
+        config(['component.table.export.xlsx_rows' => 2]);
 
         foreach (range(1, 3) as $index) {
             $this->stock("s-{$index}");
@@ -174,6 +174,11 @@ class TableEndpointTest extends TestCase
  */
 class UndrawnFieldStockTable implements TableDefinition
 {
+    public static function routeName(): string
+    {
+        return '_test.wide.list';
+    }
+
     public function table(TableBuilder $tables): Table
     {
         return StockTable::declare($tables)

@@ -2,12 +2,14 @@
 
 namespace App\Foundation\Component\Select\ValueObject;
 
+use Illuminate\Contracts\Support\Arrayable;
+
 /**
  * Where a select's choices are fetched from, for a set too large to be declared in full.
  *
  * Decides what is offered, never what is made of what was picked.
  */
-final class OptionSource
+final class OptionSource implements Arrayable
 {
     /**
      * @param  string  $url  the list to read from: a route name, or a path

@@ -52,8 +52,8 @@ final class TableBuilder
 
     public function __construct()
     {
-        $this->perPage = (int) config('table.per_page');
-        $this->maxPerPage = (int) config('table.max_per_page');
+        $this->perPage = (int) config('component.table.per_page');
+        $this->maxPerPage = (int) config('component.table.max_per_page');
     }
 
     /**

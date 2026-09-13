@@ -79,7 +79,9 @@ export function wordOf(value, offered, messages, named = null) {
             .join(' – ');
     }
 
-    const label = named?.[String(value)] ?? offered?.filter?.options?.[String(value)];
+    const label =
+        named?.[String(value)] ??
+        offered?.filter?.options?.find((option) => option.value === String(value))?.label;
 
     if (label !== undefined) {
         return label;

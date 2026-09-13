@@ -15,4 +15,9 @@ use App\Foundation\Component\Table\ValueObject\Table;
 interface TableDefinition
 {
     public function table(TableBuilder $tables): Table;
+
+    /**
+     * The name of the route this table's rows are read at. Naming it does not register it.
+     */
+    public static function routeName(): string;
 }

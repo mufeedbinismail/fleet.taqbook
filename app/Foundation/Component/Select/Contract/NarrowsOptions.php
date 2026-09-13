@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\Select\Contract;
 
-use App\Foundation\Component\Select\Intent\OptionSearchIntent;
+use App\Foundation\Component\Select\ValueObject\SelectState;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -14,14 +14,14 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  *
  * The two are stated together because neither half survives the other: a rule with no condition
  * reading it narrows nothing, and a condition reading a name no rule declared can never fire, the
- * intent carrying only what was named. Split across two places they would be free to disagree, and
+ * state carrying only what was named. Split across two places they would be free to disagree, and
  * a screen would find its narrowing silently doing nothing.
  */
 interface NarrowsOptions
 {
     /**
      * Rules for this select's own narrowing, keyed by parameter name. Whatever is named here — and
-     * nothing else — reaches the intent as a filter.
+     * nothing else — reaches the state as a filter.
      *
      * @return array<string, mixed>
      */
@@ -36,5 +36,5 @@ interface NarrowsOptions
      * Whichever builder the definition's own query hands back, which an implementation cannot narrow
      * to the one it wants — so a step written here is confined to what both of them answer to.
      */
-    public function applyFilters(EloquentBuilder|QueryBuilder $query, OptionSearchIntent $intent): void;
+    public function applyFilters(EloquentBuilder|QueryBuilder $query, SelectState $state): void;
 }

@@ -2,6 +2,8 @@
 
 namespace App\Foundation\Component\Select\ValueObject;
 
+use App\Foundation\Component\Select\Collection\OptionCollection;
+
 /**
  * One page of options, together with the verdict on the values the client said it was holding.
  *
@@ -12,23 +14,17 @@ namespace App\Foundation\Component\Select\ValueObject;
  */
 final class OptionPage
 {
-    /**
-     * @param  list<Option>  $options  the requested page
-     * @param  list<Option>  $selected  those of the requested values that survive the filters in
-     *                                  force, whichever page each falls on
-     */
     public function __construct(
-        public readonly array $options,
-        public readonly array $selected,
+        public readonly OptionCollection $options,
+        public readonly OptionCollection $selected,
         public readonly bool $hasMore,
     ) {}
 
-    /**
-     * @param  list<Option>  $options
-     * @param  list<Option>  $selected
-     */
-    public static function of(array $options, array $selected = [], bool $hasMore = false): self
-    {
-        return new self($options, $selected, $hasMore);
+    public static function of(
+        OptionCollection $options,
+        ?OptionCollection $selected = null,
+        bool $hasMore = false
+    ): self {
+        return new self($options, $selected ?? new OptionCollection, $hasMore);
     }
 }
