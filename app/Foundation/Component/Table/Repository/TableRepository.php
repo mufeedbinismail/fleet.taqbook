@@ -59,7 +59,7 @@ final class TableRepository
 
         $total = RowCount::of($narrowed->query);
 
-        $rows = $narrowed->query->lazy((int) config('table.export.chunk'))
+        $rows = $narrowed->query->lazy((int) config('component.table.export.chunk'))
             ->map(fn ($record) => $table->mapper->map($record));
 
         return new ExportSet($exported, $rows, $total);

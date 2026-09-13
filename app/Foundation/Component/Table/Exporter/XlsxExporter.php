@@ -105,6 +105,6 @@ final class XlsxExporter implements Exporter
 
     private function limit(): int
     {
-        return (int) config('table.export.xlsx_rows');
+        return (int) config('component.table.export.xlsx_rows');
     }
 }

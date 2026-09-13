@@ -3,45 +3,22 @@
 namespace App\Foundation\Component\Select\Control;
 
 use App\Foundation\Component\Control\Control;
-use App\Foundation\Component\Select\Exception\SelectException;
-use App\Foundation\Component\Select\ValueObject\OptionSource;
+use App\Foundation\Component\Select\Collection\OptionCollection;
+use App\Foundation\Component\Select\ValueObject\Option;
+use App\Foundation\Component\Select\ValueObject\OptionChannel;
 
 /**
  * A value picked from a declared set rather than typed.
  *
- * A set is listed or it is fetched and there is no way to say both; a fetched one is not read here,
- * so nothing is held to it.
+ * A fetched set is not read here, so nothing is held to it.
  */
 abstract class ChoiceControl extends Control
 {
-    /**
-     * @param  array<int|string, string>  $options  `value => label`
-     *
-     * @throws SelectException if there is nothing to choose from and nowhere to read choices from
-     */
-    protected function __construct(
-        private readonly array $options,
-        private readonly ?OptionSource $source,
-    ) {
-        if ($options === [] && $source === null) {
-            throw SelectException::offersNothing();
-        }
-    }
+    protected function __construct(protected readonly OptionChannel $channel) {}
 
-    /**
-     * @return array{options: array<int|string, string>, source: array<string, mixed>|null}
-     */
-    protected function offering(): array
+    protected function isFetchedFromSource(): bool
     {
-        return [
-            'options' => $this->options,
-            'source' => $this->source?->toArray(),
-        ];
-    }
-
-    protected function fetched(): bool
-    {
-        return $this->source !== null;
+        return $this->channel->isFetchedFromSource();
     }
 
     /**
@@ -50,26 +27,42 @@ abstract class ChoiceControl extends Control
      */
     protected function accepts(mixed $value): bool
     {
-        return $this->absent($value) || $this->options === [] || $this->offers($value);
+        return $this->isAbsent($value) || $this->isFetchedFromSource() || $this->offers($value);
     }
 
     /**
      * @return array<int, mixed>
      */
-    protected function held(mixed $raw): array
+    protected function values(mixed $raw): array
     {
         return is_array($raw) ? array_values($raw) : [$raw];
     }
 
     /**
-     * Compared as strings, numeric keys having been narrowed to int on their way into the array.
+     * @param  array<int|string, string>|list<Option>  $options
+     */
+    protected static function rows(array $options): OptionCollection
+    {
+        $rows = new OptionCollection;
+
+        foreach ($options as $key => $option) {
+            $rows[] = $option instanceof Option ? $option : Option::of($key, (string) $option);
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Compared as text, which is how a picked value arrives whatever it was declared as.
      */
     private function offers(mixed $value): bool
     {
-        return in_array(
-            (string) $value,
-            array_map(fn (int|string $offered) => (string) $offered, array_keys($this->options)),
-            true,
-        );
+        foreach ($this->channel->options() as $option) {
+            if ($option->value === (string) $value) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

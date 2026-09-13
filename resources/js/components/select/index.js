@@ -640,8 +640,14 @@ export function mount(el, raw = {}, Alpine, http = axios) {
             return;
         }
 
-        // Holding nothing, there is no verdict to ask for — only a list that is now about the
-        // wrong thing, and nobody waiting to read it until the control is opened again.
+        reload();
+    }
+
+    // Holding nothing, there is no verdict to ask for — only a list that is now about the wrong
+    // thing, and nobody waiting to read it until the control is opened again.
+    function reload() {
+        if (!remote) return;
+
         if (state.selected.length) {
             remote.verdict();
         } else {
@@ -732,6 +738,7 @@ export function mount(el, raw = {}, Alpine, http = axios) {
             core.sync();
             hydrate();
         },
+        reload,
         open,
         close,
         focus: () => dom.search.focus(),

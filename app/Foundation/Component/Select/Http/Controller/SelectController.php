@@ -18,6 +18,6 @@ class SelectController extends Controller
 {
     public function __invoke(OptionSearchRequest $request, OptionRepository $options): SelectResponse
     {
-        return SelectResponse::of($options->page($request->select(), $request->toIntent()));
+        return SelectResponse::of($options->page($request->select(), $request->toState()));
     }
 }

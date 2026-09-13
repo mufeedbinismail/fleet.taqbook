@@ -10,7 +10,7 @@ trait ReadsRawValueConcern
     /**
      * Whether the raw value asks for nothing, which cannot be wrong however a control reads.
      */
-    protected function absent(mixed $raw): bool
+    protected function isAbsent(mixed $raw): bool
     {
         return $raw === null || $raw === '' || $raw === [];
     }

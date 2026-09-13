@@ -3,7 +3,9 @@
 namespace App\Foundation\Component\Provider;
 
 use App\Foundation\Component\Date\Source\DateSource;
+use App\Foundation\Component\Select\Contract\SelectDefinition;
 use App\Foundation\Component\Select\Http\Controller\SelectController;
+use App\Foundation\Component\Table\Contract\TableDefinition;
 use App\Foundation\Component\Table\Http\Controller\TableController;
 use App\Foundation\Framework\Registry\ClientDataRegistry;
 use Illuminate\Support\Facades\Route;
@@ -30,19 +32,16 @@ class ComponentServiceProvider extends ServiceProvider
     }
 
     /**
-     * An option list is a path, a definition and a name derived from the path, and no more than
-     * that. Written out per list it was three lines whose only varying part was the definition, and
-     * the fourth list would have copied them again.
-     *
      * Nothing narrower than the session already required is applied here, and that is the decision
      * rather than an omission.
      */
     private function registerOptionListRoute(): void
     {
+        /** @param class-string<SelectDefinition> $select */
         Route::macro('optionList', function (string $path, string $select) {
-            return Route::get($path.'/options', SelectController::class)
-                ->defaults('select', $select)
-                ->name(str_replace('/', '.', $path).'.options');
+            return Route::name($select::routeName())
+                ->get($path.'/options', SelectController::class)
+                ->defaults('select', $select);
         });
     }
 
@@ -51,10 +50,11 @@ class ComponentServiceProvider extends ServiceProvider
      */
     private function registerTableDataRoute(): void
     {
+        /** @param class-string<TableDefinition> $table */
         Route::macro('tableData', function (string $path, string $table) {
-            return Route::get($path.'/list', TableController::class)
-                ->defaults('table', $table)
-                ->name(str_replace('/', '.', $path).'.list');
+            return Route::name($table::routeName())
+                ->get($path.'/list', TableController::class)
+                ->defaults('table', $table);
         });
     }
 

@@ -5,7 +5,7 @@ namespace App\Foundation\Component\Select\Http\Request;
 use App\Foundation\Component\Select\Contract\NarrowsOptions;
 use App\Foundation\Component\Select\Contract\SelectDefinition;
 use App\Foundation\Component\Select\Exception\SelectNotDefinedException;
-use App\Foundation\Component\Select\Intent\OptionSearchIntent;
+use App\Foundation\Component\Select\ValueObject\SelectState;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -29,11 +29,11 @@ final class OptionSearchRequest extends FormRequest
         return [
             'search' => ['nullable', 'string', 'max:255'],
             'page' => ['nullable', 'integer', 'min:1'],
-            'per_page' => ['nullable', 'integer', 'min:1', 'max:'.OptionSearchIntent::MAX_PER_PAGE],
+            'per_page' => ['nullable', 'integer', 'min:1', 'max:'.config('component.select.max_per_page')],
 
             // Capped because the list is a round trip the user is waiting on, and a client holding
             // more values than a page can show is asking a question the control cannot draw.
-            'selected' => ['nullable', 'array', 'max:'.OptionSearchIntent::MAX_PER_PAGE],
+            'selected' => ['nullable', 'array', 'max:'.config('component.select.max_per_page')],
             'selected.*' => ['string', 'max:255'],
             ...($select instanceof NarrowsOptions ? $select->filterRules() : []),
         ];
@@ -56,15 +56,15 @@ final class OptionSearchRequest extends FormRequest
         return app($named);
     }
 
-    public function toIntent(): OptionSearchIntent
+    public function toState(): SelectState
     {
         $validated = $this->validated();
         $select = $this->select();
 
-        return new OptionSearchIntent(
+        return new SelectState(
             search: trim((string) ($validated['search'] ?? '')),
             page: (int) ($validated['page'] ?? 1),
-            perPage: (int) ($validated['per_page'] ?? OptionSearchIntent::PER_PAGE),
+            perPage: (int) ($validated['per_page'] ?? config('component.select.per_page')),
 
             // Re-indexed and de-duplicated: the validator keeps whatever keys the query string
             // arrived with, and a repeated value would be answered on twice.

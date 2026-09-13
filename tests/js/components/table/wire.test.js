@@ -150,7 +150,7 @@ describe('a definition is read the way the server publishes it', () => {
         table.absorb({ filters: { [offering.key]: 1, [withoutOne.key]: '9' } });
 
         expect(table.chips().map((chip) => [chip.label, chip.text])).toEqual([
-            [offering.label, offering.filter.options['1']],
+            [offering.label, offering.filter.options.find((option) => option.value === '1').label],
             // The near-miss: a definition offering no filter lends its heading to nothing.
             [withoutOne.key, '9'],
         ]);
@@ -169,7 +169,7 @@ describe('a definition is read the way the server publishes it', () => {
         table.absorb({ filters: { [own.key]: 2 } });
 
         expect(table.chips().map((chip) => [chip.label, chip.text])).toEqual([
-            [own.label, own.filter.options['2']],
+            [own.label, own.filter.options.find((option) => option.value === '2').label],
         ]);
     });
 
