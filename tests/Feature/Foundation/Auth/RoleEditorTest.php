@@ -54,7 +54,6 @@ class RoleEditorTest extends TestCase
         $this->assertTrue($seed['state']['own']);
         $this->assertContains(Permission::MANAGE_ROLE, $seed['state']['permissions']);
 
-        $this->assertContains('ZZ Test Role', array_column($seed['roles'], 'role_name'));
         $this->assertNotEmpty($seed['groups']);
         $this->assertSameSize($seed['groups'], $seed['catalog']);
         $this->assertNotEmpty($seed['groups'][0]['keys']);
@@ -90,7 +89,7 @@ class RoleEditorTest extends TestCase
             );
     }
 
-    public function test_a_saved_role_comes_back_as_state_roles_and_a_notice(): void
+    public function test_a_saved_role_comes_back_as_state_and_a_notice(): void
     {
         $user = $this->actor();
 
@@ -103,7 +102,6 @@ class RoleEditorTest extends TestCase
             ->assertOk()
             ->assertJsonStructure([
                 'state' => ['id', 'role_name', 'inactive', 'permissions', 'own'],
-                'roles',
                 'notice',
             ])
             ->assertJsonPath('state.role_name', 'ZZ Test Role Renamed')

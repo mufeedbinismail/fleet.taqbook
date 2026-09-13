@@ -4,13 +4,14 @@ namespace App\Foundation\Auth\Http\Controller;
 
 use App\Foundation\Auth\Action\DeleteRoleAction;
 use App\Foundation\Auth\Action\SaveRoleAction;
+use App\Foundation\Auth\Component\Select\RoleSelect;
 use App\Foundation\Auth\Entity\Role;
 use App\Foundation\Auth\Http\Request\RoleEditorRequest;
 use App\Foundation\Auth\Http\Request\SaveRoleRequest;
 use App\Foundation\Auth\Repository\PermissionRepository;
-use App\Foundation\Auth\Repository\RoleRepository;
 use App\Foundation\Auth\Service\RoleService;
 use App\Foundation\Auth\ValueObject\RoleState;
+use App\Foundation\Component\Select\Service\OptionService;
 use App\Foundation\Framework\Http\Controller\Controller;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -19,7 +20,8 @@ use Illuminate\Http\Request;
 class RoleController extends Controller
 {
     public function __construct(
-        protected RoleRepository $roles,
+        protected RoleSelect $roles,
+        protected OptionService $options,
         protected PermissionRepository $permissions,
         protected RoleService $service,
     ) {}
@@ -33,7 +35,7 @@ class RoleController extends Controller
         return view('pages.foundation.security-role', [
             'title' => __('foundation.role.title'),
             'groups' => $this->permissions->catalog(),
-            'roles' => $this->roleList(),
+            'roles' => $this->options->lookup($this->roles),
             'state' => $this->state($request->roleId(), $request)->toArray(),
         ]);
     }
@@ -76,46 +78,23 @@ class RoleController extends Controller
     protected function save(SaveRoleRequest $request, SaveRoleAction $action): Role
     {
         $intent = $request->toIntent();
-        $actor = $this->actor($request);
+        $actor = $request->user();
 
         $this->refuse($action->validate($intent, $actor));
 
         return $action->execute($intent, $actor);
     }
 
-    /**
-     * Mutations ship the refreshed role list alongside the new state: the picker has to learn about
-     * a role that was just created, renamed, or deleted, and it holds every role at once so that
-     * "Show inactive" stays a client-side filter.
-     */
     protected function payload(RoleState $state, string $notice): JsonResponse
     {
         return response()->json([
             'state' => $state->toArray(),
-            'roles' => $this->roleList(),
             'notice' => $notice,
         ]);
     }
 
     protected function state(?int $roleId, Request $request): RoleState
     {
-        return $this->service->state($roleId, $this->actor($request));
-    }
-
-    /**
-     * The role held by whoever is asking, which is what decides whether a role reads as their own
-     * and whether a save is allowed to strip its access.
-     */
-    protected function actor(Request $request): ?int
-    {
-        return $request->user()?->role_id;
-    }
-
-    /**
-     * @return list<array{id: int, role_name: string, inactive: bool}>
-     */
-    protected function roleList(): array
-    {
-        return array_map(fn (Role $role) => $role->toArray(), $this->roles->all());
+        return $this->service->state($roleId, $request->user());
     }
 }

@@ -26,16 +26,4 @@ final class Role
             inactive: (bool) $record->inactive,
         );
     }
-
-    /**
-     * @return array{id: int, role_name: string, inactive: bool}
-     */
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->id,
-            'role_name' => $this->name,
-            'inactive' => $this->inactive,
-        ];
-    }
 }
