@@ -21,4 +21,9 @@ final class SaveRoleIntent
         public readonly bool $inactive,
         public readonly array $permissions,
     ) {}
+
+    public function isEditing(): bool
+    {
+        return $this->roleId !== null;
+    }
 }

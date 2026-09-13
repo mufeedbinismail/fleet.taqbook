@@ -3,10 +3,8 @@ export function roleEditor({ Alpine, App, axios, data }) {
 
     return () => ({
         ...seed.state,
-        roles: seed.roles,
         catalog: seed.catalog,
         filter: '',
-        showInactive: false,
         errors: [],
         roleNameError: null,
 
@@ -98,6 +96,10 @@ export function roleEditor({ Alpine, App, axios, data }) {
             return Alpine.$data(this.root.querySelector('[x-collapse]'));
         },
 
+        picker() {
+            return this.$refs.picker.__xSelect;
+        },
+
         /* Only groups the role actually uses stand open, mirroring what the server already decided
            for the page's first paint — this runs on every later state swap, which the server never
            sees.
@@ -145,7 +147,7 @@ export function roleEditor({ Alpine, App, axios, data }) {
             // The picker is a command rather than a mirror of the state, so a refused switch has to
             // be walked back by hand — nothing else would put it back on the role still loaded.
             if (body) this.apply(body.state);
-            else this.$refs.picker.value = this.id === null ? '' : String(this.id);
+            else this.picker().setValue(this.id, { silent: true });
         },
 
         async save() {
@@ -166,8 +168,8 @@ export function roleEditor({ Alpine, App, axios, data }) {
 
             if (!body) return;
 
-            this.roles = body.roles;
             this.apply(body.state);
+            this.picker().reload();
             this.showNotice(body.notice);
         },
 
@@ -182,8 +184,8 @@ export function roleEditor({ Alpine, App, axios, data }) {
 
             if (!body) return;
 
-            this.roles = body.roles;
             this.apply(body.state);
+            this.picker().reload();
             this.showNotice(body.notice);
         },
 

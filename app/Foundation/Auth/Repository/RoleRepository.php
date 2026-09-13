@@ -19,19 +19,6 @@ class RoleRepository
     }
 
     /**
-     * Every role there is, inactive ones included. Hiding those is a decision for whoever asked,
-     * not a second query.
-     *
-     * @return list<Role>
-     */
-    public function all(): array
-    {
-        return RoleRecord::orderBy('role')->get()
-            ->map(fn (RoleRecord $record) => Role::of($record))
-            ->all();
-    }
-
-    /**
      * The role's granted permission keys, empty when there is no such role.
      *
      * @return list<string>
@@ -66,9 +53,9 @@ class RoleRepository
     public function save(SaveRoleIntent $intent): Role
     {
         return DB::transaction(function () use ($intent) {
-            $record = $intent->roleId === null
-                ? new RoleRecord
-                : RoleRecord::find($intent->roleId) ?? throw ResourceNotFoundException::for('Role', $intent->roleId);
+            $record = $intent->isEditing()
+                ? RoleRecord::find($intent->roleId) ?? throw ResourceNotFoundException::for('Role', $intent->roleId)
+                : new RoleRecord;
 
             $record->role = $intent->name;
             $record->inactive = (int) $intent->inactive;

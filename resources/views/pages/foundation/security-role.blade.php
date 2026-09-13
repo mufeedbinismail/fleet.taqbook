@@ -1,5 +1,6 @@
 <?php
 
+use App\Foundation\Auth\Component\Select\RoleSelect;
 use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Framework\Facade\ClientData;
 use Illuminate\Support\Str;
@@ -10,7 +11,6 @@ $totalCount = $groups->sum(fn ($group) => $group->permissions->count());
 ClientData::registry()
     ->put('roleEditor', [
         'state' => $state,
-        'roles' => $roles,
         // Lowercased once here rather than per keystroke in the filter, and separate from `groups`
         // because it answers a different question: what the filter reads, not what a group holds.
         'catalog' => $groups->map(fn ($group) => [
@@ -54,20 +54,31 @@ ClientData::registry()
             <label for="role-picker" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-card-txt">
                 {{ __('foundation.role.picker.label') }}
             </label>
-            <select id="role-picker" data-picker x-ref="picker" @change="switchTo($event.target.value)"
-                    class="field border-field-border">
-                <option value="">{{ __('foundation.role.new') }}</option>
-                {{-- The selected role stays listed even when inactive and the filter is off, otherwise
-                     the picker would silently disagree with the form below it. --}}
-                <template x-for="role in roles.filter((role) => showInactive || !role.inactive || role.id === id)" :key="role.id">
-                    <option :value="role.id" :selected="role.id === id"
-                            x-text="role.role_name + (role.inactive ? ' — {{ __('foundation.role.picker.inactive') }}' : '')"></option>
-                </template>
-            </select>
+            {{-- Seeded with the one row already held, so the name it opens on is in the page rather
+                 than a round trip away. Pushed the held value silently: announced, it would come
+                 straight back as a switch to the role already loaded. --}}
+            <x-ui.select
+                id="role-picker"
+                name="role"
+                class="w-full"
+                data-picker
+                x-ref="picker"
+                :options="$state['id'] === null ? [] : [[
+                    'value' => $state['id'],
+                    'label' => $state['role_name'],
+                    'description' => $state['inactive'] ? __('foundation.role.picker.inactive') : null,
+                ]]"
+                :selected="$state['id']"
+                :placeholder="__('foundation.role.new')"
+                :channel="$roles"
+                :param-sources="[RoleSelect::INACTIVE => '#show-inactive']"
+                x-effect="$el.__xSelect?.setValue(id, { silent: true })"
+                @change="switchTo($event.target.value)"
+            />
         </div>
 
         <label class="flex cursor-pointer items-center gap-2 py-2 text-sm text-card-txt">
-            <input type="checkbox" class="tick" x-model="showInactive">
+            <input type="checkbox" id="show-inactive" class="tick">
             <span>{{ __('foundation.role.picker.show_inactive') }}</span>
         </label>
     </div>
