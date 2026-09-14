@@ -127,6 +127,10 @@ final class Permission
 
     public const MANAGE_USER = 'foundation.access.user.manage';
 
+    public const IMPERSONATE_USER = 'foundation.access.user.impersonate';
+
+    public const VIEW_RESERVED_ACCESS = 'foundation.access.reserved.view';
+
     public const CONFIGURE_COMPANY = 'foundation.system.company.configure';
 
     public const CONFIGURE_DISPLAY = 'foundation.system.display.configure';

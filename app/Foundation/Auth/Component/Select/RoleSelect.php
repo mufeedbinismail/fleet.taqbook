@@ -2,10 +2,12 @@
 
 namespace App\Foundation\Auth\Component\Select;
 
+use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Auth\Model\Role;
 use App\Foundation\Component\Select\Contract\NarrowsOptions;
 use App\Foundation\Component\Select\Contract\SelectDefinition;
 use App\Foundation\Component\Select\ValueObject\SelectState;
+use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -18,9 +20,15 @@ final class RoleSelect implements NarrowsOptions, SelectDefinition
 {
     public const INACTIVE = 'inactive';
 
+    public function __construct(private readonly Gate $gate) {}
+
     public function query(): EloquentBuilder
     {
         return Role::query()
+            ->when(
+                $this->gate->denies(Permission::VIEW_RESERVED_ACCESS),
+                fn (EloquentBuilder $query) => $query->where('security_roles.reserved', false),
+            )
             ->select(['security_roles.id as value', 'security_roles.role as label'])
             ->selectRaw('CASE WHEN security_roles.inactive THEN ? END as description', [__('foundation.role.picker.inactive')])
             ->orderBy('security_roles.role');

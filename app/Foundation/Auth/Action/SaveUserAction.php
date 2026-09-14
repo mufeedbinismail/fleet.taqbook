@@ -5,6 +5,7 @@ namespace App\Foundation\Auth\Action;
 use App\Foundation\Auth\Exception\UserException;
 use App\Foundation\Auth\Intent\SaveUserIntent;
 use App\Foundation\Auth\Model\User;
+use App\Foundation\Auth\Repository\RoleRepository;
 use App\Foundation\Auth\Repository\UserRepository;
 use App\Foundation\Framework\DTO\ValidationResult;
 
@@ -12,6 +13,7 @@ class SaveUserAction
 {
     public function __construct(
         protected UserRepository $users,
+        protected RoleRepository $roles,
         protected SaveUserPasswordAction $password,
     ) {}
 
@@ -22,6 +24,10 @@ class SaveUserAction
         if ($intent->isEditing()) {
             $existing = User::find($intent->userId);
 
+            if ($existing?->reserved) {
+                return ValidationResult::error('user', __('foundation.user.error.reserved'));
+            }
+
             if ($existing?->inactive) {
                 return ValidationResult::error('user', __('foundation.user.error.inactive_edit'));
             }
@@ -29,6 +35,10 @@ class SaveUserAction
             if ($this->users->loginTaken((string) $intent->login)) {
                 return ValidationResult::error('user_id', __('foundation.user.error.duplicate_login'));
             }
+        }
+
+        if ($this->roles->find($intent->roleId)?->reserved) {
+            return ValidationResult::error('role_id', __('foundation.user.error.reserved_role'));
         }
 
         if ($intent->password !== null) {
