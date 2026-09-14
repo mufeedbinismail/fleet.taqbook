@@ -26,6 +26,10 @@ class SetUserStatusAction
             return ValidationResult::success();
         }
 
+        if (User::find($userId)?->reserved) {
+            return ValidationResult::error('user', __('foundation.user.error.reserved'));
+        }
+
         if ($userId === $actor->id) {
             return ValidationResult::error('user', __('foundation.user.error.self_deactivation'));
         }

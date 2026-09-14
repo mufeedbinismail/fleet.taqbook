@@ -13,6 +13,11 @@ class Permission extends Model
         'name',
         'permission_group_id',
         'sort',
+        'reserved',
+    ];
+
+    protected $casts = [
+        'reserved' => 'boolean',
     ];
 
     public function group(): BelongsTo

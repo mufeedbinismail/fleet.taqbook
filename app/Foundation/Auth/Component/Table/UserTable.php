@@ -4,6 +4,7 @@ namespace App\Foundation\Auth\Component\Table;
 
 use App\Finance\Ledger\Query\TransactionAttributionExistsQuery;
 use App\Foundation\Auth\Component\Select\RoleSelect;
+use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Auth\Model\User;
 use App\Foundation\Component\Select\Control\MultiSelectControl;
 use App\Foundation\Component\Select\Service\OptionService;
@@ -19,6 +20,7 @@ use App\Foundation\Component\Table\ValueObject\ColumnDefinition;
 use App\Foundation\Component\Table\ValueObject\FilterDefinition;
 use App\Foundation\Component\Table\ValueObject\Table;
 use App\Foundation\Component\Table\ValueObject\TableState;
+use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -34,6 +36,7 @@ final class UserTable implements TableDefinition
         private readonly OptionService $options,
         private readonly RoleSelect $roles,
         private readonly Guard $auth,
+        private readonly Gate $gate,
     ) {}
 
     public static function routeName(): string
@@ -130,6 +133,10 @@ final class UserTable implements TableDefinition
     private function rows(): EloquentBuilder
     {
         return User::query()
+            ->when(
+                $this->gate->denies(Permission::VIEW_RESERVED_ACCESS),
+                fn (EloquentBuilder $query) => $query->where('users.reserved', false)
+            )
             ->leftJoin('security_roles', 'security_roles.id', '=', 'users.role_id')
             ->select([
                 'users.id',

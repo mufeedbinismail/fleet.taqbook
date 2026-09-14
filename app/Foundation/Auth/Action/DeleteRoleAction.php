@@ -12,6 +12,10 @@ class DeleteRoleAction
 
     public function validate(int $roleId): ValidationResult
     {
+        if ($this->roles->find($roleId)?->reserved) {
+            return ValidationResult::error('role', __('foundation.role.error.reserved'));
+        }
+
         if ($this->roles->isAssigned($roleId)) {
             return ValidationResult::error('role', __('foundation.role.error.assigned'));
         }

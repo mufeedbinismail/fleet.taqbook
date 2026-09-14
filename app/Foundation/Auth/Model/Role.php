@@ -23,6 +23,10 @@ class Role extends Model
         'inactive',
     ];
 
+    protected $casts = [
+        'reserved' => 'boolean',
+    ];
+
     public function permissions(): BelongsToMany
     {
         return $this->belongsToMany(Permission::class, 'role_permissions');

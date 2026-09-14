@@ -57,6 +57,8 @@ return [
             'duplicate_name' => 'A role with this name already exists.',
             'lockout' => 'You hold this role, so you cannot remove its access to this screen.',
             'assigned' => 'This role is currently assigned to some users and cannot be deleted.',
+            'reserved' => 'This role is reserved by the system and cannot be changed or deleted.',
+            'reserved_permission' => 'One of these permissions is reserved by the system and cannot be granted.',
         ],
 
         // Substituted into validation messages, so they read mid-sentence and lowercase.
@@ -140,6 +142,8 @@ return [
             'inactive_edit' => 'An inactive account cannot be edited. Reactivate it first.',
             'has_history' => 'This user has posted transactions, so the account can only be deactivated.',
             'no_history' => 'This user has never posted a transaction, so the account is deleted rather than deactivated.',
+            'reserved' => 'This account is reserved by the system and cannot be changed, deactivated or deleted.',
+            'reserved_role' => 'This access level is reserved by the system and cannot be assigned.',
         ],
 
         // Names the validator substitutes into its own messages, so they read mid-sentence and

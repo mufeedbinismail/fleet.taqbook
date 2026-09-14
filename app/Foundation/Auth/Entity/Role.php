@@ -5,7 +5,8 @@ namespace App\Foundation\Auth\Entity;
 use App\Foundation\Auth\Model\Role as RoleRecord;
 
 /**
- * A role, as the domain knows it: a named grant-holder, active or not.
+ * A role, as the domain knows it: a named grant-holder, active or not, and reserved where it is
+ * the system's own rather than the client's.
  *
  * What it grants is not here. A role is the same role whether or not anyone has looked its
  * permissions up, and most of what asks about roles never needs them.
@@ -16,6 +17,7 @@ final class Role
         public readonly int $id,
         public readonly string $name,
         public readonly bool $inactive,
+        public readonly bool $reserved,
     ) {}
 
     public static function of(RoleRecord $record): self
@@ -24,6 +26,7 @@ final class Role
             id: $record->id,
             name: $record->role,
             inactive: (bool) $record->inactive,
+            reserved: (bool) $record->reserved,
         );
     }
 }

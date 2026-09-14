@@ -17,6 +17,10 @@ class DeleteUserAction
 
     public function validate(int $userId, User $actor): ValidationResult
     {
+        if (User::find($userId)?->reserved) {
+            return ValidationResult::error('user', __('foundation.user.error.reserved'));
+        }
+
         if ($userId === $actor->id) {
             return ValidationResult::error('user', __('foundation.user.error.self_removal'));
         }
