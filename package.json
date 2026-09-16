@@ -1,4 +1,5 @@
 {
+    "name": "taqbook",
     "private": true,
     "type": "module",
     "scripts": {
