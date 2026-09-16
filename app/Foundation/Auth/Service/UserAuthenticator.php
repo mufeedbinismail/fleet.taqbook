@@ -34,6 +34,7 @@ class UserAuthenticator
         $credentials = [
             'user_id' => $login,
             'inactive' => 0,
+            'reserved' => 0,
             'password' => (string) $request->input('password'),
         ];
 
