@@ -4,6 +4,7 @@ namespace App\Foundation\Framework\Provider;
 
 use App\Foundation\Auth\Model\User;
 use App\Foundation\Framework\Registry\ClientDataRegistry;
+use App\Foundation\Shared\Repository\SequenceRepository;
 use App\Foundation\Shared\Setting\GlobalSetting;
 use App\Foundation\Shared\Setting\UserSetting;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -19,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(GlobalSetting::class);
+        $this->app->singleton(SequenceRepository::class);
         $this->app->scoped(UserSetting::class, function ($app) {
             if (auth()->hasUser() && auth()->user() instanceof User) {
                 $user = call_user_func([auth()->user(), 'toArray']);
