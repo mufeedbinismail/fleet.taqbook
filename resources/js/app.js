@@ -1,6 +1,7 @@
 'use strict';
 
 import Alpine from './plugins/alpine';
+import parsley from './plugins/parsley';
 import axios from './plugins/axios';
 import data from './foundation/data';
 import { setBusyState, unsetBusyState, isBusy } from './foundation/busy';
@@ -27,6 +28,7 @@ modal.defaults({ scroller: '.shell__content-scroller' });
 // Merge, not replace: a deferred module runs after the classic inline scripts that have already
 // staged onto window.App.
 Object.assign(window.App, {
+    parsley,
     setBusyState,
     unsetBusyState,
     isBusy,

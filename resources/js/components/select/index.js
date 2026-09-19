@@ -794,6 +794,9 @@ function build(el, config, id, panelId) {
         ...Array.from(el.classList).filter((name) => !name.startsWith('x-select')),
     );
 
+    control.dataset.validatorIndicator = '';
+    search.dataset.validatorExcluded = '';
+
     search.type = 'text';
     search.id = `${id}-input`;
     search.autocomplete = 'off';

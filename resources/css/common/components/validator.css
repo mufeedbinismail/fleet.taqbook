@@ -1,0 +1,51 @@
+@layer components {
+    .is-invalid {
+        input,
+        input&,
+        select,
+        select&,
+        textarea,
+        textarea&,
+        [data-validator-indicator],
+        [data-validator-indicator]& {
+            &,
+            &:focus {
+                @apply border-error-accent ring-error-accent;
+            }
+        }
+
+        [data-validator-indicator]:focus-within,
+        [data-validator-indicator]&:focus-within {
+            @apply border-error-accent ring-error-accent;
+        }
+    }
+
+    .is-valid {
+        input,
+        input&,
+        select,
+        select&,
+        textarea,
+        textarea&,
+        [data-validator-indicator],
+        [data-validator-indicator]& {
+            &,
+            &:focus {
+                @apply border-success-accent ring-success-accent;
+            }
+        }
+
+        [data-validator-indicator]:focus-within,
+        [data-validator-indicator]&:focus-within {
+            @apply border-success-accent ring-success-accent;
+        }
+    }
+
+    .validator-errors {
+        @apply opacity-0 transition-opacity;
+    }
+
+    .validator-errors.filled {
+        @apply opacity-100;
+    }
+}
