@@ -85,6 +85,7 @@ export default {
                 'primary-accent': 'var(--primary-accent)',
                 'warning-accent': 'var(--warning-accent)',
                 'error-accent': 'var(--error-accent)',
+                'success-accent': 'var(--success-accent)',
 
                 'page-bg': 'var(--page-bg)',
                 'page-txt': 'var(--page-txt)',

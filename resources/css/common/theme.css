@@ -144,6 +144,7 @@
         --primary-accent: var(--c-brand-500);
         --warning-accent: var(--c-warning-500);
         --error-accent: var(--c-danger-500);
+        --success-accent: var(--c-success-500);
         --page-bg: var(--c-neutral-0);
         --page-txt: var(--c-neutral-900);
         --page-caption-bg: var(--c-light-200);
@@ -504,6 +505,7 @@
         --primary-accent: var(--c-brand-500);
         --warning-accent: var(--c-warning-500);
         --error-accent: var(--c-danger-500);
+        --success-accent: var(--c-success-500);
         --page-bg: var(--c-dark-700);
         --page-txt: var(--c-light-200);
         --page-caption-bg: var(--c-dark-600);
