@@ -79,6 +79,9 @@
         "page-previous": 59710,
         "page-next": 59711,
         "page-last": 59712,
-        "filter": 59713
+        "filter": 59713,
+        "fleet": 60161,
+        "rename": 60162,
+        "server": 60163
     }
 }

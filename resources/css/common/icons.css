@@ -255,4 +255,13 @@
     .icon-filter:before {
         content: '\e941';
     }
+    .icon-fleet:before {
+        content: '\eb01';
+    }
+    .icon-rename:before {
+        content: '\eb02';
+    }
+    .icon-server:before {
+        content: '\eb03';
+    }
 }
