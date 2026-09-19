@@ -12,4 +12,5 @@ require __DIR__.'/guest.php';
 // reachable without a session has to join the short list above, where it stays conspicuous.
 Route::middleware(['auth', 'auth.session', IdleTimeout::class])->group(function () {
     require __DIR__.'/foundation.php';
+    require __DIR__.'/sale.php';
 });
