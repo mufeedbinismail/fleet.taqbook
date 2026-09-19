@@ -35,6 +35,7 @@
     }
 
     button {
+        @apply rounded-sm px-1 py-0.5;
         white-space: nowrap;
     }
 
@@ -56,7 +57,7 @@
     textarea,
     button,
     select {
-        @apply border border-solid rounded-sm px-1 py-0.5 transition-colors;
+        @apply border border-solid transition-colors;
         border-color: theme('colors.field-border');
         color: theme('colors.field-txt');
     }
@@ -64,7 +65,7 @@
     input,
     textarea,
     select {
-        @apply bg-field-bg;
+        @apply rounded-lg px-3 py-2 bg-field-bg;
     }
 
     [type='text'],
@@ -213,7 +214,7 @@
         width: 1rem;
         color: theme('colors.check-fill');
         --tw-shadow: 0 0 #0000;
-        @apply border border-solid border-check-border bg-check-bg;
+        @apply border border-solid border-check-border bg-check-bg p-0;
     }
 
     [type='checkbox'] {
@@ -318,7 +319,7 @@
         line-height: inherit;
 
         &::file-selector-button {
-            @apply py-0.5 px-1 -my-0.5 -mx-1 me-1 bg-file-button-bg text-file-button-txt border-0 border-solid border-file-button-border border-e rounded-e-sm transition-colors;
+            @apply py-2 px-3 -my-2 -mx-3 me-3 bg-file-button-bg text-file-button-txt border-0 border-solid border-file-button-border border-e rounded-e-sm transition-colors;
         }
 
         &:not(:disabled):not([readonly]) {

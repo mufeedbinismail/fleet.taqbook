@@ -1,3 +1,27 @@
 select {
     @apply max-w-[300px];
 }
+
+input,
+textarea,
+select,
+.x-select__control {
+    @apply rounded-sm px-1 py-0.5;
+}
+
+.x-select__panel {
+    @apply rounded-sm;
+}
+
+.x-select__search::placeholder {
+    color: inherit;
+    opacity: 1;
+}
+
+select {
+    padding-inline-end: 1.9rem;
+}
+
+input[type='file']::file-selector-button {
+    @apply py-0.5 px-1 -my-0.5 -mx-1 me-1;
+}

@@ -52,7 +52,7 @@
        field drawn in the quieter colour those use reads as having no edge at all next to the ones
        either side of it. */
     .x-select__control {
-        @apply flex max-w-full items-center gap-1 px-1 py-0.5 rounded-sm border border-solid cursor-text;
+        @apply flex max-w-full items-center gap-1 px-3 py-2 rounded-lg border border-solid cursor-text;
         border-color: theme('colors.field-border');
         color: theme('colors.field-txt');
         background-color: theme('colors.field-bg');
@@ -77,11 +77,8 @@
     .x-select__search {
         @apply flex-1 min-w-0 p-0 bg-transparent border-0 outline-none text-inherit;
 
-        /* Drawn as plainly as a chosen value, because that is what it replaces: the row a select
-           shows when nothing is picked is an ordinary option in ordinary text, so fading it here
-           would change how the field looks the moment a control takes the element's place. */
         &::placeholder {
-            color: inherit;
+            color: theme('colors.field-placeholder-txt');
             opacity: 1;
         }
     }
@@ -163,7 +160,7 @@
        whatever the field sits in, and a stacking context it loses to puts rows behind the form
        they belong to. */
     .x-select__panel {
-        @apply absolute max-h-72 overflow-y-auto py-1 rounded-sm border border-solid shadow-lg z-[200];
+        @apply absolute max-h-72 overflow-y-auto py-1 rounded-lg border border-solid shadow-lg z-[200];
         background-color: theme('colors.panel-bg');
         border-color: theme('colors.panel-border');
         color: theme('colors.panel-txt');
