@@ -51,6 +51,9 @@ enum SystemType: int implements HasLabelContract
     case MarketplaceCustomerPayment = 101; // ST_MKTCUSTPAYMENT
     case MarketplaceCustomerRefund = 102; // ST_MKTCUSTREFUND
 
+    // System Reserved Range
+    case Deployment = 900;
+
     public function abbr(): ?string
     {
         return self::abbreviations()[$this->value] ?? null;

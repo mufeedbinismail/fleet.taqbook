@@ -300,4 +300,6 @@ final class Permission
     public const VIEW_SALE_TRANSACTION = 'trade.sale.transaction.view';
 
     public const MANAGE_PAYMENT_TERM = 'trade.shared.payment-term.manage';
+
+    public const MANAGE_DEPLOYMENT = 'fleet.deployment.manage';
 }
