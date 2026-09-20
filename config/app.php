@@ -195,6 +195,7 @@ return [
         \App\Foundation\Framework\Provider\RouteServiceProvider::class,
         \App\Foundation\Component\ComponentServiceProvider::class,
         \App\Foundation\Navigation\Provider\NavigationServiceProvider::class,
+        \App\Fleet\Provider\FleetServiceProvider::class,
         \App\Legacy\Provider\LegacyServiceProvider::class,
         \App\Finance\FinanceServiceProvider::class,
         \App\Inventory\Provider\InventoryServiceProvider::class,
