@@ -48,4 +48,11 @@ interface HasLabelContract
      * @return array<mixed, string>
      */
     public static function labels(): array;
+
+    /**
+     * The set as a control offers it.
+     *
+     * @return list<array{value: int|string, label: string}>
+     */
+    public static function choices(): array;
 }
