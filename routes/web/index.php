@@ -17,4 +17,5 @@ Route::middleware(['auth', 'auth.session', IdleTimeout::class])->group(function 
     require __DIR__.'/finance.php';
     require __DIR__.'/sale.php';
     require __DIR__.'/inventory.php';
+    require __DIR__.'/fleet.php';
 });

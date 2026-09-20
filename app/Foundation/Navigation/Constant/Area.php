@@ -15,6 +15,8 @@ final class Area
 
     public const FINANCE = 'finance';
 
+    public const FLEET = 'fleet';
+
     public const INVENTORY = 'inventory';
 
     public const MANUFACTURING = 'manufacturing';

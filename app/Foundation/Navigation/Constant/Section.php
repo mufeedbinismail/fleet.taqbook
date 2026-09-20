@@ -56,6 +56,8 @@ final class Section
 
     public const SALE_TRANSACTION = 'sale.transaction';
 
+    public const FLEET_MAINTENANCE = 'fleet.maintenance';
+
     public const SYSTEM_COMPANY = 'system.company';
 
     public const SYSTEM_MAINTENANCE = 'system.maintenance';

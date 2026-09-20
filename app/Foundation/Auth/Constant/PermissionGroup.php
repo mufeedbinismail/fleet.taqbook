@@ -85,4 +85,6 @@ final class PermissionGroup
     public const SALE_SETUP = 'trade.sale.setup';
 
     public const TRADE_SHARED_SETUP = 'trade.shared.setup';
+
+    public const FLEET_SETUP = 'fleet.setup';
 }
