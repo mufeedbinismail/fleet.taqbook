@@ -43,6 +43,25 @@ enum TimeFormat: int implements HasLabelContract
     }
 
     /**
+     * The same clock, for `DATE_FORMAT()`.
+     */
+    public function sqlFormat(): string
+    {
+        return match ($this) {
+            self::TwelveHour => '%h:%i %p',
+            self::TwentyFourHour => '%H:%i',
+        };
+    }
+
+    public function sqlFormatWithSeconds(): string
+    {
+        return match ($this) {
+            self::TwelveHour => '%h:%i:%s %p',
+            self::TwentyFourHour => '%H:%i:%s',
+        };
+    }
+
+    /**
      * @return array<int, string>
      */
     public static function labels(): array

@@ -257,6 +257,36 @@ class UserSetting extends Store
         return $this->timeFormatIdx()->formatWithSeconds();
     }
 
+    public function dateTimeFormatWithSeconds(): string
+    {
+        return $this->dateFormat().' '.$this->timeFormatWithSeconds();
+    }
+
+    public function sqlDateFormat(): string
+    {
+        return $this->dateFormatIdx()->sqlFormat($this->dateSepIdx());
+    }
+
+    public function sqlTimeFormat(): string
+    {
+        return $this->timeFormatIdx()->sqlFormat();
+    }
+
+    public function sqlDateTimeFormat(): string
+    {
+        return $this->sqlDateFormat().' '.$this->sqlTimeFormat();
+    }
+
+    public function sqlTimeFormatWithSeconds(): string
+    {
+        return $this->timeFormatIdx()->sqlFormatWithSeconds();
+    }
+
+    public function sqlDateTimeFormatWithSeconds(): string
+    {
+        return $this->sqlDateFormat().' '.$this->sqlTimeFormatWithSeconds();
+    }
+
     public function dateTimeFormat(): string
     {
         return $this->dateFormat().' '.$this->timeFormat();
