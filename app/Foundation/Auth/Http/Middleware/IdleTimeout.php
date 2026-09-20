@@ -3,6 +3,7 @@
 namespace App\Foundation\Auth\Http\Middleware;
 
 use App\Foundation\Auth\Service\UserAuthenticator;
+use App\Foundation\Framework\Http\Response\Envelope;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +42,7 @@ class IdleTimeout
         $message = __('Your session has expired. Please log in again.');
 
         if ($request->expectsJson()) {
-            return response()->json(['message' => $message], 401);
+            return Envelope::failed($message, code: 401)->toResponse($request);
         }
 
         return redirect()

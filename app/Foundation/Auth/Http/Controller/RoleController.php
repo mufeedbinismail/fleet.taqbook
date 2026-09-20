@@ -13,8 +13,8 @@ use App\Foundation\Auth\Service\RoleService;
 use App\Foundation\Auth\ValueObject\RoleState;
 use App\Foundation\Component\Select\Service\OptionService;
 use App\Foundation\Framework\Http\Controller\Controller;
+use App\Foundation\Framework\Http\Response\Envelope;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
@@ -40,26 +40,26 @@ class RoleController extends Controller
         ]);
     }
 
-    public function show(Request $request, int $role): JsonResponse
+    public function show(Request $request, int $role): Envelope
     {
-        return response()->json(['state' => $this->state($role, $request)->toArray()]);
+        return Envelope::ok(data: $this->state($role, $request)->toArray());
     }
 
-    public function store(SaveRoleRequest $request, SaveRoleAction $action): JsonResponse
+    public function store(SaveRoleRequest $request, SaveRoleAction $action): Envelope
     {
         $saved = $this->save($request, $action);
 
         return $this->payload($this->state($saved->id, $request), __('foundation.role.notice.created'));
     }
 
-    public function update(SaveRoleRequest $request, SaveRoleAction $action, int $role): JsonResponse
+    public function update(SaveRoleRequest $request, SaveRoleAction $action, int $role): Envelope
     {
         $saved = $this->save($request, $action);
 
         return $this->payload($this->state($saved->id, $request), __('foundation.role.notice.updated'));
     }
 
-    public function destroy(Request $request, DeleteRoleAction $action, int $role): JsonResponse
+    public function destroy(Request $request, DeleteRoleAction $action, int $role): Envelope
     {
         $this->refuse($action->validate($role));
 
@@ -85,12 +85,9 @@ class RoleController extends Controller
         return $action->execute($intent, $actor);
     }
 
-    protected function payload(RoleState $state, string $notice): JsonResponse
+    protected function payload(RoleState $state, string $notice): Envelope
     {
-        return response()->json([
-            'state' => $state->toArray(),
-            'notice' => $notice,
-        ]);
+        return Envelope::ok($notice, $state->toArray());
     }
 
     protected function state(?int $roleId, Request $request): RoleState

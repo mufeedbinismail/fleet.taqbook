@@ -146,7 +146,7 @@ export function roleEditor({ Alpine, App, axios, data }) {
 
             // The picker is a command rather than a mirror of the state, so a refused switch has to
             // be walked back by hand — nothing else would put it back on the role still loaded.
-            if (body) this.apply(body.state);
+            if (body) this.apply(body.data);
             else this.picker().setValue(this.id, { silent: true });
         },
 
@@ -168,9 +168,9 @@ export function roleEditor({ Alpine, App, axios, data }) {
 
             if (!body) return;
 
-            this.apply(body.state);
+            this.apply(body.data);
             this.picker().reload();
-            this.showNotice(body.notice);
+            this.showNotice(body.message);
         },
 
         /* Not destroy(): Alpine treats a method of that name as a teardown hook and calls it when
@@ -184,9 +184,9 @@ export function roleEditor({ Alpine, App, axios, data }) {
 
             if (!body) return;
 
-            this.apply(body.state);
+            this.apply(body.data);
             this.picker().reload();
-            this.showNotice(body.notice);
+            this.showNotice(body.message);
         },
 
         /* Client-side only: the ticks on screen become a new role, so nothing is saved until Save. */

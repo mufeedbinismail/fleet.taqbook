@@ -2,8 +2,11 @@
 
 namespace App\Foundation\Framework\Exception;
 
+use App\Foundation\Framework\Http\Response\Envelope;
 use App\Foundation\Shared\Exception\ResourceNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -34,5 +37,11 @@ class Handler extends ExceptionHandler
         $this->renderable(function (ResourceNotFoundException $e, $request) {
             return $this->prepareResponse($request, new NotFoundHttpException($e->getMessage(), $e));
         });
+    }
+
+    protected function invalidJson($request, ValidationException $exception): JsonResponse
+    {
+        return Envelope::failed($exception->getMessage(), $exception->errors(), $exception->status)
+            ->toResponse($request);
     }
 }

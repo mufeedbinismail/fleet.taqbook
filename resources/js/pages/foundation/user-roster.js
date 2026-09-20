@@ -107,7 +107,7 @@ export function userRoster({ App, axios, data }) {
             if (!body) return;
 
             App.modal('user-editor').hide();
-            this.done(body.notice);
+            this.done(body.message);
         },
 
         async remove(row) {
@@ -116,7 +116,7 @@ export function userRoster({ App, axios, data }) {
                 App.route('access.users.destroy', { user: row.id }),
             );
 
-            if (body) this.done(body.notice);
+            if (body) this.done(body.message);
         },
 
         async setStatus(row, inactive) {
@@ -126,7 +126,7 @@ export function userRoster({ App, axios, data }) {
                 { inactive },
             );
 
-            if (body) this.done(body.notice);
+            if (body) this.done(body.message);
         },
     });
 }

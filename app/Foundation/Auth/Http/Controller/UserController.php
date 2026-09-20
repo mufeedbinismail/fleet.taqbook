@@ -15,9 +15,9 @@ use App\Foundation\Component\Table\Http\Request\TableRequest;
 use App\Foundation\Component\Table\Repository\TableRepository;
 use App\Foundation\Component\Table\ValueObject\InitialPage;
 use App\Foundation\Framework\Http\Controller\Controller;
+use App\Foundation\Framework\Http\Response\Envelope;
 use App\Trade\Sale\Repository\SalesPointRepository;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -57,21 +57,21 @@ class UserController extends Controller
         ]);
     }
 
-    public function store(SaveUserRequest $request, SaveUserAction $action): JsonResponse
+    public function store(SaveUserRequest $request, SaveUserAction $action): Envelope
     {
         $this->save($request, $action);
 
-        return $this->notice(__('foundation.user.notice.created'));
+        return Envelope::ok(__('foundation.user.notice.created'));
     }
 
-    public function update(SaveUserRequest $request, SaveUserAction $action, int $user): JsonResponse
+    public function update(SaveUserRequest $request, SaveUserAction $action, int $user): Envelope
     {
         $this->save($request, $action);
 
-        return $this->notice(__('foundation.user.notice.updated'));
+        return Envelope::ok(__('foundation.user.notice.updated'));
     }
 
-    public function destroy(Request $request, DeleteUserAction $action, int $user): JsonResponse
+    public function destroy(Request $request, DeleteUserAction $action, int $user): Envelope
     {
         $actor = $request->user();
 
@@ -79,10 +79,10 @@ class UserController extends Controller
 
         $action->execute($user, $actor);
 
-        return $this->notice(__('foundation.user.notice.deleted'));
+        return Envelope::ok(__('foundation.user.notice.deleted'));
     }
 
-    public function status(Request $request, SetUserStatusAction $action, int $user): JsonResponse
+    public function status(Request $request, SetUserStatusAction $action, int $user): Envelope
     {
         $inactive = $request->boolean('inactive');
         $actor = $request->user();
@@ -91,7 +91,7 @@ class UserController extends Controller
 
         $action->execute($user, $inactive, $actor);
 
-        return $this->notice($inactive
+        return Envelope::ok($inactive
             ? __('foundation.user.notice.deactivated')
             : __('foundation.user.notice.activated'));
     }
@@ -107,14 +107,5 @@ class UserController extends Controller
         $this->refuse($action->validate($intent));
 
         $action->execute($intent);
-    }
-
-    /**
-     * Mutations answer with a message and nothing else. Anything more would be a second description
-     * of the roster, competing with the one the list endpoint gives.
-     */
-    protected function notice(string $notice): JsonResponse
-    {
-        return response()->json(['notice' => $notice]);
     }
 }
