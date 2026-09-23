@@ -41,6 +41,16 @@ taqbook_php() {
     return 1
 }
 
+# npm's own resolution costs several times what checking a handful of files does, so prefer the
+# binary the project installed and keep npx for a prettier that lives outside it.
+taqbook_prettier() {
+    if [ -x node_modules/.bin/prettier ]; then
+        echo node_modules/.bin/prettier
+    else
+        echo npx --no-install prettier
+    fi
+}
+
 # npm ships a `node` shim in its own directory, so a PATH that reaches npm reaches node too; nothing
 # to resolve by version here the way PHP needs.
 taqbook_require_node() {

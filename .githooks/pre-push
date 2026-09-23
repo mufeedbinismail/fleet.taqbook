@@ -1,25 +1,80 @@
 #!/usr/bin/env bash
 #
-# Refuses a push while anything in the tree is unformatted.
+# Refuses a push while anything in it is unformatted.
 
 . "$(cd "$(dirname "$0")" && pwd)/_shared.sh"
 
-php=$(taqbook_php)
-taqbook_require_node
+# One line per ref being pushed. An all-zero local sha deletes a ref and carries no files; an
+# all-zero remote sha is a branch the far side has never seen, whose new commits are whatever no
+# remote holds yet.
+changed=""
+while read -r _local_ref local_sha _remote_ref remote_sha; do
+    case "$local_sha" in *[!0]*) ;; *) continue ;; esac
+
+    if [ -z "${remote_sha//0/}" ]; then
+        commits=$(git rev-list "$local_sha" --not --remotes || true)
+    else
+        commits=$(git rev-list "$remote_sha..$local_sha" || true)
+    fi
+    [ -n "$commits" ] || continue
+
+    touched=$(printf '%s\n' "$commits" \
+        | git diff-tree -r --stdin --no-commit-id --name-only --diff-filter=ACMR \
+        | sort -u)
+    [ -n "$touched" ] || continue
+
+    # A file added and then deleted within the same push is in the range but not in what lands, so
+    # keep only what the pushed tip still holds.
+    changed=$(printf '%s\n%s\n' "$changed" "$(comm -12 \
+        <(printf '%s\n' "$touched") \
+        <(git ls-tree -r --name-only "$local_sha" | sort))")
+done
+
+# The formatters read the working tree, not the commits. Pushing a branch that is not checked out
+# names files that are not on disk, so drop those rather than hand a formatter a missing path.
+changed=$(printf '%s\n' "$changed" | grep -v '^$' | sort -u || true)
+present=""
+while IFS= read -r file; do
+    [ -f "$file" ] && present=$(printf '%s\n%s' "$present" "$file")
+done <<< "$changed"
+
+changed=$(printf '%s\n' "$present" | grep -v '^$' || true)
+[ -n "$changed" ] || exit 0
+
+# Pint applies its configured exclusions only while scanning directories: hand it a path and it
+# formats that path regardless. So the two kinds of file it must never touch — legacy
+# FrontAccounting sources, and Blade templates, whose directives it rewrites into broken markup —
+# have to be withheld here rather than left to the config.
+php_files=$(printf '%s\n' "$changed" \
+    | grep -E '\.php$' \
+    | grep -vE '\.blade\.php$' \
+    | grep -vE '^public/' \
+    || true)
+
+asset_files=$(printf '%s\n' "$changed" | grep -E '\.(js|mjs|cjs|css|json)$' || true)
 
 status=0
 
-if ! "$php" vendor/bin/pint --test; then
-    status=1
+if [ -n "$php_files" ]; then
+    php=$(taqbook_php)
+    if ! printf '%s\n' "$php_files" | tr '\n' '\0' | xargs -0 "$php" vendor/bin/pint --test --; then
+        status=1
+    fi
 fi
 
-if ! npm run --silent format:check; then
-    status=1
+if [ -n "$asset_files" ]; then
+    taqbook_require_node
+    read -ra prettier < <(taqbook_prettier)
+
+    if ! printf '%s\n' "$asset_files" | tr '\n' '\0' \
+        | xargs -0 "${prettier[@]}" --check --ignore-unknown --log-level warn --; then
+        status=1
+    fi
 fi
 
 if [ "$status" -ne 0 ]; then
     echo >&2
-    echo "taqbook: push refused — the tree is not formatted." >&2
+    echo "taqbook: push refused — files this push touches are not formatted." >&2
     echo "Run 'vendor/bin/pint' and 'npm run format', then commit the result." >&2
 fi
 

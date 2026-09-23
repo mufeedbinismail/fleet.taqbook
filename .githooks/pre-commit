@@ -40,8 +40,9 @@ fi
 
 if [ -n "$asset_files" ]; then
     taqbook_require_node
+    read -ra prettier < <(taqbook_prettier)
     printf '%s\n' "$asset_files" | tr '\n' '\0' \
-        | xargs -0 npx --no-install prettier --write --ignore-unknown --log-level warn --
+        | xargs -0 "${prettier[@]}" --write --ignore-unknown --log-level warn --
 fi
 
 touched=$(printf '%s\n%s\n' "$php_files" "$asset_files" | grep -v '^$' || true)
