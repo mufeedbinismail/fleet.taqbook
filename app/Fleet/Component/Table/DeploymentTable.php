@@ -65,6 +65,7 @@ final class DeploymentTable implements TableDefinitionContract
             'status' => $record->status->value,
             'instance_created_date' => $record->instance_created_date->format(DomainDateTime::userDateFormat()),
             'url' => $record->url,
+            'last_pushed_at' => $record->last_pushed_at?->format(DomainDateTime::userDateTimeFormat()),
         ];
     }
 
@@ -95,6 +96,7 @@ final class DeploymentTable implements TableDefinitionContract
                 'deployments.status',
                 'deployments.url',
                 'deployments.instance_created_date',
+                'deployments.last_pushed_at',
                 'debtors_master.name as customer_name',
             ]);
     }
@@ -141,6 +143,13 @@ final class DeploymentTable implements TableDefinitionContract
                 __('fleet.deployment.column.status'),
                 sortable: 'deployments.status',
                 width: '9rem'
+            ),
+            new ColumnDefinition(
+                'last_pushed_at',
+                __('fleet.deployment.column.last_reached'),
+                sortable: 'deployments.last_pushed_at',
+                dataType: DataType::DateTime,
+                width: '11rem',
             ),
             new ColumnDefinition(
                 'instance_created_date',

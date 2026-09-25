@@ -5,10 +5,12 @@ namespace App\Fleet\Http\Controller;
 use App\Fleet\Action\ChangeDeploymentStatusAction;
 use App\Fleet\Action\EditDeploymentAction;
 use App\Fleet\Action\EraseDeploymentAction;
+use App\Fleet\Action\PingDeploymentAction;
 use App\Fleet\Action\RegisterDeploymentAction;
 use App\Fleet\Action\RemoveDeploymentAction;
 use App\Fleet\Action\RenameDeploymentAction;
 use App\Fleet\Component\Table\DeploymentTable;
+use App\Fleet\Enum\DeliveryOutcome;
 use App\Fleet\Enum\DeploymentStatus;
 use App\Fleet\Enum\Hosting;
 use App\Fleet\Http\Request\ChangeDeploymentStatusRequest;
@@ -93,6 +95,17 @@ class DeploymentController extends Controller
         $action->execute($deployment, $alias);
 
         return ResponseEnvelope::ok(__('fleet.deployment.notice.renamed'));
+    }
+
+    public function ping(PingDeploymentAction $action, Deployment $deployment): ResponseEnvelope
+    {
+        $this->refuse($action->validate($deployment));
+
+        $outcome = $action->execute($deployment);
+
+        return $outcome === DeliveryOutcome::Reached
+            ? ResponseEnvelope::ok(__('fleet.deployment.notice.reached', ['alias' => $deployment->alias]))
+            : ResponseEnvelope::failed($outcome->label());
     }
 
     public function destroy(RemoveDeploymentAction $action, Deployment $deployment): ResponseEnvelope
