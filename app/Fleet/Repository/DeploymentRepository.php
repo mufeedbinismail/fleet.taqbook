@@ -10,6 +10,7 @@ use App\Fleet\Model\Deployment;
 use App\Foundation\Shared\Enum\SystemType;
 use App\Foundation\Shared\Repository\SequenceRepository;
 use App\Foundation\Shared\ValueObject\DomainDateTime;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class DeploymentRepository
@@ -75,6 +76,35 @@ class DeploymentRepository
             ->where('alias', $alias)
             ->whereKeyNot($except->getKey())
             ->exists();
+    }
+
+    public function findByKey(string $key): ?Deployment
+    {
+        return Deployment::query()->find($key)
+            ?? (ctype_digit($key) ? Deployment::query()->where('number', (int) $key)->first() : null)
+            ?? Deployment::query()->where('alias', $key)->first();
+    }
+
+    /**
+     * @return Collection<int, Deployment>
+     */
+    public function pingableDeployments(): Collection
+    {
+        return Deployment::query()
+            ->whereNotNull('url')
+            ->where('url', '!=', '')
+            ->where('status', '!=', DeploymentStatus::Retired)
+            ->get();
+    }
+
+    /**
+     * Reaching a deployment is not editing it, so the row's own updated_at stays where it was.
+     */
+    public function recordPush(Deployment $deployment, DomainDateTime $at): Deployment
+    {
+        Deployment::withoutTimestamps(fn () => $deployment->fill(['last_pushed_at' => $at])->save());
+
+        return $deployment;
     }
 
     public function rename(Deployment $deployment, string $alias): Deployment

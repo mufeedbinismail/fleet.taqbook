@@ -19,6 +19,7 @@ ClientData::registry()
         'fleet.deployments.update',
         'fleet.deployments.rename',
         'fleet.deployments.status',
+        'fleet.deployments.ping',
         'fleet.deployments.destroy',
         'fleet.deployments.erase',
     ])
@@ -64,31 +65,61 @@ ClientData::registry()
             <span x-show="!row.url" class="text-card-txt">&mdash;</span>
         </x-slot>
 
-        <x-slot:actions sticky width="9rem" :label="__('fleet.deployment.column.actions')">
-            <div class="flex items-center justify-end gap-1">
-                <button type="button" class="ghost text-lg text-warning-accent"
-                        x-modal:open="{ name: 'deployment-editor', with: row }"
-                        title="{{ __('fleet.deployment.action.edit') }}" aria-label="{{ __('fleet.deployment.action.edit') }}">
-                    <span class="icon icon-cog" aria-hidden="true"></span>
+        <x-slot:cell_last_pushed_at>
+            <span x-show="row.last_pushed_at" x-text="row.last_pushed_at"></span>
+            <span x-show="!row.last_pushed_at" class="text-card-txt">&mdash;</span>
+        </x-slot>
+
+        <x-slot:actions sticky width="3.5rem" :label="__('fleet.deployment.column.actions')">
+            <div class="flex justify-end" x-dropdown>
+                <button type="button" class="ghost px-2 text-lg leading-none" x-dropdown:trigger.bare
+                        title="{{ __('fleet.deployment.action.menu') }}" aria-label="{{ __('fleet.deployment.action.menu') }}">
+                    <span x-show="!App.isBusy(row.uuid)" class="font-bold" aria-hidden="true">&#8942;</span>
+                    <span x-show="App.isBusy(row.uuid)" class="icon icon-spinner animate-spin" aria-hidden="true"></span>
                 </button>
 
-                <button type="button" class="ghost text-lg"
-                        x-modal:open="{ name: 'deployment-rename', with: row }"
-                        title="{{ __('fleet.deployment.action.rename') }}" aria-label="{{ __('fleet.deployment.action.rename') }}">
-                    <span class="icon icon-rename" aria-hidden="true"></span>
-                </button>
-
-                <button type="button" class="ghost text-lg"
-                        x-modal:open="{ name: 'deployment-status', with: row }"
-                        title="{{ __('fleet.deployment.action.change_status') }}" aria-label="{{ __('fleet.deployment.action.change_status') }}">
-                    <span class="icon icon-refresh" aria-hidden="true"></span>
-                </button>
-
-                <button type="button" class="ghost text-lg text-button-danger-txt"
-                        x-modal:open="{ name: 'deployment-removal', with: row }"
-                        title="{{ __('fleet.deployment.action.remove') }}" aria-label="{{ __('fleet.deployment.action.remove') }}">
-                    <span class="icon icon-trash" aria-hidden="true"></span>
-                </button>
+                <template x-teleport="body">
+                    <ul x-dropdown:panel.bottom-end x-transition x-cloak>
+                        <li role="none">
+                            <button type="button" x-dropdown:item class="w-full cursor-pointer border-0 bg-transparent text-start"
+                                    x-modal:open="{ name: 'deployment-editor', with: row }">
+                                <span class="icon icon-cog text-warning-accent" aria-hidden="true"></span>
+                                <span>{{ __('fleet.deployment.action.edit') }}</span>
+                            </button>
+                        </li>
+                        <li role="none">
+                            <button type="button" x-dropdown:item class="w-full cursor-pointer border-0 bg-transparent text-start"
+                                    x-modal:open="{ name: 'deployment-rename', with: row }">
+                                <span class="icon icon-rename text-primary-accent" aria-hidden="true"></span>
+                                <span>{{ __('fleet.deployment.action.rename') }}</span>
+                            </button>
+                        </li>
+                        <li role="none">
+                            <button type="button" x-dropdown:item class="w-full cursor-pointer border-0 bg-transparent text-start"
+                                    x-modal:open="{ name: 'deployment-status', with: row }">
+                                <span class="icon icon-refresh" aria-hidden="true"></span>
+                                <span>{{ __('fleet.deployment.action.change_status') }}</span>
+                            </button>
+                        </li>
+                        <li role="none">
+                            <button type="button" x-dropdown:item
+                                    class="w-full cursor-pointer border-0 bg-transparent text-start disabled:cursor-not-allowed disabled:opacity-50"
+                                    :disabled="!row.url || App.isBusy(row.uuid)"
+                                    @click="ping(row)">
+                                <span class="icon icon-globe text-success-accent" aria-hidden="true"></span>
+                                <span>{{ __('fleet.deployment.action.ping') }}</span>
+                                <span x-show="!row.url" class="ms-auto ps-4 text-xs">{{ __('fleet.deployment.hint.no_address') }}</span>
+                            </button>
+                        </li>
+                        <li role="none" class="mt-1 border-0 border-t border-solid border-panel-border pt-1">
+                            <button type="button" x-dropdown:item class="w-full cursor-pointer border-0 bg-transparent text-start text-button-danger-txt"
+                                    x-modal:open="{ name: 'deployment-removal', with: row }">
+                                <span class="icon icon-trash" aria-hidden="true"></span>
+                                <span>{{ __('fleet.deployment.action.remove') }}</span>
+                            </button>
+                        </li>
+                    </ul>
+                </template>
             </div>
         </x-slot>
     </x-ui.table>

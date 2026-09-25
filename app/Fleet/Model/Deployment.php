@@ -29,6 +29,7 @@ class Deployment extends Model
         'hosting',
         'url',
         'instance_created_date',
+        'last_pushed_at',
     ];
 
     protected $casts = [
@@ -36,6 +37,7 @@ class Deployment extends Model
         'status' => DeploymentStatus::class,
         'hosting' => Hosting::class,
         'instance_created_date' => 'date',
+        'last_pushed_at' => 'datetime',
     ];
 
     /**

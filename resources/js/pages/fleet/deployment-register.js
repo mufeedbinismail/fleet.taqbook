@@ -1,4 +1,5 @@
 import { formatDate } from '@/components/date/format';
+import { BACKGROUND } from '@/foundation/busy';
 
 export function deploymentRegister({ App, axios, data }) {
     const seed = data.deploymentRegister;
@@ -197,6 +198,31 @@ export function deploymentRegister({ App, axios, data }) {
 
             App.modal('deployment-status').hide();
             this.done(body.message);
+        },
+
+        /* In the background, holding only its own row busy: a tenant may take the whole timeout
+           to answer, and the rest of the register stays usable meanwhile. Reported as one notice:
+           neither a refusal nor a failed ping belongs to a field. */
+        async ping(row) {
+            if (App.isBusy(row.uuid)) return;
+
+            App.setBusyState(true, row.uuid);
+
+            try {
+                const response = await axios.post(
+                    App.route('fleet.deployments.ping', { deployment: row.uuid }),
+                    null,
+                    { busy: BACKGROUND },
+                );
+
+                await this.done(response.data.message);
+            } catch (error) {
+                const message = error.friendlyMessage ?? error.response?.data?.message;
+
+                if (message) App.notify.error(message);
+            } finally {
+                App.unsetBusyState(row.uuid);
+            }
         },
 
         /* Off the register, with the row kept. Its name stays reserved, which is what a register

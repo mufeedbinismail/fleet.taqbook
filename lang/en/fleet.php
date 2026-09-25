@@ -27,6 +27,7 @@ return [
             'status' => 'Status',
             'instance_created' => 'Created',
             'address' => 'Address',
+            'last_reached' => 'Last reached',
             'actions' => '',
         ],
 
@@ -59,12 +60,20 @@ return [
             'retired' => 'Retired',
         ],
 
+        'delivery_outcome' => [
+            'reached' => 'Reached',
+            'unreachable' => 'Could not connect to its address',
+            'refused' => 'Its address refused the message',
+            'wrong_answer' => 'Its address answered, but not to this message',
+        ],
+
         'hint' => [
             'alias' => 'What support will call this install: the customer, then which of theirs.',
-            'alias_shape' => 'Letters and digits, separated by single hyphens.',
+            'alias_shape' => 'Letters and digits, separated by single hyphens, and never digits alone.',
             'number' => 'Assigned when the deployment is registered, and never changed.',
             'instance_created' => 'The day the install itself was stood up, which may be long before it reached this register.',
             'changed_at' => 'When it moved, not when you are recording it.',
+            'no_address' => 'No address',
         ],
 
         'action' => [
@@ -72,6 +81,8 @@ return [
             'edit' => 'Edit',
             'rename' => 'Rename',
             'change_status' => 'Change status',
+            'ping' => 'Ping',
+            'menu' => 'Actions',
             'remove' => 'Remove',
             'save' => 'Save',
             'create' => 'Register',
@@ -97,6 +108,10 @@ return [
             'heading' => 'This deployment could not be saved',
             'same_status' => 'This deployment already stands at :status. Pick the status it moved to.',
             'alias_taken' => 'Another deployment is already called :alias, on the register or off it.',
+            'no_address' => 'This deployment has no address to reach it at.',
+            'insecure_address' => 'Its address must be https://. Plain http:// is only pinged in development.',
+            'no_signing_key' => 'This server holds no operational key or delegation. Run fleet:keypair:install first.',
+            'delegation_expired' => 'This server\'s delegation ran out on :date. Run fleet:keypair:install with the root secret.',
         ],
 
         'notice' => [
@@ -106,6 +121,7 @@ return [
             'status_changed' => 'Status changed',
             'removed' => 'Deployment moved to trash',
             'erased' => 'Deployment deleted permanently',
+            'reached' => ':alias answered the ping',
         ],
 
         'footer' => [
