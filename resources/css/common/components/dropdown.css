@@ -3,17 +3,28 @@
         @apply inline-flex items-center gap-2 bg-transparent border-0 cursor-pointer;
     }
 
+    .x-dropdown__trigger--pointer:focus {
+        outline: none;
+    }
+
     .x-dropdown__panel {
         @apply absolute min-w-[200px] py-1 rounded border border-solid shadow-lg z-[200];
         background-color: theme('colors.panel-bg');
         border-color: theme('colors.panel-border');
         color: theme('colors.panel-txt');
+
+        /* x-menu focuses the panel itself and marks the active item, so the item fill is the
+           focus indicator and a ring round the whole panel would only repeat it. */
+        &:focus {
+            outline: none;
+        }
     }
 
     .x-dropdown__item {
         @apply flex items-center gap-2 px-4 py-2 transition-colors;
 
-        &:hover {
+        &:hover,
+        &.x-dropdown__item--active {
             background-color: theme('colors.dropdown-item-hover-bg');
         }
     }

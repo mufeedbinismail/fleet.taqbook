@@ -593,17 +593,17 @@
                          left inside the card would be clipped. --}}
                     <template x-teleport="body">
                         <ul x-dropdown:panel x-transition x-cloak>
-                            <li class="x-dropdown__header">
+                            <li class="x-dropdown__header" role="none">
                                 <span class="icon icon-circle-user"></span>
                                 <span class="x-dropdown__header-name">Administrator</span>
                             </li>
-                            <li><a class="x-dropdown__item" href="#">
+                            <li role="none"><a x-dropdown:item href="#">
                                 <span class="icon icon-statistics"></span><span>Dashboard</span></a></li>
-                            <li><a class="x-dropdown__item" href="#">
+                            <li role="none"><a x-dropdown:item href="#">
                                 <span class="icon icon-prefs"></span><span>Preferences</span></a></li>
-                            <li><a class="x-dropdown__item" href="#">
+                            <li role="none"><a x-dropdown:item href="#">
                                 <span class="icon icon-security"></span><span>Change password</span></a></li>
-                            <li><a class="x-dropdown__item text-button-danger-txt" href="#">
+                            <li role="none"><a x-dropdown:item class="text-button-danger-txt" href="#">
                                 <span class="icon icon-logout"></span><span>Logout</span></a></li>
                         </ul>
                     </template>
@@ -621,8 +621,8 @@
 
                     <template x-teleport="body">
                         <ul x-dropdown:panel.top-start x-transition x-cloak>
-                            <li><button type="button" class="x-dropdown__item w-full cursor-pointer border-0 bg-transparent text-start">Export as CSV</button></li>
-                            <li><button type="button" class="x-dropdown__item w-full cursor-pointer border-0 bg-transparent text-start">Export as PDF</button></li>
+                            <li role="none"><button type="button" x-dropdown:item class="w-full cursor-pointer border-0 bg-transparent text-start">Export as CSV</button></li>
+                            <li role="none"><button type="button" x-dropdown:item class="w-full cursor-pointer border-0 bg-transparent text-start">Export as PDF</button></li>
                         </ul>
                     </template>
                 </div>

@@ -94,14 +94,15 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
                     <template x-teleport="body">
                         <ul class="min-w-0" x-dropdown:panel x-transition x-cloak>
                             @foreach ($skins as $choice)
-                                <li>
+                                <li role="none">
                                     <button
                                         type="button"
+                                        x-dropdown:item
                                         @class([
-                                            'x-dropdown__item w-full text-left bg-transparent border-0 cursor-pointer',
+                                            'w-full text-left bg-transparent border-0 cursor-pointer',
                                             'italic' => $choice['skin'] === Skin::System,
                                         ])
-                                        @click="App.setSkin('{{ $choice['skin']->value }}'); $popover.close()"
+                                        @click="App.setSkin('{{ $choice['skin']->value }}')"
                                     >
                                         <span class="icon {{ $choice['icon'] }} w-4"></span>
                                         <span>{{ $choice['label'] }}</span>
@@ -120,22 +121,22 @@ if ($shouldShowFooter && isset($GLOBALS['Pagehelp']) && isset($GLOBALS['Ajax']))
 
                     <template x-teleport="body">
                         <ul x-dropdown:panel x-transition x-cloak>
-                            <li class="x-dropdown__header">
+                            <li class="x-dropdown__header" role="none">
                                 <span class="icon icon-circle-user"></span>
                                 <span class="x-dropdown__header-name">{{ $user->real_name ?? '' }}</span>
                             </li>
                             @foreach($toolbox as $key => $item)
-                                <li>
+                                <li role="none">
                                     @if (($item['method'] ?? 'get') === 'post')
                                         <form method="POST" action="{{ $item['link'] }}">
                                             @csrf
-                                            <button type="submit" class="x-dropdown__item w-full text-left bg-transparent border-0 cursor-pointer">
+                                            <button type="submit" x-dropdown:item class="w-full text-left bg-transparent border-0 cursor-pointer">
                                                 <span class="icon {{ $item['icon'] }}"></span>
                                                 <span>{{ $item['label'] }}</span>
                                             </button>
                                         </form>
                                     @else
-                                        <a href="{{ $item['link'] }}" class="x-dropdown__item">
+                                        <a href="{{ $item['link'] }}" x-dropdown:item>
                                             <span class="icon {{ $item['icon'] }}"></span>
                                             <span>{{ $item['label'] }}</span>
                                         </a>
