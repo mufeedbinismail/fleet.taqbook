@@ -1,15 +1,20 @@
 'use strict';
 
-// Self-contained dropdown directive: wires @alpinejs/ui's x-popover together
+// Self-contained dropdown directive: wires @alpinejs/ui's x-menu together
 // with the anchor directive's positioning, in the same shape accordion/drawer
 // use (Alpine.directive + Alpine.bind) — consumers only add x-dropdown /
-// x-dropdown:trigger / x-dropdown:panel attributes, no manual x-data,
-// x-popover, x-ref or x-anchor wiring.
+// x-dropdown:trigger / x-dropdown:panel / x-dropdown:item attributes, no
+// manual x-data, x-menu, x-ref or x-anchor wiring.
 //
 //   <div x-dropdown>
 //     <button x-dropdown:trigger>...</button>
-//     <ul x-dropdown:panel>...</ul>
+//     <ul x-dropdown:panel>
+//       <li role="none"><a x-dropdown:item href="...">...</a></li>
+//     </ul>
 //   </div>
+//
+// Choosing an item closes the menu, so an item that acts in place (rather
+// than navigating) needs no close call of its own.
 //
 // x-dropdown:panel takes an optional placement modifier (anchor.js's 'flip'
 // strategy default is 'bottom'):
@@ -33,6 +38,7 @@ export default function (Alpine) {
     Alpine.directive('dropdown', (el, directive) => {
         if (directive.value === 'trigger') handleTrigger(el, Alpine, directive.modifiers);
         else if (directive.value === 'panel') handlePanel(el, Alpine, directive.modifiers);
+        else if (directive.value === 'item') handleItem(el, Alpine);
         else handleRoot(el, Alpine);
     });
 }
@@ -41,9 +47,16 @@ function handleRoot(el, Alpine) {
     el.classList.add('x-dropdown');
 
     Alpine.bind(el, {
-        'x-popover': true,
+        'x-menu': true,
         'x-data'() {
-            return { side: 'bottom' };
+            return { side: 'bottom', isUsingPointer: false };
+        },
+        // Captured, because x-menu stops the keys it handles before they could bubble up here.
+        '@pointerdown.window.capture'() {
+            this.isUsingPointer = true;
+        },
+        '@keydown.window.capture'() {
+            this.isUsingPointer = false;
         },
     });
 }
@@ -51,8 +64,16 @@ function handleRoot(el, Alpine) {
 function handleTrigger(el, Alpine, modifiers) {
     el.classList.add('x-dropdown__trigger');
 
+    /*
+        Closing hands focus back to the trigger, and the browser counts that scripted focus as
+        visible, so `:focus-visible` rings it even after a mouse choice. Whether to paint the ring
+        is decided here instead, from which input was used last.
+    */
     Alpine.bind(el, {
-        'x-popover:button': true,
+        'x-menu:button': true,
+        ':class'() {
+            return { 'x-dropdown__trigger--pointer': this.isUsingPointer };
+        },
     });
 
     if (modifiers.includes('bare')) return;
@@ -73,16 +94,31 @@ function handlePanel(el, Alpine, modifiers) {
     const placement = modifiers[0] ?? 'bottom';
 
     Alpine.bind(el, {
-        'x-popover:panel': true,
+        'x-menu:items': true,
         'x-anchor'() {
             return {
                 reference: triggerFor(el),
-                open: this.$popover.isOpen,
+                // x-menu exposes no magic for its open state; this is the flag its own x-show reads.
+                open: this.__isOpen,
                 placement,
                 onPlacement: (side) => {
                     this.side = side;
                 },
             };
+        },
+    });
+}
+
+function handleItem(el, Alpine) {
+    el.classList.add('x-dropdown__item');
+
+    Alpine.bind(el, {
+        'x-menu:item': true,
+        ':class'() {
+            return { 'x-dropdown__item--active': this.$menuItem.isActive };
+        },
+        '@click'() {
+            this.__close();
         },
     });
 }
