@@ -1,128 +1,48 @@
 ---
 name: commenting
-description: Hard rules for docblocks and comments. Consult before writing, keeping, or reviewing ANY comment or docblock — when adding a class, function, or test, when refactoring, and when auditing a diff. Applies even when the surrounding file's existing comments look nothing like these rules, and especially during long sessions where the file's own style starts to feel like the standard.
+description: Rules for every docblock and comment in this codebase's PHP and JavaScript. Invoke before writing, keeping, or reviewing any comment or docblock, which means when adding a class, function, or test, when refactoring, and when auditing a diff. Invoke it even when the comments already in the file look nothing like these rules, and especially late in a long session, when the file's own style has begun to feel like the standard.
 ---
 
-# Comment rules
+## Whether to comment
 
-General Rule: **DO NOT COMMENT**. Let the code speaks for itself.
-If Commenting: **MUST CLEAR TWO GATES**. A comment clears both or it does not go in.
+Do not comment; let the code speak for itself. A comment is the one part of a file nothing tests: wrong code fails, but a wrong comment is read and believed, and that is why the bar is strict. Let a comment in only when it passes the first gate, the second gate, and the length cap.
 
-## Gate 1: it must tell the reader something the code did not
+Let a comment through the first gate only when it tells the reader something they would not get from the code at the pace they read it. Measure against a reader passing through, not one who stops to reason the code out: a fact that can be reconstructed from the code but does not surface on a reading is exactly what a comment is for, and measuring by what the code could yield instead deletes the comment that would have spared the reader the reconstruction. True is not enough; a block that restates the signature or the control flow is true and worth nothing. Delete the comment in your head and name what the reader would now have to stop and work out; if there is nothing, there is no comment.
 
-Write only what the reader would not have had from the code in front of them. Truth is not the
-bar — a block restating the signature or the control flow is true and worth nothing. Delete it
-in your head and name what the reader now fails to know; no answer, no comment.
+Do not take a comment for a reason because it is phrased as one. Naming the construct beneath the comment, a loop where a map was possible, states the shape the decision took and not the decision, and repeating a type the signature declares states what the reader has just read; both arrive as additions and add nothing. Give the decision, not the shape it took, and where the signature carries the type, say nothing of it.
 
-## Gate 2: it must stay true
+Let a comment through the second gate only when it stays true through the ordinary edits anyone makes to another file or another function. An ordinary edit changes implementation detail and is made without ceremony, and the person making it will not know this comment exists, so a comment that rests on how another file happens to work today is false the moment that file is tidied. A comment may rest on what another file promises, such as what a schema guarantees about a column, because a promise is a fixed fact that an ordinary edit does not touch. Ask of the fact whether the other file promises it or merely does it today; that the context feels useful is not the question.
 
-A comment must stay true no matter what anyone edits in another file or another function. If an
-edit elsewhere could falsify it, it does not belong here. No exceptions, no "but it's useful
-context".
+Do not let how another file works today in because it arrives framed as context, as an assumption, or as a warning about what is coming. An account of how or where this code is reached, of who calls it and with what, is implementation detail of other files however it is framed, and a note about what a later change will do describes code that does not exist; both are false after the next ordinary edit. Count as another file any part of the system that lives elsewhere, such as the browser, the shell, the database, or a form. Mark visibility with plain `@internal` and no name after it.
 
-Judgment gets rationalized at writing time, so these are checked as text, not as intent.
-A comment is deleted if it contains:
+## What to keep
 
-- The name of another class, file, function, or test, asserting what it does
-- The words **caller**, **callers**, **call site**, or any account of how or where this code is
-  invoked or reached — *"a caller reaches for whichever..."*, *"what the import job uses"*.
-  Write plain `@internal`, never `@internal <caller> only`
-- A named part of the system that lives elsewhere — **the browser**, **the panel**, **a
-  screen**, **the shell**, **the database**, **a form** — with a claim about what it does,
-  sends, compares, or draws
-- A value, key, default, or behaviour defined elsewhere — *"matches the legacy constants"*,
-  *"defaults to true"*
-- The construct beneath it, named — *"a loop here instead of a map"*. Give the decision, not
-  the shape it took
-- Anything that does not exist yet, or planned work — *"phase 2 fixes this"*, *"once the old
-  system is gone"*
-- An explanation of a neighbouring function instead of this one
-- A type the signature already declares
+Name, before writing a comment, which kind of fact it carries, and write it only when it is one of these. Keep what this code guarantees on its own, its invariant. Keep the reasoning behind a non-obvious local decision, why it ended up this way rather than what it does. Keep a hidden assumption the code does not show, and business logic strange enough that someone would fix it by accident.
 
-The reason these are word-tests rather than principles: a fluent writer can frame any caller
-narrative as "context" and any cross-file claim as "an assumption". A word-test cannot be argued
-with mid-sentence.
+Keep surprising framework or language behaviour, which is not our code and does not drift with our edits. Keep a type where the code is not type-hinted, an array shape such as `@param {id: number, name: string}[] $users`, and the narrowing of a generic.
 
-## The length cap
+Treat a comment that cannot be placed among these kinds as one argued through a gate rather than passed. Judgement gets rationalised at writing time, and a fluent writer can frame a caller narrative as context and a cross-file claim as an assumption, but neither can be placed on this list, which is why the placing happens before the writing and not after.
 
-- A docblock is **one sentence** by default. A comment is one line.
-- Two or three lines are allowed only when stating: an invariant this code holds by itself; the
-  why of a non-obvious local decision; a hidden assumption invisible from the code; or an array
-  shape / a type the signature does not carry.
-- Nothing longer goes in without first naming — to yourself, explicitly — which single keep
-  rule it clears. Then cut it to the shortest form that still carries the fact. Length is a
-  claim of subtlety: an ordinary fact arriving after a paragraph sends the reader back through
-  it hunting for what they missed. Fluency is not evidence of keep — a well-turned paragraph is
-  *harder* to catch as padding than a clumsy one, which is why the cap is a number and not a
-  feeling.
+Put a fact about another file in that file, and a fact about a neighbouring function on that function; do not mirror either onto the code the comment sits on.
 
-## the file you are in is not the style guide
+## Length
 
-The comments already sitting in this codebase are **not** evidence of what a new comment may
-look like. Some of them predate these rules and break them; they are defects to repair, not a
-voice to match. If a rule here conflicts with the tone or length of the comments around your
-cursor, the rule wins. When editing a file, delete or fix any existing comment that breaks a
-rule below — do not leave it, and do not imitate it.
+Write a docblock as one sentence and a comment as one line. Length is read as a signal of subtlety, so an ordinary fact that arrives after a paragraph sends the reader back through the paragraph hunting for what they missed. Fluent prose is harder to recognise as padding than clumsy prose, which is why the cap is a number and not a feeling.
 
-## Worked examples
+Take two or three lines only when the one fact the comment was placed as cannot be stated in one. Before writing anything longer, cut it to the shortest form that still carries that fact, and take the cut form.
 
-**Bad — real output this skill failed to stop:**
+## The file around the cursor
 
-```php
-/**
- * Whatever a caller handed a date field, as an instant — or null where it names none.
- *
- * A caller reaches for whichever of these its own code already holds: a column read off the
- * database is text in the fixed spelling, a value coming back off a form is text in the
- * preference, and anything that has been through the domain is an object. [...]
- */
-public static function read(DateTimeInterface|string|null $value, string $format): ?DomainDateTime
-```
+Do not take the comments already in the file as evidence of what a new comment may look like. Some predate these rules and break them; they are defects, not a voice to match. When a rule here conflicts with the tone or length of the comments near the cursor, the rule wins.
 
-Every sentence is about callers (deny), the claims drift when call sites change (gate 1), and
-the union type is already in the signature (gate 2). **The compliant version is no docblock at
-all**: the accepted types are in the signature, the fallback order is on the `foreach` line, and
-everything else was a story about other files.
+Fix or delete an existing comment that breaks a rule only when the work touches the code it sits on, and leave every other comment in the file as it stands, however plainly it breaks a rule. The work is the work that was asked for, and a repair on code the task did not touch is a change the task did not ask for; a comment left standing is still not a voice to match.
 
-**Bad → good — a real seven-line comment and its one-line survivor:**
+## Two cases
 
-```js
-// The element this is written on carries no x-data of its own, and the walk Alpine makes on
-// start only visits elements that announce themselves as somewhere to start from. The shell
-// announces itself today, so a pair inside it is reached anyway — but only while the shell is
-// drawn: [...four more lines...]
-Alpine.addInitSelector(() => '[x-date-range]');
-```
+Write no docblock on a function whose signature already carries the types it accepts and whose body shows the order it tries them in, however much there is to say about where each kind of value comes from. The types fail the first gate because they are in the signature, and the rest is a story about the files the values came from, which fails the second.
 
-"The shell announces itself today" is a claim about another file with an expiry date in it. The
-one fact the reader could not get from the code is a framework behaviour — ours to state, not
-ours to drift:
+Cut a comment that explains a framework behaviour by way of the files that happen to satisfy it today down to the behaviour alone. The behaviour is not our code and does not drift with our edits, while every sentence about which of our files satisfies it has an expiry date built in.
 
-```js
-// Alpine's init walk only starts from registered selectors; declaring a directive is not one.
-Alpine.addInitSelector(() => '[x-date-range]');
-```
+## The final pass
 
-## Worth keeping, once deny and both gates are cleared
-
-- What this code guarantees on its own; the invariant it holds
-- Reasoning behind a non-obvious local decision — why it ended up this way, not what it does
-- Hidden assumptions not visible from the code
-- Business logic weird enough that someone would "fix" it by accident
-- Surprising framework or language behaviour — not our code, does not drift with our edits
-- Types when NOT type-hinted; array shapes (`@param {id: number, name: string}[] $users`);
-  narrowing a generic
-
-If the useful fact belongs to another file, **put it in that file**. Do not mirror it.
-
-## The final pass — mandatory, not optional
-
-Before finishing any task that touched code:
-
-1. Diff your changes and read **only the comments**, stripped of the code that makes them feel
-   earned.
-2. Run each one — new or pre-existing in a file you touched — through the deny-list word-tests,
-   then the two gates, then the length cap.
-3. **Assume at least one violation exists and go find it.** You wrote these comments; you are
-   the least qualified reader they will ever have. If after honest search none exists, state
-   that explicitly in your summary — the statement is what proves the pass happened.
+Diff the changes before finishing any task that touched code, and read only the comments, stripped of the code that makes them feel earned. Run each comment, new or already sitting on code the diff touches, through the two gates, place it among the kinds of fact worth keeping, then hold it to the length cap. the author is the least qualified reader the comments will ever have. If an honest search finds none, say so explicitly in the summary, because that statement is what shows the pass happened.
