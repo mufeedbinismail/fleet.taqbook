@@ -17,13 +17,13 @@ final class Area
 
     public const INVENTORY = 'inventory';
 
-    public const MANUFACTURING = 'inventory.manufacturing';
+    public const MANUFACTURING = 'manufacturing';
 
-    public const MARKETPLACE = 'trade.marketplace';
+    public const MARKETPLACE = 'marketplace';
 
-    public const PURCHASE = 'trade.purchase';
+    public const PURCHASE = 'purchase';
 
-    public const SALE = 'trade.sale';
+    public const SALE = 'sale';
 
-    public const SYSTEM = 'foundation.system';
+    public const SYSTEM = 'system';
 }

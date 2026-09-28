@@ -165,12 +165,12 @@ class PurchaseSource extends LegacySource
             ->permission(Permission::CREATE_PURCHASE_CREDIT_NOTE);
 
         $purchase->hiddenPage('order.receive', $this->label('Receive Purchase Order Items'))
-            ->under('trade.purchase.order.create')
+            ->under('purchase.order.create')
             ->target($this->script('purchasing/po_receive_items.php', ['PONumber' => Query::ANY]))
             ->permission(Permission::CREATE_PURCHASE_RECEIVAL);
 
         $purchase->hiddenPage('allocation.allocate', $this->label('Allocate Supplier Payment or Credit Note'))
-            ->under('trade.purchase.allocation.create')
+            ->under('purchase.allocation.create')
             ->target($this->script('purchasing/allocations/supplier_allocate.php', ['trans_no' => Query::ANY]))
             ->permission(Permission::ALLOCATE_PURCHASE_PAYMENT);
     }

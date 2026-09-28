@@ -69,13 +69,13 @@ function dashboard($area)
 	}
 	</script>";
 	//check_for_overdue_recurrent_invoices();
-	if ($area == "trade.sale")
+	if ($area == "sale")
 		display_customer_topten();
-	elseif ($area == "trade.purchase")
+	elseif ($area == "purchase")
 		display_supplier_topten();
 	elseif ($area == "inventory")
 		display_stock_topten();
-	elseif ($area == "inventory.manufacturing")
+	elseif ($area == "manufacturing")
 		display_stock_topten(1);
 	elseif ($area == "asset")
 		display_stock_topten(2);

@@ -188,7 +188,7 @@ function mktpl_st_handle_post_back(SupplierTransCart $cart): void
 
     if (isset($_POST['Cancel'])) {
         unset($_SESSION['mktpl_st']);
-        meta_forward(legacy_url('/index.php'), 'area=trade.marketplace');
+        meta_forward(legacy_url('/index.php'), 'area=marketplace');
     }
 }
 

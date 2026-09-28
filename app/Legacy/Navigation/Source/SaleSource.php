@@ -275,44 +275,44 @@ class SaleSource extends LegacySource
             ->permission(Permission::CREATE_SALE_PAYMENT);
 
         $sale->hiddenPage('delivery.deliver', $this->label('Deliver Items for a Sales Order'))
-            ->under('trade.sale.delivery.against-order')
+            ->under('sale.delivery.against-order')
             ->target($this->script('sales/customer_delivery.php', ['OrderNumber' => Query::ANY]))
             ->permission(Permission::CREATE_SALE_DELIVERY);
 
         $sale->hiddenPage('invoice.issue', $this->label('Issue an Invoice for Delivery Note'))
-            ->under('trade.sale.invoice.against-delivery')
+            ->under('sale.invoice.against-delivery')
             ->target($this->script('sales/customer_invoice.php', ['DeliveryNumber' => Query::ANY]))
             ->permission(Permission::CREATE_SALE_INVOICE);
 
         $sale->hiddenPage('invoice.batch', $this->label('Issue Batch Invoice for Delivery Notes'))
-            ->under('trade.sale.invoice.against-delivery')
+            ->under('sale.invoice.against-delivery')
             ->target($this->script('sales/customer_invoice.php', ['BatchInvoice' => Query::ANY]))
             ->permission(Permission::CREATE_SALE_INVOICE);
 
         // The listed entry names the deliveries still to be invoiced; dropping the filter widens it
         // to all of them, which no entry offers.
         $sale->hiddenPage('delivery.inquire-all', $this->label('Search All Deliveries'))
-            ->under('trade.sale.invoice.against-delivery')
+            ->under('sale.invoice.against-delivery')
             ->target($this->script('sales/inquiry/sales_deliveries_view.php'))
             ->permission(Permission::VIEW_SALE_TRANSACTION);
 
         $sale->hiddenPage('invoice.prepayment', $this->label('Prepayment or Final Invoice Entry'))
-            ->under('trade.sale.invoice.prepaid')
+            ->under('sale.invoice.prepaid')
             ->target($this->script('sales/customer_invoice.php', ['AllocationNumber' => Query::ANY]))
             ->permission(Permission::CREATE_SALE_INVOICE);
 
         $sale->hiddenPage('credit-note.from-invoice', $this->label('Credit all or part of an Invoice'))
-            ->under('trade.sale.transaction.inquire')
+            ->under('sale.transaction.inquire')
             ->target($this->script('sales/customer_credit_invoice.php', ['InvoiceNumber' => Query::ANY]))
             ->permission(Permission::CREATE_SALE_FREEHAND_CREDIT);
 
         $sale->hiddenPage('allocation.allocate', $this->label('Allocate Customer Payment or Credit Note'))
-            ->under('trade.sale.allocation.create')
+            ->under('sale.allocation.create')
             ->target($this->script('sales/allocations/customer_allocate.php', ['trans_no' => Query::ANY]))
             ->permission(Permission::ALLOCATE_SALE_PAYMENT);
 
         $sale->hiddenPage('order.from-quotation', $this->label('Sales Order Entry'))
-            ->under('trade.sale.quotation.create')
+            ->under('sale.quotation.create')
             ->target($this->script('sales/sales_order_entry.php', ['NewQuoteToSalesOrder' => Query::ANY]))
             ->permission(Permission::CREATE_SALE_ORDER);
     }

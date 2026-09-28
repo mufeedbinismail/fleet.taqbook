@@ -26,7 +26,7 @@ class SkinPreferenceTest extends TestCase
      */
     private function aScreen(): string
     {
-        return '/area/trade.sale';
+        return '/area/sale';
     }
 
     /**

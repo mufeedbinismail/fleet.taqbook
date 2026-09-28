@@ -727,7 +727,7 @@ function  handle_cancel_order()
 			}
 		} else {
 			processing_end();
-			meta_forward(legacy_url('/index.php'), 'area=trade.sale');
+			meta_forward(legacy_url('/index.php'), 'area=sale');
 		}
 	}
 	processing_end();
