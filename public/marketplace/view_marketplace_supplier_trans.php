@@ -1,6 +1,6 @@
 <?php
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Shared\Enum\SystemType;
 use App\Foundation\Shared\ValueObject\TypedId;

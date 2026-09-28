@@ -2,9 +2,9 @@
 
 namespace App\Foundation\Navigation\Entity;
 
-use App\Foundation\Navigation\Contract\Condition;
-use App\Foundation\Navigation\Contract\Label;
-use App\Foundation\Navigation\Contract\Target;
+use App\Foundation\Navigation\Contract\ConditionContract;
+use App\Foundation\Navigation\Contract\LabelContract;
+use App\Foundation\Navigation\Contract\TargetContract;
 
 /**
  * A top-level tree — Sales, Finance, Setup.
@@ -15,13 +15,13 @@ use App\Foundation\Navigation\Contract\Target;
 final class Area
 {
     /**
-     * @param  class-string<Condition>|null  $condition
+     * @param  class-string<ConditionContract>|null  $condition
      * @param  int  $order  declaration order, the tiebreaker when two areas share a sort
      */
     public function __construct(
         public readonly string $key,
-        public readonly Label $label,
-        public readonly ?Target $target = null,
+        public readonly LabelContract $label,
+        public readonly ?TargetContract $target = null,
         public readonly ?string $permission = null,
         public readonly ?string $icon = null,
         public readonly ?string $help = null,

@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Auth\Http\Request;
 
-use App\Foundation\Shared\Enum\Skin;
+use App\Foundation\Framework\Enum\Skin;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 

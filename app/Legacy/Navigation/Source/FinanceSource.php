@@ -4,7 +4,7 @@ namespace App\Legacy\Navigation\Source;
 
 use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Navigation\Builder\AreaBuilder;
-use App\Foundation\Navigation\Builder\Builder;
+use App\Foundation\Navigation\Builder\NavigationBuilder;
 use App\Foundation\Navigation\Builder\SectionBuilder;
 use App\Foundation\Navigation\Constant\Area;
 use App\Foundation\Navigation\Constant\Section;
@@ -21,7 +21,7 @@ use App\Legacy\Navigation\Enum\Query;
  */
 class FinanceSource extends LegacySource
 {
-    public function declare(Builder $nav): void
+    public function declare(NavigationBuilder $nav): void
     {
         $nav->area(Area::FINANCE, $this->label('&Banking and General Ledger'), function (AreaBuilder $finance) {
             $finance->icon('icon-accountant')

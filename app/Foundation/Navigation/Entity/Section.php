@@ -2,8 +2,8 @@
 
 namespace App\Foundation\Navigation\Entity;
 
-use App\Foundation\Navigation\Contract\Condition;
-use App\Foundation\Navigation\Contract\Label;
+use App\Foundation\Navigation\Contract\ConditionContract;
+use App\Foundation\Navigation\Contract\LabelContract;
 
 /**
  * A presentational bucket within an area — "Transactions", "Inquiries and Reports".
@@ -15,11 +15,11 @@ final class Section
 {
     /**
      * @param  string  $parentKey  the area (or destination) whose children this groups
-     * @param  class-string<Condition>|null  $condition
+     * @param  class-string<ConditionContract>|null  $condition
      */
     public function __construct(
         public readonly string $key,
-        public readonly Label $label,
+        public readonly LabelContract $label,
         public readonly string $parentKey,
         public readonly int $sort = 0,
         public readonly ?string $condition = null,

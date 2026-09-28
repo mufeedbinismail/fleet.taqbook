@@ -12,9 +12,9 @@ use App\Foundation\Framework\DTO\ValidationResult;
 class SaveUserAction
 {
     public function __construct(
-        protected UserRepository $users,
-        protected RoleRepository $roles,
-        protected SaveUserPasswordAction $password,
+        protected UserRepository $repository,
+        protected RoleRepository $roleRepository,
+        protected SaveUserPasswordAction $saveUserPasswordAction,
     ) {}
 
     public function validate(SaveUserIntent $intent): ValidationResult
@@ -25,25 +25,25 @@ class SaveUserAction
             $existing = User::find($intent->userId);
 
             if ($existing?->reserved) {
-                return ValidationResult::error('user', __('foundation.user.error.reserved'));
+                return ValidationResult::error('user', __('auth.user.error.reserved'));
             }
 
             if ($existing?->inactive) {
-                return ValidationResult::error('user', __('foundation.user.error.inactive_edit'));
+                return ValidationResult::error('user', __('auth.user.error.inactive_edit'));
             }
         } else {
-            if ($this->users->loginTaken((string) $intent->login)) {
-                return ValidationResult::error('user_id', __('foundation.user.error.duplicate_login'));
+            if ($this->repository->loginTaken((string) $intent->login)) {
+                return ValidationResult::error('user_id', __('auth.user.error.duplicate_login'));
             }
         }
 
-        if ($this->roles->find($intent->roleId)?->reserved) {
-            return ValidationResult::error('role_id', __('foundation.user.error.reserved_role'));
+        if ($this->roleRepository->find($intent->roleId)?->reserved) {
+            return ValidationResult::error('role_id', __('auth.user.error.reserved_role'));
         }
 
         if ($intent->password !== null) {
             $login = $intent->login ?? $existing?->user_id ?? '';
-            $checked = $this->password->validate($login, $intent->password);
+            $checked = $this->saveUserPasswordAction->validate($login, $intent->password);
 
             if (! $checked->isValid) {
                 return $checked;
@@ -64,6 +64,6 @@ class SaveUserAction
             throw UserException::unchecked((string) $checked->field);
         }
 
-        return $this->users->save($intent);
+        return $this->repository->save($intent);
     }
 }

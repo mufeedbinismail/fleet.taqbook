@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\Table\ValueObject;
 
-use App\Foundation\Component\Table\Contract\Filter;
+use App\Foundation\Component\Table\Contract\FilterContract;
 use App\Foundation\Component\Table\Enum\DataType;
 use App\Foundation\Component\Table\Enum\Stick;
 use App\Foundation\Component\Table\Exception\TableException;
@@ -33,7 +33,7 @@ final class ColumnDefinition
         public readonly string $label = '',
         public readonly DataType $dataType = DataType::Text,
         public readonly bool|string $sortable = false,
-        public readonly ?Filter $filter = null,
+        public readonly ?FilterContract $filter = null,
         public readonly ?string $default = null,
         public readonly ?string $width = null,
         public readonly bool $visible = true,

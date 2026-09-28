@@ -11,7 +11,7 @@
 ***********************************************************************/
 require_once __DIR__ . "/../../../includes/ui.inc";
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Inventory\Repository\ItemRepository;
 use App\Trade\Marketplace\Collection\ExpenseCollection;
 use App\Trade\Marketplace\Entity\Expense;

@@ -2,11 +2,11 @@
 
 namespace App\Foundation\Component\Table\Filter;
 
-use App\Foundation\Component\Control\Contract\Control;
-use App\Foundation\Component\Table\Contract\Filter;
+use App\Foundation\Component\Control\Contract\ControlContract;
+use App\Foundation\Component\Table\Contract\FilterContract;
 use App\Foundation\Framework\DTO\ValidationResult;
 
-abstract class ColumnFilter implements Filter
+abstract class ColumnFilter implements FilterContract
 {
     public function __construct(private readonly ?string $column) {}
 
@@ -20,7 +20,7 @@ abstract class ColumnFilter implements Filter
         return $this->control()->config();
     }
 
-    abstract protected function control(): Control;
+    abstract protected function control(): ControlContract;
 
     protected function column(string $key): string
     {

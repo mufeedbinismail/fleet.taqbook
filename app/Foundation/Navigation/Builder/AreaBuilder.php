@@ -2,15 +2,15 @@
 
 namespace App\Foundation\Navigation\Builder;
 
-use App\Foundation\Navigation\Contract\Condition;
-use App\Foundation\Navigation\Contract\Label;
-use App\Foundation\Navigation\Contract\Target;
+use App\Foundation\Navigation\Contract\ConditionContract;
+use App\Foundation\Navigation\Contract\LabelContract;
+use App\Foundation\Navigation\Contract\TargetContract;
 use App\Foundation\Navigation\Entity\Area;
 use Closure;
 
 final class AreaBuilder
 {
-    private ?Target $target = null;
+    private ?TargetContract $target = null;
 
     private ?string $permission = null;
 
@@ -23,9 +23,9 @@ final class AreaBuilder
     private ?string $condition = null;
 
     public function __construct(
-        private readonly Builder $root,
+        private readonly NavigationBuilder $root,
         private readonly string $key,
-        private readonly Label $label,
+        private readonly LabelContract $label,
         private readonly int $order,
     ) {}
 
@@ -34,7 +34,7 @@ final class AreaBuilder
         return $this->key;
     }
 
-    public function target(Target $target): self
+    public function target(TargetContract $target): self
     {
         $this->target = $target;
 
@@ -74,7 +74,7 @@ final class AreaBuilder
     }
 
     /**
-     * @param  class-string<Condition>  $condition
+     * @param  class-string<ConditionContract>  $condition
      */
     public function when(string $condition): self
     {
@@ -87,7 +87,7 @@ final class AreaBuilder
      * @param  string  $key  the section's own key — see `App\Foundation\Navigation\Constant\Section`
      * @param  Closure(SectionBuilder): void|null  $define
      */
-    public function section(string $key, string|Label $label, ?Closure $define = null): SectionBuilder
+    public function section(string $key, string|LabelContract $label, ?Closure $define = null): SectionBuilder
     {
         return $this->root->section($key, $label, parentKey: $this->key, prefix: $this->key, define: $define);
     }
@@ -95,7 +95,7 @@ final class AreaBuilder
     /**
      * A destination sitting directly in the area, outside any section.
      */
-    public function page(string $key, string|Label $label): DestinationBuilder
+    public function page(string $key, string|LabelContract $label): DestinationBuilder
     {
         return $this->root->page($key, $label, into: $this->key)->prefix($this->key);
     }
@@ -103,7 +103,7 @@ final class AreaBuilder
     /**
      * A place inside this area that no menu lists.
      */
-    public function hiddenPage(string $key, string|Label $label): HiddenDestinationBuilder
+    public function hiddenPage(string $key, string|LabelContract $label): HiddenDestinationBuilder
     {
         return $this->root->hiddenPage($key, $label, into: $this->key)->prefix($this->key);
     }

@@ -5,14 +5,14 @@ import { mount as attach } from '@/components/select';
 
 stage({
     translations: {
-        'foundation.select.empty': 'No results',
-        'foundation.select.searching': 'Searching…',
-        'foundation.select.failed': 'The list could not be loaded.',
-        'foundation.select.retry': 'Retry',
-        'foundation.select.more': 'Refine your search to see more',
-        'foundation.select.tooShort': 'Keep typing to search',
-        'foundation.select.remove': 'Remove :label',
-        'foundation.select.clear': 'Clear',
+        'component.select.empty': 'No results',
+        'component.select.searching': 'Searching…',
+        'component.select.failed': 'The list could not be loaded.',
+        'component.select.retry': 'Retry',
+        'component.select.more': 'Refine your search to see more',
+        'component.select.tooShort': 'Keep typing to search',
+        'component.select.remove': 'Remove :label',
+        'component.select.clear': 'Clear',
     },
 });
 

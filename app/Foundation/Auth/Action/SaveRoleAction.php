@@ -14,8 +14,8 @@ use App\Foundation\Framework\DTO\ValidationResult;
 class SaveRoleAction
 {
     public function __construct(
-        protected RoleRepository $roles,
-        protected PermissionRepository $permissions,
+        protected RoleRepository $repository,
+        protected PermissionRepository $permissionRepository,
     ) {}
 
     /**
@@ -27,21 +27,21 @@ class SaveRoleAction
     public function validate(SaveRoleIntent $intent, User $actor): ValidationResult
     {
         if ($intent->isEditing()) {
-            if ($this->roles->find($intent->roleId)?->reserved) {
-                return ValidationResult::error('role', __('foundation.role.error.reserved'));
+            if ($this->repository->find($intent->roleId)?->reserved) {
+                return ValidationResult::error('role', __('auth.role.error.reserved'));
             }
 
             if ($this->wouldLockOut($intent, $actor)) {
-                return ValidationResult::error('permissions', __('foundation.role.error.lockout'));
+                return ValidationResult::error('permissions', __('auth.role.error.lockout'));
             }
         }
 
-        if ($this->permissions->isAnyReserved($intent->permissions)) {
-            return ValidationResult::error('permissions', __('foundation.role.error.reserved_permission'));
+        if ($this->permissionRepository->isAnyReserved($intent->permissions)) {
+            return ValidationResult::error('permissions', __('auth.role.error.reserved_permission'));
         }
 
-        if ($this->roles->nameTaken($intent->name, $intent->roleId)) {
-            return ValidationResult::error('name', __('foundation.role.error.duplicate_name'));
+        if ($this->repository->nameTaken($intent->name, $intent->roleId)) {
+            return ValidationResult::error('name', __('auth.role.error.duplicate_name'));
         }
 
         return ValidationResult::success();
@@ -58,7 +58,7 @@ class SaveRoleAction
             throw RoleException::unchecked((string) $checked->field);
         }
 
-        return $this->roles->save($intent);
+        return $this->repository->save($intent);
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\DateRange\Control;
 
-use App\Foundation\Component\Control\Contract\PeriodControl;
+use App\Foundation\Component\Control\Contract\PeriodControlContract;
 use App\Foundation\Component\Control\Control;
 use App\Foundation\Component\Control\Enum\ControlName;
 use App\Foundation\Component\Date\Control\DateControl;
@@ -15,7 +15,7 @@ use App\Foundation\Shared\ValueObject\Period;
  * A period capped at a length needs both ends, an open one being longer than any length that could
  * be allowed.
  */
-final class DateRangeControl extends Control implements PeriodControl
+final class DateRangeControl extends Control implements PeriodControlContract
 {
     private readonly DateControl $ends;
 
@@ -44,7 +44,7 @@ final class DateRangeControl extends Control implements PeriodControl
     protected function check(string $field, mixed $raw): ValidationResult
     {
         if (! is_array($raw)) {
-            return ValidationResult::error($field, __('foundation.date.range.error.not_a_range'));
+            return ValidationResult::error($field, __('component.date.range.error.not_a_range'));
         }
 
         foreach (['from', 'to'] as $bound) {
@@ -81,11 +81,11 @@ final class DateRangeControl extends Control implements PeriodControl
         $days = $period->days();
 
         if ($days === null) {
-            return ValidationResult::error($field, __('foundation.date.range.error.needs_both_ends'));
+            return ValidationResult::error($field, __('component.date.range.error.needs_both_ends'));
         }
 
         return $days > $this->maxDays
-            ? ValidationResult::error($field, __('foundation.date.range.error.too_long', ['limit' => $this->maxDays]))
+            ? ValidationResult::error($field, __('component.date.range.error.too_long', ['limit' => $this->maxDays]))
             : ValidationResult::success();
     }
 }

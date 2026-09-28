@@ -1,6 +1,6 @@
 <?php
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Foundation\Auth\Constant\Permission;
 use App\Trade\Marketplace\Collection\ExpenseCollection;
 use App\Trade\Marketplace\Entity\Expense;

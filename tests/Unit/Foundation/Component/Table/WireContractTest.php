@@ -231,7 +231,7 @@ class WireContractTest extends TestCase
      */
     private static function agreement(): array
     {
-        return json_decode(file_get_contents(test_path('contract/table-wire.json')), true);
+        return json_decode(file_get_contents(test_path('Contract/table-wire.json')), true);
     }
 
     /**

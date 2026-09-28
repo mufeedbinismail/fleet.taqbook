@@ -2,7 +2,7 @@
 
 use App\Foundation\Auth\Constant\Permission;
 use App\Trade\Sale\Enum\PaymentMethod;
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Finance\Tax\ValueObject\TaxBreakdown;
 use App\Trade\Marketplace\Collection\ExpenseCollection;
 use App\Trade\Marketplace\Entity\Expense;

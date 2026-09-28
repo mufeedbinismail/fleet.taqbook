@@ -12,6 +12,7 @@ use App\Foundation\Component\Table\ValueObject\Sort;
 use Closure;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
+use Tests\Concern\SeedsStock;
 use Tests\TestCase;
 
 /**

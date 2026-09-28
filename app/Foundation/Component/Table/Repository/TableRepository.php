@@ -15,29 +15,29 @@ use App\Foundation\Framework\Support\RowCount;
 final class TableRepository
 {
     public function __construct(
-        private readonly TableService $tables,
-        private readonly TableQuery $queries,
+        private readonly TableService $service,
+        private readonly TableQuery $query,
     ) {}
 
     public function page(Table $table, TableState $state): TablePage
     {
-        $narrowed = $this->queries->builder($table, $state);
+        $narrowed = $this->query->builder($table, $state);
 
         $position = PagePosition::of(
             RowCount::of($narrowed->query),
-            $this->tables->perPage($table, $state),
+            $this->service->perPage($table, $state),
             $state->page,
         );
 
         $rows = $narrowed->query->forPage($position->page, $position->perPage)->get()
-            ->map(fn ($record) => $table->mapper->map($record))
+            ->map(fn ($record) => $table->rowMapper->map($record))
             ->all();
 
         // Narrowed again rather than paged, so a footer is computed over the whole set the
         // filters left.
         $footer = $table->footer === null
             ? []
-            : ($table->footer)($this->queries->builder($table, $state)->query);
+            : ($table->footer)($this->query->builder($table, $state)->query);
 
         return TablePage::of($rows, $position, $narrowed->applied, $footer);
     }
@@ -55,12 +55,12 @@ final class TableRepository
             throw TableException::noExportColumns();
         }
 
-        $narrowed = $this->queries->builder($table, $state);
+        $narrowed = $this->query->builder($table, $state);
 
         $total = RowCount::of($narrowed->query);
 
         $rows = $narrowed->query->lazy((int) config('component.table.export.chunk'))
-            ->map(fn ($record) => $table->mapper->map($record));
+            ->map(fn ($record) => $table->rowMapper->map($record));
 
         return new ExportSet($exported, $rows, $total);
     }

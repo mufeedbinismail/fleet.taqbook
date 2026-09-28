@@ -8,16 +8,16 @@ use App\Foundation\Framework\DTO\ValidationResult;
 
 class DeleteRoleAction
 {
-    public function __construct(protected RoleRepository $roles) {}
+    public function __construct(protected RoleRepository $repository) {}
 
     public function validate(int $roleId): ValidationResult
     {
-        if ($this->roles->find($roleId)?->reserved) {
-            return ValidationResult::error('role', __('foundation.role.error.reserved'));
+        if ($this->repository->find($roleId)?->reserved) {
+            return ValidationResult::error('role', __('auth.role.error.reserved'));
         }
 
-        if ($this->roles->isAssigned($roleId)) {
-            return ValidationResult::error('role', __('foundation.role.error.assigned'));
+        if ($this->repository->isAssigned($roleId)) {
+            return ValidationResult::error('role', __('auth.role.error.assigned'));
         }
 
         return ValidationResult::success();
@@ -34,6 +34,6 @@ class DeleteRoleAction
             throw RoleException::unchecked((string) $checked->field);
         }
 
-        $this->roles->delete($roleId);
+        $this->repository->delete($roleId);
     }
 }

@@ -2,15 +2,15 @@
 
 namespace App\Finance\Tax\Repository;
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Finance\Tax\Collection\TaxGroupLineCollection;
 use App\Finance\Tax\Entity\ItemTaxSetting;
 use App\Finance\Tax\Entity\TaxableItem;
 use App\Finance\Tax\Entity\TaxSetting;
 use App\Finance\Tax\Enum\TaxAlgorithm;
-use App\Finance\Tax\Query\ItemTaxType\ItemTaxTypeExemptionsQuery;
-use App\Finance\Tax\Query\ItemTaxType\ItemTaxTypeForItemQuery;
-use App\Finance\Tax\Query\TaxGroup\TaxGroupLinesQuery;
+use App\Finance\Tax\Query\ItemTaxTypeExemptionsQuery;
+use App\Finance\Tax\Query\ItemTaxTypeForItemQuery;
+use App\Finance\Tax\Query\TaxGroupLinesQuery;
 use Illuminate\Support\Facades\Cache;
 
 class TaxRepository

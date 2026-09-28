@@ -10,7 +10,7 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Finance\Tax\Collection\TaxableItemCollection;
 use App\Finance\Tax\Repository\TaxRepository;
 use App\Finance\Tax\Service\TaxService;

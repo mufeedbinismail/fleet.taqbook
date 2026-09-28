@@ -16,8 +16,8 @@ use App\Foundation\Framework\Http\Controller\Controller;
  */
 class SelectController extends Controller
 {
-    public function __invoke(OptionSearchRequest $request, OptionRepository $options): SelectResponse
+    public function __invoke(OptionSearchRequest $request, OptionRepository $optionRepository): SelectResponse
     {
-        return SelectResponse::of($options->page($request->select(), $request->toState()));
+        return SelectResponse::of($optionRepository->page($request->select(), $request->toState()));
     }
 }

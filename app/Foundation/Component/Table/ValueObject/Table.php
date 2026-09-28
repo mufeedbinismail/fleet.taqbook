@@ -2,8 +2,8 @@
 
 namespace App\Foundation\Component\Table\ValueObject;
 
-use App\Foundation\Component\Table\Contract\Filter;
-use App\Foundation\Component\Table\Mapper\RowMapper;
+use App\Foundation\Component\Table\Contract\FilterContract;
+use App\Foundation\Component\Table\RowMapper;
 use Closure;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -13,7 +13,7 @@ final class Table
     /**
      * @param  list<string>  $searchable  columns a global term is matched against
      * @param  array<string, string>  $sortable  client key => column, one key per column
-     * @param  array<string, Filter>  $filterable  client key => filter
+     * @param  array<string, FilterContract>  $filterable  client key => filter
      * @param  list<ColumnSort>  $defaultSort  in precedence order
      * @param  list<ColumnDefinition>  $definitions  in the order they are drawn and written
      * @param  list<FilterDefinition>  $filters  the narrowings no definition carries
@@ -27,7 +27,7 @@ final class Table
         public readonly array $filterable,
         public readonly array $defaultSort,
         public readonly array $definitions,
-        public readonly RowMapper $mapper,
+        public readonly RowMapper $rowMapper,
         public readonly int $perPage,
         public readonly int $maxPerPage,
         public readonly string $name,

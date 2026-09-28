@@ -2,9 +2,9 @@
 
 namespace App\Foundation\Navigation\Entity;
 
-use App\Foundation\Navigation\Contract\Condition;
-use App\Foundation\Navigation\Contract\Label;
-use App\Foundation\Navigation\Contract\Target;
+use App\Foundation\Navigation\Contract\ConditionContract;
+use App\Foundation\Navigation\Contract\LabelContract;
+use App\Foundation\Navigation\Contract\TargetContract;
 
 /**
  * A place a user can go that no menu lists — an edit screen, a drill-down, a mode of a page reached
@@ -22,13 +22,13 @@ final class HiddenDestination
     /**
      * @param  string  $parentKey  the navigational parent — an area, a destination, or another
      *                             hidden destination when one mode opens out of another
-     * @param  class-string<Condition>|null  $condition
+     * @param  class-string<ConditionContract>|null  $condition
      */
     public function __construct(
         public readonly string $key,
-        public readonly Label $label,
+        public readonly LabelContract $label,
         public readonly string $parentKey,
-        public readonly Target $target,
+        public readonly TargetContract $target,
         public readonly ?string $permission = null,
         public readonly ?string $condition = null,
     ) {}

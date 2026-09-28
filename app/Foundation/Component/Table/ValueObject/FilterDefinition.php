@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\Table\ValueObject;
 
-use App\Foundation\Component\Table\Contract\Filter;
+use App\Foundation\Component\Table\Contract\FilterContract;
 
 /**
  * A narrowing the table offers on its own, no heading drawing it, with the words it is shown under.
@@ -12,7 +12,7 @@ final class FilterDefinition
     public function __construct(
         public readonly string $key,
         public readonly string $label,
-        public readonly Filter $filter,
+        public readonly FilterContract $filter,
     ) {}
 
     /**
@@ -33,7 +33,7 @@ final class FilterDefinition
      *
      * @return array<string, mixed>
      */
-    public static function published(string $key, Filter $filter): array
+    public static function published(string $key, FilterContract $filter): array
     {
         return [
             'key' => $key,

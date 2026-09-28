@@ -2,9 +2,9 @@
 
 namespace App\Foundation\Navigation\Entity;
 
-use App\Foundation\Navigation\Contract\Condition;
-use App\Foundation\Navigation\Contract\Label;
-use App\Foundation\Navigation\Contract\Target;
+use App\Foundation\Navigation\Contract\ConditionContract;
+use App\Foundation\Navigation\Contract\LabelContract;
+use App\Foundation\Navigation\Contract\TargetContract;
 use App\Foundation\Navigation\Enum\Category;
 use App\Foundation\Navigation\ValueObject\Placement;
 
@@ -17,7 +17,7 @@ use App\Foundation\Navigation\ValueObject\Placement;
 final class Destination
 {
     /**
-     * @param  class-string<Condition>|null  $condition
+     * @param  class-string<ConditionContract>|null  $condition
      * @param  int  $order  declaration order, the tiebreaker when two siblings share a sort
      * @param  Placement  $placement  defaulted rather than nullable, so what an undeclared
      *                                destination carries is a real answer instead of a missing one
@@ -25,10 +25,10 @@ final class Destination
      */
     public function __construct(
         public readonly string $key,
-        public readonly Label $label,
+        public readonly LabelContract $label,
         public readonly string $parentKey,
         public readonly ?string $sectionKey = null,
-        public readonly ?Target $target = null,
+        public readonly ?TargetContract $target = null,
         public readonly ?string $permission = null,
         public readonly ?Category $category = null,
         public readonly ?string $icon = null,

@@ -5,7 +5,7 @@ namespace App\Trade\Marketplace\Service;
 use App\Foundation\Framework\DTO\ValidationResult;
 use App\Foundation\Shared\ValueObject\TypedId;
 use App\Trade\Marketplace\Cart\CustomerSettlementCart;
-use App\Trade\Marketplace\Query\Marketplace\MarketplaceQuery;
+use App\Trade\Marketplace\Query\MarketplaceQuery;
 use App\Trade\Marketplace\Repository\CustAllocRepository;
 use App\Trade\Sale\Repository\CustomerRepository;
 use App\Trade\Sale\Repository\CustomerTransRepository;

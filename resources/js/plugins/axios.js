@@ -35,15 +35,15 @@ axios.interceptors.response.use(
         const status = error.response?.status;
 
         if (!error.response) {
-            error.friendlyMessage = window.App.i18n('foundation.http.offline');
+            error.friendlyMessage = window.App.i18n('framework.http.offline');
         } else if (status === 401) {
             window.location.href = window.App.route('login');
         } else if (status === 419) {
-            error.friendlyMessage = window.App.i18n('foundation.http.expired');
+            error.friendlyMessage = window.App.i18n('framework.http.expired');
         } else if (status !== 422) {
             // 422 is left for the caller: only it knows how to map field errors to its own form.
             error.friendlyMessage =
-                error.response.data?.message ?? window.App.i18n('foundation.http.failed');
+                error.response.data?.message ?? window.App.i18n('framework.http.failed');
         }
 
         return Promise.reject(error);

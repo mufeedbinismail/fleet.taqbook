@@ -16,7 +16,7 @@ import { i18n } from '../../foundation/i18n';
  * One of this control's own strings. Read at the moment it is shown rather than at build time, so
  * a control built before its page finished staging translations still says the right thing.
  */
-export const text = (name, params) => i18n(`foundation.select.${name}`, params);
+export const text = (name, params) => i18n(`component.select.${name}`, params);
 
 export const DEFAULT_FIELDS = {
     value: 'value',

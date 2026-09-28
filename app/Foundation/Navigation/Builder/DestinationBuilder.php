@@ -2,9 +2,9 @@
 
 namespace App\Foundation\Navigation\Builder;
 
-use App\Foundation\Navigation\Contract\Condition;
-use App\Foundation\Navigation\Contract\Label;
-use App\Foundation\Navigation\Contract\Target;
+use App\Foundation\Navigation\Contract\ConditionContract;
+use App\Foundation\Navigation\Contract\LabelContract;
+use App\Foundation\Navigation\Contract\TargetContract;
 use App\Foundation\Navigation\Entity\Destination;
 use App\Foundation\Navigation\Entity\Section;
 use App\Foundation\Navigation\Enum\Category;
@@ -16,7 +16,7 @@ use App\Foundation\Navigation\ValueObject\Placement;
  */
 final class DestinationBuilder
 {
-    private ?Target $target = null;
+    private ?TargetContract $target = null;
 
     private ?string $permission = null;
 
@@ -40,7 +40,7 @@ final class DestinationBuilder
      */
     public function __construct(
         private readonly string $key,
-        private readonly Label $label,
+        private readonly LabelContract $label,
         private string $slot,
         private readonly int $order,
     ) {
@@ -59,7 +59,7 @@ final class DestinationBuilder
         return $this;
     }
 
-    public function target(Target $target): self
+    public function target(TargetContract $target): self
     {
         $this->target = $target;
 
@@ -113,7 +113,7 @@ final class DestinationBuilder
     }
 
     /**
-     * @param  class-string<Condition>  $condition
+     * @param  class-string<ConditionContract>  $condition
      */
     public function when(string $condition): self
     {

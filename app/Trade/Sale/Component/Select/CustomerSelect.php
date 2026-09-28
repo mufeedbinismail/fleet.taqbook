@@ -2,7 +2,7 @@
 
 namespace App\Trade\Sale\Component\Select;
 
-use App\Foundation\Component\Select\Contract\SelectDefinition;
+use App\Foundation\Component\Select\Contract\SelectDefinitionContract;
 use App\Trade\Sale\Model\Customer;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
  * trading relationship that opened it, and a list that hid them could not say whose an install
  * already on the register is.
  */
-final class CustomerSelect implements SelectDefinition
+final class CustomerSelect implements SelectDefinitionContract
 {
     public function query(): EloquentBuilder
     {
@@ -21,7 +21,7 @@ final class CustomerSelect implements SelectDefinition
                 'debtors_master.name as label',
             ])
             ->selectRaw('CASE WHEN debtors_master.inactive THEN ? ELSE debtors_master.debtor_ref END as description', [
-                __('trade.customer.picker.inactive'),
+                __('sale.customer.picker.inactive'),
             ])
             ->orderBy('debtors_master.name');
     }

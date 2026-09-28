@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\Table\Exporter;
 
-use App\Foundation\Component\Table\Contract\Exporter;
+use App\Foundation\Component\Table\Contract\ExporterContract;
 use App\Foundation\Component\Table\ValueObject\ExportSet;
 use App\Foundation\Framework\DTO\ValidationResult;
 use DateTimeInterface;
@@ -13,7 +13,7 @@ use DateTimeInterface;
  * Every value is text and nothing else: a spreadsheet opening this file evaluates whatever looks
  * like a formula, so a stored value would otherwise be a way to run something on whoever opens it.
  */
-final class CsvExporter implements Exporter
+final class CsvExporter implements ExporterContract
 {
     /**
      * Any size at all, since rows go out one at a time and none is held on to.

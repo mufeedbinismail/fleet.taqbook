@@ -2,7 +2,7 @@
 
 namespace App\Trade\Shared\Entity;
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Foundation\Shared\ValueObject\DomainDateTime;
 use App\Foundation\Shared\ValueObject\TypedId;
 use Brick\Money\Money;

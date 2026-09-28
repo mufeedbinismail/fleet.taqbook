@@ -1,6 +1,6 @@
 <?php
 
-use App\Finance\Tax\Query\TaxGroup\TaxGroupLinesQuery;
+use App\Finance\Tax\Query\TaxGroupLinesQuery;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.

@@ -2,8 +2,8 @@
 
 namespace App\Foundation\Navigation\Facade;
 
-use App\Foundation\Navigation\Contract\Label;
-use App\Foundation\Navigation\Contract\NavigationSource;
+use App\Foundation\Navigation\Contract\LabelContract;
+use App\Foundation\Navigation\Contract\NavigationSourceContract;
 use App\Foundation\Navigation\Entity\Node;
 use App\Foundation\Navigation\Exception\LocationAlreadyResolvedException;
 use App\Foundation\Navigation\Registry\SourceRegistry;
@@ -41,9 +41,9 @@ final class Navigation
     public const CRUMBS = 'navigation.crumbs';
 
     /**
-     * @param  class-string<NavigationSource>|NavigationSource  ...$sources
+     * @param  class-string<NavigationSourceContract>|NavigationSourceContract  ...$sources
      */
-    public static function register(string|NavigationSource ...$sources): SourceRegistry
+    public static function register(string|NavigationSourceContract ...$sources): SourceRegistry
     {
         return app(SourceRegistry::class)->register(...$sources);
     }
@@ -69,7 +69,7 @@ final class Navigation
      *
      * @throws LocationAlreadyResolvedException if anything has already asked where this request is
      */
-    public static function crumb(Crumb|Label|string $crumb): void
+    public static function crumb(Crumb|LabelContract|string $crumb): void
     {
         if (app()->resolved(CurrentLocation::class)) {
             throw LocationAlreadyResolvedException::appending();

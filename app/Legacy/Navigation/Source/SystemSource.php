@@ -4,7 +4,7 @@ namespace App\Legacy\Navigation\Source;
 
 use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Navigation\Builder\AreaBuilder;
-use App\Foundation\Navigation\Builder\Builder;
+use App\Foundation\Navigation\Builder\NavigationBuilder;
 use App\Foundation\Navigation\Builder\SectionBuilder;
 use App\Foundation\Navigation\Constant\Area;
 use App\Foundation\Navigation\Constant\Section;
@@ -19,7 +19,7 @@ use App\Foundation\Navigation\Enum\Column;
  */
 class SystemSource extends LegacySource
 {
-    public function declare(Builder $nav): void
+    public function declare(NavigationBuilder $nav): void
     {
         $nav->area(Area::SYSTEM, $this->label('S&etup'), function (AreaBuilder $system) {
             $system->icon('icon-settings')

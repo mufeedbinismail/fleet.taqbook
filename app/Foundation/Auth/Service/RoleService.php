@@ -10,7 +10,7 @@ use App\Foundation\Auth\ValueObject\RoleState;
 class RoleService
 {
     public function __construct(
-        protected RoleRepository $roles,
+        protected RoleRepository $repository,
     ) {}
 
     /**
@@ -20,7 +20,7 @@ class RoleService
      */
     public function state(?int $roleId, User $actor): RoleState
     {
-        $role = $roleId === null ? null : $this->roles->find($roleId);
+        $role = $roleId === null ? null : $this->repository->find($roleId);
 
         if ($role === null || ($role->reserved && $actor->cannot(Permission::VIEW_RESERVED_ACCESS))) {
             return RoleState::blank();
@@ -28,7 +28,7 @@ class RoleService
 
         return RoleState::of(
             $role,
-            $this->roles->grantedKeys($role->id),
+            $this->repository->grantedKeys($role->id),
             $role->id === $actor->role_id,
         );
     }

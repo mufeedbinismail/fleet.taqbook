@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Finance\Tax;
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Finance\Tax\Collection\TaxableItemCollection;
 use App\Finance\Tax\Collection\TaxGroupLineCollection;
 use App\Finance\Tax\Entity\ItemTaxSetting;

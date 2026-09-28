@@ -3,12 +3,12 @@
 namespace App\Foundation\Auth\Source;
 
 use App\Foundation\Auth\Constant\Permission;
-use App\Foundation\Navigation\Builder\Builder;
+use App\Foundation\Navigation\Builder\NavigationBuilder;
 use App\Foundation\Navigation\Constant\Section;
-use App\Foundation\Navigation\Contract\NavigationSource;
+use App\Foundation\Navigation\Contract\NavigationSourceContract;
 use App\Foundation\Navigation\Enum\Category;
 use App\Foundation\Navigation\Enum\Column;
-use App\Foundation\Navigation\ValueObject\RouteTarget;
+use App\Foundation\Navigation\Target\RouteTarget;
 
 /**
  * Who may do what, and the screens that decide it.
@@ -20,9 +20,9 @@ use App\Foundation\Navigation\ValueObject\RouteTarget;
  * Sort is stated on every entry it competes with. Sharing a section across two sources leaves
  * declaration order decided by provider boot order, which no source can see, let alone control.
  */
-class AccessSource implements NavigationSource
+class AccessSource implements NavigationSourceContract
 {
-    public function declare(Builder $nav): void
+    public function declare(NavigationBuilder $nav): void
     {
         $nav->page('foundation.access.user.manage', 'User Accounts Setup', Section::SYSTEM_COMPANY)
             ->target(RouteTarget::to('access.users.index'))

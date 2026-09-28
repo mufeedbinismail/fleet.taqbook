@@ -3,8 +3,8 @@
 namespace App\Foundation\Navigation\Provider;
 
 use App\Foundation\Navigation\Registry\SourceRegistry;
-use App\Foundation\Navigation\Service\LocationResolver;
-use App\Foundation\Navigation\Service\Resolver;
+use App\Foundation\Navigation\Service\LocationService;
+use App\Foundation\Navigation\Service\NavigationTreeService;
 use App\Foundation\Navigation\ValueObject\CurrentLocation;
 use App\Foundation\Navigation\ValueObject\NavigationTree;
 use App\Foundation\Navigation\ValueObject\Sitemap;
@@ -25,20 +25,20 @@ class NavigationServiceProvider extends ServiceProvider
         // rendered text, so nothing in an assembled sitemap belongs to the request that built it.
         $this->app->singleton(Sitemap::class, fn ($app) => $app->make(SourceRegistry::class)->build());
 
-        $this->app->scoped(Resolver::class);
+        $this->app->scoped(NavigationTreeService::class);
 
-        $this->app->scoped(NavigationTree::class, fn ($app) => $app->make(Resolver::class)->resolve(
+        $this->app->scoped(NavigationTree::class, fn ($app) => $app->make(NavigationTreeService::class)->resolve(
             $app['auth']->guard()->user(),
         ));
 
         // Stateless: it is handed the tree and the request it should answer about.
-        $this->app->singleton(LocationResolver::class);
+        $this->app->singleton(LocationService::class);
 
         // Resolved on first read and kept for the rest of the request, so a sidebar asking about
         // eight areas costs one walk of the tree. Naming a location writes to the request and never
         // touches this binding, which is what keeps a page that names itself from building a menu
         // nobody is going to draw.
-        $this->app->scoped(CurrentLocation::class, fn ($app) => $app->make(LocationResolver::class)->resolve(
+        $this->app->scoped(CurrentLocation::class, fn ($app) => $app->make(LocationService::class)->resolve(
             $app->make(NavigationTree::class),
             $app->make(Request::class),
         ));

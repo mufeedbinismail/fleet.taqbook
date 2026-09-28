@@ -6,8 +6,9 @@ namespace App\Foundation\Navigation\Constant;
  * The key of every section, named so it cannot be mistyped.
  *
  * A section's key is no longer derived from its area's — it is written out in full here, so a page
- * can be hung directly into a section from outside the area that owns it (`Builder::page($key,
- * $label, into: Section::COMPANY)`) without spelling the composed string by hand.
+ * can be hung directly into a section from outside the area that owns it
+ * (`NavigationBuilder::page($key, $label, into: Section::COMPANY)`) without spelling the composed
+ * string by hand.
  */
 final class Section
 {

@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\Table\Filter;
 
-use App\Foundation\Component\Control\Contract\SetControl;
+use App\Foundation\Component\Control\Contract\SetControlContract;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -11,12 +11,12 @@ final class InFilter extends ColumnFilter
     /**
      * Nothing is defaulted: there is no set of choices this could invent.
      */
-    public function __construct(?string $column, private readonly SetControl $choices)
+    public function __construct(?string $column, private readonly SetControlContract $choices)
     {
         parent::__construct($column);
     }
 
-    protected function control(): SetControl
+    protected function control(): SetControlContract
     {
         return $this->choices;
     }

@@ -4,7 +4,7 @@ namespace Tests\Feature\Foundation\Component\Table;
 
 use App\Foundation\Component\Select\Control\MultiSelectControl;
 use App\Foundation\Component\Table\Builder\TableBuilder;
-use App\Foundation\Component\Table\Contract\TableDefinition;
+use App\Foundation\Component\Table\Contract\TableDefinitionContract;
 use App\Foundation\Component\Table\Enum\DataType;
 use App\Foundation\Component\Table\Filter\BooleanFilter;
 use App\Foundation\Component\Table\Filter\ExactFilter;
@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\DB;
  * A declaration over rows the suite owns, shared because it is the thing under test rather than
  * anything a case asserts on.
  */
-class StockTable implements TableDefinition
+class StockTable implements TableDefinitionContract
 {
     /**
      * Written into a column nothing asserts on, so the table is narrowed to its own seeded rows.

@@ -3,7 +3,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { dataTable, expressSort, parseSort, table } from '@/components/table';
 import { deferredHttp, flush, httpDouble, queryOf } from '../../support/http';
-import agreed from '../../../contract/table-wire.json';
+import agreed from '../../../Contract/table-wire.json';
 
 /*
     What a table does while somebody is using it, which is mostly a question of what it is allowed

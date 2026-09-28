@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Framework\Exception;
 
-use App\Foundation\Framework\Http\Response\Envelope;
+use App\Foundation\Framework\Http\Response\ResponseEnvelope;
 use App\Foundation\Shared\Exception\ResourceNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
@@ -41,7 +41,7 @@ class Handler extends ExceptionHandler
 
     protected function invalidJson($request, ValidationException $exception): JsonResponse
     {
-        return Envelope::failed($exception->getMessage(), $exception->errors(), $exception->status)
+        return ResponseEnvelope::failed($exception->getMessage(), $exception->errors(), $exception->status)
             ->toResponse($request);
     }
 }

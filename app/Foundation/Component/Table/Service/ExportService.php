@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\Table\Service;
 
-use App\Foundation\Component\Table\Contract\Exporter;
+use App\Foundation\Component\Table\Contract\ExporterContract;
 use App\Foundation\Component\Table\Enum\ExportFormat;
 use App\Foundation\Component\Table\Exception\TableException;
 use App\Foundation\Component\Table\Exporter\CsvExporter;
@@ -16,15 +16,15 @@ use App\Foundation\Framework\DTO\ValidationResult;
 class ExportService
 {
     public function __construct(
-        private readonly CsvExporter $csv,
-        private readonly XlsxExporter $xlsx,
+        private readonly CsvExporter $csvExporter,
+        private readonly XlsxExporter $xlsxExporter,
     ) {}
 
-    public function for(ExportFormat $format): Exporter
+    public function for(ExportFormat $format): ExporterContract
     {
         return match ($format) {
-            ExportFormat::Csv => $this->csv,
-            ExportFormat::Xlsx => $this->xlsx,
+            ExportFormat::Csv => $this->csvExporter,
+            ExportFormat::Xlsx => $this->xlsxExporter,
         };
     }
 

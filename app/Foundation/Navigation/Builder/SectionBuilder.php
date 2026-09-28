@@ -2,8 +2,8 @@
 
 namespace App\Foundation\Navigation\Builder;
 
-use App\Foundation\Navigation\Contract\Condition;
-use App\Foundation\Navigation\Contract\Label;
+use App\Foundation\Navigation\Contract\ConditionContract;
+use App\Foundation\Navigation\Contract\LabelContract;
 use App\Foundation\Navigation\Entity\Section;
 
 final class SectionBuilder
@@ -16,9 +16,9 @@ final class SectionBuilder
      * @param  string  $prefix  key namespace for anything declared inside this section
      */
     public function __construct(
-        private readonly Builder $root,
+        private readonly NavigationBuilder $root,
         private readonly string $key,
-        private readonly Label $label,
+        private readonly LabelContract $label,
         private readonly string $parentKey,
         private readonly string $prefix,
         private readonly int $order,
@@ -37,7 +37,7 @@ final class SectionBuilder
     }
 
     /**
-     * @param  class-string<Condition>  $condition
+     * @param  class-string<ConditionContract>  $condition
      */
     public function when(string $condition): self
     {
@@ -50,7 +50,7 @@ final class SectionBuilder
      * Declare a destination inside this section. The key is namespaced to the owning area rather
      * than to the section, so an entry keeps its key when it moves between sections.
      */
-    public function page(string $key, string|Label $label): DestinationBuilder
+    public function page(string $key, string|LabelContract $label): DestinationBuilder
     {
         return $this->root->page($key, $label, into: $this->key)->prefix($this->prefix);
     }
@@ -59,7 +59,7 @@ final class SectionBuilder
      * A place no menu lists, keyed and parented as though it were declared here. It joins no
      * grouping — there is nothing to group when there is nothing to draw.
      */
-    public function hiddenPage(string $key, string|Label $label): HiddenDestinationBuilder
+    public function hiddenPage(string $key, string|LabelContract $label): HiddenDestinationBuilder
     {
         return $this->root->hiddenPage($key, $label, into: $this->key)->prefix($this->prefix);
     }

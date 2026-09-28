@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\Toggle\Control;
 
-use App\Foundation\Component\Control\Contract\BooleanControl;
+use App\Foundation\Component\Control\Contract\BooleanControlContract;
 use App\Foundation\Component\Control\Control;
 use App\Foundation\Component\Control\Enum\ControlName;
 use App\Foundation\Framework\DTO\ValidationResult;
@@ -10,7 +10,7 @@ use App\Foundation\Framework\DTO\ValidationResult;
 /**
  * One of two states, where the second is a value like any other rather than an absent one.
  */
-final class ToggleControl extends Control implements BooleanControl
+final class ToggleControl extends Control implements BooleanControlContract
 {
     public function config(): array
     {
@@ -20,7 +20,7 @@ final class ToggleControl extends Control implements BooleanControl
     protected function check(string $field, mixed $raw): ValidationResult
     {
         return $this->read($raw) === null
-            ? ValidationResult::error($field, __('foundation.toggle.error.not_yes_or_no'))
+            ? ValidationResult::error($field, __('component.toggle.error.not_yes_or_no'))
             : ValidationResult::success();
     }
 

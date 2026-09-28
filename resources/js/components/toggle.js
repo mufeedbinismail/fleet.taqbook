@@ -116,7 +116,7 @@ function handle(el, Alpine) {
 function word(state, which) {
     if (state.label === false) return '';
 
-    return state.label ?? i18n(`foundation.toggle.${which}`);
+    return state.label ?? i18n(`component.toggle.${which}`);
 }
 
 /**

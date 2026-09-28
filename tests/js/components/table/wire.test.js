@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { dataTable, expressSort, parseSort } from '@/components/table';
 import { readQuery, stateOf } from '@/components/table/state';
 import { httpDouble } from '../../support/http';
-import agreed from '../../../contract/table-wire.json';
+import agreed from '../../../Contract/table-wire.json';
 
 /*
     One half of what a table says over the wire, against cases stated in neither language.

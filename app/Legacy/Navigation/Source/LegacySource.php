@@ -2,21 +2,21 @@
 
 namespace App\Legacy\Navigation\Source;
 
-use App\Foundation\Navigation\Contract\Label;
-use App\Foundation\Navigation\Contract\NavigationSource;
-use App\Legacy\Navigation\ValueObject\AcceleratedLabel;
-use App\Legacy\Navigation\ValueObject\LegacyPageTarget;
+use App\Foundation\Navigation\Contract\LabelContract;
+use App\Foundation\Navigation\Contract\NavigationSourceContract;
+use App\Legacy\Navigation\Label\AcceleratedLabel;
+use App\Legacy\Navigation\Target\LegacyPageTarget;
 
 /**
  * Shared plumbing for the FrontAccounting menu sources. Temporary by design, and not for anything
  * outside App\Legacy to extend.
  */
-abstract class LegacySource implements NavigationSource
+abstract class LegacySource implements NavigationSourceContract
 {
     /**
      * @param  string  $label  a translation key in FrontAccounting's accelerator notation
      */
-    protected function label(string $label): Label
+    protected function label(string $label): LabelContract
     {
         return new AcceleratedLabel($label);
     }

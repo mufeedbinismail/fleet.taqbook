@@ -1,9 +1,9 @@
 <?php
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Inventory\Query\ItemInfoQuery;
-use App\Trade\Marketplace\Cart\DraftSupplierTransLine;
 use App\Trade\Marketplace\Cart\SupplierTransCart;
+use App\Trade\Marketplace\Entity\DraftSupplierTransLine;
 use App\Trade\Marketplace\Service\SupplierTransCartService;
 
 // ---------------------------------------------------------------------------
