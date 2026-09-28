@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\Select\Control;
 
-use App\Foundation\Component\Control\Contract\ScalarControl;
+use App\Foundation\Component\Control\Contract\ScalarControlContract;
 use App\Foundation\Component\Control\Enum\ControlName;
 use App\Foundation\Component\Select\Exception\SelectException;
 use App\Foundation\Component\Select\ValueObject\Option;
@@ -13,7 +13,7 @@ use App\Foundation\Framework\DTO\ValidationResult;
 /**
  * One value picked from a declared set.
  */
-final class SelectControl extends ChoiceControl implements ScalarControl
+final class SelectControl extends ChoiceControl implements ScalarControlContract
 {
     /**
      * A set small enough to be declared in full.
@@ -53,12 +53,12 @@ final class SelectControl extends ChoiceControl implements ScalarControl
     protected function check(string $field, mixed $raw): ValidationResult
     {
         if (is_array($raw)) {
-            return ValidationResult::error($field, __('foundation.select.error.not_one_value'));
+            return ValidationResult::error($field, __('component.select.error.not_one_value'));
         }
 
         return $this->accepts($raw)
             ? ValidationResult::success()
-            : ValidationResult::error($field, __('foundation.select.error.not_a_choice'));
+            : ValidationResult::error($field, __('component.select.error.not_a_choice'));
     }
 
     public function read(mixed $raw): int|float|string|bool|null

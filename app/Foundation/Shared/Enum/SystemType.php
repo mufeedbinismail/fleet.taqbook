@@ -2,8 +2,8 @@
 
 namespace App\Foundation\Shared\Enum;
 
-use App\Foundation\Framework\Concern\Enum\HasLabelConcern;
-use App\Foundation\Framework\Contract\Enum\HasLabelContract;
+use App\Foundation\Framework\Concern\HasLabelConcern;
+use App\Foundation\Framework\Contract\HasLabelContract;
 
 enum SystemType: int implements HasLabelContract
 {

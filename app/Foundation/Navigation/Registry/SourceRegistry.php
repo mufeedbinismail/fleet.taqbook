@@ -2,8 +2,8 @@
 
 namespace App\Foundation\Navigation\Registry;
 
-use App\Foundation\Navigation\Builder\Builder;
-use App\Foundation\Navigation\Contract\NavigationSource;
+use App\Foundation\Navigation\Builder\NavigationBuilder;
+use App\Foundation\Navigation\Contract\NavigationSourceContract;
 use App\Foundation\Navigation\Exception\NavigationException;
 use App\Foundation\Navigation\ValueObject\Sitemap;
 
@@ -18,7 +18,7 @@ use App\Foundation\Navigation\ValueObject\Sitemap;
  */
 class SourceRegistry
 {
-    /** @var array<int, class-string<NavigationSource>|NavigationSource> */
+    /** @var array<int, class-string<NavigationSourceContract>|NavigationSourceContract> */
     private array $sources = [];
 
     private ?Sitemap $sitemap = null;
@@ -26,9 +26,9 @@ class SourceRegistry
     private bool $frozen = false;
 
     /**
-     * @param  class-string<NavigationSource>|NavigationSource  ...$sources
+     * @param  class-string<NavigationSourceContract>|NavigationSourceContract  ...$sources
      */
-    public function register(string|NavigationSource ...$sources): static
+    public function register(string|NavigationSourceContract ...$sources): static
     {
         foreach ($sources as $source) {
             if ($this->frozen) {
@@ -60,8 +60,8 @@ class SourceRegistry
 
         $this->frozen = true;
 
-        return $this->sitemap = Builder::buildFromSources(array_map(
-            fn (string|NavigationSource $source) => is_string($source) ? app($source) : $source,
+        return $this->sitemap = NavigationBuilder::buildFromSources(array_map(
+            fn (string|NavigationSourceContract $source) => is_string($source) ? app($source) : $source,
             $this->sources,
         ));
     }

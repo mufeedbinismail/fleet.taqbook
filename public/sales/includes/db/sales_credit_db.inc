@@ -1,6 +1,6 @@
 <?php
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Finance\Tax\Service\TaxService;
 use App\Inventory\Repository\ItemRepository;
 use App\Trade\Marketplace\Cart\CustomerSettlementCart;

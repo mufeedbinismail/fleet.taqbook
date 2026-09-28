@@ -28,8 +28,8 @@ class SaveRoleRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => __('foundation.role.attribute.name'),
-            'permissions' => __('foundation.role.attribute.permissions'),
+            'name' => __('auth.role.attribute.name'),
+            'permissions' => __('auth.role.attribute.permissions'),
         ];
     }
 

@@ -3,8 +3,8 @@
 namespace App\Foundation\Component\Select\Repository;
 
 use App\Foundation\Component\Select\Collection\OptionCollection;
-use App\Foundation\Component\Select\Contract\NarrowsOptions;
-use App\Foundation\Component\Select\Contract\SelectDefinition;
+use App\Foundation\Component\Select\Contract\NarrowsOptionsContract;
+use App\Foundation\Component\Select\Contract\SelectDefinitionContract;
 use App\Foundation\Component\Select\ValueObject\OptionPage;
 use App\Foundation\Component\Select\ValueObject\SelectState;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -18,7 +18,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  */
 class OptionRepository
 {
-    public function page(SelectDefinition $select, SelectState $state): OptionPage
+    public function page(SelectDefinitionContract $select, SelectState $state): OptionPage
     {
         $query = $this->query($select, $state);
 
@@ -38,11 +38,11 @@ class OptionRepository
         );
     }
 
-    private function query(SelectDefinition $select, SelectState $state): EloquentBuilder|QueryBuilder
+    private function query(SelectDefinitionContract $select, SelectState $state): EloquentBuilder|QueryBuilder
     {
         $query = $select->query();
 
-        if ($select instanceof NarrowsOptions) {
+        if ($select instanceof NarrowsOptionsContract) {
             $select->applyFilters($query, $state);
         }
 
@@ -51,7 +51,7 @@ class OptionRepository
 
     private function filterConfirmedSelections(
         EloquentBuilder|QueryBuilder $query,
-        SelectDefinition $select,
+        SelectDefinitionContract $select,
         SelectState $state
     ): OptionCollection {
         // Ordering is dropped: this answers whether a row is still allowed, and the answer is the
@@ -67,7 +67,7 @@ class OptionRepository
      */
     private function search(
         EloquentBuilder|QueryBuilder $query,
-        SelectDefinition $select,
+        SelectDefinitionContract $select,
         SelectState $state
     ): void {
         if (! $state->isSearching()) {

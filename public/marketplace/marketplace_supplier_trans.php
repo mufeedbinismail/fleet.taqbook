@@ -9,7 +9,7 @@ require_once __DIR__ . "/includes/marketplace_supplier_trans_ui.inc";
 require_once __DIR__ . "/includes/marketplace_supplier_trans_db.inc";
 
 use App\Foundation\Auth\Constant\Permission;
-use App\Trade\Marketplace\Cart\DraftSupplierTransLine;
+use App\Trade\Marketplace\Entity\DraftSupplierTransLine;
 use App\Trade\Marketplace\Cart\SupplierTransCart;
 use App\Trade\Marketplace\Service\SupplierTransCartService;
 use App\Foundation\Framework\DTO\ValidationResult;

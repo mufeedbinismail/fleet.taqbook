@@ -1,6 +1,6 @@
 <?php
 
-use App\Trade\Marketplace\Query\Marketplace\MarketplaceQuery;
+use App\Trade\Marketplace\Query\MarketplaceQuery;
 
 function create_marketplace($name, $code, $provision_account, $created_by, $supplier_id = null)
 {

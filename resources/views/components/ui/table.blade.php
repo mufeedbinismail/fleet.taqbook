@@ -134,20 +134,20 @@
         // Placeholders rather than fragments, so each sentence stays one translatable string and
         // a language that orders it differently can say so.
         'messages' => [
-            'summary' => __('foundation.table.page.summary', ['from' => ':from:', 'to' => ':to:', 'total' => ':total:']),
-            'none' => __('foundation.table.page.empty'),
-            'yes' => __('foundation.table.filter.yes'),
-            'no' => __('foundation.table.filter.no'),
-            'any' => __('foundation.table.filter.any'),
-            'remove' => __('foundation.table.filter.remove', ['filter' => ':filter:']),
-            'position' => __('foundation.table.sort.position', ['position' => ':position:']),
-            'sorted' => __('foundation.table.announce.sorted', ['columns' => ':columns:']),
-            'unsorted' => __('foundation.table.announce.unsorted'),
-            'ascending' => __('foundation.table.announce.ascending', ['column' => ':column:']),
-            'descending' => __('foundation.table.announce.descending', ['column' => ':column:']),
-            'then' => __('foundation.table.announce.then'),
-            'results' => __('foundation.table.announce.results', ['from' => ':from:', 'to' => ':to:', 'total' => ':total:']),
-            'noResults' => __('foundation.table.announce.empty'),
+            'summary' => __('component.table.page.summary', ['from' => ':from:', 'to' => ':to:', 'total' => ':total:']),
+            'none' => __('component.table.page.empty'),
+            'yes' => __('component.table.filter.yes'),
+            'no' => __('component.table.filter.no'),
+            'any' => __('component.table.filter.any'),
+            'remove' => __('component.table.filter.remove', ['filter' => ':filter:']),
+            'position' => __('component.table.sort.position', ['position' => ':position:']),
+            'sorted' => __('component.table.announce.sorted', ['columns' => ':columns:']),
+            'unsorted' => __('component.table.announce.unsorted'),
+            'ascending' => __('component.table.announce.ascending', ['column' => ':column:']),
+            'descending' => __('component.table.announce.descending', ['column' => ':column:']),
+            'then' => __('component.table.announce.then'),
+            'results' => __('component.table.announce.results', ['from' => ':from:', 'to' => ':to:', 'total' => ':total:']),
+            'noResults' => __('component.table.announce.empty'),
         ],
     ];
 
@@ -233,8 +233,8 @@
                     type="search"
                     class="x-table__search-input"
                     autocomplete="off"
-                    placeholder="{{ __('foundation.table.search_placeholder') }}"
-                    aria-label="{{ __('foundation.table.search') }}"
+                    placeholder="{{ __('component.table.search_placeholder') }}"
+                    aria-label="{{ __('component.table.search') }}"
                     :value="asked.q"
                     @input="setSearch($event.target.value)"
                 >
@@ -243,14 +243,14 @@
 
         <div class="x-table__bar-actions">
             <x-ui.button variant="outline" x-show="isDirty()" x-cloak @click="reset()">
-                {{ __('foundation.table.clear') }}
+                {{ __('component.table.clear') }}
             </x-ui.button>
 
             {{ $toolbar ?? '' }}
 
             @foreach ($export as $format)
                 <x-ui.button variant="outline" icon="download" @click="exportTo('{{ $format }}')">
-                    {{ __('foundation.table.export.'.$format) }}
+                    {{ __('component.table.export.'.$format) }}
                 </x-ui.button>
             @endforeach
         </div>
@@ -294,7 +294,7 @@
             <caption id="{{ $name }}-caption" class="x-table__caption{{ $captionVisible ? ' x-table__caption--visible' : '' }}">
                 {{ $caption }}
                 @if ($sorts)
-                    {{ __('foundation.table.caption.sortable') }}
+                    {{ __('component.table.caption.sortable') }}
                 @endif
             </caption>
 
@@ -378,7 +378,7 @@
                                     class="x-table__head-funnel"
                                     :class="chips().some((chip) => chip.key === @js($column['filter']['key'])) && 'x-table__head-funnel--set'"
                                     :aria-expanded="open || chips().some((chip) => chip.key === @js($column['filter']['key']))"
-                                    aria-label="{{ __('foundation.table.column_search', ['column' => $column['label']]) }}"
+                                    aria-label="{{ __('component.table.column_search', ['column' => $column['label']]) }}"
                                     @click="open = ! open"
                                 >
                                     <span class="icon icon-filter" aria-hidden="true"></span>
@@ -445,7 +445,7 @@
                                             {{-- On the page so that a name can point at it: which
                                                  end a box is otherwise shows only in where it
                                                  sits. --}}
-                                            <span id="{{ $boundId }}" class="x-table__filter-bound">{{ __('foundation.table.filter.range.'.$bound) }}</span>
+                                            <span id="{{ $boundId }}" class="x-table__filter-bound">{{ __('component.table.filter.range.'.$bound) }}</span>
 
                                             <x-ui.date :attributes="$bind" />
                                         @endforeach
@@ -520,7 +520,7 @@
                                         :multiple="$several"
                                         :channel="$column['filter']"
                                         :selected="$filters[$column['filter']['key']] ?? []"
-                                        :placeholder="__('foundation.table.filter.any')"
+                                        :placeholder="__('component.table.filter.any')"
                                         :param-sources="$narrowedBy"
                                         :attributes="$bind"
                                     />
@@ -534,7 +534,7 @@
                                         {{-- Selected per option rather than as a value on the
                                              control, the choice being free to arrive with the
                                              address before this control exists to hold one. --}}
-                                        <option value="" :selected="filterValue(@js($column['filter']['key'])) === ''">{{ __('foundation.table.filter.any') }}</option>
+                                        <option value="" :selected="filterValue(@js($column['filter']['key'])) === ''">{{ __('component.table.filter.any') }}</option>
                                         @foreach ($column['filter']['options'] as $option)
                                             <option value="{{ $option['value'] }}" @disabled($option['disabled']) :selected="filterValue(@js($column['filter']['key'])) === @js($option['value'])">{{ $option['label'] }}</option>
                                         @endforeach
@@ -546,9 +546,9 @@
                                         aria-labelledby="{{ $headingId }}"
                                         @change="setFilter(@js($column['filter']['key']), $event.target.value)"
                                     >
-                                        <option value="" :selected="filterValue(@js($column['filter']['key'])) === ''">{{ __('foundation.table.filter.any') }}</option>
-                                        <option value="1" :selected="filterValue(@js($column['filter']['key'])) === '1'">{{ __('foundation.table.filter.yes') }}</option>
-                                        <option value="0" :selected="filterValue(@js($column['filter']['key'])) === '0'">{{ __('foundation.table.filter.no') }}</option>
+                                        <option value="" :selected="filterValue(@js($column['filter']['key'])) === ''">{{ __('component.table.filter.any') }}</option>
+                                        <option value="1" :selected="filterValue(@js($column['filter']['key'])) === '1'">{{ __('component.table.filter.yes') }}</option>
+                                        <option value="0" :selected="filterValue(@js($column['filter']['key'])) === '0'">{{ __('component.table.filter.no') }}</option>
                                     </select>
                                 @elseif ($column['filter']['control'] !== null)
                                     <input
@@ -650,8 +650,8 @@
         </table>
 
         <p class="x-table__empty" x-show="isEmpty()" x-cloak>
-            <span x-show="isNarrowed()">{{ $empty ?? __('foundation.table.empty') }}</span>
-            <span x-show="! isNarrowed()">{{ $blank ?? __('foundation.table.blank') }}</span>
+            <span x-show="isNarrowed()">{{ $empty ?? __('component.table.empty') }}</span>
+            <span x-show="! isNarrowed()">{{ $blank ?? __('component.table.blank') }}</span>
         </p>
         </div>
 
@@ -665,7 +665,7 @@
 
         <div class="x-table__foot-controls">
             <label class="x-table__size">
-                <span>{{ __('foundation.table.page.size') }}</span>
+                <span>{{ __('component.table.page.size') }}</span>
                 <select class="x-table__size-select" @change="setPerPage($event.target.value)">
                     <template x-for="size in ui.perPageOptions" :key="size">
                         <option :value="size" :selected="size === answer.perPage" x-text="size"></option>
@@ -675,14 +675,14 @@
 
             <div class="x-table__pager">
                 <button type="button" class="x-table__pager-step" :disabled="! hasPrevious()" @click="first()"
-                    aria-label="{{ __('foundation.table.page.first') }}"><span class="icon icon-page-first" aria-hidden="true"></span></button>
+                    aria-label="{{ __('component.table.page.first') }}"><span class="icon icon-page-first" aria-hidden="true"></span></button>
                 <button type="button" class="x-table__pager-step" :disabled="! hasPrevious()" @click="previous()"
-                    aria-label="{{ __('foundation.table.page.previous') }}"><span class="icon icon-page-previous" aria-hidden="true"></span></button>
+                    aria-label="{{ __('component.table.page.previous') }}"><span class="icon icon-page-previous" aria-hidden="true"></span></button>
                 <span class="x-table__pager-count"><span x-text="answer.page"></span> / <span x-text="answer.pages"></span></span>
                 <button type="button" class="x-table__pager-step" :disabled="! hasNext()" @click="next()"
-                    aria-label="{{ __('foundation.table.page.next') }}"><span class="icon icon-page-next" aria-hidden="true"></span></button>
+                    aria-label="{{ __('component.table.page.next') }}"><span class="icon icon-page-next" aria-hidden="true"></span></button>
                 <button type="button" class="x-table__pager-step" :disabled="! hasNext()" @click="last()"
-                    aria-label="{{ __('foundation.table.page.last') }}"><span class="icon icon-page-last" aria-hidden="true"></span></button>
+                    aria-label="{{ __('component.table.page.last') }}"><span class="icon icon-page-last" aria-hidden="true"></span></button>
             </div>
         </div>
     </div>

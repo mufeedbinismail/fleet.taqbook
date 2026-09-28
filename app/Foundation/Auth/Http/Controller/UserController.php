@@ -8,6 +8,7 @@ use App\Foundation\Auth\Action\SetUserStatusAction;
 use App\Foundation\Auth\Component\Select\RoleSelect;
 use App\Foundation\Auth\Component\Table\UserTable;
 use App\Foundation\Auth\Http\Request\SaveUserRequest;
+use App\Foundation\Auth\Http\Request\SetUserStatusRequest;
 use App\Foundation\Auth\Repository\UserRepository;
 use App\Foundation\Component\Select\Service\OptionService;
 use App\Foundation\Component\Table\Builder\TableBuilder;
@@ -15,7 +16,7 @@ use App\Foundation\Component\Table\Http\Request\TableRequest;
 use App\Foundation\Component\Table\Repository\TableRepository;
 use App\Foundation\Component\Table\ValueObject\InitialPage;
 use App\Foundation\Framework\Http\Controller\Controller;
-use App\Foundation\Framework\Http\Response\Envelope;
+use App\Foundation\Framework\Http\Response\ResponseEnvelope;
 use App\Trade\Sale\Repository\SalesPointRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -23,10 +24,10 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function __construct(
-        protected UserRepository $users,
-        protected RoleSelect $roles,
-        protected OptionService $options,
-        protected SalesPointRepository $salesPoints,
+        protected UserRepository $repository,
+        protected RoleSelect $roleSelect,
+        protected OptionService $optionService,
+        protected SalesPointRepository $salesPointRepository,
         protected TableBuilder $tables,
         protected UserTable $table,
     ) {}
@@ -35,7 +36,7 @@ class UserController extends Controller
      * The only server-rendered response. The roster arrives empty and fetches itself, so what is
      * staged here is the shape of the table and the lists the editor picks from.
      */
-    public function index(Request $request, TableRequest $asked, TableRepository $rows): View
+    public function index(Request $request, TableRequest $asked, TableRepository $tableRepository): View
     {
         $table = $this->table->table($this->tables);
 
@@ -48,30 +49,30 @@ class UserController extends Controller
         */
         $state = $this->table->opensAt($asked->toState($table->name));
 
-        return view('pages.foundation.user-roster', [
-            'title' => __('foundation.user.title'),
+        return view('pages.auth.user-roster', [
+            'title' => __('auth.user.title'),
             'definition' => $table,
-            'initial' => InitialPage::of($rows->page($table, $state), $state),
-            'roles' => $this->options->channel($this->roles, [RoleSelect::INACTIVE => 0]),
-            'salesPoints' => $this->salesPoints->all(),
+            'initial' => InitialPage::of($tableRepository->page($table, $state), $state),
+            'roles' => $this->optionService->channel($this->roleSelect, [RoleSelect::INACTIVE => 0]),
+            'salesPoints' => $this->salesPointRepository->all(),
         ]);
     }
 
-    public function store(SaveUserRequest $request, SaveUserAction $action): Envelope
+    public function store(SaveUserRequest $request, SaveUserAction $action): ResponseEnvelope
     {
         $this->save($request, $action);
 
-        return Envelope::ok(__('foundation.user.notice.created'));
+        return ResponseEnvelope::ok(__('auth.user.notice.created'));
     }
 
-    public function update(SaveUserRequest $request, SaveUserAction $action, int $user): Envelope
+    public function update(SaveUserRequest $request, SaveUserAction $action, int $user): ResponseEnvelope
     {
         $this->save($request, $action);
 
-        return Envelope::ok(__('foundation.user.notice.updated'));
+        return ResponseEnvelope::ok(__('auth.user.notice.updated'));
     }
 
-    public function destroy(Request $request, DeleteUserAction $action, int $user): Envelope
+    public function destroy(Request $request, DeleteUserAction $action, int $user): ResponseEnvelope
     {
         $actor = $request->user();
 
@@ -79,21 +80,21 @@ class UserController extends Controller
 
         $action->execute($user, $actor);
 
-        return Envelope::ok(__('foundation.user.notice.deleted'));
+        return ResponseEnvelope::ok(__('auth.user.notice.deleted'));
     }
 
-    public function status(Request $request, SetUserStatusAction $action, int $user): Envelope
+    public function status(SetUserStatusRequest $request, SetUserStatusAction $action, int $user): ResponseEnvelope
     {
-        $inactive = $request->boolean('inactive');
+        $inactive = $request->deactivates();
         $actor = $request->user();
 
         $this->refuse($action->validate($user, $inactive, $actor));
 
         $action->execute($user, $inactive, $actor);
 
-        return Envelope::ok($inactive
-            ? __('foundation.user.notice.deactivated')
-            : __('foundation.user.notice.activated'));
+        return ResponseEnvelope::ok($inactive
+            ? __('auth.user.notice.deactivated')
+            : __('auth.user.notice.activated'));
     }
 
     /**

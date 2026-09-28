@@ -30,8 +30,8 @@
 
     $id = Control::id($attributes, 'date-range', $fromName);
 
-    $start = $fromLabel ?? __('foundation.date.range.from');
-    $end = $toLabel ?? __('foundation.date.range.to');
+    $start = $fromLabel ?? __('component.date.range.from');
+    $end = $toLabel ?? __('component.date.range.to');
 
     // Everything the period describes, passed to both ends unchanged. A bag rather than markup
     // written on each tag: a loop inside a component tag leaves Blade unable to read the tag, which

@@ -10,8 +10,8 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
+use App\Foundation\Setting\Registry\GlobalSettingRegistry;
 use App\Foundation\Shared\Enum\TimeFormat;
-use App\Foundation\Shared\Setting\GlobalSetting;
 
 require_once __DIR__ . "/../../admin/db/company_db.inc";
 
@@ -25,7 +25,7 @@ require_once __DIR__ . "/../../admin/db/company_db.inc";
  */
 class sys_prefs extends stdClass
 {
-	public GlobalSetting $prefs;
+	public GlobalSettingRegistry $prefs;
 
 	public string $error_logfile;
 	public int $debug;

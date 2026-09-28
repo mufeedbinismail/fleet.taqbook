@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Navigation\Entity;
 
-use App\Foundation\Navigation\Contract\Label;
+use App\Foundation\Navigation\Contract\LabelContract;
 use App\Foundation\Navigation\Enum\Category;
 use App\Foundation\Navigation\ValueObject\SectionGroup;
 use Illuminate\Support\Collection;
@@ -58,7 +58,7 @@ final class Node
         return $this->declaration->key;
     }
 
-    public function label(): Label
+    public function label(): LabelContract
     {
         return $this->declaration->label;
     }

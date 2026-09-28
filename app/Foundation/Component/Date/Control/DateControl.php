@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\Date\Control;
 
-use App\Foundation\Component\Control\Contract\DateControl as DateControlContract;
+use App\Foundation\Component\Control\Contract\DateControlContract;
 use App\Foundation\Component\Control\Control;
 use App\Foundation\Component\Control\Enum\ControlName;
 use App\Foundation\Framework\DTO\ValidationResult;
@@ -49,15 +49,15 @@ final class DateControl extends Control implements DateControlContract
         $day = $this->read($raw);
 
         if ($day === null) {
-            return ValidationResult::error($field, __('foundation.date.error.not_a_date'));
+            return ValidationResult::error($field, __('component.date.error.not_a_date'));
         }
 
         if ($this->earliest !== null && $day->lt($this->earliest)) {
-            return ValidationResult::error($field, __('foundation.date.error.before_earliest'));
+            return ValidationResult::error($field, __('component.date.error.before_earliest'));
         }
 
         if ($this->latest !== null && $day->gt($this->latest)) {
-            return ValidationResult::error($field, __('foundation.date.error.after_latest'));
+            return ValidationResult::error($field, __('component.date.error.after_latest'));
         }
 
         return ValidationResult::success();

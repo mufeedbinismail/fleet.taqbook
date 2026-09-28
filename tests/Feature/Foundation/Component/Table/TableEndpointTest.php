@@ -3,7 +3,7 @@
 namespace Tests\Feature\Foundation\Component\Table;
 
 use App\Foundation\Component\Table\Builder\TableBuilder;
-use App\Foundation\Component\Table\Contract\TableDefinition;
+use App\Foundation\Component\Table\Contract\TableDefinitionContract;
 use App\Foundation\Component\Table\Enum\DataType;
 use App\Foundation\Component\Table\ValueObject\ColumnDefinition;
 use App\Foundation\Component\Table\ValueObject\Table;
@@ -11,6 +11,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Testing\TestResponse;
 use Tests\Concern\ReadsCsv;
+use Tests\Concern\SeedsStock;
 use Tests\TestCase;
 
 /**
@@ -172,7 +173,7 @@ class TableEndpointTest extends TestCase
 /**
  * The same table with a field written but never drawn, and one that is neither.
  */
-class UndrawnFieldStockTable implements TableDefinition
+class UndrawnFieldStockTable implements TableDefinitionContract
 {
     public static function routeName(): string
     {

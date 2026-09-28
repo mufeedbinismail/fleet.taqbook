@@ -2,34 +2,39 @@
 
 namespace App\Foundation\Auth\Http\Controller;
 
+use App\Foundation\Auth\Action\LoginAction;
+use App\Foundation\Auth\Action\LogoutAction;
 use App\Foundation\Auth\Http\Request\LoginRequest;
-use App\Foundation\Auth\Service\UserAuthenticator;
 use App\Foundation\Framework\Http\Controller\Controller;
 use Illuminate\Http\Request;
 
 class AuthenticationController extends Controller
 {
-    public function show(UserAuthenticator $authenticator)
+    public function show(Request $request)
     {
-        if ($authenticator->check()) {
+        if ($request->user() !== null) {
             return redirect()->intended($this->defaultTarget());
         }
 
-        return view('pages.foundation.login');
+        return view('pages.auth.login');
     }
 
-    public function login(LoginRequest $request, UserAuthenticator $authenticator)
+    public function login(LoginRequest $request, LoginAction $action)
     {
-        $authenticator->authenticate($request);
+        $intent = $request->toIntent();
+
+        $this->refuse($action->validate($intent));
+
+        $action->execute($intent, $request->session());
 
         return redirect()->intended($this->defaultTarget());
     }
 
-    public function logout(Request $request, UserAuthenticator $authenticator)
+    public function logout(Request $request, LogoutAction $action)
     {
-        $authenticator->logout($request);
+        $action->execute($request->session());
 
-        return view('pages.foundation.logout');
+        return view('pages.auth.logout');
     }
 
     /**

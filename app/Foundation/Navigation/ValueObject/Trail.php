@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Navigation\ValueObject;
 
-use App\Foundation\Navigation\Contract\Label;
+use App\Foundation\Navigation\Contract\LabelContract;
 use App\Foundation\Navigation\Entity\Node;
 use Countable;
 use Illuminate\Support\Collection;
@@ -38,9 +38,9 @@ final class Trail implements Countable
     }
 
     /**
-     * @param  Crumb|Label|string  $crumb  a bare label becomes a step naming a record
+     * @param  Crumb|LabelContract|string  $crumb  a bare label becomes a step naming a record
      */
-    public function with(Crumb|Label|string $crumb): self
+    public function with(Crumb|LabelContract|string $crumb): self
     {
         return new self([...$this->crumbs, $crumb instanceof Crumb ? $crumb : Crumb::of($crumb)]);
     }

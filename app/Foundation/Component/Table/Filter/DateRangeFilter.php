@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\Table\Filter;
 
-use App\Foundation\Component\Control\Contract\PeriodControl;
+use App\Foundation\Component\Control\Contract\PeriodControlContract;
 use App\Foundation\Component\DateRange\Control\DateRangeControl;
 use App\Foundation\Shared\ValueObject\DomainDateTime;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -16,12 +16,12 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  */
 final class DateRangeFilter extends ColumnFilter
 {
-    public function __construct(?string $column = null, private readonly PeriodControl $control = new DateRangeControl)
+    public function __construct(?string $column = null, private readonly PeriodControlContract $control = new DateRangeControl)
     {
         parent::__construct($column);
     }
 
-    protected function control(): PeriodControl
+    protected function control(): PeriodControlContract
     {
         return $this->control;
     }

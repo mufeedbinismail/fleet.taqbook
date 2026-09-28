@@ -4,7 +4,7 @@ namespace App\Foundation\Component\Table\Builder;
 
 use App\Foundation\Component\Table\Enum\Stick;
 use App\Foundation\Component\Table\Exception\TableException;
-use App\Foundation\Component\Table\Mapper\RowMapper;
+use App\Foundation\Component\Table\RowMapper;
 use App\Foundation\Component\Table\Support\SortExpression;
 use App\Foundation\Component\Table\ValueObject\ColumnDefinition;
 use App\Foundation\Component\Table\ValueObject\ColumnSort;

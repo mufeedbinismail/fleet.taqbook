@@ -2,7 +2,7 @@
 
 namespace App\Trade\Sale\Entity;
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Foundation\Shared\Enum\TransactionEffect;
 use App\Foundation\Shared\ValueObject\DomainDateTime;
 use App\Foundation\Shared\ValueObject\TypedId;

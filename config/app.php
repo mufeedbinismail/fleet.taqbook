@@ -187,16 +187,19 @@ return [
          * Application Service Providers...
          */
         \App\Foundation\Framework\Provider\AppServiceProvider::class,
+        \App\Foundation\Setting\Provider\SettingServiceProvider::class,
         \App\Foundation\Auth\Provider\AuthServiceProvider::class,
         \App\Foundation\Framework\Provider\BladeServiceProvider::class,
         // \App\Foundation\Framework\Provider\BroadcastServiceProvider::class,
         \App\Foundation\Framework\Provider\EventServiceProvider::class,
         \App\Foundation\Framework\Provider\RouteServiceProvider::class,
-        \App\Foundation\Component\Provider\ComponentServiceProvider::class,
+        \App\Foundation\Component\ComponentServiceProvider::class,
         \App\Foundation\Navigation\Provider\NavigationServiceProvider::class,
         \App\Legacy\Provider\LegacyServiceProvider::class,
-        \App\Finance\Provider\FinanceServiceProvider::class,
+        \App\Finance\FinanceServiceProvider::class,
+        \App\Inventory\Provider\InventoryServiceProvider::class,
         \App\Trade\Marketplace\Provider\MarketplaceServiceProvider::class,
+        \App\Trade\Sale\Provider\SaleServiceProvider::class,
     ])->toArray(),
 
     /*

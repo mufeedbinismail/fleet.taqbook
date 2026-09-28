@@ -2,7 +2,7 @@
 
 namespace App\Trade\Sale\Entity;
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use Brick\Money\Money;
 
 /**

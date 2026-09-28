@@ -2,8 +2,9 @@
 
 namespace App\Foundation\Navigation\ValueObject;
 
-use App\Foundation\Navigation\Contract\Label;
+use App\Foundation\Navigation\Contract\LabelContract;
 use App\Foundation\Navigation\Entity\Node;
+use App\Foundation\Navigation\Label\PlainLabel;
 
 /**
  * One step of a breadcrumb trail.
@@ -17,7 +18,7 @@ use App\Foundation\Navigation\Entity\Node;
 final class Crumb
 {
     public function __construct(
-        public readonly Label $label,
+        public readonly LabelContract $label,
         public readonly ?string $url = null,
         public readonly ?Node $node = null,
     ) {}
@@ -31,7 +32,7 @@ final class Crumb
      * A step naming a record. It carries no address by default: the page that appends one is
      * already on it.
      */
-    public static function of(Label|string $label, ?string $url = null): self
+    public static function of(LabelContract|string $label, ?string $url = null): self
     {
         return new self(is_string($label) ? PlainLabel::of($label) : $label, $url);
     }

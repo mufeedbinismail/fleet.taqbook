@@ -2,15 +2,15 @@
 
 namespace App\Trade\Marketplace\Entity;
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Tax\Contract\TaxableItemContract;
 use App\Finance\Tax\Entity\ItemTaxSetting;
 use App\Finance\Tax\Entity\TaxableItem;
-use App\Finance\Tax\Entity\TaxableItemSource;
 use App\Finance\Tax\Repository\TaxRepository;
 use App\Finance\Tax\ValueObject\TaxBreakdown;
 use Brick\Money\Money;
 
-class Expense implements TaxableItemSource
+class Expense implements TaxableItemContract
 {
     public string $uuid;
 

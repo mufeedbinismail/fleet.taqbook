@@ -1,6 +1,6 @@
 <?php
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Trade\Marketplace\Cart\CustomerSettlementCart;
 use App\Trade\Sale\Enum\PaymentMethod;
 use App\Trade\Shared\Enum\CustomerTransactionSource;

@@ -46,7 +46,7 @@
     // which is all "the switch alone" can mean before there is a switch.
     $word = fn ($which) => ($label = $states[$which]->label ?? null) === false
         ? ''
-        : ($label ?? __('foundation.toggle.'.$which));
+        : ($label ?? __('component.toggle.'.$which));
 
     $data = Control::config($states->all());
 

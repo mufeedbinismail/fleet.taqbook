@@ -2,19 +2,19 @@
 
 namespace App\Foundation\Component\Table\Filter;
 
-use App\Foundation\Component\Control\Contract\ScalarControl;
+use App\Foundation\Component\Control\Contract\ScalarControlContract;
 use App\Foundation\Component\Text\Control\TextControl;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 final class ExactFilter extends ColumnFilter
 {
-    public function __construct(?string $column = null, private readonly ScalarControl $control = new TextControl)
+    public function __construct(?string $column = null, private readonly ScalarControlContract $control = new TextControl)
     {
         parent::__construct($column);
     }
 
-    protected function control(): ScalarControl
+    protected function control(): ScalarControlContract
     {
         return $this->control;
     }

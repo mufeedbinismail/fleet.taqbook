@@ -101,12 +101,12 @@ class RoleEditorTest extends TestCase
             ])
             ->assertOk()
             ->assertJsonStructure([
-                'state' => ['id', 'role_name', 'inactive', 'permissions', 'own'],
-                'notice',
+                'data' => ['id', 'role_name', 'inactive', 'permissions', 'own'],
+                'message',
             ])
-            ->assertJsonPath('state.role_name', 'ZZ Test Role Renamed')
-            ->assertJsonPath('state.own', true)
-            ->assertJsonPath('state.permissions.0', Permission::MANAGE_ROLE);
+            ->assertJsonPath('data.role_name', 'ZZ Test Role Renamed')
+            ->assertJsonPath('data.own', true)
+            ->assertJsonPath('data.permissions.0', Permission::MANAGE_ROLE);
     }
 
     public function test_a_name_another_role_already_carries_is_refused_against_the_name_field(): void
@@ -139,8 +139,8 @@ class RoleEditorTest extends TestCase
         $this->actingAs($user)
             ->deleteJson('/access/roles/'.$spare->id)
             ->assertOk()
-            ->assertJsonPath('state.id', null)
-            ->assertJsonPath('state.role_name', '');
+            ->assertJsonPath('data.id', null)
+            ->assertJsonPath('data.role_name', '');
 
         $this->assertNull(Role::find($spare->id));
     }

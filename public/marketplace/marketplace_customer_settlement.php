@@ -1,6 +1,6 @@
 <?php
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Foundation\Auth\Constant\Permission;
 use App\Trade\Marketplace\Cart\CustomerSettlementCart;
 use App\Trade\Marketplace\Service\CustomerSettlementCartService;

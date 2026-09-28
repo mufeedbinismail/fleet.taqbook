@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Foundation\Component\Select;
 
-use App\Foundation\Component\Select\Contract\NarrowsOptions;
-use App\Foundation\Component\Select\Contract\SelectDefinition;
+use App\Foundation\Component\Select\Contract\NarrowsOptionsContract;
+use App\Foundation\Component\Select\Contract\SelectDefinitionContract;
 use App\Foundation\Component\Select\Service\OptionService;
 use App\Foundation\Component\Select\ValueObject\SelectState;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -148,7 +148,7 @@ class OptionEndpointTest extends TestCase
 /**
  * The people this file seeded and nobody else, unnarrowed.
  */
-class StaffSelect implements SelectDefinition
+class StaffSelect implements SelectDefinitionContract
 {
     public function query(): QueryBuilder
     {
@@ -177,7 +177,7 @@ class StaffSelect implements SelectDefinition
 /**
  * The same people, narrowed by a role the screen declares.
  */
-class RoleStaffSelect extends StaffSelect implements NarrowsOptions
+class RoleStaffSelect extends StaffSelect implements NarrowsOptionsContract
 {
     public static function routeName(): string
     {

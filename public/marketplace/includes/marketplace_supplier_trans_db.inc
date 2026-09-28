@@ -1,11 +1,11 @@
 <?php
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Finance\Tax\Collection\TaxableItemCollection;
 use App\Finance\Tax\Repository\TaxRepository;
 use App\Finance\Tax\Service\TaxService;
 use App\Trade\Marketplace\Cart\SupplierTransCart;
-use App\Trade\Marketplace\Cart\SupplierTransCartLine;
+use App\Trade\Marketplace\Entity\SupplierTransCartLine;
 use App\Trade\Shared\Enum\SupplierTransactionSource;
 use App\Foundation\Shared\Enum\SystemType;
 use App\Foundation\Shared\Enum\TransactionEffect;

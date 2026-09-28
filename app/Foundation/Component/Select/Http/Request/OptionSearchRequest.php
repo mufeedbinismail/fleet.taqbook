@@ -2,8 +2,8 @@
 
 namespace App\Foundation\Component\Select\Http\Request;
 
-use App\Foundation\Component\Select\Contract\NarrowsOptions;
-use App\Foundation\Component\Select\Contract\SelectDefinition;
+use App\Foundation\Component\Select\Contract\NarrowsOptionsContract;
+use App\Foundation\Component\Select\Contract\SelectDefinitionContract;
 use App\Foundation\Component\Select\Exception\SelectNotDefinedException;
 use App\Foundation\Component\Select\ValueObject\SelectState;
 use Illuminate\Foundation\Http\FormRequest;
@@ -35,7 +35,7 @@ final class OptionSearchRequest extends FormRequest
             // more values than a page can show is asking a question the control cannot draw.
             'selected' => ['nullable', 'array', 'max:'.config('component.select.max_per_page')],
             'selected.*' => ['string', 'max:255'],
-            ...($select instanceof NarrowsOptions ? $select->filterRules() : []),
+            ...($select instanceof NarrowsOptionsContract ? $select->filterRules() : []),
         ];
     }
 
@@ -45,7 +45,7 @@ final class OptionSearchRequest extends FormRequest
      *
      * @throws SelectNotDefinedException if nothing named one
      */
-    public function select(): SelectDefinition
+    public function select(): SelectDefinitionContract
     {
         $named = $this->route()?->defaults['select'] ?? null;
 
@@ -72,7 +72,7 @@ final class OptionSearchRequest extends FormRequest
                 static fn ($value) => (string) $value,
                 $validated['selected'] ?? [],
             ))),
-            filters: $select instanceof NarrowsOptions
+            filters: $select instanceof NarrowsOptionsContract
                 ? array_intersect_key($validated, $select->filterRules())
                 : [],
         );

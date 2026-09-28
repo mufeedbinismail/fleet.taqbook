@@ -31,7 +31,7 @@ function legacy_url(string $path, array $parameters = [], ?bool $secure = null):
  *
  * @param  array|string|null  $key
  * @param  mixed  $default
- * @return mixed|\App\Foundation\Shared\Setting\GlobalSetting
+ * @return mixed|\App\Foundation\Setting\Registry\GlobalSettingRegistry
  */
 function settings($key = null, $default = Arr::NOT_SET)
 {
@@ -53,7 +53,7 @@ function settings($key = null, $default = Arr::NOT_SET)
  *
  * @param  array|string|null  $key
  * @param  mixed  $default
- * @return mixed|\App\Foundation\Shared\Setting\UserSetting
+ * @return mixed|\App\Foundation\Setting\Registry\UserSettingRegistry
  */
 function user_settings($key = null, $default = Arr::NOT_SET)
 {

@@ -11,11 +11,11 @@
     /*
             <button x-modal:open="{ name: 'user-editor', with: row }">Edit</button>
 
-            <x-ui.modal name="user-editor" :title="__('foundation.user.edit')" size="lg" static
+            <x-ui.modal name="user-editor" :title="__('auth.user.edit')" size="lg" static
                         @modal:showing="edit($event.detail)">
                 ...fields...
                 <x-slot:actions>
-                    <x-ui.button @click="save()">{{ __('foundation.user.action.save') }}</x-ui.button>
+                    <x-ui.button @click="save()">{{ __('auth.user.action.save') }}</x-ui.button>
                 </x-slot>
             </x-ui.modal>
 
@@ -72,7 +72,7 @@
 
             @if ($dismissible)
                 <button type="button" class="x-modal__close" x-modal:close
-                        aria-label="{{ __('foundation.modal.close') }}"></button>
+                        aria-label="{{ __('component.modal.close') }}"></button>
             @endif
         </header>
     @endif

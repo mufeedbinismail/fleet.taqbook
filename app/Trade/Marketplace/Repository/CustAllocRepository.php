@@ -4,8 +4,8 @@ namespace App\Trade\Marketplace\Repository;
 
 use App\Foundation\Shared\Enum\SystemType;
 use App\Foundation\Shared\ValueObject\TypedId;
-use App\Trade\Sale\Query\Allocation\AllocateesQuery;
-use App\Trade\Sale\Query\Allocation\AllocatorsQuery;
+use App\Trade\Sale\Query\AllocateesQuery;
+use App\Trade\Sale\Query\AllocatorsQuery;
 use App\Trade\Shared\Collection\DraftAllocationLineCollection;
 
 class CustAllocRepository

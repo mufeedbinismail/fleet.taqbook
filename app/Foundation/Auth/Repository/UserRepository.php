@@ -5,9 +5,9 @@ namespace App\Foundation\Auth\Repository;
 use App\Foundation\Auth\Constant\DisplayPreference;
 use App\Foundation\Auth\Intent\SaveUserIntent;
 use App\Foundation\Auth\Model\User;
-use App\Foundation\Shared\Enum\Skin;
+use App\Foundation\Framework\Enum\Skin;
+use App\Foundation\Setting\Registry\UserSettingRegistry;
 use App\Foundation\Shared\Exception\ResourceNotFoundException;
-use App\Foundation\Shared\Setting\UserSetting;
 
 class UserRepository
 {
@@ -70,7 +70,7 @@ class UserRepository
         $record = new User;
         $record->user_id = $login;
 
-        $defaults = UserSetting::defaults();
+        $defaults = UserSettingRegistry::defaults();
 
         foreach (DisplayPreference::all() as $column) {
             if (($defaults[$column] ?? null) !== null) {

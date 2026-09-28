@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\Select\Service;
 
-use App\Foundation\Component\Select\Contract\SelectDefinition;
+use App\Foundation\Component\Select\Contract\SelectDefinitionContract;
 use App\Foundation\Component\Select\Exception\SelectException;
 use App\Foundation\Component\Select\Repository\OptionRepository;
 use App\Foundation\Component\Select\ValueObject\OptionChannel;
@@ -13,7 +13,7 @@ use Illuminate\Routing\Router;
 class OptionService
 {
     public function __construct(
-        private readonly OptionRepository $options,
+        private readonly OptionRepository $repository,
         private readonly Router $router,
     ) {}
 
@@ -25,13 +25,13 @@ class OptionService
      *
      * @throws SelectException if the route the definition names is not registered
      */
-    public function channel(SelectDefinition $select, array $filters = []): OptionChannel
+    public function channel(SelectDefinitionContract $select, array $filters = []): OptionChannel
     {
         // Checked before any row is read, so a definition with nowhere to fall back to is refused
         // on its first request rather than on the day its set grows.
         $source = $this->source($select, $filters);
 
-        $page = $this->options->page($select, new SelectState(
+        $page = $this->repository->page($select, new SelectState(
             search: '',
             page: 1,
             perPage: (int) config('component.select.inline_up_to'),
@@ -52,7 +52,7 @@ class OptionService
      *
      * @throws SelectException if the route the definition names is not registered
      */
-    public function lookup(SelectDefinition $select, array $filters = []): OptionChannel
+    public function lookup(SelectDefinitionContract $select, array $filters = []): OptionChannel
     {
         return OptionChannel::fromSource($this->source($select, $filters));
     }
@@ -62,7 +62,7 @@ class OptionService
      *
      * @throws SelectException
      */
-    private function source(SelectDefinition $select, array $filters): OptionSource
+    private function source(SelectDefinitionContract $select, array $filters): OptionSource
     {
         if (! $this->router->has($select::routeName())) {
             throw SelectException::unreachable($select::class, $select::routeName());

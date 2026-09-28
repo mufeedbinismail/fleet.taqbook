@@ -2,10 +2,11 @@
 
 namespace App\Trade\Marketplace\Cart;
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Finance\Tax\Entity\TaxSetting;
 use App\Foundation\Shared\Enum\SystemType;
 use App\Foundation\Shared\ValueObject\TypedId;
+use App\Trade\Marketplace\Entity\SupplierTransCartLine;
 use Brick\Money\Money;
 
 class SupplierTransCart

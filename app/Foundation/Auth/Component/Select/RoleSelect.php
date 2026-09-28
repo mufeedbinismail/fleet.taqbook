@@ -4,8 +4,8 @@ namespace App\Foundation\Auth\Component\Select;
 
 use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Auth\Model\Role;
-use App\Foundation\Component\Select\Contract\NarrowsOptions;
-use App\Foundation\Component\Select\Contract\SelectDefinition;
+use App\Foundation\Component\Select\Contract\NarrowsOptionsContract;
+use App\Foundation\Component\Select\Contract\SelectDefinitionContract;
 use App\Foundation\Component\Select\ValueObject\SelectState;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -16,7 +16,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * find the accounts still holding one. `inactive=0` is the one narrowing, for a list that offers
  * roles to be newly given rather than looked up.
  */
-final class RoleSelect implements NarrowsOptions, SelectDefinition
+final class RoleSelect implements NarrowsOptionsContract, SelectDefinitionContract
 {
     public const INACTIVE = 'inactive';
 
@@ -30,7 +30,7 @@ final class RoleSelect implements NarrowsOptions, SelectDefinition
                 fn (EloquentBuilder $query) => $query->where('security_roles.reserved', false),
             )
             ->select(['security_roles.id as value', 'security_roles.role as label'])
-            ->selectRaw('CASE WHEN security_roles.inactive THEN ? END as description', [__('foundation.role.picker.inactive')])
+            ->selectRaw('CASE WHEN security_roles.inactive THEN ? END as description', [__('auth.role.picker.inactive')])
             ->orderBy('security_roles.role');
     }
 

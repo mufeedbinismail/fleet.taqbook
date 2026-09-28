@@ -11,6 +11,8 @@ require __DIR__.'/guest.php';
 // Applied here rather than in each domain file so authentication is the default: anything
 // reachable without a session has to join the short list above, where it stays conspicuous.
 Route::middleware(['auth', 'auth.session', IdleTimeout::class])->group(function () {
-    require __DIR__.'/foundation.php';
+    require __DIR__.'/auth.php';
+    require __DIR__.'/navigation.php';
+    require __DIR__.'/component.php';
     require __DIR__.'/sale.php';
 });

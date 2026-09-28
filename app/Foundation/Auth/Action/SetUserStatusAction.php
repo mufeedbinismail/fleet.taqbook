@@ -11,8 +11,8 @@ use App\Foundation\Framework\DTO\ValidationResult;
 class SetUserStatusAction
 {
     public function __construct(
-        protected UserRepository $users,
-        protected TransactionAttributionExistsQuery $attribution,
+        protected UserRepository $repository,
+        protected TransactionAttributionExistsQuery $transactionAttributionExistsQuery,
     ) {}
 
     /**
@@ -27,15 +27,15 @@ class SetUserStatusAction
         }
 
         if (User::find($userId)?->reserved) {
-            return ValidationResult::error('user', __('foundation.user.error.reserved'));
+            return ValidationResult::error('user', __('auth.user.error.reserved'));
         }
 
         if ($userId === $actor->id) {
-            return ValidationResult::error('user', __('foundation.user.error.self_deactivation'));
+            return ValidationResult::error('user', __('auth.user.error.self_deactivation'));
         }
 
-        if (! $this->attribution->builder($userId)->exists()) {
-            return ValidationResult::error('user', __('foundation.user.error.no_history'));
+        if (! $this->transactionAttributionExistsQuery->builder($userId)->exists()) {
+            return ValidationResult::error('user', __('auth.user.error.no_history'));
         }
 
         return ValidationResult::success();
@@ -52,6 +52,6 @@ class SetUserStatusAction
             throw UserException::unchecked((string) $checked->field);
         }
 
-        $this->users->setStatus($userId, $inactive);
+        $this->repository->setStatus($userId, $inactive);
     }
 }

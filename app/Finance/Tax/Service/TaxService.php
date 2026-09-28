@@ -2,13 +2,13 @@
 
 namespace App\Finance\Tax\Service;
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Finance\Tax\Collection\DraftTaxGroupLineCollection;
 use App\Finance\Tax\Collection\TaxableItemCollection;
 use App\Finance\Tax\Collection\TaxGroupLineCollection;
+use App\Finance\Tax\Contract\TaxableItemContract;
 use App\Finance\Tax\Entity\ItemTaxSetting;
 use App\Finance\Tax\Entity\TaxableItem;
-use App\Finance\Tax\Entity\TaxableItemSource;
 use App\Finance\Tax\Entity\TaxGroupLine;
 use App\Finance\Tax\Entity\TaxSetting;
 use App\Finance\Tax\Enum\TaxAlgorithm;
@@ -35,7 +35,7 @@ class TaxService
     }
 
     public function getTaxBreakdownForSource(
-        TaxableItemSource $source,
+        TaxableItemContract $source,
         TaxSetting $taxSetting
     ): TaxBreakdown {
         return $this->getTaxBreakdownForItem($source->toTaxableItem(), $taxSetting);

@@ -2,7 +2,7 @@
 
 namespace App\Trade\Marketplace\Repository;
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Trade\Marketplace\Entity\Expense;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;

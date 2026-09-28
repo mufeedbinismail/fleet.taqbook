@@ -2,8 +2,8 @@
 
 namespace App\Foundation\Auth\Http\Middleware;
 
-use App\Foundation\Auth\Service\UserAuthenticator;
-use App\Foundation\Framework\Http\Response\Envelope;
+use App\Foundation\Auth\Action\LogoutAction;
+use App\Foundation\Framework\Http\Response\ResponseEnvelope;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,12 +13,12 @@ class IdleTimeout
     protected const KEY = 'auth.last_activity';
 
     public function __construct(
-        protected UserAuthenticator $authenticator
+        protected LogoutAction $logoutAction
     ) {}
 
     public function handle(Request $request, Closure $next): Response
     {
-        if (! $this->authenticator->check()) {
+        if ($request->user() === null) {
             return $next($request);
         }
 
@@ -37,12 +37,12 @@ class IdleTimeout
     /** Log out, flush the session, and bounce to the login screen. */
     protected function timedOut(Request $request): Response
     {
-        $this->authenticator->logout($request);
+        $this->logoutAction->execute($request->session());
 
         $message = __('Your session has expired. Please log in again.');
 
         if ($request->expectsJson()) {
-            return Envelope::failed($message, code: 401)->toResponse($request);
+            return ResponseEnvelope::failed($message, code: 401)->toResponse($request);
         }
 
         return redirect()

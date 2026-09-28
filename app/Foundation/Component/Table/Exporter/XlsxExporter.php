@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\Table\Exporter;
 
-use App\Foundation\Component\Table\Contract\Exporter;
+use App\Foundation\Component\Table\Contract\ExporterContract;
 use App\Foundation\Component\Table\Exception\TableException;
 use App\Foundation\Component\Table\ValueObject\ExportSet;
 use App\Foundation\Framework\DTO\ValidationResult;
@@ -20,7 +20,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
  * The workbook is held whole in memory until it is written, so this is the one format with a size
  * past which it cannot be produced at all.
  */
-final class XlsxExporter implements Exporter
+final class XlsxExporter implements ExporterContract
 {
     public function validate(ExportSet $set): ValidationResult
     {
@@ -28,7 +28,7 @@ final class XlsxExporter implements Exporter
             return ValidationResult::success();
         }
 
-        return ValidationResult::error('export', __('foundation.table.error.export_too_large', [
+        return ValidationResult::error('export', __('component.table.error.export_too_large', [
             'limit' => number_format($this->limit()),
         ]));
     }

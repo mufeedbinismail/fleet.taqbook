@@ -2,12 +2,12 @@
 
 namespace App\Legacy\Navigation\Condition;
 
-use App\Foundation\Navigation\Contract\Condition;
-use App\Foundation\Shared\Setting\GlobalSetting;
+use App\Foundation\Navigation\Contract\ConditionContract;
+use App\Foundation\Setting\Registry\GlobalSettingRegistry;
 
-final class DimensionsEnabled implements Condition
+final class DimensionsEnabled implements ConditionContract
 {
-    public function __construct(private readonly GlobalSetting $settings) {}
+    public function __construct(private readonly GlobalSettingRegistry $settings) {}
 
     public function __invoke(): bool
     {

@@ -17,9 +17,9 @@ use Illuminate\Validation\ValidationException;
 class TableController extends Controller
 {
     public function __construct(
-        private readonly TableRepository $rows,
-        private readonly ExportService $exports,
-        private readonly TableService $tables,
+        private readonly TableRepository $repository,
+        private readonly ExportService $exportService,
+        private readonly TableService $service,
         private readonly TableBuilder $builder,
     ) {}
 
@@ -33,19 +33,19 @@ class TableController extends Controller
         $state = $request->toState($table->name);
 
         // Asked before either answer: a narrowing nobody can be held to is no safer in a file.
-        $this->refuse($this->tables->validate($table, $state));
+        $this->refuse($this->service->validate($table, $state));
 
         if (! $state->isExport()) {
-            return TablePageResponse::of($this->rows->page($table, $state));
+            return TablePageResponse::of($this->repository->page($table, $state));
         }
 
-        $set = $this->rows->all($table, $state);
+        $set = $this->repository->all($table, $state);
 
         // Asked before writing, so a set the format cannot carry costs nothing to turn away.
-        $this->refuse($this->exports->validate($set, $state->export));
+        $this->refuse($this->exportService->validate($set, $state->export));
 
         return TableExportResponse::of(
-            $this->exports->write($set, $state->export),
+            $this->exportService->write($set, $state->export),
             $state->export,
             $table->name,
         );

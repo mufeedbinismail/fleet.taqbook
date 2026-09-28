@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\Select\Control;
 
-use App\Foundation\Component\Control\Contract\SetControl;
+use App\Foundation\Component\Control\Contract\SetControlContract;
 use App\Foundation\Component\Control\Enum\ControlName;
 use App\Foundation\Component\Select\Exception\SelectException;
 use App\Foundation\Component\Select\ValueObject\Option;
@@ -14,7 +14,7 @@ use App\Foundation\Framework\DTO\ValidationResult;
  * Several values picked from a declared set, which is a different thing to be handed than one of
  * them and not a way of being handed one.
  */
-final class MultiSelectControl extends ChoiceControl implements SetControl
+final class MultiSelectControl extends ChoiceControl implements SetControlContract
 {
     /**
      * A set small enough to be declared in full.
@@ -58,11 +58,11 @@ final class MultiSelectControl extends ChoiceControl implements SetControl
     {
         foreach ($this->values($raw) as $value) {
             if (is_array($value)) {
-                return ValidationResult::error($field, __('foundation.select.error.not_one_value'));
+                return ValidationResult::error($field, __('component.select.error.not_one_value'));
             }
 
             if (! $this->accepts($value)) {
-                return ValidationResult::error($field, __('foundation.select.error.not_a_choice'));
+                return ValidationResult::error($field, __('component.select.error.not_a_choice'));
             }
         }
 

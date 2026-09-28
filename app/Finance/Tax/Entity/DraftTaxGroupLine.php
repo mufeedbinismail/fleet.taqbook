@@ -2,7 +2,7 @@
 
 namespace App\Finance\Tax\Entity;
 
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use Brick\Math\BigDecimal;
 use Brick\Money\Money;
 use Illuminate\Contracts\Support\Arrayable;

@@ -3,7 +3,7 @@
 namespace App\Foundation\Component\Control;
 
 use App\Foundation\Component\Control\Concern\ReadsRawValueConcern;
-use App\Foundation\Component\Control\Contract\Control as ControlContract;
+use App\Foundation\Component\Control\Contract\ControlContract;
 use App\Foundation\Framework\DTO\ValidationResult;
 
 /**

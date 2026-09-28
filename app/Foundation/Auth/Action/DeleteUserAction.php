@@ -11,22 +11,22 @@ use App\Foundation\Framework\DTO\ValidationResult;
 class DeleteUserAction
 {
     public function __construct(
-        protected UserRepository $users,
-        protected TransactionAttributionExistsQuery $attribution,
+        protected UserRepository $repository,
+        protected TransactionAttributionExistsQuery $transactionAttributionExistsQuery,
     ) {}
 
     public function validate(int $userId, User $actor): ValidationResult
     {
         if (User::find($userId)?->reserved) {
-            return ValidationResult::error('user', __('foundation.user.error.reserved'));
+            return ValidationResult::error('user', __('auth.user.error.reserved'));
         }
 
         if ($userId === $actor->id) {
-            return ValidationResult::error('user', __('foundation.user.error.self_removal'));
+            return ValidationResult::error('user', __('auth.user.error.self_removal'));
         }
 
-        if ($this->attribution->builder($userId)->exists()) {
-            return ValidationResult::error('user', __('foundation.user.error.has_history'));
+        if ($this->transactionAttributionExistsQuery->builder($userId)->exists()) {
+            return ValidationResult::error('user', __('auth.user.error.has_history'));
         }
 
         return ValidationResult::success();
@@ -43,6 +43,6 @@ class DeleteUserAction
             throw UserException::unchecked((string) $checked->field);
         }
 
-        $this->users->delete($userId);
+        $this->repository->delete($userId);
     }
 }

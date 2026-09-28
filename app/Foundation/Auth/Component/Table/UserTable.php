@@ -9,7 +9,7 @@ use App\Foundation\Auth\Model\User;
 use App\Foundation\Component\Select\Control\MultiSelectControl;
 use App\Foundation\Component\Select\Service\OptionService;
 use App\Foundation\Component\Table\Builder\TableBuilder;
-use App\Foundation\Component\Table\Contract\TableDefinition;
+use App\Foundation\Component\Table\Contract\TableDefinitionContract;
 use App\Foundation\Component\Table\Enum\DataType;
 use App\Foundation\Component\Table\Enum\Stick;
 use App\Foundation\Component\Table\Filter\BooleanFilter;
@@ -29,12 +29,12 @@ use Illuminate\Support\Facades\DB;
 /**
  * Every login the system holds, and the access each of them works under.
  */
-final class UserTable implements TableDefinition
+final class UserTable implements TableDefinitionContract
 {
     public function __construct(
-        private readonly TransactionAttributionExistsQuery $attribution,
-        private readonly OptionService $options,
-        private readonly RoleSelect $roles,
+        private readonly TransactionAttributionExistsQuery $transactionAttributionExistsQuery,
+        private readonly OptionService $optionService,
+        private readonly RoleSelect $roleSelect,
         private readonly Guard $auth,
         private readonly Gate $gate,
     ) {}
@@ -54,7 +54,7 @@ final class UserTable implements TableDefinition
             // the roster as a whole, not compared login by login.
             ->filterable(new FilterDefinition(
                 'inactive',
-                __('foundation.user.filter.inactive'),
+                __('auth.user.filter.inactive'),
                 new BooleanFilter('users.inactive'),
             ))
             ->defaultSort('users.user_id')
@@ -74,7 +74,7 @@ final class UserTable implements TableDefinition
      */
     private function row(User $record): array
     {
-        $own = (int) $record->id === (int) $this->auth->id();
+        $own = $record->uuid === $this->auth->id();
         $history = (bool) $record->has_history;
 
         return [
@@ -123,7 +123,7 @@ final class UserTable implements TableDefinition
      */
     private function count(EloquentBuilder|QueryBuilder $rows): array
     {
-        return [['user_id' => __('foundation.user.footer.total', ['count' => $rows->count()])]];
+        return [['user_id' => __('auth.user.footer.total', ['count' => $rows->count()])]];
     }
 
     /**
@@ -155,7 +155,7 @@ final class UserTable implements TableDefinition
                 'users.pos',
             ])
             // Appended rather than listed above, because select() replaces the list it is given.
-            ->selectSub($this->attribution->builder(DB::raw('users.id')), 'has_history');
+            ->selectSub($this->transactionAttributionExistsQuery->builder(DB::raw('users.id')), 'has_history');
     }
 
     /**
@@ -166,7 +166,7 @@ final class UserTable implements TableDefinition
         return [
             new ColumnDefinition(
                 'user_id',
-                __('foundation.user.column.login'),
+                __('auth.user.column.login'),
                 sortable: 'users.user_id',
                 filter: new TextFilter('users.user_id'),
                 width: '14rem',
@@ -174,16 +174,16 @@ final class UserTable implements TableDefinition
             ),
             new ColumnDefinition(
                 'real_name',
-                __('foundation.user.column.real_name'),
+                __('auth.user.column.real_name'),
                 sortable: 'users.real_name',
                 filter: new TextFilter('users.real_name'),
                 width: '14rem',
             ),
-            new ColumnDefinition('phone', __('foundation.user.column.phone'), width: '10rem'),
-            new ColumnDefinition('email', __('foundation.user.column.email'), sortable: 'users.email', filter: new TextFilter('users.email'), width: '16rem'),
+            new ColumnDefinition('phone', __('auth.user.column.phone'), width: '10rem'),
+            new ColumnDefinition('email', __('auth.user.column.email'), sortable: 'users.email', filter: new TextFilter('users.email'), width: '16rem'),
             new ColumnDefinition(
                 'last_visit',
-                __('foundation.user.column.last_visit'),
+                __('auth.user.column.last_visit'),
                 sortable: 'users.last_visit_date',
                 filter: new DateRangeFilter('users.last_visit_date'),
                 dataType: DataType::DateTime,
@@ -191,13 +191,13 @@ final class UserTable implements TableDefinition
             ),
             new ColumnDefinition(
                 'role_name',
-                __('foundation.user.column.role'),
+                __('auth.user.column.role'),
                 sortable: 'security_roles.role',
                 // Narrowed by the id rather than by the name the column draws: two roles are free
                 // to be renamed into each other's spelling, and neither is the one asked for.
                 // Several at once, because who holds access of some weight is a question about a
                 // set of roles rather than about any one of them.
-                filter: new InFilter('users.role_id', MultiSelectControl::from($this->options->channel($this->roles))),
+                filter: new InFilter('users.role_id', MultiSelectControl::from($this->optionService->channel($this->roleSelect))),
                 width: '10rem',
             ),
             new ColumnDefinition('inactive', dataType: DataType::Boolean, visible: false, exportable: false),

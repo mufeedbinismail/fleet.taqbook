@@ -1,7 +1,7 @@
 <?php
 
-use App\Finance\Tax\Query\ItemTaxType\ItemTaxTypeExemptionsQuery;
-use App\Finance\Tax\Query\ItemTaxType\ItemTaxTypeForItemQuery;
+use App\Finance\Tax\Query\ItemTaxTypeExemptionsQuery;
+use App\Finance\Tax\Query\ItemTaxTypeForItemQuery;
 
 /**********************************************************************
     Copyright (C) FrontAccounting, LLC.

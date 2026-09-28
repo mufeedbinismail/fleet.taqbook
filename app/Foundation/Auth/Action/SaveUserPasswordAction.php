@@ -9,7 +9,7 @@ use App\Foundation\Framework\DTO\ValidationResult;
 
 class SaveUserPasswordAction
 {
-    public function __construct(protected UserRepository $users) {}
+    public function __construct(protected UserRepository $userRepository) {}
 
     /**
      * Read case-insensitively: a password differing from the login only in capitals is the same
@@ -18,7 +18,7 @@ class SaveUserPasswordAction
     public function validate(string $login, string $password): ValidationResult
     {
         if ($login !== '' && stripos($password, $login) !== false) {
-            return ValidationResult::error('password', __('foundation.user.password.error.contains_login'));
+            return ValidationResult::error('password', __('auth.user.password.error.contains_login'));
         }
 
         return ValidationResult::success();
@@ -35,6 +35,6 @@ class SaveUserPasswordAction
             throw UserException::unchecked((string) $checked->field);
         }
 
-        $this->users->setPassword($user, $password);
+        $this->userRepository->setPassword($user, $password);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\Table\Filter;
 
-use App\Foundation\Component\Control\Contract\BooleanControl;
+use App\Foundation\Component\Control\Contract\BooleanControlContract;
 use App\Foundation\Component\Toggle\Control\ToggleControl;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -12,12 +12,12 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  */
 final class BooleanFilter extends ColumnFilter
 {
-    public function __construct(?string $column = null, private readonly BooleanControl $control = new ToggleControl)
+    public function __construct(?string $column = null, private readonly BooleanControlContract $control = new ToggleControl)
     {
         parent::__construct($column);
     }
 
-    protected function control(): BooleanControl
+    protected function control(): BooleanControlContract
     {
         return $this->control;
     }

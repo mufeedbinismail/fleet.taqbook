@@ -2,9 +2,9 @@
 
 namespace App\Foundation\Navigation\Builder;
 
-use App\Foundation\Navigation\Contract\Condition;
-use App\Foundation\Navigation\Contract\Label;
-use App\Foundation\Navigation\Contract\Target;
+use App\Foundation\Navigation\Contract\ConditionContract;
+use App\Foundation\Navigation\Contract\LabelContract;
+use App\Foundation\Navigation\Contract\TargetContract;
 use App\Foundation\Navigation\Entity\HiddenDestination;
 use App\Foundation\Navigation\Entity\Section;
 use App\Foundation\Navigation\Exception\NavigationException;
@@ -16,7 +16,7 @@ use App\Foundation\Navigation\Exception\NavigationException;
  */
 final class HiddenDestinationBuilder
 {
-    private ?Target $target = null;
+    private ?TargetContract $target = null;
 
     private ?string $permission = null;
 
@@ -30,7 +30,7 @@ final class HiddenDestinationBuilder
      */
     public function __construct(
         private readonly string $key,
-        private readonly Label $label,
+        private readonly LabelContract $label,
         private string $slot,
     ) {}
 
@@ -46,7 +46,7 @@ final class HiddenDestinationBuilder
         return $this;
     }
 
-    public function target(Target $target): self
+    public function target(TargetContract $target): self
     {
         $this->target = $target;
 
@@ -61,7 +61,7 @@ final class HiddenDestinationBuilder
     }
 
     /**
-     * @param  class-string<Condition>  $condition
+     * @param  class-string<ConditionContract>  $condition
      */
     public function when(string $condition): self
     {

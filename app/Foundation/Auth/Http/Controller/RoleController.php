@@ -13,16 +13,16 @@ use App\Foundation\Auth\Service\RoleService;
 use App\Foundation\Auth\ValueObject\RoleState;
 use App\Foundation\Component\Select\Service\OptionService;
 use App\Foundation\Framework\Http\Controller\Controller;
-use App\Foundation\Framework\Http\Response\Envelope;
+use App\Foundation\Framework\Http\Response\ResponseEnvelope;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
     public function __construct(
-        protected RoleSelect $roles,
-        protected OptionService $options,
-        protected PermissionRepository $permissions,
+        protected RoleSelect $select,
+        protected OptionService $optionService,
+        protected PermissionRepository $permissionRepository,
         protected RoleService $service,
     ) {}
 
@@ -32,34 +32,34 @@ class RoleController extends Controller
      */
     public function index(RoleEditorRequest $request): View
     {
-        return view('pages.foundation.security-role', [
-            'title' => __('foundation.role.title'),
-            'groups' => $this->permissions->catalog(),
-            'roles' => $this->options->lookup($this->roles),
+        return view('pages.auth.security-role', [
+            'title' => __('auth.role.title'),
+            'groups' => $this->permissionRepository->catalog(),
+            'roles' => $this->optionService->lookup($this->select),
             'state' => $this->state($request->roleId(), $request)->toArray(),
         ]);
     }
 
-    public function show(Request $request, int $role): Envelope
+    public function show(Request $request, int $role): ResponseEnvelope
     {
-        return Envelope::ok(data: $this->state($role, $request)->toArray());
+        return ResponseEnvelope::ok(data: $this->state($role, $request)->toArray());
     }
 
-    public function store(SaveRoleRequest $request, SaveRoleAction $action): Envelope
-    {
-        $saved = $this->save($request, $action);
-
-        return $this->payload($this->state($saved->id, $request), __('foundation.role.notice.created'));
-    }
-
-    public function update(SaveRoleRequest $request, SaveRoleAction $action, int $role): Envelope
+    public function store(SaveRoleRequest $request, SaveRoleAction $action): ResponseEnvelope
     {
         $saved = $this->save($request, $action);
 
-        return $this->payload($this->state($saved->id, $request), __('foundation.role.notice.updated'));
+        return $this->payload($this->state($saved->id, $request), __('auth.role.notice.created'));
     }
 
-    public function destroy(Request $request, DeleteRoleAction $action, int $role): Envelope
+    public function update(SaveRoleRequest $request, SaveRoleAction $action, int $role): ResponseEnvelope
+    {
+        $saved = $this->save($request, $action);
+
+        return $this->payload($this->state($saved->id, $request), __('auth.role.notice.updated'));
+    }
+
+    public function destroy(Request $request, DeleteRoleAction $action, int $role): ResponseEnvelope
     {
         $this->refuse($action->validate($role));
 
@@ -67,7 +67,7 @@ class RoleController extends Controller
 
         return $this->payload(
             $this->state(null, $request),
-            __('foundation.role.notice.deleted'),
+            __('auth.role.notice.deleted'),
         );
     }
 
@@ -85,9 +85,9 @@ class RoleController extends Controller
         return $action->execute($intent, $actor);
     }
 
-    protected function payload(RoleState $state, string $notice): Envelope
+    protected function payload(RoleState $state, string $notice): ResponseEnvelope
     {
-        return Envelope::ok($notice, $state->toArray());
+        return ResponseEnvelope::ok($notice, $state->toArray());
     }
 
     protected function state(?int $roleId, Request $request): RoleState

@@ -5,6 +5,7 @@ namespace Tests\Feature\Foundation\Component\Table;
 use App\Foundation\Component\Table\Filter\BooleanFilter;
 use App\Foundation\Component\Table\ValueObject\FilterDefinition;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\Concern\SeedsStock;
 use Tests\TestCase;
 
 /**

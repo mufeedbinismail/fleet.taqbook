@@ -1,7 +1,7 @@
 <?php
 
 use App\Finance\Tax\Service\TaxService;
-use App\Finance\Support\MoneyFactory;
+use App\Finance\Shared\Support\MoneyFactory;
 use App\Finance\Tax\Collection\TaxableItemCollection;
 use App\Inventory\Repository\ItemRepository;
 use App\Trade\Marketplace\Repository\ExpenseRepository;

@@ -43,11 +43,11 @@ class SaveUserRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'user_id' => __('foundation.user.attribute.login'),
-            'password' => __('foundation.user.attribute.password'),
-            'real_name' => __('foundation.user.attribute.real_name'),
-            'role_id' => __('foundation.user.attribute.role'),
-            'pos' => __('foundation.user.attribute.pos'),
+            'user_id' => __('auth.user.attribute.login'),
+            'password' => __('auth.user.attribute.password'),
+            'real_name' => __('auth.user.attribute.real_name'),
+            'role_id' => __('auth.user.attribute.role'),
+            'pos' => __('auth.user.attribute.pos'),
         ];
     }
 
