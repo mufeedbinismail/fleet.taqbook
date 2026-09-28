@@ -32,33 +32,33 @@ final class Section
 
     public const INVENTORY_TRANSACTION = 'inventory.transaction';
 
-    public const MANUFACTURING_INQUIRY = 'inventory.manufacturing.inquiry';
+    public const MANUFACTURING_INQUIRY = 'manufacturing.inquiry';
 
-    public const MANUFACTURING_MAINTENANCE = 'inventory.manufacturing.maintenance';
+    public const MANUFACTURING_MAINTENANCE = 'manufacturing.maintenance';
 
-    public const MANUFACTURING_TRANSACTION = 'inventory.manufacturing.transaction';
+    public const MANUFACTURING_TRANSACTION = 'manufacturing.transaction';
 
-    public const MARKETPLACE_INQUIRY = 'trade.marketplace.inquiry';
+    public const MARKETPLACE_INQUIRY = 'marketplace.inquiry';
 
-    public const MARKETPLACE_MAINTENANCE = 'trade.marketplace.maintenance';
+    public const MARKETPLACE_MAINTENANCE = 'marketplace.maintenance';
 
-    public const MARKETPLACE_TRANSACTION = 'trade.marketplace.transaction';
+    public const MARKETPLACE_TRANSACTION = 'marketplace.transaction';
 
-    public const PURCHASE_INQUIRY = 'trade.purchase.inquiry';
+    public const PURCHASE_INQUIRY = 'purchase.inquiry';
 
-    public const PURCHASE_MAINTENANCE = 'trade.purchase.maintenance';
+    public const PURCHASE_MAINTENANCE = 'purchase.maintenance';
 
-    public const PURCHASE_TRANSACTION = 'trade.purchase.transaction';
+    public const PURCHASE_TRANSACTION = 'purchase.transaction';
 
-    public const SALE_INQUIRY = 'trade.sale.inquiry';
+    public const SALE_INQUIRY = 'sale.inquiry';
 
-    public const SALE_MAINTENANCE = 'trade.sale.maintenance';
+    public const SALE_MAINTENANCE = 'sale.maintenance';
 
-    public const SALE_TRANSACTION = 'trade.sale.transaction';
+    public const SALE_TRANSACTION = 'sale.transaction';
 
-    public const SYSTEM_COMPANY = 'foundation.system.company';
+    public const SYSTEM_COMPANY = 'system.company';
 
-    public const SYSTEM_MAINTENANCE = 'foundation.system.maintenance';
+    public const SYSTEM_MAINTENANCE = 'system.maintenance';
 
-    public const SYSTEM_MISCELLANEOUS = 'foundation.system.miscellaneous';
+    public const SYSTEM_MISCELLANEOUS = 'system.miscellaneous';
 }

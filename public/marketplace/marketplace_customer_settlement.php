@@ -132,7 +132,7 @@ function mktpl_cs_handle_post_back(CustomerSettlementCart $cart): void
 
     if (isset($_POST['Cancel'])) {
         unset($_SESSION['mktpl_cs']);
-        meta_forward(legacy_url('/index.php'), 'area=trade.marketplace');
+        meta_forward(legacy_url('/index.php'), 'area=marketplace');
     }
 
     if (input_changed('transDate')) {

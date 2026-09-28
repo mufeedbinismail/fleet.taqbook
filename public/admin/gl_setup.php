@@ -102,7 +102,7 @@ function can_process()
 		return false;
 	}
 
-    if (Navigation::tree()->has('trade.marketplace')) {
+    if (Navigation::tree()->has('marketplace')) {
         if (!get_post('marketplace_expense_items')) {
             display_error(__("Please select the marketplace expense items."));
             set_focus('marketplace_expense_items');
@@ -291,7 +291,7 @@ text_row(__("Delivery Required By:"), 'default_delivery_required', $_POST['defau
 
 table_section(2);
 
-if (Navigation::tree()->has('trade.marketplace')) {
+if (Navigation::tree()->has('marketplace')) {
     table_section_title(__("Marketplace Sales Defaults"));
 
     start_row();

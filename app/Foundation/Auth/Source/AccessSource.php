@@ -24,14 +24,14 @@ class AccessSource implements NavigationSourceContract
 {
     public function declare(NavigationBuilder $nav): void
     {
-        $nav->page('foundation.access.user.manage', 'User Accounts Setup', Section::SYSTEM_COMPANY)
+        $nav->page('access.user.manage', 'User Accounts Setup', Section::SYSTEM_COMPANY)
             ->target(RouteTarget::to('access.users.index'))
             ->permission(Permission::MANAGE_USER)
             ->category(Category::Settings)
             ->place(Column::Left)
             ->sort(20);
 
-        $nav->page('foundation.access.role.manage', 'Access Setup', Section::SYSTEM_COMPANY)
+        $nav->page('access.role.manage', 'Access Setup', Section::SYSTEM_COMPANY)
             ->target(RouteTarget::to('access.roles.index'))
             ->permission(Permission::MANAGE_ROLE)
             ->category(Category::Settings)

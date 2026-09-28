@@ -116,22 +116,22 @@ class ManufacturingSource extends LegacySource
             ->permission(Permission::VIEW_MANUFACTURING_OPERATION);
 
         $manufacturing->hiddenPage('work-order.release', $this->label('Work Order Release to Manufacturing'))
-            ->under('inventory.manufacturing.work-order.outstanding')
+            ->under('manufacturing.work-order.outstanding')
             ->target($this->script('manufacturing/work_order_release.php', ['trans_no' => Query::ANY]))
             ->permission(Permission::CREATE_WORK_ORDER);
 
         $manufacturing->hiddenPage('work-order.issue', $this->label('Issue Items to Work Order'))
-            ->under('inventory.manufacturing.work-order.outstanding')
+            ->under('manufacturing.work-order.outstanding')
             ->target($this->script('manufacturing/work_order_issue.php', ['trans_no' => Query::ANY]))
             ->permission(Permission::CREATE_WORK_ORDER);
 
         $manufacturing->hiddenPage('work-order.produce', $this->label('Produce or Unassemble Finished Items From Work Order'))
-            ->under('inventory.manufacturing.work-order.outstanding')
+            ->under('manufacturing.work-order.outstanding')
             ->target($this->script('manufacturing/work_order_add_finished.php', ['trans_no' => Query::ANY]))
             ->permission(Permission::CREATE_WORK_ORDER);
 
         $manufacturing->hiddenPage('work-order.cost', $this->label('Work Order Additional Costs'))
-            ->under('inventory.manufacturing.work-order.outstanding')
+            ->under('manufacturing.work-order.outstanding')
             ->target($this->script('manufacturing/work_order_costs.php', ['trans_no' => Query::ANY]))
             ->permission(Permission::CREATE_WORK_ORDER);
     }
