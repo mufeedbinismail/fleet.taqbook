@@ -4,7 +4,7 @@ import Alpine from './plugins/alpine';
 import parsley from './plugins/parsley';
 import axios from './plugins/axios';
 import data from './foundation/data';
-import { setBusyState, unsetBusyState, isBusy } from './foundation/busy';
+import { setBusyState, unsetBusyState, isBusy, makeBusyStateReactive } from './foundation/busy';
 import { route, url, buildQuery } from './foundation/route';
 import { i18n } from './foundation/i18n';
 import { dataTable, table } from './components/table';
@@ -15,6 +15,8 @@ import { modal } from './components/modal';
 import { notify } from './components/notify';
 
 const select = selectFactory(Alpine);
+
+makeBusyStateReactive(Alpine.reactive);
 
 // Bounded by the region that scrolls, so a panel opens against what is visible rather than
 // standing outside anything that could bound it and lengthening the document.
