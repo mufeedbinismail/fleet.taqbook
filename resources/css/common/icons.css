@@ -264,4 +264,7 @@
     .icon-server:before {
         content: '\eb03';
     }
+    .icon-copy:before {
+        content: '\eb04';
+    }
 }
