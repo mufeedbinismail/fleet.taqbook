@@ -5,6 +5,7 @@ namespace App\Fleet\Http\Controller;
 use App\Fleet\Action\ChangeDeploymentStatusAction;
 use App\Fleet\Action\EditDeploymentAction;
 use App\Fleet\Action\EraseDeploymentAction;
+use App\Fleet\Action\IssueIdentityAction;
 use App\Fleet\Action\PingDeploymentAction;
 use App\Fleet\Action\RegisterDeploymentAction;
 use App\Fleet\Action\RemoveDeploymentAction;
@@ -25,6 +26,7 @@ use App\Foundation\Component\Table\Repository\TableRepository;
 use App\Foundation\Component\Table\ValueObject\InitialPage;
 use App\Foundation\Framework\Http\Controller\Controller;
 use App\Foundation\Framework\Http\Response\ResponseEnvelope;
+use App\Foundation\Shared\ValueObject\DomainDateTime;
 use App\Trade\Sale\Component\Select\CustomerSelect;
 use Illuminate\Contracts\View\View;
 
@@ -96,6 +98,16 @@ class DeploymentController extends Controller
         return $outcome === DeliveryOutcome::Reached
             ? ResponseEnvelope::ok(__('fleet.deployment.notice.reached', ['alias' => $deployment->alias]))
             : ResponseEnvelope::failed($outcome->label());
+    }
+
+    public function issueIdentity(IssueIdentityAction $action, Deployment $deployment): ResponseEnvelope
+    {
+        $packed = $action->execute($deployment);
+
+        return ResponseEnvelope::ok(__('fleet.deployment.notice.identity_issued', ['alias' => $deployment->alias]), [
+            'expires_at' => $packed->statement->expiresAt->format(DomainDateTime::userDateTimeFormat()),
+            'payload' => $packed->toEncodedString(),
+        ]);
     }
 
     public function destroy(RemoveDeploymentAction $action, Deployment $deployment): ResponseEnvelope

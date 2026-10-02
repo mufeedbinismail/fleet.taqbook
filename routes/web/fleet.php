@@ -16,6 +16,7 @@ Route::prefix('fleet/deployments')
         Route::put('{deployment}/alias', [DeploymentController::class, 'rename'])->name('rename');
         Route::put('{deployment}/status', [DeploymentController::class, 'changeStatus'])->name('status');
         Route::post('{deployment}/ping', [DeploymentController::class, 'ping'])->name('ping');
+        Route::post('{deployment}/identity', [DeploymentController::class, 'issueIdentity'])->name('identity');
         Route::delete('{deployment}', [DeploymentController::class, 'destroy'])->name('destroy');
         Route::delete('{deployment}/permanent', [DeploymentController::class, 'erase'])->name('erase');
     });

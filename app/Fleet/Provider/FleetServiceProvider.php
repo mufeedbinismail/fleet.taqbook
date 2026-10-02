@@ -4,6 +4,7 @@ namespace App\Fleet\Provider;
 
 use App\Fleet\Console\GenerateKeypairCommand;
 use App\Fleet\Console\InstallKeypairCommand;
+use App\Fleet\Console\IssueIdentityCommand;
 use App\Fleet\Console\PingDeploymentCommand;
 use App\Fleet\Repository\DeploymentRepository;
 use App\Fleet\Source\FleetSource;
@@ -19,6 +20,7 @@ class FleetServiceProvider extends ServiceProvider
         $this->commands([
             GenerateKeypairCommand::class,
             InstallKeypairCommand::class,
+            IssueIdentityCommand::class,
             PingDeploymentCommand::class,
         ]);
     }
