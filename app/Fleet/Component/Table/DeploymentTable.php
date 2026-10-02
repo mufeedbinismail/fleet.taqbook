@@ -66,6 +66,10 @@ final class DeploymentTable implements TableDefinitionContract
             'instance_created_date' => $record->instance_created_date->format(DomainDateTime::userDateFormat()),
             'url' => $record->url,
             'last_pushed_at' => $record->last_pushed_at?->format(DomainDateTime::userDateTimeFormat()),
+            'identity' => $record->identity_issued_at === null ? null : __('fleet.deployment.identity', [
+                'ver' => $record->identity_ver,
+                'date' => $record->identity_issued_at->format(DomainDateTime::userDateFormat()),
+            ]),
         ];
     }
 
@@ -97,6 +101,8 @@ final class DeploymentTable implements TableDefinitionContract
                 'deployments.url',
                 'deployments.instance_created_date',
                 'deployments.last_pushed_at',
+                'deployments.identity_ver',
+                'deployments.identity_issued_at',
                 'debtors_master.name as customer_name',
             ]);
     }
@@ -150,6 +156,12 @@ final class DeploymentTable implements TableDefinitionContract
                 sortable: 'deployments.last_pushed_at',
                 dataType: DataType::DateTime,
                 width: '11rem',
+            ),
+            new ColumnDefinition(
+                'identity',
+                __('fleet.deployment.column.identity'),
+                sortable: 'deployments.identity_ver',
+                width: '10rem',
             ),
             new ColumnDefinition(
                 'instance_created_date',

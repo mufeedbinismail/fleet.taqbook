@@ -18,6 +18,7 @@ return [
         'rename' => 'Rename deployment',
         'status_change' => 'Change status',
         'status_change_of' => 'Change status of :alias',
+        'identity' => 'v:ver · :date',
 
         'column' => [
             'number' => 'Number',
@@ -28,6 +29,7 @@ return [
             'instance_created' => 'Created',
             'address' => 'Address',
             'last_reached' => 'Last reached',
+            'identity' => 'Identity',
             'actions' => '',
         ],
 
@@ -82,6 +84,9 @@ return [
             'rename' => 'Rename',
             'change_status' => 'Change status',
             'ping' => 'Ping',
+            'issue_identity' => 'Issue identity',
+            'copy' => 'Copy',
+            'done' => 'Done',
             'menu' => 'Actions',
             'remove' => 'Remove',
             'save' => 'Save',
@@ -104,6 +109,16 @@ return [
             ],
         ],
 
+        'issue_identity' => [
+            'confirm_title' => 'Issue an identity for :alias?',
+            'confirm_text' => 'This replaces its current credential. Anything issued for it before is superseded, installed or not.',
+            'confirm_action' => 'Issue identity',
+            'title' => 'Identity for :alias',
+            'text' => 'Carry this to the install and run fleet:identity:install there. It contains the tenant secret and is shown only now: once closed, it cannot be shown again.',
+            'expires' => 'Installable until :at',
+            'copied' => 'Copied',
+        ],
+
         'error' => [
             'heading' => 'This deployment could not be saved',
             'same_status' => 'This deployment already stands at :status. Pick the status it moved to.',
@@ -112,6 +127,8 @@ return [
             'insecure_address' => 'Its address must be https://. Plain http:// is only pinged in development.',
             'no_signing_key' => 'This server holds no operational key or delegation. Run fleet:keypair:install first.',
             'delegation_expired' => 'This server\'s delegation ran out on :date. Run fleet:keypair:install with the root secret.',
+            'retired' => 'This deployment is retired. A retired deployment is not issued an identity.',
+            'identity_moved' => 'Another change reached :alias while its identity was being issued. Try again.',
         ],
 
         'notice' => [
@@ -122,6 +139,7 @@ return [
             'removed' => 'Deployment moved to trash',
             'erased' => 'Deployment deleted permanently',
             'reached' => ':alias answered the ping',
+            'identity_issued' => 'Identity issued for :alias',
         ],
 
         'footer' => [

@@ -20,4 +20,18 @@ return [
         'timeout_seconds' => (int) env('FLEET_MESSAGE_TIMEOUT_SECONDS', 10),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Identity
+    |--------------------------------------------------------------------------
+    |
+    | How long an issued identity stays installable. It carries a live tenant
+    | secret, so one that is never installed should not stay usable for long.
+    |
+    */
+
+    'identity' => [
+        'lifetime_days' => (int) env('FLEET_IDENTITY_LIFETIME_DAYS', 1),
+    ],
+
 ];

@@ -107,6 +107,40 @@ class DeploymentRepository
         return $deployment;
     }
 
+    /**
+     * Issues only from the versions the caller read: one issued or retired since then is left as it
+     * is, and null comes back.
+     */
+    public function recordIdentityIssue(Deployment $deployment, DomainDateTime $at): ?Deployment
+    {
+        return DB::transaction(function () use ($deployment, $at) {
+            $updated = Deployment::query()
+                ->whereKey($deployment->uuid)
+                ->where('identity_ver', $deployment->identity_ver)
+                ->where('credential_ver', $deployment->credential_ver)
+                ->where('status', '!=', DeploymentStatus::Retired)
+                ->update([
+                    'identity_ver' => $deployment->identity_ver + 1,
+                    'credential_ver' => $deployment->credential_ver + 1,
+                    'identity_issued_at' => $at,
+                ]);
+
+            return $updated === 0 ? null : Deployment::query()->find($deployment->uuid);
+        });
+    }
+
+    /**
+     * One token per deployment: the previous one stops authenticating the moment this returns.
+     */
+    public function replaceToken(Deployment $deployment): string
+    {
+        return DB::transaction(function () use ($deployment) {
+            $deployment->tokens()->delete();
+
+            return $deployment->createToken('tenant')->plainTextToken;
+        });
+    }
+
     public function rename(Deployment $deployment, string $alias): Deployment
     {
         $deployment->fill(['alias' => $alias])->save();
