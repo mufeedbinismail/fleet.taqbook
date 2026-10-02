@@ -69,11 +69,9 @@ class SaveUserRequest extends FormRequest
      * The user being edited, or null when one is being created — which is the difference between
      * the two routes reaching this, and the only one.
      */
-    private function userId(): ?int
+    private function userId(): ?string
     {
-        $id = $this->route('user');
-
-        return $id === null ? null : (int) $id;
+        return $this->route('user')?->getKey();
     }
 
     private function isEditing(): bool

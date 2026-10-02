@@ -42,14 +42,14 @@ class UserRepository
         return $record;
     }
 
-    public function delete(int $id): void
+    public function delete(User $user): void
     {
-        User::destroy($id);
+        $user->delete();
     }
 
-    public function setStatus(int $id, bool $inactive): void
+    public function setStatus(User $user, bool $inactive): void
     {
-        User::whereKey($id)->update(['inactive' => (int) $inactive]);
+        User::whereKey($user->getKey())->update(['inactive' => (int) $inactive]);
     }
 
     /**
@@ -81,8 +81,8 @@ class UserRepository
         return $record;
     }
 
-    public function saveSkin(int $userId, Skin $skin): void
+    public function saveSkin(User $user, Skin $skin): void
     {
-        User::query()->whereKey($userId)->update(['skin' => $skin->value]);
+        User::query()->whereKey($user->getKey())->update(['skin' => $skin->value]);
     }
 }

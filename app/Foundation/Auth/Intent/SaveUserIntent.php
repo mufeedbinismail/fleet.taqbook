@@ -12,13 +12,13 @@ namespace App\Foundation\Auth\Intent;
 final class SaveUserIntent
 {
     /**
-     * @param  int|null  $userId  null to create
+     * @param  string|null  $userId  the account's uuid, or null to create
      * @param  string|null  $login  null when editing, because a login is immutable once the account
      *                              exists — it is what somebody types to sign in
      * @param  string|null  $password  null to keep the password the account already has
      */
     public function __construct(
-        public readonly ?int $userId,
+        public readonly ?string $userId,
         public readonly ?string $login,
         public readonly ?string $password,
         public readonly string $realName,

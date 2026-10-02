@@ -32,7 +32,7 @@ ClientData::registry()
         :caption="$title"
         route="access.users.list"
         :initial="$initial"
-        row-key="id"
+        row-key="uuid"
         height="34rem"
         column-search
         :export="['csv', 'xlsx']"
@@ -96,7 +96,7 @@ ClientData::registry()
     {{-- static, because a half-filled account is not something Escape should be able to drop. --}}
     <x-ui.modal name="user-editor" size="lg" static @modal:showing="open($event.detail)">
         <x-slot:header>
-            <span x-text="form.id ? @js(__('auth.user.edit')) : @js(__('auth.user.new'))"></span>
+            <span x-text="form.uuid ? @js(__('auth.user.edit')) : @js(__('auth.user.new'))"></span>
         </x-slot>
 
         <form data-form @submit.prevent="save()" class="grid gap-6">
@@ -107,20 +107,20 @@ ClientData::registry()
                     {{-- A field only while an account is being opened. Past that the login is what
                          somebody types to sign in, so moving it would change how they get in without
                          telling them. --}}
-                    <template x-if="form.id === null">
+                    <template x-if="form.uuid === null">
                         <input type="text" data-login maxlength="60" required autofocus x-model="form.user_id"
                                class="field" :class="errorFor('user_id') ? 'border-error-accent' : 'border-field-border'">
                     </template>
-                    <template x-if="form.id !== null">
+                    <template x-if="form.uuid !== null">
                         <p data-login-label class="px-3 py-2 font-semibold text-card-title-txt" x-text="form.user_id"></p>
                     </template>
                     <p class="text-sm font-semibold text-error-accent md:col-start-2" x-show="errorFor('user_id')" x-text="errorFor('user_id')"></p>
 
                     <label for="user-password" class="text-sm font-semibold text-card-title-txt">{{ __('auth.user.field.password') }}</label>
                     <input type="password" id="user-password" data-password maxlength="100" autocomplete="new-password"
-                           x-model="form.password" :required="form.id === null"
+                           x-model="form.password" :required="form.uuid === null"
                            class="field" :class="errorFor('password') ? 'border-error-accent' : 'border-field-border'">
-                    <p class="text-xs text-card-txt md:col-start-2" x-show="form.id !== null">
+                    <p class="text-xs text-card-txt md:col-start-2" x-show="form.uuid !== null">
                         {{ __('auth.user.field.password_hint') }}
                     </p>
                     <p class="text-sm font-semibold text-error-accent md:col-start-2" x-show="errorFor('password')" x-text="errorFor('password')"></p>
@@ -189,7 +189,7 @@ ClientData::registry()
                  validates the fields above before anything is sent. --}}
             <div class="flex flex-wrap items-center gap-2">
                 <x-ui.button type="submit" data-save icon="button-ok">
-                    <span x-text="form.id ? @js(__('auth.user.action.save')) : @js(__('auth.user.action.create'))"></span>
+                    <span x-text="form.uuid ? @js(__('auth.user.action.save')) : @js(__('auth.user.action.create'))"></span>
                 </x-ui.button>
 
                 <button type="button" x-modal:close

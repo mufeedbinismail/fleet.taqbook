@@ -6,7 +6,7 @@ export function userRoster({ App, axios, data }) {
     const INLINE = ['user_id', 'password', 'real_name', 'email'];
 
     const blank = () => ({
-        id: null,
+        uuid: null,
         user_id: '',
         password: '',
         real_name: '',
@@ -92,15 +92,15 @@ export function userRoster({ App, axios, data }) {
 
             // Sent only while an account is being opened, and only when one was typed: a login is
             // fixed once it exists, and an untouched password box means keep the one in force.
-            if (this.form.id === null) payload.user_id = this.form.user_id;
+            if (this.form.uuid === null) payload.user_id = this.form.user_id;
             if (this.form.password !== '') payload.password = this.form.password;
 
             const body =
-                this.form.id === null
+                this.form.uuid === null
                     ? await this.request('post', App.route('access.users.store'), payload)
                     : await this.request(
                           'put',
-                          App.route('access.users.update', { user: this.form.id }),
+                          App.route('access.users.update', { user: this.form.uuid }),
                           payload,
                       );
 
@@ -113,7 +113,7 @@ export function userRoster({ App, axios, data }) {
         async remove(row) {
             const body = await this.request(
                 'delete',
-                App.route('access.users.destroy', { user: row.id }),
+                App.route('access.users.destroy', { user: row.uuid }),
             );
 
             if (body) this.done(body.message);
@@ -122,7 +122,7 @@ export function userRoster({ App, axios, data }) {
         async setStatus(row, inactive) {
             const body = await this.request(
                 'put',
-                App.route('access.users.status', { user: row.id }),
+                App.route('access.users.status', { user: row.uuid }),
                 { inactive },
             );
 

@@ -11,6 +11,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
@@ -125,6 +126,7 @@ class OptionEndpointTest extends TestCase
 
         foreach ($staff as $name => $role) {
             $ids[$name] = DB::table('users')->insertGetId([
+                'uuid' => (string) Str::uuid(),
                 'user_id' => strtolower(str_replace(' ', '.', $name)),
                 'real_name' => $name,
                 'password' => '',
