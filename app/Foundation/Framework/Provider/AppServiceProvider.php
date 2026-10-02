@@ -4,6 +4,7 @@ namespace App\Foundation\Framework\Provider;
 
 use App\Foundation\Framework\Registry\ClientDataRegistry;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
@@ -26,6 +27,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Str::createUuidsUsing(fn () => Uuid::uuid7());
+
+        // So ->change() needs no doctrine/dbal; it rewrites the whole column, so restate what it keeps.
+        Schema::useNativeSchemaOperationsIfPossible();
 
         Factory::guessFactoryNamesUsing(fn (string $model) => Str::replaceLast(
             '\\Model\\',
