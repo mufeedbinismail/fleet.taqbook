@@ -30,9 +30,9 @@ Route::prefix('access/users')
     ->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::post('/', [UserController::class, 'store'])->name('store');
-        Route::put('{user}', [UserController::class, 'update'])->whereNumber('user')->name('update');
-        Route::delete('{user}', [UserController::class, 'destroy'])->whereNumber('user')->name('destroy');
-        Route::put('{user}/status', [UserController::class, 'status'])->whereNumber('user')->name('status');
+        Route::put('{user}', [UserController::class, 'update'])->whereUuid('user')->name('update');
+        Route::delete('{user}', [UserController::class, 'destroy'])->whereUuid('user')->name('destroy');
+        Route::put('{user}/status', [UserController::class, 'status'])->whereUuid('user')->name('status');
     });
 
 Route::tableData('access/users', UserTable::class)->middleware('can:'.Permission::MANAGE_USER);

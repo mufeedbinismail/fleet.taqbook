@@ -9,6 +9,7 @@ use App\Foundation\Auth\Component\Select\RoleSelect;
 use App\Foundation\Auth\Component\Table\UserTable;
 use App\Foundation\Auth\Http\Request\SaveUserRequest;
 use App\Foundation\Auth\Http\Request\SetUserStatusRequest;
+use App\Foundation\Auth\Model\User;
 use App\Foundation\Auth\Repository\UserRepository;
 use App\Foundation\Component\Select\Service\OptionService;
 use App\Foundation\Component\Table\Builder\TableBuilder;
@@ -65,14 +66,14 @@ class UserController extends Controller
         return ResponseEnvelope::ok(__('auth.user.notice.created'));
     }
 
-    public function update(SaveUserRequest $request, SaveUserAction $action, int $user): ResponseEnvelope
+    public function update(SaveUserRequest $request, SaveUserAction $action, User $user): ResponseEnvelope
     {
         $this->save($request, $action);
 
         return ResponseEnvelope::ok(__('auth.user.notice.updated'));
     }
 
-    public function destroy(Request $request, DeleteUserAction $action, int $user): ResponseEnvelope
+    public function destroy(Request $request, DeleteUserAction $action, User $user): ResponseEnvelope
     {
         $actor = $request->user();
 
@@ -83,7 +84,7 @@ class UserController extends Controller
         return ResponseEnvelope::ok(__('auth.user.notice.deleted'));
     }
 
-    public function status(SetUserStatusRequest $request, SetUserStatusAction $action, int $user): ResponseEnvelope
+    public function status(SetUserStatusRequest $request, SetUserStatusAction $action, User $user): ResponseEnvelope
     {
         $inactive = $request->deactivates();
         $actor = $request->user();

@@ -13,7 +13,7 @@ class UserPreferenceController extends Controller
 
     public function skin(SaveSkinRequest $request): Response
     {
-        $this->userRepository->saveSkin($request->user()->id, $request->toSkin());
+        $this->userRepository->saveSkin($request->user(), $request->toSkin());
 
         return response()->noContent();
     }

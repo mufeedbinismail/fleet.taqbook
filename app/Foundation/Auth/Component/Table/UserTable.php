@@ -78,7 +78,7 @@ final class UserTable implements TableDefinitionContract
         $history = (bool) $record->has_history;
 
         return [
-            'id' => $record->id,
+            'uuid' => $record->uuid,
             'user_id' => $record->user_id,
             'real_name' => $record->real_name,
             'email' => $record->email,
@@ -139,7 +139,7 @@ final class UserTable implements TableDefinitionContract
             )
             ->leftJoin('security_roles', 'security_roles.id', '=', 'users.role_id')
             ->select([
-                'users.id',
+                'users.uuid',
                 'users.user_id',
                 'users.real_name',
                 'users.email',

@@ -68,7 +68,7 @@ class SkinPreferenceTest extends TestCase
     {
         $actor = $this->actor();
 
-        User::query()->whereKey($actor->id)->update(['skin' => '']);
+        User::query()->whereKey($actor->getKey())->update(['skin' => '']);
 
         $this->assertSame('', $this->skinOf($this->actingAs($actor->fresh())->get($this->aScreen())));
     }

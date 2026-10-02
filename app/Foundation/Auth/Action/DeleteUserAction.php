@@ -15,17 +15,17 @@ class DeleteUserAction
         protected TransactionAttributionExistsQuery $transactionAttributionExistsQuery,
     ) {}
 
-    public function validate(int $userId, User $actor): ValidationResult
+    public function validate(User $user, User $actor): ValidationResult
     {
-        if (User::find($userId)?->reserved) {
+        if ($user->reserved) {
             return ValidationResult::error('user', __('auth.user.error.reserved'));
         }
 
-        if ($userId === $actor->id) {
+        if ($user->is($actor)) {
             return ValidationResult::error('user', __('auth.user.error.self_removal'));
         }
 
-        if ($this->transactionAttributionExistsQuery->builder($userId)->exists()) {
+        if ($this->transactionAttributionExistsQuery->builder($user->id)->exists()) {
             return ValidationResult::error('user', __('auth.user.error.has_history'));
         }
 
@@ -35,14 +35,14 @@ class DeleteUserAction
     /**
      * @throws UserException if the removal was never checked and the check would have refused it
      */
-    public function execute(int $userId, User $actor): void
+    public function execute(User $user, User $actor): void
     {
-        $checked = $this->validate($userId, $actor);
+        $checked = $this->validate($user, $actor);
 
         if (! $checked->isValid) {
             throw UserException::unchecked((string) $checked->field);
         }
 
-        $this->repository->delete($userId);
+        $this->repository->delete($user);
     }
 }

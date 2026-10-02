@@ -20,21 +20,21 @@ class SetUserStatusAction
      * out of the only screen able to let them back in. And a login the journal never names is
      * deleted rather than shut, so that an inactive login always has history behind it.
      */
-    public function validate(int $userId, bool $inactive, User $actor): ValidationResult
+    public function validate(User $user, bool $inactive, User $actor): ValidationResult
     {
         if (! $inactive) {
             return ValidationResult::success();
         }
 
-        if (User::find($userId)?->reserved) {
+        if ($user->reserved) {
             return ValidationResult::error('user', __('auth.user.error.reserved'));
         }
 
-        if ($userId === $actor->id) {
+        if ($user->is($actor)) {
             return ValidationResult::error('user', __('auth.user.error.self_deactivation'));
         }
 
-        if (! $this->transactionAttributionExistsQuery->builder($userId)->exists()) {
+        if (! $this->transactionAttributionExistsQuery->builder($user->id)->exists()) {
             return ValidationResult::error('user', __('auth.user.error.no_history'));
         }
 
@@ -44,14 +44,14 @@ class SetUserStatusAction
     /**
      * @throws UserException if it was never checked and the check would have refused it
      */
-    public function execute(int $userId, bool $inactive, User $actor): void
+    public function execute(User $user, bool $inactive, User $actor): void
     {
-        $checked = $this->validate($userId, $inactive, $actor);
+        $checked = $this->validate($user, $inactive, $actor);
 
         if (! $checked->isValid) {
             throw UserException::unchecked((string) $checked->field);
         }
 
-        $this->repository->setStatus($userId, $inactive);
+        $this->repository->setStatus($user, $inactive);
     }
 }
