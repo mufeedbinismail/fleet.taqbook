@@ -31,6 +31,9 @@ class AppServiceProvider extends ServiceProvider
         // So ->change() needs no doctrine/dbal; it rewrites the whole column, so restate what it keeps.
         Schema::useNativeSchemaOperationsIfPossible();
 
+        // Morphs key by uuid by default; one pointing at an integer-keyed model uses numericMorphs().
+        Schema::morphUsingUuids();
+
         Factory::guessFactoryNamesUsing(fn (string $model) => Str::replaceLast(
             '\\Model\\',
             '\\Database\\Factory\\',
