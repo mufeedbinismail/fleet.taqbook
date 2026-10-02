@@ -20,6 +20,7 @@ ClientData::registry()
         'fleet.deployments.rename',
         'fleet.deployments.status',
         'fleet.deployments.ping',
+        'fleet.deployments.identity',
         'fleet.deployments.destroy',
         'fleet.deployments.erase',
     ])
@@ -29,6 +30,11 @@ ClientData::registry()
         'fleet.deployment.remove.erase.confirm_title',
         'fleet.deployment.remove.erase.confirm_text',
         'fleet.deployment.remove.erase.confirm_action',
+        'fleet.deployment.issue_identity.confirm_title',
+        'fleet.deployment.issue_identity.confirm_text',
+        'fleet.deployment.issue_identity.confirm_action',
+        'fleet.deployment.issue_identity.title',
+        'fleet.deployment.issue_identity.expires',
     ]);
 ?>
 
@@ -63,6 +69,11 @@ ClientData::registry()
             <a x-show="row.url" :href="row.url" target="_blank" rel="noopener" x-text="row.url"
                class="text-link-txt hover:underline"></a>
             <span x-show="!row.url" class="text-card-txt">&mdash;</span>
+        </x-slot>
+
+        <x-slot:cell_identity>
+            <span x-show="row.identity" x-text="row.identity" class="whitespace-nowrap"></span>
+            <span x-show="!row.identity" class="text-card-txt">&mdash;</span>
         </x-slot>
 
         <x-slot:cell_last_pushed_at>
@@ -109,6 +120,13 @@ ClientData::registry()
                                 <span class="icon icon-globe text-success-accent" aria-hidden="true"></span>
                                 <span>{{ __('fleet.deployment.action.ping') }}</span>
                                 <span x-show="!row.url" class="ms-auto ps-4 text-xs">{{ __('fleet.deployment.hint.no_address') }}</span>
+                            </button>
+                        </li>
+                        <li role="none">
+                            <button type="button" x-dropdown:item class="w-full cursor-pointer border-0 bg-transparent text-start"
+                                    @click="issueIdentity(row)">
+                                <span class="icon icon-security text-primary-accent" aria-hidden="true"></span>
+                                <span>{{ __('fleet.deployment.action.issue_identity') }}</span>
                             </button>
                         </li>
                         <li role="none" class="mt-1 border-0 border-t border-solid border-panel-border pt-1">
@@ -284,6 +302,34 @@ ClientData::registry()
                     class="cursor-pointer border-0 bg-transparent text-sm text-card-txt transition hover:text-card-title-txt">
                 {{ __('fleet.deployment.action.cancel') }}
             </button>
+        </div>
+    </x-ui.modal>
+
+    {{-- static, because the payload is shown this once: a stray Escape would cost a fresh issue. --}}
+    <x-ui.modal name="deployment-identity" size="lg" static @modal:closed="forgetIssued()">
+        <x-slot:header>
+            <span x-text="App.i18n('fleet.deployment.issue_identity.title', { alias: issued.alias })"></span>
+        </x-slot>
+
+        <div class="grid gap-4">
+            <p class="text-sm text-card-txt">{{ __('fleet.deployment.issue_identity.text') }}</p>
+
+            <textarea x-ref="issuedPayload" readonly rows="6" spellcheck="false" autocomplete="off"
+                      class="field w-full resize-none break-all border-field-border font-mono text-xs"
+                      x-text="issued.payload" @focus="$el.select()"></textarea>
+
+            <p class="text-xs text-card-txt"
+               x-text="App.i18n('fleet.deployment.issue_identity.expires', { at: issued.expires_at })"></p>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <x-ui.button icon="copy" @click="copyIssued()">{{ __('fleet.deployment.action.copy') }}</x-ui.button>
+                <span x-show="issued.copied" class="text-sm text-success-accent">{{ __('fleet.deployment.issue_identity.copied') }}</span>
+
+                <button type="button" x-modal:close
+                        class="ms-auto cursor-pointer border-0 bg-transparent text-sm text-card-txt transition hover:text-card-title-txt">
+                    {{ __('fleet.deployment.action.done') }}
+                </button>
+            </div>
         </div>
     </x-ui.modal>
 

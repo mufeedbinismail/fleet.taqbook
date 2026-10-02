@@ -10,10 +10,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Sanctum\HasApiTokens;
 
 class Deployment extends Model
 {
-    use HasUuids, SoftDeletes;
+    use HasApiTokens, HasUuids, SoftDeletes;
 
     protected $primaryKey = 'uuid';
 
@@ -30,6 +31,9 @@ class Deployment extends Model
         'url',
         'instance_created_date',
         'last_pushed_at',
+        'identity_ver',
+        'credential_ver',
+        'identity_issued_at',
     ];
 
     protected $casts = [
@@ -38,6 +42,9 @@ class Deployment extends Model
         'hosting' => Hosting::class,
         'instance_created_date' => 'date',
         'last_pushed_at' => 'datetime',
+        'identity_ver' => 'integer',
+        'credential_ver' => 'integer',
+        'identity_issued_at' => 'datetime',
     ];
 
     /**

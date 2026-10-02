@@ -27,6 +27,13 @@ export function deploymentRegister({ App, axios, data }) {
         instance_created_date: '',
     });
 
+    const nothingIssued = () => ({
+        alias: '',
+        expires_at: '',
+        payload: '',
+        copied: false,
+    });
+
     return () => ({
         hostings: seed.hostings,
         statuses: seed.statuses,
@@ -35,6 +42,7 @@ export function deploymentRegister({ App, axios, data }) {
         renaming: { uuid: null, alias: '' },
         changing: { uuid: null, alias: '', from: null, status: null, changed_at: '' },
         removing: { uuid: null, alias: '' },
+        issued: nothingIssued(),
         errors: {},
         messages: [],
 
@@ -67,6 +75,11 @@ export function deploymentRegister({ App, axios, data }) {
                 status: seed.statuses.find((status) => status.value !== row.status)?.value ?? null,
                 changed_at: formatDate(new Date(), seed.dateTimeFormat),
             };
+        },
+
+        // Dropped as the dialog closes, so a secret once read lingers nowhere on the page.
+        forgetIssued() {
+            this.issued = nothingIssued();
         },
 
         openRemoval(row) {
@@ -222,6 +235,46 @@ export function deploymentRegister({ App, axios, data }) {
                 if (message) App.notify.error(message);
             } finally {
                 App.unsetBusyState(row.uuid);
+            }
+        },
+
+        // Asked first, because an issue cannot be taken back.
+        async issueIdentity(row) {
+            const ok = await this.$confirm({
+                title: App.i18n('fleet.deployment.issue_identity.confirm_title', {
+                    alias: row.alias,
+                }),
+                text: App.i18n('fleet.deployment.issue_identity.confirm_text'),
+                confirmText: App.i18n('fleet.deployment.issue_identity.confirm_action'),
+                danger: true,
+            });
+
+            if (!ok) return;
+
+            const body = await this.request(
+                'post',
+                App.route('fleet.deployments.identity', { deployment: row.uuid }),
+            );
+
+            if (!body) {
+                this.messages.forEach((message) => App.notify.error(message));
+                return;
+            }
+
+            this.issued = { alias: row.alias, ...body.data, copied: false };
+            App.modal('deployment-identity').show();
+            this.done(body.message);
+        },
+
+        // Selected too, since the clipboard API is withheld outside secure contexts.
+        async copyIssued() {
+            this.$refs.issuedPayload.select();
+
+            try {
+                await navigator.clipboard.writeText(this.issued.payload);
+                this.issued.copied = true;
+            } catch {
+                this.issued.copied = false;
             }
         },
 
