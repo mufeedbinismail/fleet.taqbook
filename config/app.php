@@ -200,6 +200,7 @@ return [
         \App\Inventory\Provider\InventoryServiceProvider::class,
         \App\Trade\Marketplace\Provider\MarketplaceServiceProvider::class,
         \App\Trade\Sale\Provider\SaleServiceProvider::class,
+        \App\Trust\Provider\TrustServiceProvider::class,
     ])->toArray(),
 
     /*

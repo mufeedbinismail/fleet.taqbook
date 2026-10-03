@@ -13,6 +13,7 @@
         "ext-openssl": "*",
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
+        "ext-sodium": "*",
         "ext-zlib": "*",
         "brick/math": "^0.12.3",
         "brick/money": "^0.10.3",
