@@ -3,6 +3,8 @@
 use App\Trade\Sale\Component\Select\CustomerSelect;
 use App\Fleet\Component\Table\DeploymentTable;
 use App\Fleet\Constant\DeploymentAlias;
+use App\Fleet\Enum\SupportEntryDelivery;
+use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Framework\Facade\ClientData;
 use App\Foundation\Shared\ValueObject\DomainDateTime;
 
@@ -10,6 +12,9 @@ ClientData::registry()
     ->put('deploymentRegister', [
         'hostings' => $hostings,
         'statuses' => $statuses,
+        'enums' => [
+            'SupportEntryDelivery' => SupportEntryDelivery::toArray(),
+        ],
         'dateTimeFormat' => DomainDateTime::userDateTimeFormat(),
     ])
     ->routes([
@@ -21,6 +26,7 @@ ClientData::registry()
         'fleet.deployments.status',
         'fleet.deployments.ping',
         'fleet.deployments.identity',
+        'fleet.deployments.support',
         'fleet.deployments.destroy',
         'fleet.deployments.erase',
     ])
@@ -35,6 +41,8 @@ ClientData::registry()
         'fleet.deployment.issue_identity.confirm_action',
         'fleet.deployment.issue_identity.title',
         'fleet.deployment.issue_identity.expires',
+        'fleet.deployment.enter_support.title',
+        'fleet.deployment.enter_support.expires',
     ]);
 ?>
 
@@ -129,6 +137,15 @@ ClientData::registry()
                                 <span>{{ __('fleet.deployment.action.issue_identity') }}</span>
                             </button>
                         </li>
+                        @can(Permission::SUPPORT_DEPLOYMENT)
+                            <li role="none" x-show="row.identity">
+                                <button type="button" x-dropdown:item class="w-full cursor-pointer border-0 bg-transparent text-start"
+                                        x-modal:open="{ name: 'deployment-support', with: row }">
+                                    <span class="icon icon-login text-primary-accent" aria-hidden="true"></span>
+                                    <span>{{ __('fleet.deployment.action.enter_support') }}</span>
+                                </button>
+                            </li>
+                        @endcan
                         <li role="none" class="mt-1 border-0 border-t border-solid border-panel-border pt-1">
                             <button type="button" x-dropdown:item class="w-full cursor-pointer border-0 bg-transparent text-start text-button-danger-txt"
                                     x-modal:open="{ name: 'deployment-removal', with: row }">
@@ -324,6 +341,54 @@ ClientData::registry()
             <div class="flex flex-wrap items-center gap-2">
                 <x-ui.button icon="copy" @click="copyIssued()">{{ __('fleet.deployment.action.copy') }}</x-ui.button>
                 <span x-show="issued.copied" class="text-sm text-success-accent">{{ __('fleet.deployment.issue_identity.copied') }}</span>
+
+                <button type="button" x-modal:close
+                        class="ms-auto cursor-pointer border-0 bg-transparent text-sm text-card-txt transition hover:text-card-title-txt">
+                    {{ __('fleet.deployment.action.done') }}
+                </button>
+            </div>
+        </div>
+    </x-ui.modal>
+
+    {{-- static, because a link shown to copy is not issued again by reopening the dialog. --}}
+    <x-ui.modal name="deployment-support" size="lg" static @modal:showing="openSupport($event.detail)" @modal:closed="forgetEntry()">
+        <x-slot:header>
+            <span x-text="App.i18n('fleet.deployment.enter_support.title', { alias: entering.alias })"></span>
+        </x-slot>
+
+        <form x-show="!entering.link" @submit.prevent="enterAsSupport()" class="grid gap-4">
+            <label class="grid gap-1">
+                <span class="text-sm font-semibold text-card-title-txt">{{ __('fleet.deployment.enter_support.target_login') }}</span>
+                <input type="text" maxlength="60" autocomplete="off" spellcheck="false"
+                       x-model="entering.target_login"
+                       class="field" :class="errorFor('target_login') ? 'border-error-accent' : 'border-field-border'">
+                <p class="text-xs text-card-txt" x-show="!errorFor('target_login')">{{ __('fleet.deployment.enter_support.target_login_hint') }}</p>
+                <p class="text-sm font-semibold text-error-accent" x-show="errorFor('target_login')" x-text="errorFor('target_login')"></p>
+            </label>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <x-ui.button type="submit" icon="button-ok">{{ __('fleet.deployment.enter_support.action') }}</x-ui.button>
+
+                <button type="button" x-modal:close
+                        class="ms-auto cursor-pointer border-0 bg-transparent text-sm text-card-txt transition hover:text-card-title-txt">
+                    {{ __('fleet.deployment.action.cancel') }}
+                </button>
+            </div>
+        </form>
+
+        <div x-show="entering.link" class="grid gap-4">
+            <p class="text-sm text-card-txt">{{ __('fleet.deployment.enter_support.copy_text') }}</p>
+
+            <input type="text" x-ref="entryLink" spellcheck="false" autocomplete="off"
+                   class="field w-full border-field-border font-mono text-xs"
+                   x-model="entering.link" @input="entering.copied = false">
+
+            <p class="text-xs text-card-txt"
+               x-text="App.i18n('fleet.deployment.enter_support.expires', { at: entering.expires_at })"></p>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <x-ui.button icon="copy" @click="copyEntry()">{{ __('fleet.deployment.action.copy') }}</x-ui.button>
+                <span x-show="entering.copied" class="text-sm text-success-accent">{{ __('fleet.deployment.enter_support.copied') }}</span>
 
                 <button type="button" x-modal:close
                         class="ms-auto cursor-pointer border-0 bg-transparent text-sm text-card-txt transition hover:text-card-title-txt">

@@ -302,4 +302,6 @@ final class Permission
     public const MANAGE_PAYMENT_TERM = 'trade.shared.payment-term.manage';
 
     public const MANAGE_DEPLOYMENT = 'fleet.deployment.manage';
+
+    public const SUPPORT_DEPLOYMENT = 'fleet.deployment.support';
 }

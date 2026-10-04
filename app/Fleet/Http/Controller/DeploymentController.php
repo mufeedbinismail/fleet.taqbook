@@ -6,6 +6,7 @@ use App\Fleet\Action\ChangeDeploymentStatusAction;
 use App\Fleet\Action\EditDeploymentAction;
 use App\Fleet\Action\EraseDeploymentAction;
 use App\Fleet\Action\IssueIdentityAction;
+use App\Fleet\Action\IssueSupportEntryAction;
 use App\Fleet\Action\PingDeploymentAction;
 use App\Fleet\Action\RegisterDeploymentAction;
 use App\Fleet\Action\RemoveDeploymentAction;
@@ -16,6 +17,7 @@ use App\Fleet\Enum\DeploymentStatus;
 use App\Fleet\Enum\Hosting;
 use App\Fleet\Http\Request\ChangeDeploymentStatusRequest;
 use App\Fleet\Http\Request\EditDeploymentRequest;
+use App\Fleet\Http\Request\IssueSupportEntryRequest;
 use App\Fleet\Http\Request\RegisterDeploymentRequest;
 use App\Fleet\Http\Request\RenameDeploymentRequest;
 use App\Fleet\Model\Deployment;
@@ -108,6 +110,16 @@ class DeploymentController extends Controller
             'expires_at' => $packed->statement->expiresAt->format(DomainDateTime::userDateTimeFormat()),
             'payload' => $packed->toEncodedString(),
         ]);
+    }
+
+    public function enterAsSupport(
+        IssueSupportEntryRequest $request,
+        IssueSupportEntryAction $action,
+        Deployment $deployment,
+    ): ResponseEnvelope {
+        $link = $action->execute($deployment, $request->toIntent());
+
+        return ResponseEnvelope::ok(__('fleet.deployment.enter_support.notice', ['alias' => $deployment->alias]), $link->toArray());
     }
 
     public function destroy(RemoveDeploymentAction $action, Deployment $deployment): ResponseEnvelope
