@@ -64,4 +64,9 @@ class Deployment extends Model
     {
         return $this->hasMany(DeploymentStatusChange::class, 'deployment_uuid', 'uuid');
     }
+
+    public function supportEntries(): HasMany
+    {
+        return $this->hasMany(SupportEntry::class, 'deployment_uuid', 'uuid');
+    }
 }

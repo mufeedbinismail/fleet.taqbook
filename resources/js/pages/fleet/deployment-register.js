@@ -14,6 +14,7 @@ export function deploymentRegister({ App, axios, data }) {
         'url',
         'instance_created_date',
         'changed_at',
+        'target_login',
     ];
 
     const blank = () => ({
@@ -34,6 +35,15 @@ export function deploymentRegister({ App, axios, data }) {
         copied: false,
     });
 
+    const nothingEntered = () => ({
+        uuid: null,
+        alias: '',
+        target_login: '',
+        link: '',
+        expires_at: '',
+        copied: false,
+    });
+
     return () => ({
         hostings: seed.hostings,
         statuses: seed.statuses,
@@ -43,6 +53,7 @@ export function deploymentRegister({ App, axios, data }) {
         changing: { uuid: null, alias: '', from: null, status: null, changed_at: '' },
         removing: { uuid: null, alias: '' },
         issued: nothingIssued(),
+        entering: nothingEntered(),
         errors: {},
         messages: [],
 
@@ -80,6 +91,16 @@ export function deploymentRegister({ App, axios, data }) {
         // Dropped as the dialog closes, so a secret once read lingers nowhere on the page.
         forgetIssued() {
             this.issued = nothingIssued();
+        },
+
+        openSupport(row) {
+            this.errors = {};
+            this.messages = [];
+            this.entering = { ...nothingEntered(), uuid: row.uuid, alias: row.alias };
+        },
+
+        forgetEntry() {
+            this.entering = nothingEntered();
         },
 
         openRemoval(row) {
@@ -275,6 +296,54 @@ export function deploymentRegister({ App, axios, data }) {
                 this.issued.copied = true;
             } catch {
                 this.issued.copied = false;
+            }
+        },
+
+        /* The tab is opened before the request, while the click still counts as a gesture, since a
+           popup blocker refuses one opened after an await. */
+        async enterAsSupport() {
+            const tab = window.open('', '_blank');
+
+            if (tab) tab.opener = null;
+
+            const body = await this.request(
+                'post',
+                App.route('fleet.deployments.support', { deployment: this.entering.uuid }),
+                { target_login: this.entering.target_login },
+            );
+
+            if (!body) {
+                tab?.close();
+                this.messages.forEach((message) => App.notify.error(message));
+                return;
+            }
+
+            if (body.data.delivery === seed.enums.SupportEntryDelivery.Redirected && tab) {
+                tab.location.href = body.data.link;
+                App.modal('deployment-support').hide();
+                this.done(body.message);
+                return;
+            }
+
+            tab?.close();
+            this.entering = {
+                ...this.entering,
+                link: body.data.link,
+                expires_at: body.data.expires_at,
+                copied: false,
+            };
+            this.done(body.message);
+        },
+
+        // The field's current value, so a host corrected by hand is what gets copied.
+        async copyEntry() {
+            this.$refs.entryLink.select();
+
+            try {
+                await navigator.clipboard.writeText(this.entering.link);
+                this.entering.copied = true;
+            } catch {
+                this.entering.copied = false;
             }
         },
 

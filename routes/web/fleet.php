@@ -21,5 +21,10 @@ Route::prefix('fleet/deployments')
         Route::delete('{deployment}/permanent', [DeploymentController::class, 'erase'])->name('erase');
     });
 
+// Outside the register's own gate: entering is granted on its own, with or without keeping the register.
+Route::post('fleet/deployments/{deployment}/support', [DeploymentController::class, 'enterAsSupport'])
+    ->middleware('can:'.Permission::SUPPORT_DEPLOYMENT)
+    ->name('fleet.deployments.support');
+
 Route::tableData('fleet/deployments', DeploymentTable::class)
     ->middleware('can:'.Permission::MANAGE_DEPLOYMENT);

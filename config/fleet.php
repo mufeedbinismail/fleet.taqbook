@@ -34,4 +34,23 @@ return [
         'lifetime_days' => (int) env('FLEET_IDENTITY_LIFETIME_DAYS', 1),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Support entry
+    |--------------------------------------------------------------------------
+    |
+    | Where on a deployment's address a support link lands, and how long one
+    | stays valid. A copied link has to be carried to another machine, so it
+    | lives longer than one the fleet opens straight away.
+    |
+    */
+
+    'support' => [
+        'path' => '/support/session',
+        'lifetime_minutes' => [
+            'redirected' => (int) env('FLEET_SUPPORT_REDIRECTED_LIFETIME_MINUTES', 3),
+            'copied' => (int) env('FLEET_SUPPORT_COPIED_LIFETIME_MINUTES', 10),
+        ],
+    ],
+
 ];

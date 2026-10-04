@@ -69,6 +69,11 @@ return [
             'wrong_answer' => 'Its address answered, but not to this message',
         ],
 
+        'support_entry_delivery' => [
+            'redirected' => 'Redirected',
+            'copied' => 'Copied',
+        ],
+
         'hint' => [
             'alias' => 'What support will call this install: the customer, then which of theirs.',
             'alias_shape' => 'Letters and digits, separated by single hyphens, and never digits alone.',
@@ -85,6 +90,7 @@ return [
             'change_status' => 'Change status',
             'ping' => 'Ping',
             'issue_identity' => 'Issue identity',
+            'enter_support' => 'Enter as support',
             'copy' => 'Copy',
             'done' => 'Done',
             'menu' => 'Actions',
@@ -119,6 +125,21 @@ return [
             'copied' => 'Copied',
         ],
 
+        'enter_support' => [
+            'title' => 'Enter :alias as support',
+            'target_login' => 'Act as',
+            'target_login_hint' => 'The login of the client user to act as. Leave it empty to choose from their user roster.',
+            'action' => 'Enter',
+            'copy_text' => 'Change the host to whatever reaches this install from where you are, then open the link there. It works once.',
+            'expires' => 'Valid until :at',
+            'copied' => 'Copied',
+            'notice' => 'Support link for :alias issued',
+            'error' => [
+                'retired' => 'This deployment is retired. A retired deployment cannot be entered.',
+                'no_identity' => 'This deployment has not been issued an identity, so it would refuse a support link.',
+            ],
+        ],
+
         'error' => [
             'heading' => 'This deployment could not be saved',
             'same_status' => 'This deployment already stands at :status. Pick the status it moved to.',
@@ -129,6 +150,7 @@ return [
             'delegation_expired' => 'This server\'s delegation ran out on :date. Run fleet:keypair:install with the root secret.',
             'retired' => 'This deployment is retired. A retired deployment is not issued an identity.',
             'identity_moved' => 'Another change reached :alias while its identity was being issued. Try again.',
+            'erase_entered' => 'Support has entered this deployment, so its record is kept. Move it to trash instead.',
         ],
 
         'notice' => [
