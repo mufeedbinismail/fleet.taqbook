@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Str;
-
 return [
 
     /*
@@ -123,13 +121,11 @@ return [
     | Here you may change the name of the cookie used to identify a session
     | instance by ID. The name specified here will get used every time a
     | new session cookie is created by the framework for every driver.
-    |
+    | The default is keyed by install directory, so installs sharing a host
+    | keep separate sessions.
     */
 
-    'cookie' => env(
-        'SESSION_COOKIE',
-        Str::slug(env('APP_NAME', 'laravel'), '_').'_session'
-    ),
+    'cookie' => env('SESSION_COOKIE', 'tb_sess_'.substr(md5(base_path()), 0, 12)),
 
     /*
     |--------------------------------------------------------------------------
