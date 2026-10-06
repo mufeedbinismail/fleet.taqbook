@@ -2,11 +2,13 @@
 
 namespace App\Foundation\Auth\Action;
 
+use App\Foundation\Auth\Constant\AccessName;
 use App\Foundation\Auth\Exception\UserException;
 use App\Foundation\Auth\Intent\SaveUserIntent;
 use App\Foundation\Auth\Model\User;
 use App\Foundation\Auth\Repository\RoleRepository;
 use App\Foundation\Auth\Repository\UserRepository;
+use App\Foundation\Auth\Service\AccessService;
 use App\Foundation\Framework\DTO\ValidationResult;
 
 class SaveUserAction
@@ -15,6 +17,7 @@ class SaveUserAction
         protected UserRepository $repository,
         protected RoleRepository $roleRepository,
         protected SaveUserPasswordAction $saveUserPasswordAction,
+        protected AccessService $accessService,
     ) {}
 
     public function validate(SaveUserIntent $intent): ValidationResult
@@ -32,6 +35,10 @@ class SaveUserAction
                 return ValidationResult::error('user', __('auth.user.error.inactive_edit'));
             }
         } else {
+            if ($this->accessService->isReservedName((string) $intent->login)) {
+                return ValidationResult::error('user_id', __('auth.user.error.reserved_login', ['prefix' => AccessName::RESERVED_PREFIX]));
+            }
+
             if ($this->repository->loginTaken((string) $intent->login)) {
                 return ValidationResult::error('user_id', __('auth.user.error.duplicate_login'));
             }

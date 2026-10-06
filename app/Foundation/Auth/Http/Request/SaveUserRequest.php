@@ -2,6 +2,7 @@
 
 namespace App\Foundation\Auth\Http\Request;
 
+use App\Foundation\Auth\Constant\AccessName;
 use App\Foundation\Auth\Intent\SaveUserIntent;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -34,7 +35,7 @@ class SaveUserRequest extends FormRequest
         // somebody types to sign in, and moving it would change how they get in without telling
         // them.
         if (! $this->isEditing()) {
-            $rules['user_id'] = ['required', 'string', 'min:4', 'max:60'];
+            $rules['user_id'] = ['required', 'string', 'min:4', 'max:60', 'regex:'.AccessName::PATTERN];
         }
 
         return $rules;
@@ -48,6 +49,13 @@ class SaveUserRequest extends FormRequest
             'real_name' => __('auth.user.attribute.real_name'),
             'role_id' => __('auth.user.attribute.role'),
             'pos' => __('auth.user.attribute.pos'),
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'user_id.regex' => __('auth.user.error.login_format'),
         ];
     }
 

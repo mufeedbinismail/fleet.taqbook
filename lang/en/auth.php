@@ -69,6 +69,8 @@ return [
             'assigned' => 'This role is currently assigned to some users and cannot be deleted.',
             'reserved' => 'This role is reserved by the system and cannot be changed or deleted.',
             'reserved_permission' => 'One of these permissions is reserved by the system and cannot be granted.',
+            'reserved_name' => 'Role names starting with ":prefix" are reserved by the system.',
+            'name_format' => 'A role name may use only letters, digits, spaces and - & _, and cannot end with a separator.',
         ],
 
         // Substituted into validation messages, so they read mid-sentence and lowercase.
@@ -154,6 +156,8 @@ return [
             'no_history' => 'This user has never posted a transaction, so the account is deleted rather than deactivated.',
             'reserved' => 'This account is reserved by the system and cannot be changed, deactivated or deleted.',
             'reserved_role' => 'This access level is reserved by the system and cannot be assigned.',
+            'reserved_login' => 'Logins starting with ":prefix" are reserved by the system.',
+            'login_format' => 'A login may use only letters, digits, spaces and - & _, and cannot end with a separator.',
         ],
 
         // Names the validator substitutes into its own messages, so they read mid-sentence and

@@ -2,8 +2,13 @@
 
 namespace Tests\Feature\Foundation\Auth;
 
+use App\Foundation\Auth\Constant\AccessName;
+use App\Foundation\Auth\Constant\Permission;
+use App\Foundation\Auth\Model\Permission as PermissionRecord;
+use App\Foundation\Auth\Model\Role;
 use App\Foundation\Auth\Model\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 /**
@@ -45,5 +50,65 @@ class ReservedEntitiesTest extends TestCase
         ])->assertSessionHasNoErrors();
 
         $this->assertAuthenticatedAs($user->fresh());
+    }
+
+    public function test_a_role_cannot_be_created_under_the_reserved_prefix(): void
+    {
+        $this->actingAs($this->actor(Permission::MANAGE_ROLE))
+            ->postJson('/access/roles', [
+                'name' => 'TB-Support',
+                'inactive' => false,
+                'permissions' => [],
+            ])
+            ->assertStatus(422)
+            ->assertJsonPath('errors.name.0', __('auth.role.error.reserved_name', ['prefix' => AccessName::RESERVED_PREFIX]));
+    }
+
+    public function test_a_role_cannot_be_renamed_into_the_reserved_prefix(): void
+    {
+        $role = new Role;
+        $role->role = 'ZZ Spare Role';
+        $role->inactive = 0;
+        $role->save();
+
+        $this->actingAs($this->actor(Permission::MANAGE_ROLE))
+            ->putJson('/access/roles/'.$role->id, [
+                'name' => 'TB-Support',
+                'inactive' => false,
+                'permissions' => [],
+            ])
+            ->assertStatus(422)
+            ->assertJsonPath('errors.name.0', __('auth.role.error.reserved_name', ['prefix' => AccessName::RESERVED_PREFIX]));
+    }
+
+    public function test_a_user_cannot_be_registered_under_the_reserved_prefix(): void
+    {
+        $actor = $this->actor(Permission::MANAGE_USER);
+
+        $this->actingAs($actor)
+            ->postJson('/access/users', [
+                'user_id' => 'tb-support',
+                'password' => 'Secret123',
+                'real_name' => 'Support',
+                'role_id' => $actor->role_id,
+                'pos' => DB::table('sales_pos')->value('id'),
+            ])
+            ->assertStatus(422)
+            ->assertJsonPath('errors.user_id.0', __('auth.user.error.reserved_login', ['prefix' => AccessName::RESERVED_PREFIX]));
+    }
+
+    private function actor(string $permission): User
+    {
+        $role = new Role;
+        $role->role = 'ZZ Test Role';
+        $role->inactive = 0;
+        $role->save();
+        $role->permissions()->sync(PermissionRecord::where('key', $permission)->pluck('id'));
+
+        $user = User::first();
+        $user->role_id = $role->id;
+        $user->save();
+
+        return $user->fresh();
     }
 }

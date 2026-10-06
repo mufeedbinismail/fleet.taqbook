@@ -2,6 +2,7 @@
 
 namespace App\Foundation\Auth\Action;
 
+use App\Foundation\Auth\Constant\AccessName;
 use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Auth\Entity\Role;
 use App\Foundation\Auth\Exception\RoleException;
@@ -9,6 +10,7 @@ use App\Foundation\Auth\Intent\SaveRoleIntent;
 use App\Foundation\Auth\Model\User;
 use App\Foundation\Auth\Repository\PermissionRepository;
 use App\Foundation\Auth\Repository\RoleRepository;
+use App\Foundation\Auth\Service\AccessService;
 use App\Foundation\Framework\DTO\ValidationResult;
 
 class SaveRoleAction
@@ -16,6 +18,7 @@ class SaveRoleAction
     public function __construct(
         protected RoleRepository $repository,
         protected PermissionRepository $permissionRepository,
+        protected AccessService $accessService,
     ) {}
 
     /**
@@ -38,6 +41,10 @@ class SaveRoleAction
 
         if ($this->permissionRepository->isAnyReserved($intent->permissions)) {
             return ValidationResult::error('permissions', __('auth.role.error.reserved_permission'));
+        }
+
+        if ($this->accessService->isReservedName($intent->name)) {
+            return ValidationResult::error('name', __('auth.role.error.reserved_name', ['prefix' => AccessName::RESERVED_PREFIX]));
         }
 
         if ($this->repository->nameTaken($intent->name, $intent->roleId)) {

@@ -2,6 +2,7 @@
 
 namespace App\Foundation\Auth\Http\Request;
 
+use App\Foundation\Auth\Constant\AccessName;
 use App\Foundation\Auth\Intent\SaveRoleIntent;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -18,7 +19,7 @@ class SaveRoleRequest extends FormRequest
             // max:30 needs to be enforced before the query, not after: a name too long for the
             // column reaches MariaDB as a QueryException — a 500 — where the user should be
             // seeing an inline message instead.
-            'name' => ['required', 'string', 'max:30'],
+            'name' => ['required', 'string', 'max:30', 'regex:'.AccessName::PATTERN],
             'inactive' => ['required', 'boolean'],
             'permissions' => ['present', 'array'],
             'permissions.*' => ['string'],
@@ -30,6 +31,13 @@ class SaveRoleRequest extends FormRequest
         return [
             'name' => __('auth.role.attribute.name'),
             'permissions' => __('auth.role.attribute.permissions'),
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.regex' => __('auth.role.error.name_format'),
         ];
     }
 
