@@ -72,7 +72,7 @@ class ReservedEntitiesTest extends TestCase
         $role->save();
 
         $this->actingAs($this->actor(Permission::MANAGE_ROLE))
-            ->putJson('/access/roles/'.$role->id, [
+            ->putJson('/access/roles/'.$role->uuid, [
                 'name' => 'TB-Support',
                 'inactive' => false,
                 'permissions' => [],
@@ -90,7 +90,7 @@ class ReservedEntitiesTest extends TestCase
                 'user_id' => 'tb-support',
                 'password' => 'Secret123',
                 'real_name' => 'Support',
-                'role_id' => $actor->role_id,
+                'role_uuid' => $actor->role_uuid,
                 'pos' => DB::table('sales_pos')->value('id'),
             ])
             ->assertStatus(422)
@@ -106,7 +106,7 @@ class ReservedEntitiesTest extends TestCase
         $role->permissions()->sync(PermissionRecord::where('key', $permission)->pluck('id'));
 
         $user = User::first();
-        $user->role_id = $role->id;
+        $user->role_uuid = $role->uuid;
         $user->save();
 
         return $user->fresh();

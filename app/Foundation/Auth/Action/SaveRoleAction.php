@@ -75,7 +75,7 @@ class SaveRoleAction
     private function wouldLockOut(SaveRoleIntent $intent, User $actor): bool
     {
         return $intent->isEditing()
-            && $intent->roleId === $actor->role_id
+            && $intent->roleId === $actor->role_uuid
             && ! in_array(Permission::MANAGE_ROLE, $intent->permissions, true);
     }
 }

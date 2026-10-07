@@ -29,7 +29,7 @@ class RoleEditorTest extends TestCase
         );
 
         $user = User::first();
-        $user->role_id = $role->id;
+        $user->role_uuid = $role->uuid;
         $user->save();
 
         return $user->fresh();
@@ -43,13 +43,13 @@ class RoleEditorTest extends TestCase
     {
         $actor = $this->actor();
 
-        $response = $this->actingAs($actor)->get('/access/roles?role='.$actor->role_id);
+        $response = $this->actingAs($actor)->get('/access/roles?role='.$actor->role_uuid);
 
         $response->assertOk()->assertSee('x-data="roleEditor()"', false);
 
         $seed = $this->clientData($response->getContent())['roleEditor'];
 
-        $this->assertSame($actor->role_id, $seed['state']['id']);
+        $this->assertSame($actor->role_uuid, $seed['state']['id']);
         $this->assertSame('ZZ Test Role', $seed['state']['role_name']);
         $this->assertTrue($seed['state']['own']);
         $this->assertContains(Permission::MANAGE_ROLE, $seed['state']['permissions']);
@@ -64,7 +64,7 @@ class RoleEditorTest extends TestCase
         $user = $this->actor();
 
         $this->actingAs($user)
-            ->putJson('/access/roles/'.$user->role_id, [
+            ->putJson('/access/roles/'.$user->role_uuid, [
                 'name' => 'ZZ Test Role',
                 'inactive' => false,
                 'permissions' => [],
@@ -81,7 +81,7 @@ class RoleEditorTest extends TestCase
         $user = $this->actor();
 
         $this->actingAs($user)
-            ->deleteJson('/access/roles/'.$user->role_id)
+            ->deleteJson('/access/roles/'.$user->role_uuid)
             ->assertStatus(422)
             ->assertJsonPath(
                 'errors.role.0',
@@ -94,7 +94,7 @@ class RoleEditorTest extends TestCase
         $user = $this->actor();
 
         $this->actingAs($user)
-            ->putJson('/access/roles/'.$user->role_id, [
+            ->putJson('/access/roles/'.$user->role_uuid, [
                 'name' => 'ZZ Test Role Renamed',
                 'inactive' => false,
                 'permissions' => [Permission::MANAGE_ROLE],
@@ -112,10 +112,10 @@ class RoleEditorTest extends TestCase
     public function test_a_name_another_role_already_carries_is_refused_against_the_name_field(): void
     {
         $user = $this->actor();
-        $taken = Role::where('id', '!=', $user->role_id)->firstOrFail();
+        $taken = Role::where('uuid', '!=', $user->role_uuid)->firstOrFail();
 
         $this->actingAs($user)
-            ->putJson('/access/roles/'.$user->role_id, [
+            ->putJson('/access/roles/'.$user->role_uuid, [
                 'name' => $taken->role,
                 'inactive' => false,
                 'permissions' => [Permission::MANAGE_ROLE],
@@ -137,11 +137,11 @@ class RoleEditorTest extends TestCase
         $spare->save();
 
         $this->actingAs($user)
-            ->deleteJson('/access/roles/'.$spare->id)
+            ->deleteJson('/access/roles/'.$spare->uuid)
             ->assertOk()
             ->assertJsonPath('data.id', null)
             ->assertJsonPath('data.role_name', '');
 
-        $this->assertNull(Role::find($spare->id));
+        $this->assertNull(Role::find($spare->uuid));
     }
 }

@@ -86,7 +86,7 @@ final class UserTable implements TableDefinitionContract
             'role_name' => $record->role_name,
             'last_visit' => $record->last_visit,
             'inactive' => $record->inactive,
-            'role_id' => $record->role_id,
+            'role_uuid' => $record->role_uuid,
             'pos' => $record->pos,
             'is_editable' => ! $record->inactive,
             'is_switchable' => ! $own && $history,
@@ -137,7 +137,7 @@ final class UserTable implements TableDefinitionContract
                 $this->gate->denies(Permission::VIEW_RESERVED_ACCESS),
                 fn (EloquentBuilder $query) => $query->where('users.reserved', false)
             )
-            ->leftJoin('security_roles', 'security_roles.id', '=', 'users.role_id')
+            ->leftJoin('security_roles', 'security_roles.uuid', '=', 'users.role_uuid')
             ->select([
                 'users.uuid',
                 'users.user_id',
@@ -151,7 +151,7 @@ final class UserTable implements TableDefinitionContract
                 'users.inactive',
                 // Carried rather than drawn, so a row says what the account holds without being
                 // read again.
-                'users.role_id',
+                'users.role_uuid',
                 'users.pos',
             ])
             // Appended rather than listed above, because select() replaces the list it is given.
@@ -197,7 +197,7 @@ final class UserTable implements TableDefinitionContract
                 // to be renamed into each other's spelling, and neither is the one asked for.
                 // Several at once, because who holds access of some weight is a question about a
                 // set of roles rather than about any one of them.
-                filter: new InFilter('users.role_id', MultiSelectControl::from($this->optionService->channel($this->roleSelect))),
+                filter: new InFilter('users.role_uuid', MultiSelectControl::from($this->optionService->channel($this->roleSelect))),
                 width: '10rem',
             ),
             new ColumnDefinition('inactive', dataType: DataType::Boolean, visible: false, exportable: false),

@@ -45,7 +45,7 @@ class SaveUserAction
         }
 
         if ($this->roleRepository->find($intent->roleId)?->reserved) {
-            return ValidationResult::error('role_id', __('auth.user.error.reserved_role'));
+            return ValidationResult::error('role_uuid', __('auth.user.error.reserved_role'));
         }
 
         if ($intent->password !== null) {

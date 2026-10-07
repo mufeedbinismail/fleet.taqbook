@@ -27,7 +27,7 @@ class SaveUserRequest extends FormRequest
             'real_name' => ['required', 'string', 'max:100'],
             'phone' => ['nullable', 'string', 'max:30'],
             'email' => ['nullable', 'email', 'max:100'],
-            'role_id' => ['required', 'integer', 'exists:security_roles,id'],
+            'role_uuid' => ['required', 'uuid', 'exists:security_roles,uuid'],
             'pos' => ['required', 'integer', 'exists:sales_pos,id'],
         ];
 
@@ -47,7 +47,7 @@ class SaveUserRequest extends FormRequest
             'user_id' => __('auth.user.attribute.login'),
             'password' => __('auth.user.attribute.password'),
             'real_name' => __('auth.user.attribute.real_name'),
-            'role_id' => __('auth.user.attribute.role'),
+            'role_uuid' => __('auth.user.attribute.role'),
             'pos' => __('auth.user.attribute.pos'),
         ];
     }
@@ -68,7 +68,7 @@ class SaveUserRequest extends FormRequest
             realName: $this->validated('real_name'),
             phone: (string) ($this->validated('phone') ?? ''),
             email: (string) ($this->validated('email') ?? ''),
-            roleId: (int) $this->validated('role_id'),
+            roleId: $this->validated('role_uuid'),
             pos: (int) $this->validated('pos'),
         );
     }

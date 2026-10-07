@@ -30,7 +30,7 @@ class UserRepository
         $record->real_name = $intent->realName;
         $record->phone = $intent->phone;
         $record->email = $intent->email;
-        $record->role_id = $intent->roleId;
+        $record->role_uuid = $intent->roleId;
         $record->pos = $intent->pos;
 
         if ($intent->password !== null) {

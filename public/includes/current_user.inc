@@ -40,7 +40,7 @@ class current_user
             $this->company = 0;
             $this->prefs = new user_prefs();
         } else {
-            $this->access = $model->role_id;
+            $this->access = $model->role_uuid;
             $this->name = $model->real_name;
             $this->pos = $model->pos;
             $this->loginname = $model->user_id;

@@ -19,9 +19,9 @@ Route::prefix('access/roles')
     ->group(function () {
         Route::get('/', [RoleController::class, 'index'])->name('index');
         Route::post('/', [RoleController::class, 'store'])->name('store');
-        Route::get('{role}', [RoleController::class, 'show'])->whereNumber('role')->name('show');
-        Route::put('{role}', [RoleController::class, 'update'])->whereNumber('role')->name('update');
-        Route::delete('{role}', [RoleController::class, 'destroy'])->whereNumber('role')->name('destroy');
+        Route::get('{role}', [RoleController::class, 'show'])->whereUuid('role')->name('show');
+        Route::put('{role}', [RoleController::class, 'update'])->whereUuid('role')->name('update');
+        Route::delete('{role}', [RoleController::class, 'destroy'])->whereUuid('role')->name('destroy');
     });
 
 Route::prefix('access/users')

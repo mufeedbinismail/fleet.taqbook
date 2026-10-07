@@ -44,23 +44,12 @@ class SaveRoleRequest extends FormRequest
     public function toIntent(): SaveRoleIntent
     {
         return new SaveRoleIntent(
-            roleId: $this->roleId(),
+            roleId: $this->route('role'),
             name: $this->validated('name'),
             inactive: $this->boolean('inactive'),
             // array_values, because the validator preserves the client's keys — re-indexing here
             // is what keeps this a plain list rather than a sparse/associative array.
             permissions: array_values(array_unique($this->validated('permissions'))),
         );
-    }
-
-    /**
-     * The role being edited, or null when one is being created — which is the difference between
-     * the two routes reaching this, and the only one.
-     */
-    private function roleId(): ?int
-    {
-        $id = $this->route('role');
-
-        return $id === null ? null : (int) $id;
     }
 }

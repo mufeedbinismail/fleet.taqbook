@@ -2,6 +2,7 @@
 
 namespace App\Foundation\Auth\Model;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,7 +10,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Role extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
+
+    protected $primaryKey = 'uuid';
+
+    protected $keyType = 'string';
+
+    public $incrementing = false;
 
     protected $table = 'security_roles';
 
@@ -27,14 +34,22 @@ class Role extends Model
         'reserved' => 'boolean',
     ];
 
+    /**
+     * @return list<string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
+    }
+
     public function permissions(): BelongsToMany
     {
-        return $this->belongsToMany(Permission::class, 'role_permissions');
+        return $this->belongsToMany(Permission::class, 'role_permissions', 'role_uuid');
     }
 
     public function users(): HasMany
     {
-        return $this->hasMany(User::class, 'role_id');
+        return $this->hasMany(User::class, 'role_uuid');
     }
 
     public function hasPermission(string $key): bool

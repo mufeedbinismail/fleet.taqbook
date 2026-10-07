@@ -29,7 +29,7 @@ final class RoleSelect implements NarrowsOptionsContract, SelectDefinitionContra
                 $this->gate->denies(Permission::VIEW_RESERVED_ACCESS),
                 fn (EloquentBuilder $query) => $query->where('security_roles.reserved', false),
             )
-            ->select(['security_roles.id as value', 'security_roles.role as label'])
+            ->select(['security_roles.uuid as value', 'security_roles.role as label'])
             ->selectRaw('CASE WHEN security_roles.inactive THEN ? END as description', [__('auth.role.picker.inactive')])
             ->orderBy('security_roles.role');
     }
@@ -56,7 +56,7 @@ final class RoleSelect implements NarrowsOptionsContract, SelectDefinitionContra
 
     public function valueColumn(): string
     {
-        return 'security_roles.id';
+        return 'security_roles.uuid';
     }
 
     public static function routeName(): string

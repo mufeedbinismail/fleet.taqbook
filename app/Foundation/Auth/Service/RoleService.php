@@ -18,7 +18,7 @@ class RoleService
      * blank rather than failing: a link outliving the role it names is the ordinary case, and a
      * reserved role is the same case to anybody not allowed to see it.
      */
-    public function state(?int $roleId, User $actor): RoleState
+    public function state(?string $roleId, User $actor): RoleState
     {
         $role = $roleId === null ? null : $this->repository->find($roleId);
 
@@ -29,7 +29,7 @@ class RoleService
         return RoleState::of(
             $role,
             $this->repository->grantedKeys($role->id),
-            $role->id === $actor->role_id,
+            $role->id === $actor->role_uuid,
         );
     }
 }

@@ -153,12 +153,12 @@ ClientData::registry()
                          back and the two would chase each other. --}}
                     <x-ui.select
                         id="user-role"
-                        name="role_id"
+                        name="role_uuid"
                         class="w-full"
                         required
                         :channel="$roles"
-                        x-model.number="form.role_id"
-                        x-effect="$el.__xSelect?.setValue(form.role_id, { silent: true })"
+                        x-model="form.role_uuid"
+                        x-effect="$el.__xSelect?.setValue(form.role_uuid, { silent: true })"
                     />
 
                     <label for="user-pos" class="text-sm font-semibold text-card-title-txt">{{ __('auth.user.field.pos') }}</label>

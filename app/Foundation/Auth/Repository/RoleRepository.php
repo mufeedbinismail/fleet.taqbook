@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class RoleRepository
 {
-    public function find(int $id): ?Role
+    public function find(string $id): ?Role
     {
         $record = RoleRecord::find($id);
 
@@ -23,12 +23,12 @@ class RoleRepository
      *
      * @return list<string>
      */
-    public function grantedKeys(int $id): array
+    public function grantedKeys(string $id): array
     {
         return RoleRecord::find($id)?->permissions()->pluck('key')->values()->all() ?? [];
     }
 
-    public function isAssigned(int $id): bool
+    public function isAssigned(string $id): bool
     {
         return RoleRecord::find($id)?->users()->exists() ?? false;
     }
@@ -37,10 +37,10 @@ class RoleRepository
      * Whether some other role already carries this name. $excludingId is the role being saved, so
      * a role keeps its own name without tripping over itself.
      */
-    public function nameTaken(string $name, ?int $excludingId): bool
+    public function nameTaken(string $name, ?string $excludingId): bool
     {
         return RoleRecord::where('role', $name)
-            ->when($excludingId !== null, fn ($query) => $query->where('id', '!=', $excludingId))
+            ->when($excludingId !== null, fn ($query) => $query->where('uuid', '!=', $excludingId))
             ->exists();
     }
 
@@ -74,7 +74,7 @@ class RoleRepository
         });
     }
 
-    public function delete(int $id): void
+    public function delete(string $id): void
     {
         RoleRecord::destroy($id);
     }

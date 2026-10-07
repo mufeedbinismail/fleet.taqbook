@@ -40,7 +40,7 @@ class RoleController extends Controller
         ]);
     }
 
-    public function show(Request $request, int $role): ResponseEnvelope
+    public function show(Request $request, string $role): ResponseEnvelope
     {
         return ResponseEnvelope::ok(data: $this->state($role, $request)->toArray());
     }
@@ -52,14 +52,14 @@ class RoleController extends Controller
         return $this->payload($this->state($saved->id, $request), __('auth.role.notice.created'));
     }
 
-    public function update(SaveRoleRequest $request, SaveRoleAction $action, int $role): ResponseEnvelope
+    public function update(SaveRoleRequest $request, SaveRoleAction $action, string $role): ResponseEnvelope
     {
         $saved = $this->save($request, $action);
 
         return $this->payload($this->state($saved->id, $request), __('auth.role.notice.updated'));
     }
 
-    public function destroy(Request $request, DeleteRoleAction $action, int $role): ResponseEnvelope
+    public function destroy(Request $request, DeleteRoleAction $action, string $role): ResponseEnvelope
     {
         $this->refuse($action->validate($role));
 
@@ -90,7 +90,7 @@ class RoleController extends Controller
         return ResponseEnvelope::ok($notice, $state->toArray());
     }
 
-    protected function state(?int $roleId, Request $request): RoleState
+    protected function state(?string $roleId, Request $request): RoleState
     {
         return $this->service->state($roleId, $request->user());
     }

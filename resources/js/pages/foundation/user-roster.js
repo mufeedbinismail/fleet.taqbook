@@ -12,7 +12,7 @@ export function userRoster({ App, axios, data }) {
         real_name: '',
         phone: '',
         email: '',
-        role_id: Number(seed.roles.options[0]?.value) || null,
+        role_uuid: seed.roles.options[0]?.value ?? null,
         pos: seed.salesPoints[0]?.id ?? null,
     });
 
@@ -86,7 +86,7 @@ export function userRoster({ App, axios, data }) {
                 real_name: this.form.real_name,
                 phone: this.form.phone,
                 email: this.form.email,
-                role_id: this.form.role_id,
+                role_uuid: this.form.role_uuid,
                 pos: this.form.pos,
             };
 

@@ -10,7 +10,7 @@ class DeleteRoleAction
 {
     public function __construct(protected RoleRepository $repository) {}
 
-    public function validate(int $roleId): ValidationResult
+    public function validate(string $roleId): ValidationResult
     {
         if ($this->repository->find($roleId)?->reserved) {
             return ValidationResult::error('role', __('auth.role.error.reserved'));
@@ -26,7 +26,7 @@ class DeleteRoleAction
     /**
      * @throws RoleException if the removal was never checked and the check would have refused it
      */
-    public function execute(int $roleId): void
+    public function execute(string $roleId): void
     {
         $checked = $this->validate($roleId);
 

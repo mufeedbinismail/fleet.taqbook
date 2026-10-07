@@ -64,7 +64,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'role_id' => 'integer',
         'reserved' => 'boolean',
     ];
 
@@ -78,7 +77,7 @@ class User extends Authenticatable
 
     public function role(): BelongsTo
     {
-        return $this->belongsTo(Role::class, 'role_id');
+        return $this->belongsTo(Role::class, 'role_uuid');
     }
 
     public function hasPermission(string $key): bool

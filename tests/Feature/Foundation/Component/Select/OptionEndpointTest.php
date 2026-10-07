@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Foundation\Component\Select;
 
+use App\Foundation\Auth\Model\Role;
 use App\Foundation\Component\Select\Contract\NarrowsOptionsContract;
 use App\Foundation\Component\Select\Contract\SelectDefinitionContract;
 use App\Foundation\Component\Select\Service\OptionService;
@@ -26,17 +27,24 @@ class OptionEndpointTest extends TestCase
 {
     use DatabaseTransactions;
 
+    private string $front;
+
+    private string $back;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         Route::optionList('test/staff', StaffSelect::class);
         Route::optionList('test/role-staff', RoleStaffSelect::class);
+
+        $this->front = Role::factory()->create()->uuid;
+        $this->back = Role::factory()->create()->uuid;
     }
 
     public function test_a_clerk_searching_is_offered_only_the_rows_that_match(): void
     {
-        $this->given(['ZZ Alan Reed' => 1, 'ZZ Bea Novak' => 1, 'ZZ Cal Ortiz' => 2]);
+        $this->given(['ZZ Alan Reed' => $this->front, 'ZZ Bea Novak' => $this->front, 'ZZ Cal Ortiz' => $this->back]);
 
         $this->assertSame(['ZZ Bea Novak'], $this->offered(['search' => 'ZZ Bea'])->json('data.*.label'));
     }
@@ -49,7 +57,7 @@ class OptionEndpointTest extends TestCase
      */
     public function test_a_long_list_pages_and_the_last_page_says_so(): void
     {
-        $this->given(array_fill_keys(array_map(fn ($letter) => "ZZ {$letter}", range('A', 'J')), 1));
+        $this->given(array_fill_keys(array_map(fn ($letter) => "ZZ {$letter}", range('A', 'J')), $this->front));
 
         $first = $this->offered(['per_page' => 5]);
         $second = $this->offered(['per_page' => 5, 'page' => 2]);
@@ -68,10 +76,10 @@ class OptionEndpointTest extends TestCase
      */
     public function test_a_held_employee_is_kept_only_while_the_department_still_allows_them(): void
     {
-        $ids = $this->given(['ZZ Alan Reed' => 1, 'ZZ Bea Novak' => 1, 'ZZ Cal Ortiz' => 2], language: 'fr_FR');
+        $ids = $this->given(['ZZ Alan Reed' => $this->front, 'ZZ Bea Novak' => $this->front, 'ZZ Cal Ortiz' => $this->back], language: 'fr_FR');
 
         $response = $this->offered(
-            ['role_id' => 1, 'per_page' => 1, 'selected' => [$ids['ZZ Bea Novak'], $ids['ZZ Cal Ortiz']]],
+            ['role_uuid' => $this->front, 'per_page' => 1, 'selected' => [$ids['ZZ Bea Novak'], $ids['ZZ Cal Ortiz']]],
             'test/role-staff/options',
         );
 
@@ -85,11 +93,11 @@ class OptionEndpointTest extends TestCase
      */
     public function test_a_narrowing_the_screen_never_declared_is_ignored(): void
     {
-        $this->given(['ZZ Alan Reed' => 1, 'ZZ Cal Ortiz' => 2]);
+        $this->given(['ZZ Alan Reed' => $this->front, 'ZZ Cal Ortiz' => $this->back]);
 
         $this->assertSame(
             ['ZZ Alan Reed', 'ZZ Cal Ortiz'],
-            $this->offered(['role_id' => 2])->json('data.*.label'),
+            $this->offered(['role_uuid' => $this->back])->json('data.*.label'),
         );
     }
 
@@ -100,11 +108,11 @@ class OptionEndpointTest extends TestCase
      */
     public function test_a_set_too_large_to_list_is_offered_by_address_instead(): void
     {
-        $this->given(['ZZ Alan Reed' => 1, 'ZZ Bea Novak' => 1, 'ZZ Cal Ortiz' => 2]);
+        $this->given(['ZZ Alan Reed' => $this->front, 'ZZ Bea Novak' => $this->front, 'ZZ Cal Ortiz' => $this->back]);
 
         config(['component.select.inline_up_to' => 2]);
 
-        $listed = app(OptionService::class)->channel(new RoleStaffSelect, ['role_id' => 1]);
+        $listed = app(OptionService::class)->channel(new RoleStaffSelect, ['role_uuid' => $this->front]);
 
         $this->assertFalse($listed->isFetchedFromSource());
         $this->assertSame(['ZZ Alan Reed', 'ZZ Bea Novak'], array_column($listed->options()->toArray(), 'label'));
@@ -117,7 +125,7 @@ class OptionEndpointTest extends TestCase
     }
 
     /**
-     * @param  array<string, int>  $staff  name to the role they hold
+     * @param  array<string, string>  $staff  name to the role they hold
      * @return array<string, int> name to id
      */
     private function given(array $staff, string $language = 'en_GB'): array
@@ -130,7 +138,7 @@ class OptionEndpointTest extends TestCase
                 'user_id' => strtolower(str_replace(' ', '.', $name)),
                 'real_name' => $name,
                 'password' => '',
-                'role_id' => $role,
+                'role_uuid' => $role,
                 'language' => $language,
             ]);
         }
@@ -188,13 +196,13 @@ class RoleStaffSelect extends StaffSelect implements NarrowsOptionsContract
 
     public function applyFilters(EloquentBuilder|QueryBuilder $query, SelectState $state): void
     {
-        if ($role = $state->filter('role_id')) {
-            $query->where('role_id', $role);
+        if ($role = $state->filter('role_uuid')) {
+            $query->where('role_uuid', $role);
         }
     }
 
     public function filterRules(): array
     {
-        return ['role_id' => ['required', 'integer']];
+        return ['role_uuid' => ['required', 'uuid']];
     }
 }

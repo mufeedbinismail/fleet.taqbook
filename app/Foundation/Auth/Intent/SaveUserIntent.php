@@ -24,7 +24,7 @@ final class SaveUserIntent
         public readonly string $realName,
         public readonly string $phone,
         public readonly string $email,
-        public readonly int $roleId,
+        public readonly string $roleId,
         public readonly int $pos,
     ) {}
 
