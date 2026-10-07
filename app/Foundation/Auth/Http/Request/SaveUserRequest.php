@@ -3,7 +3,8 @@
 namespace App\Foundation\Auth\Http\Request;
 
 use App\Foundation\Auth\Constant\AccessName;
-use App\Foundation\Auth\Intent\SaveUserIntent;
+use App\Foundation\Auth\Intent\CreateUserIntent;
+use App\Foundation\Auth\Intent\UpdateUserIntent;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SaveUserRequest extends FormRequest
@@ -59,18 +60,35 @@ class SaveUserRequest extends FormRequest
         ];
     }
 
-    public function toIntent(): SaveUserIntent
+    public function toIntent(): CreateUserIntent|UpdateUserIntent
     {
-        return new SaveUserIntent(
-            uuid: $this->uuid(),
-            login: $this->isEditing() ? null : $this->validated('user_id'),
-            password: $this->input('password'),
-            realName: $this->validated('real_name'),
-            phone: (string) ($this->validated('phone') ?? ''),
-            email: (string) ($this->validated('email') ?? ''),
-            roleUuid: $this->validated('role_uuid'),
-            pos: (int) $this->validated('pos'),
-        );
+        $realName = $this->validated('real_name');
+        $phone = (string) ($this->validated('phone') ?? '');
+        $email = (string) ($this->validated('email') ?? '');
+        $roleUuid = $this->validated('role_uuid');
+        $pos = (int) $this->validated('pos');
+        $uuid = $this->uuid();
+
+        return $uuid === null
+            ? new CreateUserIntent(
+                uuid: null,
+                login: $this->validated('user_id'),
+                password: (string) $this->input('password'),
+                realName: $realName,
+                phone: $phone,
+                email: $email,
+                roleUuid: $roleUuid,
+                pos: $pos,
+            )
+            : new UpdateUserIntent(
+                uuid: $uuid,
+                password: $this->input('password'),
+                realName: $realName,
+                phone: $phone,
+                email: $email,
+                roleUuid: $roleUuid,
+                pos: $pos,
+            );
     }
 
     /**

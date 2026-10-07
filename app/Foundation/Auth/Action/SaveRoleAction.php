@@ -6,7 +6,8 @@ use App\Foundation\Auth\Constant\AccessName;
 use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Auth\Entity\Role;
 use App\Foundation\Auth\Exception\RoleException;
-use App\Foundation\Auth\Intent\SaveRoleIntent;
+use App\Foundation\Auth\Intent\CreateRoleIntent;
+use App\Foundation\Auth\Intent\UpdateRoleIntent;
 use App\Foundation\Auth\Model\User;
 use App\Foundation\Auth\Repository\PermissionRepository;
 use App\Foundation\Auth\Repository\RoleRepository;
@@ -27,9 +28,9 @@ class SaveRoleAction
      * else is asked of a role that can never be saved; a reserved permission is refused rather
      * than silently dropped from the grant.
      */
-    public function validate(SaveRoleIntent $intent, User $actor): ValidationResult
+    public function validate(CreateRoleIntent|UpdateRoleIntent $intent, User $actor): ValidationResult
     {
-        if ($intent->isEditing()) {
+        if ($intent instanceof UpdateRoleIntent) {
             if ($this->repository->find($intent->uuid)?->reserved) {
                 return ValidationResult::error('role', __('auth.role.error.reserved'));
             }
@@ -47,7 +48,7 @@ class SaveRoleAction
             return ValidationResult::error('name', __('auth.role.error.reserved_name', ['prefix' => AccessName::RESERVED_PREFIX]));
         }
 
-        if ($this->repository->nameTaken($intent->name, $intent->uuid)) {
+        if ($this->repository->nameTaken($intent->name, $intent instanceof UpdateRoleIntent ? $intent->uuid : null)) {
             return ValidationResult::error('name', __('auth.role.error.duplicate_name'));
         }
 
@@ -57,7 +58,7 @@ class SaveRoleAction
     /**
      * @throws RoleException if the save was never checked and the check would have refused it
      */
-    public function execute(SaveRoleIntent $intent, User $actor): Role
+    public function execute(CreateRoleIntent|UpdateRoleIntent $intent, User $actor): Role
     {
         $checked = $this->validate($intent, $actor);
 
@@ -65,17 +66,18 @@ class SaveRoleAction
             throw RoleException::unchecked((string) $checked->field);
         }
 
-        return $this->repository->save($intent);
+        return $intent instanceof UpdateRoleIntent
+            ? $this->repository->update($intent)
+            : $this->repository->create($intent);
     }
 
     /**
      * Editing somebody else's role is never a lockout: their access is theirs to lose, and the
      * author keeps the screen either way.
      */
-    private function wouldLockOut(SaveRoleIntent $intent, User $actor): bool
+    private function wouldLockOut(UpdateRoleIntent $intent, User $actor): bool
     {
-        return $intent->isEditing()
-            && $intent->uuid === $actor->role_uuid
+        return $intent->uuid === $actor->role_uuid
             && ! in_array(Permission::MANAGE_ROLE, $intent->permissions, true);
     }
 }

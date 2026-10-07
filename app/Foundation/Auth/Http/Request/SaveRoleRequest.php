@@ -3,7 +3,8 @@
 namespace App\Foundation\Auth\Http\Request;
 
 use App\Foundation\Auth\Constant\AccessName;
-use App\Foundation\Auth\Intent\SaveRoleIntent;
+use App\Foundation\Auth\Intent\CreateRoleIntent;
+use App\Foundation\Auth\Intent\UpdateRoleIntent;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SaveRoleRequest extends FormRequest
@@ -41,15 +42,27 @@ class SaveRoleRequest extends FormRequest
         ];
     }
 
-    public function toIntent(): SaveRoleIntent
+    public function toIntent(): CreateRoleIntent|UpdateRoleIntent
     {
-        return new SaveRoleIntent(
-            uuid: $this->route('role'),
-            name: $this->validated('name'),
-            inactive: $this->boolean('inactive'),
-            // array_values, because the validator preserves the client's keys — re-indexing here
-            // is what keeps this a plain list rather than a sparse/associative array.
-            permissions: array_values(array_unique($this->validated('permissions'))),
-        );
+        $name = $this->validated('name');
+        $inactive = $this->boolean('inactive');
+        // array_values, because the validator preserves the client's keys — re-indexing here
+        // is what keeps this a plain list rather than a sparse/associative array.
+        $permissions = array_values(array_unique($this->validated('permissions')));
+        $uuid = $this->route('role');
+
+        return $uuid === null
+            ? new CreateRoleIntent(
+                uuid: null,
+                name: $name,
+                inactive: $inactive,
+                permissions: $permissions,
+            )
+            : new UpdateRoleIntent(
+                uuid: $uuid,
+                name: $name,
+                inactive: $inactive,
+                permissions: $permissions,
+            );
     }
 }

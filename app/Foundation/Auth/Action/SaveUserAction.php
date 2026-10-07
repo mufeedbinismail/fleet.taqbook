@@ -4,7 +4,8 @@ namespace App\Foundation\Auth\Action;
 
 use App\Foundation\Auth\Constant\AccessName;
 use App\Foundation\Auth\Exception\UserException;
-use App\Foundation\Auth\Intent\SaveUserIntent;
+use App\Foundation\Auth\Intent\CreateUserIntent;
+use App\Foundation\Auth\Intent\UpdateUserIntent;
 use App\Foundation\Auth\Model\User;
 use App\Foundation\Auth\Repository\RoleRepository;
 use App\Foundation\Auth\Repository\UserRepository;
@@ -20,11 +21,11 @@ class SaveUserAction
         protected AccessService $accessService,
     ) {}
 
-    public function validate(SaveUserIntent $intent): ValidationResult
+    public function validate(CreateUserIntent|UpdateUserIntent $intent): ValidationResult
     {
         $existing = null;
 
-        if ($intent->isEditing()) {
+        if ($intent instanceof UpdateUserIntent) {
             $existing = User::find($intent->uuid);
 
             if ($existing?->reserved) {
@@ -35,11 +36,11 @@ class SaveUserAction
                 return ValidationResult::error('user', __('auth.user.error.inactive_edit'));
             }
         } else {
-            if ($this->accessService->isReservedName((string) $intent->login)) {
+            if ($this->accessService->isReservedName($intent->login)) {
                 return ValidationResult::error('user_id', __('auth.user.error.reserved_login', ['prefix' => AccessName::RESERVED_PREFIX]));
             }
 
-            if ($this->repository->loginTaken((string) $intent->login)) {
+            if ($this->repository->loginTaken($intent->login)) {
                 return ValidationResult::error('user_id', __('auth.user.error.duplicate_login'));
             }
         }
@@ -49,7 +50,7 @@ class SaveUserAction
         }
 
         if ($intent->password !== null) {
-            $login = $intent->login ?? $existing?->user_id ?? '';
+            $login = $intent instanceof CreateUserIntent ? $intent->login : $existing?->user_id ?? '';
             $checked = $this->saveUserPasswordAction->validate($login, $intent->password);
 
             if (! $checked->isValid) {
@@ -63,7 +64,7 @@ class SaveUserAction
     /**
      * @throws UserException if the save was never checked and the check would have refused it
      */
-    public function execute(SaveUserIntent $intent): User
+    public function execute(CreateUserIntent|UpdateUserIntent $intent): User
     {
         $checked = $this->validate($intent);
 
@@ -71,6 +72,8 @@ class SaveUserAction
             throw UserException::unchecked((string) $checked->field);
         }
 
-        return $this->repository->save($intent);
+        return $intent instanceof UpdateUserIntent
+            ? $this->repository->update($intent)
+            : $this->repository->create($intent);
     }
 }

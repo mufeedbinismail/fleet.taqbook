@@ -3,7 +3,8 @@
 namespace App\Foundation\Auth\Repository;
 
 use App\Foundation\Auth\Constant\DisplayPreference;
-use App\Foundation\Auth\Intent\SaveUserIntent;
+use App\Foundation\Auth\Intent\CreateUserIntent;
+use App\Foundation\Auth\Intent\UpdateUserIntent;
 use App\Foundation\Auth\Model\User;
 use App\Foundation\Framework\Enum\Skin;
 use App\Foundation\Setting\Registry\UserSettingRegistry;
@@ -16,27 +17,45 @@ class UserRepository
         return User::where('user_id', $login)->exists();
     }
 
+    public function find(string $uuid): ?User
+    {
+        return User::find($uuid);
+    }
+
     /**
-     * Creates or overwrites a user's details, leaving their display preferences alone.
+     * Opens on the application's display defaults, leaving the account holder's preferences to them.
+     */
+    public function create(CreateUserIntent $intent): User
+    {
+        $record = $this->started($intent->login);
+
+        if ($intent->uuid !== null) {
+            $record->uuid = $intent->uuid;
+        }
+
+        $record->password = $intent->password;
+        $record->reserved = (int) $intent->reserved;
+        $record->inactive = 0;
+        $this->fill($record, $intent);
+        $record->save();
+
+        return $record;
+    }
+
+    /**
+     * Overwrites a user's details, leaving their display preferences alone.
      *
      * @throws ResourceNotFoundException if $intent->uuid names no user
      */
-    public function save(SaveUserIntent $intent): User
+    public function update(UpdateUserIntent $intent): User
     {
-        $record = $intent->isEditing()
-            ? User::find($intent->uuid) ?? throw ResourceNotFoundException::for('User', $intent->uuid)
-            : $this->started((string) $intent->login);
-
-        $record->real_name = $intent->realName;
-        $record->phone = $intent->phone;
-        $record->email = $intent->email;
-        $record->role_uuid = $intent->roleUuid;
-        $record->pos = $intent->pos;
+        $record = User::find($intent->uuid) ?? throw ResourceNotFoundException::for('User', $intent->uuid);
 
         if ($intent->password !== null) {
             $record->password = $intent->password;
         }
 
+        $this->fill($record, $intent);
         $record->save();
 
         return $record;
@@ -79,6 +98,15 @@ class UserRepository
         }
 
         return $record;
+    }
+
+    private function fill(User $record, CreateUserIntent|UpdateUserIntent $intent): void
+    {
+        $record->real_name = $intent->realName;
+        $record->phone = $intent->phone;
+        $record->email = $intent->email;
+        $record->role_uuid = $intent->roleUuid;
+        $record->pos = $intent->pos;
     }
 
     public function saveSkin(User $user, Skin $skin): void
