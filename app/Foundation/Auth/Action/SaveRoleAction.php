@@ -30,7 +30,7 @@ class SaveRoleAction
     public function validate(SaveRoleIntent $intent, User $actor): ValidationResult
     {
         if ($intent->isEditing()) {
-            if ($this->repository->find($intent->roleId)?->reserved) {
+            if ($this->repository->find($intent->uuid)?->reserved) {
                 return ValidationResult::error('role', __('auth.role.error.reserved'));
             }
 
@@ -47,7 +47,7 @@ class SaveRoleAction
             return ValidationResult::error('name', __('auth.role.error.reserved_name', ['prefix' => AccessName::RESERVED_PREFIX]));
         }
 
-        if ($this->repository->nameTaken($intent->name, $intent->roleId)) {
+        if ($this->repository->nameTaken($intent->name, $intent->uuid)) {
             return ValidationResult::error('name', __('auth.role.error.duplicate_name'));
         }
 
@@ -75,7 +75,7 @@ class SaveRoleAction
     private function wouldLockOut(SaveRoleIntent $intent, User $actor): bool
     {
         return $intent->isEditing()
-            && $intent->roleId === $actor->role_uuid
+            && $intent->uuid === $actor->role_uuid
             && ! in_array(Permission::MANAGE_ROLE, $intent->permissions, true);
     }
 }

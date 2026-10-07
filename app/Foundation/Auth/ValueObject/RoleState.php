@@ -40,12 +40,12 @@ final class RoleState
      * Flat, because that is what the editor reads. A blank state answers with the empty values a
      * new role starts from rather than with nulls the client would have to translate.
      *
-     * @return array{id: int|null, role_name: string, inactive: bool, permissions: list<string>, own: bool}
+     * @return array{uuid: string|null, role_name: string, inactive: bool, permissions: list<string>, own: bool}
      */
     public function toArray(): array
     {
         return [
-            'id' => $this->role?->id,
+            'uuid' => $this->role?->uuid,
             'role_name' => $this->role?->name ?? '',
             'inactive' => $this->role?->inactive ?? false,
             'permissions' => $this->permissions,

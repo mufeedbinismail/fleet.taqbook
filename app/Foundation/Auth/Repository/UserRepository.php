@@ -19,18 +19,18 @@ class UserRepository
     /**
      * Creates or overwrites a user's details, leaving their display preferences alone.
      *
-     * @throws ResourceNotFoundException if $intent->userId names no user
+     * @throws ResourceNotFoundException if $intent->uuid names no user
      */
     public function save(SaveUserIntent $intent): User
     {
         $record = $intent->isEditing()
-            ? User::find($intent->userId) ?? throw ResourceNotFoundException::for('User', $intent->userId)
+            ? User::find($intent->uuid) ?? throw ResourceNotFoundException::for('User', $intent->uuid)
             : $this->started((string) $intent->login);
 
         $record->real_name = $intent->realName;
         $record->phone = $intent->phone;
         $record->email = $intent->email;
-        $record->role_uuid = $intent->roleId;
+        $record->role_uuid = $intent->roleUuid;
         $record->pos = $intent->pos;
 
         if ($intent->password !== null) {

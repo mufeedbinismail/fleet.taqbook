@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\DB;
 
 class RoleRepository
 {
-    public function find(string $id): ?Role
+    public function find(string $uuid): ?Role
     {
-        $record = RoleRecord::find($id);
+        $record = RoleRecord::find($uuid);
 
         return $record === null ? null : Role::of($record);
     }
@@ -23,24 +23,24 @@ class RoleRepository
      *
      * @return list<string>
      */
-    public function grantedKeys(string $id): array
+    public function grantedKeys(string $uuid): array
     {
-        return RoleRecord::find($id)?->permissions()->pluck('key')->values()->all() ?? [];
+        return RoleRecord::find($uuid)?->permissions()->pluck('key')->values()->all() ?? [];
     }
 
-    public function isAssigned(string $id): bool
+    public function isAssigned(string $uuid): bool
     {
-        return RoleRecord::find($id)?->users()->exists() ?? false;
+        return RoleRecord::find($uuid)?->users()->exists() ?? false;
     }
 
     /**
-     * Whether some other role already carries this name. $excludingId is the role being saved, so
+     * Whether some other role already carries this name. $excludingUuid is the role being saved, so
      * a role keeps its own name without tripping over itself.
      */
-    public function nameTaken(string $name, ?string $excludingId): bool
+    public function nameTaken(string $name, ?string $excludingUuid): bool
     {
         return RoleRecord::where('role', $name)
-            ->when($excludingId !== null, fn ($query) => $query->where('uuid', '!=', $excludingId))
+            ->when($excludingUuid !== null, fn ($query) => $query->where('uuid', '!=', $excludingUuid))
             ->exists();
     }
 
@@ -48,13 +48,13 @@ class RoleRepository
      * Creates or overwrites a role together with its grants, in a transaction because a role
      * written without its grants is a role that silently locks people out.
      *
-     * @throws ResourceNotFoundException if $intent->roleId names no role
+     * @throws ResourceNotFoundException if $intent->uuid names no role
      */
     public function save(SaveRoleIntent $intent): Role
     {
         return DB::transaction(function () use ($intent) {
             $record = $intent->isEditing()
-                ? RoleRecord::find($intent->roleId) ?? throw ResourceNotFoundException::for('Role', $intent->roleId)
+                ? RoleRecord::find($intent->uuid) ?? throw ResourceNotFoundException::for('Role', $intent->uuid)
                 : new RoleRecord;
 
             $record->role = $intent->name;
@@ -74,8 +74,8 @@ class RoleRepository
         });
     }
 
-    public function delete(string $id): void
+    public function delete(string $uuid): void
     {
-        RoleRecord::destroy($id);
+        RoleRecord::destroy($uuid);
     }
 }

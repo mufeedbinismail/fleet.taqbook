@@ -22,7 +22,7 @@ class RoleEditorRequest extends FormRequest
      * Which role the editor should open on. An address naming one that no longer exists opens
      * blank rather than failing: the link outliving the role is the ordinary case, not an error.
      */
-    public function roleId(): ?string
+    public function uuid(): ?string
     {
         return $this->validated('role');
     }

@@ -84,8 +84,8 @@ export function roleEditor({ Alpine, App, axios, data }) {
             window.history.replaceState(
                 null,
                 '',
-                this.id
-                    ? App.route('access.roles.index', null, { query: { role: this.id } })
+                this.uuid
+                    ? App.route('access.roles.index', null, { query: { role: this.uuid } })
                     : App.route('access.roles.index'),
             );
         },
@@ -129,11 +129,11 @@ export function roleEditor({ Alpine, App, axios, data }) {
 
         //------------------------------------------------------------------------------ actions --
 
-        async switchTo(id) {
-            if (id === '') {
+        async switchTo(uuid) {
+            if (uuid === '') {
                 this.clearMessages();
                 this.apply({
-                    id: null,
+                    uuid: null,
                     role_name: '',
                     inactive: false,
                     permissions: [],
@@ -142,12 +142,12 @@ export function roleEditor({ Alpine, App, axios, data }) {
                 return;
             }
 
-            const body = await this.request('get', App.route('access.roles.show', { role: id }));
+            const body = await this.request('get', App.route('access.roles.show', { role: uuid }));
 
             // The picker is a command rather than a mirror of the state, so a refused switch has to
             // be walked back by hand — nothing else would put it back on the role still loaded.
             if (body) this.apply(body.data);
-            else this.picker().setValue(this.id, { silent: true });
+            else this.picker().setValue(this.uuid, { silent: true });
         },
 
         async save() {
@@ -158,10 +158,10 @@ export function roleEditor({ Alpine, App, axios, data }) {
                 permissions: [...this.permissions],
             };
 
-            const body = this.id
+            const body = this.uuid
                 ? await this.request(
                       'put',
-                      App.route('access.roles.update', { role: this.id }),
+                      App.route('access.roles.update', { role: this.uuid }),
                       payload,
                   )
                 : await this.request('post', App.route('access.roles.store'), payload);
@@ -179,7 +179,7 @@ export function roleEditor({ Alpine, App, axios, data }) {
         async deleteRole() {
             const body = await this.request(
                 'delete',
-                App.route('access.roles.destroy', { role: this.id }),
+                App.route('access.roles.destroy', { role: this.uuid }),
             );
 
             if (!body) return;
@@ -192,7 +192,7 @@ export function roleEditor({ Alpine, App, axios, data }) {
         /* Client-side only: the ticks on screen become a new role, so nothing is saved until Save. */
         clone() {
             this.clearMessages();
-            this.id = null;
+            this.uuid = null;
             this.own = false;
             this.syncUrl();
             this.$refs.roleName.focus();
@@ -201,7 +201,7 @@ export function roleEditor({ Alpine, App, axios, data }) {
 
         cancel() {
             this.clearMessages();
-            this.apply({ id: null, role_name: '', inactive: false, permissions: [], own: false });
+            this.apply({ uuid: null, role_name: '', inactive: false, permissions: [], own: false });
         },
     });
 }

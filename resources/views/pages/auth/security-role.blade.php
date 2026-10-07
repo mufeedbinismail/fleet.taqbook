@@ -63,16 +63,16 @@ ClientData::registry()
                 class="w-full"
                 data-picker
                 x-ref="picker"
-                :options="$state['id'] === null ? [] : [[
-                    'value' => $state['id'],
+                :options="$state['uuid'] === null ? [] : [[
+                    'value' => $state['uuid'],
                     'label' => $state['role_name'],
                     'description' => $state['inactive'] ? __('auth.role.picker.inactive') : null,
                 ]]"
-                :selected="$state['id']"
+                :selected="$state['uuid']"
                 :placeholder="__('auth.role.new')"
                 :channel="$roles"
                 :param-sources="[RoleSelect::INACTIVE => '#show-inactive']"
-                x-effect="$el.__xSelect?.setValue(id, { silent: true })"
+                x-effect="$el.__xSelect?.setValue(uuid, { silent: true })"
                 @change="switchTo($event.target.value)"
             />
         </div>
@@ -88,7 +88,7 @@ ClientData::registry()
         <div class="mb-5 rounded-xl border border-card-border bg-card-bg shadow-sm">
             <div class="flex flex-wrap items-center gap-2 border-b border-card-divider px-5 py-3">
                 <h2 class="text-sm font-semibold uppercase tracking-wide text-card-title-txt"
-                    x-text="id ? @js(__('auth.role.details')) : @js(__('auth.role.new'))"></h2>
+                    x-text="uuid ? @js(__('auth.role.details')) : @js(__('auth.role.new'))"></h2>
 
                 {{-- Warns before a rejected save has to: this is the role the current user holds. --}}
                 <span x-show="own"
@@ -265,14 +265,14 @@ ClientData::registry()
 
             <div class="flex flex-wrap items-center gap-2 px-4 py-3">
                 <x-button type="submit" data-save icon="button-ok">
-                    <span x-text="id ? @js(__('auth.role.action.save')) : @js(__('auth.role.action.create'))"></span>
+                    <span x-text="uuid ? @js(__('auth.role.action.save')) : @js(__('auth.role.action.create'))"></span>
                 </x-button>
 
-                <x-button data-action="clone" variant="outline" icon="data" x-show="id" @click="clone()">
+                <x-button data-action="clone" variant="outline" icon="data" x-show="uuid" @click="clone()">
                     {{ __('auth.role.action.clone') }}
                 </x-button>
 
-                <x-button data-action="delete" variant="danger" icon="trash" x-show="id"
+                <x-button data-action="delete" variant="danger" icon="trash" x-show="uuid"
                         @click="$confirm({
                             title: App.i18n('auth.role.delete.title'),
                             text: App.i18n('auth.role.delete.text', { role: role_name }),

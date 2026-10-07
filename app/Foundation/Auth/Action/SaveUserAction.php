@@ -25,7 +25,7 @@ class SaveUserAction
         $existing = null;
 
         if ($intent->isEditing()) {
-            $existing = User::find($intent->userId);
+            $existing = User::find($intent->uuid);
 
             if ($existing?->reserved) {
                 return ValidationResult::error('user', __('auth.user.error.reserved'));
@@ -44,7 +44,7 @@ class SaveUserAction
             }
         }
 
-        if ($this->roleRepository->find($intent->roleId)?->reserved) {
+        if ($this->roleRepository->find($intent->roleUuid)?->reserved) {
             return ValidationResult::error('role_uuid', __('auth.user.error.reserved_role'));
         }
 

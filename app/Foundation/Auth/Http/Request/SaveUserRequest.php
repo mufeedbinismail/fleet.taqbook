@@ -62,13 +62,13 @@ class SaveUserRequest extends FormRequest
     public function toIntent(): SaveUserIntent
     {
         return new SaveUserIntent(
-            userId: $this->userId(),
+            uuid: $this->uuid(),
             login: $this->isEditing() ? null : $this->validated('user_id'),
             password: $this->input('password'),
             realName: $this->validated('real_name'),
             phone: (string) ($this->validated('phone') ?? ''),
             email: (string) ($this->validated('email') ?? ''),
-            roleId: $this->validated('role_uuid'),
+            roleUuid: $this->validated('role_uuid'),
             pos: (int) $this->validated('pos'),
         );
     }
@@ -77,13 +77,13 @@ class SaveUserRequest extends FormRequest
      * The user being edited, or null when one is being created — which is the difference between
      * the two routes reaching this, and the only one.
      */
-    private function userId(): ?string
+    private function uuid(): ?string
     {
         return $this->route('user')?->getKey();
     }
 
     private function isEditing(): bool
     {
-        return $this->userId() !== null;
+        return $this->uuid() !== null;
     }
 }

@@ -12,11 +12,11 @@ namespace App\Foundation\Auth\Intent;
 final class SaveRoleIntent
 {
     /**
-     * @param  string|null  $roleId  the role's uuid, or null to create
+     * @param  string|null  $uuid  the role's uuid, or null to create
      * @param  list<string>  $permissions  the grants in full
      */
     public function __construct(
-        public readonly ?string $roleId,
+        public readonly ?string $uuid,
         public readonly string $name,
         public readonly bool $inactive,
         public readonly array $permissions,
@@ -24,6 +24,6 @@ final class SaveRoleIntent
 
     public function isEditing(): bool
     {
-        return $this->roleId !== null;
+        return $this->uuid !== null;
     }
 }

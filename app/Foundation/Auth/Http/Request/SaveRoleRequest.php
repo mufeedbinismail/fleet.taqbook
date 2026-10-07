@@ -44,7 +44,7 @@ class SaveRoleRequest extends FormRequest
     public function toIntent(): SaveRoleIntent
     {
         return new SaveRoleIntent(
-            roleId: $this->route('role'),
+            uuid: $this->route('role'),
             name: $this->validated('name'),
             inactive: $this->boolean('inactive'),
             // array_values, because the validator preserves the client's keys — re-indexing here

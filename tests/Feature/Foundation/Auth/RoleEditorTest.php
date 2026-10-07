@@ -49,7 +49,7 @@ class RoleEditorTest extends TestCase
 
         $seed = $this->clientData($response->getContent())['roleEditor'];
 
-        $this->assertSame($actor->role_uuid, $seed['state']['id']);
+        $this->assertSame($actor->role_uuid, $seed['state']['uuid']);
         $this->assertSame('ZZ Test Role', $seed['state']['role_name']);
         $this->assertTrue($seed['state']['own']);
         $this->assertContains(Permission::MANAGE_ROLE, $seed['state']['permissions']);
@@ -101,7 +101,7 @@ class RoleEditorTest extends TestCase
             ])
             ->assertOk()
             ->assertJsonStructure([
-                'data' => ['id', 'role_name', 'inactive', 'permissions', 'own'],
+                'data' => ['uuid', 'role_name', 'inactive', 'permissions', 'own'],
                 'message',
             ])
             ->assertJsonPath('data.role_name', 'ZZ Test Role Renamed')
@@ -139,7 +139,7 @@ class RoleEditorTest extends TestCase
         $this->actingAs($user)
             ->deleteJson('/access/roles/'.$spare->uuid)
             ->assertOk()
-            ->assertJsonPath('data.id', null)
+            ->assertJsonPath('data.uuid', null)
             ->assertJsonPath('data.role_name', '');
 
         $this->assertNull(Role::find($spare->uuid));

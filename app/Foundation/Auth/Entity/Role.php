@@ -14,7 +14,7 @@ use App\Foundation\Auth\Model\Role as RoleRecord;
 final class Role
 {
     public function __construct(
-        public readonly string $id,
+        public readonly string $uuid,
         public readonly string $name,
         public readonly bool $inactive,
         public readonly bool $reserved,
@@ -23,7 +23,7 @@ final class Role
     public static function of(RoleRecord $record): self
     {
         return new self(
-            id: $record->getKey(),
+            uuid: $record->getKey(),
             name: $record->role,
             inactive: (bool) $record->inactive,
             reserved: (bool) $record->reserved,
