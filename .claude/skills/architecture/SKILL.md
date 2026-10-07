@@ -243,6 +243,12 @@ shares that subject:
 A name that reports what happened to the value on the way here (`parsed…`, `sorted…`,
 `resolved…`) is the file's view. Return to step 1 and name what the caller asked for.
 
+### A uuid on a legacy table
+
+Call a uuid introduced to a table the legacy layer already has `uuid`, and call it that everywhere it travels: the column, the foreign key column on every table that refers to it, the model attribute, and every property, parameter, Intent field, Entity field, response key and script variable that carries it. Write `$user->uuid` and `$user->roleUuid`, never `$user->id` or `$user->roleId`. In those tables `id` has historically been the integer key, so a uuid carried under that name is easy to miss and easy to take for the integer. This rule outranks the name a call site suggests, because the call site is exactly where `id` feels natural.
+
+The layers far from the column are where this goes wrong. An Entity, an Intent, a response key or a script variable that only passes the value along feels like it is speaking about the thing and not about a column, and the framework's own vocabulary (`find($id)`, `getKey()`, `Auth::id()`) says id, so the name drifts back. Rename those too. A framework method keeps its own name, a route parameter keeps the name of the thing it stands for, and the legacy integer column keeps `id`.
+
 ## The legacy boundary
 
 Port FrontAccounting; do not maintain it. Write every new screen or capability in `app/`, even when its screen is still a legacy one.
