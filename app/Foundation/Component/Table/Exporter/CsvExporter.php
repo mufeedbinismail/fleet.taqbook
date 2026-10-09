@@ -4,7 +4,6 @@ namespace App\Foundation\Component\Table\Exporter;
 
 use App\Foundation\Component\Table\Contract\ExporterContract;
 use App\Foundation\Component\Table\ValueObject\ExportSet;
-use App\Foundation\Framework\DTO\ValidationResult;
 use DateTimeInterface;
 
 /**
@@ -18,10 +17,7 @@ final class CsvExporter implements ExporterContract
     /**
      * Any size at all, since rows go out one at a time and none is held on to.
      */
-    public function validate(ExportSet $set): ValidationResult
-    {
-        return ValidationResult::success();
-    }
+    public function validate(ExportSet $set): void {}
 
     public function write(ExportSet $set, string $path): void
     {

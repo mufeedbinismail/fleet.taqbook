@@ -12,7 +12,7 @@ use App\Foundation\Auth\Constant\Permission;
 use App\Trade\Marketplace\Entity\DraftSupplierTransLine;
 use App\Trade\Marketplace\Cart\SupplierTransCart;
 use App\Trade\Marketplace\Service\SupplierTransCartService;
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 use App\Foundation\Shared\Enum\SystemType;
 use App\Foundation\Shared\ValueObject\TypedId;
 
@@ -77,54 +77,53 @@ function mktpl_st_display_confirmation_and_exit(TypedId $transId): void
     display_footer_exit();
 }
 
-function mktpl_st_can_process(SupplierTransCart $cart): ValidationResult
+function mktpl_st_can_process(SupplierTransCart $cart): void
 {
     if (!check_csrf_token()) {
-        return ValidationResult::error(null, __("Invalid CSRF token. Please refresh the page and try again."));
+        throw new ValidationException(__("Invalid CSRF token. Please refresh the page and try again."));
     }
     if (!$cart->marketplaceId) {
-        return ValidationResult::error('marketplaceId', __("Select a marketplace."));
+        throw new ValidationException(__("Select a marketplace."), 'marketplaceId');
     }
     if (!is_date($cart->date)) {
-        return ValidationResult::error('transDate', __("Enter a valid date."));
+        throw new ValidationException(__("Enter a valid date."), 'transDate');
     }
     if (!is_date_in_fiscalyear($cart->date)) {
-        return ValidationResult::error('transDate', __("The entered date is out of fiscal year or is closed for further data entry."));
+        throw new ValidationException(__("The entered date is out of fiscal year or is closed for further data entry."), 'transDate');
     }
     if (!check_reference($cart->reference, $cart->transType->value)) {
-        return ValidationResult::error('reference', null);
+        throw new ValidationException('', 'reference');
     }
     if (!$cart->supplierRef || trim($cart->supplierRef) === '') {
-        return ValidationResult::error('suppReference', __("Enter the supplier's reference."));
+        throw new ValidationException(__("Enter the supplier's reference."), 'suppReference');
     }
     if (is_reference_already_there($cart->supplierId, $cart->supplierRef, 0, $cart->transType->value)) {
-        return ValidationResult::error('suppReference', __("This reference has already been entered for this supplier."));
+        throw new ValidationException(__("This reference has already been entered for this supplier."), 'suppReference');
     }
     if (!$cart->hasLines()) {
-        return ValidationResult::error(null, __("Add at least one line item."));
+        throw new ValidationException(__("Add at least one line item."));
     }
-    return ValidationResult::success();
 }
 
-function mktpl_st_check_item(DraftSupplierTransLine $draft, bool $isEditing = false): ValidationResult
+function mktpl_st_check_item(DraftSupplierTransLine $draft, bool $isEditing = false): void
 {
     if (!$isEditing && !$draft->stockId) {
-        return ValidationResult::error('stockId', __("Select an item."));
+        throw new ValidationException(__("Select an item."), 'stockId');
     }
     if (!((float) $draft->qty > 0)) {
-        return ValidationResult::error('qty', __("Quantity must be greater than zero."));
+        throw new ValidationException(__("Quantity must be greater than zero."), 'qty');
     }
     if (!((float) $draft->amount > 0)) {
-        return ValidationResult::error('amount', __("Amount must be greater than zero."));
+        throw new ValidationException(__("Amount must be greater than zero."), 'amount');
     }
-    return ValidationResult::success();
 }
 
 function mktpl_st_handle_add_line(DraftSupplierTransLine $draft, SupplierTransCart $cart): void
 {
-    $result = mktpl_st_check_item($draft);
-    if (!$result->isValid) {
-        display_validation_error_and_set_focus($result);
+    try {
+        mktpl_st_check_item($draft);
+    } catch (ValidationException $refusal) {
+        display_validation_error_and_set_focus($refusal);
         return;
     }
     app(SupplierTransCartService::class)->addLine($cart, $draft);
@@ -133,9 +132,10 @@ function mktpl_st_handle_add_line(DraftSupplierTransLine $draft, SupplierTransCa
 
 function mktpl_st_handle_update_line(DraftSupplierTransLine $draft, SupplierTransCart $cart, int $lineNo): void
 {
-    $result = mktpl_st_check_item($draft, isEditing: true);
-    if (!$result->isValid) {
-        display_validation_error_and_set_focus($result);
+    try {
+        mktpl_st_check_item($draft, isEditing: true);
+    } catch (ValidationException $refusal) {
+        display_validation_error_and_set_focus($refusal);
         return;
     }
     app(SupplierTransCartService::class)->updateLine($cart, $lineNo, $draft);
@@ -176,10 +176,15 @@ function mktpl_st_handle_post_back(SupplierTransCart $cart): void
 
     if (isset($_POST['Submit'])) {
         mktpl_st_copy_to_cart($cart);
-        $result = mktpl_st_can_process($cart);
-        if (!$result->isValid) {
-            display_validation_error_and_set_focus($result);
-        } else {
+        try {
+            mktpl_st_can_process($cart);
+            $valid = true;
+        } catch (ValidationException $refusal) {
+            display_validation_error_and_set_focus($refusal);
+            $valid = false;
+        }
+
+        if ($valid) {
             $trans_no = write_marketplace_supplier_trans($cart);
             unset($_SESSION['mktpl_st']);
             meta_forward(url()->current(), "AddedID=".$cart->transId()->toString());

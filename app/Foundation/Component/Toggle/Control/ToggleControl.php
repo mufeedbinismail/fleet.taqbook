@@ -5,7 +5,7 @@ namespace App\Foundation\Component\Toggle\Control;
 use App\Foundation\Component\Control\Contract\BooleanControlContract;
 use App\Foundation\Component\Control\Control;
 use App\Foundation\Component\Control\Enum\ControlName;
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 
 /**
  * One of two states, where the second is a value like any other rather than an absent one.
@@ -17,11 +17,11 @@ final class ToggleControl extends Control implements BooleanControlContract
         return ['control' => ControlName::Toggle->value];
     }
 
-    protected function check(string $field, mixed $raw): ValidationResult
+    protected function check(string $field, mixed $raw): void
     {
-        return $this->read($raw) === null
-            ? ValidationResult::error($field, __('component.toggle.error.not_yes_or_no'))
-            : ValidationResult::success();
+        if ($this->read($raw) === null) {
+            throw new ValidationException(__('component.toggle.error.not_yes_or_no'), $field);
+        }
     }
 
     public function read(mixed $raw): ?bool

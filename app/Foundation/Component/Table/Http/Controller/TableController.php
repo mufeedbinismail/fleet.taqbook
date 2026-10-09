@@ -11,8 +11,8 @@ use App\Foundation\Component\Table\Repository\TableRepository;
 use App\Foundation\Component\Table\Service\ExportService;
 use App\Foundation\Component\Table\Service\TableService;
 use App\Foundation\Component\Table\ValueObject\Table;
+use App\Foundation\Framework\Exception\ValidationException;
 use App\Foundation\Framework\Http\Controller\Controller;
-use Illuminate\Validation\ValidationException;
 
 class TableController extends Controller
 {
@@ -33,16 +33,13 @@ class TableController extends Controller
         $state = $request->toState($table->name);
 
         // Asked before either answer: a narrowing nobody can be held to is no safer in a file.
-        $this->refuse($this->service->validate($table, $state));
+        $this->service->validate($table, $state);
 
         if (! $state->isExport()) {
             return TablePageResponse::of($this->repository->page($table, $state));
         }
 
         $set = $this->repository->all($table, $state);
-
-        // Asked before writing, so a set the format cannot carry costs nothing to turn away.
-        $this->refuse($this->exportService->validate($set, $state->export));
 
         return TableExportResponse::of(
             $this->exportService->write($set, $state->export),

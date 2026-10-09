@@ -2,7 +2,7 @@
 
 namespace App\Trade\Marketplace\Service;
 
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 use App\Foundation\Shared\ValueObject\TypedId;
 use App\Trade\Marketplace\Cart\CustomerSettlementCart;
 use App\Trade\Marketplace\Query\MarketplaceQuery;
@@ -42,12 +42,12 @@ class CustomerSettlementCartService
      * session since it was loaded: same marketplace, same customer, same total and same
      * allocated amount. Must run inside the write transaction so the locked read is held.
      */
-    public function validateEditFreshness(CustomerSettlementCart $cart): ValidationResult
+    public function validateEditFreshness(CustomerSettlementCart $cart): void
     {
         $fresh = $this->customerTransRepository->find($cart->transId, lock: true);
 
         if (! $fresh) {
-            return ValidationResult::error(null, __('This settlement no longer exists. You cannot modify this settlement anymore.'));
+            throw new ValidationException(__('This settlement no longer exists. You cannot modify this settlement anymore.'));
         }
 
         // The settlement is unchanged when its marketplace, customer, total and
@@ -59,12 +59,10 @@ class CustomerSettlementCartService
             && $fresh->allocated->isEqualTo($old->allocated);
 
         if (! $unchanged) {
-            return ValidationResult::error(null, __(
+            throw new ValidationException(__(
                 'This settlement changed since the page was loaded. Reload the page and try again.'
             ));
         }
-
-        return ValidationResult::success();
     }
 
     /**
@@ -165,7 +163,7 @@ class CustomerSettlementCartService
      * total nor its already-allocated amount has shifted since the cart was loaded.
      * Must run inside the same transaction as the write so the lock is held through it.
      */
-    public function validateFreshness(CustomerSettlementCart $cart): ValidationResult
+    public function validateFreshness(CustomerSettlementCart $cart): void
     {
         $fresh = $this->getFreshLines($cart, lock: true);
 
@@ -176,14 +174,14 @@ class CustomerSettlementCartService
             $current = $fresh[$line->transId->toString()] ?? null;
 
             if (! $current) {
-                return ValidationResult::error(null, __(
+                throw new ValidationException(__(
                     ':doc #:n is no longer open for allocation. Reload the page and try again.',
                     ['doc' => $doc, 'n' => $line->transId->id]
                 ));
             }
 
             if (! $current->total->isEqualTo($line->total) || ! $current->allocated->isEqualTo($line->allocated)) {
-                return ValidationResult::error(null, __(
+                throw new ValidationException(__(
                     ':doc #:n changed since the page was loaded. Reload the page and try again.',
                     ['doc' => $doc, 'n' => $line->transId->id]
                 ));
@@ -192,9 +190,7 @@ class CustomerSettlementCartService
 
         // On edit, confirm the settlement itself hasn't shifted (or been voided) under us.
         if ($cart->isEdit()) {
-            return $this->validateEditFreshness($cart);
-        } else {
-            return ValidationResult::success();
+            $this->validateEditFreshness($cart);
         }
     }
 }

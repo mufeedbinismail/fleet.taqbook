@@ -3,10 +3,9 @@
 namespace App\Foundation\Auth\Action;
 
 use App\Finance\Ledger\Query\TransactionAttributionExistsQuery;
-use App\Foundation\Auth\Exception\UserException;
 use App\Foundation\Auth\Model\User;
 use App\Foundation\Auth\Repository\UserRepository;
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 
 class DeleteUserAction
 {
@@ -15,33 +14,27 @@ class DeleteUserAction
         protected TransactionAttributionExistsQuery $transactionAttributionExistsQuery,
     ) {}
 
-    public function validate(User $user, User $actor): ValidationResult
+    private function validate(User $user, User $actor): void
     {
         if ($user->reserved) {
-            return ValidationResult::error('user', __('auth.user.error.reserved'));
+            throw new ValidationException(__('auth.user.error.reserved'), 'user');
         }
 
         if ($user->is($actor)) {
-            return ValidationResult::error('user', __('auth.user.error.self_removal'));
+            throw new ValidationException(__('auth.user.error.self_removal'), 'user');
         }
 
         if ($this->transactionAttributionExistsQuery->builder($user->id)->exists()) {
-            return ValidationResult::error('user', __('auth.user.error.has_history'));
+            throw new ValidationException(__('auth.user.error.has_history'), 'user');
         }
-
-        return ValidationResult::success();
     }
 
     /**
-     * @throws UserException if the removal was never checked and the check would have refused it
+     * @throws ValidationException if the check refuses it
      */
     public function execute(User $user, User $actor): void
     {
-        $checked = $this->validate($user, $actor);
-
-        if (! $checked->isValid) {
-            throw UserException::unchecked((string) $checked->field);
-        }
+        $this->validate($user, $actor);
 
         $this->repository->delete($user);
     }

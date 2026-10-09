@@ -4,11 +4,10 @@ namespace App\Foundation\Component\Table\Service;
 
 use App\Foundation\Component\Table\Contract\ExporterContract;
 use App\Foundation\Component\Table\Enum\ExportFormat;
-use App\Foundation\Component\Table\Exception\TableException;
 use App\Foundation\Component\Table\Exporter\CsvExporter;
 use App\Foundation\Component\Table\Exporter\XlsxExporter;
 use App\Foundation\Component\Table\ValueObject\ExportSet;
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 
 /**
  * Which of the ways of writing an export answers for a format, and where what it writes ends up.
@@ -28,9 +27,9 @@ class ExportService
         };
     }
 
-    public function validate(ExportSet $set, ExportFormat $format): ValidationResult
+    public function validate(ExportSet $set, ExportFormat $format): void
     {
-        return $this->for($format)->validate($set);
+        $this->for($format)->validate($set);
     }
 
     /**
@@ -39,13 +38,17 @@ class ExportService
      *
      * @return string the absolute path of a temporary file
      *
-     * @throws TableException if the set is beyond what the format can carry
+     * @throws ValidationException if the set is beyond what the format can carry
      */
     public function write(ExportSet $set, ExportFormat $format): string
     {
+        $exporter = $this->for($format);
+
+        $exporter->validate($set);
+
         $path = tempnam(sys_get_temp_dir(), 'table-export-');
 
-        $this->for($format)->write($set, $path);
+        $exporter->write($set, $path);
 
         return $path;
     }

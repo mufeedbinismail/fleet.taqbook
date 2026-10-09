@@ -4,15 +4,14 @@ namespace App\Foundation\Component\Table\Filter;
 
 use App\Foundation\Component\Control\Contract\ControlContract;
 use App\Foundation\Component\Table\Contract\FilterContract;
-use App\Foundation\Framework\DTO\ValidationResult;
 
 abstract class ColumnFilter implements FilterContract
 {
     public function __construct(private readonly ?string $column) {}
 
-    final public function validate(string $key, mixed $raw): ValidationResult
+    final public function validate(string $key, mixed $raw): void
     {
-        return $this->control()->validate($key, $raw);
+        $this->control()->validate($key, $raw);
     }
 
     final public function config(): array

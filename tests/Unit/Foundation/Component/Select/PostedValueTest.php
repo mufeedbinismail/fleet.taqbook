@@ -4,6 +4,7 @@ namespace Tests\Unit\Foundation\Component\Select;
 
 use App\Foundation\Component\Select\Control\MultiSelectControl;
 use App\Foundation\Component\Select\Control\SelectControl;
+use Tests\Concern\AssertsRefusal;
 use Tests\TestCase;
 
 /**
@@ -13,16 +14,19 @@ use Tests\TestCase;
  */
 class PostedValueTest extends TestCase
 {
+    use AssertsRefusal;
+
     public function test_only_a_value_the_list_offered_is_accepted(): void
     {
         $control = SelectControl::simple([7 => 'Admin', 9 => 'Clerk']);
 
-        $this->assertTrue($control->validate('role', 7)->isValid);
-        $this->assertTrue($control->validate('role', '7')->isValid);
+        $this->assertNotRefused(fn () => $control->validate('role', 7));
+        $this->assertNotRefused(fn () => $control->validate('role', '7'));
 
         foreach (['banana', '8', 0, '07', [7]] as $unoffered) {
-            $this->assertFalse(
-                $control->validate('role', $unoffered)->isValid,
+            $this->assertRefusedOn(
+                'role',
+                fn () => $control->validate('role', $unoffered),
                 var_export($unoffered, true).' was accepted',
             );
         }
@@ -32,8 +36,8 @@ class PostedValueTest extends TestCase
     {
         $control = MultiSelectControl::simple([7 => 'Admin', 9 => 'Clerk']);
 
-        $this->assertTrue($control->validate('roles', [7, '9'])->isValid);
-        $this->assertFalse($control->validate('roles', [7, '8'])->isValid);
-        $this->assertFalse($control->validate('roles', [7, '07'])->isValid);
+        $this->assertNotRefused(fn () => $control->validate('roles', [7, '9']));
+        $this->assertRefusedOn('roles', fn () => $control->validate('roles', [7, '8']));
+        $this->assertRefusedOn('roles', fn () => $control->validate('roles', [7, '07']));
     }
 }

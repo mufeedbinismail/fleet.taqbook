@@ -5,7 +5,7 @@ namespace App\Foundation\Component\Date\Control;
 use App\Foundation\Component\Control\Contract\DateControlContract;
 use App\Foundation\Component\Control\Control;
 use App\Foundation\Component\Control\Enum\ControlName;
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 use App\Foundation\Shared\ValueObject\DomainDateTime;
 use Carbon\Exceptions\InvalidFormatException;
 
@@ -44,23 +44,21 @@ final class DateControl extends Control implements DateControlContract
         );
     }
 
-    protected function check(string $field, mixed $raw): ValidationResult
+    protected function check(string $field, mixed $raw): void
     {
         $day = $this->read($raw);
 
         if ($day === null) {
-            return ValidationResult::error($field, __('component.date.error.not_a_date'));
+            throw new ValidationException(__('component.date.error.not_a_date'), $field);
         }
 
         if ($this->earliest !== null && $day->lt($this->earliest)) {
-            return ValidationResult::error($field, __('component.date.error.before_earliest'));
+            throw new ValidationException(__('component.date.error.before_earliest'), $field);
         }
 
         if ($this->latest !== null && $day->gt($this->latest)) {
-            return ValidationResult::error($field, __('component.date.error.after_latest'));
+            throw new ValidationException(__('component.date.error.after_latest'), $field);
         }
-
-        return ValidationResult::success();
     }
 
     /**

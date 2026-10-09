@@ -3,14 +3,13 @@
 namespace App\Foundation\Auth\Action;
 
 use App\Foundation\Auth\Constant\AccessName;
-use App\Foundation\Auth\Exception\UserException;
 use App\Foundation\Auth\Intent\CreateUserIntent;
 use App\Foundation\Auth\Intent\UpdateUserIntent;
 use App\Foundation\Auth\Model\User;
 use App\Foundation\Auth\Repository\RoleRepository;
 use App\Foundation\Auth\Repository\UserRepository;
 use App\Foundation\Auth\Service\AccessService;
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 
 class SaveUserAction
 {
@@ -21,7 +20,7 @@ class SaveUserAction
         protected AccessService $accessService,
     ) {}
 
-    public function validate(CreateUserIntent|UpdateUserIntent $intent): ValidationResult
+    private function validate(CreateUserIntent|UpdateUserIntent $intent): void
     {
         $existing = null;
 
@@ -29,48 +28,38 @@ class SaveUserAction
             $existing = User::find($intent->uuid);
 
             if ($existing?->reserved) {
-                return ValidationResult::error('user', __('auth.user.error.reserved'));
+                throw new ValidationException(__('auth.user.error.reserved'), 'user');
             }
 
             if ($existing?->inactive) {
-                return ValidationResult::error('user', __('auth.user.error.inactive_edit'));
+                throw new ValidationException(__('auth.user.error.inactive_edit'), 'user');
             }
         } else {
             if ($this->accessService->isReservedName($intent->login)) {
-                return ValidationResult::error('user_id', __('auth.user.error.reserved_login', ['prefix' => AccessName::RESERVED_PREFIX]));
+                throw new ValidationException(__('auth.user.error.reserved_login', ['prefix' => AccessName::RESERVED_PREFIX]), 'user_id');
             }
 
             if ($this->repository->loginTaken($intent->login)) {
-                return ValidationResult::error('user_id', __('auth.user.error.duplicate_login'));
+                throw new ValidationException(__('auth.user.error.duplicate_login'), 'user_id');
             }
         }
 
         if ($this->roleRepository->find($intent->roleUuid)?->reserved) {
-            return ValidationResult::error('role_uuid', __('auth.user.error.reserved_role'));
+            throw new ValidationException(__('auth.user.error.reserved_role'), 'role_uuid');
         }
 
         if ($intent->password !== null) {
             $login = $intent instanceof CreateUserIntent ? $intent->login : $existing?->user_id ?? '';
-            $checked = $this->saveUserPasswordAction->validate($login, $intent->password);
-
-            if (! $checked->isValid) {
-                return $checked;
-            }
+            $this->saveUserPasswordAction->validate($login, $intent->password);
         }
-
-        return ValidationResult::success();
     }
 
     /**
-     * @throws UserException if the save was never checked and the check would have refused it
+     * @throws ValidationException if the check refuses it
      */
     public function execute(CreateUserIntent|UpdateUserIntent $intent): User
     {
-        $checked = $this->validate($intent);
-
-        if (! $checked->isValid) {
-            throw UserException::unchecked((string) $checked->field);
-        }
+        $this->validate($intent);
 
         return $intent instanceof UpdateUserIntent
             ? $this->repository->update($intent)

@@ -4,7 +4,6 @@ namespace App\Foundation\Component\Table\Service;
 
 use App\Foundation\Component\Table\ValueObject\Table;
 use App\Foundation\Component\Table\ValueObject\TableState;
-use App\Foundation\Framework\DTO\ValidationResult;
 
 /**
  * What a table says about what it was asked, short of reading a row: no question here touches the
@@ -17,7 +16,7 @@ class TableService
      * asks for nothing, where a live declaration handed something it cannot read asks for the wrong
      * thing.
      */
-    public function validate(Table $table, TableState $state): ValidationResult
+    public function validate(Table $table, TableState $state): void
     {
         foreach ($state->filters as $key => $raw) {
             $filter = $table->filterable[$key] ?? null;
@@ -26,14 +25,8 @@ class TableService
                 continue;
             }
 
-            $result = $filter->validate($key, $raw);
-
-            if (! $result->isValid) {
-                return $result;
-            }
+            $filter->validate($key, $raw);
         }
-
-        return ValidationResult::success();
     }
 
     public function perPage(Table $table, TableState $state): int

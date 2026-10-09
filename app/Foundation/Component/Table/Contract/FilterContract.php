@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\Table\Contract;
 
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -14,7 +14,10 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  */
 interface FilterContract
 {
-    public function validate(string $key, mixed $raw): ValidationResult;
+    /**
+     * @throws ValidationException if the raw value is not one this filter can read
+     */
+    public function validate(string $key, mixed $raw): void;
 
     /**
      * @return array<string, mixed>

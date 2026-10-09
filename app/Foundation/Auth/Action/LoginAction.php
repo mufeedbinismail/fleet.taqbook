@@ -2,9 +2,8 @@
 
 namespace App\Foundation\Auth\Action;
 
-use App\Foundation\Auth\Exception\UserException;
 use App\Foundation\Auth\Intent\LoginIntent;
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Auth;
@@ -16,40 +15,34 @@ class LoginAction
     /**
      * A wrong password is counted where it is found, so no caller can weigh a guess unthrottled.
      */
-    public function validate(LoginIntent $intent): ValidationResult
+    private function validate(LoginIntent $intent): void
     {
         $key = $this->throttleKey($intent);
 
         if (RateLimiter::tooManyAttempts($key, $this->maxAttempts())) {
             $seconds = RateLimiter::availableIn($key);
 
-            return ValidationResult::error('username', __('auth.throttle', [
+            throw new ValidationException(__('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
-            ]));
+            ]), 'username');
         }
 
         if (! $this->guard()->validate($this->credentials($intent))) {
             RateLimiter::hit($key, $this->lockoutSeconds());
 
-            return ValidationResult::error('username', __('auth.failed'));
+            throw new ValidationException(__('auth.failed'), 'username');
         }
-
-        return ValidationResult::success();
     }
 
     /**
      * The session is started afresh, so an identifier planted before sign-in is worthless after it.
      *
-     * @throws UserException if it was never checked and the check would have refused it
+     * @throws ValidationException if the check refuses it
      */
     public function execute(LoginIntent $intent, Session $session): void
     {
-        $checked = $this->validate($intent);
-
-        if (! $checked->isValid) {
-            throw UserException::unchecked((string) $checked->field);
-        }
+        $this->validate($intent);
 
         RateLimiter::clear($this->throttleKey($intent));
 

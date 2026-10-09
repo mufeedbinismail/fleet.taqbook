@@ -23,8 +23,6 @@ class AuthenticationController extends Controller
     {
         $intent = $request->toIntent();
 
-        $this->refuse($action->validate($intent));
-
         $action->execute($intent, $request->session());
 
         return redirect()->intended($this->defaultTarget());

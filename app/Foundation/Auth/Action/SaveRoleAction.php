@@ -5,14 +5,13 @@ namespace App\Foundation\Auth\Action;
 use App\Foundation\Auth\Constant\AccessName;
 use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Auth\Entity\Role;
-use App\Foundation\Auth\Exception\RoleException;
 use App\Foundation\Auth\Intent\CreateRoleIntent;
 use App\Foundation\Auth\Intent\UpdateRoleIntent;
 use App\Foundation\Auth\Model\User;
 use App\Foundation\Auth\Repository\PermissionRepository;
 use App\Foundation\Auth\Repository\RoleRepository;
 use App\Foundation\Auth\Service\AccessService;
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 
 class SaveRoleAction
 {
@@ -28,43 +27,37 @@ class SaveRoleAction
      * else is asked of a role that can never be saved; a reserved permission is refused rather
      * than silently dropped from the grant.
      */
-    public function validate(CreateRoleIntent|UpdateRoleIntent $intent, User $actor): ValidationResult
+    private function validate(CreateRoleIntent|UpdateRoleIntent $intent, User $actor): void
     {
         if ($intent instanceof UpdateRoleIntent) {
             if ($this->repository->find($intent->uuid)?->reserved) {
-                return ValidationResult::error('role', __('auth.role.error.reserved'));
+                throw new ValidationException(__('auth.role.error.reserved'), 'role');
             }
 
             if ($this->wouldLockOut($intent, $actor)) {
-                return ValidationResult::error('permissions', __('auth.role.error.lockout'));
+                throw new ValidationException(__('auth.role.error.lockout'), 'permissions');
             }
         }
 
         if ($this->permissionRepository->isAnyReserved($intent->permissions)) {
-            return ValidationResult::error('permissions', __('auth.role.error.reserved_permission'));
+            throw new ValidationException(__('auth.role.error.reserved_permission'), 'permissions');
         }
 
         if ($this->accessService->isReservedName($intent->name)) {
-            return ValidationResult::error('name', __('auth.role.error.reserved_name', ['prefix' => AccessName::RESERVED_PREFIX]));
+            throw new ValidationException(__('auth.role.error.reserved_name', ['prefix' => AccessName::RESERVED_PREFIX]), 'name');
         }
 
         if ($this->repository->nameTaken($intent->name, $intent instanceof UpdateRoleIntent ? $intent->uuid : null)) {
-            return ValidationResult::error('name', __('auth.role.error.duplicate_name'));
+            throw new ValidationException(__('auth.role.error.duplicate_name'), 'name');
         }
-
-        return ValidationResult::success();
     }
 
     /**
-     * @throws RoleException if the save was never checked and the check would have refused it
+     * @throws ValidationException if the check refuses it
      */
     public function execute(CreateRoleIntent|UpdateRoleIntent $intent, User $actor): Role
     {
-        $checked = $this->validate($intent, $actor);
-
-        if (! $checked->isValid) {
-            throw RoleException::unchecked((string) $checked->field);
-        }
+        $this->validate($intent, $actor);
 
         return $intent instanceof UpdateRoleIntent
             ? $this->repository->update($intent)

@@ -77,8 +77,6 @@ class UserController extends Controller
     {
         $actor = $request->user();
 
-        $this->refuse($action->validate($user, $actor));
-
         $action->execute($user, $actor);
 
         return ResponseEnvelope::ok(__('auth.user.notice.deleted'));
@@ -89,8 +87,6 @@ class UserController extends Controller
         $inactive = $request->deactivates();
         $actor = $request->user();
 
-        $this->refuse($action->validate($user, $inactive, $actor));
-
         $action->execute($user, $inactive, $actor);
 
         return ResponseEnvelope::ok($inactive
@@ -98,15 +94,9 @@ class UserController extends Controller
             : __('auth.user.notice.activated'));
     }
 
-    /**
-     * Checked and then written, in that order: past the check the same breach stops being something
-     * to report and becomes a fault, which is why only this side of it produces a message.
-     */
     protected function save(SaveUserRequest $request, SaveUserAction $action): void
     {
         $intent = $request->toIntent();
-
-        $this->refuse($action->validate($intent));
 
         $action->execute($intent);
     }

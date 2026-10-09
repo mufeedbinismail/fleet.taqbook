@@ -2,37 +2,30 @@
 
 namespace App\Foundation\Auth\Action;
 
-use App\Foundation\Auth\Exception\RoleException;
 use App\Foundation\Auth\Repository\RoleRepository;
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 
 class DeleteRoleAction
 {
     public function __construct(protected RoleRepository $repository) {}
 
-    public function validate(string $uuid): ValidationResult
+    private function validate(string $uuid): void
     {
         if ($this->repository->find($uuid)?->reserved) {
-            return ValidationResult::error('role', __('auth.role.error.reserved'));
+            throw new ValidationException(__('auth.role.error.reserved'), 'role');
         }
 
         if ($this->repository->isAssigned($uuid)) {
-            return ValidationResult::error('role', __('auth.role.error.assigned'));
+            throw new ValidationException(__('auth.role.error.assigned'), 'role');
         }
-
-        return ValidationResult::success();
     }
 
     /**
-     * @throws RoleException if the removal was never checked and the check would have refused it
+     * @throws ValidationException if the check refuses it
      */
     public function execute(string $uuid): void
     {
-        $checked = $this->validate($uuid);
-
-        if (! $checked->isValid) {
-            throw RoleException::unchecked((string) $checked->field);
-        }
+        $this->validate($uuid);
 
         $this->repository->delete($uuid);
     }

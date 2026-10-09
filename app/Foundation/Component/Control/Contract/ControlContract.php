@@ -2,7 +2,7 @@
 
 namespace App\Foundation\Component\Control\Contract;
 
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 
 /**
  * One way of asking a person for a value.
@@ -20,9 +20,9 @@ interface ControlContract
     public function config(): array;
 
     /**
-     * Whether the raw value is one this control could have produced.
+     * @throws ValidationException if the raw value is not one this control could have produced
      */
-    public function validate(string $field, mixed $raw): ValidationResult;
+    public function validate(string $field, mixed $raw): void;
 
     /**
      * The value as this control spells it, or null where there is none to spell.

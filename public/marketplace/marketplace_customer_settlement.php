@@ -5,7 +5,7 @@ use App\Foundation\Auth\Constant\Permission;
 use App\Trade\Marketplace\Cart\CustomerSettlementCart;
 use App\Trade\Marketplace\Service\CustomerSettlementCartService;
 use App\Trade\Shared\Enum\CustomerTransactionSource;
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 use App\Foundation\Shared\Enum\SystemType;
 use App\Foundation\Shared\ValueObject\DomainDateTime;
 use App\Foundation\Shared\ValueObject\TypedId;
@@ -166,10 +166,11 @@ function mktpl_cs_handle_post_back(CustomerSettlementCart $cart): void
         // Validation locks the selected invoices; the write runs under the same lock.
         begin_transaction();
 
-        $result = mktpl_cs_can_process($cart);
-        if (!$result->isValid) {
+        try {
+            mktpl_cs_can_process($cart);
+        } catch (ValidationException $refusal) {
             cancel_transaction();
-            display_validation_error_and_set_focus($result);
+            display_validation_error_and_set_focus($refusal);
             return;
         }
 
@@ -237,38 +238,38 @@ function mktpl_cs_copy_to_cart(CustomerSettlementCart $cart): void
 
 // ---------------------------------------------------------------------------
 
-function mktpl_cs_can_process(CustomerSettlementCart $cart): ValidationResult
+function mktpl_cs_can_process(CustomerSettlementCart $cart): void
 {
     if (!check_csrf_token()) {
-        return ValidationResult::error(null, __('Invalid CSRF token. Please refresh the page and try again.'));
+        throw new ValidationException(__('Invalid CSRF token. Please refresh the page and try again.'));
     }
     if (!$cart->customerId) {
-        return ValidationResult::error('customerId', __('Select a customer.'));
+        throw new ValidationException(__('Select a customer.'), 'customerId');
     }
     if (!$cart->marketplaceId) {
-        return ValidationResult::error('marketplaceId', __('Select a marketplace.'));
+        throw new ValidationException(__('Select a marketplace.'), 'marketplaceId');
     }
     if (!$cart->supplierId || !$cart->payableAccount) {
-        return ValidationResult::error('marketplaceId', __('The selected marketplace is not linked to a supplier with a payable account.'));
+        throw new ValidationException(__('The selected marketplace is not linked to a supplier with a payable account.'), 'marketplaceId');
     }
     if (!is_date_in_fiscalyear($cart->transDate->toUserDateString())) {
-        return ValidationResult::error('transDate', __('The entered date is out of fiscal year or is closed for further data entry.'));
+        throw new ValidationException(__('The entered date is out of fiscal year or is closed for further data entry.'), 'transDate');
     }
     // The reference is fixed on edit, so only validate uniqueness for a new settlement.
     if (!$cart->isEdit() && !check_reference($cart->reference, $cart->transId->type->value)) {
-        return ValidationResult::error('reference', null);
+        throw new ValidationException('', 'reference');
     }
     if ($cart->amount->isNegativeOrZero()) {
-        return ValidationResult::error('amount', __('Enter a positive payment amount.'));
+        throw new ValidationException(__('Enter a positive payment amount.'), 'amount');
     }
     if ($cart->amount->isLessThan($cart->totalAllocated())) {
-        return ValidationResult::error('amount', __('Payment amount must be at least the total allocated amount.'));
+        throw new ValidationException(__('Payment amount must be at least the total allocated amount.'), 'amount');
     }
     if ($cart->selectedLines()->count() < 1) {
-        return ValidationResult::error('amount', __('The amount should be allocated to at least one invoice.'));
+        throw new ValidationException(__('The amount should be allocated to at least one invoice.'), 'amount');
     }
     // Re-validate the selected invoices against a fresh, locked read (held for the write).
-    return app(CustomerSettlementCartService::class)->validateFreshness($cart);
+    app(CustomerSettlementCartService::class)->validateFreshness($cart);
 }
 
 // ---------------------------------------------------------------------------

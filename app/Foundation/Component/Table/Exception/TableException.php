@@ -81,11 +81,6 @@ class TableException extends RuntimeException
         return new self('A table cannot be exported before its columns are declared.');
     }
 
-    public static function tooManyRowsToExport(int $total, int $limit): self
-    {
-        return new self("An export of {$total} rows was attempted in a format capped at {$limit}.");
-    }
-
     public static function pinnedWithoutWidth(string $key): self
     {
         return new self("The pinned column [{$key}] declares no width, which is what the column pinned behind it is placed from.");

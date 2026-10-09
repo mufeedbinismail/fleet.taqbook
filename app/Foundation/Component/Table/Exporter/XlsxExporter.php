@@ -3,9 +3,8 @@
 namespace App\Foundation\Component\Table\Exporter;
 
 use App\Foundation\Component\Table\Contract\ExporterContract;
-use App\Foundation\Component\Table\Exception\TableException;
 use App\Foundation\Component\Table\ValueObject\ExportSet;
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 use DateTimeInterface;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
@@ -22,22 +21,20 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
  */
 final class XlsxExporter implements ExporterContract
 {
-    public function validate(ExportSet $set): ValidationResult
+    public function validate(ExportSet $set): void
     {
         if ($set->total <= $this->limit()) {
-            return ValidationResult::success();
+            return;
         }
 
-        return ValidationResult::error('export', __('component.table.error.export_too_large', [
+        throw new ValidationException(__('component.table.error.export_too_large', [
             'limit' => number_format($this->limit()),
-        ]));
+        ]), 'export');
     }
 
     public function write(ExportSet $set, string $path): void
     {
-        if (! $this->validate($set)->isValid) {
-            throw TableException::tooManyRowsToExport($set->total, $this->limit());
-        }
+        $this->validate($set);
 
         $spreadsheet = new Spreadsheet;
         $sheet = $spreadsheet->getActiveSheet();

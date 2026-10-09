@@ -61,8 +61,6 @@ class RoleController extends Controller
 
     public function destroy(Request $request, DeleteRoleAction $action, string $role): ResponseEnvelope
     {
-        $this->refuse($action->validate($role));
-
         $action->execute($role);
 
         return $this->payload(
@@ -71,16 +69,10 @@ class RoleController extends Controller
         );
     }
 
-    /**
-     * Checked and then written, in that order: past the check the same breach stops being something
-     * to report and becomes a fault, which is why only this side of it produces a message.
-     */
     protected function save(SaveRoleRequest $request, SaveRoleAction $action): Role
     {
         $intent = $request->toIntent();
         $actor = $request->user();
-
-        $this->refuse($action->validate($intent, $actor));
 
         return $action->execute($intent, $actor);
     }

@@ -6,7 +6,7 @@ use App\Foundation\Component\Control\Contract\PeriodControlContract;
 use App\Foundation\Component\Control\Control;
 use App\Foundation\Component\Control\Enum\ControlName;
 use App\Foundation\Component\Date\Control\DateControl;
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 use App\Foundation\Shared\ValueObject\Period;
 
 /**
@@ -41,23 +41,19 @@ final class DateRangeControl extends Control implements PeriodControlContract
         );
     }
 
-    protected function check(string $field, mixed $raw): ValidationResult
+    protected function check(string $field, mixed $raw): void
     {
         if (! is_array($raw)) {
-            return ValidationResult::error($field, __('component.date.range.error.not_a_range'));
+            throw new ValidationException(__('component.date.range.error.not_a_range'), $field);
         }
 
         foreach (['from', 'to'] as $bound) {
-            $refusal = $this->ends->validate($field, $raw[$bound] ?? null);
-
-            if (! $refusal->isValid) {
-                return $refusal;
-            }
+            $this->ends->validate($field, $raw[$bound] ?? null);
         }
 
-        return $this->maxDays === null
-            ? ValidationResult::success()
-            : $this->within($field, $this->read($raw));
+        if ($this->maxDays !== null) {
+            $this->within($field, $this->read($raw));
+        }
     }
 
     public function read(mixed $raw): ?Period
@@ -72,20 +68,20 @@ final class DateRangeControl extends Control implements PeriodControlContract
         );
     }
 
-    private function within(string $field, ?Period $period): ValidationResult
+    private function within(string $field, ?Period $period): void
     {
         if ($period === null) {
-            return ValidationResult::success();
+            return;
         }
 
         $days = $period->days();
 
         if ($days === null) {
-            return ValidationResult::error($field, __('component.date.range.error.needs_both_ends'));
+            throw new ValidationException(__('component.date.range.error.needs_both_ends'), $field);
         }
 
-        return $days > $this->maxDays
-            ? ValidationResult::error($field, __('component.date.range.error.too_long', ['limit' => $this->maxDays]))
-            : ValidationResult::success();
+        if ($days > $this->maxDays) {
+            throw new ValidationException(__('component.date.range.error.too_long', ['limit' => $this->maxDays]), $field);
+        }
     }
 }

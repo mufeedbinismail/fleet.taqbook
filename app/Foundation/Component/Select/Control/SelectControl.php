@@ -8,7 +8,7 @@ use App\Foundation\Component\Select\Exception\SelectException;
 use App\Foundation\Component\Select\ValueObject\Option;
 use App\Foundation\Component\Select\ValueObject\OptionChannel;
 use App\Foundation\Component\Select\ValueObject\OptionSource;
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 
 /**
  * One value picked from a declared set.
@@ -50,15 +50,15 @@ final class SelectControl extends ChoiceControl implements ScalarControlContract
         ];
     }
 
-    protected function check(string $field, mixed $raw): ValidationResult
+    protected function check(string $field, mixed $raw): void
     {
         if (is_array($raw)) {
-            return ValidationResult::error($field, __('component.select.error.not_one_value'));
+            throw new ValidationException(__('component.select.error.not_one_value'), $field);
         }
 
-        return $this->accepts($raw)
-            ? ValidationResult::success()
-            : ValidationResult::error($field, __('component.select.error.not_a_choice'));
+        if (! $this->accepts($raw)) {
+            throw new ValidationException(__('component.select.error.not_a_choice'), $field);
+        }
     }
 
     public function read(mixed $raw): int|float|string|bool|null

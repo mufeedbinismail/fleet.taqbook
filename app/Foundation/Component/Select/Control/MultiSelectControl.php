@@ -8,7 +8,7 @@ use App\Foundation\Component\Select\Exception\SelectException;
 use App\Foundation\Component\Select\ValueObject\Option;
 use App\Foundation\Component\Select\ValueObject\OptionChannel;
 use App\Foundation\Component\Select\ValueObject\OptionSource;
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 
 /**
  * Several values picked from a declared set, which is a different thing to be handed than one of
@@ -54,19 +54,17 @@ final class MultiSelectControl extends ChoiceControl implements SetControlContra
         ];
     }
 
-    protected function check(string $field, mixed $raw): ValidationResult
+    protected function check(string $field, mixed $raw): void
     {
         foreach ($this->values($raw) as $value) {
             if (is_array($value)) {
-                return ValidationResult::error($field, __('component.select.error.not_one_value'));
+                throw new ValidationException(__('component.select.error.not_one_value'), $field);
             }
 
             if (! $this->accepts($value)) {
-                return ValidationResult::error($field, __('component.select.error.not_a_choice'));
+                throw new ValidationException(__('component.select.error.not_a_choice'), $field);
             }
         }
-
-        return ValidationResult::success();
     }
 
     /**

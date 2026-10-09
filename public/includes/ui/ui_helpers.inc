@@ -5,7 +5,7 @@
  * indicating the session was replaced by opening a second browser tab.
  */
 
-use App\Foundation\Framework\DTO\ValidationResult;
+use App\Foundation\Framework\Exception\ValidationException;
 
 function check_cart_edit_conflict(string $posted_id, string $cart_id): void
 {
@@ -19,8 +19,8 @@ function check_cart_edit_conflict(string $posted_id, string $cart_id): void
     display_footer_exit();
 }
 
-function display_validation_error_and_set_focus(ValidationResult $result)
+function display_validation_error_and_set_focus(ValidationException $refusal)
 {
-    if ($result->error) display_error($result->error);
-    if ($result->field) set_focus($result->field);
+    if ($refusal->getMessage() !== '') display_error($refusal->getMessage());
+    if ($refusal->field) set_focus($refusal->field);
 }
