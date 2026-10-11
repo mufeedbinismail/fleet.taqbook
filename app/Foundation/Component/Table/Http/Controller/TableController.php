@@ -2,7 +2,6 @@
 
 namespace App\Foundation\Component\Table\Http\Controller;
 
-use App\Foundation\Component\Table\Builder\TableBuilder;
 use App\Foundation\Component\Table\Exception\TableException;
 use App\Foundation\Component\Table\Http\Request\TableRequest;
 use App\Foundation\Component\Table\Http\Response\TableExportResponse;
@@ -20,7 +19,6 @@ class TableController extends Controller
         private readonly TableRepository $repository,
         private readonly ExportService $exportService,
         private readonly TableService $service,
-        private readonly TableBuilder $builder,
     ) {}
 
     /**
@@ -62,6 +60,6 @@ class TableController extends Controller
             throw TableException::notDefinedOnRoute($request->path());
         }
 
-        return app($named)->table($this->builder);
+        return app($named)->table();
     }
 }

@@ -12,7 +12,6 @@ use App\Foundation\Auth\Http\Request\SetUserStatusRequest;
 use App\Foundation\Auth\Model\User;
 use App\Foundation\Auth\Repository\UserRepository;
 use App\Foundation\Component\Select\Service\OptionService;
-use App\Foundation\Component\Table\Builder\TableBuilder;
 use App\Foundation\Component\Table\Http\Request\TableRequest;
 use App\Foundation\Component\Table\Repository\TableRepository;
 use App\Foundation\Component\Table\ValueObject\InitialPage;
@@ -29,7 +28,6 @@ class UserController extends Controller
         protected RoleSelect $roleSelect,
         protected OptionService $optionService,
         protected SalesPointRepository $salesPointRepository,
-        protected TableBuilder $tables,
         protected UserTable $table,
     ) {}
 
@@ -39,7 +37,7 @@ class UserController extends Controller
      */
     public function index(Request $request, TableRequest $asked, TableRepository $tableRepository): View
     {
-        $table = $this->table->table($this->tables);
+        $table = $this->table->table();
 
         /*
             Read for the position the address asks for rather than for the first page, so a link

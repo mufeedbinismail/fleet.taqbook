@@ -175,14 +175,16 @@ class TableEndpointTest extends TestCase
  */
 class UndrawnFieldStockTable implements TableDefinitionContract
 {
+    public function __construct(private readonly TableBuilder $tables) {}
+
     public static function routeName(): string
     {
         return '_test.wide.list';
     }
 
-    public function table(TableBuilder $tables): Table
+    public function table(): Table
     {
-        return StockTable::declare($tables)
+        return StockTable::declare($this->tables)
             ->definitions(
                 new ColumnDefinition('stock_id', 'Code'),
                 new ColumnDefinition('description', 'Description', visible: false),

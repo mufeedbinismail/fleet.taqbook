@@ -2,7 +2,6 @@
 
 namespace App\Foundation\Component\Table\Contract;
 
-use App\Foundation\Component\Table\Builder\TableBuilder;
 use App\Foundation\Component\Table\ValueObject\Table;
 
 /**
@@ -14,7 +13,7 @@ use App\Foundation\Component\Table\ValueObject\Table;
  */
 interface TableDefinitionContract
 {
-    public function table(TableBuilder $tables): Table;
+    public function table(): Table;
 
     /**
      * The name of the route this table's rows are read at. Naming it does not register it.

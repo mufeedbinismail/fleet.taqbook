@@ -37,6 +37,7 @@ final class UserTable implements TableDefinitionContract
         private readonly RoleSelect $roleSelect,
         private readonly Guard $auth,
         private readonly Gate $gate,
+        private readonly TableBuilder $tables,
     ) {}
 
     public static function routeName(): string
@@ -44,9 +45,9 @@ final class UserTable implements TableDefinitionContract
         return 'access.users.list';
     }
 
-    public function table(TableBuilder $tables): Table
+    public function table(): Table
     {
-        return $tables
+        return $this->tables
             ->of($this->rows())
             ->name('users')
             ->searchable('users.user_id', 'users.real_name', 'users.email', 'security_roles.role')

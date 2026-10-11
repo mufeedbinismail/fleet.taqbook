@@ -28,14 +28,16 @@ class StockTable implements TableDefinitionContract
 
     public const NAME = 'stock';
 
+    public function __construct(private readonly TableBuilder $tables) {}
+
     public static function routeName(): string
     {
         return '_test.stock.list';
     }
 
-    public function table(TableBuilder $tables): Table
+    public function table(): Table
     {
-        return self::declare($tables)->definition();
+        return self::declare($this->tables)->definition();
     }
 
     public static function rows(): QueryBuilder
