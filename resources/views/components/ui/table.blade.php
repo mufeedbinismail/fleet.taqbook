@@ -32,6 +32,11 @@
     'export' => [],
     'urlSync' => true,
     /*
+        Whether the bar offers to drop every narrowing at once. A table whose narrowings each show as a
+        chip that removes itself may do without.
+    */
+    'resettable' => true,
+    /*
         The page this table opens on, resolved before it was drawn. Declared rather than assumed: it
         puts the rows in the page source, which a saved page, a document cache and a captured DOM
         all reach and a fetch response does not.
@@ -242,9 +247,11 @@
         @endif
 
         <div class="x-table__bar-actions">
-            <x-ui.button variant="outline" x-show="isDirty()" x-cloak @click="reset()">
-                {{ __('component.table.clear') }}
-            </x-ui.button>
+            @if ($resettable)
+                <x-ui.button variant="outline" x-show="isDirty()" x-cloak @click="reset()">
+                    {{ __('component.table.clear') }}
+                </x-ui.button>
+            @endif
 
             {{ $toolbar ?? '' }}
 
