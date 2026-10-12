@@ -4,8 +4,11 @@
     "type": "module",
     "scripts": {
         "prepare": "node -e \"try{require('child_process').execSync('git config core.hooksPath .githooks')}catch(e){}\"",
+        "predev": "npm run icons",
         "dev": "vite",
+        "prebuild": "npm run icons",
         "build": "vite build",
+        "prewatch": "npm run icons",
         "watch": "vite build --watch",
         "icons": "node resources/icons/gen-codepoints.mjs && node resources/icons/normalize.mjs && fantasticon",
         "test": "vitest run",
