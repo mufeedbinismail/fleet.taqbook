@@ -5,6 +5,7 @@ namespace Tests\Unit\Foundation\Component\Table;
 use App\Foundation\Component\DateRange\Control\DateRangeControl;
 use App\Foundation\Component\Select\Control\SelectControl;
 use App\Foundation\Component\Select\ValueObject\OptionSource;
+use App\Foundation\Component\Table\Builder\TableBuilder;
 use App\Foundation\Component\Table\Enum\DataType;
 use App\Foundation\Component\Table\Enum\Direction;
 use App\Foundation\Component\Table\Enum\Stick;
@@ -17,6 +18,7 @@ use App\Foundation\Component\Table\ValueObject\FilterDefinition;
 use App\Foundation\Component\Table\ValueObject\Sort;
 use App\Foundation\Component\Table\ValueObject\TablePage;
 use App\Foundation\Component\Table\ValueObject\TableState;
+use Illuminate\Support\Facades\DB;
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
@@ -50,7 +52,13 @@ class WireContractTest extends TestCase
     #[DataProvider('addresses')]
     public function test_an_address_is_read_as_the_position_the_browser_wrote(string $name, string $query, array $means): void
     {
-        $state = TableRequest::create('/_test/table/list?'.$query)->toState($name);
+        $table = app(TableBuilder::class)
+            ->of(DB::table('stock_master'))
+            ->name($name)
+            ->definitions(new ColumnDefinition('stock_id', 'Code', dataType: DataType::Text))
+            ->definition();
+
+        $state = TableRequest::create('/_test/table/list?'.$query)->toState($table);
 
         $this->assertSame($means, json_decode(json_encode($state->toArray()), true));
     }

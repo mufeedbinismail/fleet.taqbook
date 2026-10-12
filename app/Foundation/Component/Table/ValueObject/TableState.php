@@ -33,6 +33,15 @@ final class TableState
         return $this->export !== null;
     }
 
+    public function isInitialState(): bool
+    {
+        return $this->page === 1
+            && $this->perPage === null
+            && ! $this->hasSearch()
+            && $this->filters === []
+            && $this->sort === [];
+    }
+
     public function hasSearch(): bool
     {
         return $this->search !== null && $this->search !== '';

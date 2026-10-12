@@ -4,6 +4,7 @@ namespace App\Foundation\Component\Table\Http\Request;
 
 use App\Foundation\Component\Table\Enum\ExportFormat;
 use App\Foundation\Component\Table\Support\SortExpression;
+use App\Foundation\Component\Table\ValueObject\Table;
 use App\Foundation\Component\Table\ValueObject\TableState;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -34,9 +35,9 @@ class TableRequest extends FormRequest
      * that two tables on one page never read each other's state. The export format is the one
      * exception and stays unnested.
      */
-    public function toState(string $name): TableState
+    public function toState(Table $table): TableState
     {
-        $own = $this->query($name);
+        $own = $this->query($table->name);
         $own = is_array($own) ? $own : [];
 
         $perPage = (int) $this->stringOrNull($own, 'per_page');

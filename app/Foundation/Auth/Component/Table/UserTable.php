@@ -19,7 +19,6 @@ use App\Foundation\Component\Table\Filter\TextFilter;
 use App\Foundation\Component\Table\ValueObject\ColumnDefinition;
 use App\Foundation\Component\Table\ValueObject\FilterDefinition;
 use App\Foundation\Component\Table\ValueObject\Table;
-use App\Foundation\Component\Table\ValueObject\TableState;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -59,6 +58,7 @@ final class UserTable implements TableDefinitionContract
                 new BooleanFilter('users.inactive'),
             ))
             ->defaultSort('users.user_id')
+            ->defaultFilters(['inactive' => false])
             ->perPage(25, max: 100)
             ->definitions(...$this->definitions())
             ->map($this->row(...))
@@ -93,27 +93,6 @@ final class UserTable implements TableDefinitionContract
             'is_switchable' => ! $own && $history,
             'is_deletable' => ! $own && ! $history,
         ];
-    }
-
-    /**
-     * Where the roster opens: on the people who are still here, and only where the address named
-     * nothing — a shared link opening somewhere other than where it was copied from is not a
-     * default.
-     */
-    public function opensAt(TableState $asked): TableState
-    {
-        if (array_key_exists('inactive', $asked->filters)) {
-            return $asked;
-        }
-
-        return new TableState(
-            page: $asked->page,
-            perPage: $asked->perPage,
-            search: $asked->search,
-            filters: [...$asked->filters, 'inactive' => false],
-            sort: $asked->sort,
-            export: $asked->export,
-        );
     }
 
     /**

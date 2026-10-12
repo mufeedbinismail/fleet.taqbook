@@ -17,6 +17,7 @@ final class Table
      * @param  list<ColumnSort>  $defaultSort  in precedence order
      * @param  list<ColumnDefinition>  $definitions  in the order they are drawn and written
      * @param  list<FilterDefinition>  $filters  the narrowings no definition carries
+     * @param  array<string, mixed>  $defaultFilters  client key => value the table opens narrowed by
      * @param  Closure(EloquentBuilder|QueryBuilder): (list<array<string, mixed>>)|null  $footer  over
      *                                                                                            the narrowed, unpaged query
      */
@@ -33,6 +34,7 @@ final class Table
         public readonly string $name,
         public readonly array $filters = [],
         public readonly ?Closure $footer = null,
+        public readonly array $defaultFilters = [],
     ) {}
 
     /**

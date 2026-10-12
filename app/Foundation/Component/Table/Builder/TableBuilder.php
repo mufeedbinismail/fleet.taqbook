@@ -36,6 +36,9 @@ final class TableBuilder
     /** @var list<FilterDefinition> */
     private array $filters = [];
 
+    /** @var array<string, mixed> */
+    private array $defaultFilters = [];
+
     private ?Closure $mapper = null;
 
     private ?Closure $footer = null;
@@ -134,6 +137,16 @@ final class TableBuilder
     }
 
     /**
+     * @param  array<string, mixed>  $filters
+     */
+    public function defaultFilters(array $filters): self
+    {
+        $this->defaultFilters = $filters;
+
+        return $this;
+    }
+
+    /**
      * A mapping answers with values, never with presentation: `1234.56` and a date, not
      * `'1,234.56'` and `'04/03/2024'`.
      *
@@ -210,6 +223,7 @@ final class TableBuilder
             $this->name ?? throw TableException::unnamed(),
             $this->filters,
             $this->footer,
+            $this->defaultFilters,
         );
     }
 

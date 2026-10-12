@@ -32,7 +32,7 @@ trait SeedsStock
     private function asked(array $own, string $name = StockTable::NAME): TableState
     {
         return TableRequest::create('/_test/stock/list?'.http_build_query([$name => $own]))
-            ->toState($name);
+            ->toState($this->table()->name($name)->definition());
     }
 
     private function table(): TableBuilder

@@ -14,7 +14,6 @@ use App\Foundation\Auth\Repository\UserRepository;
 use App\Foundation\Component\Select\Service\OptionService;
 use App\Foundation\Component\Table\Http\Request\TableRequest;
 use App\Foundation\Component\Table\Repository\TableRepository;
-use App\Foundation\Component\Table\ValueObject\InitialPage;
 use App\Foundation\Framework\Http\Controller\Controller;
 use App\Foundation\Framework\Http\Response\ResponseEnvelope;
 use App\Trade\Sale\Repository\SalesPointRepository;
@@ -46,12 +45,12 @@ class UserController extends Controller
             them in the page source rather than in a fetch response — deliberate, on a screen
             already gated to whoever administers accounts.
         */
-        $state = $this->table->opensAt($asked->toState($table->name));
+        $state = $asked->toState($table);
 
         return view('pages.auth.user-roster', [
             'title' => __('auth.user.title'),
             'definition' => $table,
-            'initial' => InitialPage::of($tableRepository->page($table, $state), $state),
+            'initial' => $tableRepository->initialPage($table, $state),
             'roles' => $this->optionService->channel($this->roleSelect, [RoleSelect::INACTIVE => 0]),
             'salesPoints' => $this->salesPointRepository->all(),
         ]);

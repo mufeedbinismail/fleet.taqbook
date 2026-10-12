@@ -6,6 +6,7 @@ use App\Foundation\Component\Table\Exception\TableException;
 use App\Foundation\Component\Table\Query\TableQuery;
 use App\Foundation\Component\Table\Service\TableService;
 use App\Foundation\Component\Table\ValueObject\ExportSet;
+use App\Foundation\Component\Table\ValueObject\InitialPage;
 use App\Foundation\Component\Table\ValueObject\PagePosition;
 use App\Foundation\Component\Table\ValueObject\Table;
 use App\Foundation\Component\Table\ValueObject\TablePage;
@@ -18,6 +19,15 @@ final class TableRepository
         private readonly TableService $service,
         private readonly TableQuery $query,
     ) {}
+
+    public function initialPage(Table $table, TableState $state): InitialPage
+    {
+        if ($state->isInitialState() && $table->defaultFilters !== []) {
+            $state = new TableState(filters: $table->defaultFilters);
+        }
+
+        return InitialPage::of($this->page($table, $state), $state);
+    }
 
     public function page(Table $table, TableState $state): TablePage
     {

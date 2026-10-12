@@ -28,7 +28,7 @@ class TableController extends Controller
     public function __invoke(TableRequest $request): TablePageResponse|TableExportResponse
     {
         $table = $this->definition($request);
-        $state = $request->toState($table->name);
+        $state = $request->toState($table);
 
         // Asked before either answer: a narrowing nobody can be held to is no safer in a file.
         $this->service->validate($table, $state);
