@@ -30,7 +30,7 @@ final class RoleSelect implements NarrowsOptionsContract, SelectDefinitionContra
                 fn (EloquentBuilder $query) => $query->where('security_roles.reserved', false),
             )
             ->select(['security_roles.uuid as value', 'security_roles.role as label'])
-            ->selectRaw('CASE WHEN security_roles.inactive THEN ? END as description', [__('auth.role.picker.inactive')])
+            ->selectRaw('CASE WHEN security_roles.inactive THEN ? END as description', [__('shared.record.inactive')])
             ->orderBy('security_roles.role');
     }
 

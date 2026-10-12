@@ -66,7 +66,7 @@ ClientData::registry()
                 :options="$state['uuid'] === null ? [] : [[
                     'value' => $state['uuid'],
                     'label' => $state['role_name'],
-                    'description' => $state['inactive'] ? __('auth.role.picker.inactive') : null,
+                    'description' => $state['inactive'] ? __('shared.record.inactive') : null,
                 ]]"
                 :selected="$state['uuid']"
                 :placeholder="__('auth.role.new')"

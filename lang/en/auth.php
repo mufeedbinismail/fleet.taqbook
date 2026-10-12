@@ -24,7 +24,6 @@ return [
 
         'picker' => [
             'label' => 'Editing role',
-            'inactive' => 'inactive',
             'show_inactive' => 'Show inactive',
         ],
 
