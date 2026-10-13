@@ -580,6 +580,91 @@
         color: theme('colors.card-txt');
     }
 
+    /* For a table in a narrow column: the same parts, drawn closer. */
+    .x-table--compact {
+        .x-table__bar-actions {
+            @apply min-w-0 max-w-full;
+        }
+
+        .x-table__search {
+            @apply w-[300px] max-w-full;
+        }
+
+        .x-table__search-input {
+            @apply min-w-0 grow;
+        }
+
+        .x-table__chips {
+            @apply gap-1 px-2 py-1;
+        }
+
+        .x-table__chip {
+            @apply min-h-0 py-0 pe-0.5 ps-2 text-[0.6875rem];
+        }
+
+        .x-table__chip-remove {
+            @apply h-4 w-4 text-xs;
+        }
+
+        .x-table__foot {
+            @apply gap-x-3 gap-y-1 px-3 py-1.5;
+        }
+
+        .x-table__foot-controls {
+            @apply contents;
+        }
+
+        .x-table__size {
+            @apply ms-auto gap-1;
+        }
+
+        .x-table__size-select {
+            @apply h-6 min-h-6 py-0 pe-6 ps-2 text-xs;
+        }
+
+        .x-table__pager {
+            @apply w-full justify-between;
+        }
+
+        .x-table__pager-step {
+            @apply h-6 w-6;
+        }
+
+        .x-table__pager-count {
+            @apply h-6 px-2;
+        }
+    }
+
+    /* The heading and footer stay put and only the rows scroll, inside whatever height the parent gives. */
+    .x-table--fill {
+        @apply flex min-h-0 flex-1 flex-col;
+
+        .x-table__body {
+            @apply min-h-0 flex-1;
+        }
+
+        .x-table__scroll {
+            @apply h-full;
+            max-height: none !important;
+        }
+    }
+
+    /* Only the toolbar is drawn, and not as a card. */
+    .x-table--bar-only {
+        @apply border-0 bg-transparent shadow-none;
+
+        .x-table__bar {
+            @apply border-0 p-0;
+        }
+
+        .x-table__search,
+        .x-table__body,
+        .x-table__chips,
+        .x-table__foot {
+            @apply hidden;
+        }
+    }
+
     /* The rows already loaded, laid out as a document rather than as the screen showing them.
        Nothing is fetched for print. */
     @media print {

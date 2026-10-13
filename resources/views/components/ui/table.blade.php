@@ -54,7 +54,10 @@
     'rowHrefKey' => null,
     // A cap rather than a height: a table short enough to fit under it never scrolls. `none`
     // declines it, and gives up the pinned chrome with it.
-    'height' => '70vh',
+    'height' => '70vh',    // Denser chips, footer and pager, for a table in a narrow column.
+    'compact' => false,
+    // Grows into the height of a flex parent and scrolls its rows inside it, in place of the `height` cap.
+    'fill' => false,
 ])
 
 @php
@@ -227,7 +230,7 @@
 @endphp
 
 <div
-    {{ $attributes->merge(['class' => 'x-table']) }}
+    {{ $attributes->class(['x-table', 'x-table--compact' => $compact, 'x-table--fill' => $fill]) }}
     x-data="dataTable(@js($config))"
 >
     <div class="x-table__bar">
