@@ -15,6 +15,7 @@ import modal from '../components/modal';
 import notify from '../components/notify';
 import select from '../components/select';
 import table from '../components/table';
+import tabs from '../components/tabs';
 import toggle from '../components/toggle';
 
 Alpine.plugin(focus);
@@ -31,6 +32,7 @@ Alpine.plugin(modal);
 Alpine.plugin(notify);
 Alpine.plugin(select);
 Alpine.plugin(table);
+Alpine.plugin(tabs);
 Alpine.plugin(toggle);
 
 export default Alpine;

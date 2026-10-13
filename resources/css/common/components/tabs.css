@@ -1,0 +1,41 @@
+@layer components {
+    .x-tabs__list {
+        @apply flex overflow-x-auto border-0 border-t border-solid border-card-divider px-1;
+        scrollbar-width: none;
+    }
+
+    .x-tabs__tab {
+        @apply -mb-px shrink-0 cursor-pointer whitespace-nowrap rounded-t-lg border-0 border-b-2 border-solid border-transparent bg-transparent px-3 py-3 text-sm font-semibold text-card-txt outline-none transition-colors hover:bg-card-hover-bg hover:text-card-title-txt;
+    }
+
+    .x-tabs__tab--selected {
+        @apply border-primary-accent text-card-title-txt;
+    }
+
+    .x-tabs--fill {
+        @apply flex flex-1 flex-col;
+
+        .x-tabs__panel,
+        .x-tabs__content {
+            @apply flex flex-1 flex-col;
+        }
+    }
+
+    .x-tabs__panel {
+        @apply border-0 border-t border-solid border-card-divider p-4 outline-none;
+    }
+
+    @screen lg {
+        .x-tabs__list {
+            @apply px-3;
+        }
+
+        .x-tabs__tab {
+            @apply px-4;
+        }
+
+        .x-tabs__panel {
+            @apply p-6;
+        }
+    }
+}
