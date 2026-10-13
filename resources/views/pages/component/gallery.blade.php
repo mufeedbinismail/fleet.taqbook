@@ -1178,6 +1178,55 @@
     </div>
 
 
+    <h2 class="mb-1 mt-8 text-base font-semibold text-card-title-txt">Tabs</h2>
+    <p class="mb-3 max-w-3xl text-sm text-card-txt">
+        <code>&lt;x-ui.tabs&gt;</code>, a strip of sections and a panel for each, each written as an
+        <code>&lt;x-ui.tab name label&gt;</code> row inside it. A row holds its panel, which is drawn only once
+        its tab has been opened, and fails if it is not inside an <code>x-ui.tabs</code>. <code>id</code> is required
+        and must be unique on the page. The chosen tab is held in memory unless <code>param</code> names an address
+        parameter to keep it in, as the second does; each instance that does needs a parameter of its own.
+        <code>fill</code> lets it grow into the height of a flex parent; without it the tabs are only as tall as
+        their open section.
+    </p>
+
+    <div class="grid gap-4 lg:grid-cols-2">
+        <div class="rounded-xl border border-card-border bg-card-bg shadow-sm">
+            <x-ui.tabs id="demo-account" label="Account sections">
+                <x-ui.tab name="profile" label="Profile">@include('pages.component.tabs.mock', ['label' => 'Profile'])</x-ui.tab>
+                <x-ui.tab name="security" label="Security">@include('pages.component.tabs.mock', ['label' => 'Security'])</x-ui.tab>
+                <x-ui.tab name="billing" label="Billing">@include('pages.component.tabs.mock', ['label' => 'Billing'])</x-ui.tab>
+            </x-ui.tabs>
+        </div>
+
+        <div class="rounded-xl border border-card-border bg-card-bg shadow-sm">
+            <x-ui.tabs id="demo-report" param="report_tab" label="Report sections">
+                <x-ui.tab name="summary" label="Summary">@include('pages.component.tabs.report.summary')</x-ui.tab>
+                <x-ui.tab name="details" label="Details">@include('pages.component.tabs.mock', ['label' => 'Details'])</x-ui.tab>
+                <x-ui.tab name="history" label="History">@include('pages.component.tabs.mock', ['label' => 'History'])</x-ui.tab>
+            </x-ui.tabs>
+        </div>
+    </div>
+
+    <p class="mb-3 mt-4 max-w-3xl text-sm text-card-txt">
+        Bound with <code>x-model</code>, which is Alpine UI's own binding, the chosen tab's position goes
+        both ways (0 is the first): the page reads it and can set it. The variable should start as the
+        position of the tab that opens first.
+    </p>
+
+    <div class="rounded-xl border border-card-border bg-card-bg shadow-sm" x-data="{ section: 0 }">
+        <div class="flex flex-wrap items-center gap-2 border-0 border-b border-solid border-card-divider px-4 py-3 text-sm text-card-txt">
+            <span>Chosen position: <strong class="text-card-title-txt" x-text="section"></strong></span>
+            <button type="button" class="ghost" @click="section = 2">Go to Settings</button>
+            <button type="button" class="ghost" @click="section = 0">Go to Overview</button>
+        </div>
+        <x-ui.tabs id="demo-bound" x-model="section" selected="overview" label="Bound sections">
+            <x-ui.tab name="overview" label="Overview">@include('pages.component.tabs.mock', ['label' => 'Overview'])</x-ui.tab>
+            <x-ui.tab name="activity" label="Activity">@include('pages.component.tabs.mock', ['label' => 'Activity'])</x-ui.tab>
+            <x-ui.tab name="settings" label="Settings">@include('pages.component.tabs.mock', ['label' => 'Settings'])</x-ui.tab>
+        </x-ui.tabs>
+    </div>
+
+
     <h2 class="mb-1 mt-8 text-base font-semibold text-card-title-txt">Area index</h2>
     <p class="mb-3 max-w-3xl text-sm text-card-txt">
         The second way to read the tree: one card per section, laid across the page rather than down
