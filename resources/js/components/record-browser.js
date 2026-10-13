@@ -1,6 +1,7 @@
 'use strict';
 
 import axios from '../plugins/axios';
+import { beautifyUrl } from '../foundation/route';
 import { BACKGROUND } from '../foundation/busy';
 import { rail, wide } from '../../css/common/screens.mjs';
 
@@ -129,7 +130,7 @@ export function recordBrowser(options, env = defaultEnv()) {
             if (this.selected === null) address.searchParams.delete(param);
             else address.searchParams.set(param, this.selected);
 
-            env.history.replaceState(env.history.state, '', address);
+            env.history.replaceState(env.history.state, '', beautifyUrl(address));
         },
     };
 }

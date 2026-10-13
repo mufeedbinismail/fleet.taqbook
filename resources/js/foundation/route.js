@@ -29,6 +29,15 @@ export function buildQuery(query, prefix, params = new URLSearchParams()) {
     return params;
 }
 
+// URLSearchParams writes brackets in a query as %5B and %5D, which the address bar would have kept as they are.
+export function beautifyUrl(address) {
+    const beautified = new URL(address);
+
+    beautified.search = beautified.search.replace(/%5B/gi, '[').replace(/%5D/gi, ']');
+
+    return beautified.toString();
+}
+
 export function url(path, { query, absolute = false } = {}) {
     const resolved = new URL(path, base);
 

@@ -1,5 +1,7 @@
 'use strict';
 
+import { beautifyUrl } from '../foundation/route';
+
 // Sections on top of @alpinejs/ui's x-tabs: consumers add x-tabset attributes and nothing else.
 
 const ROOT = '[x-tabset]';
@@ -48,7 +50,7 @@ export function tabs(options, env = defaultEnv()) {
             const address = new URL(env.location.href);
 
             address.searchParams.set(param, name);
-            env.history.replaceState(env.history.state, '', address);
+            env.history.replaceState(env.history.state, '', beautifyUrl(address));
         },
     };
 }

@@ -1,6 +1,6 @@
 'use strict';
 
-import { buildQuery } from '../../foundation/route';
+import { beautifyUrl, buildQuery } from '../../foundation/route';
 
 /*
     A table's working copy: what it is asking for, and everything derivable from that without a
@@ -231,11 +231,9 @@ export function writeQuery(state, name) {
         params.set(param, value);
     }
 
-    const search = params.toString();
+    const address = new URL(window.location.href);
 
-    window.history.replaceState(
-        window.history.state,
-        '',
-        search === '' ? window.location.pathname : `${window.location.pathname}?${search}`,
-    );
+    address.search = params.toString();
+
+    window.history.replaceState(window.history.state, '', beautifyUrl(address));
 }
