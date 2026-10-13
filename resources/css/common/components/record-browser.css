@@ -1,0 +1,94 @@
+@layer components {
+    .x-record-browser {
+        @apply flex flex-col gap-4;
+
+        @screen lg {
+            @apply flex-row items-start gap-5;
+        }
+    }
+
+    .x-record-browser__rail {
+        @apply flex min-w-0 flex-col rounded-2xl border border-solid border-card-border bg-card-bg p-3;
+
+        @screen lg {
+            @apply w-96 shrink-0 p-4;
+        }
+
+        /* The screen less the header, breadcrumb and padding around it. */
+        @screen rail {
+            @apply sticky top-0 h-[calc(100dvh-8.375rem)];
+        }
+    }
+
+    .x-record-browser__rail-head {
+        @apply flex items-center justify-between gap-2;
+    }
+
+    .x-record-browser__title {
+        @apply text-lg font-semibold text-card-title-txt;
+    }
+
+    .x-record-browser__filters {
+        @apply text-lg;
+
+        &.x-record-browser__filters--open {
+            @apply text-primary-accent;
+        }
+
+        @screen rail {
+            @apply hidden;
+        }
+    }
+
+    .x-record-browser__lookup {
+        @apply mt-3 grid grid-cols-[minmax(0,1fr)];
+
+        @screen rail {
+            @apply hidden;
+        }
+    }
+
+    .x-record-browser__lookup-label {
+        @apply mb-1 block text-xs font-semibold uppercase tracking-wide text-card-txt;
+    }
+
+    .x-record-browser__list {
+        @apply mt-3;
+    }
+
+    .x-record-browser__pick {
+        @apply block w-full cursor-pointer whitespace-normal break-words border-0 bg-transparent p-0 text-start text-card-title-txt;
+
+        &.x-record-browser__pick--selected {
+            @apply text-primary-accent;
+        }
+    }
+
+    .x-record-browser__detail {
+        @apply flex min-w-0 flex-col rounded-2xl border border-solid border-card-border bg-card-bg;
+
+        @screen lg {
+            @apply grow self-stretch;
+        }
+    }
+
+    .x-record-browser__pane {
+        @apply flex flex-1 flex-col;
+    }
+
+    .x-record-browser__state {
+        @apply flex flex-1 flex-col items-center justify-center gap-2 px-6 py-16 text-center;
+    }
+
+    .x-record-browser__state-icon {
+        @apply flex h-16 w-16 items-center justify-center rounded-2xl border border-solid border-card-border text-3xl text-card-txt;
+    }
+
+    .x-record-browser__state-title {
+        @apply m-0 mt-2 text-lg font-semibold text-card-title-txt;
+    }
+
+    .x-record-browser__state-text {
+        @apply m-0 max-w-sm text-sm text-card-txt;
+    }
+}

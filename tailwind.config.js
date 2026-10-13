@@ -1,5 +1,6 @@
 import { classNames } from './resources/icons/names.mjs';
 import { panelClassNames } from './resources/css/common/components/date-panel-classes.mjs';
+import { rail } from './resources/css/common/screens.mjs';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -42,6 +43,7 @@ export default {
             screens: {
                 '2xl': '100rem',
                 '3xl': '120rem',
+                rail: { raw: rail },
             },
             boxShadow: {
                 sm: '0 1px 2px 0 rgb(var(--shadow-rgb) / 0.05)',

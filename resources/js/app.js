@@ -12,9 +12,11 @@ import { factory as selectFactory } from './components/select';
 import { date } from './components/date';
 import { dateRange } from './components/date-range';
 import { modal } from './components/modal';
+import { factory as recordBrowserFactory } from './components/record-browser';
 import { notify } from './components/notify';
 
 const select = selectFactory(Alpine);
+const recordBrowser = recordBrowserFactory(Alpine);
 
 makeBusyStateReactive(Alpine.reactive);
 
@@ -44,6 +46,7 @@ Object.assign(window.App, {
     date,
     dateRange,
     modal,
+    recordBrowser,
     notify,
 });
 
