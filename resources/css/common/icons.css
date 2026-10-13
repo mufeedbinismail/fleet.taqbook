@@ -1,4 +1,8 @@
-/* Font is rebuilt from resources/icons/*.svg via `npm run icons` (fantasticon). */
+/*
+    The font files in fonts/ are not committed: `npm run icons` (fantasticon) builds them from
+    resources/icons/*.svg, and `npm run dev`, `build` and `watch` run it first. A new icon is its svg
+    plus a declaration below; the codepoint next to the name is what keeps the font stable.
+*/
 @font-face {
     font-family: 'icomoon';
     src:
@@ -266,5 +270,8 @@
     }
     .icon-copy:before {
         content: '\eb04';
+    }
+    .icon-image:before {
+        content: '\eb05';
     }
 }
