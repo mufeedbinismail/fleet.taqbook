@@ -1149,6 +1149,35 @@
         </div>
     </div>
 
+    <h2 class="mb-1 mt-8 text-base font-semibold text-card-title-txt">Stat</h2>
+    <p class="mb-3 max-w-3xl text-sm text-card-txt">
+        <code>&lt;x-ui.stat&gt;</code>, a label over one figure, with an optional caption. The figure
+        is whatever is placed in the default slot, so the card knows nothing of what it counts; the
+        caption is the <code>caption</code> slot, whose attributes (<code>x-show</code>,
+        <code>x-text</code>) land on the caption line itself. A long figure wraps rather than
+        pushing the card wider.
+    </p>
+
+    <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <x-ui.stat label="On hand">
+            21
+            <x-slot:caption>DEF 0 · NFBN 21</x-slot:caption>
+        </x-ui.stat>
+
+        <x-ui.stat label="Average cost">
+            55.00
+            <x-slot:caption>1510 Inventory</x-slot:caption>
+        </x-ui.stat>
+
+        <x-ui.stat label="Normal price">No price</x-ui.stat>
+
+        <x-ui.stat label="A figure that runs long">
+            1,234,567,890,123,456,789,012,345,678.00
+            <x-slot:caption>Wraps inside the card instead of widening it</x-slot:caption>
+        </x-ui.stat>
+    </div>
+
+
     <h2 class="mb-1 mt-8 text-base font-semibold text-card-title-txt">Area index</h2>
     <p class="mb-3 max-w-3xl text-sm text-card-txt">
         The second way to read the tree: one card per section, laid across the page rather than down

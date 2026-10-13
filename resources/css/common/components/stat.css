@@ -1,0 +1,17 @@
+@layer components {
+    .x-stat {
+        @apply min-w-0 rounded-xl border border-solid border-card-border p-4;
+    }
+
+    .x-stat__label {
+        @apply text-xs font-semibold uppercase tracking-wide text-card-txt;
+    }
+
+    .x-stat__value {
+        @apply mt-1 break-words text-xl font-semibold text-card-title-txt;
+    }
+
+    .x-stat__caption {
+        @apply mt-1 break-words text-xs text-card-txt;
+    }
+}
