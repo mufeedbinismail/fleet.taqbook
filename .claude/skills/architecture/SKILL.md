@@ -1,6 +1,6 @@
 ---
 name: architecture
-description: Use before creating, moving or naming any file under app/, routes/, config/, lang/, resources/views/ or tests/, that is, before choosing whether a class is a Service, an Action, a Query, a Repository or another component type, before choosing the module, the feature and the folder it lives in, before naming the file, before adding a parameter to an existing verb, before deciding how a check reports failure or where an exception class lives, before reporting or removing a member that nothing calls, before adding anything to the FrontAccounting legacy layer, and when reviewing whether existing code sits in the right folder, under the right type, or does something its type may not.
+description: Use before creating, moving or naming any file under app/, routes/, config/, lang/, resources/views/ or tests/, that is, before choosing whether a class is a Service, an Action, a Query, a Repository or another component type, before choosing the module, the feature and the folder it lives in, before naming the file, before naming or renaming any method, property, parameter or local, before adding a parameter to an existing verb, before deciding how a check reports failure or where an exception class lives, before reporting or removing a member that nothing calls, before adding anything to the FrontAccounting legacy layer, and when reviewing whether existing code sits in the right folder, under the right type, or does something its type may not.
 ---
 
 ## Precedence
@@ -182,6 +182,10 @@ Give a module an `Exception/` folder only when a catch site distinguishes one of
 
 ## Naming
 
+### Folders and Classes
+
+Give a folder or a class the form this table sets for what it is.
+
 | What is being named | Form |
 |---|---|
 | a folder or class Taqbook authors | singular, PascalCase: `Controller/`, `Entity/`, `Tax/`, never `Controllers/` |
@@ -196,52 +200,74 @@ Give a module an `Exception/` folder only when a catch site distinguishes one of
 | a Service | for the subject whose behaviour it holds, never for the narrow rule it started with: `Service/RoleService`, not `Service/RoleLockout`, so that the next calculation has an obvious home and adding it there is not a rename |
 | a Model sharing its name with an Entity or a Constant | aliased at the point of use, because the domain object is the thing and the table is the detail: `use App\Foundation\Auth\Entity\Role;` and `use App\Foundation\Auth\Model\Role as RoleRecord;` |
 
-## Naming members
+### Methods, Properties, Parameters and Locals
 
-Covers methods, properties, parameters and locals.
+Run these steps, in order, every time you name a method, property, parameter or local,
+including when you rename one. Each step needs what the step before it produced, so a name
+that skipped a step was never derived and only looks finished.
 
-1. Write the **call site** before the declaration: the line that uses the member, as the
-   caller would say it aloud with the file closed.
-2. Declare the member under the call-site name, unchanged.
-3. On a collision, return to step 1 for a different word, or a different home for the
-   member.
-4. When no name comes, the member is two things: split it and name each half from its own
-   call site.
+1. **Write the call site.** Before the declaration exists, write the line that uses the
+   member, as the caller would say it aloud with the file closed. A member whose call site
+   is fixed by its type takes no name from here: an Action's `execute()` and a Query's
+   `builder()` stop at this step.
 
-### The subject
+2. **Find the host and the subject it gives.** Decide what the member hangs off. The host
+   decides which part of the call site already names the subject, and the member's name
+   supplies only the rest:
 
-The call site supplies a **subject**; the name supplies the rest. Decide which host the
-member hangs off, then name for that host:
+   | Host | Subject comes from | The name supplies | Reads as |
+   |---|---|---|---|
+   | Proposition (yes/no) | the receiver | an assertion: a third-person verb, `contains` and not `doesContain`; or `is` / `has` / `can` + rest, `isReserved`, `is_releasable` or `canRelease`, and not `reserved` or `releasable` | `$workOrder->isReleased()`, `$quotation->hasLines()`, `$period->contains($date)` |
+   | Model, Entity, ValueObject, or any other data object | the receiver | a short verb or noun read against it | `$invoice->total()`, `$money->add($other)`, `$workOrder->markReleased()` |
+   | Repository, or a Service grouped under a subject | the arguments; the receiver's name is a namespace, not a subject | the operation and its object, in full | `$customerRepository->findCustomerByCode($code)`, `$customerService->mergeCustomers($duplicate, $survivor)` |
+   | A Service scoped to one operation, named for it by its agent noun | the receiver | the bare operation | `$messageSigner->sign($message)`, `$taxCalculator->calculate($invoice)` |
+   | Named constructor | the class | the origin: `from` + what its one argument is; bare `from()` when it takes more than one | `Money::fromMinorUnits(1999)`, `ValidationException::fromValidator($validator)`, `StockShortfall::from($required, $available)` |
+   | Injected collaborator | the class it is injected into, for a constructor dependency; the method's name, for a method dependency | the bare role word or the full class name, decided in step 3 | `$repository`, `$calculator`, `$itemRepository`, `$taxCalculator` |
 
-| Host | Subject | Name supplies | Reads as |
-|---|---|---|---|
-| Proposition (yes/no) | the receiver | an assertion: third-person verb, or `is` / `has` / `can` + rest | `$subscription->isActive()`, `$cart->hasItems()`, `$member->canVote()`, `$period->contains($date)` |
-| Entity, model, value object | the receiver | a short verb or noun read against it | `$order->total()`, `$email->domain()`, `$money->add($other)`, `$invoice->markPaid()` |
-| Service, repository, umbrella | the arguments | the operation and its object, in full | `$userRepository->findByEmail($email)`, `$paymentService->charge($order)`, `$mailer->sendReceipt($order)`, `$signer->sign($payload)` |
-| Factory | the class | the operation and origin | `Money::fromCents(1999)`, `Key::fromDelegation($packed, $root)`, `Period::between($start, $end)`, `Duration::ofMinutes(15)` |
+   Rewrite the call site from step 1 until it reads like the row's last column. A name that
+   repeats the subject the call site already supplies, `$workOrder->workOrderStatus()`, has
+   not been read against its host.
 
-### Collaborators
+   A Repository or a subject-grouped Service looks as if its receiver supplies the subject,
+   because its name contains one, and `$customerRepository->findByCode($code)` reads well
+   only through that name. The receiver is a namespace for many operations, held under
+   `$repository` or `$customerRepository` depending on where it is injected, so the method
+   names its object itself: `findCustomerByCode`. Only an agent noun scoped to one operation
+   is a subject, and only its method drops the object: `$messageSigner->sign($message)`, not
+   `signMessage`.
 
-A collaborator is a dependency injected into a constructor or a method. Take its subject
-from where it is injected: the class supplies the subject for a constructor dependency, and
-the method name supplies it for a method dependency. Name the collaborator by whether it
-shares that subject:
+3. **Name a collaborator by whether it shares the subject.** Skip this step for anything
+   that is not injected. The role word is the type for most collaborators, `$repository`,
+   `$action`, `$request`; for a Service scoped to one operation it is the agent noun of that
+   operation, `$signer`, `$calculator`, `$resolver`.
+   - **Same subject** → the bare role word, in full. `ReleaseWorkOrderAction` holds
+     `WorkOrderRepository` as `$repository`; `WorkOrderController::release()` takes
+     `ReleaseWorkOrderAction` as `$action` and `ReleaseWorkOrderRequest` as `$request`;
+     `ApplyTaxAction` holds `TaxCalculator` as `$calculator`; `SendMessageAction` holds
+     `MessageSigner` as `$signer`.
+   - **Different subject** → the full class name, singular, with a `Contract` suffix
+     dropped, so the subject stays in the name. `RaiseInvoiceAction` holds `TaxCalculator`
+     as `$taxCalculator` and `MessageSigner` as `$messageSigner`; `ReleaseWorkOrderAction`
+     holds `ItemRepositoryContract` as `$itemRepository`.
+   - **A framework collaborator** → Laravel's own short name: `$app`, `$cache`, `$http`,
+     `$gate`, `$auth`, `$router`.
 
-- **Same subject** → the bare role word, in full. `CustomerService` holds
-  `CustomerRepository` as `$repository`; `CustomerRepository` holds `CustomerService` as
-  `$service`; `OrderController::cancel()` takes `CancelOrderAction` as `$action`.
-- **Different subject** → the full class name, singular. `CustomerService` holds
-  `EmployeeRepository` as `$employeeRepository`; `PlaceOrderAction` holds
-  `ReserveStockAction` as `$reserveStockAction`; `ValidationService` is held as
-  `$validationService`. A service scoped to one action is the agent noun of that action
-  instead: `Signer` as `$signer`, `Mailer` as `$mailer`, `Geocoder` as `$geocoder`. A
-  framework collaborator keeps Laravel's own short name instead: `$app`, `$http`, `$gate`,
-  `$auth`, `$router`.
+   The plural of the subject, `$items` for `ItemRepositoryContract` or `$quotations` for
+   `QuotationRepository`, is the name this step replaces, and the tree still carries it.
+   `$items->find($id)` reads as a lookup in a list of items already loaded, not as a load.
 
-### Guardrail
+4. **Reject a name that reports the journey.** A name that says what happened to the value on
+   the way here, `parsed…`, `sorted…`, `resolved…`, is the file's view and not
+   the caller's. Return to step 1 and name what the caller asked for.
 
-A name that reports what happened to the value on the way here (`parsed…`, `sorted…`,
-`resolved…`) is the file's view. Return to step 1 and name what the caller asked for.
+5. **Resolve a collision with a new word or a new host.** When the name is already taken on
+   that host, return to step 1 for a different word, or move the member to a different
+   host.
+
+6. **Split a member that will not name.** When no name survives steps 1 to 5, the member is
+   two things: split it, and run every step again for each half from its own call site.
+
+7. **Declare the member under the call-site name, unchanged.**
 
 ### A uuid on a legacy table
 
