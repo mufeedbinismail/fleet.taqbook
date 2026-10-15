@@ -11,6 +11,8 @@
 ***********************************************************************/
 
 use App\Foundation\Auth\Constant\Permission;
+use App\Legacy\Enum\DecimalSeparator;
+use App\Legacy\Enum\ThousandSeparator;
 
 $GLOBALS['page_security'] = Permission::CONFIGURE_DISPLAY;
 require __DIR__ . "/../includes/session.inc";
@@ -31,6 +33,10 @@ if (isset($_POST['setprefs']))
 		display_error($_POST['query_size']);
 		display_error( __("Query size must be integer and greater than zero."));
 		set_focus('query_size');
+	} elseif (ThousandSeparator::from((int) $_POST['tho_sep'])->label() === DecimalSeparator::from((int) $_POST['dec_sep'])->label())
+	{
+		display_error(__("Thousand separator and decimal separator must be different."));
+		set_focus('dec_sep');
 	} else {
 		$_POST['theme'] = clean_file_name($_POST['theme']);
 		$chg_theme = user_theme() != $_POST['theme'];

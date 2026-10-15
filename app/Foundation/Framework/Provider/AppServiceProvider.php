@@ -18,7 +18,17 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->scoped(ClientDataRegistry::class, fn () => (new ClientDataRegistry)
             ->routes(config('framework.client_data.routes'))
-            ->translations(config('framework.client_data.i18n')));
+            ->translations(config('framework.client_data.i18n'))
+            ->put('user', [
+                'prefs' => [
+                    'thousand_separator' => user_settings()->thousandSepIdx()->label(),
+                    'decimal_separator' => user_settings()->decimalSepIdx()->label(),
+                    'price_decimals' => user_settings()->priceDecimals(),
+                    'quantity_decimals' => user_settings()->quantityDecimals(),
+                    'percent_decimals' => user_settings()->percentDecimals(),
+                    'exchange_rate_decimals' => user_settings()->exchangeRateDecimals(),
+                ],
+            ]));
     }
 
     /**

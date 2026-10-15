@@ -195,51 +195,38 @@ JsHttpRequest._request = function(trigger, form) {
 		return q;
 	};
 //
-//	User price formatting
+//	User price formatting: finds the field, and leaves the formatting to App.figures
 //
 function price_format(post, num, dec, label, color) {
+    num = Number(num) || 0;
+    dec = dec == 'max' ? 'max' : (Number(dec) || 0);
+
 	var el = label ? document.getElementById(post) : document.getElementsByName(post)[0];
-	//num = num.toString().replace(/\$|\,/g,'');
-	if(isNaN(num))
-		num = "0";
-	sign = (num == (num = Math.abs(num)));
-	var max = dec=='max';
-	if(max) dec = num==0 ? 2 : 15 - Math.floor(Math.log(Math.abs(num)));
-	if(dec<0) dec = 2;
-	decsize = Math.pow(10, dec);
-	num = Math.floor(num*decsize+0.50000000001);
-	cents = num%decsize;
-	num = Math.floor(num/decsize).toString();
-	for( i=cents.toString().length; i<dec; i++){
-		cents = "0"+cents;
-	}
-	if (max) // strip trailing 0
-		cents = cents.toString().replace(/0+$/,'');
-	for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)
-		num = num.substring(0,num.length-(4*i+3))+user.ts+
-			num.substring(num.length-(4*i+3));
-	 num = ((sign)?'':'-') + num;
-	if(dec!=0 && (!max || cents!=0))
-		num = num + user.ds + cents;
-	if(label)
-	    el.innerHTML = num;
-	else
-	    el.value = num;
-	if(color) {
-			el.style.color = (sign) ? '' : '#FF0000';
+	var text = dec == 'max'
+        ? App.figures.formatMaxPrecision(num)
+        : App.figures.formatDecimals(num, dec < 0 ? 2 : dec);
+
+	if (label) {
+	    el.innerHTML = text;
+	} else {
+	    el.value = text;
+    }
+
+	if (color) {
+		el.style.color = num < 0 ? '#FF0000' : '';
 	}
 }
 
 function get_amount(doc, label) {
-	    if(label)
-			var val = document.getElementById(doc).innerHTML;
-	    else
-			var val = typeof(doc) == "string" ?
-			document.getElementsByName(doc)[0].value : doc.value;
+    if (label) {
+        var val = document.getElementById(doc).innerHTML;
+    } else {
+        var val = typeof(doc) == "string"
+            ? document.getElementsByName(doc)[0].value
+            : doc.value
+    };
 
-		val = val.replace(new RegExp('\\'+user.ts, 'g'),'');
-		val = +val.replace(new RegExp('\\'+user.ds, 'g'),'.');
-		return isNaN(val) ? 0 : val;
+    return App.figures.parseDecimals(val);
 }
 
 function goBack(deep) {

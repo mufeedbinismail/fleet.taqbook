@@ -1,6 +1,7 @@
 import data from './data';
 
 const granted = { ...data.user?.permissions };
+const preferences = { ...data.user?.prefs };
 
 // Keyed by the name of a `Permission` constant. Only the ones the page registered are answerable; any other
 // is a lookup nothing sent, so it fails the way an unregistered route or translation does rather than reading as a refusal.
@@ -11,5 +12,13 @@ export const user = {
         }
 
         return granted[permission];
+    },
+
+    pref(name) {
+        if (!(name in preferences)) {
+            throw new Error(`Preference "${name}" is not defined`);
+        }
+
+        return preferences[name];
     },
 };

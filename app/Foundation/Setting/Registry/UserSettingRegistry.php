@@ -16,6 +16,7 @@ use App\Legacy\Enum\PrintDestination;
 use App\Legacy\Enum\PrintOrientation;
 use App\Legacy\Enum\ThousandSeparator;
 use InvalidArgumentException;
+use RuntimeException;
 
 class UserSettingRegistry extends SettingRegistry
 {
@@ -73,6 +74,8 @@ class UserSettingRegistry extends SettingRegistry
     public function __construct(array $user = [])
     {
         parent::__construct($this->prepare($user));
+
+        $this->guardSeparators();
     }
 
     public function prepare(array $user): array
@@ -99,6 +102,8 @@ class UserSettingRegistry extends SettingRegistry
     public function setUser(?array $user): static
     {
         $this->items = $this->prepare($user ?: []);
+
+        $this->guardSeparators();
 
         return $this;
     }
@@ -156,6 +161,13 @@ class UserSettingRegistry extends SettingRegistry
     public function decimalSepIdx(): DecimalSeparator
     {
         return DecimalSeparator::from((int) $this->items[DisplayPreference::DECIMAL_SEP_IDX]);
+    }
+
+    private function guardSeparators(): void
+    {
+        if (($sep = $this->thousandSepIdx()->label()) === $this->decimalSepIdx()->label()) {
+            throw new RuntimeException("The thousand and decimal separators are both '{$sep}'.");
+        }
     }
 
     public function theme(): string
