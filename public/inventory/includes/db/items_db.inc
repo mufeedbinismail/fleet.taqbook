@@ -116,12 +116,11 @@ function delete_item($stock_id)
 
 function get_item($stock_id)
 {
-	$sql = "SELECT item.*, taxtype.name AS tax_type_name
-		FROM stock_master item,
-			item_tax_types taxtype
-		WHERE taxtype.id=item.tax_type_id
-		AND stock_id=".db_escape($stock_id);
-	$result = db_query($sql,"an item could not be retreived");
+	$result = db_query(
+        app(\App\Inventory\Query\ItemDetailQuery::class)
+            ->builder(['stock_id' => (string) $stock_id]),
+        "an item could not be retreived"
+    );
 
 	return db_fetch_assoc($result);
 }
