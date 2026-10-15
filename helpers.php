@@ -1,6 +1,6 @@
 <?php
 
-use App\Foundation\Framework\Contract\Enum\HasLabelContract;
+use App\Foundation\Framework\Contract\HasLabelContract;
 use App\Foundation\Framework\Support\Arr;
 
 /**
