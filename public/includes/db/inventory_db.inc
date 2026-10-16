@@ -14,23 +14,14 @@ function get_qoh_on_date($stock_id, $location=null, $date_=null)
     if ($date_ == null)
         $date_ = Today();
 
-     $date = date2sql($date_);
-     $sql = "SELECT SUM(qty)
-     	FROM stock_moves st
-   		LEFT JOIN voided v ON st.type=v.type AND st.trans_no=v.id
-          WHERE ISNULL(v.id)
-          AND stock_id=".db_escape($stock_id)."
-          AND tran_date <= '$date'"; 
-
+    $filters = ['stock_id' => (string) $stock_id, 'as_of' => date2sql($date_)];
     if ($location != null)
-        $sql .= " AND loc_code = ".db_escape($location);
+        $filters['location_code'] = $location;
 
-    $result = db_query($sql, "QOH calculation failed");
-
-    $myrow = db_fetch_row($result);
-
-    $qoh =  $myrow[0];
-		return $qoh ? $qoh : 0;
+    return app(\App\Inventory\Query\StockOnHandQuery::class)
+        ->builder($filters)
+        ->get()
+        ->sum('quantity') ?: 0;
 }
 
 /**

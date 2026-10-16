@@ -16,20 +16,14 @@ $GLOBALS['qoh_stock'] = NULL;
 
 function get_demand_qty($stock_id, $location)
 {
-	$sql = "SELECT SUM(line.quantity - line.qty_sent) AS QtyDemand
-			FROM sales_order_details line,
-				sales_orders sorder
-				WHERE line.order_no=sorder.order_no AND sorder.trans_type=".ST_SALESORDER
-				." AND sorder.trans_type=line.trans_type"
-				." AND line.stk_code = ".db_escape($stock_id);
+	$filters = ['stock_id' => (string) $stock_id];
 	if ($location != "")
-		$sql .= " AND sorder.from_stk_loc =".db_escape($location);
+		$filters['location_code'] = $location;
 
-    $result = db_query($sql,"No transactions were returned");
-	$row = db_fetch($result);
-	if ($row === false)
-		return 0;
-	return $row['QtyDemand'];
+	return app(\App\Inventory\Query\SalesDemandQuery::class)
+        ->builder($filters)
+        ->get()
+        ->sum('quantity');
 }
 
 function load_stock_levels($location)
@@ -102,74 +96,31 @@ function stock_demand_manufacture($stock_id, $qty, $demand_id, $location, $level
 }
 
 // recursion fixed by Tom Moulton
-function get_demand_asm_qty($stock_id, $location) 
+function get_demand_asm_qty($stock_id, $location)
 {
-	$demand_qty = 0.0;
-	$sql = "SELECT line.stk_code, SUM(line.quantity-line.qty_sent) AS Demmand
-		   FROM sales_order_details line,
-				sales_orders sorder,
-				stock_master item
-		   WHERE sorder.order_no = line.order_no
-		   		AND sorder.trans_type=".ST_SALESORDER
-		   	 ." AND sorder.trans_type=line.trans_type
-				AND line.quantity-line.qty_sent > 0
-				AND item.stock_id=line.stk_code
-				AND item.mb_flag='M'";
+	$filters = ['stock_id' => (string) $stock_id];
 	if ($location != "")
-		$sql .= " AND sorder.from_stk_loc =".db_escape($location);
-	$sql .= " GROUP BY line.stk_code";
-    $result = db_query($sql, "No transactions were returned");
-	while ($row = db_fetch_row($result)) {
-		$demand_qty += stock_demand_manufacture($row[0], $row[1], $stock_id, $location);
-	}
-	return $demand_qty;
+		$filters['location_code'] = $location;
+
+	return app(\App\Inventory\Query\AssemblyDemandQuery::class)->builder($filters)->get()->sum('quantity');
 }
 
 function get_on_porder_qty($stock_id, $location)
 {
-	$sql = "SELECT SUM(line.quantity_ordered - line.quantity_received) AS qoo
-		FROM purch_order_details line 
-			INNER JOIN purch_orders po ON line.order_no=po.order_no
-		WHERE line.item_code=".db_escape($stock_id);
+	$filters = ['stock_id' => (string) $stock_id];
 	if ($location != "")
-		$sql .= " AND po.into_stock_location=".db_escape($location);
-	$sql .= " AND line.item_code=".db_escape($stock_id);
-	$qoo_result = db_query($sql,"could not receive quantity on order for item");
+		$filters['location_code'] = $location;
 
-	if (db_num_rows($qoo_result) == 1)
-	{
-		$qoo_row = db_fetch_row($qoo_result);
-		$qoo =  $qoo_row[0];
-	}
-	else
-	{
-		$qoo = 0;
-	}
-	return $qoo;
+	return app(\App\Inventory\Query\OnPurchaseOrderQuery::class)->builder($filters)->get()->sum('quantity');
 }
 
 function get_on_worder_qty($stock_id, $location)
 {
- 	$qoo = 0.0;
-	$flag = get_mb_flag($stock_id);
-	if ($flag == 'M')
-	{
-		$sql = "SELECT SUM((units_reqd-units_issued)) AS qoo
-			FROM workorders
-			WHERE stock_id=".db_escape($stock_id)
-				." AND released AND NOT closed";
+	$filters = ['stock_id' => (string) $stock_id];
+	if ($location != "")
+		$filters['location_code'] = $location;
 
-		if ($location != "")
-			$sql .= " AND loc_code=".db_escape($location);
-
-		$qoo_result = db_query($sql,"could not receive quantity on order for item");
-		if (db_num_rows($qoo_result) == 1)
-		{
-			$qoo_row = db_fetch_row($qoo_result);
-			$qoo = $qoo_row[0];
-		}
-	}
-	return $qoo;
+	return app(\App\Inventory\Query\OnWorkOrderQuery::class)->builder($filters)->get()->sum('quantity');
 }
 
 //--------------------------------------------------------------------------------------

@@ -85,13 +85,12 @@ function set_reorder_level($stock_id, $loc_code, $reorder_level)
 
 function get_loc_details($stock_id, $fixed_asset = 0)
 {
-	$sql = "SELECT stock.loc_code, stock.location_name, "
-	.db_escape($stock_id)." as stock_id, reorders.reorder_level
-		FROM locations stock LEFT JOIN loc_stock reorders ON
-		reorders.loc_code=stock.loc_code
-		AND reorders.stock_id = ".db_escape($stock_id)
-	    ." WHERE stock.fixed_asset = ".db_escape($fixed_asset)
-		." ORDER BY reorders.loc_code";
-	return db_query($sql,"an item reorder could not be retreived");
+	$places = app(\App\Inventory\Query\ItemLocationQuery::class)
+		->builder(
+            ['stock_id' => (string) $stock_id],
+            $fixed_asset ? 'fixed_assets' : 'items'
+        );
+
+	return db_query($places, "an item reorder could not be retreived");
 }
 

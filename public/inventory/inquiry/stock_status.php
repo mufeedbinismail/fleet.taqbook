@@ -11,6 +11,7 @@
 ***********************************************************************/
 
 use App\Foundation\Auth\Constant\Permission;
+use App\Inventory\Query\ItemStatusQuery;
 
 $GLOBALS['page_security'] = Permission::VIEW_INVENTORY_STATUS;
 require_once __DIR__ . "/../../includes/session.inc";
@@ -63,7 +64,10 @@ if (is_service($mb_flag))
 	$kitset_or_service = true;
 }
 
-$loc_details = get_loc_details($_POST['stock_id']);
+$loc_details = db_query(
+    app(ItemStatusQuery::class)->builder(['stock_id' => (string) $_POST['stock_id']]),
+    "an item status could not be retreived"
+);
 
 start_table(TABLESTYLE);
 
@@ -86,21 +90,14 @@ while ($myrow = db_fetch($loc_details))
 
 	alt_table_row_color($k);
 
-	$demand_qty = get_demand_qty($_POST['stock_id'], $myrow["loc_code"]);
-	$demand_qty += get_demand_asm_qty($_POST['stock_id'], $myrow["loc_code"]);
-
-	$qoh = get_qoh_on_date($_POST['stock_id'], $myrow["loc_code"]);
-
 	if ($kitset_or_service == false)
 	{
-		$qoo = get_on_porder_qty($_POST['stock_id'], $myrow["loc_code"]);
-		$qoo += get_on_worder_qty($_POST['stock_id'], $myrow["loc_code"]);
 		label_cell($myrow["location_name"]);
-		qty_cell($qoh, false, $dec);
+		qty_cell($myrow["on_hand"], false, $dec);
         qty_cell($myrow["reorder_level"], false, $dec);
-        qty_cell($demand_qty, false, $dec);
-        qty_cell($qoh - $demand_qty, false, $dec);
-        qty_cell($qoo, false, $dec);
+        qty_cell($myrow["demand"], false, $dec);
+        qty_cell($myrow["available"], false, $dec);
+        qty_cell($myrow["on_order"], false, $dec);
         end_row();
 
 	}
@@ -108,7 +105,7 @@ while ($myrow = db_fetch($loc_details))
 	{
 	/* It must be a service or kitset part */
 		label_cell($myrow["location_name"]);
-		qty_cell($demand_qty, false, $dec);
+		qty_cell($myrow["demand"], false, $dec);
 		end_row();
 
 	}
