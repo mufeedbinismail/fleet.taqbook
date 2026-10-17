@@ -5,8 +5,8 @@ namespace Tests\Unit\Foundation\Component\Table;
 use App\Foundation\Component\Table\Builder\TableBuilder;
 use App\Foundation\Component\Table\Enum\DataType;
 use App\Foundation\Component\Table\Exception\TableException;
-use App\Foundation\Component\Table\Filter\BooleanFilter;
 use App\Foundation\Component\Table\Filter\ExactFilter;
+use App\Foundation\Component\Table\Filter\SwitchFilter;
 use App\Foundation\Component\Table\Filter\TextFilter;
 use App\Foundation\Component\Table\ValueObject\ColumnDefinition;
 use App\Foundation\Component\Table\ValueObject\FilterDefinition;
@@ -110,16 +110,16 @@ class TableDeclarationTest extends TestCase
 
         $this->assertTrue(
             $this->refuses(fn () => $this->settled(
-                new ColumnDefinition('inactive', 'Inactive', filter: new BooleanFilter),
-                new FilterDefinition('inactive', 'Show inactive', new BooleanFilter('inactive')),
+                new ColumnDefinition('inactive', 'Inactive', filter: new SwitchFilter),
+                new FilterDefinition('inactive', 'Show inactive', new SwitchFilter('inactive')),
             )),
             'A heading and the table were allowed to offer one key.',
         );
 
         $this->assertTrue(
             $this->refuses(fn () => $this->settled(
-                new FilterDefinition('inactive', 'Show inactive', new BooleanFilter('inactive')),
-                new FilterDefinition('inactive', 'Retired', new BooleanFilter('inactive')),
+                new FilterDefinition('inactive', 'Show inactive', new SwitchFilter('inactive')),
+                new FilterDefinition('inactive', 'Retired', new SwitchFilter('inactive')),
             )),
             'The table was allowed to offer one key twice.',
         );

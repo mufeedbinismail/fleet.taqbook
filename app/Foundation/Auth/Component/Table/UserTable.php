@@ -12,9 +12,9 @@ use App\Foundation\Component\Table\Builder\TableBuilder;
 use App\Foundation\Component\Table\Contract\TableDefinitionContract;
 use App\Foundation\Component\Table\Enum\DataType;
 use App\Foundation\Component\Table\Enum\Stick;
-use App\Foundation\Component\Table\Filter\BooleanFilter;
 use App\Foundation\Component\Table\Filter\DateRangeFilter;
 use App\Foundation\Component\Table\Filter\InFilter;
+use App\Foundation\Component\Table\Filter\SwitchFilter;
 use App\Foundation\Component\Table\Filter\TextFilter;
 use App\Foundation\Component\Table\ValueObject\ColumnDefinition;
 use App\Foundation\Component\Table\ValueObject\FilterDefinition;
@@ -55,7 +55,7 @@ final class UserTable implements TableDefinitionContract
             ->filterable(new FilterDefinition(
                 'inactive',
                 __('auth.user.filter.inactive'),
-                new BooleanFilter('users.inactive'),
+                new SwitchFilter('users.inactive', flipped: true),
             ))
             ->defaultSort('users.user_id')
             ->defaultFilters(['inactive' => false])

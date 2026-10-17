@@ -6,9 +6,9 @@ use App\Foundation\Component\Select\Control\MultiSelectControl;
 use App\Foundation\Component\Table\Builder\TableBuilder;
 use App\Foundation\Component\Table\Contract\TableDefinitionContract;
 use App\Foundation\Component\Table\Enum\DataType;
-use App\Foundation\Component\Table\Filter\BooleanFilter;
 use App\Foundation\Component\Table\Filter\ExactFilter;
 use App\Foundation\Component\Table\Filter\InFilter;
+use App\Foundation\Component\Table\Filter\SwitchFilter;
 use App\Foundation\Component\Table\Filter\TextFilter;
 use App\Foundation\Component\Table\ValueObject\ColumnDefinition;
 use App\Foundation\Component\Table\ValueObject\Table;
@@ -64,7 +64,7 @@ class StockTable implements TableDefinitionContract
                     2 => 'Software',
                     5 => 'Services',
                 ]))),
-                new ColumnDefinition('inactive', 'Inactive', dataType: DataType::Boolean, filter: new BooleanFilter),
+                new ColumnDefinition('inactive', 'Inactive', dataType: DataType::Boolean, filter: new SwitchFilter(flipped: true)),
             )
             ->map(fn (object $record) => [
                 'stock_id' => $record->stock_id,

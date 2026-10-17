@@ -8,12 +8,15 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
- * A true/false constraint, where false is a value like any other rather than an absent one.
+ * Narrows by the column equalling the state, and only while the table is in the state that asks for it; in the other state, and when unset, it leaves the rows alone.
  */
-final class BooleanFilter extends ColumnFilter
+final class SwitchFilter extends ColumnFilter
 {
-    public function __construct(?string $column = null, private readonly BooleanControlContract $control = new ToggleControl)
-    {
+    public function __construct(
+        ?string $column = null,
+        private readonly BooleanControlContract $control = new ToggleControl,
+        private readonly bool $flipped = false,
+    ) {
         parent::__construct($column);
     }
 
@@ -26,7 +29,7 @@ final class BooleanFilter extends ColumnFilter
     {
         $value = $this->control->read($raw);
 
-        if ($value === null) {
+        if ($value === null || $value === $this->flipped) {
             return null;
         }
 

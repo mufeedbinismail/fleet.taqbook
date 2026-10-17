@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Foundation\Component\Table;
 
-use App\Foundation\Component\Table\Filter\BooleanFilter;
+use App\Foundation\Component\Table\Filter\SwitchFilter;
 use App\Foundation\Component\Table\ValueObject\FilterDefinition;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Concern\SeedsStock;
@@ -151,7 +151,7 @@ class TableNarrowingTest extends TestCase
         StockTable::rows()->where('stock_id', 's-2')->update(['no_sale' => 1]);
 
         $table = $this->table()->filterable(
-            new FilterDefinition('discontinued', 'Discontinued', new BooleanFilter('no_sale')),
+            new FilterDefinition('discontinued', 'Discontinued', new SwitchFilter('no_sale')),
         );
 
         $page = $this->pageOf($table, $this->asked(['filter' => ['discontinued' => 1]]));
@@ -165,12 +165,12 @@ class TableNarrowingTest extends TestCase
      */
     public function test_a_constraint_the_definition_put_on_its_own_query_is_never_widened(): void
     {
-        $this->stock('s-1', ['inactive' => 0]);
-        $this->stock('s-2', ['inactive' => 1]);
+        $this->stock('s-1', ['category_id' => 1]);
+        $this->stock('s-2', ['category_id' => 2]);
 
-        $table = $this->table()->of(StockTable::rows()->where('inactive', 0));
+        $table = $this->table()->of(StockTable::rows()->where('category_id', 1));
 
         $this->assertSame(['s-1'], $this->codes($this->pageOf($table, $this->asked([]))));
-        $this->assertSame([], $this->codes($this->pageOf($table, $this->asked(['filter' => ['inactive' => 1]]))));
+        $this->assertSame([], $this->codes($this->pageOf($table, $this->asked(['filter' => ['group' => 2]]))));
     }
 }
