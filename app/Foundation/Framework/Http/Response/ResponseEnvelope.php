@@ -13,6 +13,11 @@ use stdClass;
 final class ResponseEnvelope implements Responsable
 {
     /**
+     * Encodes the data as a JSON list, an empty one included, where it would otherwise be a JSON object.
+     */
+    public const AS_LIST = 1;
+
+    /**
      * @param  array<string, mixed>  $payload
      */
     private function __construct(
@@ -20,14 +25,16 @@ final class ResponseEnvelope implements Responsable
         private readonly string $message,
         private readonly array $payload,
         private readonly int $code,
+        private readonly int $flags = 0,
     ) {}
 
     /**
-     * @param  array<string, mixed>  $data
+     * @param  array<mixed>  $data
+     * @param  int-mask-of<self::AS_LIST>  $flags
      */
-    public static function ok(string $message = '', array $data = [], int $code = 200): self
+    public static function ok(string $message = '', array $data = [], int $code = 200, int $flags = 0): self
     {
-        return new self(ResponseStatus::Ok, $message, $data, $code);
+        return new self(ResponseStatus::Ok, $message, $data, $code, $flags);
     }
 
     /**
@@ -40,8 +47,12 @@ final class ResponseEnvelope implements Responsable
 
     public function toResponse($request): JsonResponse
     {
-        // Empty, a PHP array encodes as `[]` — and a client reading `data.x` would meet a list.
-        $payload = $this->payload === [] ? new stdClass : $this->payload;
+        // An empty PHP array encodes as `[]` whichever it meant, so it is an object unless a list was asked for.
+        $payload = match (true) {
+            ($this->flags & self::AS_LIST) !== 0 => array_values($this->payload),
+            $this->payload === [] => new stdClass,
+            default => $this->payload,
+        };
 
         return response()->json([
             'status' => $this->status->value,
