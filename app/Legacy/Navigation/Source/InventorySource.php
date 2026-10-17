@@ -62,13 +62,6 @@ class InventorySource extends LegacySource
             })->sort(20);
 
             $inventory->section(Section::INVENTORY_MAINTENANCE, $this->label('Maintenance'), function (SectionBuilder $section) {
-                $section->page('item.manage', $this->label('&Items'))
-                    ->target($this->script('inventory/manage/items.php'))
-                    ->permission(Permission::MANAGE_INVENTORY_ITEM)
-                    ->category(Category::Entry)
-                    ->place(Column::Left)
-                    ->sort(10);
-
                 $section->page('foreign-code.manage', $this->label('&Foreign Item Codes'))
                     ->target($this->script('inventory/manage/item_codes.php'))
                     ->permission(Permission::MANAGE_FOREIGN_CODE)

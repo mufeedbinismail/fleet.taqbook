@@ -7,7 +7,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Every item, fixed assets among them, with every column of its row, the names of everything it points at, and its price for the base sales type in the home currency.
+ * Every item, fixed assets among them, with every column of its row, the names of everything it points at, its price for the base sales type in the home currency, and whether anything refers to it.
  */
 class ItemDetailQuery
 {
@@ -59,6 +59,14 @@ class ItemDetailQuery
                 'stock.fa_class_id',
             )
             ->selectRaw('CASE WHEN unit.decimals < 0 THEN NULL ELSE unit.decimals END as unit_decimals');
+
+        $query->leftJoinSub(
+            (new ItemInUseQuery)->builder(isset($filters['stock_id']) ? ['stock_id' => $filters['stock_id']] : []),
+            'usage',
+            'usage.stock_id',
+            '=',
+            'stock.stock_id'
+        )->addSelect('usage.is_in_use');
 
         foreach (['sales', 'cogs', 'inventory', 'adjustment', 'wip'] as $kind) {
             $query->leftJoin("chart_master as {$kind}", "{$kind}.account_code", '=', "stock.{$kind}_account")
