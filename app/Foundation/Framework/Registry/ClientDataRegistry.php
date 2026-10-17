@@ -2,10 +2,13 @@
 
 namespace App\Foundation\Framework\Registry;
 
+use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Framework\Exception\ClientDataAlreadyRenderedException;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Js;
+use LogicException;
 
 /**
  * Collects everything this request wants to hand the browser, under one namespace per kind.
@@ -41,6 +44,32 @@ class ClientDataRegistry
         return $this->put('i18n', collect(Arr::wrap($keys))
             ->mapWithKeys(fn ($key) => [$key => __($key)])
             ->all());
+    }
+
+    /**
+     * Answered for whoever is signed in now, so the browser holds a yes or a no for each name and never the rule behind it.
+     *
+     * Names are those of `Permission` constants, so the permission strings themselves stay on the server.
+     *
+     * @param  string|list<string>  $names
+     *
+     * @throws LogicException if a name is not a `Permission` constant
+     */
+    public function permissions(string|array $names): static
+    {
+        $granted = collect(Arr::wrap($names))
+            ->mapWithKeys(function ($name) {
+                $constant = Permission::class.'::'.$name;
+
+                if (! defined($constant)) {
+                    throw new LogicException("`{$name}` is not a Permission constant.");
+                }
+
+                return [$name => Gate::allows(constant($constant))];
+            })
+            ->all();
+
+        return $this->put('user', ['permissions' => array_merge($this->data['user']['permissions'] ?? [], $granted)]);
     }
 
     /**

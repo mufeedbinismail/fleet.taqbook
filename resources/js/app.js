@@ -7,6 +7,7 @@ import data from './foundation/data';
 import { setBusyState, unsetBusyState, isBusy, makeBusyStateReactive } from './foundation/busy';
 import { route, url, buildQuery } from './foundation/route';
 import { i18n } from './foundation/i18n';
+import { user } from './foundation/user';
 import { dataTable, table } from './components/table';
 import { factory as selectFactory } from './components/select';
 import { date } from './components/date';
@@ -38,6 +39,7 @@ Object.assign(window.App, {
     isBusy,
     route,
     i18n,
+    user,
     url,
     buildQuery,
     dataTable,

@@ -33,6 +33,14 @@ final class ClientData
     }
 
     /**
+     * @throws ClientDataAlreadyRenderedException if the page has already handed its data over
+     */
+    public static function permissions(string|array $names): void
+    {
+        self::registry()->permissions($names);
+    }
+
+    /**
      * @param  array<string, mixed>  $values
      *
      * @throws ClientDataAlreadyRenderedException if the page has already handed its data over
