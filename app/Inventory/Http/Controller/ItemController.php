@@ -25,8 +25,10 @@ use App\Inventory\Http\Resource\ItemStatusCollection;
 use App\Inventory\Query\ItemDetailQuery;
 use App\Inventory\Query\ItemStatusQuery;
 use App\Inventory\Repository\ItemImageRepository;
+use App\Inventory\Service\ItemBarcodeService;
 use Illuminate\Contracts\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ItemController extends Controller
@@ -50,6 +52,18 @@ class ItemController extends Controller
             'categories' => $optionService->channel(new ItemCategorySelect),
             'types' => collect(ItemSourceType::labels())->except(ItemSourceType::FixedAsset->value)->toArray(),
         ]);
+    }
+
+    /**
+     * @throws AccessDeniedHttpException when the company has not turned barcode generation on
+     */
+    public function barcode(ItemBarcodeService $service): ResponseEnvelope
+    {
+        if (! settings()->enableBarcodeGenerationForItems()) {
+            throw new AccessDeniedHttpException(__('inventory.item.error.barcode_disabled'));
+        }
+
+        return ResponseEnvelope::ok(data: ['barcode' => (string) $service->generate()]);
     }
 
     /**

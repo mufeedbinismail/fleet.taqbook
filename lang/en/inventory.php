@@ -122,6 +122,7 @@ return [
             'locked_unit' => 'The unit of measure cannot be changed while the item is in use.',
             'in_use' => 'The item cannot be deleted because it is in use.',
             'item_missing' => 'The item no longer exists.',
+            'barcode_disabled' => 'Barcode generation is switched off for items.',
             'image_type' => 'The image must be a JPEG, PNG or GIF picture.',
             'image_size' => 'The image may not be larger than :max KB.',
         ],

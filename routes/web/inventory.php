@@ -32,6 +32,10 @@ Route::prefix('inventory/items')
             ->middleware('can:'.Permission::MANAGE_INVENTORY_ITEM)
             ->name('store');
 
+        Route::get('/barcode', [ItemController::class, 'barcode'])
+            ->middleware('can:'.Permission::MANAGE_INVENTORY_ITEM)
+            ->name('barcode');
+
         Route::get('/{item}', [ItemController::class, 'show'])
             ->middleware('can:'.Permission::MANAGE_INVENTORY_ITEM)
             ->name('show');
