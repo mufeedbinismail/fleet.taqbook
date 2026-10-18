@@ -3,6 +3,7 @@
 use App\Foundation\Auth\Constant\Permission;
 use App\Inventory\Component\Select\ItemCategorySelect;
 use App\Inventory\Component\Select\ItemSelect;
+use App\Inventory\Component\Select\ItemUnitSelect;
 use App\Inventory\Component\Table\ItemTable;
 use App\Inventory\Http\Controller\ItemCategoryController;
 use App\Inventory\Http\Controller\ItemController;
@@ -12,6 +13,7 @@ Route::tableData('inventory/items', ItemTable::class)->middleware('can:'.Permiss
 
 Route::optionList('inventory/items', ItemSelect::class);
 Route::optionList('inventory/categories', ItemCategorySelect::class);
+Route::optionList('inventory/item-units', ItemUnitSelect::class);
 
 Route::prefix('inventory/categories')
     ->name('inventory.categories.')
