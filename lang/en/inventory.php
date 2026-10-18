@@ -3,6 +3,7 @@
 return [
     'item' => [
         'title' => 'Items',
+        'noun' => 'item',
 
         'rail' => [
             'label' => 'Item list',
@@ -100,6 +101,45 @@ return [
             'bought' => 'Bought',
             'service' => 'Service',
             'fixed_asset' => 'Fixed asset',
+        ],
+
+        'notice' => [
+            'created' => 'The item has been added.',
+            'updated' => 'The item has been updated.',
+            'image_deleted' => 'The image has been removed.',
+            'deleted' => 'The item has been deleted.',
+        ],
+
+        'error' => [
+            'code_taken' => 'This code is already assigned to an item, a sales kit or a code alias.',
+            'no_category' => 'The category does not exist.',
+            'no_tax_type' => 'The item tax type does not exist.',
+            'no_unit' => 'The unit of measure does not exist.',
+            'account_required' => 'The :account is required for this item type.',
+            'no_account' => 'The :account is not a GL account.',
+            'account_inapplicable' => 'The :account does not apply to this item type and must be left empty.',
+            'locked_type' => 'The item type cannot be changed while the item is in use.',
+            'locked_unit' => 'The unit of measure cannot be changed while the item is in use.',
+            'in_use' => 'The item cannot be deleted because it is in use.',
+            'item_missing' => 'The item no longer exists.',
+            'image_type' => 'The image must be a JPEG, PNG or GIF picture.',
+            'image_size' => 'The image may not be larger than :max KB.',
+        ],
+
+        'attribute' => [
+            'stock_id' => 'item code',
+            'description' => 'name',
+            'long_description' => 'description',
+            'category' => 'category',
+            'tax_type' => 'item tax type',
+            'units' => 'unit of measure',
+            'type' => 'item type',
+            'sales_account' => 'sales account',
+            'cogs_account' => 'cost of goods sold account',
+            'inventory_account' => 'inventory account',
+            'adjustment_account' => 'inventory adjustments account',
+            'wip_account' => 'work in progress account',
+            'image' => 'image',
         ],
 
         'tabs' => 'Item sections',

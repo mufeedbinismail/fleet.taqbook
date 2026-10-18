@@ -33,4 +33,28 @@ enum ItemSourceType: string implements HasLabelContract
     {
         return $this !== self::Service;
     }
+
+    /**
+     * The accounts an item of this type has.
+     *
+     * @return list<ItemAccount>
+     */
+    public function accounts(): array
+    {
+        $accounts = [
+            ItemAccount::Sales,
+            ItemAccount::Cogs,
+        ];
+
+        if ($this->isStocked()) {
+            $accounts[] = ItemAccount::Inventory;
+            $accounts[] = ItemAccount::Adjustment;
+        }
+
+        if ($this === self::Manufactured) {
+            $accounts[] = ItemAccount::Wip;
+        }
+
+        return $accounts;
+    }
 }

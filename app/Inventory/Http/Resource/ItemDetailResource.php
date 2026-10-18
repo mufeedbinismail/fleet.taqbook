@@ -2,7 +2,9 @@
 
 namespace App\Inventory\Http\Resource;
 
+use App\Foundation\Shared\ValueObject\ShortCode;
 use App\Inventory\Enum\ItemSourceType;
+use App\Inventory\Repository\ItemImageRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -28,6 +30,7 @@ class ItemDetailResource extends JsonResource
             'no_sale' => (bool) $item->no_sale,
             'no_purchase' => (bool) $item->no_purchase,
             'editable' => (bool) $item->editable,
+            'has_image' => $this->hasImage($item->stock_id),
             'is_in_use' => (bool) $item->is_in_use,
             'category_id' => (int) $item->category_id,
             'category_name' => $item->category_name,
@@ -52,6 +55,16 @@ class ItemDetailResource extends JsonResource
             'wip_account' => $this->text($item->wip_account),
             'wip_account_name' => $item->wip_account_name,
         ];
+    }
+
+    /**
+     * Whether a picture is stored for the item; a code the page cannot hold has none.
+     */
+    private function hasImage(string $stockId): bool
+    {
+        $code = ShortCode::tryFrom($stockId);
+
+        return $code !== null && app(ItemImageRepository::class)->imageExists($code);
     }
 
     /**

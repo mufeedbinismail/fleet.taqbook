@@ -3,6 +3,8 @@
 return [
     'record' => [
         'inactive' => 'Inactive',
+        'activated' => 'The :record has been activated.',
+        'deactivated' => 'The :record has been deactivated.',
     ],
 
     'error' => [
