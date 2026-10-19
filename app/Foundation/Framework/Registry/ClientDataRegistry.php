@@ -73,6 +73,35 @@ class ClientDataRegistry
     }
 
     /**
+     * Resolved by the company settings, so the browser holds the value each call answered and never the call behind it.
+     *
+     * An entry is a method name, or a name followed by the arguments to call it with, in the order it takes them.
+     * The browser asks by name alone.
+     *
+     * @param  list<string|array{0: string}>  $entries
+     *
+     * @throws LogicException if a name is not callable on the settings
+     */
+    public function settings(array $entries): static
+    {
+        $settings = settings();
+        $answers = [];
+
+        foreach ($entries as $entry) {
+            $arguments = Arr::wrap($entry);
+            $name = array_shift($arguments);
+
+            if (! is_callable([$settings, $name])) {
+                throw new LogicException("`{$name}` is not callable on the settings.");
+            }
+
+            $answers[$name] = call_user_func([$settings, $name], ...$arguments);
+        }
+
+        return $this->put('settings', $answers);
+    }
+
+    /**
      * @param  array<string, mixed>  $values
      *
      * @throws ClientDataAlreadyRenderedException if the page has already handed its data over

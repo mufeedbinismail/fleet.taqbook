@@ -41,6 +41,16 @@ final class ClientData
     }
 
     /**
+     * @param  list<string|array{0: string}>  $entries
+     *
+     * @throws ClientDataAlreadyRenderedException if the page has already handed its data over
+     */
+    public static function settings(array $entries): void
+    {
+        self::registry()->settings($entries);
+    }
+
+    /**
      * @param  array<string, mixed>  $values
      *
      * @throws ClientDataAlreadyRenderedException if the page has already handed its data over
