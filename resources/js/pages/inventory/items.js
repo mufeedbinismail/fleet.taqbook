@@ -8,6 +8,10 @@ export function itemsPage({ App, axios }) {
             canViewStatus: App.user.can('VIEW_INVENTORY_STATUS'),
             dimensionLevel: App.setting('dimensionLevel'),
 
+            imageUrl(code) {
+                return App.route('inventory.items.image', { item: code });
+            },
+
             /* The open item's stock by location: its rows, or why there are none; both empty while it loads. */
             stock: { rows: null, onHand: null, problem: null },
 

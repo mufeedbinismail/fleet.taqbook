@@ -6,7 +6,7 @@ use App\Foundation\Framework\Facade\ClientData;
 ClientData::registry()
     ->settings(['dimensionLevel'])
     ->permissions(['VIEW_INVENTORY_STATUS'])
-    ->routes(['inventory.items.show', 'inventory.items.status'])
+    ->routes(['inventory.items.show', 'inventory.items.status', 'inventory.items.image'])
     ->translations([
         'inventory.item.detail.missing',
     ]);
@@ -118,8 +118,10 @@ ClientData::registry()
     <x-slot:detail>
         <header class="flex flex-wrap items-start gap-4 px-4 py-4 lg:px-6 lg:py-5">
             <div role="img" aria-label="{{ __('inventory.item.detail.image') }}"
-                    class="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-solid border-card-border bg-card-sunken-bg text-3xl text-card-txt">
-                <span class="icon icon-image" aria-hidden="true"></span>
+                    class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-solid border-card-border bg-card-sunken-bg text-3xl text-card-txt">
+                <img alt="" class="h-full w-full object-cover" x-show="detail.has_image"
+                    :src="detail.has_image ? imageUrl(detail.stock_id) : ''">
+                <span class="icon icon-image" aria-hidden="true" x-show="! detail.has_image"></span>
             </div>
 
             <div class="min-w-0 flex-1 basis-56">
