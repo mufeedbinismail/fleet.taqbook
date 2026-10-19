@@ -240,6 +240,9 @@ export default {
                 'button-danger-txt': 'var(--button-danger-txt)',
                 'button-danger-border': 'var(--button-danger-border)',
                 'button-danger-hover-bg': 'var(--button-danger-hover-bg)',
+                'button-success-txt': 'var(--button-success-txt)',
+                'button-success-border': 'var(--button-success-border)',
+                'button-success-hover-bg': 'var(--button-success-hover-bg)',
                 'button-ghost-hover-bg': 'var(--button-ghost-hover-bg)',
 
                 'loader-overlay-bg': 'var(--loader-overlay-bg)',

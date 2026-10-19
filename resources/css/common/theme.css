@@ -364,6 +364,9 @@
         --button-danger-txt: var(--c-danger-600);
         --button-danger-border: var(--c-light-300);
         --button-danger-hover-bg: var(--c-light-100);
+        --button-success-txt: var(--c-success-600);
+        --button-success-border: var(--c-light-300);
+        --button-success-hover-bg: var(--c-light-100);
         --button-ghost-hover-bg: var(--c-light-100);
         --loader-overlay-bg: var(--c-neutral-0);
         --loader-track: var(--c-light-300);
@@ -728,6 +731,9 @@
         --button-danger-txt: var(--c-danger-400);
         --button-danger-border: var(--c-dark-400);
         --button-danger-hover-bg: var(--c-dark-500);
+        --button-success-txt: var(--c-success-400);
+        --button-success-border: var(--c-dark-400);
+        --button-success-hover-bg: var(--c-dark-500);
         --button-ghost-hover-bg: var(--c-dark-500);
         --loader-overlay-bg: var(--c-dark-700);
         --loader-track: var(--c-dark-400);

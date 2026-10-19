@@ -5,6 +5,7 @@ $variants = [
     'primary' => 'border-0 bg-button-primary-bg text-button-primary-txt hover:bg-button-primary-hover-bg',
     'outline' => 'border border-button-outline-border bg-transparent text-button-outline-txt hover:bg-button-outline-hover-bg',
     'danger' => 'border border-button-danger-border bg-transparent text-button-danger-txt hover:bg-button-danger-hover-bg',
+    'success' => 'border border-button-success-border bg-transparent text-button-success-txt hover:bg-button-success-hover-bg',
 ];
 @endphp
 
