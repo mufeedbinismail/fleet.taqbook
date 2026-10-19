@@ -8,8 +8,47 @@ export function itemsPage({ App, axios }) {
             canViewStatus: App.user.can('VIEW_INVENTORY_STATUS'),
             dimensionLevel: App.setting('dimensionLevel'),
 
+            /* Changes whenever an item is saved, so a picture that was replaced is fetched again. */
+            imageStamp: Date.now(),
+
             imageUrl(code) {
-                return App.route('inventory.items.image', { item: code });
+                return `${App.route('inventory.items.image', { item: code })}?v=${this.imageStamp}`;
+            },
+
+            /* Draws the rail again, since a change can add a row or move one out of the filters in force, and shows the item as it is now. */
+            itemChanged(code) {
+                this.imageStamp = Date.now();
+                App.table('items').reload();
+                App.recordBrowser().refresh(code);
+            },
+
+            async deleteItem(code) {
+                if (App.isBusy()) return;
+
+                const confirmed = await this.$confirm({
+                    title: App.i18n('inventory.item.delete.title'),
+                    text: App.i18n('inventory.item.delete.text'),
+                    confirmText: App.i18n('inventory.item.delete.confirm'),
+                    danger: true,
+                });
+
+                if (!confirmed) return;
+
+                try {
+                    const { data: body } = await axios.delete(
+                        App.route('inventory.items.destroy', { item: code }),
+                    );
+
+                    App.notify.success(body.message);
+                    App.table('items').reload();
+                    App.recordBrowser().refresh(null);
+                } catch (error) {
+                    App.notify.error(
+                        error.friendlyMessage ??
+                            error.response?.data?.message ??
+                            App.i18n('framework.http.failed'),
+                    );
+                }
             },
 
             /* The open item's stock by location: its rows, or why there are none; both empty while it loads. */

@@ -42,6 +42,7 @@ return [
             'missing' => 'No item has the code :recordId.',
             'loading' => 'Loading the item.',
             'image' => 'No image',
+            'new' => 'New item',
             'edit' => 'Edit',
             'clone' => 'Clone',
             'delete' => 'Delete',
@@ -141,6 +142,71 @@ return [
             'adjustment_account' => 'inventory adjustments account',
             'wip_account' => 'work in progress account',
             'image' => 'image',
+        ],
+
+        'delete' => [
+            'title' => 'Delete this item?',
+            'text' => 'The item is removed with its locations, prices and purchasing data. This cannot be undone.',
+            'confirm' => 'Yes, delete it',
+            'in_use' => 'Stock, an order, a bill of materials, a kit or a code alias refers to this item, so it cannot be deleted.',
+        ],
+
+        'editor' => [
+            'title_new' => 'New item',
+            'title_edit' => 'Edit item',
+            'locked' => 'Fixed while the item is in use.',
+            'locked_account' => 'This account does not apply to the selected item type.',
+            'code_hint' => 'Letters, digits, hyphens and underscores; it cannot be changed afterwards.',
+
+            'section' => [
+                'identity' => 'Identity',
+                'rules' => 'Item rules',
+                'accounts' => 'GL accounts',
+                'dimensions' => 'Dimensions',
+                'image' => 'Image',
+            ],
+
+            'field' => [
+                'stock_id' => 'Item code',
+                'description' => 'Name',
+                'long_description' => 'Description',
+                'category' => 'Category',
+                'type' => 'Item type',
+                'units' => 'Unit of measure',
+                'tax_type' => 'Item tax type',
+                'no_sale' => 'Not for sale',
+                'no_purchase' => 'Not purchasable',
+                'editable' => 'Description can be edited on documents',
+                'dimension' => 'Dimension 1',
+                'dimension2' => 'Dimension 2',
+                'image' => 'Picture',
+            ],
+
+            'placeholder' => [
+                'choose' => 'Choose…',
+                'category' => 'Choose a category',
+                'account' => 'Choose an account',
+                'dimension' => 'None',
+            ],
+
+            'action' => [
+                'create' => 'Add item',
+                'save' => 'Save changes',
+                'cancel' => 'Cancel',
+                'generate' => 'Generate',
+                'remove_image' => 'Remove the picture',
+                'activate' => 'Activate',
+                'deactivate' => 'Deactivate',
+            ],
+
+            'remove_image' => [
+                'title' => 'Remove the picture?',
+                'text' => 'The picture of this item is deleted now, apart from saving. This cannot be undone.',
+                'confirm' => 'Yes, remove it',
+            ],
+
+            'image_hint' => 'JPEG, PNG or GIF, up to :max KB.',
+            'error_heading' => 'The item could not be saved',
         ],
 
         'tabs' => 'Item sections',

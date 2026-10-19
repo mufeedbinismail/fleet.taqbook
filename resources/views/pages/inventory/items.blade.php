@@ -6,16 +6,25 @@ use App\Foundation\Framework\Facade\ClientData;
 ClientData::registry()
     ->settings(['dimensionLevel'])
     ->permissions(['VIEW_INVENTORY_STATUS'])
-    ->routes(['inventory.items.show', 'inventory.items.status', 'inventory.items.image'])
+    ->routes(['inventory.items.show', 'inventory.items.status', 'inventory.items.image', 'inventory.items.destroy'])
     ->translations([
         'inventory.item.detail.missing',
+        'inventory.item.delete.title',
+        'inventory.item.delete.text',
+        'inventory.item.delete.confirm',
     ]);
 ?>
 
 @extends('layout.app')
 @section('title', $title)
 @section('content')
-<div x-data="itemsPage()" @record-browser:changed="loadStockStatus($event.detail)">
+<div x-data="itemsPage()" @record-browser:loaded="loadStockStatus($event.detail.stock_id)">
+<x-inventory.item-editor-modal name="item-editor"
+    @item-editor:created="itemChanged($event.detail.item)"
+    @item-editor:updated="itemChanged($event.detail.item)"
+    @item-editor:status-changed="itemChanged($event.detail.item)"
+    @item-editor:image-removed="itemChanged($event.detail.item)" />
+
 <x-ui.record-browser
     param="item"
     route="inventory.items.show"
@@ -36,6 +45,11 @@ ClientData::registry()
         'loading' => __('inventory.item.detail.loading'),
     ]"
 >
+    <x-slot:actions>
+        <x-ui.button icon="plus-circle" data-action="new"
+            x-modal:open="'item-editor'">{{ __('inventory.item.detail.new') }}</x-ui.button>
+    </x-slot>
+
     <x-slot:lookup>
         <x-ui.select
             id="item-lookup"
@@ -136,9 +150,15 @@ ClientData::registry()
             </div>
 
             <div class="flex flex-wrap gap-2">
-                <x-ui.button variant="outline" icon="pencil" disabled>{{ __('inventory.item.detail.edit') }}</x-ui.button>
-                <x-ui.button variant="outline" icon="copy" disabled>{{ __('inventory.item.detail.clone') }}</x-ui.button>
-                <x-ui.button variant="danger" icon="trash" disabled>{{ __('inventory.item.detail.delete') }}</x-ui.button>
+                <x-ui.button variant="outline" icon="pencil" data-action="edit"
+                    x-modal:open="{ name: 'item-editor', with: { item: detail.stock_id } }">{{ __('inventory.item.detail.edit') }}</x-ui.button>
+                <x-ui.button variant="outline" icon="copy" data-action="clone"
+                    x-modal:open="{ name: 'item-editor', with: { clone: detail.stock_id } }">{{ __('inventory.item.detail.clone') }}</x-ui.button>
+                {{-- Some browsers show no tooltip on a disabled button, so the reason sits on its wrapper. --}}
+                <span class="inline-flex" :title="detail.is_in_use ? @js(__('inventory.item.delete.in_use')) : ''">
+                    <x-ui.button variant="danger" icon="trash" data-action="delete" ::disabled="detail.is_in_use"
+                        @click="deleteItem(detail.stock_id)">{{ __('inventory.item.detail.delete') }}</x-ui.button>
+                </span>
             </div>
         </header>
 
