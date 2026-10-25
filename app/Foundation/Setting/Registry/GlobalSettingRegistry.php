@@ -6,6 +6,7 @@ use App\Finance\Tax\Enum\TaxAlgorithm;
 use App\Foundation\Setting\Model\Setting;
 use App\Legacy\Enum\AccountCodeFormat;
 use App\Legacy\Enum\DepreciationPeriodType;
+use Brick\Math\BigDecimal;
 
 class GlobalSettingRegistry extends SettingRegistry
 {
@@ -166,11 +167,13 @@ class GlobalSettingRegistry extends SettingRegistry
 
     /**
      * Percentage to add to standard cost when calculating price.
-     * -1 means disabled.
+     * Null when disabled, which the stored setting spells -1.
      */
-    public function stdCostMarkupPercentage(): int
+    public function stdCostMarkupPercentage(): ?BigDecimal
     {
-        return (int) $this->get('add_pct', -1);
+        $percentage = BigDecimal::of($this->get('add_pct', -1));
+
+        return $percentage->isEqualTo(-1) ? null : $percentage;
     }
 
     /**
