@@ -2,6 +2,7 @@
 
 namespace App\Inventory\Repository;
 
+use App\Finance\Shared\Support\DomainMoney;
 use App\Foundation\Shared\Exception\ResourceNotFoundException;
 use App\Foundation\Shared\ValueObject\ShortCode;
 use App\Inventory\Intent\CreateItemIntent;
@@ -10,6 +11,10 @@ use App\Inventory\Intent\UpdateItemIntent;
 use App\Inventory\Model\Item;
 use App\Inventory\Query\ItemCodeTakenQuery;
 use App\Inventory\Query\ItemInUseQuery;
+use App\Inventory\ValueObject\KitLine;
+use Brick\Math\BigDecimal;
+use Brick\Money\RationalMoney;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use LogicException;
@@ -34,6 +39,29 @@ class ItemRepository
         }
 
         return Item::query()->lockForUpdate()->find($stockId);
+    }
+
+    /**
+     * Exact, since a cost carries more decimals than its currency, and always in the home currency.
+     */
+    public function findItemUnitCost(string $stockId): ?RationalMoney
+    {
+        $cost = DB::table('stock_master')->where('stock_id', $stockId)->value('material_cost');
+
+        return $cost === null
+            ? null
+            : RationalMoney::of($cost, DomainMoney::defaultCurrency());
+    }
+
+    /**
+     * @return Collection<int, KitLine>
+     */
+    public function findKitLines(string $itemCode): Collection
+    {
+        return DB::table('item_codes')
+            ->where('item_code', $itemCode)
+            ->get(['item_code', 'stock_id', 'quantity'])
+            ->map(fn ($line) => new KitLine($line->item_code, $line->stock_id, BigDecimal::of($line->quantity)));
     }
 
     public function isItemCodeTaken(ShortCode $stockId): bool

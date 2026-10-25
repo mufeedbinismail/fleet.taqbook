@@ -10,7 +10,12 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
+use App\Finance\Shared\Support\DomainMoney;
+use App\Foundation\Shared\ValueObject\DomainDateTime;
 use App\Trade\Marketplace\Collection\ExpenseCollection;
+use App\Trade\Sale\Service\SalePriceService;
+use Brick\Math\BigDecimal;
+use Brick\Money\Exception\CurrencyConversionException;
 
 require_once __DIR__ . "/../../includes/banking.inc";
 require_once __DIR__ . "/../../includes/inventory.inc";
@@ -72,127 +77,54 @@ function add_gl_trans_customer(
 
 //----------------------------------------------------------------------------------------
 
-function get_calculated_price($stock_id, $add_pct)
-{
-	$avg = get_unit_cost($stock_id);
-	if ($avg == 0)
-		return 0;
-	return round2($avg * (1 + $add_pct / 100), user_price_dec());
-}
-
-function round_to_nearest($price, $round_to)
-{
-	if ($price == 0)
-		return 0;
-	$pow = pow(10, user_price_dec());
-	if ($pow >= $round_to)
-		$mod = ($pow % $round_to);
-	else
-		$mod = ($round_to % $pow);
-	if ($mod != 0)
-		$price = ceil($price) - ($pow - $round_to) / $pow;
-	else	
-    	$price = ceil($price * ($pow / $round_to)) / ($pow / $round_to);
-    return $price;
-
-}
-
 function get_price ($stock_id, $currency, $sales_type_id, $factor=null, $date=null)
 {
-	if ($date == null)
-	    $date = new_doc_date();
+    try {
+        $price = app(SalePriceService::class)->calculateItemPrice(
+            (string) $stock_id,
+            (string) $currency,
+            (int) $sales_type_id,
+            $factor === null ? null : BigDecimal::of($factor),
+            $date ? DomainDateTime::fromUserDateString($date) : null
+        );
+    } catch (CurrencyConversionException) {
+        display_error(__('finance.exchange_rate.error.missing', ['currency' => $currency, 'date' => $date ?: Today()]));
+        return 0.0;
+    }
 
-	if ($factor === null) 
-	{
-		$myrow = get_sales_type($sales_type_id);
-		$factor = $myrow['factor'];
-	}
-
-	$add_pct = get_company_pref('add_pct');
-	$base_id = get_base_sales_type();
-    $home_curr = get_company_currency();
-	//	AND (sales_type_id = $sales_type_id	OR sales_type_id = $base_id)
-	$sql = "SELECT price, curr_abrev, sales_type_id
-		FROM prices
-		WHERE stock_id = ".db_escape($stock_id)."
-			AND (curr_abrev = ".db_escape($currency)." OR curr_abrev = ".db_escape($home_curr).")";
-
-	$result = db_query($sql, "There was a problem retrieving the pricing information for the part $stock_id for customer");
-	$num_rows = db_num_rows($result);
-	$rate = round2(get_exchange_rate_from_home_currency($currency, $date),
-	    user_exrate_dec());
-	$round_to = get_company_pref('round_to');
-	$prices = array();
-	while($myrow = db_fetch($result)) 
-	{
-	    $prices[$myrow['sales_type_id']][$myrow['curr_abrev']] = $myrow['price'];
-	}
-	$price = false;
-	if (isset($prices[$sales_type_id][$currency])) 
-	{
-	    $price = $prices[$sales_type_id][$currency];
-	}
-	elseif (isset($prices[$base_id][$currency])) 
-	{
-	    $price = $prices[$base_id][$currency] * $factor;
-	}
-	elseif (isset($prices[$sales_type_id][$home_curr])) 
-	{
-	    $price = $prices[$sales_type_id][$home_curr] / $rate;
-	}
-	elseif (isset($prices[$base_id][$home_curr])) 
-	{
-	    $price = $prices[$base_id][$home_curr] * $factor / $rate;
-	}
-	elseif ($num_rows == 0 && $add_pct != -1)
-	{
-		$price = get_calculated_price($stock_id, $add_pct);
-		if ($currency != $home_curr)
-			$price /= $rate;
-		if ($factor != 0)
-			$price *= $factor;
-	}	
-	if ($price === false)
-		return 0;
-	elseif ($round_to != 1)	
-		return round_to_nearest($price, $round_to);
-	else
-		return round2($price, user_price_dec());
+	return $price == null ? 0.0 : (float) DomainMoney::value($price->value);
 }
 //----------------------------------------------------------------------------------------
-//
-//	Get price for given item or kit.
-//  When $std==true price is calculated as a sum of all included stock items,
-//	otherwise all prices set for kits and items are accepted.
-//
-function get_kit_price($item_code, $currency, $sales_type_id, $factor=null, 
-	$date=null, $std = false)
+/**
+ * Get price for given item or kit.
+ * 
+ * When $std==true price is calculated as a sum of all included stock items,
+ * otherwise all prices set for kits and items are accepted.
+ */
+function get_kit_price(
+    $item_code,
+    $currency,
+    $sales_type_id,
+    $factor=null, 
+	$date=null,
+    $std = false
+)
 {
-	$kit_price = 0.00;
-	if (!$std) {
-		$kit_price = get_price( $item_code, $currency, $sales_type_id, 
-			$factor, $date);
+    try {
+        $price = app(SalePriceService::class)->calculateKitPrice(
+            (string) $item_code,
+            (string) $currency,
+            (int) $sales_type_id,
+            $factor === null ? null : BigDecimal::of($factor),
+            $date ? DomainDateTime::fromUserDateString($date) : null,
+            (bool) $std
+        );
+    } catch (CurrencyConversionException) {
+        display_error(__('finance.exchange_rate.error.missing', ['currency' => $currency, 'date' => $date ?: Today()]));
+        return 0.0;
+    }
 
-		if ($kit_price !== 0) {
-			return $kit_price;
-		}
-	}	
-	// no price for kit found, get total value of all items
-	$kit = get_item_kit($item_code);
-	
-	while($item = db_fetch($kit)) {
-		if ($item['item_code'] != $item['stock_id']) {
-			// foreign/kit code
-			$kit_price += $item['quantity'] * get_kit_price( $item['stock_id'], 
-				$currency, $sales_type_id, $factor, $date, $std);
-
-		} else {
-			// stock item
-			$kit_price += $item['quantity'] * get_price( $item['stock_id'], 
-				$currency, $sales_type_id, $factor, $date);
-		}
-	}
-	return $kit_price;
+	return (float) DomainMoney::value($price->value);
 }
 
 //--------------------------------------------------------------------------------------------------
