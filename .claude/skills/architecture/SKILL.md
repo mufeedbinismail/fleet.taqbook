@@ -191,7 +191,7 @@ Give a folder or a class the form this table sets for what it is.
 | a folder or class Taqbook authors | singular, PascalCase: `Controller/`, `Entity/`, `Tax/`, never `Controllers/` |
 | a folder Laravel owns | Laravel's own lowercase spelling: `routes/`, `config/`, `lang/`, `database/`, `resources/`, `tests/` |
 | a behaviour class | suffixed with its component type: `Repository/RoleRepository`, `Action/SaveRoleAction`, `Http/Request/LoginRequest`, `Registry/SourceRegistry` |
-| a Support or a Facade | bare, the exceptions among behaviour: `Support/MoneyFactory`, `Facade/Navigation` |
+| a Support or a Facade | bare, the exceptions among behaviour: `Support/DomainMoney`, `Facade/Navigation` |
 | a data class | bare, because the type folder is the handle: `Entity/Role`, `ValueObject/Crumb`, `DTO/Problem`, `Enum/SystemType` |
 | an Intent or a Collection | suffixed, the exceptions among data: `Intent/SaveRoleIntent`, because a bare verb phrase reads as behaviour; `Collection/AllocLineCollection`, because a bare name collides with its own element |
 | a Contract or a Concern under `app/` | suffixed, and a trait implementing a contract shares its stem: `Contract/HasLabelContract`, `Concern/HasLabelConcern`; bare under `tests/Concern/` |

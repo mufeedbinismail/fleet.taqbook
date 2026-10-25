@@ -13,7 +13,7 @@ use Brick\Money\Money as BrickMoney;
 use Brick\Money\RationalMoney;
 use UnexpectedValueException;
 
-final class MoneyFactory
+final class DomainMoney
 {
     /**
      * Resolve default currency from settings. Throws if not set.

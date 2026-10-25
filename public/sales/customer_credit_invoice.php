@@ -2,7 +2,7 @@
 
 use App\Foundation\Auth\Constant\Permission;
 use App\Trade\Sale\Enum\PaymentMethod;
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Finance\Tax\ValueObject\TaxBreakdown;
 use App\Trade\Marketplace\Collection\ExpenseCollection;
 use App\Trade\Marketplace\Entity\Expense;
@@ -155,8 +155,8 @@ if (isset($_GET['InvoiceNumber']) && $_GET['InvoiceNumber'] > 0) {
         $ln->additional_data['bk_expense_amounts'] = [];
         foreach ($ln->marketplace_expenses as $expense) {
             $ln->additional_data['bk_expense_amounts'][$expense->uuid] = [$expense->amount, $expense->taxBreakdown];
-            $expense->amount = MoneyFactory::zero();
-            $expense->taxBreakdown = new TaxBreakdown(MoneyFactory::zero(), MoneyFactory::zero());
+            $expense->amount = DomainMoney::zero();
+            $expense->taxBreakdown = new TaxBreakdown(DomainMoney::zero(), DomainMoney::zero());
         }
     }
 
@@ -214,7 +214,7 @@ function check_quantities()
         ) {
             $collection = new ExpenseCollection();
             foreach (($_POST['mkt_expense'][$line_no] ?? []) as $uuid => $e) {
-                $collection->add(Expense::draft($uuid, $e['stock_id'], $e['description'], MoneyFactory::of(user_numeric($e['amount']))));
+                $collection->add(Expense::draft($uuid, $e['stock_id'], $e['description'], DomainMoney::of(user_numeric($e['amount']))));
             }
             $_SESSION['Items']->line_items[$line_no]->marketplace_expenses = $collection;
         }
@@ -291,8 +291,8 @@ function display_marketplace_expense_rows(int $line_no, line_details $line): voi
     foreach ($line->marketplace_expenses as $expense) {
         if (isset($bk_amounts[$expense->uuid])) {
             [$bk_amount, $bk_tax_breakdown] = $bk_amounts[$expense->uuid];
-            $amount_hint = "<br><small>(" . __("Original:") . " " . price_format(MoneyFactory::value($bk_amount)) . ")</small>";
-            $tax_hint = "<br><small>(" . __("Original:") . " " . price_format(MoneyFactory::value($bk_tax_breakdown->tax)) . ")</small>";
+            $amount_hint = "<br><small>(" . __("Original:") . " " . price_format(DomainMoney::value($bk_amount)) . ")</small>";
+            $tax_hint = "<br><small>(" . __("Original:") . " " . price_format(DomainMoney::value($bk_tax_breakdown->tax)) . ")</small>";
         } else {
             $amount_hint = null;
             $tax_hint = '';
@@ -305,7 +305,7 @@ function display_marketplace_expense_rows(int $line_no, line_details $line): voi
         label_cell($expense->description);
         label_cell('', "colspan=3");
         amount_cells(null, "mkt_expense[{$line_no}][{$expense->uuid}][amount]", price_format(0), null, $amount_hint);
-        label_cell(price_format(MoneyFactory::value($expense->taxBreakdown->tax)) . $tax_hint, "align=right");
+        label_cell(price_format(DomainMoney::value($expense->taxBreakdown->tax)) . $tax_hint, "align=right");
         label_cell('');
         end_row();
     }

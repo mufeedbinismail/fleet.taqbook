@@ -2,7 +2,7 @@
 
 namespace App\Trade\Marketplace\Entity;
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Finance\Tax\Contract\TaxableItemContract;
 use App\Finance\Tax\Entity\ItemTaxSetting;
 use App\Finance\Tax\Entity\TaxableItem;
@@ -41,7 +41,7 @@ class Expense implements TaxableItemContract
         $this->description = $description;
         $this->amount = $amount;
         $this->itemTaxSetting = (new TaxRepository)->getItemTaxSetting($stockId);
-        $this->taxBreakdown = $taxBreakdown ?? new TaxBreakdown(MoneyFactory::zero(), $amount);
+        $this->taxBreakdown = $taxBreakdown ?? new TaxBreakdown(DomainMoney::zero(), $amount);
     }
 
     public function toTaxableItem(): TaxableItem
@@ -72,10 +72,10 @@ class Expense implements TaxableItemContract
             $row->uuid,
             $row->stock_id,
             $row->description,
-            MoneyFactory::of($row->amount),
+            DomainMoney::of($row->amount),
             new TaxBreakdown(
-                MoneyFactory::of($row->tax),
-                MoneyFactory::of($row->amount)->minus(MoneyFactory::of($row->tax_inclusive ? $row->tax : 0))
+                DomainMoney::of($row->tax),
+                DomainMoney::of($row->amount)->minus(DomainMoney::of($row->tax_inclusive ? $row->tax : 0))
             )
         );
     }

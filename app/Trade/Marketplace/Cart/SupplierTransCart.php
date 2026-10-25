@@ -2,7 +2,7 @@
 
 namespace App\Trade\Marketplace\Cart;
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Finance\Tax\Entity\TaxSetting;
 use App\Foundation\Shared\Enum\SystemType;
 use App\Foundation\Shared\ValueObject\TypedId;
@@ -73,7 +73,7 @@ class SupplierTransCart
         return array_reduce(
             $this->line_items,
             fn (Money $carry, SupplierTransCartLine $line) => $carry->plus($line->rawTotal()),
-            MoneyFactory::zero()
+            DomainMoney::zero()
         );
     }
 
@@ -82,7 +82,7 @@ class SupplierTransCart
         return array_reduce(
             $this->line_items,
             fn (Money $carry, SupplierTransCartLine $line) => $carry->plus($line->netTotal()),
-            MoneyFactory::zero()
+            DomainMoney::zero()
         );
     }
 
@@ -91,7 +91,7 @@ class SupplierTransCart
         return array_reduce(
             $this->line_items,
             fn (Money $carry, SupplierTransCartLine $line) => $carry->plus($line->taxTotal()),
-            MoneyFactory::zero()
+            DomainMoney::zero()
         );
     }
 

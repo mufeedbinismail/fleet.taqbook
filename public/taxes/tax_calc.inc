@@ -10,7 +10,7 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Finance\Tax\Collection\TaxableItemCollection;
 use App\Finance\Tax\Repository\TaxRepository;
 use App\Finance\Tax\Service\TaxService;
@@ -35,7 +35,7 @@ function get_tax_free_price_for_item(
     $tax_group_array = null
 ): string
 {
-	return MoneyFactory::value(get_tax_breakdown_for_item(
+	return DomainMoney::value(get_tax_breakdown_for_item(
         $stock_id,
         $price,
         $tax_group,
@@ -56,7 +56,7 @@ function get_full_price_for_item(
     $tax_group_array=null
 ): string
 {
-	return MoneyFactory::value(get_tax_breakdown_for_item(
+	return DomainMoney::value(get_tax_breakdown_for_item(
         $stock_id,
         $price,
         $tax_group,
@@ -77,7 +77,7 @@ function get_tax_for_item(
     $tax_group_array=null
 ): string
 {
-    return MoneyFactory::value(get_tax_breakdown_for_item(
+    return DomainMoney::value(get_tax_breakdown_for_item(
         $stock_id,
         $price,
         $tax_group,
@@ -126,7 +126,7 @@ function get_tax_for_items($items, $prices, $shipping_cost, $tax_group, $tax_inc
     $taxes = $service->calculateTaxes(
         $taxable_items,
         $tax_setting,
-        MoneyFactory::of($shipping_cost ?: '0')
+        DomainMoney::of($shipping_cost ?: '0')
     );
 
 	return $taxes->toArray();

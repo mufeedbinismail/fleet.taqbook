@@ -2,7 +2,7 @@
 
 namespace App\Trade\Marketplace\Service;
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Finance\Tax\Repository\TaxRepository;
 use App\Finance\Tax\Service\TaxService;
 use App\Finance\Tax\ValueObject\TaxBreakdown;
@@ -51,7 +51,7 @@ class SupplierTransCartService
             $draft->description,
             $draft->unit,
             BigDecimal::of($draft->qty),
-            MoneyFactory::of($draft->amount),
+            DomainMoney::of($draft->amount),
             $itemTaxSetting
         );
         if ($cart->marketplaceTaxSetting) {
@@ -68,7 +68,7 @@ class SupplierTransCartService
 
         $line = $cart->line_items[$index];
         $line->qty = BigDecimal::of($draft->qty);
-        $line->amount = MoneyFactory::of($draft->amount);
+        $line->amount = DomainMoney::of($draft->amount);
         if ($cart->marketplaceTaxSetting) {
             $line->taxBreakdown = $this->taxService->getTaxBreakdownForSource($line, $cart->marketplaceTaxSetting);
         }
@@ -78,7 +78,7 @@ class SupplierTransCartService
     {
         if (! $cart->marketplaceTaxSetting) {
             foreach ($cart->line_items as $line) {
-                $line->taxBreakdown = new TaxBreakdown(MoneyFactory::zero(), $line->toTaxableItem()->price);
+                $line->taxBreakdown = new TaxBreakdown(DomainMoney::zero(), $line->toTaxableItem()->price);
             }
         } else {
             foreach ($cart->line_items as $line) {

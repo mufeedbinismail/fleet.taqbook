@@ -2,7 +2,7 @@
 
 namespace App\Trade\Shared\Entity;
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Foundation\Shared\ValueObject\DomainDateTime;
 use App\Foundation\Shared\ValueObject\TypedId;
 use Brick\Money\Money;
@@ -25,10 +25,10 @@ class DraftAllocationLine
             transId: TypedId::make($row->trans_type, $row->trans_no),
             reference: (string) $row->reference,
             transDate: DomainDateTime::fromDateString($row->tran_date),
-            total: MoneyFactory::of($row->total, $row->currency),
-            allocated: MoneyFactory::of($row->alloc, $row->currency),
-            outstanding: MoneyFactory::of($row->outstanding, $row->currency),
-            thisAllocation: MoneyFactory::of($row->this_alloc, $row->currency)
+            total: DomainMoney::of($row->total, $row->currency),
+            allocated: DomainMoney::of($row->alloc, $row->currency),
+            outstanding: DomainMoney::of($row->outstanding, $row->currency),
+            thisAllocation: DomainMoney::of($row->this_alloc, $row->currency)
         );
     }
 }

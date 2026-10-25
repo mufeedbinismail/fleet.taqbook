@@ -2,7 +2,7 @@
 
 namespace App\Trade\Marketplace\Repository;
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Trade\Marketplace\Entity\Expense;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -25,8 +25,8 @@ class ExpenseRepository
             'marketplace_id' => $marketplaceId,
             'stock_id' => $expense->stockId,
             'description' => $expense->description,
-            'amount' => MoneyFactory::value($expense->amount),
-            'tax' => MoneyFactory::value($expense->taxBreakdown->tax),
+            'amount' => DomainMoney::value($expense->amount),
+            'tax' => DomainMoney::value($expense->taxBreakdown->tax),
             'tax_inclusive' => (int) $taxInclusive,
             'is_voided' => 0,
         ]);

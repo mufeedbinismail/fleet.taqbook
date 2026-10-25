@@ -1,6 +1,6 @@
 <?php
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Finance\Tax\Collection\TaxableItemCollection;
 use App\Finance\Tax\Repository\TaxRepository;
 use App\Finance\Tax\Service\TaxService;
@@ -66,8 +66,8 @@ function read_marketplace_supplier_trans(TypedId $transId): SupplierTransCart
 
     foreach ($items as $row) {
         $qty       = BigDecimal::of((string) $row->quantity);
-        $unitPrice = MoneyFactory::of((string) $row->unit_price);
-        $unitTax   = MoneyFactory::of((string) $row->unit_tax);
+        $unitPrice = DomainMoney::of((string) $row->unit_price);
+        $unitTax   = DomainMoney::of((string) $row->unit_tax);
 
         $cart->addLine(new SupplierTransCartLine(
             stockId:        $row->stock_id,
@@ -130,7 +130,7 @@ function write_marketplace_supplier_trans(SupplierTransCart $cart): int
     begin_transaction();
     $exRate = 1;
     $totalDiscount = 0;
-    $totalTaxAdded = $cart->marketplaceTaxSetting->taxIncluded ? 0 : MoneyFactory::value($signed($cart->totalTax()));
+    $totalTaxAdded = $cart->marketplaceTaxSetting->taxIncluded ? 0 : DomainMoney::value($signed($cart->totalTax()));
     $cart->transNo = $transNo = write_supp_trans(
         $transType,
         $cart->transNo,
@@ -139,7 +139,7 @@ function write_marketplace_supplier_trans(SupplierTransCart $cart): int
         $cart->date,   // due_date = document date (settled in advance)
         $cart->reference,
         $cart->supplierRef,
-        MoneyFactory::value($signed($cart->totalRaw())),
+        DomainMoney::value($signed($cart->totalRaw())),
         $totalTaxAdded,
         $totalDiscount,
         'Could not write '.$cart->transType->label().' header',
@@ -156,8 +156,8 @@ function write_marketplace_supplier_trans(SupplierTransCart $cart): int
             $line->stockId,
             $line->description,
             '',
-            MoneyFactory::value($line->amount),
-            MoneyFactory::value($line->taxBreakdown->tax->dividedBy($line->qty, MoneyFactory::defaultRoundingMode())),
+            DomainMoney::value($line->amount),
+            DomainMoney::value($line->taxBreakdown->tax->dividedBy($line->qty, DomainMoney::defaultRoundingMode())),
             (string) $line->qty,
             null,
             null,
@@ -177,8 +177,8 @@ function write_marketplace_supplier_trans(SupplierTransCart $cart): int
                 $draftTaxGroupLine->taxTypeId,
                 (string) $draftTaxGroupLine->rate,
                 $cart->marketplaceTaxSetting->taxIncluded,
-                MoneyFactory::value($signed($draftTaxGroupLine->tax)),
-                MoneyFactory::value($signed($draftTaxGroupLine->net)),
+                DomainMoney::value($signed($draftTaxGroupLine->tax)),
+                DomainMoney::value($signed($draftTaxGroupLine->net)),
                 $exRate,
                 $cart->date,
                 $cart->supplierRef,
@@ -193,7 +193,7 @@ function write_marketplace_supplier_trans(SupplierTransCart $cart): int
                     $draftTaxGroupLine->purchasingGlCode,
                     0,
                     0,
-                    MoneyFactory::value($signed($draftTaxGroupLine->tax)),
+                    DomainMoney::value($signed($draftTaxGroupLine->tax)),
                     $cart->supplierId,
                     "A general ledger transaction for the tax amount could not be added",
                     $exRate,
@@ -208,7 +208,7 @@ function write_marketplace_supplier_trans(SupplierTransCart $cart): int
                     0,
                     0,
                     "$provisionVerb: Input Tax Provision",
-                    MoneyFactory::value($signed($draftTaxGroupLine->tax->negated())),
+                    DomainMoney::value($signed($draftTaxGroupLine->tax->negated())),
                     null,
                     PT_MARKETPLACE,
                     $cart->marketplaceId,
@@ -228,7 +228,7 @@ function write_marketplace_supplier_trans(SupplierTransCart $cart): int
             $cart->payableAccount,
             0,
             0,
-            MoneyFactory::value($totalNet->negated()),
+            DomainMoney::value($totalNet->negated()),
             $cart->supplierId,
             "The general ledger transaction for total payable could not be added",
             $exRate,
@@ -243,7 +243,7 @@ function write_marketplace_supplier_trans(SupplierTransCart $cart): int
             0,
             0,
             'Release: Marketplace Provision',
-            MoneyFactory::value($totalNet),
+            DomainMoney::value($totalNet),
             null,
             PT_MARKETPLACE,
             $cart->marketplaceId,

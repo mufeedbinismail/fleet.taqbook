@@ -1,6 +1,6 @@
 <?php
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Foundation\Auth\Constant\Permission;
 use App\Trade\Marketplace\Collection\ExpenseCollection;
 use App\Trade\Marketplace\Entity\Expense;
@@ -292,7 +292,7 @@ function collect_marketplace_expenses(): ExpenseCollection
             $uuid,
             $expense['stock_id'],
             $expense['description'],
-            MoneyFactory::of(user_numeric($expense['amount']))
+            DomainMoney::of(user_numeric($expense['amount']))
         ));
     }
     return $marketplace_expenses;

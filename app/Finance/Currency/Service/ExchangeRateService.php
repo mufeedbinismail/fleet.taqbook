@@ -3,7 +3,7 @@
 namespace App\Finance\Currency\Service;
 
 use App\Finance\Currency\Repository\ExchangeRateRepository;
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Foundation\Shared\ValueObject\DomainDateTime;
 use Brick\Math\BigRational;
 use Brick\Money\AbstractMoney;
@@ -24,7 +24,7 @@ class ExchangeRateService
         string $currency,
         DomainDateTime $date
     ): RationalMoney {
-        $homeCurrency = MoneyFactory::defaultCurrency();
+        $homeCurrency = DomainMoney::defaultCurrency();
         $amountCurrency = $amount->getCurrency()->getCurrencyCode();
 
         if ($amountCurrency !== $homeCurrency) {

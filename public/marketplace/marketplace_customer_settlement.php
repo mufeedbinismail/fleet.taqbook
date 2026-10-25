@@ -1,6 +1,6 @@
 <?php
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Foundation\Auth\Constant\Permission;
 use App\Trade\Marketplace\Cart\CustomerSettlementCart;
 use App\Trade\Marketplace\Service\CustomerSettlementCartService;
@@ -191,7 +191,7 @@ function mktpl_cs_copy_from_cart(CustomerSettlementCart $cart): void
     $_POST['customerId']     = $cart->customerId;
     $_POST['marketplaceId']  = $cart->marketplaceId;
     $_POST['transDate']      = $cart->transDate?->toUserDateString();
-    $_POST['amount']         = price_format(MoneyFactory::value($cart->amount ?? MoneyFactory::zero()));
+    $_POST['amount']         = price_format(DomainMoney::value($cart->amount ?? DomainMoney::zero()));
     $_POST['memo']           = $cart->memo;
     $_POST['reference']      = $cart->reference;
 
@@ -212,11 +212,11 @@ function mktpl_cs_copy_alloc_from_cart(CustomerSettlementCart $cart): void
     foreach ($cart->lines as $i => $line) {
         $_POST['alloc'][$i] = [
             'selected'   => $line->thisAllocation->isPositive() ? 1 : 0,
-            'this_alloc' => price_format(MoneyFactory::value($line->thisAllocation)),
+            'this_alloc' => price_format(DomainMoney::value($line->thisAllocation)),
         ];
     }
 
-    $_POST['alloc_total'] = price_format(MoneyFactory::value($cart->totalAllocated()));
+    $_POST['alloc_total'] = price_format(DomainMoney::value($cart->totalAllocated()));
     $Ajax->activate('allocations_panel', 'alloc_total');
 }
 
@@ -229,10 +229,10 @@ function mktpl_cs_copy_to_cart(CustomerSettlementCart $cart): void
 {
     $cart->reference = get_post('reference');
     $cart->memo      = get_post('memo');
-    $cart->amount    = MoneyFactory::of(input_num('amount'));
+    $cart->amount    = DomainMoney::of(input_num('amount'));
 
     foreach ($cart->lines as $i => $line) {
-        $line->thisAllocation = MoneyFactory::of(input_num("alloc[$i][this_alloc]"));
+        $line->thisAllocation = DomainMoney::of(input_num("alloc[$i][this_alloc]"));
     }
 }
 
@@ -364,12 +364,12 @@ function mktpl_cs_render_allocations(CustomerSettlementCart $cart): void
         label_cell((string) $line->transId->id);
         label_cell(e($line->reference));
         label_cell($line->transDate->toUserDateString());
-        amount_cell(MoneyFactory::value($line->total));
-        amount_cell(MoneyFactory::value($line->allocated));
+        amount_cell(DomainMoney::value($line->total));
+        amount_cell(DomainMoney::value($line->allocated));
         amount_cells_ex(null, "alloc[$i][outstanding]", 12, null,
-            price_format(MoneyFactory::value($line->outstanding)), null, null, null, true);
+            price_format(DomainMoney::value($line->outstanding)), null, null, null, true);
         amount_cells_ex(null, "alloc[$i][this_alloc]", 12, null,
-            price_format(MoneyFactory::value($line->thisAllocation)));
+            price_format(DomainMoney::value($line->thisAllocation)));
 
         end_row();
     }

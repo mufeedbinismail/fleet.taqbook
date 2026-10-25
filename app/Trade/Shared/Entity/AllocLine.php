@@ -2,7 +2,7 @@
 
 namespace App\Trade\Shared\Entity;
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Foundation\Shared\ValueObject\DomainDateTime;
 use App\Foundation\Shared\ValueObject\TypedId;
 use Brick\Money\Money;
@@ -30,7 +30,7 @@ class AllocLine
         return new self(
             id: (int) $row->id,
             personId: $row->person_id !== null ? (int) $row->person_id : null,
-            amount: MoneyFactory::of($row->amt, $currency),
+            amount: DomainMoney::of($row->amt, $currency),
             dateAlloc: DomainDateTime::fromDateString($row->date_alloc),
             allocator: TypedId::make($row->trans_type_from, $row->trans_no_from),
             allocatee: TypedId::make($row->trans_type_to, $row->trans_no_to)

@@ -1,6 +1,6 @@
 <?php
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Finance\Tax\Service\TaxService;
 use App\Inventory\Repository\ItemRepository;
 use App\Trade\Marketplace\Cart\CustomerSettlementCart;
@@ -285,7 +285,7 @@ function write_credit_marketplace_setoff(
 			(int) $credit_note->marketplace_id,
 			(int) $marketplace_data['supplier_id'],
 			$marketplace_data['payable_account'],
-			MoneyFactory::of($amount, get_customer_currency($credit_note->customer_id)),
+			DomainMoney::of($amount, get_customer_currency($credit_note->customer_id)),
 			TypedId::make(ST_MKTCUSTREFUND),
 			$Refs->get_next(ST_MKTCUSTREFUND, null, array(
 				'customer' => $credit_note->customer_id,

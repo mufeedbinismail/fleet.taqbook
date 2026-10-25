@@ -2,7 +2,7 @@
 
 namespace App\Finance\Tax\Service;
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Finance\Tax\Collection\DraftTaxGroupLineCollection;
 use App\Finance\Tax\Collection\TaxableItemCollection;
 use App\Finance\Tax\Collection\TaxGroupLineCollection;
@@ -58,14 +58,14 @@ class TaxService
         TaxSetting $taxSetting
     ): TaxBreakdown {
         if ($price->isZero()) {
-            return new TaxBreakdown(MoneyFactory::zero(), MoneyFactory::zero());
+            return new TaxBreakdown(DomainMoney::zero(), DomainMoney::zero());
         }
 
         if ($applicable->count() === 0) {
-            return new TaxBreakdown(MoneyFactory::zero(), $price);
+            return new TaxBreakdown(DomainMoney::zero(), $price);
         }
 
-        $tax = MoneyFactory::zero();
+        $tax = DomainMoney::zero();
         $totalTaxRate = BigDecimal::sum(...$applicable->column('rate'));
         foreach ($applicable as $line) {
             $breakdown = $this->calculateTaxBreakdown(
@@ -89,7 +89,7 @@ class TaxService
         TaxSetting $taxSetting,
         ?Money $shippingCharge = null
     ): DraftTaxGroupLineCollection {
-        $shippingCharge ??= MoneyFactory::zero();
+        $shippingCharge ??= DomainMoney::zero();
         $draft = DraftTaxGroupLineCollection::fromTaxGroupLineCollection($taxSetting->taxGroupLines);
         $isFullyExempt = $taxSetting->taxGroupLines->isFullyExempt();
 
@@ -134,7 +134,7 @@ class TaxService
                     ->toRational()
                     ->multipliedBy($draftLine->rate)
                     ->dividedBy(100)
-                    ->to($draftLine->net->getContext(), MoneyFactory::defaultRoundingMode());
+                    ->to($draftLine->net->getContext(), DomainMoney::defaultRoundingMode());
             }
         }
 
@@ -179,8 +179,8 @@ class TaxService
         BigDecimal $qty,
         bool $taxIncluded
     ): TaxBreakdown {
-        $tax = $unitTax->multipliedBy($qty, MoneyFactory::defaultRoundingMode());
-        $net = $unitPrice->multipliedBy($qty, MoneyFactory::defaultRoundingMode());
+        $tax = $unitTax->multipliedBy($qty, DomainMoney::defaultRoundingMode());
+        $net = $unitPrice->multipliedBy($qty, DomainMoney::defaultRoundingMode());
 
         return new TaxBreakdown($tax, $taxIncluded ? $net->minus($tax) : $net);
     }
@@ -192,7 +192,7 @@ class TaxService
         bool $taxIncluded
     ): TaxBreakdown {
         if ($price->isZero()) {
-            return new TaxBreakdown(MoneyFactory::zero(), MoneyFactory::zero());
+            return new TaxBreakdown(DomainMoney::zero(), DomainMoney::zero());
         }
 
         if ($taxIncluded) {
@@ -209,12 +209,12 @@ class TaxService
         $tax = $priceRational
             ->multipliedBy($taxMultiplier)
             ->dividedBy($divisor)
-            ->to($price->getContext(), MoneyFactory::defaultRoundingMode());
+            ->to($price->getContext(), DomainMoney::defaultRoundingMode());
 
         $net = $priceRational
             ->multipliedBy($netMultiplier)
             ->dividedBy($divisor)
-            ->to($price->getContext(), MoneyFactory::defaultRoundingMode());
+            ->to($price->getContext(), DomainMoney::defaultRoundingMode());
 
         return new TaxBreakdown($tax, $net);
     }

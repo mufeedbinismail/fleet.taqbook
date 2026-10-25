@@ -1,6 +1,6 @@
 <?php
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Foundation\Auth\Constant\Permission;
 use App\Foundation\Shared\Enum\SystemType;
 use App\Foundation\Shared\ValueObject\TypedId;
@@ -65,23 +65,23 @@ function display_mktpl_st_view(SupplierTransCart $cart): void
         label_cell(e($line->description));
         qty_cell($line->qty->toFloat(), false, user_qty_dec());
         label_cell(e($line->unit));
-        amount_cell(MoneyFactory::value($line->amount));
-        amount_cell(MoneyFactory::value($line->netTotal()));
-        amount_cell(MoneyFactory::value($line->taxTotal()));
-        amount_cell(MoneyFactory::value($line->lineTotal()));
+        amount_cell(DomainMoney::value($line->amount));
+        amount_cell(DomainMoney::value($line->netTotal()));
+        amount_cell(DomainMoney::value($line->taxTotal()));
+        amount_cell(DomainMoney::value($line->lineTotal()));
         end_row();
     }
     end_table(1);
 
     start_table(TABLESTYLE, "width='95%'");
-    label_row(__("Sub Total"), price_format(MoneyFactory::value($cart->totalRaw())), "align=right", "nowrap align=right width='15%'");
+    label_row(__("Sub Total"), price_format(DomainMoney::value($cart->totalRaw())), "align=right", "nowrap align=right width='15%'");
     $tax_items = get_trans_tax_details($cart->transType->value, $cart->transNo);
     display_supp_trans_tax_details($tax_items, 1);
-    label_row(__("TOTAL"), price_format(MoneyFactory::value($cart->totalGross())), "colspan=1 align=right", "nowrap align=right");
+    label_row(__("TOTAL"), price_format(DomainMoney::value($cart->totalGross())), "colspan=1 align=right", "nowrap align=right");
     end_table(1);
 
     $voided = is_voided_display($cart->transType->value, $cart->transNo, __("This document has been voided."));
     if (!$voided) {
-        display_allocations_to(PT_SUPPLIER, $cart->supplierId, $cart->transType->value, $cart->transNo, MoneyFactory::value($cart->totalGross()));
+        display_allocations_to(PT_SUPPLIER, $cart->supplierId, $cart->transType->value, $cart->transNo, DomainMoney::value($cart->totalGross()));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Trade\Marketplace\Cart\CustomerSettlementCart;
 use App\Trade\Sale\Enum\PaymentMethod;
 use App\Trade\Shared\Enum\CustomerTransactionSource;
@@ -33,7 +33,7 @@ function write_marketplace_customer_setoff(
 
     $transType  = $cart->transId->type->value;
     $date       = $cart->transDate->toUserDateString();
-    $amount     = MoneyFactory::value($cart->amount);
+    $amount     = DomainMoney::value($cart->amount);
     $isEdit     = $cart->isEdit();
     $transNo    = (int) $cart->transId->id;
 
@@ -112,7 +112,7 @@ function write_marketplace_customer_setoff(
             ? [$doc->type->value, $doc->id, $transType, $transNo]
             : [$transType, $transNo, $doc->type->value, $doc->id];
 
-        add_cust_allocation(MoneyFactory::value($line->thisAllocation),
+        add_cust_allocation(DomainMoney::value($line->thisAllocation),
             $fromType, $fromNo, $toType, $toNo, $cart->customerId, $date);
         update_debtor_trans_allocation($doc->type->value, $doc->id, $cart->customerId);
     }

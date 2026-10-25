@@ -10,7 +10,7 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Inventory\Repository\ItemRepository;
 use App\Trade\Marketplace\Collection\ExpenseCollection;
 use App\Trade\Marketplace\Entity\Expense;
@@ -276,8 +276,8 @@ function display_order_summary($title, &$order, $editable_items=false)
                     label_cell("└───", "style='text-align: center;'");
                     label_cell($expense->description);
                     label_cell('', "colspan='".(2 + intval(!$is_new))."'");
-                    amount_cell(MoneyFactory::value($expense->amount));
-                    amount_cell(MoneyFactory::value($expense->taxBreakdown->tax));
+                    amount_cell(DomainMoney::value($expense->amount));
+                    amount_cell(DomainMoney::value($expense->taxBreakdown->tax));
                     label_cell('');
                     label_cell('');
                     if ($lines_added) {
@@ -699,7 +699,7 @@ function sales_order_item_controls(
                     Str::uuid()->toString(),
                     $expense_item_id,
                     $expense_item->description,
-                    MoneyFactory::zero()
+                    DomainMoney::zero()
                 ));
             }
         }
@@ -710,7 +710,7 @@ function sales_order_item_controls(
             label_cell("└───", "style='text-align: center;'");
             text_cells(null, "mkt_expense[{$expense->uuid}][description]", $expense->description, 45, 50, false, "", "", 'style="font-size: 0.85rem;"', true);
             label_cell('', "colspan='".(2+intval(!$is_new))."' ");
-            amount_cells(null, "mkt_expense[{$expense->uuid}][amount]", price_format(MoneyFactory::value($expense->amount)));
+            amount_cells(null, "mkt_expense[{$expense->uuid}][amount]", price_format(DomainMoney::value($expense->amount)));
             label_cell('');
             label_cell('');
             label_cell('');

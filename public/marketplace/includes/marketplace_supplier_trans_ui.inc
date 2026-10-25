@@ -1,6 +1,6 @@
 <?php
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Inventory\Query\ItemInfoQuery;
 use App\Trade\Marketplace\Cart\SupplierTransCart;
 use App\Trade\Marketplace\Entity\DraftSupplierTransLine;
@@ -144,7 +144,7 @@ function mktpl_st_line_controls(SupplierTransCart $cart, int &$k, int $line_no =
         $_POST['description'] = $line->description;
         $_POST['unit'] = $line->unit;
         $_POST['qty'] = number_format2($line->qty->toFloat(), $itemInfo->unit_decimals);
-        $_POST['amount'] = price_format(MoneyFactory::value($line->amount));
+        $_POST['amount'] = price_format(DomainMoney::value($line->amount));
 
         hidden('lineNo', $line_no);
         hidden('stockId', $line->stockId);
@@ -153,9 +153,9 @@ function mktpl_st_line_controls(SupplierTransCart $cart, int &$k, int $line_no =
         qty_cells(null, 'qty', null, null, null, $itemInfo->unit_decimals);
         text_cells(null, 'unit', null, 8, 20, '', '', '', '', true);
         amount_cells(null, 'amount');
-        amount_cell(MoneyFactory::value($line->netTotal()));
-        amount_cell(MoneyFactory::value($line->taxTotal()));
-        amount_cell(MoneyFactory::value($line->lineTotal()));
+        amount_cell(DomainMoney::value($line->netTotal()));
+        amount_cell(DomainMoney::value($line->taxTotal()));
+        amount_cell(DomainMoney::value($line->lineTotal()));
         button_cell('UpdateLine', __('Update'), __('Confirm changes'), ICON_UPDATE);
         button_cell('CancelEdit', __('Cancel'), __('Cancel changes'), ICON_CANCEL);
         $Ajax->activate('items_table');
@@ -202,10 +202,10 @@ function display_mktpl_st_items(SupplierTransCart $cart): void
             label_cell(e($line->description));
             qty_cell($line->qty->toFloat(), false, 0);
             label_cell(e($line->unit));
-            amount_decimal_cell(MoneyFactory::value($line->amount));
-            amount_decimal_cell(MoneyFactory::value($line->netTotal()));
-            amount_decimal_cell(MoneyFactory::value($line->taxTotal()));
-            amount_cell(MoneyFactory::value($line->lineTotal()));
+            amount_decimal_cell(DomainMoney::value($line->amount));
+            amount_decimal_cell(DomainMoney::value($line->netTotal()));
+            amount_decimal_cell(DomainMoney::value($line->taxTotal()));
+            amount_cell(DomainMoney::value($line->lineTotal()));
             edit_button_cell("Edit$i",   __('Edit'),   __('Edit this line'));
             delete_button_cell("Delete$i", __('Delete'), __('Remove this line'));
             end_row();
@@ -218,10 +218,10 @@ function display_mktpl_st_items(SupplierTransCart $cart): void
     // Totals footer — 8 cols: label(5) + value(1) + buttons(2)
     $colspan = count($th) - 2;
 
-    label_row(__("Sub-total"), price_format(MoneyFactory::value($cart->totalNet())), "colspan=$colspan align=right", "align=right", 2);
-    label_row(__("Tax"), price_format(MoneyFactory::value($cart->totalTax())), "colspan=$colspan align=right", "align=right", 2);
+    label_row(__("Sub-total"), price_format(DomainMoney::value($cart->totalNet())), "colspan=$colspan align=right", "align=right", 2);
+    label_row(__("Tax"), price_format(DomainMoney::value($cart->totalTax())), "colspan=$colspan align=right", "align=right", 2);
     start_row();
-    label_cells(__("Amount Total"), price_format( MoneyFactory::value($cart->totalGross())), "colspan=$colspan align='right'", "align='right'");
+    label_cells(__("Amount Total"), price_format( DomainMoney::value($cart->totalGross())), "colspan=$colspan align='right'", "align='right'");
     submit_cells('update', __("Update"), "colspan=2 align='center'", __("Refresh"), true);
     end_row();
 

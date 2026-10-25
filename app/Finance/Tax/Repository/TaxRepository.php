@@ -2,7 +2,7 @@
 
 namespace App\Finance\Tax\Repository;
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Finance\Tax\Collection\TaxGroupLineCollection;
 use App\Finance\Tax\Entity\ItemTaxSetting;
 use App\Finance\Tax\Entity\TaxableItem;
@@ -51,7 +51,7 @@ class TaxRepository
     {
         return new TaxableItem(
             $this->getItemTaxSetting($stockId),
-            MoneyFactory::of($price)
+            DomainMoney::of($price)
         );
     }
 

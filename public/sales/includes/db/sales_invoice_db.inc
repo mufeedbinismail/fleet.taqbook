@@ -1,7 +1,7 @@
 <?php
 
 use App\Finance\Tax\Service\TaxService;
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Finance\Tax\Collection\TaxableItemCollection;
 use App\Inventory\Repository\ItemRepository;
 use App\Trade\Marketplace\Repository\ExpenseRepository;
@@ -327,7 +327,7 @@ function write_invoice_marketplace_setoff(
             (int) $invoice->marketplace_id,
             (int) $marketplace_data['supplier_id'],
             $marketplace_data['payable_account'],
-            MoneyFactory::of($amount, get_customer_currency($invoice->customer_id)),
+            DomainMoney::of($amount, get_customer_currency($invoice->customer_id)),
             TypedId::make(ST_MKTCUSTPAYMENT),
             $Refs->get_next(ST_MKTCUSTPAYMENT, null, array(
                 'customer' => $invoice->customer_id,
@@ -407,7 +407,7 @@ function process_marketplace_expenses(
             0,
             0,
             $expense->description,
-            $sign * MoneyFactory::value($breakdown->net),
+            $sign * DomainMoney::value($breakdown->net),
             null,
             null,
             null,
@@ -426,7 +426,7 @@ function process_marketplace_expenses(
                     0,
                     0,
                     $expense->description . ' (prov. tax)',
-                    $sign * MoneyFactory::value($taxLine->tax),
+                    $sign * DomainMoney::value($taxLine->tax),
                     null,
                     null,
                     null,
@@ -444,7 +444,7 @@ function process_marketplace_expenses(
             0,
             0,
             $expense->description,
-            $sign * MoneyFactory::value($breakdown->fullPrice()->negated()),
+            $sign * DomainMoney::value($breakdown->fullPrice()->negated()),
             null,
             PT_MARKETPLACE,
             $invoice->marketplace_id,

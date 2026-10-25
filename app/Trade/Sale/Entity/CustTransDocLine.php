@@ -2,7 +2,7 @@
 
 namespace App\Trade\Sale\Entity;
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use Brick\Money\Money;
 
 /**
@@ -33,13 +33,13 @@ class CustTransDocLine
             id: (int) $row->id,
             stockId: (string) $row->stock_id,
             description: $row->description !== null ? (string) $row->description : null,
-            unitPrice: MoneyFactory::of($row->unit_price, $currency),
-            unitTax: MoneyFactory::of($row->unit_tax, $currency),
+            unitPrice: DomainMoney::of($row->unit_price, $currency),
+            unitTax: DomainMoney::of($row->unit_tax, $currency),
             quantity: (float) $row->quantity,
             discountPercent: (float) $row->discount_percent,
-            marketplaceCommission: MoneyFactory::of($row->marketplace_commission, $currency),
-            marketplaceShipping: MoneyFactory::of($row->marketplace_shipping, $currency),
-            standardCost: MoneyFactory::of($row->standard_cost, $currency),
+            marketplaceCommission: DomainMoney::of($row->marketplace_commission, $currency),
+            marketplaceShipping: DomainMoney::of($row->marketplace_shipping, $currency),
+            standardCost: DomainMoney::of($row->standard_cost, $currency),
             qtyDone: (float) $row->qty_done,
             srcId: $row->src_id !== null ? (int) $row->src_id : null
         );

@@ -10,7 +10,7 @@
     See the License here <http://www.gnu.org/licenses/gpl-3.0.html>.
 ***********************************************************************/
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Finance\Tax\Entity\TaxSetting;
 use App\Finance\Tax\Repository\TaxRepository;
 use App\Finance\Tax\Service\TaxService;
@@ -586,13 +586,13 @@ class Cart
 	}
 
     function get_total_marketplace_cost() {
-        $total = MoneyFactory::zero();
+        $total = DomainMoney::zero();
         foreach ($this->line_items as $line) {
             foreach ($line->marketplace_expenses as $expense) {
                 $total = $total->plus($expense->taxBreakdown->fullPrice());
             }
         }
-        return MoneyFactory::value($total);
+        return DomainMoney::value($total);
     }
 
 	function has_items_dispatch()
@@ -657,12 +657,12 @@ class Cart
 
 	function get_tax_free_shipping()
 	{
-        return MoneyFactory::value($this->get_shipping_tax_breakdown()->net);
+        return DomainMoney::value($this->get_shipping_tax_breakdown()->net);
 	}
 
 	function get_shipping_tax()
 	{
-        return MoneyFactory::value($this->get_shipping_tax_breakdown()->tax);
+        return DomainMoney::value($this->get_shipping_tax_breakdown()->tax);
 	}
 
     function get_shipping_tax_breakdown(): TaxBreakdown
@@ -672,7 +672,7 @@ class Cart
 
         $taxSetting = $repository->getTaxSetting($this->tax_group_id, $this->tax_included);
         return $service->getTaxBreakdownForShipping(
-            MoneyFactory::of($this->freight_cost),
+            DomainMoney::of($this->freight_cost),
             $taxSetting
         );
     }
@@ -783,7 +783,7 @@ class Cart
         if (!$this->marketplace_id) {
             foreach ($this->line_items as $line) {
                 foreach ($line->marketplace_expenses as $expense) {
-                    $expense->taxBreakdown = new TaxBreakdown(MoneyFactory::zero(), clone $expense->amount);
+                    $expense->taxBreakdown = new TaxBreakdown(DomainMoney::zero(), clone $expense->amount);
                 }
             }
             return;

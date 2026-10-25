@@ -2,7 +2,7 @@
 
 use App\Foundation\Auth\Constant\Permission;
 use App\Trade\Sale\Enum\PaymentMethod;
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Inventory\Repository\ItemRepository;
 use App\Trade\Marketplace\Collection\ExpenseCollection;
 use App\Trade\Marketplace\Entity\Expense;
@@ -262,7 +262,7 @@ function check_quantities()
                     $uuid,
                     $e['stock_id'],
                     $e['description'],
-                    MoneyFactory::of(user_numeric($e['amount']))
+                    DomainMoney::of(user_numeric($e['amount']))
                 ));
             }
             $_SESSION['Items']->line_items[$line_no]->marketplace_expenses = $collection;
@@ -680,7 +680,7 @@ function display_marketplace_expenses(
                 Str::uuid()->toString(),
                 $sid,
                 $itemRepo->findCachedByStockId($sid)->description,
-                MoneyFactory::zero()
+                DomainMoney::zero()
             );
         }
 
@@ -690,8 +690,8 @@ function display_marketplace_expenses(
         label_cell("└───", "style='text-align: center;'");
         label_cell($expense->description);
         label_cell('', "colspan=" . ($options['is_prepaid'] ? 2 : 4));
-        amount_cells(null, "mkt_expense[{$lineIndex}][{$expense->uuid}][amount]", price_format(MoneyFactory::value($expense->amount)));
-        label_cell(price_format(MoneyFactory::value($expense->taxBreakdown->tax)), "align=right");
+        amount_cells(null, "mkt_expense[{$lineIndex}][{$expense->uuid}][amount]", price_format(DomainMoney::value($expense->amount)));
+        label_cell(price_format(DomainMoney::value($expense->taxBreakdown->tax)), "align=right");
         label_cell('', "colspan=2");
         if ($options['is_batch_invoice']) label_cell('', "colspan=2");
         end_row();

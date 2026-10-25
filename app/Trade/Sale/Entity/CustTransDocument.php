@@ -2,7 +2,7 @@
 
 namespace App\Trade\Sale\Entity;
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Foundation\Shared\Enum\TransactionEffect;
 use App\Foundation\Shared\ValueObject\DomainDateTime;
 use App\Foundation\Shared\ValueObject\TypedId;
@@ -81,15 +81,15 @@ class CustTransDocument
             trackingNo: $row->tracking_no !== null ? (string) $row->tracking_no : null,
             salesType: (int) $row->tpe,
             orderNo: (int) $row->order_,
-            overAmount: MoneyFactory::of($row->ov_amount, $currency),
-            overGst: MoneyFactory::of($row->ov_gst, $currency),
-            overFreight: MoneyFactory::of($row->ov_freight, $currency),
-            overFreightTax: MoneyFactory::of($row->ov_freight_tax, $currency),
-            overDiscount: MoneyFactory::of($row->ov_discount, $currency),
-            overMktCost: MoneyFactory::of($row->ov_mkt_cost, $currency),
-            total: MoneyFactory::of($row->total ?? 0, $currency),
-            allocated: MoneyFactory::of($row->alloc, $currency),
-            prepAmount: MoneyFactory::of($row->prep_amount, $currency),
+            overAmount: DomainMoney::of($row->ov_amount, $currency),
+            overGst: DomainMoney::of($row->ov_gst, $currency),
+            overFreight: DomainMoney::of($row->ov_freight, $currency),
+            overFreightTax: DomainMoney::of($row->ov_freight_tax, $currency),
+            overDiscount: DomainMoney::of($row->ov_discount, $currency),
+            overMktCost: DomainMoney::of($row->ov_mkt_cost, $currency),
+            total: DomainMoney::of($row->total ?? 0, $currency),
+            allocated: DomainMoney::of($row->alloc, $currency),
+            prepAmount: DomainMoney::of($row->prep_amount, $currency),
             rate: (float) $row->rate,
             effect: TransactionEffect::from((int) $row->effect),
             shipVia: $row->ship_via !== null ? (int) $row->ship_via : null,

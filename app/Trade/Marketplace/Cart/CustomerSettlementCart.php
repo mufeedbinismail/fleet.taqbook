@@ -2,7 +2,7 @@
 
 namespace App\Trade\Marketplace\Cart;
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Foundation\Shared\Enum\SystemType;
 use App\Foundation\Shared\ValueObject\DomainDateTime;
 use App\Foundation\Shared\ValueObject\TypedId;
@@ -130,7 +130,7 @@ class CustomerSettlementCart
 
     public function totalAllocated(): Money
     {
-        return MoneyFactory::sum($this->lines->column('thisAllocation'));
+        return DomainMoney::sum($this->lines->column('thisAllocation'));
     }
 
     public function selectedLines(): DraftAllocationLineCollection

@@ -2,7 +2,7 @@
 
 namespace App\Trade\Marketplace\Entity;
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use App\Finance\Tax\Contract\TaxableItemContract;
 use App\Finance\Tax\Entity\ItemTaxSetting;
 use App\Finance\Tax\Entity\TaxableItem;
@@ -24,7 +24,7 @@ class SupplierTransCartLine implements TaxableItemContract
         ?TaxBreakdown $taxBreakdown = null
     ) {
         $this->taxBreakdown = $taxBreakdown ?? new TaxBreakdown(
-            MoneyFactory::zero(),
+            DomainMoney::zero(),
             $this->toTaxableItem()->price
         );
     }
@@ -36,7 +36,7 @@ class SupplierTransCartLine implements TaxableItemContract
 
     public function rawTotal(): Money
     {
-        return $this->amount->multipliedBy($this->qty, MoneyFactory::defaultRoundingMode());
+        return $this->amount->multipliedBy($this->qty, DomainMoney::defaultRoundingMode());
     }
 
     public function lineTotal(): Money

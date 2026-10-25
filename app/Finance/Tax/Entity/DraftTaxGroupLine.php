@@ -2,7 +2,7 @@
 
 namespace App\Finance\Tax\Entity;
 
-use App\Finance\Shared\Support\MoneyFactory;
+use App\Finance\Shared\Support\DomainMoney;
 use Brick\Math\BigDecimal;
 use Brick\Money\Money;
 use Illuminate\Contracts\Support\Arrayable;
@@ -31,14 +31,14 @@ final class DraftTaxGroupLine implements Arrayable
             $line->purchasingProvisionGlCode,
             $line->rate,
             $line->taxShipping,
-            MoneyFactory::zero(),
-            MoneyFactory::zero()
+            DomainMoney::zero(),
+            DomainMoney::zero()
         );
     }
 
     public static function exempt(): self
     {
-        return new self('', '', '', '', null, null, false, MoneyFactory::zero(), MoneyFactory::zero());
+        return new self('', '', '', '', null, null, false, DomainMoney::zero(), DomainMoney::zero());
     }
 
     public static function fromArray(array $data): self
@@ -51,8 +51,8 @@ final class DraftTaxGroupLine implements Arrayable
             $data['purchasing_provision_gl_code'] ?? null,
             BigDecimal::of($data['rate']),
             (bool) $data['tax_shipping'],
-            MoneyFactory::of($data['Value'] ?? '0'),
-            MoneyFactory::of($data['Net'] ?? '0')
+            DomainMoney::of($data['Value'] ?? '0'),
+            DomainMoney::of($data['Net'] ?? '0')
         );
     }
 
@@ -66,8 +66,8 @@ final class DraftTaxGroupLine implements Arrayable
             'purchasing_provision_gl_code' => $this->purchasingProvisionGlCode,
             'rate' => (string) $this->rate,
             'tax_shipping' => (int) $this->taxShipping,
-            'Value' => MoneyFactory::value($this->tax),
-            'Net' => MoneyFactory::value($this->net),
+            'Value' => DomainMoney::value($this->tax),
+            'Net' => DomainMoney::value($this->net),
         ];
     }
 }
