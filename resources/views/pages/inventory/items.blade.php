@@ -190,7 +190,7 @@ ClientData::registry()
             </x-ui.tab>
             @can(Permission::MANAGE_SALE_PRICE)
                 <x-ui.tab name="sales" label="{{ __('inventory.item.tab.sales') }}">
-                    @include('pages.inventory.items.tabs.placeholder', ['label' => __('inventory.item.tab.sales')])
+                    @include('pages.inventory.items.tabs.sales')
                 </x-ui.tab>
             @endcan
         </x-ui.tabs>

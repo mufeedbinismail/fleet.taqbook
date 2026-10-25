@@ -213,7 +213,7 @@ return [
 
         'tab' => [
             'general' => 'General',
-            'sales' => 'Sales',
+            'sales' => 'Selling Price',
             'purchasing' => 'Purchasing',
             'costs' => 'Costs',
             'reorder' => 'Reorder',

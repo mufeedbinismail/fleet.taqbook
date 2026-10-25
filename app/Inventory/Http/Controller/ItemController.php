@@ -2,6 +2,7 @@
 
 namespace App\Inventory\Http\Controller;
 
+use App\Finance\Currency\Component\Select\CurrencySelect;
 use App\Foundation\Component\Select\Service\OptionService;
 use App\Foundation\Component\Table\Http\Request\TableRequest;
 use App\Foundation\Component\Table\Repository\TableRepository;
@@ -26,6 +27,7 @@ use App\Inventory\Query\ItemDetailQuery;
 use App\Inventory\Query\ItemStatusQuery;
 use App\Inventory\Repository\ItemImageRepository;
 use App\Inventory\Service\ItemBarcodeService;
+use App\Trade\Sale\Component\Select\SalesTypeSelect;
 use Illuminate\Contracts\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -51,6 +53,8 @@ class ItemController extends Controller
             'lookup' => $optionService->lookup(new ItemSelect),
             'categories' => $optionService->channel(new ItemCategorySelect),
             'types' => collect(ItemSourceType::labels())->except(ItemSourceType::FixedAsset->value)->toArray(),
+            'salesTypes' => $optionService->channel(new SalesTypeSelect),
+            'currencies' => $optionService->channel(new CurrencySelect),
         ]);
     }
 
