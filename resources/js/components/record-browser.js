@@ -82,6 +82,17 @@ export function recordBrowser(options, env = defaultEnv()) {
             else this.load(this.selected);
         },
 
+        /* The open record as the server has it now, handed back and not shown: what to do with it is the caller's; null when none is open. */
+        async refetch() {
+            if (this.selected === null) return null;
+
+            const { data: body } = await env.http.get(
+                env.route(options.route, { [param]: this.selected }),
+            );
+
+            return body.data;
+        },
+
         // A reply to a request a later one has replaced is dropped, whether that one asked for another record or the same.
         async load(recordId) {
             const request = ++requests;
@@ -150,6 +161,7 @@ export function factory(Alpine) {
 
         return {
             refresh: (recordId) => Alpine.$data(mounted).refresh(recordId),
+            refetch: () => Alpine.$data(mounted).refetch(),
         };
     };
 }
