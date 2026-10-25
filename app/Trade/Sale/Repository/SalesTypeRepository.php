@@ -8,6 +8,17 @@ use Illuminate\Support\Facades\DB;
 
 class SalesTypeRepository
 {
+    public function salesTypeExists(int $salesTypeId, bool $includeInactive = false): bool
+    {
+        $query = DB::table('sales_types')->where('id', $salesTypeId);
+
+        if (! $includeInactive) {
+            $query->where('inactive', false);
+        }
+
+        return $query->exists();
+    }
+
     public function getSalesTypeFactor(int $salesTypeId): BigDecimal
     {
         $factor = DB::table('sales_types')->where('id', $salesTypeId)->value('factor')
