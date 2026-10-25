@@ -17,6 +17,9 @@ Route::prefix('sales/prices')
         Route::get('/items/{item}', [ItemSalePriceController::class, 'index'])
             ->name('items.index');
 
+        Route::get('/items/{item}/suggestion', [SalePriceController::class, 'suggest'])
+            ->name('items.suggestion');
+
         Route::post('/', [SalePriceController::class, 'store'])
             ->name('store');
 
